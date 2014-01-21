@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>TicketMgmt Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    <service name="createComplaint" engine="java" location="in.vasista.vbiz.ticketmgmt.TicketMgmtServices" invoke="createComplaint" auth="true">
+        <attribute name="description" mode="IN" type="String" optional="false"/>
+        <attribute name="PNAME" mode="IN" type="String" optional="false"/>
+        <attribute name="PPHONE" mode="IN" type="String" optional="true"/>
+        <attribute name="PADDR" mode="IN" type="String" optional="true"/>
+        <attribute name="ACTION" mode="IN" type="String" optional="true"/>
+        <attribute name="custRequestDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+        <attribute name="custRequestTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="salesChannelEnumId" mode="IN" type="String" optional="true"/> 
+        <attribute name="productId" mode="IN" type="String" optional="true"/> 
+        <attribute name="custRequestId" mode="OUT" type="String" optional="true"/> 
+        <attribute name="contactNumberTo" mode="OUT" type="String" optional="true"/> 
+        <attribute name="text" mode="OUT" type="String" optional="true"/> 
+       
+              
+    </service>
+    <service name="updateComplaint" engine="java" location="in.vasista.vbiz.ticketmgmt.TicketMgmtServices" invoke="updateComplaint" auth="true">
+        <attribute name="description" mode="IN" type="String" optional="false"/>
+        <attribute name="PNAME" mode="IN" type="String" optional="true"/>
+        <attribute name="PPHONE" mode="IN" type="String" optional="true"/>
+        <attribute name="PADDR" mode="IN" type="String" optional="true"/>
+        <attribute name="ACTION" mode="IN" type="String" optional="false"/>
+        <attribute name="custRequestDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="statusId" mode="IN" type="String" optional="true"/>
+        <attribute name="custRequestTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="custRequestId" mode="INOUT" type="String" optional="false"/> 
+        <attribute name="salesChannelEnumId" mode="IN" type="String" optional="true"/> 
+        <attribute name="productId" mode="IN" type="String" optional="true"/>  
+        <attribute name="custRequestItemSeqId" mode="IN" type="String" optional="true"/> 
+                  
+    </service>
+    <service name="createNewComplaint" engine="simple" location="component://ticketmgmt/script/TicketMgmtServices.xml" invoke="createNewComplaint">
+        <attribute name="description" mode="IN" type="String" optional="false"/>
+        <attribute name="custRequestDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="custRequestTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+        <attribute name="salesChannelEnumId" mode="IN" type="String" optional="true"/> 
+        <attribute name="productId" mode="IN" type="String" optional="true"/> 
+        <attribute name="custRequestId" mode="OUT" type="String" optional="false"/>
+    </service>
+    <service name="deleteCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
+            location="component://ticketmgmt/script/TicketMgmtServices.xml" invoke="deleteCustRequestParty" auth="true">
+        <description>Delete a CustRequestParty record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    <service name="createCustRequestStatus" engine="simple" location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestStatus">
+        <attribute name="custRequestId" mode="IN" type="String" optional="false"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="createCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
+            location="component://ticketmgmt/script/TicketMgmtServices.xml" invoke="createCustRequestParty" auth="true">
+        <description>Create a CustRequestParty record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="fromDate" mode="IN" type="Timestamp" optional="true"/>
+    </service>
+    <service name="getTicketMgmtComplaintTypes" engine="java" location="in.vasista.vbiz.ticketmgmt.TicketMgmtServices" invoke="getTicketMgmtComplaintTypes" auth="true">
+        <attribute name="complaintsList" mode="INOUT" type="List" optional="true"/>
+    </service>
+</services>

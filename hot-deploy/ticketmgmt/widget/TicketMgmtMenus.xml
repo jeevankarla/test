@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="MainAppBar" title="${uiLabelMap.TicketMgmtApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
+    </menu>
+    <menu name="TicketMgmtTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="dashboard" title="Dashboard">
+            <link target="dashboard"></link> 
+        </menu-item>
+        <menu-item name="complaints" title="Complaints">
+            <link target="FindComplaint"></link> 
+        </menu-item>
+    </menu>
+    <menu name="ComplaintTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ViewRequest" title="Complaint OverView">
+           <condition>
+                <not><if-empty field="custRequestId"/></not>
+           </condition> 
+            <link target="ViewRequest">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        <menu-item name="editRequest" title="Edit Complaint">
+            <!-- <condition>
+                <and>
+                    <not><if-empty field="custRequest"/></not>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_CANCELLED"/>
+                    <if-compare field="custRequest.statusId" operator="not-equals" value="CRQ_COMPLETED"/>
+                </and>
+            </condition> -->
+            <link target="editComplaint">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+         <menu-item name="requestroles" title="Roles">
+            <condition>
+                <not><if-empty field="custRequestId"/></not>
+           </condition> 
+            <link target="requestroles">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+        <!-- <menu-item name="requestitems" title="Complaint Items">
+           <condition> <not><if-empty field="custRequestId"/></not></condition>
+            <link target="/requestitems">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item> -->
+        <menu-item name="custRequestContent" title="Complaint Content">
+            <condition> <not><if-empty field="custRequestId"/></not>
+            </condition>
+            <link target="EditCustRequestContent">
+                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
+            </link>
+        </menu-item>
+    </menu>
+</menus>

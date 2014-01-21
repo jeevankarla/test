@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+
+    <PortletCategory portletCategoryId="HUMANRES" description="Human Resources related data"/>
+
+    <PortalPortlet portalPortletId="PunchInOut" portletName="Punch In/Out"
+        screenName="EditEmplInOutPortlet"
+        screenLocation="component://humanres/widget/EmplInOutScreens.xml"
+        description="Punch In/Out"/>
+        
+    <PortletPortletCategory portalPortletId="PunchInOut" portletCategoryId="HUMANRES"/>
+    
+    <PortalPortlet portalPortletId="Attendance" portletName="Attendance"
+        screenName="CalendarWeekPortlet"
+        screenLocation="component://humanres/widget/CalendarScreens.xml"
+        description="Attendance"/>
+        
+    <PortletPortletCategory portalPortletId="Attendance" portletCategoryId="HUMANRES"/>  
+    
+    <PortalPortlet portalPortletId="Leave" portletName="Leave"
+        screenName="FindEmplLeavesPortlet"
+        screenLocation="component://humanres/widget/EmplLeaveScreens.xml"
+        description="Attendance"/>
+        
+    <PortletPortletCategory portalPortletId="Leave" portletCategoryId="HUMANRES"/>       
+
+</entity-engine-xml>

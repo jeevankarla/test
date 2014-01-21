@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	
+	 <form name="ListTruckSheets" list-name="listDeliverySchedule" title="" type="list" paginate-target="TruckSheetMotherDairy"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    	<row-actions>
+    		<entity-condition entity-name="Shipment" list="shipmentRouteList">
+    			<condition-list combine="and">
+                		<condition-expr field-name="estimatedShipDate" value="${estimatedShipDate}"/>
+                		<condition-expr field-name="statusId" operator="equals" value="GENERATED"/>
+                		<condition-expr field-name="shipmentTypeId" operator="equals" value="${shipmentTypeId}"/>
+                </condition-list>
+                <order-by field-name="routeId"/>
+    		</entity-condition>
+    		<set field="scheduleDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /> 
+    	</row-actions>
+    	<field name="estimatedShipDate" title="${uiLabelMap.SupplyDate}" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>    
+    	<!-- <field name="createdDate" title="Created Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdStamp, &quot;dd MMMMM, yyyy&quot;);}" /></field> -->   
+        <field name="shipmentTypeId" title="Shipment Type"><display-entity entity-name="ShipmentType"/></field>
+        <!-- <field name="originFacilityId" title="Dairy Name"><display-entity entity-name="Facility"  key-field-name="facilityId" description="${facilityName}"/></field> -->
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+     <!--   <field name="facilityId" title="Route Id"  id-name="facilityId">
+            <drop-down allow-empty="false">
+                <option key="allRoutes" description="All-Routes"/>
+                <entity-options description="${routeId}" entity-name="Shipment" key-field-name="routeId" >
+                   <entity-constraint name="estimatedShipDate" value="${estimatedShipDate}"/>
+                    <entity-constraint name="shipmentTypeId" value="${shipmentTypeId}"/>
+                   <entity-constraint name="statusId" operator="equals" value="GENERATED"/>
+                </entity-options> 
+            </drop-down>
+        </field> -->
+        <field name="shipmentId" title="Route" id-name="shipmentId" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
+            <drop-down allow-empty="false">
+                <option key="allRoutes" description="All-Routes"/>
+                <list-options list-name="shipmentRouteList" key-name="shipmentId" description="${groovy: routes.get(routeId);}  [ ${tripNum} ]"/>
+            </drop-down>
+        </field>
+        <!-- <field name="tripId" title="Trip" id-name="tripId" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" separate-column="true">
+            <drop-down allow-empty="false">
+                <option key="allTrips" description="All-Trips"/>
+                <list-options list-name="trips" key-name="tripId" description="${tripId}"/>
+            </drop-down>
+        </field> -->
+        <!-- <field use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" name="shipmentId" id-name = "shipmentId">
+            <drop-down allow-empty="false">
+                <option key="allRoutes" description="All-Routes"/>
+                 <list-options list-name="shipmentRouteList" key-name="shipmentId" description="${routeId}"/>
+            </drop-down>
+        </field> -->
+         <field name="TruckSheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name = "truckSheet">
+            <hyperlink target="truckSheetReport.txt" description="Truck Sheet Report" target-window="_blank" >
+              	 <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
+               	 <parameter param-name="estimatedShipDate" from-field="estimatedShipDate"/>
+            </hyperlink>
+        </field>
+          <!-- <field name="gatePass" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name = "truckSheet">
+            <hyperlink target="MLDGenerateTruckSheet.txt" description="Gate Pass" target-window="_blank" >
+              	  <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
+               	  <parameter param-name="estimatedShipDate" from-field="estimatedShipDate"/> 
+              	  <parameter param-name="reportTypeFlag" value="trucksheet"/>   
+            </hyperlink>
+        </field> -->
+        <field name="abstractReport" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="routeAbstract">
+            <hyperlink target="RouteAbstractReport.txt" description="Route Abstract Report" target-window="_blank" >
+                <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
+               	  <parameter param-name="estimatedShipDate" from-field="estimatedShipDate"/>
+               	  <parameter param-name="reportTypeFlag" value="abstract"/>                                                   
+            </hyperlink>
+        </field>
+        <field name="InvoiceSlips" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name = "invoiceSlips">
+            <hyperlink target="Invoice.txt" description="Invoice Slips" target-window="_blank"> 	
+                  <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
+               	  <parameter param-name="estimatedShipDate" from-field="estimatedShipDate"/>
+               	  <parameter param-name="reportTypeFlag" value="invoiceSlips"/> 
+            </hyperlink>
+        </field>
+        <!-- <field name="Route Dispatch  Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="deliverySchedule">
+            <hyperlink target="MilkDeliveryScheduleReport.pdf" description="Route Dispatch  Sheet" target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="RouteDispatchSheet"/>                                                           
+            </hyperlink>
+        </field>
+        <field name="Route Collection Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="deliverySchedule">
+            <hyperlink target="MilkDeliveryScheduleReport.pdf" description="Route Collection Sheet" target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="RouteCollectionSheet"/>                                                           
+            </hyperlink>
+        </field>
+         <field name="Main Truck Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="loadingStatement">
+            <hyperlink target="MLDGenerateTruckSheet.txt" description="Main Truck Sheet"   target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="consolidatedLoadingStatement"/>                                                           
+            </hyperlink>
+        </field>
+        <field name="DeliveryChallan" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="crDeliveryChallan">
+            <hyperlink target="MilkDeliveryScheduleReport.txt" description="DeliveryChalan"   target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="crInstDeliveryChalan"/>                                                           
+            </hyperlink>
+        </field> -->
+        <field name="cancelShipment" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target-type="plain" target="javascript:showCancelTruckSheetGenerate('${estimatedShipDate}','${scheduleDate}' ,'${shipmentTypeId}');" description="${uiLabelMap.CommonCancel}">
+            </hyperlink>
+        </field>
+    </form>
+    <form name="FindByProduct" type="single" target="FindByProduct" title="" default-map-name="product"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
+        <field name="productName" title="Product Name"><text-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListByProducts" list-name="productList" target="" title="" type="list" paginate-target="FindByProduct"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
+       <!--  <actions>
+            <set field="entityName" value="Product"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="requestParameters"/>
+                <field-map field-name="entityName" from-field="entityName"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions> -->
+        <field name="productId" sort-field="true">
+            <hyperlink also-hidden="false" description="${productId}" target="EditByProduct">
+                <parameter param-name="productId"/>
+                <parameter param-name="subMenuItem" value="EditProduct"/>
+            </hyperlink>
+        </field>
+        <field name="productName" sort-field="true"><display/></field>
+        <field name="primaryProductCategoryId" sort-field="true"><display/></field>
+        <field name="description" sort-field="true"><display/></field>
+    </form>
+    <form name="EditByProduct" type="single" target="updateByProduct" title="" default-map-name="product"
+        header-row-style="header-row" default-table-style="basic-table">
+
+        <alt-target use-when="product==null" target="createByProduct"/>
+
+        <field use-when="product==null" name="isCreate"><hidden value="true"/></field>
+
+        <field position="1" use-when="product!=null" name="productId" required-field="true" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProduct}"><display/></field>
+        <field position="1" use-when="product==null&amp;&amp;productId==null" name="productId" required-field="true" title="${uiLabelMap.ProductProductId}"><text size="20" maxlength="20"/></field>
+        <field position="1" use-when="product==null&amp;&amp;productId!=null" name="productId" required-field="true" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotFindProductId} [${productId}]" ><text size="20" maxlength="20"/></field>
+		
+		<field name="productTypeId"><hidden value="FINISHED_GOOD"/></field>
+		
+        <field position="1" name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${productCategoryId}">
+                    <entity-constraint name="productCategoryTypeId" value="BYPROD_CAT"/>
+                    <entity-order-by field-name="productCategoryId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+		<field position="1" name="productName" title="Product Name" required-field="true" event="onBlur" action="javascript:autofillProdNames()"><text size="20" maxlength="20"/></field>
+		<field name="internalName"><text size="20" maxlength="20"/></field>
+        <field name="brandName"><text size="20" maxlength="20"/></field>
+        <field name="description"><text size="30" maxlength="255"/></field>
+        <field position="1" name="introductionDate" title="${uiLabelMap.CommonIntroductionDate}" red-when="after-now"><date-time/></field>
+        <field position="1" name="salesDiscontinuationDate" title="${uiLabelMap.ProductSalesThruDate}" red-when="before-now"><date-time/></field>
+        <field position="1" name="quantityIncluded" title="${uiLabelMap.ProductQuantityIncluded}"><text size="10" maxlength="20"/></field>
+        <field position="1" name="quantityUomId" title="${uiLabelMap.ProductQuantityUomId}">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom" >
+                    <entity-constraint name="uomId" operator="in" value="VLIQ_N,VLIQ_K,VLIQ_L"/>                                      
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- <field position="1" name="piecesIncluded" title="${uiLabelMap.ProductPiecesIncluded}"><text size="10" maxlength="20" default-value="1"/></field> -->
+        <field name="piecesIncluded"><hidden value="1"/></field>
+        <!-- <field position="1" name="isVirtual" title="${uiLabelMap.ProductVirtualProduct}">
+            <drop-down><option key="N" description="${uiLabelMap.CommonN}"/><option key="Y" description="${uiLabelMap.CommonY}"/></drop-down>
+        </field>
+        <field position="1" name="isVariant" title="${uiLabelMap.ProductVariantProduct}">
+            <drop-down><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field> -->
+       <!--  <field position="1" name="mfgLocation" title="Mfg Location">
+            <drop-down><option key="UNION" description="UNION"/><option key="DAIRY" description="DAIRY"/></drop-down>
+        </field>
+        <field position="1" name="disLocation" title="Dispatch Location">
+            <drop-down><option key="UNION" description="UNION"/><option key="DAIRY" description="DAIRY"/></drop-down>
+        </field> -->
+        <field position="1" name="isActive" title="Is Active">
+            <drop-down><option key="Y" description="Y"/><option key="N" description="N"/></drop-down>
+        </field>
+        <field name="isVirtual"><hidden value="N"/></field>
+		<field name="isVariant"><hidden value="Y"/></field>
+		<field name="taxable"><hidden value="Y"/></field>
+		<field name="chargeShipping"><hidden value="N"/></field>
+		<field name="autoCreateKeywords"><hidden value="Y"/></field>
+		<field position="1" use-when="product==null&amp;&amp;productId==null" name="pricesEffectiveDate" red-when="after-now" tooltip="Default Prices are Automatically Created. If Left blank, Today's date is taken"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" use-when="product!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductCreateProduct}" use-when="product==null" widget-style="smallSubmit"><submit button-type="button"/></field>
+
+        <field use-when="product!=null" position="1" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
+            <display description="[${product.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${product.lastModifiedDate}" also-hidden="false"/>
+        </field>
+        <field use-when="product!=null" position="2" name="createdByText" title="${uiLabelMap.CommonCreatedBy}:">
+            <display description="[${product.createdByUserLogin}] ${uiLabelMap.CommonOn} ${product.createdDate}" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="UpdateByProductPrice" type="list" target="updateByProductPrice" title="" list-name="productPrices"
+        odd-row-style="alternate-row" separate-columns="true" default-table-style="basic-table">
+        <auto-fields-service service-name="updateByProductPrice" map-name="productPrice"/>
+        <field name="customPriceCalcService"><ignored/></field>    
+        <!-- <field name="taxPercentage" ><ignored/></field> -->    
+        <field name="taxAuthPartyId"><ignored/></field>    
+        <field name="taxAuthGeoId"><ignored/></field>    
+        <field name="taxInPrice" ><ignored/></field>   
+        <field name="termUomId" ><ignored/></field> 
+        <field name="tenantId" ><ignored/></field> 
+        <field name="taxPercentage" ><ignored/></field>   
+        <!-- <field name="currencyUomId"><ignored/></field> 
+        <field name="productPricePurposeId"><ignored/></field> -->
+         
+        <field name="productId"><hidden/></field>
+        <field name="currencyUomId"><hidden value="INR"/></field>
+        <field name="productPricePurposeId"><hidden/></field>
+        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}"><display-entity entity-name="ProductPriceType"/></field>
+        <!-- <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}"><display-entity entity-name="ProductPricePurpose"/></field> -->
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date"/></field>
+        <!-- <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}" ><display-entity entity-name="Uom" key-field-name="uomId" description="${uomId}"/></field> -->
+        <field name="currencyUomId" ><hidden value="INR"/> </field>
+        <field name="productStoreGroupId" ><hidden value="_NA_"/> </field>
+        
+		<field name="price"><text size="7"/></field>
+		<field name="VAT_SALE_Price" title="Vat"><hidden/></field>
+		<field name="VAT_SALE_Rate" title="Vat%"><text size="4"/></field>
+		<field name="BED_SALE_Price" title="Bed"><hidden /></field>
+		<field name="BED_SALE_Rate" title="Bed%"><hidden /></field>
+		<field name="BEDCESS_SALE_Price" title="Bedcess"><hidden /></field>
+		<field name="BEDCESS_SALE_Rate" title="BedCess%"><hidden /></field>
+		<field name="BEDSECCESS_SALE_Price" title="SecCess"><hidden /></field>
+		<field name="BEDSECCESS_SALE_Rate" title="SecCess%"><hidden /></field>
+		<!-- <field name="taxAmount"><text size="10"/></field>
+		<field name="taxPercentage"><text size="10"/></field> -->
+		<field name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
+            <display description="[${lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${lastModifiedDate}" also-hidden="false"/>
+        </field>
+
+        <field use-when="&quot;${thruDate}&quot; == &quot;&quot;" name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+
+        <!-- <field name="viewHistoryLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink target="ProductPriceHistory" description="${uiLabelMap.ProductHistory}" also-hidden="false">
+                <parameter param-name="productId"/>
+                <parameter param-name="productPriceTypeId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field> -->
+
+       <!--  <field use-when="&quot;${thruDate}&quot; == &quot;&quot;" name="deleteLink" title="Delete" widget-style="buttontext">
+            <hyperlink target="deleteByProductPrice" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="productId"/><parameter param-name="productPriceTypeId"/><parameter param-name="productPricePurposeId"/>
+                <parameter param-name="currencyUomId"/><parameter param-name="productStoreGroupId"/><parameter param-name="fromDate"/>
+            </hyperlink>
+        </field> -->
+    </form>
+    <form name="configCrates" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="updateCrateQtyConfig"
+    	default-table-style="basic-table hover-bar" separate-columns="true">
+    	<field name="uomId"><hidden value="VLIQ_CRT"/></field>
+        <field name="crate" title="CRATE:" widget-style="h3" position="1"><display description="1"/></field>
+        <field name="uomIdTo"><hidden value="VLIQ_L"/></field>
+        <field name="liters" title="LITERS:" widget-style="h3;" position="2"><text/></field>
+	    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" position="3"><submit/></field>       
+    </form>
+     <form name="FindQuotaListing" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="QuotaListing"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<field name="hideSearch"><hidden value="N"/></field>
+    	<!--  <field  name="custRdisplayDateequestDate" id-name="date" widget-style="h3" title="${uiLabelMap.SupplyDate}"><text size="15" default-value="${supplyDate}" /></field> -->
+    	<field name="supplyDate" title="${uiLabelMap.SupplyDate}" id-name="date" widget-style="h3"><text  default-value="${supplyDate}" />
+    	</field>
+    	<field name="subscriptionTypeId" title="${uiLabelMap.SupplyTime}">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${description}" entity-name="SubscriptionType" key-field-name="subscriptionTypeId">
+        			<entity-constraint name="parentTypeId" operator="equals" value="LMS"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+         <!-- <field name="productSubscriptionTypeId" title="${uiLabelMap.productSubscriptionType}">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+        			<entity-constraint name="enumTypeId" operator="equals" value="SUB_PROD_TYPE"/>
+        		</entity-options>
+        	</drop-down>
+        </field> --> 
+           
+        <field name="facilityId" title="Dealer"><lookup target-form-name="LookupFacility"></lookup></field>
+        <field name="productId" title="Product"> <lookup target-form-name="LookupProduct"></lookup></field>    
+        <field name="routeId" title="Route"><lookup target-form-name="LookupFacility"/></field>
+        <field name="tripId" title="Trip" widget-style="h3">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+        			<entity-constraint name="enumTypeId" operator="equals" value="MULTI_TRIP"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+       <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="FindDealerPayments" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="FindDealerPayments"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<field name="hideSearch"><hidden value="N"/></field>
+    	<field name="onlyCurrentDues"><hidden value="false"/></field>     	   	
+    	<field name="paymentDate" title="${uiLabelMap.SupplyDate}"><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}"/></field>    	
+        <field name="facilityId" title="Dealer / Route" required-field="true"><lookup target-form-name="LookupFacility"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
+            <drop-down allow-empty="false">
+            	<option key="NOT_PAID" description="Not Paid"/>
+            	<option key="PAID" description="Paid"/>                
+            </drop-down>
+        </field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+</forms>

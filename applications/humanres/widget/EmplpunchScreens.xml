@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+<screen name="EditEmplPunch" >
+        <section>
+            <actions>
+                <set field="punchdate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+               <!-- <set field="punchtime" value="${bsh: org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;hh:mm:ss&quot;)}" type="String" clock="24"/> -->             <set field="punchtime" value="${bsh: org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;hh:mm:ss&quot;)}"/> 
+                <set field="dateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/> 
+                <set field="partyId" from-field="userLogin.partyId"/>
+                <set field="titleProperty" value="Employee Punch"/>
+                <set field="headerItem" value="Punchinout"/>
+                <set field="emplWageCtx" from-field="parameters.PartyId"/>
+                <set field="check" from-field="context.check"/>
+                 <!--<script location="component://humanres/webapp/humanres/WEB-INF/actions/calendar/emplPunch.bsh"/>
+               set field="emplPunchId" from-field="parameters.emplPunchId"/-->
+		<entity-one entity-name="EmplPunch" value-field="emplPunch"/>
+            </actions> 
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Add punch">
+                            <section>
+                                <widgets>
+                                    <include-form name="Punch" location="component://humanres/widget/forms/EmplpunchForms.xml"/>
+                                     <!--lookup target-form-name="punch" size="20" location="component://humanres/widget/forms/EmplpunchForms.xml"/-->
+                                </widgets>
+                                <fail-widgets>
+                                    <label>Your Punch Time is Not Saved</label>
+                                </fail-widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

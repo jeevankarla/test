@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	<RateType rateTypeId="VENDOR_MRGN"  description="Vendor margin"/>
+    <RateType rateTypeId="VENDOR_CD_ADTL_MRGN" description="Additional margin for card orders"/>
+	<RateAmount rateTypeId="VENDOR_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="VENDOR_CD_ADTL_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	
+	<RateType  rateTypeId="CR_INST_MRGN" createdStamp="2012-05-31 17:06:30.0" createdTxStamp="2012-05-31 17:06:30.0" description="Credit Institution margin" lastUpdatedStamp="2012-05-31 17:06:30.0" lastUpdatedTxStamp="2012-05-31 17:06:30.0"/>
+	<RateType rateTypeId="SO_INST_MRGN" createdStamp="2012-05-31 17:06:30.0" createdTxStamp="2012-05-31 17:06:30.0" description="Institutional Special Order margin" lastUpdatedStamp="2012-05-31 17:06:30.0" lastUpdatedTxStamp="2012-05-31 17:06:30.0"/>
+	<RateAmount rateTypeId="CR_INST_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<RateAmount rateTypeId="SO_INST_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<RateAmount rateTypeId="VENDOR_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	
+	<RateType rateTypeId="LEAKS_MRGN"  description="Leaks margin"/>
+	<RateType rateTypeId="FREES_MRGN"  description="Frees margin"/>
+	<RateType rateTypeId="SAMPLES_MRGN"  description="Samples margin"/>
+	<RateType rateTypeId="AUTO_SHORT_MRGN"  description="AutoShorge margin"/>
+	<RateType rateTypeId="VAN_SHORT_MRGN"  description="VanShoratge  margin"/>
+	<RateType rateTypeId="SPOILS_MRGN"  description="Spoilage margin"/>
+	
+	<RateAmount rateTypeId="LEAKS_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<RateAmount rateTypeId="FREES_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<RateAmount rateTypeId="SAMPLES_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<RateAmount rateTypeId="AUTO_SHORT_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<RateAmount rateTypeId="VAN_SHORT_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<RateAmount rateTypeId="SPOILS_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+</entity-engine-xml>

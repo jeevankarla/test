@@ -1,0 +1,15 @@
+FacilityType_facilityTypeId,FacilityType_parentTypeId,FacilityType_hasTable,FacilityType_description
+RES_UNIT,,N,Residential Unit
+SPORTS_FAC,,N,Sports Facility
+UTILITY,,N,Utility Facility
+PARKING,,N,Parking Facility
+COMMON_FACILITY,,N,Common Facility
+A_TYPE_RES,RES_UNIT,N,A Type Residential Units
+B_TYPE_RES,RES_UNIT,N,B Type Residential Units
+C_TYPE_RES,RES_UNIT,N,C Type Residential Units
+STP,UTILITY,N,STP
+OPEN_SPACE,COMMON_FACILITY,N,Open Space
+STILT,PARKING,N,Stilt Parking 
+COVERED_PRKNG,PARKING,N,Covered Parking
+OPEN_PRKNG,PARKING,N,Open Parking
+CLUB_HOUSE,COMMON_FACILITY,N,Club House

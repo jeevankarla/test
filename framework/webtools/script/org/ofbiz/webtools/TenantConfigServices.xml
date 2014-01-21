@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods.xsd">
+
+    <simple-method method-name="updateTenantConfigProperty" short-description="Update a tenant configuration property">
+        <entity-one entity-name="TenantConfiguration" value-field="tenantConfig" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map="parameters" value-field="tenantConfig"/>
+        <store-value value-field="tenantConfig"/>
+        <check-errors/>
+	</simple-method>        
+</simple-methods>        

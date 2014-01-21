@@ -1,0 +1,9 @@
+EnumerationType_description,EnumerationType_enumTypeId,EnumerationType_hasTable,EnumerationType_parentTypeId
+Financial Account Replenish Type,FARP_TYPE,N,
+Financial Account Replenish Method,FARP_METHOD,N,
+Service Debit Reasons,FINACCT_TRANS_REASON,N,
+Taxable Invoice Item Types,TAXABLE_INV_ITM_TY,N,
+Tax Forms,TAX_FORMS,N,
+COGS Methods,COGS_METHODS,N,
+Invoice Sequence Mode,INVOICE_SEQMD,N,
+Store Credit Account,STR_CRDT_ACT,N,

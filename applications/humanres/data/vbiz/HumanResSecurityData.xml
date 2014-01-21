@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the HumanRes Manager." permissionId="HUMANRES_VIEW"/>
+    <SecurityPermission description="Create operations in the HumanRes Manager." permissionId="HUMANRES_CREATE"/>
+    <SecurityPermission description="Update operations in the HumanRes Manager." permissionId="HUMANRES_UPDATE"/>
+    <SecurityPermission description="Delete operations in the HumanRes Manager." permissionId="HUMANRES_DELETE"/>
+
+    <SecurityPermission description="Allow view of reports in the HumanRes Manager." permissionId="HUMANRES_REPORTS_VIEW"/>
+    <SecurityPermission description="Allow view of employees in the HumanRes Manager." permissionId="HUMANRES_EMPLOYEE_VIEW"/>
+    <SecurityPermission description="Allow add/update/delete of employees in the HumanRes Manager." permissionId="HUMANRES_EMPLOYEE_EDIT"/>
+    <SecurityPermission description="Allow view of employments in the HumanRes Manager." permissionId="HUMANRES_EMPLOYMENT_VIEW"/>
+    <SecurityPermission description="Allow add/update/delete of employments in the HumanRes Manager." permissionId="HUMANRES_EMPLOYMENT_EDIT"/>
+    <SecurityPermission description="Allow view of employee positions in the HumanRes Manager." permissionId="HUMANRES_EMPLOYEEPOS_VIEW"/>
+    <SecurityPermission description="Allow add/update/delete of employee positions in the HumanRes Manager." permissionId="HUMANRES_EMPLOYEEPOS_EDIT"/>
+    <SecurityPermission description="Allow add/update/delete of Calendar in the HumanRes Manager." permissionId="HUMANRES_CALENDAR_EDIT"/>
+    <SecurityPermission description="Allow add/update/delete of Leave in the HumanRes Manager." permissionId="HUMANRES_LEAVE_EDIT"/>
+    <SecurityPermission description="Allow In/Out in the HumanRes Manager." permissionId="HUMANRES_PUNCH_EDIT"/>
+    <SecurityPermission description="Allow view of Global HR Settings in the HumanRes Manager." permissionId="HUMANRES_GLOBALHR_VIEW"/>
+    <SecurityPermission description="Allow add/update/delete of Global HR Settings in the HumanRes Manager." permissionId="HUMANRES_GLOBALHR_EDIT"/>
+
+    <SecurityGroup description="HumanRes Admin group, has complete permissions to administer all HR activities." groupId="HUMANRES_ADMIN"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HUMANRES_ADMIN"/>
+    <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="WORKEFFORTMGR_VIEW"/>    
+    
+    
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HUMANRES_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="HUMANRES_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="HUMANRES_ADMIN"/>
+
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_VIEW"/>      
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_CALENDAR_EDIT"/>
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_EMPLOYEEPOS_VIEW"/>    
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_EMPLOYEEPOS_EDIT"/>
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_EMPLOYEE_VIEW"/> 
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_EMPLOYEE_EDIT"/>     
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_EMPLOYMENT_VIEW"/>  
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_GLOBALHR_VIEW"/> 
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_GLOBALHR_EDIT"/>    
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_LEAVE_EDIT"/>  
+    <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_REPORTS_VIEW"/>
+      
+    <SecurityGroupPermission groupId="Controller" permissionId="HUMANRES_VIEW"/>      
+    <SecurityGroupPermission groupId="Controller" permissionId="HUMANRES_EMPLOYEEPOS_VIEW"/>    
+    <SecurityGroupPermission groupId="Controller" permissionId="HUMANRES_EMPLOYEE_VIEW"/>      
+    <SecurityGroupPermission groupId="Controller" permissionId="HUMANRES_EMPLOYMENT_VIEW"/> 
+    <SecurityGroupPermission groupId="Controller" permissionId="HUMANRES_EMPLOYMENT_EDIT"/>      
+    <SecurityGroupPermission groupId="Controller" permissionId="HUMANRES_GLOBALHR_VIEW"/>    
+    <SecurityGroupPermission groupId="Controller" permissionId="HUMANRES_REPORTS_VIEW"/>        
+
+    <SecurityGroupPermission groupId="Bookkeeper" permissionId="HUMANRES_LEAVE_EDIT"/> 
+    
+                        
+    <SecurityGroupPermission groupId="BasicEmployee" permissionId="HUMANRES_LEAVE_EDIT"/>  
+    <SecurityGroupPermission groupId="BasicEmployee" permissionId="HUMANRES_PUNCH_EDIT"/>            
+</entity-engine-xml>

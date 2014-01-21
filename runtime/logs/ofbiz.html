@@ -1,0 +1,53 @@
+<div class="ERROR">2014-01-21 11:33:13,714 (http-0.0.0.0-58443-1) [     ControlServlet.java:243:ERROR] An error occurred, going to the errorPage: /error/error.jsp </div>
+<div class="ERROR">2014-01-21 11:33:13,714 (http-0.0.0.0-58443-1) [     ControlServlet.java:250:ERROR] Including errorPage: /error/error.jsp </div>
+<div class="ERROR">2014-01-21 11:33:13,848 (http-0.0.0.0-58443-1) [ApplicationDispatcher.java:678:ERROR] Servlet.service() for servlet jsp threw exception </div>
+org.apache.jasper.JasperException: Unable to compile class for JSP: 
+
+An error occurred at line: 41 in the jsp file: /error/error.jsp
+Duplicate local variable errorMsg
+38: <link rel="shortcut icon" href="/images/vbiz.ico" />
+39: </head>
+40: 
+41: <% String errorMsg = (String) request.getAttribute("_ERROR_MESSAGE_"); %>
+42: 
+43: <body bgcolor="#FFFFFF">
+44: <div align="center">
+
+
+Stacktrace:
+	at org.apache.jasper.compiler.DefaultErrorHandler.javacError(DefaultErrorHandler.java:92)
+	at org.apache.jasper.compiler.ErrorDispatcher.javacError(ErrorDispatcher.java:330)
+	at org.apache.jasper.compiler.JDTCompiler.generateClass(JDTCompiler.java:439)
+	at org.apache.jasper.compiler.Compiler.compile(Compiler.java:349)
+	at org.apache.jasper.compiler.Compiler.compile(Compiler.java:327)
+	at org.apache.jasper.compiler.Compiler.compile(Compiler.java:314)
+	at org.apache.jasper.JspCompilationContext.compile(JspCompilationContext.java:592)
+	at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:326)
+	at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:313)
+	at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:260)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:646)
+	at org.apache.catalina.core.ApplicationDispatcher.doInclude(ApplicationDispatcher.java:551)
+	at org.apache.catalina.core.ApplicationDispatcher.include(ApplicationDispatcher.java:488)
+	at org.ofbiz.webapp.control.ControlServlet.doGet(ControlServlet.java:254)
+	at org.ofbiz.webapp.control.ControlServlet.doPost(ControlServlet.java:87)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:637)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.ofbiz.webapp.control.ContextFilter.doFilter(ContextFilter.java:337)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:235)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:554)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:298)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:859)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:588)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:489)
+	at java.lang.Thread.run(Thread.java:662)

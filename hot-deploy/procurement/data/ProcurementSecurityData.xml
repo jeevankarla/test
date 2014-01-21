@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the Procurement Component." permissionId="PROCUREMENT_VIEW"/>
+    <SecurityPermission description="Create operations in the Procurement Component." permissionId="PROCUREMENT_CREATE"/>
+    <SecurityPermission description="Update operations in the Procurement Component." permissionId="PROCUREMENT_UPDATE"/>
+    <SecurityPermission description="Delete operations in the Procurement Component." permissionId="PROCUREMENT_DELETE"/>
+    <SecurityPermission description="ALL operations in the Procurement Component." permissionId="PROCUREMENT_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PROCUREMENT_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PROCUREMENT_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PROCUREMENT_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PROCUREMENT_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PROCUREMENT_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PROCUREMENT_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="PROCUREMENT_ADMIN"/>    
+    <!-- Producer Data Migration Operator -->
+    <SecurityPermission description="Procurement Data Migration operator" permissionId="PROCUREMENT_DATAMIG"/>
+    <SecurityGroup groupId="PROCUREMENTMIG_OPE" description="Procurement Data Migration operator Group Permission"/>
+    <SecurityGroupPermission groupId="PROCUREMENTMIG_OPE" permissionId="PROCUREMENT_VIEW"/>
+    <SecurityGroupPermission groupId="PROCUREMENTMIG_OPE" permissionId="PROCUREMENT_DATAMIG"/>
+    <SecurityGroupPermission groupId="PROCUREMENTMIG_OPE" permissionId="PROCUREMENT_ENTRY"/>
+    <SecurityGroupPermission groupId="PROCUREMENTMIG_OPE" permissionId="FACILITY_FIND"/>
+    
+    
+     <!-- Producer Data Entry Operator -->
+         
+    <SecurityPermission description="Procurement Data Entry operator" permissionId="PROCUREMENT_DATAENTRY"/>
+    <SecurityGroup groupId="PROCUREMENT_ENTRY" description="Procurement Data Entry operator Group Permission"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="PROCUREMENT_VIEW"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="PROCUREMENT_DATAMIG"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="PROCUREMENT_DATAENTRY"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="FACILITY_FIND"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="FACILITY_VIEW"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="ORDERMGR_DELETE"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="ORDERMGR_PURCHASE_CREATE"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_ENTRY" permissionId="ORDERMGR_PURCHASE_VIEW"/>    
+     
+    <SecurityGroup groupId="PROCUREMENT_BILLINC" description="Procurement billing incharge Group Permission"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="PROCUREMENT_VIEW"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ACCTFORMULA_EDIT"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>   
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="FACILITY_FIND"/>
+    <SecurityGroupPermission groupId="PROCUREMENT_BILLINC" permissionId="FACILITY_VIEW"/>      
+    
+</entity-engine-xml>

@@ -1,0 +1,4 @@
+EmplLeaveReasonType_description,EmplLeaveReasonType_emplLeaveReasonTypeId,EmplLeaveReasonType_hasTable,EmplLeaveReasonType_parentTypeId
+Medical,MEDICAL,N,
+Casual,CASUAL,N,
+Maternity,MATERNITY,N,

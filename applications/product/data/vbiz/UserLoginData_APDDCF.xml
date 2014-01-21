@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+	<Party partyId="1" partyTypeId="PERSON"/>
+	<Party partyId="2" partyTypeId="PERSON"/>
+	<Party partyId="3" partyTypeId="PERSON"/>
+	<Party partyId="4" partyTypeId="PERSON"/>
+	<Party partyId="5" partyTypeId="PERSON"/>
+	<Party partyId="6" partyTypeId="PERSON"/>
+	<Party partyId="eseva" partyTypeId="PERSON"/>
+	<Party partyId="aponline" partyTypeId="PERSON"/>
+	
+
+	 <Person partyId="1" firstName="Praveen" lastName="Prakash" gender="M"/>
+	 <Person partyId="2" firstName="ramdas" lastName="k" gender="M"/>
+	 <Person partyId="3" firstName="sudhakar" lastName="" gender="M"/>
+	 <Person partyId="4" firstName="suresh" lastName="" gender="M"/>
+	 <Person partyId="5" firstName="murali" lastName="" gender="M"/>
+	 <Person partyId="6" firstName="nreddy" lastName="" gender="M"/>
+	 <Person partyId="eseva" firstName="eSeva" lastName="" />
+	 <Person partyId="aponline" firstName="APOnline" lastName="" />
+	 
+    <UserLogin userLoginId="pprakash" currentPassword="{SHA}3ab8917c2ca3d7e621fb18a0deb7a91795be7ee5" passwordHint="vbiz" enabled="Y" requirePasswordChange="N" partyId="1"/>
+    <UserLogin userLoginId="ramdask" currentPassword="{SHA}3ab8917c2ca3d7e621fb18a0deb7a91795be7ee5" passwordHint="vbiz" enabled="Y" requirePasswordChange="N" partyId="2"/>
+    <UserLogin userLoginId="sudhakar" currentPassword="{SHA}3ab8917c2ca3d7e621fb18a0deb7a91795be7ee5" passwordHint="vbiz" enabled="Y" requirePasswordChange="N" partyId="3"/>
+    <UserLogin userLoginId="suresh" currentPassword="{SHA}3ab8917c2ca3d7e621fb18a0deb7a91795be7ee5" passwordHint="vbiz" enabled="Y" requirePasswordChange="N" partyId="4"/>
+    <UserLogin userLoginId="murali" currentPassword="{SHA}3ab8917c2ca3d7e621fb18a0deb7a91795be7ee5" passwordHint="vbiz" enabled="Y" requirePasswordChange="N" partyId="5"/>
+    <UserLogin userLoginId="nreddy" currentPassword="{SHA}3ab8917c2ca3d7e621fb18a0deb7a91795be7ee5" passwordHint="vbiz" enabled="Y" requirePasswordChange="N" partyId="6"/>
+    <UserLogin userLoginId="eseva" currentPassword="{SHA}e0c44ba60b769b605a583a3b14bba5cdde66ab42" passwordHint="vbiz" enabled="Y" requirePasswordChange="N" partyId="eseva"/>
+    <UserLogin userLoginId="aponline" currentPassword="{SHA}e0c44ba60b769b605a583a3b14bba5cdde66ab42" passwordHint="vbiz" enabled="Y" requirePasswordChange="N" partyId="aponline"/>
+
+
+
+</entity-engine-xml>

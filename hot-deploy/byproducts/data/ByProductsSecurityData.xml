@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the ByProducts Component." permissionId="BYPRODUCTS_VIEW"/>
+    <SecurityPermission description="Create operations in the ByProducts Component." permissionId="BYPRODUCTS_CREATE"/>
+    <SecurityPermission description="Update operations in the ByProducts Component." permissionId="BYPRODUCTS_UPDATE"/>
+    <SecurityPermission description="Delete operations in the ByProducts Component." permissionId="BYPRODUCTS_DELETE"/>
+    <SecurityPermission description="ALL operations in the ByProducts Component." permissionId="BYPRODUCTS_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BYPRODUCTS_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="BYPRODUCTS_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="BYPRODUCTS_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="BYPRODUCTS_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="BYPRODUCTS_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="BYPRODUCTS_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="BYPRODUCTS_ADMIN"/>
+    
+    
+	<!-- LVD SMS     -->
+    <SecurityGroup groupId="SENDLVDSMS" description="SEND LVD SMS GROUP" lastUpdatedStamp="2013-04-13 19:01:57.0" lastUpdatedTxStamp="2013-04-13 19:01:57.0" createdStamp="2013-04-13 19:01:57.0" createdTxStamp="2013-04-13 19:01:57.0"/>
+	<SecurityPermission permissionId="SENDLVDSMS_VIEW" description="Special permission to show and send LVD SMS Report." lastUpdatedStamp="2013-04-13 18:59:55.0" lastUpdatedTxStamp="2013-04-13 18:59:55.0" createdStamp="2013-04-13 18:59:55.0" createdTxStamp="2013-04-13 18:59:55.0"/>
+	<SecurityGroupPermission groupId="SENDLVDSMS" permissionId="SENDLVDSMS_VIEW" lastUpdatedStamp="2013-04-13 19:02:31.0" lastUpdatedTxStamp="2013-04-13 19:02:31.0" createdStamp="2013-04-13 19:02:31.0" createdTxStamp="2013-04-13 19:02:31.0"/>
+    
+    <!-- D.S. CORRECTION     -->
+    <SecurityGroup groupId="BYPROD_DSCORRECTION" description="DELIVERY SCHEDULE CORRECTION" lastUpdatedStamp="2013-04-13 19:01:57.0" lastUpdatedTxStamp="2013-04-13 19:01:57.0" createdStamp="2013-04-13 19:01:57.0" createdTxStamp="2013-04-13 19:01:57.0"/>
+	<SecurityPermission permissionId="BYPRODUCTS_DSCORRECTION" description="Special permission that allows deliverySchedule Correction." lastUpdatedStamp="2013-04-13 18:59:55.0" lastUpdatedTxStamp="2013-04-13 18:59:55.0" createdStamp="2013-04-13 18:59:55.0" createdTxStamp="2013-04-13 18:59:55.0"/>
+	<SecurityGroupPermission groupId="BYPROD_DSCORRECTION" permissionId="BYPRODUCTS_DSCORRECTION" lastUpdatedStamp="2013-04-13 19:02:31.0" lastUpdatedTxStamp="2013-04-13 19:02:31.0" createdStamp="2013-04-13 19:02:31.0" createdTxStamp="2013-04-13 19:02:31.0"/>
+    
+    <!--Special Permissions   -->
+    
+     <!-- General permission Id  -->
+    <SecurityPermission description="Byproducts Component indent entry Permission." permissionId="BYPRODUCTS_INDENT"/>
+    <SecurityPermission description="Byproducts Component Parlour Sales entry Permission." permissionId="BYPRODUCTS_PSALES"/>
+    <SecurityPermission description="Byproducts Component Payment entry Permission." permissionId="BYPRODUCTS_PAYMENT"/>
+    <SecurityPermission description="Byproducts Component Stock Register Permission." permissionId="BYPRODUCTS_STOREG"/>
+    <SecurityPermission description="Byproducts Component Truck Sheet Permission." permissionId="BYPRODUCTS_TRCKSHEET"/>
+    <SecurityPermission description="Byproducts Component Truck Sheet Correction Permission." permissionId="BYPRODUCTS_TRSHEETCR"/>
+    <SecurityPermission description="Byproducts Component Delivery Schedule Correction Permission." permissionId="BYPRODUCTS_DSCORRECTION"/>
+    <SecurityPermission description="Byproducts Component Reports Permission." permissionId="BYPRODUCTS_REPORTS"/>
+    
+    <!-- Indent Admin Group -->
+    
+    <SecurityGroup description="ByProducts Indent admin group" groupId="BYPROD_INDENT_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCTG_PREF_VIEW"/>
+    
+     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="CARDSALE_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="CHARTS_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="FACILITYGRP_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="FACILITY_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="FACILITY_FIND"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="FACILITY_GEOPOINT"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="FACILITY_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="MYPORTALBASE_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="PARTYMGR_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="SENDSMS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
+    
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_INDENT"/>
+   <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_PAYMENT"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_STOREG"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_TRCKSHEET"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_TRSHEETCR"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_REPORTS"/>
+    <!--  Parlour Sales Group-->
+    
+    <SecurityGroup description="ByProducts Parlour Sales admin group" groupId="BYPROD_PSALE_ADMIN"/>
+    
+     <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="CARDSALE_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="CHARTS_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="FACILITYGRP_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="FACILITY_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="FACILITY_FIND"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="FACILITY_GEOPOINT"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="FACILITY_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="MYPORTALBASE_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="PARTYMGR_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="SENDSMS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="BYPRODUCTS_PSALES"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="BYPRODUCTS_PAYMENT"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="BYPRODUCTS_REPORTS"/>
+    <SecurityGroupPermission groupId="BYPROD_PSALE_ADMIN" permissionId="ACCTG_ATX_CREATE"/>
+     
+     <!-- Admin Permission Group -->
+     
+    <SecurityGroup description="ByProducts  admin group" groupId="BYPRODUCTS_ADMIN"/>
+    
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ACCTG_PREF_VIEW"/>
+    
+     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="CARDSALE_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="CHARTS_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="FACILITYGRP_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="FACILITY_CREATE"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="FACILITY_FIND"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="FACILITY_GEOPOINT"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="FACILITY_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="MYPORTALBASE_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="PARTYMGR_ADMIN"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="SENDSMS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
+    
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_INDENT"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_PSALES"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_PAYMENT"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_STOREG"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_TRCKSHEET"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_TRSHEETCR"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_REPORTS"/>
+</entity-engine-xml>

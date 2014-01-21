@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            	<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.KkdmpcuCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.KkdmpcuCompanySubtitle" global="true"/>
+                <set field="activeApp" value="kkdmpcu" global="true"/>
+                <set field="applicationMenuName" value="MainAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://kkdmpcu/widget/KkdmpcuMenus.xml" global="true"/>                          
+                <set field="applicationTitle" value="${uiLabelMap.KkdmpcuApplication}" global="true"/>
+            </actions>
+            <widgets>
+                <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="KkdmpcuCommonDecorator">
+        <section>
+            <actions>
+            	 
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                            	<include-menu name="FacilityTabBar" location="component://kkdmpcu/widget/KkdmpcuMenus.xml"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.KkdmpcuViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MyPortalFacilityTree">
+        <section>
+            <actions>
+            	<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            	<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="ProductFacilityMain"/>
+                <set field="dashBoardMenuLocation" value="component://kkdmpcu/widget/KkdmpcuMenus.xml" global="true"/>
+         		<set field="menuLocation" value="${groovy:session.setAttribute(&quot;menuLocation&quot;,dashBoardMenuLocation)}"/>
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="main"/>
+                <set field="isTreeRoot" value="Y"/>
+				<script  
+					location="component://product/webapp/facility/WEB-INF/actions/facility/facilityTree.groovy" />
+            </actions>
+            <widgets>         
+                <include-menu name="FacilityTabBar" location="component://kkdmpcu/widget/KkdmpcuMenus.xml"/>
+            	<container style="lefthalf"> 
+             		<screenlet title="Location Network">  
+            			 <platform-specific><html><html-template location="component://product/webapp/facility/facility/facilityTree.ftl"></html-template></html></platform-specific>
+					</screenlet>
+				</container>
+            </widgets>
+        </section>
+    </screen>
+</screens>

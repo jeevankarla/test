@@ -1,0 +1,4 @@
+PaymentGroupType_description,PaymentGroupType_hasTable,PaymentGroupType_parentTypeId,PaymentGroupType_paymentGroupTypeId
+Check Run,N,,CHECK_RUN
+Batch of Payments,N,,BATCH_PAYMENT
+ECS Collections,N,,ECS_COLLECTION

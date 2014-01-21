@@ -1,0 +1,4 @@
+BenefitType_benefitTypeId,BenefitType_description,BenefitType_hasTable,BenefitType_parentTypeId
+VACATION,Vacation,N,
+SICK_LEAVE,Sick Leave,N,
+CASUAL_LEAVE,Casual Leave,N,

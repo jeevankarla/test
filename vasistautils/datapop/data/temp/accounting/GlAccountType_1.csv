@@ -1,0 +1,58 @@
+GlAccountType_description,GlAccountType_glAccountTypeId,GlAccountType_hasTable,GlAccountType_parentTypeId
+Accounts Receivable,ACCOUNTS_RECEIVABLE,N,
+Accounts Payable,ACCOUNTS_PAYABLE,N,
+Balance,BALANCE_ACCOUNT,N,
+Bank Settlement,BANK_STLMNT_ACCOUNT,N,
+Undeposited Receipts,UNDEPOSITED_RECEIPTS,N,
+Current Asset,CURRENT_ASSET,N,
+Fixed Asset,FIXED_ASSET,N,
+Fixed Asset Maintenance,FIXED_ASSET_MAINT,N,
+Other Asset,OTHER_ASSET,N,
+Credit Card,CREDIT_CARD,N,
+Current Liability,CURRENT_LIABILITY,N,
+Long Term Liability,LONG_TERM_LIABILITY,N,
+Customer,CUSTOMER_ACCOUNT,N,
+Supplier,SUPPLIER_ACCOUNT,N,
+Product,PRODUCT_ACCOUNT,N,
+Inventory,INVENTORY_ACCOUNT,N,
+Inventory Adjustment from Average Cost,INV_ADJ_AVG_COST,N,INVENTORY_ACCOUNT
+Inventory Item Value Adjustment,INV_ADJ_VAL,N,
+Raw Materials Inventory,RAWMAT_INVENTORY,N,
+Work In Progress Inventory,WIP_INVENTORY,N,
+Tax,TAX_ACCOUNT,N,
+Profit Loss,PROFIT_LOSS_ACCOUNT,N,
+Sales,SALES_ACCOUNT,N,
+Customer Returns,SALES_RETURNS,N,
+Discounts,DISCOUNTS_ACCOUNT,N,
+Cost of Goods Sold,COGS_ACCOUNT,N,
+COGS - Average Cost Adjustment,COGS_ADJ_AVG_COST,N,COGS_ACCOUNT
+Purchase,PURCHASE_ACCOUNT,N,
+Inventory Change,INV_CHANGE_ACCOUNT,N,
+Expense,EXPENSE,N,
+Operating Expense,OPERATING_EXPENSE,N,EXPENSE
+Other Expense,OTHER_EXPENSE,N,EXPENSE
+Owner's Equity,OWNERS_EQUITY,N,
+Retained Earnings,RETAINED_EARNINGS,N,
+Customer Deposits,CUSTOMER_DEPOSIT,N,CURRENT_LIABILITY
+Customer Credits,CUSTOMER_CREDIT,N,CURRENT_LIABILITY
+Purchase Price Variance,PURCHASE_PRICE_VAR,N,OTHER_EXPENSE
+Income,INCOME,N,
+Other Income,OTHER_INCOME,N,INCOME
+Interest Income,INTEREST_INCOME,N,INCOME
+Interest Income Receivables,INTRSTINC_RECEIVABLE,N,ACCOUNTS_RECEIVABLE
+Prepaid Expenses,PREPAID_EXPENSES,N,CURRENT_ASSET
+Advance Payment to Vendors,VENDOR_ADVANCE,N,CURRENT_ASSET
+Receivable from Inventory Transferred Out,INVENTORY_XFER_OUT,N,CURRENT_ASSET
+Payable from Inventory Transferred In,INVENTORY_XFER_IN,N,CURRENT_LIABILITY
+Accounts Payable - Unapplied Payments,ACCPAYABLE_UNAPPLIED,N,ACCOUNTS_PAYABLE
+Accounts Receivable - Unapplied Payments,ACCREC_UNAPPLIED,N,ACCOUNTS_RECEIVABLE
+Commission Expense,COMMISSION_EXPENSE,N,OPERATING_EXPENSE
+Commissions Payables,COMMISSIONS_PAYABLE,N,CURRENT_LIABILITY
+Write Off,WRITEOFF,N,OTHER_EXPENSE
+Accounts Receivables Write Off,ACCTRECV_WRITEOFF,N,WRITEOFF
+Accounts Payables Write Off,ACCTPAY_WRITEOFF,N,WRITEOFF
+Commissions Payables Write Off,COMMISSIONS_WRITEOFF,N,WRITEOFF
+Interest Income Write Off,INTRSTINC_WRITEOFF,N,WRITEOFF
+Foreign Exchange Gain/Loss,FX_GAIN_LOSS_ACCT,N,OTHER_EXPENSE
+Foreign Exchange Gain,FX_GAIN_ACCOUNT,N,FX_GAIN_LOSS_ACCT
+Foreign Exchange Loss,FX_LOSS_ACCOUNT,N,FX_GAIN_LOSS_ACCT

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+	
+	<PeriodType description="Card Month" periodTypeId="CARD_MONTH" periodLength="1" uomId="TF_mon"/>
+	<CustomTimePeriod customTimePeriodId="Jan16-Feb15" periodTypeId="CARD_MONTH" periodNum="1" periodName="Jan16-Feb15" fromDate="2013-01-16" thruDate="2013-02-15" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0"  organizationPartyId="Company"/>
+
+    <MilkCardType milkCardTypeId="101" name="TM1" description="TM 1000ML" isMIS="Y" isLMS="Y"/>     
+    <MilkCardType milkCardTypeId="102" name="TM1/2" description="TM500 ML" isMIS="Y" isLMS="Y"/>     
+    <MilkCardType milkCardTypeId="103" name="SM1/2" description="SM 500 ML" isMIS="Y" isLMS="Y"/>     
+    <MilkCardType milkCardTypeId="104" name="FCM1/2" description="FCM500 ML" isMIS="Y" isLMS="Y"/>
+    <MilkCardType milkCardTypeId="105" name="DTM1/2" description="DTM 500ML" isMIS="Y" isLMS="Y"/>
+    
+	<StatusType description="Milk Card Order" hasTable="N" parentTypeId="" statusTypeId="MCARD_ORDER_STATUS"/>
+    <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="ORDER_CREATED" statusTypeId="MCARD_ORDER_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="02" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="MCARD_ORDER_STATUS"/>
+    
+    <EnumerationType description="Milk Card Payment Type" enumTypeId="MCARD_PMNT_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Cash" enumCode="CASH" enumId="CASH_MCARD" sequenceId="01" enumTypeId="MCARD_PMNT_TYPE"/>
+    <Enumeration description="Credit Card" enumCode="CREDIT_CARD" enumId="CREDIT_CARD_MCARD" sequenceId="02" enumTypeId="MCARD_PMNT_TYPE"/>
+    <Enumeration description="Demand Draft" enumCode="DEMAND_DRAFT" enumId="DEMAND_DRAFT_MCARD" sequenceId="03" enumTypeId="MCARD_PMNT_TYPE"/>
+    
+</entity-engine-xml>    

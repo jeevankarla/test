@@ -1,0 +1,155 @@
+
+<entity-engine-xml>
+
+    
+    <!-- Zone Owner Security -->
+    <SecurityGroup description="Zone Owner" groupId="ZONEOWNER"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="FACILITY_VIEW"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="CATALOG_VIEW"/>  
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="CATALOG_CREATE"/>          
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="MYPORTAL_FACILITY"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="CARDSALE_ADMIN"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="CASH_ADMIN"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="INDENT_ADMIN"/>
+     <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="ZONEOWNER" permissionId="ACCOUNTING_PAYMENT_EDIT"/>
+      
+    <SecurityGroup description="Data Entry Operator" groupId="DATAENTRY_OPERATOR"/>    
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="FACILITY_VIEW"/>
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="CATALOG_VIEW"/>  
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="CATALOG_CREATE"/>   
+    <SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="MYPORTAL_FACILITY"/>		 	
+	<SecurityGroupPermission groupId="DATAENTRY_OPERATOR" permissionId="MYPORTALBASE_ADMIN"/>
+	
+	<!-- Special Permissions for Facility Subscriptions menu -->
+    <SecurityPermission description="Special Permission to show subscriptions in the menu." permissionId="SUBSCRIPTION_ADMIN"/>
+    <SecurityPermission description="Special Permission to show gatepass in the menu." permissionId="GATEPASS_ADMIN"/>
+    <SecurityPermission description="Special Permission to show change Indent in the menu." permissionId="INDENT_ADMIN"/>
+    <SecurityPermission description="Special Permission to show trucksheet correction in the menu." permissionId="TRUCKSHEETCORRECTION_ADMIN"/>
+    <SecurityPermission description="Special Permission to show card sale in the menu." permissionId="CARDSALE_ADMIN"/>
+   	<SecurityPermission description="Special Permission to show charts in the menu." permissionId="CHARTS_ADMIN"/>
+    <SecurityPermission description="Special Permission to show payments in the menu." permissionId="CASH_ADMIN"/>
+    <SecurityPermission description="Special Permission to show and generate trucksheet in the menu." permissionId="TRUCKSHEET_ADMIN"/>
+    <SecurityPermission description="Special Permission to show Facility location in the menu." permissionId="FACILITY_GEOPOINT"/>
+    <SecurityPermission description="Special Permission to show Facility Find option in the menu." permissionId="FACILITY_FIND"/>
+
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
+    
+    <!--Dispatch   Section permissions-->
+    <SecurityGroup description="Dispatch   Section Permissions" groupId="DISPATCH_ADMIN"/>    
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="CATALOG_VIEW"/>  
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="CATALOG_CREATE"/>   
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="MYPORTAL_FACILITY"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="FACILITY_FIND"/>		 	
+	<SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="MYPORTALBASE_ADMIN"/>
+	<SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="TRUCKSHEETCORRECTION_ADMIN"/>
+	<SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="INDENT_ADMIN"/>
+	<SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="GATEPASS_ADMIN"/>
+	 <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ACCOUNTING_READ"/>
+	<SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="TRUCKSHEET_ADMIN"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+    <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="CHARTS_ADMIN"/>
+   
+    
+    <!--Marketing   Section permissions-->
+    <SecurityGroup description="Marketing Wing Permissions" groupId="MARKETING_WING"/>    
+    <SecurityGroupPermission groupId="MARKETING_WING" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="MARKETING_WING" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="MARKETING_WING" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="MARKETING_WING" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="MARKETING_WING" permissionId="ORDERMGR_UPDATE"/>    
+    <SecurityGroupPermission groupId="MARKETING_WING" permissionId="CATALOG_VIEW"/>  
+    <SecurityGroupPermission groupId="MARKETING_WING" permissionId="CATALOG_CREATE"/>   
+    <SecurityGroupPermission groupId="MARKETING_WING" permissionId="MYPORTAL_FACILITY"/>		 	
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="MYPORTALBASE_ADMIN"/>	
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="INDENT_ADMIN"/>
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="FACILITY_GEOPOINT"/>
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="CATALOG_VIEW"/>
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="CATALOG_ROLE_CREATE"/>
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="CATALOG_UPDATE"/>
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="CATALOG_CREATE"/>
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="CATALOG_PRICE_MAINT"/>
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="OFBTOOLS_VIEW"/> 
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="FACILITY_UPDATE"/>
+	<SecurityGroupPermission groupId="MARKETING_WING" permissionId="CONTENTMGR_ROLE_CREATE"/>
+	
+    <!--Account  Section permissions-->
+    <SecurityGroup description="Accounting Wing Permissions" groupId="ACCOUNTING_WING"/>      
+    <SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="MYPORTAL_FACILITY"/>		 	
+	<SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="MYPORTALBASE_ADMIN"/>	
+	<SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="CASH_ADMIN"/>
+    <SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="ACCOUNTING_PAYMENT_EDIT"/>
+    <SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="PARTYMGR_VIEW"/>
+          
+    <SecurityGroup description="Reports Admin operations" groupId="REPORTS_ADMIN"/>    
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="FACILITY_VIEW"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="CATALOG_VIEW"/>  
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="CATALOG_CREATE"/>   
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="MYPORTAL_FACILITY"/>		 	
+	<SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="MYPORTALBASE_ADMIN"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="FACILITY_ADMIN"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="ACCTG_PREF_VIEW"/>   
+    <SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="OFBTOOLS_VIEW"/>
+   
+    
+    <SecurityGroup description="eSeva/APOnline payment operations" groupId="PAYMENT_OPS"/>    
+    <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCTG_PREF_VIEW"/>    
+    <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCOUNTING_PAYMENT_EDIT"/>  
+    <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCTG_ATX_CREATE"/>
+        
+    <SecurityPermission description="To Access the facility webapplication user need to have this permission." permissionId="FACILITYVIEWAPP"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="FACILITYVIEWAPP"/>
+	<SecurityGroupPermission groupId="BIZADMIN" permissionId="FACILITYVIEWAPP"/>
+	 <!-- VNDRMRGN Admin permissions -->
+    <SecurityGroup description="All 'VNDR MRGN' permissions like create,cancel " groupId="VNDRMRGNADMIN"/>    
+    <SecurityGroupPermission groupId="VNDRMRGNADMIN" permissionId="VNDRMRGN_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="VNDRMRGN_ADMIN"/>
+    <!-- VNDRMRGN View permissions -->
+    <SecurityGroup description=" 'VNDR MRGN' permissions with restriction on download of VendorMarginMainReport" groupId="VNDRMRGNVIEW"/>    
+    <SecurityGroupPermission groupId="VNDRMRGNVIEW" permissionId="VNDRMRGN_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="VNDRMRGN_VIEW"/>
+	
+	<SecurityPermission description="Special Permission to show Reports in the menu." permissionId="REPORTS_VIEW"/>
+	<SecurityGroupPermission groupId="REPORTS_ADMIN" permissionId="REPORTS_VIEW"/>
+	<SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="REPORTS_VIEW"/>
+	<SecurityGroupPermission groupId="ACCOUNTING_WING" permissionId="REPORTS_VIEW"/>
+	<SecurityGroupPermission groupId="FULLADMIN" permissionId="REPORTS_VIEW"/>
+	<SecurityGroupPermission groupId="BIZADMIN" permissionId="REPORTS_VIEW"/>
+	
+</entity-engine-xml>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	 <form name="ListTruckSheets" list-name="listTruckSheets" title="" type="list" paginate-target="KVTruckSheet"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="shipmentId"><hidden/></field> 
+    	<field name="estimatedShipDate" title="${uiLabelMap.SupplyDate}" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>       
+        <field name="shipmentTypeId" title="Shipment Type"><display-entity entity-name="ShipmentType"/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="facilityId" title="Route Id" >
+            <drop-down allow-empty="false">
+                <option key="allRoutes" description="All-Routes"/>
+                <entity-options description="${facilityId}" entity-name="Facility" key-field-name="facilityId">
+                   <entity-constraint name="facilityTypeId" operator="equals" value="ROUTE"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="Report" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name = "truckSheet">
+            <hyperlink target="KVGenerateTruckSheet.txt" description="Truck Sheet Report" target-window="_blank" >
+              	  <parameter param-name="shipmentId" from-field="shipmentId"/> 
+              	  <parameter param-name="reportTypeFlag" value="trucksheet"/>   
+            </hyperlink>
+        </field>
+        <field name="abstractReport" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name="routeAbstract">
+            <hyperlink target="KVGenerateTruckSheet.txt" description="Route Abstract Report" target-window="_blank" >
+                <parameter param-name="shipmentId" from-field="shipmentId" />  
+                <parameter param-name="reportTypeFlag" value="abstract"/>                                                
+            </hyperlink>
+        </field>
+        <field name="milkDeliverySchedule" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name="deliverySchedule">
+            <hyperlink target="MilkDeliveryScheduleReport.txt" description="Delivery Schedule" target-window="_blank" >
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="milkDeliverySchedule"/>                                                           
+            </hyperlink>
+        </field>
+        <field name="cancelShipment" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target="cancelLMSShipment" description="${uiLabelMap.CommonCancel}" target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" />                                                               
+            </hyperlink>
+        </field>
+    </form>   
+    <form name="ListVendorReports" list-name="listVendorReports" title="" type="list" paginate-target="Commissions"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="periodBillingId"><hidden/></field>       
+        <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+        </field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="vendorMarginRouteAbstract" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
+            <hyperlink target="KVGenerateMarginReport.txt" description="Vendor Margin Route Abstract" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="vendorMarginRouteAbstract"/>                                  
+            </hyperlink>
+        </field>
+        <field name="vendorMarginBoothAbstract" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
+            <hyperlink target="KVGenerateMarginReport.txt" description="Vendor Margin Booth Abstract" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="vendorMarginBoothAbstract"/>                                  
+            </hyperlink>
+        </field>
+        <field name="vendorMarginDuesDeduction" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
+            <hyperlink target="GenerateMarginReport.txt" description="Vendor Margin Dues Deduction" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="vendorMarginDues"/>                                  
+            </hyperlink>
+        </field>
+        <field name="vendorMarginReport" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
+            <hyperlink target="KVGenerateMarginReport.txt" description="Vendor Margin Report" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="vendorMarginReport"/>                                  
+            </hyperlink>
+        </field>
+       
+        <field name="ecsReport" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
+            <hyperlink target="ECSReport" description="ECS Report" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="ecsReport"/>                                  
+            </hyperlink>
+        </field>
+        <field name="vendorMarginCheques" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
+            <hyperlink target="VendorMarginCheques.csv" description="Vendor Margin Cheques" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="vendorMarginCheques"/>                                  
+            </hyperlink>
+        </field>
+        <field name="cancelVendorMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp;(${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_TRUCKSHEETCANCEL&quot;, session))) } )" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target="cancelVendorMarginReport" description="${uiLabelMap.CommonCancel}" target-window="_blank">
+                <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
+            </hyperlink>
+        </field> 
+    </form> 
+    <form name="CratesReport" type="list" list-name="crateCanReportList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<field name="routeId" title="Route"><display/></field>
+    	<field name="supplyDate" title="SupplyDate"><display/></field>
+    	<field name="cratesSent" title="CratesSent"><display/></field>
+    	<field name="cratesReceived" title="CratesReceived"><display/></field>
+    	<field name="cratesShort" title="CratesShort"><display/></field>
+    	<field name="cansSent" title="CansSent"><display/></field>
+    	<field name="cansReceived" title="CansReceived"><display/></field>
+    	<field name="cansShort" title="CansShort"><display/></field>
+    </form>
+    <form name="NewCratesEntry" type="single"> 
+		<field name="issueDate" title="${uiLabelMap.EntryDate}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;dd MMM yyyy&quot;);}"></display></field>
+    </form>													
+    <form name="ListCratesEntry" type="multi" list-name="cratesCansList" odd-row-style="alternate-row" header-row-style="header-row"
+    	default-table-style="basic-table hover-bar" separate-columns="true" target="CreateOrUpdateCrateCanEntry" paginate="false">
+    	<field name="routeId" title="${uiLabelMap.Route}" ><display></display></field>	  
+        <field name="cratesSent" title="${uiLabelMap.CratesSent}"><text size="10"></text></field>
+        <field name="cratesReceived" title="${uiLabelMap.CratesReceived}"><text size="10"></text></field>       
+        <field name="cansSent" title="${uiLabelMap.CansSent}"><text size="10"></text></field>
+        <field name="cansReceived" title="${uiLabelMap.CansReceived}"><text size="10"></text></field>                          
+        <field name="submitButton" title="${uiLabelMap.ProductSubmit}" action="javascript:appendParamsToNewCrate();" event="onclick" >
+            <submit button-type="button"/>
+        </field>        
+    </form>
+    
+</forms>

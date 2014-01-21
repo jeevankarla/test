@@ -1,0 +1,25 @@
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="ListPartyContent" type="list" list-name="partyContent"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <row-actions>
+            <entity-one entity-name="DataCategory" value-field="dataCategory">
+            </entity-one> 
+            <set field="dataCategoryId" from-field="dataCategory.categoryName"/>
+        </row-actions>
+        <field name="contentName" title="Document"><display/></field>
+        <field name="dataCategoryId" title="Category"><display/></field>
+        <field name="partyId" title="Owner"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}"/></field>
+        <field name="createdDate">
+            <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdDate, &quot;dd/MM/yyyy&quot;);}"/>        
+        </field>
+		<field name="action" title=" " widget-style="buttontext">
+            <hyperlink  target="img/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK">
+            	<parameter param-name="imgId" value="${dataResourceId}"/>
+            </hyperlink>              
+        </field>        
+    </form>
+    
+</forms>

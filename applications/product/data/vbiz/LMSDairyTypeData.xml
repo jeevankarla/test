@@ -1,0 +1,120 @@
+<entity-engine-xml>	
+	<EnumerationType description="Subscription Product Type" enumTypeId="SUB_PROD_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Cash" enumCode="CASH" enumId="CASH" sequenceId="04" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Card" enumCode="CARD" enumId="CARD" sequenceId="02" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Special Order" enumCode="SPECIAL_ORDER" enumId="SPECIAL_ORDER" sequenceId="03" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Credit" enumCode="CREDIT" enumId="CREDIT" sequenceId="01" enumTypeId="SUB_PROD_TYPE"/>
+    <!-- <Enumeration description="Festive Order" enumCode="CASH_FS" enumId="CASH_FS" sequenceId="05" enumTypeId="SUB_PROD_TYPE"/>
+ -->
+	<EnumerationType description="Facility Category Type" enumTypeId="FACILITY_CAT_TYPE" hasTable="N" parentTypeId=""/>
+	
+    <Enumeration description="LMS Channel" enumCode="LMS_CHANNEL" enumId="LMS_SALES_CHANNEL" sequenceId="100" enumTypeId="ORDER_SALES_CHANNEL"/>
+   
+	<PeriodType description="Margin Month" periodTypeId="MARGIN_MONTH" periodLength="1" uomId="TF_mon"/>
+	<PeriodType description="Card Month" periodTypeId="CARD_MONTH" periodLength="1" uomId="TF_mon"/>
+	
+	<SubscriptionType description="LMS Subscription" hasTable="N"  subscriptionTypeId="LMS"/> 
+	<SubscriptionType description="AM" hasTable="N" parentTypeId="LMS" subscriptionTypeId="AM"/>    
+    <SubscriptionType description="PM" hasTable="N" parentTypeId="LMS" subscriptionTypeId="PM"/>    
+	
+	<ShipmentType description="Supplimentary Shipment" hasTable="N" parentTypeId="" shipmentTypeId="SUPPLIMENTARY"/>
+	<ShipmentType description="LMS Shipment" hasTable="N" parentTypeId="" shipmentTypeId="LMS_SHIPMENT"/>
+	
+	<ShipmentType description="AM Shipment" hasTable="N"  shipmentTypeId="AM"/>
+    <ShipmentType description="PM Shipment" hasTable="N" shipmentTypeId="PM"/>
+    
+	<ShipmentType description="Supplimentary Shipment LMS" hasTable="N" parentTypeId="" shipmentTypeId="LMS_SHIPMENT_SUPPL"/>
+	
+    <ShipmentType description="AM Shipment" hasTable="N" parentTypeId="LMS_SHIPMENT" shipmentTypeId="AM_SHIPMENT"/>
+    <ShipmentType description="AM Gate Pass" hasTable="N" parentTypeId="LMS_SHIPMENT_SUPPL" shipmentTypeId="AM_SHIPMENT_SUPPL"/>
+    <ShipmentType description="PM Shipment" hasTable="N" parentTypeId="LMS_SHIPMENT" shipmentTypeId="PM_SHIPMENT"/>
+    <ShipmentType description="PM Gate Pass" hasTable="N" parentTypeId="LMS_SHIPMENT_SUPPL" shipmentTypeId="PM_SHIPMENT_SUPPL"/>
+    
+    <StatusType description="Shipment" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="In-Process" sequenceId="01" statusCode="IN_PROCESS" statusId="IN_PROCESS" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Generated" sequenceId="02" statusCode="GENERATED" statusId="GENERATED" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Generation Failed" sequenceId="02" statusCode="GENERATION_FAIL" statusId="GENERATION_FAIL" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Cancellation In-Process" sequenceId="02" statusCode="CANCEL_INPROCESS" statusId="CANCEL_INPROCESS" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem statusId="ADJUSTED" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTED" description="Margin Adjusted"/>
+    <StatusItem statusId="ADJUSTMENT_FAIL" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTMENT FAIL" description="Adjustment Failed"/>
+    <StatusItem statusId="ADJUST_IN_PROCESS" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTMENT IN PROCESS" description="Adjustment in Process"/>
+    <StatusItem statusId="CANCEL_ADJ_INPROCESS" statusTypeId="SHIPMENT_STATUS" statusCode="CANCEL ADJUSTMENT IN PROCESS" description="Cancel Adjustment in Process"/>
+    <StatusValidChange statusId="ADJUSTED" statusIdTo="CANCEL_ADJ_INPROCESS" transitionName="Cancel Adjustment in Process"/>
+    <StatusValidChange statusId="ADJUST_IN_PROCESS" statusIdTo="ADJUSTED" transitionName="Margin Adjusted"/>
+    <StatusValidChange statusId="ADJUST_IN_PROCESS" statusIdTo="ADJUSTMENT_FAIL" transitionName="Adjustment Failed"/>
+    <StatusValidChange statusId="CANCEL_ADJ_INPROCESS" statusIdTo="GENERATED" transitionName="Cancelled Adjustment"/>
+    <StatusValidChange statusId="GENERATED" statusIdTo="ADJUST_IN_PROCESS" transitionName="Margin Adjustment in Process"/>
+    <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATED" transitionName="Generated"/>
+    <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATION_FAIL" transitionName="Generated"/>
+    <StatusValidChange condition="" statusId="GENERATED" statusIdTo="CANCEL_INPROCESS" transitionName="Cancellation In-Process"/>
+
+	<!-- Milk Card Order status -->
+    <StatusType description="Milk Card Order" hasTable="N" parentTypeId="" statusTypeId="MCARD_ORDER_STATUS"/>
+    <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="ORDER_CREATED" statusTypeId="MCARD_ORDER_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="02" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="MCARD_ORDER_STATUS"/>
+    <StatusValidChange condition="" statusId="ORDER_CREATED" statusIdTo="ORDER_CANCELLED" transitionName="Cancelled"/>
+    <Enumeration enumId="LMS" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Facility Inventory Configurations"/>
+	<TenantConfiguration propertyName="enablePhase2" propertyValue="N" propertyTypeEnumId="LMS" description="Enable LMS Phase 2 functionality"/>
+	<TenantConfiguration propertyName="enableStopShip" propertyValue="Y" propertyTypeEnumId="LMS" description="enable LMS Stop Ship List"/>
+	<TenantConfiguration propertyName="enablePaymentRounding" propertyValue="Y" propertyTypeEnumId="LMS" description="enable to show  booth due amount rounded value"/>
+	<TenantConfiguration propertyName="enableCancelAfterShipDate" propertyValue="N" propertyTypeEnumId="LMS" description="Enable Trucksheet Cancellation After Ship Date"/>
+	<TenantConfiguration propertyName="enablePastPaymentService" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable past payments screen"/>
+	<TenantConfiguration propertyName="enableSameDayPmEntry" propertyValue="N" propertyTypeEnumId="LMS" description="Enable LMS PM Sales(if the property set to 'N' then ,Day  NetSales  = 'AM Sales+Prev.Day PM Sales'   otherwise NetSales = 'AM Sales+ PM Sales')"/>
+	<TenantConfiguration propertyName="enableLmsPmSales" propertyValue="N" propertyTypeEnumId="LMS" description="Enable Lms PM Sales"/>
+	<!-- To Show Dues in Dues payments and past payment screens  -->
+	<TenantConfiguration propertyName="enableSoCrPmntTrack" propertyValue="Y" propertyTypeEnumId="LMS" description="enable Credit ,SO Payments List"/>
+	
+	<Enumeration enumId="SMS" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Invoice and Payment Sms  Configurations"/>
+	<TenantConfiguration propertyName="enablePaymentSms" propertyValue="N" propertyTypeEnumId="SMS" description="Enable Payment Sms functionality"/>
+	
+	<EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="LMS Vendor Margin Period Billing" enumCode="PB_LMS_VNDR_MRGN" enumId="PB_LMS_VNDR_MRGN" sequenceId="01" enumTypeId="PBILLING_TYPE"/>
+    <Enumeration description="LMS Transporter Margin Period Billing" enumCode="PB_LMS_TRSPT_MRGN" enumId="PB_LMS_TRSPT_MRGN" sequenceId="02" enumTypeId="PBILLING_TYPE"/>
+   
+	<RoleType description="Booth Owner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="BOOTH_OWNER"/>
+	<RoleType description="Facility Role" roleTypeId="FACILITY_ROLE"/>
+	<RoleType description="Facility Cashier" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="FACILITY_CASHIER"/>
+	<RoleType description="Route Cashier" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="ROUTE_CASHIER"/>
+	<ProductPriceType description="Card Price" productPriceTypeId="CARD_PRICE"/>
+	<ProductPriceType description="Margin Price" productPriceTypeId="MARGIN_PRICE"/>
+	<PartyRole partyId="Company" roleTypeId="CARRIER"/>
+    <PartyRole partyId="_NA_" roleTypeId="CARRIER"/> 
+    <ShipmentMethodType description="No Shipping" shipmentMethodTypeId="NO_SHIPPING"/>
+    <ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
+	<CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="5"/>
+	<InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="INV_PROD_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="PINV_PROD_ITEM" parentTypeId=""/>    
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="INV_FPROD_ITEM" parentTypeId="INV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="PINV_FPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+	<ProductCategory longDescription="Lms Products"
+        productCategoryId="LMS" categoryName="Lms" productCategoryTypeId="CATALOG_CATEGORY"/>
+     
+	<WorkEffort workEffortId="_NA_"/>
+    <EmplPositionType emplPositionTypeId="_NA_"/>
+
+    <RateType rateTypeId="VENDOR_MRGN"  description="Vendor margin"/>
+    <RateType rateTypeId="VENDOR_CD_ADTL_MRGN" description="Additional margin for card orders"/>
+    <Product productId="_NA_"></Product>
+    	<!--  Vendor Deductions -->
+    <RateType rateTypeId="VENDOR_DEDUCTION"  description="Vendor price deduction at source"/>  
+    <RateAmount rateTypeId="VENDOR_DEDUCTION" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" productId="_NA_"/>
+	
+    <RecurrenceRule recurrenceRuleId="100" untilDateTime="" frequency="HOURLY" intervalNumber="6" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="100" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="100" recurrenceCount="0"/>
+    <JobSandbox jobId="100" jobName="Auto populate LMSSalesHistory summary " runTime="2000-01-01 00:00:00.000" serviceName="populateLMSSalesHistorySummary" poolId="pool" runAsUser="system" recurrenceInfoId="100"/>
+    
+   <RecurrenceRule recurrenceRuleId="RUNCUSTPERIOD_CONFIG" frequency="DAILY" intervalNumber="1" countNumber="-1" byHourList="01" byDayList="MO,TU,WE,TH,FR,SA,SU"/>
+   <RecurrenceInfo recurrenceInfoId="RUNCUSTPERIOD_CONFIG" startDateTime="2008-01-01 00:00:00.000" recurrenceRuleId="RUNCUSTPERIOD_CONFIG" recurrenceCount="0"/>
+   <JobSandbox jobId="RUNCUSTPERIOD_CONFIG" jobName="Auto Run CustomTime Period Configuration " runTime="2012-01-01 00:00:00.000" serviceName="runCustomTimePeriodConfiguration" poolId="pool" runAsUser="system" recurrenceInfoId="RUNCUSTPERIOD_CONFIG"/>
+    
+    <!-- Opening Balane invoice Type Data -->
+    <PaymentType paymentTypeId="OBINVOICE_PAYIN" parentTypeId="RECEIPT" hasTable="N" description="Opening balance invoice-payin" lastUpdatedStamp="2012-12-15 13:17:34.00" lastUpdatedTxStamp="2012-12-15 13:17:34.00" createdStamp="2012-12-15 13:17:34.00"/>
+  
+	<InvoiceType invoiceTypeId="OBINVOICE_IN" parentTypeId="SALES_INVOICE" hasTable="N" isGroupInvoicable="" isPeriodInvoice="" description="Opneing balance Invoice" paymentTypeId="OBINVOICE_PAYIN" LastUpdatedStamp="2012-12-15 13:17:34.00" lastupdatedtxstamp="2012-12-15 13:17:34.00" createdstamp="2012-12-15 13:17:34.00" createdtxstamp="2012-12-15 13:17:34.00" isFacilityGroupInvoice=""/>
+	<InvoiceItemTypeMap invoiceItemMapKey="OBINVOICE_INMAP" invoiceTypeId="OBINVOICE_IN" invoiceItemTypeId="INV_FPROD_ITEM" lastUpdatedStamp="2012-12-15 13:17:34.00" lastUpDatedTxStamp="2012-12-15 13:17:34.00" createdStamp="2012-12-15 13:17:34.00" createdtxstamp="2012-12-15 13:17:34.00"/>
+	<InvoiceTypeRoleType invoiceTypeId="OBINVOICE_IN" roleTypeId="TRADE_CUSTOMER" lastUpdatedStamp="2012-12-15 13:17:34.00" lastUpdatedTxStamp="2012-12-15 13:17:34.00" createdStamp="2012-12-15 13:17:34.00" createdTxStamp="2012-12-15 13:17:34.00"/>
+    <!-- <CustomTimePeriodConfiguration  periodTypeId="CARD_MONTH" startDate="24" endDate="23" intervalDays="30"  organizationPartyId="Company"></CustomTimePeriodConfiguration>
+    
+    <CustomTimePeriodConfiguration  periodTypeId="PROC_BILL_MONTH" startDate="01" endDate="30" intervalDays="30"  organizationPartyId="Company" createDate="25"/> -->   
+</entity-engine-xml>	

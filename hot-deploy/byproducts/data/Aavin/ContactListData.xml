@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	    <ContactList contactListId="SALES_NOTIFY_LST" contactListName="Sales Notification List" contactListTypeId="ANNOUNCEMENT" contactMechTypeId="TELECOM_NUMBER" createdStamp="2012-07-10 13:09:27.0" createdTxStamp="2012-07-10 13:09:27.0" lastUpdatedStamp="2012-07-10 13:09:27.0" lastUpdatedTxStamp="2012-07-10 13:09:27.0" ownerPartyId="10000" singleUse="N"/>
+	    
+	    
+</entity-engine-xml>

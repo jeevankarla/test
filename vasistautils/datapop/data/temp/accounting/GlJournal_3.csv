@@ -1,0 +1,6 @@
+GlJournal_organizationPartyId,GlJournal_glJournalId,GlJournal_glJournalName
+100,1,Income journal
+100,2,Expenditure journal
+100,3,Depreciation journal
+100,4,Amortization journal
+100,5,Obligation journal

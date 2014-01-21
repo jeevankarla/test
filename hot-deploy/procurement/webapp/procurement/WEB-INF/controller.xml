@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://product/webapp/facility/WEB-INF/controller.xml"/>
+   <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
+	<include location="component://order/webapp/ordermgr/WEB-INF/controller.xml"/>    
+   	<include location="component://milkline/webapp/milkline/WEB-INF/controller.xml"/>
+    <description>Procurement Component Site Configuration File</description>
+
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+    <preprocessor>
+    </preprocessor>
+    -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+    <postprocessor>
+        <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
+    </postprocessor>
+    -->
+
+    <!-- Request Mappings -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    
+    <request-map uri="getUnitRoutes">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getUnitRoutes"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <request-map uri="ProcurementEntry">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="ProcurementEntry"/>       
+    </request-map>
+    <request-map uri="FindProcurementEntry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindProcurementEntry"/>
+    </request-map>
+    <request-map uri="createProcurementEntryAjax">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createProcurementEntryAjax"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map> 
+    <request-map uri="updateProcurementEntryAjax">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="updateProcurementEntry"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>     
+    </request-map>
+    <request-map uri="createProcurementEntry">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createProcurementEntry"/>        
+       <response name="success" type="view" value="ProcurementEntry"/>
+       <response name="failed" type="view" value="ProcurementEntry"/>
+       <response name="error" type="view" value="ProcurementEntry"/>       
+    </request-map>
+    <request-map uri="EditProcurementEntryRecord">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EditProcurementEntry"/>       
+    </request-map>
+    <request-map uri="EditProcurementEntry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EditProcurementEntry"/>       
+    </request-map>
+     <request-map uri="EditProcurementEntryAlt">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EditProcurementEntryAlt"/>       
+    </request-map>
+     <request-map uri="EditSnfFatValidation">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EditSnfFatValidation"/>       
+    </request-map>
+     <request-map uri="EditProcValidationEntry">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="EditProcValidationEntry"/>       
+    </request-map>
+     <request-map uri="updateNegativeBillingAmount">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateNegativeBillingAmount"/>
+        <response name="success" type="view" value="FindProcurementBillingValidation"/>
+        <response name="error" type="view" value="FindProcurementBillingValidation"/>
+    </request-map>
+    <request-map uri="updateProcurementEntry">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="updateProcurementEntry"/>        
+       <response name="success" type="request-redirect-noparam" value="FindProcurementEntry"/>
+       <response name="failed" type="view" value="EditProcurementEntry"/>
+       <response name="error" type="view" value="EditProcurementEntry"/>       
+    </request-map>
+    <request-map uri="updateProcurementEntryRecordAjax">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="updateProcurementEntryRecord"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>     
+    </request-map>
+   <request-map uri="updateProcurementValidationEntry">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="updateApproveBillingValidation"/>        
+       <response name="success" type="view" value="FindProcurementBillingValidation"/>
+       <response name="failed" type="view" value="FindProcurementBillingValidation"/>
+       <response name="error" type="view" value="FindProcurementBillingValidation"/>       
+    </request-map>
+    <request-map uri="fetchProcurementRecordAjax">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="fetchProcurementRecordAjax"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>    
+    </request-map> 
+     <request-map uri="deleteProcurementEntry">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="deleteProcurementEntry"/>        
+       <response name="success" type="request-redirect-noparam" value="FindProcurementEntry"/>
+       <response name="failed" type="view" value="FindProcurementEntry"/>
+       <response name="error" type="view" value="FindProcurementEntry"/>       
+    </request-map>
+     <request-map uri="deleteOrderAdjustmentAdditions">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="deleteOrderAdjustment"/>        
+       <response name="success" type="request-redirect-noparam" value="BillingAdjustments"/>
+       <response name="failed" type="view" value="BillingAdjustments"/>
+       <response name="error" type="view" value="BillingAdjustments"/>       
+    </request-map>
+    <request-map uri="deleteOrderAdjustmentDeductions">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="deleteOrderAdjustment"/>        
+       <response name="success" type="request-redirect-noparam" value="BillingAdjustmentDeductions"/>
+       <response name="failed" type="view" value="BillingAdjustmentDeductions"/>
+       <response name="error" type="view" value="BillingAdjustmentDeductions"/>       
+    </request-map>
+    <request-map uri="deleteOrderAdjustments">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="deleteOrderAdjustment"/>        
+       <response name="success" type="request-redirect-noparam" value="FindAdjustment"/>
+       <response name="failed" type="view" value="FindAdjustment"/>
+       <response name="error" type="view" value="FindAdjustment"/>       
+    </request-map>
+    <request-map uri="facilitySubTree">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://procurement/webapp/procurement/WEB-INF/actions/facility/" invoke="facilityTree.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="FindFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFacility"/>
+    </request-map>
+     <request-map uri="EditFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFacility"/>
+    </request-map>  
+     <request-map uri="EditFacilityGeoPoint">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFacilityGeoPoint"/>
+    </request-map> 
+     
+     <request-map uri="EditFacilityParties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFacilityParties"/>
+    </request-map>
+     <request-map uri="EditFacilityContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFacilityContent"/>
+    </request-map>
+    <request-map uri="PartyFinancialHistory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyFinancialHistory"/>
+    </request-map>
+    <request-map uri="ProcurementBilling">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcurementBilling"/>
+    </request-map> 
+    <request-map uri="FindProcurementBillingValidation">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindProcurementBillingValidation"/>
+    </request-map>
+     <request-map uri="validatePeriodEntries">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="validatePeriodEntries"/>        
+       <response name="success" type="view" value="FindProcurementBillingValidation"/>
+       <response name="failed" type="view" value="FindProcurementBillingValidation"/>
+       <response name="error" type="view" value="FindProcurementBillingValidation"/>    
+    </request-map>   
+    <request-map uri="approveValidation">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="approveValidation"/>        
+       <response name="success" type="request-redirect-noparam" value="FindProcurementBillingValidation"/>
+       <response name="failed" type="view" value="FindProcurementBillingValidation"/>
+       <response name="error" type="view" value="FindProcurementBillingValidation"/>       
+    </request-map>
+    <request-map uri="ProcurementReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcurementReports"/>
+    </request-map>
+    <request-map uri="checkListReport.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CheckListReport"/>
+    </request-map>
+    <request-map uri="listProcurementEntries.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListProcumentEntriesCSV"/>
+    </request-map>
+    <request-map uri="checkListReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcurementCheckListReport"/>
+    </request-map>
+    <request-map uri="milkBillReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MilkBillReportTXT"/>
+    </request-map>
+    <request-map uri="billsAbstract.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BillsAbstract"/>
+    </request-map>
+    <request-map uri="routeWiseBillsAbstract.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RouteWiseBillsAbstract"/>
+    </request-map>
+    <request-map uri="dayWiseAnalysisReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DayWiseAnalysisReport"/>
+    </request-map>
+    <request-map uri="feedRecoveriesList.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FeedRecoveriesListTXT"/>
+    </request-map>
+    <request-map uri="bankAbstarct.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankAbstarct"/>
+    </request-map>
+    <request-map uri="procurementCheckList.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcCheckListPDF"/>
+    </request-map>
+    <request-map uri="unitWisePtcRecoveryAbstract.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnitWisePtcRecoveryAbstract"/>
+    </request-map>
+    <request-map uri="ShedWiseAmountAbstract.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShedWiseAmountAbstract"/>
+    </request-map>
+    <request-map uri="BankWiseTotalPayment.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankWiseTotalPayment"/>
+    </request-map>
+    <request-map uri="unitBankWiseStatement.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnitBankWiseStatement"/>
+    </request-map>
+    
+    <request-map uri="shedWiseProcurementAbstract.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShedWiseProcurementAbstract"/>
+    </request-map>
+    <request-map uri="shedWiseInputOutputAbst">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShedWiseInputOutputAbstract"/>
+    </request-map>
+    <request-map uri="unitMilkBillNetPayable">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnitMilkBillNetPayable"/>
+    </request-map>    
+    <request-map uri="unitWiseMilkBillSummary.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnitWiseMilkBillSummary"/>
+    </request-map>
+    <request-map uri="UnitWiseCenterWiseBankStmt.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnitWiseCenterWiseBankStmt"/>
+    </request-map>
+    <request-map uri="ShortagesRecovery.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShortagesRecovery"/>
+    </request-map>
+    <request-map uri="ShedMilkBillDetails.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShedMilkBillDetails"/>
+    </request-map>
+    <request-map uri="UnitWiseInputOutputAbstract.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnitWiseInputOutputAbstract"/>
+    </request-map>
+    <request-map uri="populateProcurementPeriodBilling">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="populateProcurementPeriodBilling"/>        
+       <response name="success" type="view" value="ProcurementBilling"/>
+       <response name="failed" type="view" value="ProcurementBilling"/>
+       <response name="error" type="view" value="ProcurementBilling"/>    
+    </request-map>
+    <request-map uri="cancelProcessPeriodBilling">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelProcessPeriodBilling"/>
+       <response name="success" type="request" value="ProcurementBilling"/>
+        <response name="failed" type="view" value="ProcurementBilling"/>
+        <response name="error" type="view" value="ProcurementBilling"/>
+    </request-map>
+    <request-map uri="ProcurementAnalysisLocation">
+       <security https="true" auth="true"/>      
+       <response name="success" type="view" value="ProcurementAnalysisLocation"/>   
+    </request-map>  
+     <request-map uri="ProcurementAnalysisLocationInternal">
+       <security https="true" auth="true"/>      
+       <response name="success" type="view" value="ProcurementAnalysisLocationInternal"/>   
+    </request-map>      
+     <request-map uri="ProcurementAnalysisLocationComp">
+       <security https="true" auth="true"/>      
+       <response name="success" type="view" value="ProcurementAnalysisLocationComp"/>   
+    </request-map>
+     <request-map uri="ProcurementAnalysisDailyTrend">
+       <security https="true" auth="true"/>      
+       <response name="success" type="view" value="ProcurementAnalysisDailyTrend"/>   
+    </request-map>  
+     <request-map uri="ProcurementRates">
+       <security https="true" auth="true"/>      
+       <response name="success" type="view" value="ProcurementRates"/>   
+    </request-map>         
+    <request-map uri="updateBillingAdjustment">
+       <security https="true" auth="true"/>
+       <event type="service" invoke="updateBillingAdjustment"/>
+       <response name="success" type="view-last"/>
+       <response name="error" type="view-last"/> 
+    </request-map>
+    <request-map uri="BillingAdjustments">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="BillingAdjustments"/> 
+    </request-map>
+    <request-map uri="BillingAdjustmentDeductions">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="BillingAdjustmentDeductions"/> 
+    </request-map>
+    <request-map uri="FindAdjustment">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindAdjustment"/> 
+    </request-map>
+   <request-map uri="createBillingAdjustmentAdditions">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="createBillingAdjustment"/>        
+       <response name="success" type="view" value="BillingAdjustments"/>
+       <response name="failed" type="view" value="BillingAdjustments"/>
+       <response name="error" type="view" value="BillingAdjustments"/>    
+    </request-map> 
+    <request-map uri="createBillingAdjustmentDeductions">
+       <security https="true" auth="true"/>
+       <event type="service"  invoke="createBillingAdjustment"/>        
+       <response name="success" type="view" value="BillingAdjustmentDeductions"/>
+       <response name="failed" type="view" value="BillingAdjustmentDeductions"/>
+       <response name="error" type="view" value="BillingAdjustmentDeductions"/>    
+    </request-map>  
+    <request-map uri="ProcurementLookupFacility">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="ProcurementLookupFacility"/>
+    </request-map>
+    <request-map uri="ProcurementCenterLookupFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcurementCenterLookupFacility"/>
+    </request-map>
+    <request-map uri="CentreWiseKgfatAccount.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CentreWiseKgfatAccount"/>
+    </request-map>
+    <request-map uri="unitWiseCenterWiseMilkCollections.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="unitWiseCenterWiseMilkCollections"/>
+    </request-map>
+    <request-map uri="UnitWiseDayWiseKgFatAccount.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnitWiseDayWiseKgFatAccount"/>
+    </request-map>
+     <request-map uri="UnitDayWiseTotals.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnitDayWiseTotals"/>
+    </request-map>
+    <request-map uri="calculateProductRate">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="ProcurementRates"/>
+      <response name="error" type="request" value="ProcurementRates"/>
+    </request-map>
+    <request-map uri="ProcurementPriceChart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcurementPriceChart"/>
+    </request-map>
+    <request-map uri="ProcurementPriceChartAlt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcurementPriceChartAlt"/>
+    </request-map>
+    <request-map uri="createNewPriceChart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createNewPriceChart"/>
+    </request-map>
+    <request-map uri="createPriceChart">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.procurement.PriceServices" invoke="createPriceChart"/>
+        <response name="success" type="view" value="ProcurementPriceChart"/>
+        <response name="error" type="view" value="createNewPriceChart"/>
+    </request-map>
+    <request-map uri="MilkTransfers">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="milkTransfers"/>
+        <response name="error" type="view"  value="main"/>
+    </request-map>
+    <request-map uri="ReceiveMilk">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="receiveMilk"></response>
+        <response name="error" type="view" value="MilkTransfers"/>
+    </request-map>
+    
+    <request-map uri="updateRecievedMilkDetails">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="updateMilkDetails"/>
+        <response name="success" type="view" value="receiveMilk"></response>
+        <response name="error" type="view" value="MilkTransfers"/>
+    </request-map>
+    <request-map uri="resetMilkRecord">
+    	<security auth="true" https="true"/>
+    	<event type="service" invoke="resetMilkRecord"/>
+    	<response name="success" type="request-redirect-noparam" value="ReceiveMilk"></response>
+    	<response name="error" type="request-redirect-noparam" value="ReceiveMilk"></response>
+    </request-map>
+    
+    <request-map uri="FindMilkTransfers">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FindMilkTransfers"/>
+        <response name="error" type="view" value="MilkTransfers"/>
+    </request-map>
+   
+    <request-map uri="createSendMilkRecord">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="createMilkTransferRecord"/>
+        <response name="success" type="request-redirect" value="MilkTransfers"/>
+        <response name="error" type="request-redirect"  value="MilkTransfers"/>
+    </request-map>
+    <request-map uri="createRecevedMilkRecord">
+        <security auth="true" https="true"/>
+        <event type="service"  invoke="createMilkTransferRecord"/>
+        <response name="success" type="request-redirect" value="ReceiveMilk"/>
+        <response name="error" type="request-redirect" value="MilkTransfers"/>
+    </request-map>
+    <request-map uri="deleteMilkRecord">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="deleteMilkRecord"/>
+        <response name="success" type="request-redirect" value="MilkTransfers"/>
+        <response name="error" type="request-redirect" value="MilkTransfers"/>
+    </request-map>
+    <request-map uri="approveMilkRecord">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="receivedMilkDetails"/>
+        <response name="error" type="request-redirect" value="receiveMilk"/>
+    </request-map>
+    <request-map uri="updateSendMilkRecord">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="updateMilkDetails"/>
+        <response name="success" type="request-redirect" value="MilkTransfers" />
+        <response name="error" type="view" value="milkTransfers"/>
+    </request-map>
+    <request-map uri="updateReceivedMilkDetails">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="updateMilkDetails"/>
+        <response name="success" type="request-redirect" value="ReceiveMilk"/>
+        <response name="error" type="request-redirect" value="MilkTransfers"/>
+    </request-map>
+    <!-- Procuremnt Migration Requests -->
+    <request-map uri="FindProcurementProducerMigr">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindProcurementProducerMigr"/>
+    </request-map> 
+    <request-map uri="CreateProcurementProducerMigr">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateProcurementProducerMigr"/>
+    </request-map>
+    <request-map uri="producerDataExportCsv.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProducerDataExportCsv"/>
+        <response name="error" type="view" value="FindProcurementProducerMigr"/>
+    </request-map>
+    <request-map uri="createProcurementProducerMigr">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProcurementProducerMigr"/>
+        <response name="success" type="request-redirect" value="CreateProcurementProducerMigr">
+            <redirect-parameter name="shedCode"/>
+            <redirect-parameter name="bmcuCode"/>
+            <redirect-parameter name="routeId"/>
+            <redirect-parameter name="centerCode"/>
+        </response>
+        <response name="error" type="view" value="CreateProcurementProducerMigr"/>
+    </request-map>
+    <request-map uri="UpdateProcurementProducerMigr">
+        <security https="true" auth="true"/>      
+        <response name="success" type="view" value="UpdateProcurementProducerMigr"/>        
+    </request-map>
+    <request-map uri="updateProcurementProducerMigr">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProcurementProducerMigr"/>
+        <response name="success" type="request-redirect-noparam" value="FindProcurementProducerMigr"/>
+        <response name="error" type="view" value="FindProcurementProducerMigr"/>
+    </request-map>
+    <request-map uri="deleteProcurementProducerMigr">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProcurementProducerMigr"/>
+        <response name="success" type="request-redirect-noparam" value="FindProcurementProducerMigr"/>
+        <response name="error" type="view" value="FindProcurementProducerMigr"/>
+    </request-map>
+    <request-map uri="FindFacilityOutputEntry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFacilityOutputEntry"/>
+    </request-map>
+    <request-map uri="CreateProcFaciltiyOutputEntry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateProcFaciltiyOutputEntry"/>
+    </request-map>
+    <request-map uri="createSendingMilk">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateSendingMilk"/>
+    </request-map>
+    <request-map uri="ImportREILData">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ImportREILData"/>
+    </request-map>
+    <request-map uri="createProcFaciltiyOutputEntry">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="createProcFaciltiyOutputEntry"/>
+        <response name="success" type="request-redirect" value="CreateProcFaciltiyOutputEntry">
+        	<redirect-parameter name="shedCode"/>
+        	<redirect-parameter name="customTimePeriodId"/>
+        </response>
+        <response name="error" type="request-redirect"  value="CreateProcFaciltiyOutputEntry"/>
+    </request-map> 
+    <request-map uri="deleteProFacilityOutputEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProFacilityOutputEntry"/>
+        <response name="success" type="request-redirect-noparam" value="FindFacilityOutputEntry"/>
+        <response name="error" type="view" value="FindFacilityOutputEntry"/>
+    </request-map> 
+    <request-map uri="deleteFacilityOutputEntry">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProFacilityOutputEntry"/>
+        <response name="success" type="request-redirect-noparam" value="CreateProcFaciltiyOutputEntry"/>
+        <response name="error" type="view" value="CreateProcFaciltiyOutputEntry"/>
+    </request-map> 
+    <request-map uri="CreateFacility">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProcFacility"/>
+        <response name="success" type="view" value="EditFacility"/>
+        <response name="error" type="view" value="EditFacility"/>
+    </request-map> 
+    <!-- request Mappings for Foxpro Csv  -->
+    <request-map uri="MPROC.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="procurementEntriesFoxproCsv"/>
+    </request-map>
+    <request-map uri="MPADDN.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderAdjustmentsFoxproCsv"/>
+    </request-map>
+    <request-map uri="MPDED.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderAdjustmentsFoxproCsv"/>
+    </request-map>
+    <request-map uri="MPABS.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MPABSFoxproCsv"/>
+    </request-map>
+    <request-map uri="UNITMAS.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UNITMASFoxproCsv"/>
+    </request-map>
+    <request-map uri="ROUTEMAS.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ROUTEMASFoxproCsv"/>
+    </request-map>
+    <request-map uri="MPMAS.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MPMASFoxproCsv"/>
+    </request-map>
+    <request-map uri="BANKMAS.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BANKMASFoxproCsv"/>
+    </request-map>
+    
+    <!-- DBF Request -->
+    
+    <request-map uri="MPROC.DBF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="procurementEntriesFoxproCsv"/>
+    </request-map>
+    <request-map uri="MPADDN.DBF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderAdjustmentsFoxproCsv"/>
+    </request-map>
+    <request-map uri="MPDED.DBF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderAdjustmentsFoxproCsv"/>
+    </request-map>
+    <request-map uri="MPABS.DBF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MPABSFoxproCsv"/>
+    </request-map>
+    <request-map uri="UNTMAS.DBF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UNITMASFoxproCsv"/>
+    </request-map>
+    <request-map uri="ROUTEMAS.DBF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ROUTEMASFoxproCsv"/>
+    </request-map>
+    <request-map uri="MPMAS.DBF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MPMASFoxproCsv"/>
+    </request-map>
+     <request-map uri="BANKMAS.DBF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BANKMASFoxproCsv"/>
+    </request-map>
+    <!-- View Mappings --> 
+    <view-map name="FindMilkTransfers" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindMilkTransfers"/>
+    <view-map name="UnitWiseInputOutputAbstract" type="screenfop" page="component://procurement/widget/ProcurementReportScreens.xml#UnitWiseInputOutputAbstract" content-type="text/plain" encoding="none"/>
+    <view-map name="ShedMilkBillDetails" type="screenfop" page="component://procurement/widget/ProcurementReportScreens.xml#ShedMilkBillDetails" content-type="application/pdf"/>
+    <view-map name="ShortagesRecovery" type="screenfop" page="component://procurement/widget/ProcurementReportScreens.xml#ShortagesRecovery" content-type="text/plain" encoding="none"/>
+    <view-map name="receivedMilkDetails" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ReceivedMilkDetails"/>
+    <view-map name="receiveMilk" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ReceiveMilk"/>
+    <view-map name="milkTransfers" type="screen" page="component://procurement/widget/ProcurementScreens.xml#MilkTransfers"/>
+    
+    <view-map name="CreateSendingMilk" type="screen" page="component://procurement/widget/ProcurementScreens.xml#CreateSendingMilk"/>
+    <view-map name="ImportREILData" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ImportREILData"/>
+    <view-map name="UnitWiseDayWiseKgFatAccount" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#UnitWiseDayWiseKgFatAccount" content-type="text/plain" encoding="none"/>
+    <view-map name="UnitDayWiseTotals" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#UnitDayWiseTotals" content-type="text/plain" encoding="none"/>
+    <view-map name="createNewPriceChart" type="screen" page="component://procurement/widget/ProcurementScreens.xml#CreatePriceChart"/>
+    <view-map name="unitWiseCenterWiseMilkCollections" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#unitWiseCenterWiseMilkCollections" content-type="application/pdf" /> 
+    <view-map name="ProcurementPriceChart" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementPriceChart"/>
+    <view-map name="ProcurementPriceChartAlt" type="screen" page="component://procurement/widget/ProcurementPriceScreens.xml#ProcurementPriceChartAlt"/>
+    <view-map name="CentreWiseKgfatAccount" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#CentreWiseKgfatAccount" content-type="text/plain" encoding="none"/> 
+    <view-map name="ProcurementLookupFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementLookupFacility"/>
+    <view-map name="ProcurementCenterLookupFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementCenterLookupFacility"/>   
+    <view-map name="ProcurementEntry" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementEntry"/>
+    <view-map name="ListProcumentEntriesCSV" type="screencsv" page="component://procurement/widget/ProcurementScreens.xml#ListProcumentEntriesCSV" content-type="text/csv"/>
+    <view-map name="ProducerDataExportCsv" type="screencsv" page="component://procurement/widget/ProcurementAnalysisScreens.xml#ProducerDataExportCsv" content-type="text/csv"/>
+    <view-map name="CheckListReport" type="screencsv" page="component://procurement/widget/ProcurementScreens.xml#CheckListReport" content-type="application/octet-stream"/>
+    <view-map name="ProcurementCheckListReport" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#ProcurementCheckListReport" content-type="text/plain" encoding="none"/>
+    <view-map name="MilkBillReportTXT" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#MilkBillReportTXT" content-type="text/plain" encoding="none"/>
+    <view-map name="BillsAbstract" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#BillsAbstract" content-type="text/plain" encoding="none"/>
+    <view-map name="RouteWiseBillsAbstract" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#RouteWiseBillsAbstract" content-type="text/plain" encoding="none"/>
+    <view-map name="DayWiseAnalysisReport" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#DayWiseAnalysisReport" content-type="text/plain" encoding="none"/>
+    <view-map name="FeedRecoveriesListTXT" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#FeedRecoveriesListTXT" content-type="text/plain" encoding="none"/>
+    <view-map name="BankAbstarct" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#BankAbstarct" content-type="text/plain" encoding="none"/>
+    <view-map name="ProcCheckListPDF" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#ProcCheckListPDF" content-type="application/pdf"/>
+    <view-map name="UnitWisePtcRecoveryAbstract" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#UnitWisePtcRecoveryAbstract" content-type="application/pdf"/>
+    <view-map name="ShedWiseProcurementAbstract" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#ShedWiseProcurementAbstract" content-type="application/pdf"/>
+    <view-map name="ShedWiseInputOutputAbstract" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#ShedWiseInputOutputAbstract" content-type="text/plain" encoding="none"/>
+    <view-map name="UnitMilkBillNetPayable" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#UnitMilkBillNetPayable" content-type="text/plain" encoding="none"/>
+    <view-map name="ShedWiseAmountAbstract" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#ShedWiseAmountAbstract" content-type="application/pdf"/>
+    <view-map name="BankWiseTotalPayment" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#BankWiseTotalPayment" content-type="text/plain" encoding="none"/>
+    <view-map name="UnitBankWiseStatement" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#UnitBankWiseStatement" content-type="text/plain" encoding="none"/>
+    <view-map name="UnitWiseCenterWiseBankStmt" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#UnitWiseCenterWiseBankStmt" content-type="text/plain" encoding="none"/>
+    <view-map name="UnitWiseMilkBillSummary" type="screenfop" page="component://procurement/widget/ProcurementScreens.xml#UnitWiseMilkBillSummary" content-type="text/plain" encoding="none"/>
+    <view-map name="FindProcurementEntry" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindProcurementEntry"/>
+    <view-map name="main" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FacilityTree"/>
+	<view-map name="FindFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindFacility"/>
+	<view-map name="EditFacility" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacility"/>
+	<view-map name="EditFacilityParties" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityParties"/>
+	<view-map name="EditFacilityContent" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityContent"/>
+    <view-map name="EditFacilityGeoPoint" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditFacilityGeoPoint"/>
+    <view-map name="ProcurementRates" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementRates"/>
+    <view-map name="PartyFinancialHistory" type="screen" page="component://procurement/widget/ProcurementScreens.xml#PartyFinancialHistory"/>
+    <view-map name="ProcurementAnalysisLocation" type="screen" page="component://procurement/widget/ProcurementAnalysisScreens.xml#ProcurementAnalysisLocation"/>
+    <view-map name="ProcurementAnalysisLocationInternal" type="screen" page="component://procurement/widget/ProcurementAnalysisScreens.xml#ProcurementAnalysisLocationInternal"/>
+
+    <view-map name="ProcurementAnalysisLocationComp" type="screen" page="component://procurement/widget/ProcurementAnalysisScreens.xml#ProcurementAnalysisLocationComp"/>
+    <view-map name="ProcurementAnalysisDailyTrend" type="screen" page="component://procurement/widget/ProcurementAnalysisScreens.xml#ProcurementAnalysisDailyTrend"/>
+    <view-map name="ProcurementBilling" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementBilling"/> 
+    <view-map name="FindProcurementBillingValidation" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindProcurementBillingValidation"/>
+    <view-map name="ProcurementReports" type="screen" page="component://procurement/widget/ProcurementScreens.xml#ProcurementReports"/>
+    <view-map name="BillingAdjustments" type="screen" page="component://procurement/widget/ProcurementScreens.xml#BillingAdjustments"/>
+    <view-map name="BillingAdjustmentDeductions" type="screen" page="component://procurement/widget/ProcurementScreens.xml#BillingAdjustmentDeductions"/>
+    <view-map name="FindAdjustment" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindAdjustment"/>
+    <view-map name="EditProcurementEntry" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditProcurementEntry"/>
+  	<view-map name="EditProcValidationEntry" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditProcValidationEntry"/>
+    <view-map name="EditProcurementEntryAlt" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditProcurementEntryAlt"/>
+    <view-map name="EditSnfFatValidation" type="screen" page="component://procurement/widget/ProcurementScreens.xml#EditSnfFatValidation"/>
+    	
+	<!-- Procuremnt Migration Views -->
+	<view-map name="FindProcurementProducerMigr" type="screen" page="component://procurement/widget/ProcurementAnalysisScreens.xml#FindProcurementProducerMigr"/>
+	<view-map name="CreateProcurementProducerMigr" type="screen" page="component://procurement/widget/ProcurementAnalysisScreens.xml#CreateProcurementProducerMigr"/>
+	<view-map name="UpdateProcurementProducerMigr" type="screen" page="component://procurement/widget/ProcurementAnalysisScreens.xml#UpdateProcurementProducerMigr"/>
+	<!-- Procuremnt Facility Output Entry Views -->
+	<view-map name="FindFacilityOutputEntry" type="screen" page="component://procurement/widget/ProcurementScreens.xml#FindFacilityOutputEntry"/>
+	<view-map name="CreateProcFaciltiyOutputEntry" type="screen" page="component://procurement/widget/ProcurementScreens.xml#CreateProcFaciltiyOutputEntry"/>
+	
+	<!-- view Mappings for Foxpro Csv -->
+	  <view-map name="procurementEntriesFoxproCsv" type="screencsv" page="component://procurement/widget/ProcurementReportScreens.xml#procurementEntriesFoxproCsv" content-type="text/csv"/>
+	  <view-map name="orderAdjustmentsFoxproCsv" type="screencsv" page="component://procurement/widget/ProcurementReportScreens.xml#orderAdjustmentsFoxproCsv" content-type="text/csv"/>
+	  <view-map name="MPABSFoxproCsv" type="screencsv" page="component://procurement/widget/ProcurementReportScreens.xml#MPABSFoxproCsv" content-type="text/csv"/>
+	  <view-map name="UNITMASFoxproCsv" type="screencsv" page="component://procurement/widget/ProcurementReportScreens.xml#UNITMASFoxproCsv" content-type="text/csv"/>
+	  <view-map name="ROUTEMASFoxproCsv" type="screencsv" page="component://procurement/widget/ProcurementReportScreens.xml#ROUTEMASFoxproCsv" content-type="text/csv"/>
+	  <view-map name="MPMASFoxproCsv" type="screencsv" page="component://procurement/widget/ProcurementReportScreens.xml#MPMASFoxproCsv" content-type="text/csv"/>
+	  <view-map name="BANKMASFoxproCsv" type="screencsv" page="component://procurement/widget/ProcurementReportScreens.xml#BANKMASFoxproCsv" content-type="text/csv"/>
+</site-conf>

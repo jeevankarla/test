@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+    <form name="ListAccountFormulas" type="list"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="AcctgFormula"/>
+        </actions>
+        <field name="acctgFormulaId" title="${uiLabelMap.AcctgFormulaId}" widget-style="buttontext">
+            <hyperlink target="EditAccountFormula" description="${acctgFormulaId}" also-hidden="false">
+                <parameter param-name="acctgFormulaId"/>
+            </hyperlink>
+        </field>
+        <field name="formula"><display/></field>
+        <field name="isSlabBased"><display/></field>        
+        <field name="description"><display/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasAcctFormulaEditPermission">
+            <hyperlink target="deleteAccountFormula" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="acctgFormulaId"/>
+            </hyperlink>
+        </field>
+        <field name="testLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasAcctFormulaEditPermission">
+            <hyperlink target="TestAccountFormula" description="${uiLabelMap.acctgFormulaTest}" also-hidden="false">
+                <parameter param-name="acctgFormulaId"/>                             
+            </hyperlink>
+        </field>        
+    </form>
+    
+     <form name="ListAccountFormulaSlabs" type="list" list-name="acctgFormulaSlabs" target="updateAccountFormulaSlab"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="acctgFormulaId"><hidden/></field>        
+        <field name="slabStart" title="${uiLabelMap.acctgFormulaSlabStart}"><text size="20"/></field>      
+        <field name="slabEnd" title="${uiLabelMap.acctgFormulaSlabEnd}"><text size="20"/></field>          
+        <field name="formula"><text size="30"/></field>      
+        <field name="description"><text size="30"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" use-when="hasAcctFormulaEditPermission"><submit button-type="text-link"/></field>        
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasAcctFormulaEditPermission">
+            <hyperlink target="deleteAccountFormulaSlab" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="acctgFormulaId"/>
+                <parameter param-name="slabStart"/>
+                <parameter param-name="slabEnd"/>                                
+            </hyperlink>
+        </field> 
+        <field name="slabStart" use-when="!hasAcctFormulaEditPermission"><display/></field>      
+        <field name="slabEnd" use-when="!hasAcctFormulaEditPermission"><display/></field>		
+        <field name="formula" title="${uiLabelMap.acctgFormulaFormula}" use-when="!hasAcctFormulaEditPermission"><display/></field>     
+        <field name="description" title="${uiLabelMap.acctgFormulaDesc}" use-when="!hasAcctFormulaEditPermission"><display/></field>     
+    </form>   
+
+    <form name="EditAccountFormula" type="single" target="updateAccountFormula" default-map-name="accountFormula"
+        header-row-style="header-row" default-table-style="basic-table">
+		<alt-target use-when="accountFormula==null" target="createAccountFormula"/>
+        <field use-when="accountFormula!=null&amp;&amp;hasAcctFormulaEditPermission" name="acctgFormulaId" title="${uiLabelMap.acctgFormulaId}"  tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="accountFormula==null&amp;&amp;acctgFormulaId==null &amp;&amp;hasAcctFormulaEditPermission" name="acctgFormulaId" title="${uiLabelMap.acctgFormulaId}"><text size="20" maxlength="20"/></field>
+        <field use-when="accountFormula==null&amp;&amp;acctgFormulaId!=null &amp;&amp;!hasAcctFormulaEditPermission" name="acctgFormulaId" title="${uiLabelMap.acctgFormulaId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${acctgFormulaId}]"><text size="20" maxlength="20"/></field>		
+        <field name="formula" title="${uiLabelMap.acctgFormulaFormula}" use-when="hasAcctFormulaEditPermission"><text size="55"/></field>
+        <field name="formula" title="${uiLabelMap.acctgFormulaFormula}" use-when="!hasAcctFormulaEditPermission"><display/></field>
+        <field name="isSlabBased" title="${uiLabelMap.acctgFormulaIsSlabBased}" use-when="hasAcctFormulaEditPermission">
+            <drop-down allow-empty="true">
+                <option key="Y" description="${uiLabelMap.CommonY}"/>
+                <option key="N" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+         <field name="isSlabBased" title="${uiLabelMap.acctgFormulaIsSlabBased}" use-when="!hasAcctFormulaEditPermission"><display/></field>         
+        <field name="description" title="${uiLabelMap.acctgFormulaSlabDesc}" use-when="hasAcctFormulaEditPermission"><text size="55"/></field>
+        <field name="description" title="${uiLabelMap.acctgFormulaSlabDesc}" use-when="!hasAcctFormulaEditPermission"><display/></field>        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext" use-when="hasAcctFormulaEditPermission"><submit button-type="text-link"/></field>
+    </form>
+ 
+     <form name="EditAccountFormulaSlab" type="single" target="createAccountFormulaSlab" default-map-name="accountFormulaSlab"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="acctgFormulaId"><hidden/></field>
+        <field name="slabStart" use-when="hasAcctFormulaEditPermission"><text size="20"/></field>      
+        <field name="slabEnd" use-when="hasAcctFormulaEditPermission"><text size="20"/></field>		
+        <field name="formula" title="${uiLabelMap.acctgFormulaFormula}" use-when="hasAcctFormulaEditPermission"><text size="55"/></field>     
+        <field name="description" title="${uiLabelMap.acctgFormulaDesc}" use-when="hasAcctFormulaEditPermission"><text size="55"/></field>        
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="buttontext" use-when="hasAcctFormulaEditPermission"><submit button-type="text-link"/></field>
+        <field name="slabStart" use-when="hasAcctFormulaEditPermission"><display/></field>      
+        <field name="slabEnd" use-when="!hasAcctFormulaEditPermission"><display/></field>		
+        <field name="formula" title="${uiLabelMap.acctgFormulaFormula}" use-when="!hasAcctFormulaEditPermission"><display/></field>     
+        <field name="description" title="${uiLabelMap.acctgFormulaDesc}" use-when="!hasAcctFormulaEditPermission"><display/></field>
+    </form>   
+
+    <form name="TestEditAccountFormula" type="single" default-map-name="accountFormula"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="acctgFormulaId" title="${uiLabelMap.acctgFormulaId}"><display/></field>
+        <field name="formula" title="${uiLabelMap.acctgFormulaFormula}"><display/></field>
+        <field name="description" title="${uiLabelMap.acctgFormulaDesc}"><display/></field> 
+        <field name="isSlabBased" title="${uiLabelMap.acctgFormulaIsSlabBased}"><display/></field>  
+    </form>
+
+    <form name="TestListAccountFormulaSlabs" type="list" list-name="acctgFormulaSlabs"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">        
+        <field name="slabStart"><display/></field>      
+        <field name="slabEnd"><display/></field>          
+        <field name="formula"><display/></field>      
+        <field name="description"><display/></field>      
+    </form>  
+        
+    <form name="TestFormula" type="single" target="testFormula" default-map-name="accountFormula"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="acctgFormulaId"><hidden/></field>  
+        <field name="variableValues" title="${uiLabelMap.acctgFormulaVariableValues}"><text size="55" default-value="${parameters.variableValues}"/></field>                
+        <field name="slabAmount" title="${uiLabelMap.acctgFormulaSlabAmt}"><text size="25" default-value="${parameters.slabAmount}"/></field>                
+        <field name="submitButton" title="${uiLabelMap.Test}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>    
+
+</forms>

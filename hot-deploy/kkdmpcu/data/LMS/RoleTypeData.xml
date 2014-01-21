@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><entity-engine-xml> 
+    <RoleType createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" description="Transport Booth" hasTable="N" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0" parentTypeId="ORGANIZATION_ROLE" roleTypeId="TRANSPORT_BOOTH"/> 
+</entity-engine-xml> 

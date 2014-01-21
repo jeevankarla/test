@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the TicketMgmt Component." permissionId="TICKETMGMT_VIEW"/>
+    <SecurityPermission description="Create operations in the TicketMgmt Component." permissionId="TICKETMGMT_CREATE"/>
+    <SecurityPermission description="Update operations in the TicketMgmt Component." permissionId="TICKETMGMT_UPDATE"/>
+    <SecurityPermission description="Delete operations in the TicketMgmt Component." permissionId="TICKETMGMT_DELETE"/>
+    <SecurityPermission description="ALL operations in the TicketMgmt Component." permissionId="TICKETMGMT_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TICKETMGMT_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TICKETMGMT_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TICKETMGMT_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TICKETMGMT_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TICKETMGMT_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TICKETMGMT_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="TICKETMGMT_ADMIN"/>
+</entity-engine-xml>

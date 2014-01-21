@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- main reports screen of facility's reports section -->
+    <screen name="InventoryReports">
+        <section>
+            <actions>
+                <set field="titleProperty" value="CommonReports"/>
+                <set field="headerItem" value="reports"/>
+                <set field="tabButtonItem" value="EditFacilityInventoryItems"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+
+                <!-- This is the target of the search form-->
+                <set field="facilityInventoryByProductScreen" value="InventoryReports"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="productTypeId" from-field="parameters.productTypeId"/>
+                <set field="searchInProductCategoryId" from-field="parameters.searchInProductCategoryId"/>
+                <set field="productSupplierId" from-field="parameters.productSupplierId"/>
+                <set field="offsetQOHQty" from-field="parameters.offsetQOHQty"/>
+                <set field="offsetATPQty" from-field="parameters.offsetATPQty"/>
+                <set field="productsSoldThruTimestamp" from-field="parameters.productsSoldThruTimestamp" type="Timestamp"/>
+                <set field="internalName" from-field="parameters.internalName"/>
+                <set field="productId" from-field="parameters.productId"/>
+
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/ViewFacilityInventoryByProduct.groovy"/>
+                <entity-one entity-name="Facility" value-field="facility" use-cache="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="h1" text="${uiLabelMap.ProductInventoryByProduct} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
+                        </container>
+                        <container>
+                            <link target="ViewFacilityInventoryByProductReport?${searchParameterString}" text="${uiLabelMap.CommonPrint}" style="buttontext"/>
+                            <link target="ViewFacilityInventoryByProductExport?${searchParameterString}" text="${uiLabelMap.CommonExport}" style="buttontext"/>
+                            <link target="ViewFacilityInventoryHistoryReport?${searchParameterString}" text="${uiLabelMap.FacilityInventoryHistoryReport}" style="buttontext"/>
+                        </container>
+                        <screenlet title="${uiLabelMap.PageTitleFindFacilityInventoryItemsByProduct}">
+                            <include-form name="FindFacilityInventoryByProduct" location="component://product/widget/facility/FacilityForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleFindFacilityInventoryItemsByProduct}">
+                            <include-form name="ListFacilityInventoryByProduct" location="component://product/widget/facility/FacilityForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+	<screen name="FindBoothQuota">
+		<section>
+			<actions>
+               <set field="titleProperty" value="PageTitleFacilityQuotaList"/>	            
+               <set field="tabButtonItem" value="QuotaList"/>            
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<script
+					location="component://product/webapp/facility/WEB-INF/actions/facility/quotaList.groovy" />		
+			</actions>
+			<widgets>
+            	<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">  							  	
+						<screenlet title="Quota Listing">
+							<include-form name="FindBoothQuota" location="component://product/widget/facility/FacilityForms.xml" />
+								<platform-specific>
+	                            	<html><html-template location="component://product/webapp/facility/facility/quotaList.ftl"/></html>
+	                            </platform-specific>
+						</screenlet>								
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+    <screen name="LMSReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/>            
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDate()}" type="Date"/>                
+				<set field="reportDateStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String"/>                
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                
+                <set field="shipmentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(nowTimestamp,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" type="Timestamp"/>
+				<set field="shipmentId" value="${bsh:org.ofbiz.network.NetworkServices.getShipmentIds(delegator,shipmentDate,null)}" type="List"/>
+                <entity-one entity-name="Facility" value-field="facility" use-cache="true"/>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
+                	<condition-expr field-name="fromDate" operator="less" value="${reportDate}"/>   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+               <entity-condition list="facilityList" entity-name="Facility" use-cache="true" filter-by-date="false" >
+                	<condition-list>
+                	<condition-expr field-name="facilityTypeId" operator="equals" value="ROUTE"/>
+                	</condition-list>
+                </entity-condition>
+                <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true" filter-by-date="false">
+                	<condition-list>
+                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
+                		<condition-expr field-name="enumId" operator="in" value="SO_INST,CR_INST"/>
+                	</condition-list>
+                	<order-by field-name="enumId"/>
+                </entity-condition>  
+            </actions>
+            <widgets>
+            	<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    	<container>
+                        	<label style="h1">LMS Reports</label>                       	
+                        </container>  
+   							<platform-specific><html><html-template location="component://product/webapp/facility/facility/LMSReports.ftl"></html-template></html></platform-specific>
+                       <!-- <include-screen location="component://order/widget/ordermgr/ReportScreens.xml" name="DisplayDuesReport"/>                        
+                    	<include-screen name="DisplayDistributorReport"/>
+                    	<include-screen name="NetSalesReport"/>
+                    	<include-screen name="DistributorWiseCashRealisationReport"/>
+                    	<include-screen location="component://order/widget/ordermgr/ReportScreens.xml" name="GenarateZoneWiseVendorMarginReport"/>  
+                    	<screenlet title="Margin Reports">
+                    		<include-screen name="DistributorMarginReport"/>
+                    		<include-screen name="VendorMarginAbstractReport"/>                   	
+                    		<include-screen location="component://order/widget/ordermgr/ReportScreens.xml" name="GenarateVendorMarginReport"/>
+                    		<include-screen name="DisplaySOAndCRInsReport"/>
+                    	</screenlet>
+                    	<include-screen name="ChangesReport"/> -->
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="LMSChartsDailySales">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLMSAnalytics"/>
+                <set field="tabButtonItem" value="LMSCharts"/>  
+ 				<set field="tabButtonItem2" value="LMSChartsDailySales" />                                                                                    
+                <set field="headerItem" value="charts"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/DayWiseTotalSales.groovy"/>                                                
+            </actions>            
+            <widgets>
+            	<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-menu name="LMSChartsTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>                    
+                        <container>
+                        	<platform-specific> 
+                            	<html><html-template location="component://order/webapp/ordermgr/order/daySalesGraph.ftl"/></html>
+                        	</platform-specific>                        
+                        </container>                      
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LMSChartsDayVolumeTotals">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLMSAnalytics"/>
+                <set field="tabButtonItem" value="LMSCharts"/>
+ 				<set field="tabButtonItem2" value="LMSChartsDayVolumeTotals" />                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="LMSChartsDayVolumeTotalsInternal" type="String"/>                                
+            </actions>            
+            <widgets>
+            	<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">     
+                        <include-menu name="LMSChartsTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>                                                        
+                        	<platform-specific> 
+                            	<html><html-template location="component://order/webapp/ordermgr/order/dayTotalsDateSelection.ftl"/></html>
+                        	</platform-specific>                     	               
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="LMSChartsDayVolumeTotalsInternal">
+        <section>      
+    		<actions>
+               <script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/ZonesReportList.groovy"/>                                                  	
+    		</actions>          
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://order/webapp/ordermgr/order/DaySalesVolumeCharts.ftl"/></html>
+                </platform-specific>                 
+
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="LMSChartsDayRevenueTotals">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLMSAnalytics"/>
+                <set field="tabButtonItem" value="LMSCharts"/>
+ 				<set field="tabButtonItem2" value="LMSChartsDayRevenueTotals" />                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="LMSChartsDayRevenueTotalsInternal" type="String"/>                
+            </actions>            
+            <widgets>
+            	<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">     
+                        <include-menu name="LMSChartsTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>                                                        
+                        	<platform-specific> 
+                            	<html><html-template location="component://order/webapp/ordermgr/order/dayTotalsDateSelection.ftl"/></html>
+                        	</platform-specific>                 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
+    <screen name="LMSChartsDayRevenueTotalsInternal">
+        <section>      
+    		<actions>
+               <script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/ZonesReportList.groovy"/>                                                  	
+    		</actions>          
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://order/webapp/ordermgr/order/DaySalesRevenueCharts.ftl"/></html>
+                </platform-specific>                 
+            </widgets>
+        </section>
+    </screen>      
+    <screen name="LMSChartsDayCashReceivables">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLMSAnalytics"/>
+                <set field="tabButtonItem" value="LMSCharts"/>
+ 				<set field="tabButtonItem2" value="LMSChartsDayCashReceivables" />                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="LMSChartsDayCashReceivablesInternal" type="String"/>                                
+            </actions>            
+            <widgets>
+            	<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">     
+                        <include-menu name="LMSChartsTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>                                                        
+                        	<platform-specific> 
+                            	<html><html-template location="component://order/webapp/ordermgr/order/dayTotalsDateSelection.ftl"/></html>
+                        	</platform-specific>             
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="LMSChartsDayCashReceivablesInternal">
+        <section>      
+    		<actions>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/CashReceivablesChart.groovy"/>                                              
+    		</actions>          
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://order/webapp/ordermgr/order/CashReceivablesChart.ftl"/></html>
+                </platform-specific>                 
+            </widgets>
+        </section>
+    </screen>           
+   <screen name="CheckListReportsPDF">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>              
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/checkListReport.groovy"/>            
+            </actions>            
+            <widgets>            	
+				<platform-specific> 
+                     <xsl-fo><html-template location="component://product/webapp/facility/facility/checkListReport.fo.ftl"/></xsl-fo>
+                </platform-specific>				
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CardSaleCheckListCSV">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/> 
+            
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/cardSaleCheckListCSV.groovy"/>            
+            </actions>            
+            <widgets> 
+            <include-form location="component://product/widget/facility/FacilityForms.xml" name="CardSaleCheckListCSV"/>           	
+				<!-- <platform-specific> 
+                     <xsl-fo><html-template location="component://product/webapp/facility/facility/checkListReport.fo.ftl"/></xsl-fo>
+                </platform-specific> -->				
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CardSaleReportCSV">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/> 
+            	<set field="timePeriod" from-field="parameters.customTimePeriodId"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/CardSaleReportCSV.groovy"/>            
+            </actions>            
+            <widgets> 
+            <include-form location="component://product/widget/facility/FacilityForms.xml" name="CardSaleReportCSV"/>           	
+				<!-- <platform-specific> 
+                     <xsl-fo><html-template location="component://product/webapp/facility/facility/cardSaleReport.fo.ftl"/></xsl-fo>
+                </platform-specific> -->				
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="CardSaleReportPDF">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/> 
+            
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/CardSaleReport.groovy"/>            
+            </actions>            
+            <widgets> 
+            <!-- <include-form location="component://product/widget/facility/FacilityForms.xml" name="CardSaleReportCSV"/>  -->          	
+				<platform-specific> 
+                     <xsl-fo><html-template location="component://product/webapp/facility/facility/cardSaleReport.fo.ftl"/></xsl-fo>
+                </platform-specific>				
+            </widgets>
+        </section>
+    </screen>
+	
+    <screen name="PaymentsCheckList">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>              
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/paymentsCheckListReport.groovy"/>            
+            </actions>            
+            <widgets>            	
+				<platform-specific> 
+                     <xsl-fo><html-template location="component://product/webapp/facility/facility/PaymentsCheckList.fo.ftl"/></xsl-fo>
+                </platform-specific>				
+            </widgets>
+        </section>
+    </screen>
+    <screen name="DisplayDistributorReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"	global="true" />
+				<set field="shipmentDate" from-field="parameters.estimatedDeliveryDate" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(nowTimestamp,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" type="Timestamp"/>
+				<set field="dateValue" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(shipmentDate,-1)}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp,-1)}"/>
+				<set field="dateValueStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(dateValue,&quot;yyyy-MM-dd HH:mm:ss&quot;)}"/>
+				<set field="amShipDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(shipmentDate,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(nowTimestamp,&quot;yyyy-MM-dd HH:mm:ss&quot;)}"/>
+				<set field="shipmentTypeId" value="PM_SHIPMENT_SUPPL" type="String"/>
+				<set field="reportTypeFlag"/>
+				<set field="shipmentIds" value="${bsh:org.ofbiz.network.NetworkServices.getShipmentIds(delegator,dateValueStr, shipmentTypeId)}" type="List"/>
+				<set field="listShipments" value="${bsh:org.ofbiz.network.NetworkServices.getShipmentIds(delegator,amShipDate,null)}" type="List"/>				
+				
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/TruckSheetReport.groovy"></script>
+				<set field="pmTruckList" from-field="truckSheetReportList"/>
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/AmShipmentIds.groovy"></script>
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/TruckSheetReport.groovy"></script>
+				<set field="amTruckList" from-field="truckSheetReportList"/>
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/DistributorWiseSalesStatement.groovy"></script>				
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://order/webapp/ordermgr/reports/DistributorWiseSalesReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DisplayDistributorReport">
+		<section>
+			<widgets>
+				<screenlet title=" Distributor Report">
+					<include-form name="DistributorReport" location="component://product/widget/facility/FacilityForms.xml" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
+    <screen name="DisplaySOAndCRInsReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"	global="true" />
+				<script	location="component://order/webapp/ordermgr/WEB-INF/actions/reports/SOandCRReport.groovy" /> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template	location="component://order/webapp/ordermgr/reports/SOandCRInsts.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DisplaySOAndCRInsReport">
+		<section>
+			<widgets>
+				<screenlet title=" SOAndCRIns Report">
+					<include-form name="SOAndCRInsReport" location="component://product/widget/facility/FacilityForms.xml" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ChangesReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"	global="true" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<screenlet title=" Changes Report">
+							<include-form name="changesReportForm" location="component://product/widget/facility/FacilityForms.xml" />
+			   			</screenlet>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ChangesReportCsv">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"	global="true" />
+				<set field="supplyDate" from-field="parameters.fromDate"  default-value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp(),1),&quot;yyyy-MM-dd HH:mm:ss&quot;)}"/>
+				<script	location="component://order/webapp/ordermgr/WEB-INF/actions/reports/ChangesReportFoxPro.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<screenlet title=" Changes Report Csv">
+							<include-form name="changesReportCsv" location="component://product/widget/facility/FacilityForms.xml" />
+			   			</screenlet>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="NetSalesReportTXT">
+	    <section>
+	    	<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"	global="true" />
+				<set field="shipmentDate" from-field="parameters.estimatedDeliveryDate" type="Timestamp"/>
+				<set field="dateValue" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(shipmentDate,-1)}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp,-1)}"/>
+				<set field="dateValueStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(dateValue,&quot;yyyy-MM-dd HH:mm:ss&quot;)}"/>
+				<set field="amShipDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(shipmentDate,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(nowTimestamp,&quot;yyyy-MM-dd HH:mm:ss&quot;)}"/>
+				<set field="shipmentTypeId" value="PM_SHIPMENT_SUPPL" type="String"/>
+				<set field="reportTypeFlag"/>
+				<set field="netSalesList" type="NewList"/>
+				<set field="shipmentIds" value="${bsh:org.ofbiz.network.NetworkServices.getShipmentIds(delegator,dateValueStr, shipmentTypeId)}" type="List"/>
+				<set field="listShipments" value="${bsh:org.ofbiz.network.NetworkServices.getShipmentIds(delegator,amShipDate,null)}" type="List"/>
+				
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/TruckSheetReport.groovy"></script>
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/NetSalesReport.groovy"></script>
+				
+				
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/TruckSheetReport.groovy"></script>
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/NetSalesReport.groovy"></script>
+				
+				</actions>
+			<widgets>
+				<platform-specific>
+				 	<xsl-fo>
+						<html-template	location="component://order/webapp/ordermgr/reports/NetSalesReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="NetSalesReport">
+		<section>
+			<widgets>
+				<screenlet title=" Net Sales Report">
+					<include-form name="NetSalesReport" location="component://product/widget/facility/FacilityForms.xml" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DistributorWiseCashRealisationReportTXT">
+	    <section>
+	    	<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"	global="true" />
+				<set field="supplyDate" from-field="parameters.fromDate" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd HH:mm:ss&quot;)}"/>
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/DistributorWiseCashRealizationStatement.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+				 	<xsl-fo>
+						<html-template	location="component://order/webapp/ordermgr/reports/DistributorWiseCashRealisationStmtReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DistributorWiseCashRealisationReport">
+		<section>
+			<widgets>
+				<screenlet title=" Distributor Wise Cash Realisation Report">
+					<include-form name="DistributorWiseCashRealisationReport" location="component://product/widget/facility/FacilityForms.xml" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DistributorMarginReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<set field="salesDate" from-field="parameters.salesDate"/>
+				<script	location="component://order/webapp/ordermgr/WEB-INF/actions/reports/DistributorMargins.groovy" /> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://order/webapp/ordermgr/reports/DistributorMarginReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DistributorMarginReport">
+		<section>
+			<widgets>
+				<screenlet title=" Distributor Margin Report">
+					<include-form name="DistributorMarginReport" location="component://product/widget/facility/FacilityForms.xml" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="SummaryReportMonthlyTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/SummaryReport.groovy"></script>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template	location="component://order/webapp/ordermgr/reports/NetSalesMonthlyReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ECSReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               	<set field="tabButtonItem" value="VendorMargins"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<script	location="component://product/webapp/facility/WEB-INF/actions/facility/ECSReport.groovy" />
+			</actions>
+			 <widgets>
+            	<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">  
+                       <platform-specific><html><html-template location="component://product/webapp/facility/facility/ECSReport.ftl"></html-template></html></platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+             </widgets>
+		</section>
+	</screen>
+	<screen name="VendorMarginChequesCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               	<set field="tabButtonItem" value="VendorMargins"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<script	location="component://product/webapp/facility/WEB-INF/actions/facility/VendorMarginCheques.groovy" />
+			</actions>
+			 <widgets> 
+            	<include-form location="component://product/widget/facility/FacilityForms.xml" name="VendorMarginChequesCSV"/>           	
+            </widgets>
+		</section>
+	</screen>
+	<screen name="GenerateMarginReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="logoImageUrl" value="/images/apddcf_logo.gif"/>
+				<script	location="component://product/webapp/facility/WEB-INF/actions/facility/VendorMarginReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="vendorMarginReport" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://product/webapp/facility/facility/VendorMarginReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="vendorMarginAbstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://product/webapp/facility/facility/VendorMarginAbstract.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="vendorMarginDues" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://product/webapp/facility/facility/VendorMarginDues.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="GenerateTrnsptMarginReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<script	location="component://product/webapp/facility/WEB-INF/actions/facility/TransporterMarginReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="transporterMarginAbstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://product/webapp/facility/facility/TransporterMarginAbstract.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="trnsptMarginReport" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://product/webapp/facility/facility/TranspoterMargin.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>				
+			</widgets>
+		</section>
+	</screen>
+	<screen name="RouteWiseDeliveryScheduleTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<set field="shipmentId" from-field="parameters.shipmentId"/>
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/MilkDeliverySchedule.groovy" />
+				<set field="facilityTypeId" from-field="parameters.facilityId"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/MilkDeliverySchedule.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	 <screen name="duesAbstractCsv">
+		<section>
+			<actions>
+				<script
+					location="component://product/webapp/facility/WEB-INF/actions/facility/boothWiseDues.groovy" />															
+			</actions>
+			<widgets>				
+	        	<container>	
+			       <include-form name="ListDuesAbstractCsv" location="component://product/widget/facility/FacilityForms.xml" />
+		    	</container>
+		    </widgets>								
+		</section>
+	</screen>
+</screens>

@@ -1,0 +1,7 @@
+FinAccountType_description,FinAccountType_finAccountTypeId,FinAccountType_hasTable,FinAccountType_isRefundable,FinAccountType_parentTypeId,FinAccountType_replenishEnumId
+Deposit Account,DEPOSIT_ACCOUNT,N,Y,,FARP_MANUAL
+Bank Account,BANK_ACCOUNT,N,Y,DEPOSIT_ACCOUNT,FARP_MANUAL
+Investment Account,INVESTMENT_ACCOUNT,N,Y,DEPOSIT_ACCOUNT,FARP_MANUAL
+Replenish Account,REPLENISH_ACCOUNT,N,Y,DEPOSIT_ACCOUNT,FARP_AUTOMATIC
+Loan Account,LOAN_ACCOUNT,N,Y,,FARP_MANUAL
+Cash Account,CASH,N,,,FARP_MANUAL

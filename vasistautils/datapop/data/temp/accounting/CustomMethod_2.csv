@@ -1,0 +1,3 @@
+CustomMethod_customMethodId,CustomMethod_customMethodName,CustomMethod_customMethodTypeId,CustomMethod_description
+STR_LINE_DEP_FORMULA,straightLineDepreciation,DEPRECIATION_FORMULA,Straight Line depreciatiion algorithm for fixed asset((purchaseCost - salvageCost)/expectedLifeInYears)
+DBL_DECL_DEP_FORMULA,doubleDecliningBalanceDepreciation,DEPRECIATION_FORMULA,Double decline depreciatiion algorithm for fixed asset((NetBookValue - salvageCost)*2/remainingLifeInYears)

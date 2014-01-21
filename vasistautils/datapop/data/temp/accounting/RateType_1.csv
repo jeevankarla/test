@@ -1,0 +1,7 @@
+RateType_description,RateType_rateTypeId
+Standard Rate,STANDARD
+Discounted Rate,DISCOUNTED
+Overtime Rate,OVERTIME
+Average Pay Rate,AVERAGE_PAY_RATE
+Highest Pay Rate,HIGH_PAY_RATE
+Lowest Pay Rate,LOW_PAY_RATE

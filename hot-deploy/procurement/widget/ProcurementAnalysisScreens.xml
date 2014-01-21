@@ -1,0 +1,202 @@
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="ProcurementAnalysisLocation">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementAnalysis"/>	            
+               <set field="tabButtonItem" value="Analysis"/>
+ 				<set field="tabButtonItem2" value="ProcurementAnalysisLocation" /> 
+				<set field="ajaxUrl" value="ProcurementAnalysisLocationInternal" type="String"/>                                 				                                                                        
+            </actions>
+            <widgets>
+            	 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    	<include-menu name="ProcurementAnalysisTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>                                                                            
+                        <platform-specific> 
+                            <html><html-template location="component://procurement/webapp/procurement/facility/procurementAnalysisSelection.ftl"/></html>
+                        </platform-specific>        
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+	<screen name="ProcurementAnalysisLocationInternal">
+        <section>      
+    		<actions>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/procurementAnalysis.groovy"/>                                              
+    		</actions>          
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://procurement/webapp/procurement/facility/procurementAnalysis.ftl"/></html>
+                </platform-specific>                 
+
+            </widgets>
+        </section>
+    </screen>
+        
+    <screen name="ProcurementAnalysisLocationComp">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementAnalysisLocationComp"/>	            
+               <set field="tabButtonItem" value="Analysis"/>
+ 				<set field="tabButtonItem2" value="ProcurementAnalysisLocationComp" />                                                          
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementAnalysisLocationComp.groovy"/>                                              
+               
+            </actions>
+            <widgets>
+            	 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    	<include-menu name="ProcurementAnalysisTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>                                                                            
+                        <platform-specific> 
+                            <html><html-template location="component://procurement/webapp/procurement/facility/procurementAnalysisLocationCompSelection.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific> 
+                            <html><html-template location="component://procurement/webapp/procurement/facility/procurementAnalysisLocationComp.ftl"/></html>
+                        </platform-specific>     
+                        	        
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+	<screen name="ProcurementAnalysisDailyTrend">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementAnalysisDailyTrend"/>
+                <set field="tabButtonItem" value="Analysis"/>  
+ 				<set field="tabButtonItem2" value="ProcurementAnalysisDailyTrend" />                                                                                    
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/DayWiseTotalProcurement.groovy"/>                                                
+            </actions>            
+            <widgets>
+            	 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProcurementAnalysisTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>                                                                            
+                        <container>
+                        	<platform-specific> 
+                            	<html><html-template location="component://procurement/webapp/procurement/facility/dayWiseTotalProcurement.ftl"/></html>
+                        	</platform-specific>                        
+                        </container>                      
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!--  Special Screen for Producers migration  -->
+   		
+	 <screen name="FindProcurementProducerMigr">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementProducerMigr"/>               
+                <set field="tabButtonItem" value="FindProcurementProducerMigr" />                
+             <!--    <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="30"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/> -->
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">                                       	
+                   		<container style="button-bar">
+                        	<link target="CreateProcurementProducerMigr" text="Create New" style="buttontext create"/>
+                        </container>
+                   		<screenlet title="${uiLabelMap.ProducerMigration}">
+                   			<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindProcurementProducerMigr"/>  
+                   			<link target="producerDataExportCsv.csv" text="Export As Csv" style="buttontext create">
+                   				<parameter param-name="shedCode" from-field="parameters.shedCode"/>
+                   				<parameter param-name="bmcuCode" from-field="parameters.bmcuCode"/>
+                   				<parameter param-name="bmcuCode_op" from-field="parameters.bmcuCode_op"/>
+                   				<parameter param-name="centerCode" from-field="parameters.centerCode"/>
+                   				<parameter param-name="centerCode_op" from-field="parameters.centerCode_op"/>
+                   				<parameter param-name="mobileNo" from-field="parameters.mobileNo"/>
+                   				<parameter param-name="mobileNo_op" from-field="parameters.mobileNo_op"/>
+                   				<parameter param-name="avgMilkProduced" from-field="parameters.avgMilkProduced"/>
+                   				<parameter param-name="createdDate" from-field="parameters.createdDate"/>
+                   			</link>
+                   			<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListProcurementProducerMigr"/>                    		
+                   		</screenlet>                         
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProducerDataExportCsv">
+        <section>
+        	<actions>
+        		 <set field="titleProperty" value="PageTitleProcurementProducerMigr"/>               
+                <set field="tabButtonItem" value="FindProcurementProducerMigr" /> 
+                <set field="viewSize" value="10000" type="Integer"/>
+                <set field="parameters.recordId"  value=""/>
+                <set field="parameters.noConditionFind"  value="Y"/>               
+                <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="ProcProducerMigration"/>
+                    <field-map field-name="orderBy" value="-createdDate"/>
+                    <field-map field-name="viewIndex" from-field="viewIndex"/>
+                    <field-map field-name="viewSize" from-field="viewSize"/>                  
+                </service>
+                <set field="listRecentProducersList" from-field="result.listIt"/>
+        	</actions>
+            <widgets>
+              	<include-form name="producerDataExportCsv" location="component://procurement/widget/ProcurementForms.xml"/>            	
+           </widgets>
+        </section>
+    </screen>
+     <screen name="CreateProcurementProducerMigr">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementProducerMigr"/>               
+                <set field="tabButtonItem" value="FindProcurementProducerMigr" /> 
+                <set field="viewSize" value="5" type="Integer"/>
+                <set field="parameters.recordId"  value=""/>
+                <set field="searchCondition.noConditionFind"  value="Y"/>   
+                <set field="searchCondition.createdByUserLogin" value="${context.userLogin.userLoginId}"/>
+                <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="searchCondition"/>
+                    <field-map field-name="entityName" value="ProcProducerMigration"/>
+                    <field-map field-name="orderBy" value="-createdDate"/>
+                    <field-map field-name="viewIndex" from-field="viewIndex"/>
+                    <field-map field-name="viewSize" from-field="viewSize"/>                  
+                </service>
+                <set field="listRecentProducersList" from-field="result.listIt"/>  
+            </actions>
+            <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<screenlet title="${uiLabelMap.ProducerMigration}">
+                    		<section>                    			
+                    			<widgets>
+                    				<include-form location="component://procurement/widget/ProcurementForms.xml" name="CreateProcurementProducerMigr"/>
+                                    <screenlet title="List Recent Producer Entries Data">
+                                         <include-form location="component://procurement/widget/ProcurementForms.xml" name="ListRecentProcurementProducerMigr"/>                           
+                                    </screenlet>                    			
+                    			</widgets>
+                    		</section>  
+                        	                                               
+                    	</screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UpdateProcurementProducerMigr">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementProducerMigr"/>               
+                <set field="tabButtonItem" value="FindProcurementProducerMigr" />   
+            </actions>
+            <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.ProducerMigration}">
+                            <section>                               
+                                <widgets>
+                                    <include-form location="component://procurement/widget/ProcurementForms.xml" name="UpdateProcurementProducerMigr"/>
+                                </widgets>
+                            </section>  
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+
+ </screens>   

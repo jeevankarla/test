@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="KkdmpcuCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="FacilityTree">
+        <section>
+            <actions>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>               
+                <set field="titleProperty" value="ProductFacilityMain"/>
+         
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="main"/>
+<!--                <set field="facilityId" from-field="parameters.facilityId"/>-->
+<!--                <set field="isTreeRoot" value="Y"/>-->
+				<script  
+					location="component://product/webapp/facility/WEB-INF/actions/facility/facilityTree.groovy" />                                
+            </actions>          
+            <widgets>
+            <section>
+            <condition>
+                <if-empty field="parameters.ajaxLookup"/>
+            </condition> 
+            <widgets>
+            	<decorator-screen name="KkdmpcuCommonDecorator" location="component://kkdmpcu/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="lefthalf"> 
+                                	<screenlet title="${uiLabelMap.FormFieldTitle_company}">    
+   										<platform-specific><html><html-template location="component://product/webapp/facility/facility/facilityTree.ftl"></html-template></html></platform-specific>
+									</screenlet>
+								</container>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+   				<platform-specific><html><html-template location="component://product/webapp/facility/facility/facilityTree.ftl"></html-template></html></platform-specific>
+            </fail-widgets>
+        </section>         
+        </widgets>     
+		</section>
+    </screen>
+     <screen name="TruckSheet">
+		<section>
+			<actions>
+			    <set field="layoutSettings.javaScripts[]" value="/facility/images/carryRouteId.js" global="true"/> 
+				<set field="titleProperty" value="PageTitleTruckSheet"/> 
+				<set field="tabButtonItem" value="TruckSheet" />
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>  
+                <entity-condition list="listTruckSheets" entity-name="Shipment">
+                	<order-by field-name="-estimatedShipDate"/>
+                </entity-condition>  				
+			</actions>
+			<widgets>
+				<decorator-screen name="KkdmpcuCommonDecorator" location="component://kkdmpcu/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<or>
+									<if-has-permission permission="TRUCKSHEET" action="_ADMIN"/>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+								</or>
+							</condition>
+							<widgets>
+								<container style="button-bar">
+									<platform-specific><html><html-template location="component://product/webapp/facility/facility/NewTruckSheet.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showTruckSheetGenerateForm();" text="Create Truck Sheet" style="buttontext create"  link-type="anchor"/>
+								</container>
+								<screenlet title="Truck Sheets">				
+									<include-form name="ListTruckSheets" location="component://kkdmpcu/widget/KkdmpcuForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>						
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="VendorMargins">
+		<section>
+			<actions>
+				<set field="titleProperty" value="VendorMargins"/> 
+				<set field="tabButtonItem" value="VendorMargins" />
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>                
+               <entity-condition list="listVendorReports" entity-name="PeriodBilling">
+               		<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_LMS_VNDR_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>   
+                	</condition-list>
+                	<order-by field-name="-createdDate"/>
+                	<order-by field-name="-customTimePeriodId"/>
+                </entity-condition>
+                <entity-condition list="listTransporterReports" entity-name="PeriodBilling">
+                	<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_LMS_TRSPT_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+                	</condition-list>
+                	<order-by field-name="-createdDate"/>
+                	<order-by field-name="-customTimePeriodId"/>
+                </entity-condition>  				
+			</actions>
+			<widgets>
+				<decorator-screen name="KkdmpcuCommonDecorator" location="component://kkdmpcu/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<or>
+									<if-has-permission permission="TRUCKSHEET" action="_ADMIN"/>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+								</or>
+							</condition>
+							<widgets>
+								<container style="button-bar">
+									<link target="KVGenerateVendorMarginReport" text="Generate Vendor Margin Report" style="buttontext create">
+										<parameter param-name="billingTypeId" value="PB_LMS_VNDR_MRGN"/>
+									</link>
+									<link target="GenerateTransporterMarginReport" text="Generate Transporter Margin Report" style="buttontext create">				
+										<parameter param-name="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+									</link>
+								</container>
+								<screenlet title="Vendor Margin Reports">				
+									<include-form name="ListVendorReports" location="component://kkdmpcu/widget/KkdmpcuForms.xml" />
+								</screenlet>
+								<screenlet title="Transporter Margin Reports">				
+									<include-form name="ListTransporterReports" location="component://product/widget/facility/FacilityForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>						
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="GenerateMarginReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="logoImageUrl" value="/images/apddcf_logo.gif"/>
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/VendorMarginReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="vendorMarginReport" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://kkdmpcu/webapp/kkdmpcu/reports/VendorMarginReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="vendorMarginRouteAbstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://kkdmpcu/webapp/kkdmpcu/reports/VendorMarginRouteAbstract.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="vendorMarginBoothAbstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://kkdmpcu/webapp/kkdmpcu/reports/VendorMarginBoothAbstract.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="vendorMarginDues" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://product/webapp/facility/facility/VendorMarginDues.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="GenerateVendorMarginReport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="VendorMargins"/>
+				<set field="tabButtonItem" value="VendorMargins" />
+				<set field="billingTypeId" value="PB_LMS_VNDR_MRGN"/>
+            </actions>           
+            <widgets>
+				<decorator-screen name="KkdmpcuCommonDecorator" location="component://kkdmpcu/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<section>
+							<widgets>
+								 <screenlet title="New VendorMargin Report">
+                    				<include-form location="component://product/widget/facility/FacilityForms.xml" name="GenerateVendorMarginReport"/>
+                    			</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="LMSReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/>            
+                <set field="reportDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDate()}" type="Date"/>                
+				<set field="reportDateStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String"/>                
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <entity-one entity-name="Facility" value-field="facility" use-cache="true"/>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
+                	<condition-expr field-name="fromDate" operator="less" value="${reportDate}"/>   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+               <entity-condition list="facilityList" entity-name="Facility" use-cache="true" filter-by-date="false" >
+                	<condition-list>
+                	<condition-expr field-name="facilityTypeId" operator="equals" value="ROUTE"/>
+                	</condition-list>
+                </entity-condition>
+                <entity-condition list="cardPeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="CARD_MONTH"/>
+                	<condition-expr field-name="isClosed" operator="equals" value="N"/>   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+                <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true" filter-by-date="false">
+                	<condition-list>
+                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
+                		<condition-expr field-name="enumId" operator="in" value="SO_INST,CR_INST"/>
+                	</condition-list>
+                	<order-by field-name="enumId"/>
+                </entity-condition>  
+            </actions>
+            <widgets>
+            	<decorator-screen name="KkdmpcuCommonDecorator" location="component://kkdmpcu/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    	<container>
+                        	<label style="h1">LMS Reports</label>                       	
+                        </container>  
+   							<platform-specific><html><html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/LMSReports.ftl"></html-template></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="RouteWiseQuotaSummaryTXT">
+	    <section>
+	    	<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" 	global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"	global="true" />
+				<set field="hideSearch" value="N"/>
+				<script location="component://product/webapp/facility/WEB-INF/actions/facility/quotaList.groovy" />	
+				<script location="component://product/webapp/facility/WEB-INF/actions/facility/routesQuotaList.groovy" />	
+			</actions>
+			<widgets>
+				<platform-specific>
+				 	<xsl-fo>
+						<html-template	location="component://kkdmpcu/webapp/kkdmpcu/reports/RouteWiseQuotaSummary.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="TruckSheetReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="logoImageUrl" value="/images/apddcf_logo.gif"/>
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/TruckSheetReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="abstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://kkdmpcu/webapp/kkdmpcu/reports/TruckSheetAbstractReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="trucksheet" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://kkdmpcu/webapp/kkdmpcu/reports/TruckSheetReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="milkDeliverySchedule" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template	location="component://kkdmpcu/webapp/kkdmpcu/reports/MilkDeliverySchedule.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="MilkDeliveryScheduleReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>				
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/MilkDeliverySchedule.groovy" />
+			</actions>
+			<widgets>				
+				<platform-specific>
+					<xsl-fo>
+						<html-template
+							location="component://kkdmpcu/webapp/kkdmpcu/reports/MilkDeliverySchedule.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>					
+			</widgets>
+		</section>
+	</screen>	
+	<screen name="ValueSheetTotalsTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<set field="reportTypeFlag" value="trucksheet"/>
+				<set field="shipmentDate" from-field="parameters.estimatedDeliveryDate" type="Timestamp"/>
+				<set field="shipDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(shipmentDate,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" default-value= "${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(nowTimestamp,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" />
+				<set field="shipmentIds" value="${bsh:org.ofbiz.network.NetworkServices.getShipmentIds(delegator,shipDate,null)}" type="List"/>				
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/TruckSheetReport.groovy" />
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/ValueSheetTotals.groovy" />
+				<set field="facilityId" from-field="parameters.facilityId"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/ValueSheetTotals.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ValueSheetProductWiseTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<set field="reportTypeFlag" value="ValueSheetProductWise"/>
+				<set field="shipmentDate" from-field="parameters.estimatedDeliveryDate" type="Timestamp"/>
+				<set field="shipDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(shipmentDate,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" default-value= "${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(nowTimestamp,&quot;yyyy-MM-dd HH:mm:ss&quot;)}" />
+				<set field="shipmentIds" value="${bsh:org.ofbiz.network.NetworkServices.getShipmentIds(delegator,shipDate,null)}" type="List"/>				
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/TruckSheetReport.groovy" />
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/ValueSheetProductWise.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="VehicleShortPaymentReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="paymentDate" from-field="parameters.paymentDate"/>
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/VehicleShortPaymentReport.groovy" />
+			</actions>
+			<widgets>				
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/VehicleShortPayments.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>					
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CrateCanEntries">
+        <section>
+        	<actions>
+        		<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="tabButtonItem" value="CrateCanEntries" />
+	        	<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/CratesCansEntry.groovy"/>
+	        	<entity-one entity-name="CratesCansAccnt" value-field="cratesInfo"/>
+     		</actions>     		
+            <widgets>
+            	<decorator-screen name="KkdmpcuCommonDecorator" location="component://kkdmpcu/widget/CommonScreens.xml">
+					<decorator-section name="body">
+              			  <container style="lefthalf"> 
+                	 		<screenlet title="${uiLabelMap.CratesCans}">  
+						      <include-form name="NewCratesEntry" location="component://kkdmpcu/widget/KkdmpcuForms.xml" />
+						      <include-form name="ListCratesEntry" location="component://kkdmpcu/widget/KkdmpcuForms.xml" />
+					        </screenlet>
+				          </container>	
+				    </decorator-section>
+				</decorator-screen>       
+            </widgets>
+        </section>
+    </screen>
+	<screen name="CratesReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="fromDate" from-field="parameters.fromDate"/>
+				<set field="thruDate" from-field="parameters.thruDate"/>
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/CratesCansReport.groovy" />
+			</actions>
+			<widgets>				
+				<container>
+					<include-form name="CratesReport" location="component://kkdmpcu/widget/KkdmpcuForms.xml" />
+				</container>				
+			</widgets>
+		</section>
+	</screen>
+	<screen name="AgentWiseSalesReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/AgentWiseSaleList.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/AgentWiseSaleReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="RouteWiseSalesReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/AgentWiseSaleList.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/RouteWiseSalesReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="RouteWiseMilkSalesParticulars">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="fromDate" from-field="parameters.fromDate"/>
+				<set field="thruDate" from-field="parameters.thruDate"/>
+				<script	location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/CratesCansReport.groovy" />
+				<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/AgentWiseSaleList.groovy"/>	
+				<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/CashTransaction.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/RouteWiseSalesParticulars.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="NetSalesSummaryReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/SummaryReport.groovy"></script>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template	location="component://kkdmpcu/webapp/kkdmpcu/reports/NetSalesMonthlyReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CashTransactionTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/CashTransaction.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://kkdmpcu/webapp/kkdmpcu/reports/CashTransaction.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+</screens>

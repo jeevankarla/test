@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+				<script location="component://appvalidator/webapp/appvalidator/WEB-INF/actions/listValidations.groovy" />
+            </actions>
+            <widgets>
+                <decorator-screen name="AppValidatorCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                   		<screenlet title="Validation List">
+                    		<include-form location="component://appvalidator/widget/AppValidatorForms.xml" name="listValidations"/> 
+                    	</screenlet>                   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+        
+    <screen name="ValidationResult">
+        <section>
+            <actions>
+                <set field="component" from-field="parameters.component"/>
+                <set field="validator" from-field="parameters.id"/>                
+				<script location="component://appvalidator/webapp/appvalidator/WEB-INF/actions/doValidation.groovy" />
+            </actions>        
+            <widgets>
+                <decorator-screen name="AppValidatorCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="h1">Validation Result for ${validator} </label>
+                        </container>                    
+                   		<screenlet title="">
+                             <platform-specific>
+                                 <html><html-template location="component://appvalidator/webapp/appvalidator/result/validatorResult.ftl"/></html>
+                             </platform-specific>                    	
+                        </screenlet>                   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>        
+    </screen>
+
+</screens>

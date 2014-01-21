@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	<FacilityGroupType facilityGroupTypeId="REGION_TYPE" description="Region"/>
+	<FacilityGroup facilityGroupId="CENTRAL_ZONE" facilityGroupTypeId="REGION_TYPE" facilityGroupName="Central Region" description="Central Region" ownerFacilityId="COMPANY"/>	
+	<FacilityGroup facilityGroupId="NORTH_ZONE" facilityGroupTypeId="REGION_TYPE" facilityGroupName="North Region" description="North Region" ownerFacilityId="COMPANY"/>	
+	<FacilityGroup facilityGroupId="SOUTH_ZONE" facilityGroupTypeId="REGION_TYPE" facilityGroupName="South Region" description="South Region" ownerFacilityId="COMPANY"/>	
+
+
+    <FacilityGroupMember facilityGroupId="CENTRAL_ZONE" facilityId="ANN" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="CENTRAL_ZONE" facilityId="ANS" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="CENTRAL_ZONE" facilityId="AYV" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="CENTRAL_ZONE" facilityId="TNG" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="CENTRAL_ZONE" facilityId="TRP" fromDate="2012-01-01 00:00:00.00"/>
+
+    <FacilityGroupMember facilityGroupId="NORTH_ZONE" facilityId="ASK" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="NORTH_ZONE" facilityId="NRM" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="NORTH_ZONE" facilityId="PRM" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="NORTH_ZONE" facilityId="VPR" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="NORTH_ZONE" facilityId="WMP" fromDate="2012-01-01 00:00:00.00"/>
+
+    <FacilityGroupMember facilityGroupId="SOUTH_ZONE" facilityId="ADY" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="SOUTH_ZONE" facilityId="MYR" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="SOUTH_ZONE" facilityId="PVK" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="SOUTH_ZONE" facilityId="PVR" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="SOUTH_ZONE" facilityId="TMR" fromDate="2012-01-01 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="SOUTH_ZONE" facilityId="VLC" fromDate="2012-01-01 00:00:00.00"/>
+
+</entity-engine-xml>

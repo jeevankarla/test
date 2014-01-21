@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Procurement Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="createProcurementEntry" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createProcurementEntry" auth="true">
+        <attribute name="shedCode" mode="IN" type="String" optional="false"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="false"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="false"/>
+        <attribute name="orderDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="qtyLtrs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="fat" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="snf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="lactoReading" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sFat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="cQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="ptcQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="ptcMilkType" mode="IN" type="String" optional="true"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+        <attribute name="orderItem" mode="OUT" type="Map" optional="false"/>
+        <attribute name="invoiceId" mode="OUT" type="String" optional="true"/>        
+    </service>
+    
+     <service name="createProcurementEntryAjax" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createProcurementEntryAjax" auth="true">
+        <attribute name="shedCode" mode="IN" type="String" optional="false"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="false"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="false"/>
+        <attribute name="orderDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="qtyLtrs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="fat" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="snf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="lactoReading" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sFat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="cQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="ptcQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="ptcMilkType" mode="IN" type="String" optional="true"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+        <attribute name="orderItem" mode="OUT" type="Map" optional="false"/>
+        <attribute name="invoiceId" mode="OUT" type="String" optional="true"/>         
+    </service>
+    <service name="fetchProcurementRecordAjax" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="fetchProcurementRecordAjax" auth="true">
+        <attribute name="shedCode" mode="IN" type="String" optional="false"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="false"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="false"/>
+        <attribute name="orderDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="false"/>
+        <attribute name="orderItem" mode="OUT" type="Map" optional="true"/>
+        <attribute name="lactoReading" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="qtyLtrs" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="sQtyKgs" mode="OUT" type="BigDecimal" optional="true"/>
+    </service>
+    <service name="updatePremiumAdjestment" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updatePremiumAdjestment" auth="true">
+       		<attribute name="orderId" mode="INOUT" type="String" optional="false"></attribute>
+    </service>
+    <service name="recalculateProcurementEntryPrice" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="recalculateProcurementEntryPrice" auth="true" transaction-timeout="3600">
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityId" mode="INOUT" type="String" optional="false"/>        
+    </service>
+    <service name="createMilkTransferRecord" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createMilkTransferRecord" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="fat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="snf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sendKgFat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sendKgSnf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sendLR" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="facilityIdTo" mode="IN" type="String" optional="true"/>
+        <attribute name="containerId" mode="IN" type="String" optional="true"/>
+        <attribute name="sendDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+    </service>
+    <service name="updateMilkDetails" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateMilkDetails" auth="true">
+        <attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+        <attribute name="status" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="fat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="snf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="receivedQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="receivedFat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="receivedSnf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="receivedKgFat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="receivedKgSnf" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="receivedLR" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="gheeYield" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="containerId" mode="IN" type="String" optional="true"/>
+        <attribute name="milkType" mode="IN" type="String" optional="true"/>
+        <attribute name="sendDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+        <attribute name="receiveDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+        <attribute name="cQuantityLtrs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sFat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQuantityLtrs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="containsSourAdviceValue" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_0" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_1" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_2" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_3" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_4" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_5" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_6" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_7" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_8" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_9" mode="IN" type="String" optional="true"/>
+        <!-- <attribute name="quantity_o_0" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_1" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_2" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_3" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_4" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_5" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_6" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_7" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_8" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_9" mode="IN" type="BigDecimal" optional="true"/> -->
+    </service>
+    <service name="deleteMilkRecord" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="deleteMilkRecord" auth="true">
+        <attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+    </service>
+     <service name="updateProcurementEntry" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateProcurementEntry" auth="true">
+        <auto-attributes mode="IN" entity-name="OrderItem" include="pk" optional="false"></auto-attributes>
+        <auto-attributes mode="IN" entity-name="OrderItem" include="nonpk" optional="true"></auto-attributes>
+        <attribute name="orderDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+        <attribute name="cQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="lactoReading" mode="IN" type="BigDecimal" optional="true"/> 
+        <attribute name="shedCode" mode="IN" type="String" optional="true"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="true"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="true"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="true"/>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityCode" mode="IN" type="String" optional="true"/>
+        <attribute name="qtyLtrs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/> 
+        <attribute name="orderItem" mode="OUT" type="Map" optional="true"/>
+                      
+    </service>
+    <service name="updateProcurementEntryRecord" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateProcurementEntryRecord" auth="true">
+       <description>This service is called whenever we want to modify whole record  </description>
+        <auto-attributes mode="IN" entity-name="OrderItem" include="pk" optional="false"></auto-attributes>
+        <auto-attributes mode="IN" entity-name="OrderItem" include="nonpk" optional="true"></auto-attributes>
+        <attribute name="orderDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+        <attribute name="cQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="lactoReading" mode="IN" type="BigDecimal" optional="true"/> 
+        <attribute name="shedCode" mode="IN" type="String" optional="true"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="true"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="true"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="true"/>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityCode" mode="IN" type="String" optional="true"/>
+        <attribute name="qtyLtrs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/> 
+        <attribute name="orderItem" mode="OUT" type="Map" optional="true"/>
+                      
+    </service>
+    <service name="updateApproveBillingValidation" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateApproveBillingValidation" auth="true">
+        <auto-attributes mode="IN" entity-name="OrderItem" include="pk" optional="false"></auto-attributes>
+        <auto-attributes mode="IN" entity-name="OrderItem" include="nonpk" optional="true"></auto-attributes>
+        <attribute name="orderDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+        <attribute name="cQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="sQtyKgs" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="shedCode" mode="IN" type="String" optional="true"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="true"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="true"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="true"/>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityCode" mode="IN" type="String" optional="true"/>
+        <attribute name="validationTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="shedId" mode="IN" type="String" optional="true"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
+        <attribute name="sequenceNum" mode="IN" type="String" optional="true"/>        
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/> 
+        <attribute name="orderItem" mode="OUT" type="Map" optional="true"/>                      
+    </service>
+    <service name="updateOrderAdjustmentsService" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateOrderAdjustmentsService" auth="true">  
+        <attribute name="orderAdjustmentId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderAdjustmentTypeId" mode="IN" type="String" optional="true"/>        
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="orderAdjustmentId" mode="OUT" type="String" optional="false"/>                      
+    </service>
+    <service name="deleteProcurementEntry" engine="simple"
+                location="component://procurement/script/ProcurementServices.xml" invoke="deleteProcurementEntry" auth="true">
+        <auto-attributes mode="IN" entity-name="OrderItem" include="pk" optional="false"></auto-attributes>
+        <auto-attributes mode="IN" entity-name="OrderItem" include="nonpk" optional="true"></auto-attributes>      
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>               
+    </service>
+     <service name="checkDeleteProcValidationEntry" engine="simple"
+                location="component://procurement/script/ProcurementServices.xml" invoke="checkDeleteProcValidationEntry" auth="true">
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderItemSeqId" mode="IN" type="String" optional="false"/>                  
+    </service>
+    <service name="calculateProcurementProductPrice" engine="java"
+                location="in.vasista.vbiz.procurement.PriceServices" invoke="getProcurementProductPrice" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="priceDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>        
+        <attribute name="fatPercent" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="snfPercent" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="categoryTypeEnum" mode="IN" type="String" optional="true"/>
+        <attribute name="supplyTypeEnumId" mode="IN" type="String" optional="true"/>
+        <attribute name="price" mode="OUT" type="BigDecimal" optional="false"/>      
+        <attribute name="premium" mode="OUT" type="BigDecimal" optional="false"/>
+        <attribute name="defaultRate" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="useTotalSolids" mode="OUT" type="String" optional="true"/>
+        <attribute name="sourRate" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="priceChartMap" mode="OUT" type="Map" optional="true"/> 
+        <attribute name="snfPercentList" mode="OUT" type="List" optional="true"/>
+        <attribute name="uomId" mode="OUT" type="String" optional="true" ></attribute>                 
+    </service>  
+    <service name="processPeriodBilling" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="processPeriodBilling" auth="true" transaction-timeout="30000">
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityId" mode="IN" type="String" optional="true"/>
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>         
+    </service>
+     <service name="cancelProcessPeriodBilling" engine="java" auth="true" transaction-timeout="30000"
+        location="in.vasista.vbiz.procurement.ProcurementServices" invoke="cancelProcessPeriodBilling">
+        <description>Cancel Process Billing</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+     <service name="cancelProcessBilling" engine="java" auth="true" transaction-timeout="30000"
+        location="in.vasista.vbiz.procurement.ProcurementServices" invoke="cancelProcessBilling">
+        <description>Cancel Process Billing</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    <service name="validatePeriodEntries" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="validatePeriodEntries" auth="true" transaction-timeout="30000">
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+         <attribute name="shedId" mode="IN" type="String" optional="true"/>
+         <attribute name="facilityId" mode="IN" type="String" optional="true"/>  
+        <attribute name="verifyApprove" mode="IN" type="String" optional="true"/>                   
+    </service>
+    <service name="checkQuantityOutLier" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="checkQuantityOutLier" auth="true" transaction-timeout="30000">
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
+        <attribute name="shedId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderItems" mode="IN" type="java.util.List" optional="true"/>
+        <attribute name="verifyApprove" mode="IN" type="String" optional="true"/>                        
+    </service>
+     <service name="checkNegativeBillValue" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="checkNegativeBillValue" auth="true" transaction-timeout="30000">
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
+        <attribute name="shedId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderItems" mode="IN" type="java.util.List" optional="true"/>
+        <attribute name="verifyApprove" mode="IN" type="String" optional="true"/>      
+    </service>
+    <service name="checkSnfFatRange" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="checkSnfFatRange" auth="true" transaction-timeout="30000">
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
+        <attribute name="shedId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderItems" mode="IN" type="java.util.List" optional="true"/>
+        <attribute name="verifyApprove" mode="IN" type="String" optional="true"/>                           
+    </service>
+     <service name="approveValidation" default-entity-name="ProcBillingValidation" engine="entity-auto" invoke="update" auth="true">
+        <description>Update Status</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="getPeriodTotals" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementReports" invoke="getPeriodTotals" auth="true">
+        <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="java.sql.Timestamp" optional="false"/>                 
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/> <!-- can be center, route, unit -->       
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="purchaseTime" mode="IN" type="String" optional="true"/> <!-- AM/PM -->
+        <attribute name="includeCenterTotals" mode="IN" type="Boolean" optional="true"/>       
+        <attribute name="periodTotalsMap" type="Map" mode="OUT" optional="false"/>               
+    </service>
+    <service name="getShedDDAccount" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementReports" invoke="getShedDDAccount" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/> <!-- should be Shed -->
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>       
+        <attribute name="ddAccDetailsMap" mode="OUT" type="Map" optional="false"/>
+    </service> 
+     <service name="getPeriodTransferTotals" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementReports" invoke="getPeriodTransferTotals" auth="true">
+        <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="java.sql.Timestamp" optional="false"/>                 
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/> <!-- can be center, route, unit -->       
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="periodTransferTotalsMap" type="Map" mode="OUT" optional="false"/>               
+    </service>  
+    <service name="createBillingAdjustment" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createBillingAdjustment" auth="true">
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="shedCode" mode="IN" type="String" optional="false"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="false"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="false"/>
+        <attribute name="adjustmentTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    <service name="updateBillingAdjustment" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="updateBillingAdjustment" auth="true">
+        <attribute name="shedCode" mode="IN" type="String" optional="true"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="true"/>
+        <attribute name="centerCode" mode="IN" type="String" optional="true"/>
+        <attribute name="originFacilityId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderAdjustmentId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderAdjustmentTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    <service name="batchRunMilkProcurementEntry" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="batchRunMilkProcurementEntry" auth="true" transaction-timeout="7200">
+           <description>This is a batch service that creates the milk procurement entry</description>      
+         <attribute name="orderDate" mode="IN" type="Date" optional="false"/>
+    </service>
+    <service name="batchRunMilkProcurementMigration" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="batchRunMilkProcurementMigration" auth="true" transaction-timeout="7200">
+           <description>This is a batch service that creates the milk procurement entry</description>      
+         <attribute name="procurementDate" mode="IN" type="Date" optional="false"/>
+    </service> 
+    <service name="populateProcurementPeriodBilling" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.procurement.ProcurementServices" invoke="populateProcurementPeriodBilling">
+        <description>populate Period Billing.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/> 
+        <attribute name="periodBillingId" type="String" mode="OUT" optional="false"/>       
+    </service>   
+   <service name="createProcurementProducerMigr" engine="simple" auth="true" transaction-timeout="300"
+        location="component://procurement/script/ProcurementServices.xml" invoke="createProcurementProducerMigr">
+         <description>Create Producer Migration Entry</description>
+        <required-permissions join-type="OR">
+        	<check-permission permission="FACILITY"  action="_ADMIN"/>
+        	<check-permission permission="PROCUREMENT"  action="_DATAMIG"/>        			
+        </required-permissions>       
+        <auto-attributes mode="IN" entity-name="ProcProducerMigration" optional="true"/>
+         <attribute name="recordId" type="String" mode="OUT" optional="true"/>      
+    </service>
+    
+    <service name="updateProcurementProducerMigr" engine="simple" auth="true" transaction-timeout="300"
+        location="component://procurement/script/ProcurementServices.xml" invoke="updateProcurementProducerMigr">
+        <description>Create Producer Migration Entry</description>
+        <required-permissions join-type="OR">
+        	<check-permission permission="FACILITY"  action="_ADMIN"/>
+        	<check-permission permission="PROCUREMENT"  action="_DATAMIG"/>        			
+        </required-permissions>  
+        <auto-attributes mode="IN" entity-name="ProcProducerMigration" optional="true"/>        
+        <attribute name="recordId" type="String" mode="OUT" optional="false"/>
+        <override name="recordId" optional="true" mode="IN"></override>     
+    </service>    
+    <service name="deleteProcurementProducerMigr" engine="simple" auth="true" transaction-timeout="300"
+        location="component://procurement/script/ProcurementServices.xml" invoke="deleteProcurementProducerMigr">
+        <description>Create Producer Migration Entry</description>
+        <required-permissions join-type="OR">
+        	<check-permission permission="FACILITY"  action="_ADMIN"/>
+        	<check-permission permission="PROCUREMENT"  action="_DATAMIG"/>        			
+        </required-permissions>  
+        <auto-attributes mode="IN" entity-name="ProcProducerMigration" optional="true"/>
+        <attribute name="recordId" type="String" mode="OUT" optional="true"/>
+        <override name="recordId" optional="false" mode="IN"></override>      
+    </service>             
+      
+    <service name="createProcFaciltiyOutputEntry" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createProcFaciltiyOutputEntry" auth="true">       
+        <attribute name="shedCode" mode="IN" type="String" optional="false"/>
+        <attribute name="unitCode" mode="IN" type="String" optional="false"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="outputTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="qty" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="kgFat" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="kgSnf" mode="IN" type="BigDecimal" optional="true"/>        
+    </service>
+    <service name="deleteProFacilityOutputEntry" engine="simple" auth="true" transaction-timeout="300"
+        location="component://procurement/script/ProcurementServices.xml" invoke="deleteProFacilityOutputEntry">
+        <description>Delete Facility Output Entry</description>      
+         <required-permissions join-type="OR">
+        	<check-permission permission="FACILITY"  action="_ADMIN"/>        	
+        </required-permissions>    
+        <auto-attributes mode="IN" entity-name="ProcFacilityOutput" optional="true"/>             
+    </service>
+    <service name="batchRunMilkProcurementProducerMigration" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="batchRunMilkProcurementProducerMigration" auth="true" transaction-timeout="7200">
+           <description>This is a batch service that creates the milk procurement Producer Records</description>      
+        
+    </service>
+    
+    <service name="getUnitRoutes" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementNetworkServices" invoke="getUnitRoutes" auth="true">
+           <description>This service will return the all the route details under the unit specified</description>
+           <attribute name="unitId" mode="IN" type="String" optional="false"/>
+           <attribute name="routesList" mode="OUT" type="List" optional="false"></attribute>
+           <attribute name="routesDetailList" mode="OUT" type="List" optional="false"></attribute>
+           
+    </service>
+    <service name="getShedFacilityFinAccount" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementNetworkServices" invoke="getShedFacilityFinAccount" auth="true">
+           <description>This service will return the all the route details under the unit specified</description>
+           <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+           <attribute name="facAccntsMap" mode="OUT" type="Map" optional="false"/>
+           <attribute name="finAccountList" mode="OUT" type="List" optional="false"/>
+    </service>
+    <service name="getShedUnitsByShed" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementNetworkServices" invoke="getShedUnitsByShed" auth="true">
+           <description>This service will return the all the route details under the unit specified</description>
+           <attribute name="shedId" mode="IN" type="String" optional="true"/>
+           <attribute name="shedCode" mode="IN" type="String" optional="true"/>
+           <attribute name="unitsList" mode="OUT" type="List" optional="false"></attribute>
+           <attribute name="unitsDetailList" mode="OUT" type="List" optional="false"></attribute>           
+    </service>
+	 <service name="getProcurementFacilityRateAmount" default-entity-name="FacilityRate" engine="java" auth="true"
+        location="in.vasista.vbiz.procurement.ProcurementServices" invoke="getProcurementFacilityRateAmount">
+        <description>Get Rate Amount</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <attribute name="level" type="String" mode="OUT" optional="true"/><!-- the level the amount was retrieved from(specific -> general): facility or 'null' if not found-->
+        <attribute name="rateAmount" type="BigDecimal" mode="OUT" optional="true"/>        
+        <attribute name="rateCurrencyUomId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="OUT" optional="true"/>
+          <attribute name="slabAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <override name="rateTypeId" optional="false"/>
+    </service>
+    <service name="getShedDetailsForFacility" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementNetworkServices" invoke="getShedDetailsForFacility" auth="true">
+           <description>This service will return the Shed details for the given facilityId </description>
+           <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+           <attribute name="facility" mode="OUT" type="Map" optional="false"></attribute>
+    </service> 
+    <service name="getOpeningBalance" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementReports" invoke="getOpeningBalance" auth="true">
+           <description>This service will return the Shed details for the given facilityId </description>
+           <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+           <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+           <attribute name="periodTypeId" mode="IN" type="String" optional="false"/>
+           <attribute name="openingBalance" mode="OUT" type="Map" optional="false"></attribute>
+    </service>
+    <service name="createProcFacility"  engine="java"  auth="true"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="createProcFacility">
+        <description>Create A Center/route/unit</description>
+        <attribute name="shedId" mode="IN" type="String" optional="true"/>
+        <attribute name="unitId" mode="IN" type="String" optional="true"/>
+       	<attribute name="routeId" mode="IN" type="String" optional="true"/>
+       	<attribute name="commission" mode="IN" type="BigDecimal" optional="true"/>
+       	<attribute name="cartage" mode="IN" type="BigDecimal" optional="true"/>
+       	<attribute name="tip" mode="IN" type="BigDecimal" optional="true"/>
+       	<attribute name="opCost" mode="IN" type="BigDecimal" optional="true"/>
+       	<attribute name="eOpCost" mode="IN" type="BigDecimal" optional="true"/>
+        <auto-attributes entity-name="Facility" mode="IN" optional="true"/>
+        <auto-attributes entity-name="FinAccount" mode="IN" optional="true">
+            <exclude field-name="finAccountId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="Person" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="PostalAddress" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="TelecomNumber" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="PartyContactMechPurpose" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes> 
+        <auto-attributes entity-name="PartyGroup" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes>
+        <attribute name="facilityId" mode="OUT" type="String" optional="false"/>
+    </service>
+    <service name="addSourDistributionAdvice" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="addSourDistributionAdvice" auth="true">
+        <attribute name="milkTransferId" mode="IN" type="String" optional="false"/>
+        <attribute name="adviceValueList" mode="IN" type="List" optional="true"/>
+        <attribute name="facilityId_o_0" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_1" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_2" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_3" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_4" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_5" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_6" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_7" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_8" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityId_o_9" mode="IN" type="String" optional="true"/>
+       
+        <!-- <attribute name="quantity_o_0" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_1" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_2" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_3" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_4" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_5" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_6" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_7" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_8" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="quantity_o_9" mode="IN" type="BigDecimal" optional="true"/> -->
+    </service>
+    <service name="checkProcPeriodBilling" engine="java"
+                location="in.vasista.vbiz.procurement.ProcurementServices" invoke="checkProcPeriodBilling" auth="true">
+                <attribute name="estimatedDeliveryDate" mode="IN" type="java.sql.Timestamp" optional="true"/>
+                <attribute name="customTimePeriodId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="createProcFacilityRate" engine="java"
+        location="in.vasista.vbiz.procurement.ProcurementNetworkServices" invoke="createProcFacilityRate">
+        <description>populate Procurement Facility Rate </description>
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="rateTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="supplyTypeEnumId" mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate"  mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="acctgFormulaId" mode="IN" type="String" optional="true"/>
+        <attribute name="rateAmount" mode="IN" type="BigDecimal" optional="false"/>                                              
+    </service>
+    
+    
+    <!--services for creating facilities from dbf files  -->
+    <service name="mpMasToVbiz" engine="java" 
+            location="in.vasista.vbiz.procurement.ProcurementServices" invoke="mpMasToVbiz" transaction-timeout="72000">
+        <description>service to create Facilities from DBF file</description>
+    	<attribute name="shedId" mode="IN" type="String" optional="false"/>
+    	<attribute name="file_name" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="rtMasToVbiz" engine="java" 
+            location="in.vasista.vbiz.procurement.ProcurementServices" invoke="rtMasToVbiz" transaction-timeout="72000">
+        <description>service to create Facilities from DBF file</description>
+    	<attribute name="shedId"  mode="IN" type="String" optional="false"></attribute>
+    	<attribute name="file_name" mode="IN" type="String" optional="false"></attribute>
+    </service>
+    <service name="unitMasToVbiz" engine="java" 
+            location="in.vasista.vbiz.procurement.ProcurementServices" invoke="unitMasToVbiz" transaction-timeout="72000">
+        <description>service to create Facilities from DBF file</description>
+    	<attribute name="shedId" mode="IN" type="String" optional="false"></attribute>
+    	<attribute name="file_name" mode="IN" type="String" optional="false"></attribute>
+    </service>
+    <service name="bankMasToVbiz" engine="java" 
+            location="in.vasista.vbiz.procurement.ProcurementServices" invoke="bankMasToVbiz" transaction-timeout="72000">
+        <description>service to update Bank Details of Fin_accounts by using BANKMAS.DBF file</description>
+    	<attribute name="shedId" mode="IN" type="String" optional="false"></attribute>
+    	<attribute name="file_name" mode="IN" type="String" optional="false"></attribute>
+    </service>
+    <!-- End -->
+                
+</services>

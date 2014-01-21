@@ -1,0 +1,37 @@
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+<form name="Punch" type="single" target="emplPunch" title="" header-row-style="header-row" default-table-style="basic-table">
+    <actions>    
+        <set field="punchtime" value="${bsh: org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;HH:mm:ss&quot;)}"/> 
+       	<set field="punchdate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+        <set field="partyId" value="${userLogin.partyId}"/>
+    </actions>        
+    <auto-fields-service default-field-type="display" service-name="emplPunch" map-name="successMessageList"/>        
+	<field name="partyId" title="Name :"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName}"/></field>
+    <field name="emplPunchId"><hidden/></field>      
+    <field name="punchtime"><display/></field>
+    <field name="dateTime"><hidden/></field>        
+       <field name="InOut"  use-when="check==null" widget-style="required">
+               <drop-down allow-empty="false"  no-current-selected-key="IN">
+  		<option key="IN" description="IN"/>
+  		<option key="OUT" description="OUT"/>
+          </drop-down>
+        </field>        
+        <field name="InOut"  use-when="check!=null" widget-style="required">
+               <drop-down allow-empty="false"  no-current-selected-key="OUT">
+  		<option key="IN" description="IN"/>
+  		<option key="OUT" description="OUT"/>
+          </drop-down>
+        </field>
+        <field name="PunchType"  widget-style="required">
+         <drop-down allow-empty="false" current="selected" no-current-selected-key="Normal">
+  		<option key="Normal" description="Normal"/>
+  		<option key="Break" description="Break"/>
+  		<option key="Lunch" description="Lunch"/>
+	</drop-down>
+        </field>
+        <field name="Note" title="${uiLabelMap.CommonNote}"><text/></field>
+        <field name="submitButton" title="Submit" widget-style="smallSubmit" ><submit button-type="button"/></field>
+</form>
+</forms>
+

@@ -1,0 +1,7 @@
+PaymentMethodType_description,PaymentMethodType_paymentMethodTypeId
+Main Cash,MAIN_CASH
+Counter Cash,COUNTER_CASH
+Financial Account,FIN_ACCOUNT
+Personal Check,PERSONAL_CHECK
+Company Check,COMPANY_CHECK
+Cash On Delivery,EXT_COD

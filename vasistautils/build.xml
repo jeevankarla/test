@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Vasista copyrighted. 
+-->
+
+<project name="Vasista utils" default="build" basedir=".">
+    <import file="../macros.xml"/>
+
+    <filelist id="vasistautils-builds" dir="."
+        files="datapop/build.xml"/>
+
+    <!-- ================================================================== -->
+    <!-- Removes all created files and directories                          -->
+    <!-- ================================================================== -->
+
+    <target name="refresh">
+        <antcall target="clean"/>
+        <antcall target="build"/>
+    </target>
+
+    <target name="clean">
+        <iterate target="clean" filelist="vasistautils-builds"/>
+        <echo message="[clean] ========== Done Cleaning vasistautils =========="/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build Components                                                   -->
+    <!-- ================================================================== -->
+
+    <target name="build" depends="">
+        <echo message="[build] ========== Start Building vasistautils (Compile) =========="/>
+
+        <iterate inheritall="false" filelist="vasistautils-builds"/>
+    	<copy file="../vasistautils/datapop/build/lib/vbiz-datapop.jar" todir="../framework/webtools/build/lib"/>
+        <echo message="[build] ========== Done Building vasistutils (Compile) =========="/>    	
+    </target>
+
+</project>

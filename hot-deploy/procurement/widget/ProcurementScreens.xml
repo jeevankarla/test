@@ -1,0 +1,1968 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="FacilityTree">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="ProcurementFacilityMain"/>
+         
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="main"/>
+<!--                <set field="facilityId" from-field="parameters.facilityId"/>-->
+<!--                <set field="isTreeRoot" value="Y"/>-->
+				<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/facilityTree.groovy" />                                
+            </actions>          
+            <widgets>
+            <section>
+            <condition>
+                <if-empty field="parameters.ajaxLookup"/>
+            </condition> 
+            <widgets>
+            	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="lefthalf"> 
+                                	<screenlet title="${uiLabelMap.FormFieldTitle_company}">    
+   										<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/facilityTree.ftl"></html-template></html></platform-specific>
+									</screenlet>
+								</container>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+   				<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/facilityTree.ftl"></html-template></html></platform-specific>
+            </fail-widgets>
+        </section>         
+        </widgets>     
+		</section>
+    </screen>
+    <screen name="ProcurementLookupFacility">
+        <section>
+            <condition>
+                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupFacility}"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="entityName" value="Facility"/>
+                <set field="searchFields" value="[facilityId, facilityName, description]"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ConditionFacilityLookup.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityLookupCustomPerformFind.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="procurementLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="listProcurementLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+	</screen>    
+	<screen name="ProcurementCenterLookupFacility">
+        <section>
+            <condition>
+                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleLookupFacility}"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="entityName" value="Facility"/>
+                <set field="searchFields" value="[facilityId, facilityName, description]"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ConditionFacilityLookup.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/FacilityLookupCustomPerformFind.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="procurementCenterLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="listProcurementLookupFacility" location="component://procurement/widget/ProcurementLookupForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProcurementEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="orderentry"/>
+                <set field="tabButtonItem" value="ProcurementEntry" />
+                <set field="tabButtonItem2" value="ProcurementEntry" />
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/procurementEntry.js" global="true"/>	
+                <set field="updateFlag" value="create" global="true"/>
+                <!-- <entity-condition list="listProcurementOrders" entity-name="OrderHeaderItemProductAndFacility">
+                	<condition-expr field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
+                </entity-condition> -->               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <set field="parameters.createdByUserLoginId" value="${userLogin.userLoginId}"></set>
+                <set field="parameters.orderTypeId" value="PURCHASE_ORDER"></set> 
+                <set field="parameters.purposeTypeId" value="MILK_PROCUREMENT"></set>                
+                 <set field="viewIndex" value="0" type="Integer"/>
+                <set field="viewSize" value="1" type="Integer"/>
+                <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="OrderHeaderItemProductAndFacility"/>
+                    <field-map field-name="orderBy" value="-createdDate"/>
+                    <field-map field-name="viewIndex" from-field="viewIndex"/>
+                	<field-map field-name="viewSize" from-field="viewSize"/>                  
+                </service>
+                <set field="listProcurementOrders" from-field="result.listIt"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/>
+                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	<!-- <container style="lefthalf">
+                    		<screenlet title="${uiLabelMap.ProcurementEntry}">                    			
+          					    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/CheckListMenu.ftl"/></html></platform-specific>
+						       		<include-form location="component://procurement/widget/ProcurementForms.xml" name="ProcurementEntry"/>
+                    		</screenlet>                     		
+                    	</container>                    	
+                   		  <screenlet>
+                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListRecentProcurementEntry"/>                    		
+                   		</screenlet> -->
+                   		
+	          					<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntry.ftl"/></html></platform-specific>
+							                         
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+     <screen name="EditProcurementEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="ProcurementEntry"/>
+                <set field="tabButtonItem" value="ProcurementEntry" />
+                <set field="tabButtonItem2" value="EditProcurementEntry" />
+                <set field="tabButtonItem3" from-field="parameters.tabButtonItem" default-value="EditProcurementEntry"/>
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/procurementEntry.js" global="true"/>	
+                <!-- <entity-condition list="listProcurementOrders" entity-name="OrderHeaderItemProductAndFacility">
+                	<condition-expr field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
+                </entity-condition> -->
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <set field="parameters.createdByUserLoginId" value="${userLogin.userLoginId}"></set>
+                <set field="parameters.orderTypeId" value="PURCHASE_ORDER"></set> 
+                <set field="parameters.purposeTypeId" value="MILK_PROCUREMENT"></set>                
+                 <set field="viewIndex" value="0" type="Integer"/>
+                <set field="viewSize" value="1" type="Integer"/>
+                <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="OrderHeaderItemProductAndFacility"/>
+                    <field-map field-name="orderBy" value="-createdDate"/>
+                    <field-map field-name="viewIndex" from-field="viewIndex"/>
+                	<field-map field-name="viewSize" from-field="viewSize"/>                  
+                </service>
+                <set field="updateFlag" value="update" global="true"/>
+                <set field="editRecord" from-field="parameters.editRecord" default-value="false" global="true"/> 
+                <set field="listProcurementOrders" from-field="result.listIt"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                    	<include-menu name="EditProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	               		
+	          					<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntry.ftl"/></html></platform-specific>
+							                         
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProcurementEntryAlt">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="ProcurementEntry"/>
+                <set field="tabButtonItem" value="ProcurementEntry" />
+                <set field="tabButtonItem2" value="EditProcurementEntry" />
+                <entity-one value-field="procurementEntry" entity-name="OrderHeaderItemProductAndFacility" auto-field-map="true">
+                	<field-map field-name="orderId" from-field="parameters.orderId"/>
+                	<field-map field-name="orderItemSeqId" from-field="parameters.orderItemSeqId"/>
+                </entity-one>               
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	<container style="lefthalf">
+                    		<screenlet title="${editProcurementEntry}">
+						       		<include-form location="component://procurement/widget/ProcurementForms.xml" name="EditProcurementEntry"/>
+                    		</screenlet>                       		
+                    	</container>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+     <screen name="EditSnfFatValidation">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementReports"/>               
+                <set field="tabButtonItem" value="Billing" />
+                <set field="tabButtonItem2" value="EditSnfFatValidations" />
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UpdateFatSnfValidation.groovy" />
+                <set field="updateFatSnfMap" value="${updateFatSnfMap}"/>            
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	<container style="lefthalf">
+                    		<screenlet title="${validationTypeId}">
+						       		<include-form location="component://procurement/widget/ProcurementForms.xml" name="EditSnfFatValidation"/>
+                    		</screenlet>                       		
+                    	</container>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProcValidationEntry">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementReports"/>	            
+               <set field="tabButtonItem" value="Billing"/>
+               <set field="tabButtonItem2" value="EditBillingValidationEntry"/>               
+                <entity-one value-field="procValidationEntry" entity-name="ProcBillingValidation" auto-field-map="true">
+                	<field-map field-name="shedId" from-field="parameters.shedId"/>
+                	<field-map field-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+                	<field-map field-name="validationTypeId" from-field="parameters.validationTypeId"/>
+                	<field-map field-name="sequenceNum" from-field="parameters.sequenceNum"/>
+                </entity-one> 
+                <set field="centerId" from-field="parameters.centerId"/>   
+                <set field="orderId" from-field="parameters.orderId"/>   
+                <entity-condition list="dedList" entity-name="OrderHeaderAdjustmentAndAdjustmentType"> 
+	                <condition-list>
+	                	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_DEDUCTIONS"/>
+	                	<condition-expr field-name="statusId" operator="equals" value="ORDER_CREATED"/>
+	                	<condition-expr field-name="originFacilityId" operator="equals" from-field="centerId"/>
+	                	<condition-expr field-name="orderId" operator="equals" from-field="orderId"/>
+	                </condition-list>        	
+                </entity-condition>
+                <set field="deductionsList" value="${dedList}"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillingValidation.groovy" />                
+                <set field="totalAmt" value="${totalAmt}"/>                    
+            </actions>
+            <widgets>
+            	<section>
+                   	<condition>
+                       	<not><if-empty field="parameters.validationTypeId"/></not>
+                   	</condition>
+                   	<widgets>
+                   		<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                   			<decorator-section name="body">
+                    			<include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>                    	
+                    			<container style="lefthalf">
+                    				<screenlet>
+						       			<include-form location="component://procurement/widget/ProcurementForms.xml" name="EditProcValidationEntry"/>						       			
+                    				</screenlet>  
+                    				<screenlet title="Edit Negative Amount Validation">	
+                    					<include-form location="component://procurement/widget/ProcurementForms.xml" name="DeductionTypesList"/>
+                    				</screenlet>  	                     		
+                    			</container>  
+                  		 	</decorator-section>
+               			</decorator-screen>
+                   	</widgets>
+                  </section>
+            </widgets>
+        </section>
+    </screen>    
+    <screen name="FindProcurementEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="orderentry"/>
+                <set field="tabButtonItem" value="ProcurementEntry" />
+                <set field="tabButtonItem2" value="FindProcurementEntry" />
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/removeProcurementEntrySearchParams.js" global="true"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="unitCode" from-field="context.unitCode"/> 	
+             <!--    <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="30"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/> -->
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>                    	 
+                   		<screenlet title="${uiLabelMap.ProcurementEntry}">                   			
+                   			<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindProcurementEntry"/>
+                   		</screenlet>                    	           	
+                   		<screenlet title="${uiLabelMap.ProcurementEntry}">                   			
+                   			<link target="listProcurementEntries.csv" text="Export As CSV" style="buttontext create" > 
+                   				<parameter param-name="supplyTypeEnumId" from-field="parameters.supplyTypeEnumId"/>
+                   				<parameter param-name="shedId" from-field="parameters.shedId"/>
+                   				<parameter param-name="unitCode" from-field="parameters.unitCode"/>
+                   				<parameter param-name="facilityCode" from-field="parameters.facilityCode"/>
+								<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+								<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
+								<parameter param-name="fromDate" from-field="parameters.fromDate"/>
+								<parameter param-name="thruDate" from-field="parameters.thruDate"/>
+								<parameter param-name="changeByUserLoginId" from-field="parameters.changeByUserLoginId"/>
+								<parameter param-name="orderTypeId" from-field="parameters.orderTypeId"/>
+								<parameter param-name="purposeTypeId" from-field="parameters.purposeTypeId"/>
+								<parameter param-name="productId" from-field="parameters.productId"/>                   			
+                   			</link>
+                   			<link target="MPROC.csv" text="Export FoxPro CSV " style="buttontext create" > 
+                   				<parameter param-name="supplyTypeEnumId" from-field="parameters.supplyTypeEnumId"/>
+                   				<parameter param-name="shedId" from-field="parameters.shedId"/>
+                   				<parameter param-name="unitCode" from-field="parameters.unitCode"/>
+                   				<parameter param-name="facilityCode" from-field="parameters.facilityCode"/>
+								<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+								<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
+								<parameter param-name="fromDate" from-field="parameters.fromDate"/>
+								<parameter param-name="thruDate" from-field="parameters.thruDate"/>
+								<parameter param-name="changeByUserLoginId" from-field="parameters.changeByUserLoginId"/>
+								<parameter param-name="orderTypeId" from-field="parameters.orderTypeId"/>
+								<parameter param-name="purposeTypeId" from-field="parameters.purposeTypeId"/>
+								<parameter param-name="productId" from-field="parameters.productId"/>                   			
+                   			</link>
+                   			<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListProcurementEntry"/>                    		
+                   		</screenlet>                         
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ListProcumentEntriesCSV">
+        <section>
+        	<actions>
+        	<set field="headerItem" value="ProcurementEntry"/>
+                <set field="tabButtonItem" value="ProcurementEntry" />
+        		 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <set field="parameters.createdByUserLoginId" value="${parameters.createdByUserLoginId}"></set>
+                <set field="parameters.orderTypeId" value="PURCHASE_ORDER"></set> 
+                <set field="parameters.purposeTypeId" value="MILK_PROCUREMENT"></set> 
+                <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+                <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set>       
+				<set field="viewSize" value="5000" type="Integer"/>       
+                <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="OrderHeaderItemProductAndFacility"/>
+                    <field-map field-name="orderBy" value="-createdDate"/>
+                    <field-map field-name="viewIndex" from-field="viewIndex"/>             		         
+                </service>
+                <set field="listProcurementOrders" from-field="result.listIt"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PrepareProcurementEntryList.groovy"/>
+        	</actions>
+            <widgets>
+              	<include-form name="ProcumentEntriesCsv" location="component://procurement/widget/ProcurementForms.xml"/>            	
+           </widgets>
+        </section>
+    </screen>
+    <screen name="ProcCheckListPDF">
+        <section>
+        	<actions>
+        		<set field="headerItem" value="ProcurementEntry"/>
+                <set field="tabButtonItem" value="ProcurementEntry"/>
+        		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcCheckList.groovy"/>
+        	</actions>
+            <widgets>            	
+            	<platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ProcCheckList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+           </widgets>
+        </section>
+    </screen> 
+    <screen name="FindFacility">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductFindFacilities"/>
+                <set field="tabButtonItem" value="facility" />
+                <set field="subTabButtonItem" value="facility"/>                
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacility.groovy"/>
+            </actions>           
+            <widgets>
+            	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" value="one" operator="equals"/>
+                                    </condition>
+                                    <actions>
+                                        <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
+                                    </actions>
+                                    <widgets>
+                                        <section>
+                                            <condition>
+                                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                            </condition>
+                                            <widgets>
+                                                <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                                <include-menu name="FindLocationsTabBar"
+									                 location="component://product/widget/facility/FacilityMenus.xml"/>
+                                                <section>
+                                                    <condition>
+                                                        <not><if-empty field="facilityId"/></not>
+                                                    </condition>
+                                                    <widgets>
+                                                        <container style="button-bar">
+                                                            <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/>
+                                                            <link target="/workeffort/control/calendar" text="${uiLabelMap.CommonViewCalendar}" style="buttontext" url-mode="inter-app">
+                                                                <parameter param-name="facilityId"/>
+                                                                <parameter param-name="externalLoginKey" from-field="parameters.externalLoginKey"/>
+                                                            </link>
+                                                        </container>
+                                                        <label style="h1">${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facilityId}]</label>
+                                                        <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                                    </widgets>
+                                                    <fail-widgets>
+                                                        <label style="h1">${uiLabelMap.ProductNewFacility}"</label>
+                                                        <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                                    </fail-widgets>
+                                                </section>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                            </fail-widgets>
+                                        </section>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" value="ten" operator="equals"/>
+                                    </condition>
+                                    <widgets>
+                                        <label text="${uiLabelMap.FacilitySelection}" style="h1"/>
+                                        <section>
+                                            <condition>
+                                                <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
+                                            </condition>
+                                            <widgets>
+                                                <container style="button-bar"><link target="EditFacility" text="${uiLabelMap.ProductCreateNewFacility}" style="buttontext create"/></container>
+                                            </widgets>
+                                        </section>
+                                        <screenlet>
+                                            <include-form name="FindFacility10" location="component://product/widget/facility/FacilityForms.xml"/>
+                                        </screenlet>
+                                        
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" value="more" operator="equals"/>
+                                    </condition>
+                                    <widgets>
+                                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                            <decorator-section name="menu-bar">
+                                                <section>
+                                                    <condition>
+                                                        <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
+                                                    </condition>
+                                                    <widgets>
+                                                        <container style="button-bar">
+                                                        <link target="EditFacility" text="${uiLabelMap.ProductCreateNewFacility}" style="buttontext"/>
+                                                        <link target="boothMaster.csv" text="Export As CSV" style="buttontext create" />		
+                                                        </container>
+                                                    </widgets>
+                                                </section>
+                                            </decorator-section>
+                                            <decorator-section name="search-options">
+                                                <include-form name="FindFacilityOptions" location="component://product/widget/facility/FacilityForms.xml"/>
+                                            </decorator-section>
+                                            <decorator-section name="search-results">
+                                                <include-screen name="FacilitySearchResults" location="component://product/widget/facility/FacilityScreens.xml"/>
+                                            </decorator-section>
+                                        </decorator-screen>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="EditFacility">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductNewFacility"/>
+                <set field="tabButtonItem" value="EditFacility" />
+				<set field="subTabButtonItem" value="createnewlocation" />
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
+                 <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="routesList" value="${routesList}"/>
+               <set field="unitsList" value="${unitsList}"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="facility"/></not>
+                    </condition>
+                    <actions>
+                        <set field="titleProperty" value="ProductEditFacility"/>
+                    </actions>
+                    <widgets>
+                        <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                            <decorator-section name="body">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                    </condition>
+                                    <widgets>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="facilityId"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <container style="button-bar">
+                                                    <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/><!--
+                                                    <link target="/workeffort/control/calendar" text="${uiLabelMap.CommonViewCalendar}" style="buttontext" url-mode="inter-app">
+                                                        <parameter param-name="facilityId"/>
+                                                        <parameter param-name="externalLoginKey" from-field="parameters.externalLoginKey"/>
+                                                    </link>
+                                                --></container>
+                                                <label style="h1">${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facilityId}]</label>
+                                                <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+                                            </widgets>
+                                        </section>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                    </fail-widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
+                    </widgets>
+                    <fail-widgets>
+                        <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                                    </condition>
+                                    <actions>
+                                        <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="AP"/>
+                                        <set field="dependentForm" value="EditFacilityForm"/>
+                                        <set field="paramKey" value="countryGeoId"/>                                        
+                                        <set field="mainId" value="countryGeoId"/>
+                                        <set field="dependentId" value="stateProvinceGeoId"/>
+                                        <set field="requestName" value="getAssociatedStateList"/>
+                                        <set field="responseName" value="stateList"/>
+                                        <set field="dependentKeyName" value="geoId"/>
+                                        <set field="descName" value="geoName"/>
+                                        <set field="selectedDependentOption" value="_none_"/>
+                                    </actions>
+                                    <widgets>
+                                         <include-menu name="ProcurementTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                                        <include-menu name="FindLocationsTabBar"
+									           location="component://product/widget/facility/FacilityMenus.xml"/>
+                                        <label style="h1">${uiLabelMap.ProductNewFacility}</label>
+                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                               			<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                                        <include-form name="EditFacilityForm" location="component://procurement/widget/ProcurementForms.xml"/>
+                                        <!-- <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+ -->                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                    </fail-widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="EditFacilityParties">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="EditFacilityParties"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="roleTypeId" from-field="parameters.roleTypeId"/>
+                <entity-one entity-name="Facility" value-field="facility"/>
+                <entity-and entity-name="FacilityParty" list="facilityParties" filter-by-date="true">
+                    <field-map field-name="facilityId"/>
+                    <order-by field-name="partyId"/>
+                </entity-and>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="title" value="${uiLabelMap.PageTitleEditFacilityParties}"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <container style="h1">
+                            <label>${title}</label>
+                        </container>
+                        <container style="button-bar">
+                            <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/>
+                        </container>
+                        <screenlet id="add-facility-party-role" title="${uiLabelMap.ProductAddFacilityPartyRole}" collapsible="true">
+                            <include-form name="AddPartyToFacility" location="component://product/widget/facility/FacilityForms.xml"/>
+                        </screenlet>
+                        <include-form name="EditFacilityParties" location="component://product/widget/facility/FacilityForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="EditFacilityContent">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="EditFacilityContent"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <entity-one entity-name="Facility" value-field="facility"/>
+                <entity-and entity-name="FacilityContentDetail" list="facilityContentDetails" filter-by-date="true">
+                    <field-map field-name="facilityId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-and>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap"/>
+                <set field="title" value="${uiLabelMap.PageTitleEditFacilityContent}"/>  
+            </actions>
+            <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="h1">${title}</label>
+                        </container>
+                        <screenlet id="add-facility-content" title="${uiLabelMap.ProductAddFacilityContent}" collapsible="true">
+                            <include-form name="AddFacilityContent" location="component://product/widget/facility/FacilityForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListFacilityContent" location="component://product/widget/facility/FacilityForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="EditFacilityGeoPoint">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="EditFacilityGeoPoint"/>
+                <set field="titleProperty" value="PageTitleFacilityGeoLocation"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <entity-one entity-name="Facility" value-field="facility"/>
+                <get-related-one relation-name="GeoPoint" to-value-field="geoPoint" value-field="facility"/>
+                <get-related-one relation-name="ElevationUom" to-value-field="uom" value-field="geoPoint"/>
+<!-- 		
+                <set field="geoPoints[+0].lat" from-field="geoPoint.latitude"/>
+                <set field="geoPoints[0].lon" from-field="geoPoint.longitude"/>
+                <set field="geoChart.dataSourceId" from-field="geoPoint.dataSourceId"/>
+                <set field="geoChart.width" value="600px"/>
+                <set field="geoChart.height" value="500px"/>
+                <set field="geoChart.points" from-field="geoPoints"/>  
+-->
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacilityGeoPoint.groovy"/>                         
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="title" value="${uiLabelMap.PageTitleFacilityGeoLocation}"/>  
+            </actions>
+            <widgets>
+            	 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="h1">${title}</label>
+                        </container>                    
+                        <screenlet id="edit-facility-geopoint" title="${uiLabelMap.ProductEditFacilityGeoLocation}" collapsible="true" initially-collapsed="true">
+                            <include-form name="EditFacilityGeoPoint" location="component://product/widget/facility/FacilityForms.xml"/>
+                        </screenlet>
+                        <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>        
+        </section>
+    </screen>
+     <screen name="PartyFinancialHistory">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PartyFinancialHistory"/>
+                <set field="headerItem" value="accountsMain"/>
+                <set field="tabButtonItem" value="FinancialHistory"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-field="party"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="Party" value-field="party"/>
+                <entity-one entity-name="Person" value-field="lookupPerson"/>
+                <entity-one entity-name="PartyGroup" value-field="lookupGroup"/>                
+            </actions>
+            <widgets>
+            	 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+						<section>
+							<condition>
+                            	<or>
+                                	<not><if-empty field="lookupPerson"/></not>
+                                    <not><if-empty field="lookupGroup"/></not>
+                                </or>
+                           </condition>
+                           <widgets>
+                           		<label style="h1" text="${parameters.facilityId} [${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName}]"/>
+                           </widgets>
+                           <fail-widgets>
+                           		<label style="h1" text="${uiLabelMap.PartyNewUser}"/>
+                           </fail-widgets>
+                        </section>                    
+                        <label style="h1" text="${uiLabelMap.PartyFinancialHistory}"/>
+                        <section>
+                            <actions>
+                                <entity-condition entity-name="InvoiceAndApplAndPayment" list="ListInvoicesApplPayments">
+                                    <condition-list combine="and">
+                                        <condition-list combine="or">
+                                            <condition-list combine="and">
+                                                <condition-expr field-name="partyId" from-field="partyId"/>
+                                                <condition-expr field-name="partyIdFrom" from-field="defaultOrganizationPartyId"/>
+                                            </condition-list>
+                                            <condition-list combine="and">
+                                                <condition-expr field-name="partyId" from-field="defaultOrganizationPartyId"/>
+                                                <condition-expr field-name="partyIdFrom" from-field="partyId"/>
+                                            </condition-list>
+                                        </condition-list>
+                                        <condition-expr field-name="statusId" operator="not-equals" value="INVOICE_IN_PROCESS"/>
+                                        <condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
+                                        <condition-expr field-name="statusId" operator="not-equals" value="INVOICE_WRITEOFF"/>
+                                    </condition-list>
+                                </entity-condition>
+                            </actions>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="ListInvoicesApplPayments"/></not>
+                                    </condition>
+                                    <actions>
+                                        <set field="actualCurrency" value="false" type="Boolean"/>
+                                        <set field="actualCurrencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
+                                    </actions>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap.AccountingInvoicesApplPayments}" navigation-form-name="Invoices">
+                                            <include-form name="ListInvoicesApplPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                            <section>
+                                                <condition>
+                                                    <and>
+                                                        <not><if-empty field="party.preferredCurrencyUomId"/></not>
+                                                        <if-compare-field field="defaultOrganizationPartyCurrencyId" operator="not-equals" to-field="party.preferredCurrencyUomId"/>
+                                                    </and>
+                                                </condition>
+                                                <actions>
+                                                    <set field="actualCurrency" value="true" type="Boolean"/>
+                                                    <set field="actualCurrencyUomId" from-field="party.preferredCurrencyUomId"/>
+                                                </actions>
+                                                <widgets>
+                                                    <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
+                                                    <include-form name="ListInvoicesApplPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                                </widgets>
+                                            </section>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                        <section>
+                            <actions>
+                                <set field="actualCurrency" value="false" type="Boolean"/>
+                                <set field="actualCurrencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyInvoicesNotApplied}" navigation-form-name="partyFinancialHistoryInvoicesN">
+                                    <include-form name="ListUnAppliedInvoices" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <and>
+                                                <not><if-empty field="party.preferredCurrencyUomId"/></not>
+                                                <if-compare-field field="defaultOrganizationPartyCurrencyUomId" operator="not-equals" to-field="party.preferredCurrencyUomId"/>
+                                            </and>
+                                        </condition>
+                                        <actions>
+                                            <set field="actualCurrency" value="true" type="Boolean"/>
+                                            <set field="actualCurrencyUomId" from-field="party.preferredCurrencyUomId"/>
+                                        </actions>
+                                        <widgets>
+                                            <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
+                                            <include-form name="ListUnAppliedInvoices" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <actions>
+                                <set field="actualCurrency" value="false" type="Boolean"/>
+                                <set field="actualCurrencyUomId" from-field="defaultOrganizationPartyCurrencyId"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyPaymentsNotApplied}" navigation-form-name="partyFinancialHistoryPaymentsN">
+                                    <include-form name="ListUnAppliedPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <and>
+                                                <not><if-empty field="party.preferredCurrencyUomId"/></not>
+                                                <if-compare-field field="defaultOrganizationPartyCurrencyId" operator="not-equals" to-field="party.preferredCurrencyUomId"/>
+                                            </and>
+                                        </condition>
+                                        <actions>
+                                            <set field="actualCurrency" value="true" type="Boolean"/>
+                                            <set field="actualCurrencyUomId" from-field="party.preferredCurrencyUomId"/>
+                                        </actions>
+                                        <widgets>
+                                            <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
+                                            <include-form name="ListUnAppliedPayments" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <actions>
+                                <set field="actualCurrency" value="false" type="Boolean"/>
+                                <set field="actualCurrencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyFinancialSummary}${defaultOrganizationPartyId}" navigation-form-name="partyFinancialSummary">
+                                    <include-form name="partyFinancialSummary" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <and>
+                                                <not><if-empty field="party.preferredCurrencyUomId"/></not>
+                                                <if-compare-field field="defaultOrganizationPartyCurrencyUomId" operator="not-equals" to-field="party.preferredCurrencyUomId"/>
+                                            </and>
+                                        </condition>
+                                        <actions>
+                                            <set field="actualCurrency" value="true" type="Boolean"/>
+                                            <set field="actualCurrencyUomId" from-field="party.preferredCurrencyUomId"/>
+                                        </actions>
+                                        <widgets>
+                                            <label style="h2" text="${uiLabelMap.PartyCurrency}"></label>
+                                            <include-form name="partyFinancialSummary" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <actions>
+                                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/BillingAccounts.groovy"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingBillingAccount}">
+                                    <include-form name="PartyBillingAccount" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <actions>
+                                <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnHeader.groovy"/>
+                            </actions>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.OrderOrderReturns}">
+                                    <include-form name="PartyReturns" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- <screen name="CheckListReport">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+        		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntyListReport.groovy"/>
+        	</actions>
+            <widgets>
+            	<include-form name="ProcurementEntryCheckList" location="component://procurement/widget/ProcurementForms.xml"/>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntryListReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+           </widgets>
+        </section>
+    </screen> -->
+    <screen name="ProcurementCheckListReport">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+        		<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntryListReport.groovy"/>
+        		<set field="tenantId" value="${tenantId}"/>
+        	</actions>
+            <widgets>
+            	<section>
+            		<condition>
+           				<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            		<widgets>
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component://milkline/webapp/milkline/procurement/ProcurementEntryListReport.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>
+            		<fail-widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ProcurementEntryListReport.fo.ftl"/></xsl-fo>
+                		</platform-specific>            			
+            		</fail-widgets>
+            	</section>            	 
+           </widgets>
+        </section>
+    </screen>
+    <screen name="ProcurementReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementReports"/>	            
+               <set field="tabButtonItem" value="reports"/> 
+               <set field="reportDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDate()}" type="Date"/>                
+			   <set field="reportDateStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String"/> 				  
+               <entity-condition list="timePeriodList" entity-name="FacilityCustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                		<condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>                	   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+               </entity-condition>
+               <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementProducts(dispatcher.getDispatchContext(),context)); }"/>
+              
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="routesList" value="${routesList}"/>
+               <set field="unitsList" value="${unitsList}"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+               <set field="tenantId" value="${tenantId}"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/> 
+            </actions>
+            <widgets>
+            	<section>
+            		<condition>
+            			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            	  <widgets>
+            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+	                    	<container>
+	                        	<label style="h1">Procurement Reports</label>                       	
+	                        </container>  
+   							<platform-specific><html><html-template location="component://milkline/webapp/milkline/procurement/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+                	</decorator-section>
+                   </decorator-screen>
+            	  </widgets>
+            	  <fail-widgets>
+            	  	<decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/shedSelection.ftl"></html-template></html></platform-specific>  
+	                    	<container>
+	                        	<label style="h1">Procurement Reports</label>                       	
+	                        </container>  
+   							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementReports.ftl"></html-template></html></platform-specific>                     
+                	</decorator-section>
+                   </decorator-screen>
+            	  </fail-widgets>
+            	</section>
+            	 
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MilkBillReportTXT">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MilkBillReport.groovy"/>   
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+                <set field="tenantId" value="${tenantId}"/>     		        		
+        	</actions>
+            <widgets>
+            	<section>
+            		<condition>
+            			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            		<widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://milkline/webapp/milkline/procurement/PassOrderMilkBillReport.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>
+            		<fail-widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/MilkBillReport.fo.ftl"/></xsl-fo>
+                		</platform-specific>            			
+            		</fail-widgets>
+            	</section>            	 
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ShedWiseAmountAbstract">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseAmountAbstract.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BankWiseTotalPayment">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseTotalPayment.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BankWiseTotalPayment.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnitBankWiseStatement">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankWiseTotalPayment.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitBankWiseStatement.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BillsAbstract">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BillsAbstract.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="RouteWiseBillsAbstract">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/RouteWiseBillsAbstract.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FeedRecoveriesListTXT">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/feedRecoveries.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/feedRecoveries.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BankAbstarct">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BillsAbstract.groovy"/>
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/BankAbstarct.groovy"/>             		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/BankAbstarct.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnitWisePtcRecoveryAbstract">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>                
+        	    <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWisePtcRecoveryAbstract.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/unitWisePtcRecoveryAbstract.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="DayWiseAnalysisReport">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/DayWiseAnalysisReport.groovy"/>        		        		
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+                <set field="tenantId" value="${tenantId}"/>        		        		
+        	</actions>
+            <widgets>
+            	<section>
+            		<condition>
+            			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            		<widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://milkline/webapp/milkline/procurement/DayWiseAnalysisReport.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>
+            		<fail-widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/DayWiseAnalysisReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            		</fail-widgets>
+            	</section>            	
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CentreWiseKgfatAccount">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/CenterWisePeriodAnalysisReport.groovy"/>                               
+            </actions>
+            <widgets>
+                 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/CenterWisePeriodAnalysisReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="unitWiseCenterWiseMilkCollections">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseCenterWiseMilkCollections.groovy"/>                               
+            </actions>
+            <widgets>
+                 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitWiseCenterWiseMilkCollections.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnitWiseDayWiseKgFatAccount">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseDayWiseKgFatAccount.groovy"/>                               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+                <set field="tenantId" value="${tenantId}"/>                              
+            </actions>
+            <widgets>
+            	<section>
+            		<condition>
+           				<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            		<widgets>
+                  <platform-specific>
+                   			 <xsl-fo><html-template location="component://milkline/webapp/milkline/procurement/UnitWiseDayWiseKgFatAccount.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>
+            		<fail-widgets>
+            			 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitWiseDayWiseKgFatAccount.fo.ftl"/></xsl-fo>
+                </platform-specific> 
+            		</fail-widgets>
+            	</section>                   
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnitDayWiseTotals">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseDayWiseKgFatAccount.groovy"/>                               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+                <set field="tenantId" value="${tenantId}"/>                              
+            </actions>
+            <widgets>
+            	<section>            		
+            		<widgets>
+                  		<platform-specific>
+                   			  <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitWiseDayWiseTotals.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>            		
+            	</section>                   
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ShedWiseProcurementAbstract">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseProcurementAbstract.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseProcurementAbstract.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ShedWiseInputOutputAbstract">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedInputOutputAbst.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/ShedWiseInputOutputAbst.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnitMilkBillNetPayable">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ShedWiseAmountAbstract.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseNetPayable.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitMilkBillNetPayable.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnitWiseMilkBillSummary">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseMilkBillSummary.groovy"/>   
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getTenantId.groovy"/>
+                <set field="tenantId" value="${tenantId}"/>      		        		
+        	</actions>
+            <widgets>
+            	<section>
+            		<condition>
+            			<if-has-permission permission="MILKLINE" action="_VIEW "/>
+            		</condition>
+            		<widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://milkline/webapp/milkline/procurement/UnitWiseMilkBillSummary.fo.ftl"/></xsl-fo>
+                		</platform-specific>
+            		</widgets>
+            		<fail-widgets>
+            			 <platform-specific>
+                    		<xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitWiseMilkBillSummary.fo.ftl"/></xsl-fo>
+                		 </platform-specific>            			
+            		</fail-widgets>
+            	</section>            	 
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnitWiseCenterWiseBankStmt">
+        <section>
+        	<actions>
+        		<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseCenterWiseBankStmt.groovy"/>        		        		
+        	</actions>
+            <widgets>
+            	 <platform-specific>
+                    <xsl-fo><html-template location="component://procurement/webapp/procurement/facility/UnitWiseCenterWiseBankStmt.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProcurementBilling">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementBilling"/>	            
+               <set field="tabButtonItem" value="Billing"/>
+               <set field="tabButtonItem2" value="ProcurementBilling"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <set field="shedList" value="${shedList}"/>
+               <set field="unitsList" value="${units}"/>
+                 <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">  
+                 	<condition-expr field-name="periodTypeId" operator="equals"  value="PROC_BILL_MONTH"/>              
+	                <order-by field-name="-createdStamp"/>  		
+                </entity-condition>  
+                <entity-condition list="listProcurementBilling" entity-name="PeriodBilling">
+                	<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_PROC_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+                	</condition-list>                	
+                	<order-by field-name="-customTimePeriodId"/>
+                	<order-by field-name="-lastModifiedDate"/>
+                </entity-condition>
+                <set field="facilityId" value="${parameters.facilityId}"/>               
+            </actions>
+             <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+                    	<include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    <container style="lefthalf">
+                    <screenlet title="Process Billing">
+                        <platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcBilling.ftl"/></html></platform-specific>      		         
+					</screenlet>
+					</container>
+                    	<container>
+							<container style="clear"></container>
+					   </container>  
+					   <container>
+                    	<screenlet title="Process Billing List">
+						       	<include-form name="ListProcurementBilling" location="component://procurement/widget/ProcurementForms.xml"/>
+                    	</screenlet> 
+                    	</container>          		         
+                    </decorator-section>                    
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ <screen name="FindProcurementBillingValidation">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleProcurementBilling"/>	            
+               <set field="tabButtonItem" value="Billing"/>
+               <set field="tabButtonItem2" value="FindProcurementBillingValidation"/>
+                <entity-condition list="statusItemList" entity-name="StatusItem">
+                	<condition-list combine="or">
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
+                		<condition-expr field-name="statusId" operator="equals" value="ITEM_CREATED"/>
+                	</condition-list>
+                </entity-condition>
+                <entity-condition list="shedList" entity-name="Facility">
+                	<condition-list combine="and">
+                		<condition-expr field-name="facilityTypeId" operator="equals" value="SHED"/>
+                		<condition-expr field-name="parentFacilityId" operator="equals" value="MAIN_PLANT"/>
+                	</condition-list>
+                </entity-condition>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">
+                	<condition-expr field-name="periodTypeId" operator="equals"  value="PROC_BILL_MONTH"/>                	
+                	<order-by field-name="-fromDate"/>
+                </entity-condition>
+               <set field="testTimePeriodId" value="${groovy:import org.ofbiz.entity.util.EntityUtil; (EntityUtil.getFirst(timePeriodList)).get(&quot;customTimePeriodId&quot;)}"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcBillingValidationSearch.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <set field="shedId" from-field="context.shedId"/>
+               <set field="unitCode" from-field="context.unitCode"/>
+               <service service-name="performFind" result-map="result" >
+	                 <field-map field-name="inputFields" from-field="parameters"/>
+	                 <field-map field-name="entityName" value="ProcBillingValidation"/>
+	                 <field-map field-name="orderBy" value="centerId"/>
+	                 <field-map field-name="viewIndex" from-field="viewIndex"/>
+	             	 <field-map field-name="viewSize" from-field="viewSize"/>                  
+            	</service>
+            	<set field="listProcurementBillingValidation" from-field="result.listIt"/> 
+            	<set field="listProcBillingValidation" value="${result.listIt}"/>
+            	<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/SeperationOfValidations.groovy" />
+            	<set field="negativeAmtList" value="${negativeAmtList}"/> 
+            	<set field="qtySnfFinalList" value="${qtySnfFinalList}"/>
+            	<set field="outLierFinalList" value="${outLierFinalList}"/>           	                   
+            </actions>
+            <widgets>
+            	 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="ProcurementBillingTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>  
+                    	<container style="button-bar">
+							<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/RunValidation.ftl"/></html></platform-specific>							  	        					
+							<link url-mode="plain" target="javascript:showRunValidationForm();" text="Run Validation" style="buttontext create"  link-type="anchor"/>
+						</container>
+                    	<container style="lefthalf">
+                        	<label style="h1">Billing Validation </label>
+                        	<screenlet title="Find Invalid Record">                        	
+                        		<include-form name="FindProcurementBillingValidation" location="component://procurement/widget/ProcurementForms.xml"/>
+                        	</screenlet>
+                        	<screenlet title="List OutLier Validation">                        	
+                        		<include-form name="ListOutLierBillingValidation" location="component://procurement/widget/ProcurementForms.xml"/>
+                        	</screenlet>
+                        	<screenlet title="List Negative Validation">                        	
+                        		<include-form name="ListNegativeAmtValidation" location="component://procurement/widget/ProcurementForms.xml"/>
+                        	</screenlet>
+                        	<screenlet title="Qty SNF FAT  Validation">                        	
+                        		<include-form name="ListQtySnfFatValidation" location="component://procurement/widget/ProcurementForms.xml"/>
+                        	</screenlet>                        	                    	
+                        </container>             
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <screen name="ImportREILData">
+       <section>
+           <actions>
+               <set field="titleProperty" value="PageTitleProcurementEntry"/>
+               <set field="headerItem" value="ProcurementEntry"/>
+               <set field="tabButtonItem" value="ProcurementEntry" />
+               <set field="tabButtonItem2" value="ImportREILData" />
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap"/>
+               <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap"/>                
+           </actions>
+           <widgets>
+               <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                   <decorator-section name="body">
+                   	<include-menu name="ProcurementEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                   		<platform-specific>
+                           <html><html-template location="component://procurement/webapp/procurement/facility/ImportREILData.ftl"/></html>
+                     	</platform-specific>	                         
+                   </decorator-section>
+               </decorator-screen>
+           </widgets>
+       </section>
+    </screen>
+    <screen name="ProcurementRates">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Procurement Rates"/>               
+               <set field="tabButtonItem" value="rates"/>
+               <set field="tabButtonItem2" value="PriceCalculator"/>
+               <script  location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PriceCalculator.groovy"/>
+               <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+                <set field="shedList" value="${shedList}"/>
+                <set field="unitsList" value="${unitsList}"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                        <include-menu name="PriceCalculatorTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        <container style="lefthalf">                            
+                        	<screenlet title="Price Calculator">                        	
+                                <platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+                                <include-form name="PriceCalculator" location="component://procurement/widget/ProcurementForms.xml"/>
+                            </screenlet>
+                            <screenlet title="Price Details">                           
+                                <include-form name="RatesList" location="component://procurement/widget/ProcurementForms.xml"/>
+                            </screenlet>                        
+                        </container>             
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProcurementPriceChart">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Procurement Rates"/>               
+               <set field="tabButtonItem" value="rates"/>
+               <set field="tabButtonItem2" value="PriceChart"/>
+               <script  location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PriceChart.groovy"/>
+               <set field="priceDate" from-field="parameters.priceDate" type="Timestamp"/>               
+            </actions>
+            <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                        <include-menu name="PriceCalculatorTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        <container style="lefthalf">                            
+                            <screenlet title="Find Price chart">                            
+                                <include-form name="FindPriceChart" location="component://procurement/widget/ProcurementForms.xml"/>
+                            </screenlet>
+                            <screenlet title="Price Applicable ">
+                                <label text="Applicable  ${regionType} Price"/>
+                            </screenlet>
+                            <screenlet title="Price Chart : ">   
+                                <section>
+                                    <condition>
+                                      <not>
+                                      <if-empty field="parameters.facilityId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <link text="Update" style="buttontext h2" target="createNewPriceChart">
+                                           <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+                                           <parameter param-name="priceDate" from-field="parameters.priceDate"/>
+                                           <parameter param-name="supplyTypeEnumId" from-field="parameters.supplyTypeEnumId"/>
+                                           <parameter param-name="categoryTypeEnum" from-field="parameters.categoryTypeEnum"/>
+                                        </link>
+                                    </widgets>
+                                </section>
+                                <include-form name="PriceChartList" location="component://procurement/widget/ProcurementForms.xml"/>
+                            </screenlet>                        
+                        </container>             
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreatePriceChart">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Procurement Rates"/>               
+               <set field="tabButtonItem" value="rates"/>
+               <set field="tabButtonItem2" value="PriceChart"/>
+               <script  location="component://procurement/webapp/procurement/WEB-INF/actions/facility/PriceChart.groovy"/> 
+               <set field="facilityId" from-field="parameters.facilityId"/>
+               <set field="priceDate" from-field="parameters.priceDate" />
+               <set field="supplyTypeEnumId" from-field="parameters.supplyTypeEnumId"/> 
+               <set field="categoryTypeEnum" from-field="parameters.categoryTypeEnum"/>
+               <set field="fromDate" value="${fromDate}"/>
+               <set field="thruDate" value="${thruDate}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                        <include-menu name="PriceCalculatorTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        <container style="lefthalf">  
+                        <screenlet title="Edit Price chart">                            
+                                <include-form name="EditPriceChart" location="component://procurement/widget/ProcurementForms.xml"/>
+                        </screenlet>
+                        <screenlet title="Create New Price Chart">
+                            <include-form name="CreateNewPriceChart" location="component://procurement/widget/ProcurementForms.xml"/>
+                        </screenlet>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="BillingAdjustments">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="BillingAdjustments" />
+                <set field="tabButtonItem2" value="BillingAdjustmentAdditions" /> 
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>        
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="unitCode" from-field="context.unitCode"/> 
+                <set field="shedCode" from-field="context.shedCode"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <entity-condition list="additionsList" entity-name="OrderHeaderAdjustmentAndAdjustmentType"> 
+	                <condition-list combine="and">
+	                	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_ADDITIONS"/>
+	                	<condition-expr field-name="statusId" operator="equals" value="ORDER_CREATED"/>
+	                </condition-list>               	
+               		<order-by field-name="-createdDate"/>
+                </entity-condition>   	
+                <set field="additionsList" from-field="additionsList"/>               
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
+	                <condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>  	
+	                <order-by field-name="-fromDate"/>	
+                </entity-condition>  
+                <set field="timePeriodList" from-field="timePeriodList"/> 
+                <entity-condition list="adjustmentTypeList" entity-name="OrderAdjustmentType">
+                	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_ADDITIONS"/>
+                </entity-condition>
+                <set field="adjustmentTypeList" from-field="adjustmentTypeList"/>
+                <set field="createAdjustmentTarget" value="createBillingAdjustmentAdditions"/> 
+                <set field="timePeriodId" from-field="parameters.customTimePeriodId"/>                     
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="BillingAdjustmentTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/AdjustmentsEntry.ftl"/></html></platform-specific>      		         
+                    	<container style="lefthalf">                    		
+                    		<screenlet title="${uiLabelMap.AdditionsList}">
+						       	<include-form location="component://procurement/widget/ProcurementForms.xml" name="AdjustmentsAdditionsList"/>
+                    		</screenlet>                     		
+                    	</container>            		         
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
+    <screen name="BillingAdjustmentDeductions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="BillingAdjustments" />
+                <set field="tabButtonItem2" value="BillingAdjustmentDeductions" />
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="unitCode" from-field="context.unitCode"/>
+                <entity-condition list="deductionsList" entity-name="OrderHeaderAdjustmentAndAdjustmentType"> 
+	                <condition-list>
+	                	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_DEDUCTIONS"/>
+	                	<condition-expr field-name="statusId" operator="equals" value="ORDER_CREATED"/>
+	                </condition-list>        		                		
+                	<order-by field-name="-createdDate"/>
+                </entity-condition>   	
+                <set field="deductionsList" from-field="deductionsList"/>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
+	                <condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
+	                <order-by field-name="-fromDate"/>  		
+                </entity-condition>  
+                <set field="timePeriodList" from-field="timePeriodList"/> 
+                <entity-condition list="adjustmentTypeList" entity-name="OrderAdjustmentType">
+                	<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_DEDUCTIONS"/>
+                </entity-condition>
+                <set field="adjustmentTypeList" from-field="adjustmentTypeList"/>
+                <set field="createAdjustmentTarget" value="createBillingAdjustmentDeductions"/>
+                <set field="timePeriodId" from-field="parameters.customTimePeriodId"/>
+                 <set field="adjustmentTypeId" from-field="parameters.adjustmentTypeId"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="BillingAdjustmentTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/AdjustmentsEntry.ftl"/></html></platform-specific>
+                    	<container style="lefthalf"> 
+                    		<screenlet title="${uiLabelMap.DeductionsList}">
+						       	<include-form location="component://procurement/widget/ProcurementForms.xml" name="AdjustmentsDeductionsList"/>
+                    		</screenlet>                    		
+                    	</container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindAdjustment">
+        <section>
+            <actions>
+                <set field="viewIndex"  value="5" type="Integer"/>
+                <set field="viewSize" from-field="parameters.viewSize" type="Integer"/>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="BillingAdjustments" />
+                <set field="tabButtonItem2" value="FindAdjustment" />  
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/AdjustmentEntriesSearch.groovy" />  
+             	 <set field="viewIndex" value="0" type="Integer"/>
+                <set field="viewSize" value="10" type="Integer"/>
+             	<service service-name="performFind" result-map="result">
+	                 <field-map field-name="inputFields" from-field="parameters"/>
+	                 <field-map field-name="entityName" value="OrderHeaderAdjustmentAndAdjustmentType"/>
+	                 <field-map field-name="orderBy" value="-orderDate"/>
+	                 <field-map field-name="viewIndex" from-field="viewIndex"/>
+	             	 <field-map field-name="viewSize" from-field="viewSize"/>                  
+            	</service>   	
+                <set field="listAdjustment" from-field="result.listIt"/>
+                <entity-condition list="adjustmentsTypeList" entity-name="OrderAdjustmentType">
+                	<condition-list combine="or"> 
+                		<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_DEDUCTIONS"/>
+                		<condition-expr field-name="parentTypeId" operator="equals" value="MILKPROC_ADDITIONS"/>
+                	</condition-list>
+                </entity-condition>
+                <set field="adjTypeList" from-field="adjustmentsTypeList"/>
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/procurementEntry.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/removeProcurementEntrySearchParams.js" global="true"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               <set field="shedId" from-field="context.shedId"/>
+               <set field="unitCode" from-field="context.unitCode"/>                                    
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="BillingAdjustmentTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	<container style="lefthalf">
+                    		<screenlet title="${uiLabelMap.SearchAdjustments}">
+                   				<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindAdjustments"/>                    		
+                   			</screenlet>
+                   			<screenlet title="Adjustments List">
+						       	<include-form location="component://procurement/widget/ProcurementForms.xml" name="AdjustmentsList"/>
+                    		</screenlet>                    		
+                    	</container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    <screen name="MilkTransfers">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="MilkTransfers" />
+                <set field="tabButtonItem2" value="SendMilk" />
+                <entity-condition list="listIt" entity-name="MilkTransfer">
+                </entity-condition>
+                <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                       <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        <container style="full">
+                            <link target="createSendingMilk" text="${uiLabelMap.CommonCreateNew}" 	style="buttontext create" />                    		
+                    		<screenlet title="Find Sending Milk">
+                                    <include-form location="component://procurement/widget/ProcurementForms.xml" name="FindingMilk"/>
+                            </screenlet> 
+                             <screenlet title="Sending Milk List">
+                                    <include-form location="component://procurement/widget/ProcurementForms.xml" name="ListSendMilk"/>
+                            </screenlet>  
+                            <screenlet title="Received Milk List">
+                                    <include-form location="component://procurement/widget/ProcurementForms.xml" name="ListMilkReceived"/>
+                            </screenlet>    
+                         </container>                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="ReceiveMilk">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="MilkTransfers" />
+                <set field="tabButtonItem2" value="ReceivedMilk" />
+                <entity-condition list="listReceivedMilk" entity-name="MilkTransfer">
+                    <condition-expr field-name="statusId" value="MXF_INPROCESS"/>
+                </entity-condition>
+                <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                       <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                       <section>
+                        <condition>
+                            <not><if-empty field="listReceivedMilk"/></not>
+                        </condition>
+                           <widgets>
+	                         <container style="full">
+	                           <screenlet title="Received Milk List">
+	                                <include-form location="component://procurement/widget/ProcurementForms.xml" name="ListReceivedMilk"/>                          
+	                           </screenlet>
+	                         </container>
+	                       </widgets>
+	                       <fail-widgets>
+	                           <label text=" No Milk is sent yet"></label>
+	                       </fail-widgets>   
+                        </section>                       
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="CreateSendingMilk">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="MilkTransfers" />
+                <set field="tabButtonItem2" value="SendMilk" />
+                <entity-condition list="listIt" entity-name="MilkTransfer">
+                </entity-condition>
+                <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<container style="lefthalf"> 
+                       <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                    		<screenlet title="Sending Milk">
+                                    <include-form location="component://procurement/widget/ProcurementForms.xml" name="SendMilk"/>
+                            </screenlet>                    		
+                    	</container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FindMilkTransfer">
+                       <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="MilkTransfers" />
+                <set field="tabButtonItem2" value="ReceivedMilk" />
+                <entity-condition list="listReceivedMilk" entity-name="MilkTransfer">
+                    <condition-expr field-name="statusId" value="MXF_INPROCESS"/>
+                </entity-condition>
+                <set field="productsList" type="List" value="${groovy: import org.ofbiz.base.util.*; return (in.vasista.vbiz.procurement.ProcurementNetworkServices.getProcurementTransferProducts(dispatcher.getDispatchContext(),context)); }"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                       <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                       <section>
+                        <condition>
+                            <not><if-empty field="listReceivedMilk"/></not>
+                        </condition>
+                           <widgets>
+	                         <container style="full">
+	                           <screenlet title="Received Milk List">
+	                                <include-form location="component://procurement/widget/ProcurementForms.xml" name="ListReceivedMilk"/>                          
+	                           </screenlet>
+	                         </container>
+	                       </widgets>
+	                       <fail-widgets>
+	                           <label text=" No Milk is sent yet"></label>
+	                       </fail-widgets>   
+                        </section>                       
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="ReceivedMilkDetails">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementEntry"/>
+                <set field="headerItem" value="BillingAdjustments"/>
+                <set field="tabButtonItem" value="MilkTransfers" />
+                <set field="tabButtonItem2" value="ReceivedMilk" />
+                <set field="milkTransferId" from-field="parameters.milkTransferId"/>
+                <entity-one value-field="milkRecordList" entity-name="MilkTransfer">
+                    <field-map field-name="milkTransferId" from-field="milkTransferId"/>
+                </entity-one>
+                <set field="receiveDate" value="${milkRecordList.sendDate}" />
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/milkTypeChange.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                       <include-menu name="MilkTransferTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        <container style="full">
+                           <screenlet title="Received Milk">
+                                <include-form location="component://procurement/widget/ProcurementForms.xml" name="ReceivedMilk"/>                          
+                           </screenlet>
+                        </container> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindFacilityOutputEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementFacilityOutputEntry"/>               
+                <set field="tabButtonItem" value="FindFacilityOutputEntry" />
+                <set field="tabButtonItem1" value="FindFacilityOutputEntry" /> 
+                <set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>        
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="unitCode" from-field="context.unitCode"/>
+               	<set field="unitId" from-field="context.unitId"/>  
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+               <set field="shedList" value="${shedList}"/>
+               <set field="unitsList" value="${unitsList}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                    <decorator-section name="body">                                       	
+                   		<container style="lefthalf">
+                        	<include-menu name="OutputEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                        	<screenlet title="${uiLabelMap.FacilityOutputEntry}">
+	                   		<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcurementDependentDropDown.ftl"></html-template></html></platform-specific>
+	                   			<include-form location="component://procurement/widget/ProcurementForms.xml" name="FindFacilityOutputEntry"/>                   			                   		
+	                   		</screenlet>                   		
+	                   		<screenlet>
+	                             <include-form location="component://procurement/widget/ProcurementForms.xml" name="ListProcOutputEntry"/>                           
+	                        </screenlet>   
+                     </container>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+     </screen>
+     <screen name="CreateProcFaciltiyOutputEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleProcurementFacilityOutputEntry"/>               
+                <set field="tabButtonItem" value="FindFacilityOutputEntry" />
+                 <set field="tabButtonItem1" value="CreateProcFaciltiyOutputEntry" /> 
+                 <entity-condition list="timePeriodList" entity-name="CustomTimePeriod">               
+	                <condition-expr field-name="periodTypeId" operator="equals" value="PROC_BILL_MONTH"/>
+	                <order-by field-name="-createdStamp"/>  		
+                </entity-condition>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/getUserRelatedFacilies.groovy"/>
+               	<set field="shedId" from-field="context.shedId"/>
+               	<set field="shedCode" from-field="context.shedCode"/>
+               	<set field="unitCode" from-field="context.unitCode"/>  
+               	<set field="parameters.shedCode" from-field="context.shedCode"/>
+               	<set field="parameters.unitCode" from-field="context.unitCode"/>   
+                <set field="timePeriodList" from-field="timePeriodList"/>   
+                <entity-condition list="outputTypeList" entity-name="Enumeration">
+                	<condition-expr field-name="enumTypeId" operator="equals" value="PROC_OUTPUT_TYPE"/>
+                </entity-condition>	
+                <set field="outputTypeList" from-field="outputTypeList"/>
+                <set field="timePeriodId" from-field="parameters.customTimePeriodId"/>
+				<set field="layoutSettings.javaScripts[]" value="/procurement/images/appendDecimals.js" global="true"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntrySearch.groovy"/>
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/ProcurementEntry.groovy" />
+                	
+            </actions>
+            <widgets>
+                 <decorator-screen name="ProcurementCommonDecorator" location="component://procurement/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+                    	<include-menu name="OutputEntryTabBar" location="component://procurement/widget/ProcurementMenus.xml"/> 
+                    	<platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/ProcOutputEntry.ftl"/></html></platform-specific>      		         
+                    	<container style="lefthalf">                    		
+                    		<screenlet title="List Facility Output  Entries Data">
+						       	<include-form location="component://procurement/widget/ProcurementForms.xml" name="ListRecentProcOutputEntries"/>
+                    		</screenlet>                     		
+                    	</container>            		         
+                    </decorator-section>                    
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ </screens>   

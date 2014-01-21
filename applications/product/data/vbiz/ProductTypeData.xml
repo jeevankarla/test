@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>	
+	<EnumerationType description="Subscription Product Type" enumTypeId="SUB_PROD_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Cash" enumCode="CASH" enumId="CASH" sequenceId="04" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Card" enumCode="CARD" enumId="CARD" sequenceId="02" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Special Order" enumCode="SPECIAL_ORDER" enumId="SPECIAL_ORDER" sequenceId="03" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Credit" enumCode="CREDIT" enumId="CREDIT" sequenceId="01" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Festive Order" enumCode="CASH_FS" enumId="CASH_FS" sequenceId="05" enumTypeId="SUB_PROD_TYPE"/>
+
+	<EnumerationType description="Facility Category Type" enumTypeId="FACILITY_CAT_TYPE" hasTable="N" parentTypeId=""/>
+
+	<EnumerationType description="Booth Facility Category Type" enumTypeId="BOOTH_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
+    <Enumeration description="Credit Institution" enumCode="CR_INST" enumId="CR_INST" sequenceId="01" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Special Order Institution" enumCode="SO_INST" enumId="SO_INST" sequenceId="02" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Vendor" enumCode="VENDOR" enumId="VENDOR" sequenceId="03" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Franchisee" enumCode="FRANCHISEE" enumId="FRANCHISEE" sequenceId="04" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="PTC" enumCode="PTC" enumId="PTC" sequenceId="05" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Distributor" enumCode="DISTRIBUTOR" enumId="DISTRIBUTOR" sequenceId="06" enumTypeId="BOOTH_CAT_TYPE"/>
+
+	<EnumerationType description="Zone Facility Category Type" enumTypeId="ZONE_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
+    <Enumeration description="NORMAL" enumCode="NORMAL" enumId="NORMAL" sequenceId="01" enumTypeId="ZONE_CAT_TYPE"/>
+    <Enumeration description="Up Country" enumCode="UPCOUNTRY" enumId="UPCOUNTRY" sequenceId="02" enumTypeId="ZONE_CAT_TYPE"/>
+    
+    <PeriodType description="Margin Month" periodTypeId="MARGIN_MONTH" periodLength="1" uomId="TF_mon"/>
+	<CustomTimePeriod customTimePeriodId="JAN-1-31" periodTypeId="MARGIN_MONTH" periodNum="1" periodName="January-2012" fromDate="2012-01-01" thruDate="2012-01-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="FEB-1-29" periodTypeId="MARGIN_MONTH" periodNum="2" periodName="February-2012" fromDate="2012-02-01" thruDate="2012-02-29" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="MAR-1-31" periodTypeId="MARGIN_MONTH" periodNum="3" periodName="March-2012" fromDate="2012-03-01" thruDate="2012-03-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="APR-1-30" periodTypeId="MARGIN_MONTH" periodNum="4" periodName="April-2012" fromDate="2012-04-01" thruDate="2012-04-30" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="MAY-1-31" periodTypeId="MARGIN_MONTH" periodNum="5" periodName="May-2012" fromDate="2012-05-01" thruDate="2012-05-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="JUN-1-30" periodTypeId="MARGIN_MONTH" periodNum="6" periodName="June-2012" fromDate="2012-06-01" thruDate="2012-06-30" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="JULY-1-31" periodTypeId="MARGIN_MONTH" periodNum="7" periodName="July-2012" fromDate="2012-07-01" thruDate="2012-07-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="AUGUST-1-31" periodTypeId="MARGIN_MONTH" periodNum="8" periodName="August-2012" fromDate="2012-08-01" thruDate="2012-08-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="SEP-1-30" periodTypeId="MARGIN_MONTH" periodNum="9" periodName="September-2012" fromDate="2012-09-01" thruDate="2012-09-30" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="OCT-1-31" periodTypeId="MARGIN_MONTH" periodNum="10" periodName="October-2012" fromDate="2012-10-01" thruDate="2012-10-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="NOV-1-30" periodTypeId="MARGIN_MONTH" periodNum="11" periodName="November-2012" fromDate="2012-11-01" thruDate="2012-11-30" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="DEC-1-31" periodTypeId="MARGIN_MONTH" periodNum="12" periodName="December-2012" fromDate="2012-12-01" thruDate="2012-12-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    
+    <PeriodType description="Card Month" periodTypeId="CARD_MONTH" periodLength="1" uomId="TF_mon"/>
+    <Party partyId="CARD_CUSTOMER" partyTypeId="PERSON"/>
+    <PartyRole partyId="CARD_CUSTOMER" roleTypeId="TRADE_CUSTOMER"/>
+    <InvoiceItemType description="Invoice Card Sale Item" hasTable="N" invoiceItemTypeId="INV_FPROD_CARD_ITEM" parentTypeId="INV_PROD_ITEM"/>
+    <CustomTimePeriod customTimePeriodId="DEC-11-10" periodTypeId="CARD_MONTH" periodNum="1" periodName="December(11-10)" fromDate="2011-12-11" thruDate="2012-01-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:47:14.0" lastUpdatedTxStamp="2011-12-17 15:47:14.0" createdStamp="2011-12-17 15:47:14.0" createdTxStamp="2011-12-17 15:47:14.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="DEC-13-10" periodTypeId="CARD_MONTH" periodNum="2" periodName="December(13-10)" fromDate="2011-12-13" thruDate="2012-01-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:47:14.0" lastUpdatedTxStamp="2011-12-17 15:47:14.0" createdStamp="2011-12-17 15:47:14.0" createdTxStamp="2011-12-17 15:47:14.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="JAN-11-10" periodTypeId="CARD_MONTH" periodNum="3" periodName="January(11-10)" fromDate="2012-01-11" thruDate="2012-02-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="JAN-13-10" periodTypeId="CARD_MONTH" periodNum="4" periodName="January(13-10)" fromDate="2012-01-13" thruDate="2012-02-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    
+    <CustomTimePeriod customTimePeriodId="MAR-11-10" periodTypeId="CARD_MONTH" periodNum="5" periodName="March(11-10)" fromDate="2012-03-11" thruDate="2012-04-10" isClosed="N"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="MAR-13-10" periodTypeId="CARD_MONTH" periodNum="6" periodName="March(13-10)" fromDate="2012-03-13" thruDate="2012-04-10" isClosed="N"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="APR-11-10" periodTypeId="CARD_MONTH" periodNum="7" periodName="April(11-10)" fromDate="2012-04-11" thruDate="2012-05-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="APR-13-10" periodTypeId="CARD_MONTH" periodNum="8" periodName="April(13-10)" fromDate="2012-04-13" thruDate="2012-05-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="MAY-11-10" periodTypeId="CARD_MONTH" periodNum="9" periodName="May(11-10)" fromDate="2012-05-11" thruDate="2012-06-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="MAY-13-10" periodTypeId="CARD_MONTH" periodNum="10" periodName="May(13-10)" fromDate="2012-05-13" thruDate="2012-06-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="JUN-11-10" periodTypeId="CARD_MONTH" periodNum="11" periodName="Jun(11-10)" fromDate="2012-06-11" thruDate="2012-07-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="JUN-13-10" periodTypeId="CARD_MONTH" periodNum="12" periodName="Jun(13-10)" fromDate="2012-06-13" thruDate="2012-07-10" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0"  organizationPartyId="Company"/>
+    
+    
+    <SubscriptionType description="AM" hasTable="N" parentTypeId="" subscriptionTypeId="AM"/>    
+    <SubscriptionType description="PM" hasTable="N" parentTypeId="" subscriptionTypeId="PM"/>    
+	
+	<ShipmentType description="Supplimentary Shipment" hasTable="N" parentTypeId="" shipmentTypeId="SUPPLIMENTARY"/>
+	<ShipmentType description="LMS Shipment" hasTable="N" parentTypeId="" shipmentTypeId="LMS_SHIPMENT"/>
+	
+    <ShipmentType description="AM Shipment" hasTable="N" parentTypeId="LMS_SHIPMENT" shipmentTypeId="AM_SHIPMENT"/>
+    <ShipmentType description="AM Gate Pass" hasTable="N" parentTypeId="SUPPLIMENTARY" shipmentTypeId="AM_SHIPMENT_SUPPL"/>
+    <ShipmentType description="PM Shipment" hasTable="N" parentTypeId="LMS_SHIPMENT" shipmentTypeId="PM_SHIPMENT"/>
+    <ShipmentType description="PM Gate Pass" hasTable="N" parentTypeId="SUPPLIMENTARY" shipmentTypeId="PM_SHIPMENT_SUPPL"/>
+ 
+     <!-- Shipment status -->
+    <StatusType description="Shipment" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="In-Process" sequenceId="01" statusCode="IN_PROCESS" statusId="IN_PROCESS" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Generated" sequenceId="02" statusCode="GENERATED" statusId="GENERATED" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Generation Failed" sequenceId="02" statusCode="GENERATION_FAIL" statusId="GENERATION_FAIL" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Cancellation In-Process" sequenceId="02" statusCode="CANCEL_INPROCESS" statusId="CANCEL_INPROCESS" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem statusId="ADJUSTED" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTED" description="Margin Adjusted"/>
+    <StatusItem statusId="ADJUSTMENT_FAIL" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTMENT FAIL" description="Adjustment Failed"/>
+    <StatusItem statusId="ADJUST_IN_PROCESS" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTMENT IN PROCESS" description="Adjustment in Process"/>
+    <StatusItem statusId="CANCEL_ADJ_INPROCESS" statusTypeId="SHIPMENT_STATUS" statusCode="CANCEL ADJUSTMENT IN PROCESS" description="Cancel Adjustment in Process"/>
+    <StatusValidChange statusId="ADJUSTED" statusIdTo="CANCEL_ADJ_INPROCESS" transitionName="Cancel Adjustment in Process"/>
+    <StatusValidChange statusId="ADJUST_IN_PROCESS" statusIdTo="ADJUSTED" transitionName="Margin Adjusted"/>
+    <StatusValidChange statusId="ADJUST_IN_PROCESS" statusIdTo="ADJUSTMENT_FAIL" transitionName="Adjustment Failed"/>
+    <StatusValidChange statusId="CANCEL_ADJ_INPROCESS" statusIdTo="GENERATED" transitionName="Cancelled Adjustment"/>
+    <StatusValidChange statusId="GENERATED" statusIdTo="ADJUST_IN_PROCESS" transitionName="Margin Adjustment in Process"/>
+    <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATED" transitionName="Generated"/>
+    <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATION_FAIL" transitionName="Generated"/>
+    <StatusValidChange condition="" statusId="GENERATED" statusIdTo="CANCEL_INPROCESS" transitionName="Cancellation In-Process"/>
+
+	<!-- Milk Card Order status -->
+    <StatusType description="Milk Card Order" hasTable="N" parentTypeId="" statusTypeId="MCARD_ORDER_STATUS"/>
+    <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="ORDER_CREATED" statusTypeId="MCARD_ORDER_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="02" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="MCARD_ORDER_STATUS"/>
+    <StatusValidChange condition="" statusId="ORDER_CREATED" statusIdTo="ORDER_CANCELLED" transitionName="Cancelled"/>
+
+	<EnumerationType description="Milk Card Payment Type" enumTypeId="MCARD_PMNT_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Cash" enumCode="CASH" enumId="CASH_MCARD" sequenceId="01" enumTypeId="MCARD_PMNT_TYPE"/>
+    <Enumeration description="Credit Card" enumCode="CREDIT_CARD" enumId="CREDIT_CARD_MCARD" sequenceId="02" enumTypeId="MCARD_PMNT_TYPE"/>
+    <Enumeration description="Demand Draft" enumCode="DEMAND_DRAFT" enumId="DEMAND_DRAFT_MCARD" sequenceId="03" enumTypeId="MCARD_PMNT_TYPE"/>
+    <Enumeration description="eSeva" enumCode="E_SEVA" enumId="E_SEVA_MCARD" sequenceId="04" enumTypeId="MCARD_PMNT_TYPE"/>
+    <Enumeration description="APonline" enumCode="AP_ONLINE" enumId="AP_ONLINE_MCARD" sequenceId="05" enumTypeId="MCARD_PMNT_TYPE"/>
+
+    <Enumeration enumId="LMS" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Facility Inventory Configurations"/>
+	<TenantConfiguration propertyName="enablePhase2" propertyValue="N" propertyTypeEnumId="LMS" description="Enable LMS Phase 2 functionality"/>
+	<TenantConfiguration propertyName="enableStopShip" propertyValue="Y" propertyTypeEnumId="LMS" description="enable LMS Stop Ship List"/>
+	<TenantConfiguration propertyName="enablePaymentRounding" propertyValue="Y" propertyTypeEnumId="LMS" description="enable to show  booth due amount rounded value"/>
+	<TenantConfiguration propertyName="enableCancelAfterShipDate" propertyValue="N" propertyTypeEnumId="LMS" description="Enable Trucksheet Cancellation After Ship Date"/>
+
+	<!-- To Show Dues in Dues payments and past payment screens  -->
+	<TenantConfiguration propertyName="enableSoCrPmntTrack" propertyValue="Y" propertyTypeEnumId="LMS" description="enable Credit ,SO Payments List"/>
+	
+	<Enumeration enumId="SMS" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Invoice and Payment Sms  Configurations"/>
+	<TenantConfiguration propertyName="enablePaymentSms" propertyValue="N" propertyTypeEnumId="SMS" description="Enable Payment Sms functionality"/>
+	
+	<EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="LMS Vendor Margin Period Billing" enumCode="PB_LMS_VNDR_MRGN" enumId="PB_LMS_VNDR_MRGN" sequenceId="01" enumTypeId="PBILLING_TYPE"/>
+    <Enumeration description="LMS Transporter Margin Period Billing" enumCode="PB_LMS_TRSPT_MRGN" enumId="PB_LMS_TRSPT_MRGN" sequenceId="02" enumTypeId="PBILLING_TYPE"/>
+    <TenantConfiguration propertyName="enablePastPaymentService" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable past payments screen"/>
+	
+	<TenantConfiguration propertyName="enableSameDayPmEntry" propertyValue="N" propertyTypeEnumId="LMS" description="Enable LMS PM Sales(if the property set to 'N' then ,Day  NetSales  = 'AM Sales+Prev.Day PM Sales'   otherwise NetSales = 'AM Sales+ PM Sales')"/>
+
+	 <RecurrenceRule recurrenceRuleId="100" untilDateTime="" frequency="HOURLY" intervalNumber="6" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="100" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="100" recurrenceCount="0"/>
+    <JobSandbox jobId="100" jobName="Auto populate LMSSalesHistory summary " runTime="2000-01-01 00:00:00.000" serviceName="populateLMSSalesHistorySummary" poolId="pool" runAsUser="system" recurrenceInfoId="100"/>
+    
+	<!-- Party Configuration  for Product  payments  -->
+	<Party partyId="PROCPAYMENT_VENDOR" partyTypeId="PERSON"/>
+	<PartyRole partyId="PROCPAYMENT_VENDOR" roleTypeId="TRADE_CUSTOMER"/>
+	
+	<EnumerationType description="Facility Managed By" enumTypeId="FACILITY_MNG_BY" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Society" enumCode="SOCIETY" enumId="SOCIETY" sequenceId="01" enumTypeId="FACILITY_MNG_BY"/>
+    <Enumeration description="Federation" enumCode="FEDERATION" enumId="FEDERATION" sequenceId="02" enumTypeId="FACILITY_MNG_BY"/>
+	
+	 <!--LMSPriodSalesSummary-->
+    <EnumerationType description="LMS Sales Period Type" enumTypeId="LMSSALES_PERIODTYP" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Dayily Sales" enumCode="SALES_DAY" enumId="SALES_DAY" sequenceId="01" enumTypeId="LMSSALES_PERIODTYP"/>
+    <Enumeration description="Monthly Sales" enumCode="SALES_MONTH" enumId="SALES_MONTH" sequenceId="02" enumTypeId="LMSSALES_PERIODTYP"/>
+
+</entity-engine-xml>    

@@ -1,0 +1,30 @@
+
+#messages-container {
+	position:relative;
+	background-color: #FFFFFF;
+	margin: 0 7px 0 7px;
+	padding-bottom: 1em;
+}
+.content-messages p {
+ 	margin: 0.5em 0 0.5em 0;
+ 	text-align: left;
+ 	font-family: Verdana, Arial, Helvetica, sans-serif;
+ 	font-weight: bold;
+ 	font-size: 100%;
+ 	border: 0;
+ 	outline: 0;
+ 	padding: 0;
+ 	border-style: none;
+ 	vertical-align: baseline;
+}
+.errorMessage {
+	background: #FFFFFF url(/vasista/images/exclamation.png) no-repeat 10px 50%;
+	color: #FF0000;
+	border: solid 3px #FF0000;
+	font-weight: bold;
+	margin: 0 1em 0 1em;
+	padding: 0 1em 0 50px;
+}
+div {
+	display: block;
+}

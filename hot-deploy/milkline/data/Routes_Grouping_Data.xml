@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    	
+    <Facility facilityId="CITY_VEHICLE" description="CITY Vehicle" facilityName="CITY Vehicle"/>
+	<Facility facilityId="SRIKAKULAM_VEHICLE" description="Srikakulam Vehicle" facilityName="Srikakulam Vehicle"/>
+	<Facility facilityId="KAKINADA_VEHICLE" description="Kakinada Vehicle" facilityName="Kakinada Vehicle"/>
+	<Facility facilityId="ANAKAPALLY_VEHICLE" description="AnakaPally Vehicle" facilityName="AnakaPally Vehicle"/>
+	
+	 <FacilityGroup  facilityGroupId="CITY_VEHICLE_AM" facilityGroupName="CITY Vehicle AM" description="CITY Vehicle AM "  facilityGroupTypeId ="DAIRY_LMD_TYPE" ownerFacilityId="CITY_VEHICLE"/>
+	 <FacilityGroup  facilityGroupId="SRIKAKULAM_AM" facilityGroupName="Srikakulam AM" description="Srikakulam  AM"  facilityGroupTypeId ="DAIRY_LMD_TYPE" ownerFacilityId="SRIKAKULAM_VEHICLE"/>
+	 <FacilityGroup  facilityGroupId="KAKINADA_AM" facilityGroupName="Kakinada AM" description="Kakinada  AM"  facilityGroupTypeId ="DAIRY_LMD_TYPE" ownerFacilityId="KAKINADA_VEHICLE"/>
+     <FacilityGroup  facilityGroupId="ANAKAPALLY_AM" facilityGroupName="ANAKAPALLY PM " description="AnakaPally AM"  facilityGroupTypeId ="DAIRY_LMD_TYPE" ownerFacilityId="ANAKAPALLY_VEHICLE"/>
+     <FacilityGroup  facilityGroupId="CITY_VEHICLE_PM" facilityGroupName="CITY Vehicle PM" description="CITY Vehicle PM"  facilityGroupTypeId ="DAIRY_LMD_TYPE" ownerFacilityId="CITY_VEHICLE"/>
+
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_AM" facilityId="RSO1_RT01"  fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_AM" facilityId="RSO1_RT02" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_AM" facilityId="RSO1_RT03" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_AM" facilityId="RSO3_RT07" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_AM" facilityId="RSO3_RT21" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_AM" facilityId="RSO2_RT05" fromDate="2013-02-26 13:19:27.000"/> 
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_AM" facilityId="RSO2_RT28" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_AM" facilityId="RSO2_RT06" fromDate="2013-02-26 13:19:27.000"/> 
+ 
+     <FacilityGroupMember facilityGroupId="SRIKAKULAM_AM" facilityId="RSO5_RT10" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="SRIKAKULAM_AM" facilityId="RSO5_RT11" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="SRIKAKULAM_AM" facilityId="RSO5_RT12" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="SRIKAKULAM_AM" facilityId="RSO5_RT24" fromDate="2013-02-26 13:19:27.000"/>
+			
+     <FacilityGroupMember facilityGroupId="SRIKAKULAM_AM" facilityId="RSO8_RT20" fromDate="2013-02-26 13:19:27.000"/>
+	 <FacilityGroupMember facilityGroupId="SRIKAKULAM_AM" facilityId="RSO9_RT23" fromDate="2013-02-26 13:19:27.000"/> 
+
+     <FacilityGroupMember facilityGroupId="KAKINADA_AM" facilityId="RSO6_RT19" fromDate="2013-02-26 13:19:27.000"/> 
+	 <FacilityGroupMember facilityGroupId="KAKINADA_AM" facilityId="RSO6_RT15" fromDate="2013-02-26 13:19:27.000"/>
+	 <FacilityGroupMember facilityGroupId="KAKINADA_AM" facilityId="RSO7_RT26" fromDate="2013-02-26 13:19:27.000"/>
+	 <FacilityGroupMember facilityGroupId="KAKINADA_AM" facilityId="RSO7_RT27" fromDate="2013-02-26 13:19:27.000"/> 
+
+	 <FacilityGroupMember facilityGroupId="ANAKAPALLY_AM" facilityId="RSO6_RT14" fromDate="2013-02-26 13:19:27.000"/>
+	 <FacilityGroupMember facilityGroupId="ANAKAPALLY_AM" facilityId="RSO6_RT18" fromDate="2013-02-26 13:19:27.000"/>
+			 
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO1_RT01" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO1_RT02" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO1_RT03" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO2_RT05" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO2_RT06" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO2_RT28" fromDate="2013-02-26 13:19:27.000"/>
+
+	 <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO3_RT07" fromDate="2013-02-26 13:19:27.000"/>
+	 <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO3_RT21" fromDate="2013-02-26 13:19:27.000"/>
+
+	 <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO5_RT10" fromDate="2013-02-26 13:19:27.000"/>
+	 <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO5_RT12" fromDate="2013-02-26 13:19:27.000"/>
+	 <FacilityGroupMember facilityGroupId="CITY_VEHICLE_PM" facilityId="RSO5_RT24" fromDate="2013-02-26 13:19:27.000"/>
+  </entity-engine-xml>

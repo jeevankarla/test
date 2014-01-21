@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <PaymentMethodType description="eSeva" paymentMethodTypeId="ESEVA_PAYIN"/>
+ 	<PaymentMethodType description="APOnline" paymentMethodTypeId="APONLINE_PAYIN"/>
+ 	
+    <PaymentMethodTypeGlAccount organizationPartyId="Company" paymentMethodTypeId="ESEVA_PAYIN" glAccountId="112000"/> 	
+    <PaymentMethodTypeGlAccount organizationPartyId="Company" paymentMethodTypeId="APONLINE_PAYIN" glAccountId="112000"/> 	
+ 	
+</entity-engine-xml>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <ProductCategoryType productCategoryTypeId="BYPROD_CAT" parentTypeId="BYPROD" description="Byproduct Product Category" lastUpdatedStamp="2012-12-17 00:00:00.00" lastUpdatedTxStamp="2012-12-17 00:00:00.00" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="BYPROD_MFG_LOC" parentTypeId="BYPROD" description="Byproduct Product Manufacturing Location" lastUpdatedStamp="2012-12-17 00:00:00.00" lastUpdatedTxStamp="2012-12-17 00:00:00.00" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+
+</entity-engine-xml>

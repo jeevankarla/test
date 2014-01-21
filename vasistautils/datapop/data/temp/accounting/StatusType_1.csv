@@ -1,0 +1,8 @@
+StatusType_description,StatusType_hasTable,StatusType_parentTypeId,StatusType_statusTypeId
+Acctg Entry Reconcile,N,,ACCTG_ENREC_STATUS
+Financial Account Status,N,,FINACCT_STATUS
+Financial Account Trans Status,N,,FINACT_TRNS_STATUS
+Party Asset,N,,PARTY_ASSET_STATUS
+Invoice Status,N,,INVOICE_STATUS
+Payment Status,N,,PMNT_STATUS
+Gl Reconciliation Status,N,,GLREC_STATUS

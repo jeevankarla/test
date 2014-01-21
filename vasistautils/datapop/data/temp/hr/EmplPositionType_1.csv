@@ -1,0 +1,13 @@
+EmplPositionType_emplPositionTypeId,EmplPositionType_parentTypeId,EmplPositionType_hasTable,EmplPositionType_description
+ACCNT,,N,Accountant
+FMDMGR,,N,Facility Manager
+FRNTDESKMGR,FMDMGR,N,Front Desk Manager
+TWNSHPMGR,FMDMGR,N,Township Manager
+TWNSHPSUPVR,FMDMGR,N,Township Supervisor
+ACCNTSOFFCR,ACCNT,N,
+SRACCNT,ACCNT,N,Senior Accountant
+JRACCNT,ACCNT,N,Junior Accountant
+CLERK,,N,Clerk
+OFFCLERK,CLERK,N,Office Clerk
+COLLCLERK,CLERK,N,Collection Clerk
+LIASONCLERK,CLERK,N,Liaison Clerk

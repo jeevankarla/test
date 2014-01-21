@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods.xsd">
+	
+	 <simple-method method-name="createBudget" short-description="Create a new Budget">
+        <now-timestamp field="nowTimestamp"/>     
+
+       
+         <make-value entity-name="Budget" value-field="budget"/>
+        <if-empty field="parameters.budgetId">
+            <sequenced-id sequence-name="Budget" field="budget.budgetId"/>
+            <else>
+                <set field="budget.budgetId" from-field="parameters.budgetId"/>
+            </else>
+        </if-empty>
+        <field-to-result field="budget.budgetId" result-name="budgetId"/> 
+        <set-nonpk-fields map="parameters" value-field="budget"/>
+        
+        <create-value value-field="budget"/>    
+    </simple-method>
+    <simple-method method-name="createBudgetItem" short-description="Create a new Budget Item">
+        <set field="budgetId" from-field="parameters.budgetId"/>
+        <make-value value-field="newEntity" entity-name="BudgetItem"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.budgetItemSeqId">
+            <make-next-seq-id value-field="newEntity" seq-field-name="budgetItemSeqId"/> <!-- this finds the next sub-sequence ID -->
+            <field-to-result field="newEntity.budgetItemSeqId" result-name="budgetItemSeqId"/>
+        </if-empty>
+        <set field="newEntity.amount" from-field="parameters.amount"></set>  
+        <if-empty field="parameters.amount">
+            <add-error>
+                <fail-message message="The amount value is mandatory"/>
+            </add-error>
+        </if-empty>       
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateBudgetItem"
+        short-description="Update an existing Budget Item">
+        
+        <make-value value-field="lookupPKMap" entity-name="BudgetItem"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+
+        <find-by-primary-key entity-name="BudgetItem" map="lookupPKMap" value-field="lookedUpValue"/>
+        <clone-value value-field="lookedUpValue" new-value-field="savedValue"/>
+
+        <!-- set all parameters -->
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+	
+      
+        <if-empty field="lookedUpValue.amount">
+            <add-error>
+                <fail-message message="The amount value is mandatory"/>
+            </add-error>
+        </if-empty>           
+        <if-compare-field field="lookedUpValue" to-field="savedValue" operator="not-equals" type="Object">
+            <store-value value-field="lookedUpValue"/>
+        </if-compare-field>
+    </simple-method>
+    <simple-method method-name="removeBudgetItem" short-description="Remove an existing Budget Item">
+        
+        <set field="budgetItemMap.budgetId" from-field="parameters.budgetId"/>
+        <set field="budgetItemMap.budgetItemSeqId" from-field="parameters.budgetItemSeqId"/>
+       	<entity-one entity-name="BudgetItem" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>   
+     <simple-method method-name="createBudgetRevision" short-description="Create a new Budget Revision">
+        <set field="budgetId" from-field="parameters.budgetId"/>
+        <make-value value-field="newEntity" entity-name="BudgetRevision"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.revisionSeqId">
+            <make-next-seq-id value-field="newEntity" seq-field-name="revisionSeqId"/> <!-- this finds the next sub-sequence ID -->
+            <field-to-result field="newEntity.revisionSeqId" result-name="revisionSeqId"/>
+        </if-empty>
+         <now-timestamp field="nowTimestamp"/>
+         <set field="newEntity.dateRevised" from-field="nowTimestamp"/>     
+         <create-value value-field="newEntity"/> 
+         
+         <entity-and entity-name="BudgetItem" list="budgetItems">
+            <field-map field-name="budgetId" from-field="budgetId"/>
+        </entity-and>
+        <make-value value-field="budgetRevisionImpact" entity-name="BudgetRevisionImpact"/>
+        <iterate entry="budgetItem" list="budgetItems">
+        	<set field="budgetRevisionImpact.budgetId" from-field="budgetItem.budgetId"/>
+        	<set field="budgetRevisionImpact.revisionSeqId" from-field="newEntity.revisionSeqId"/>
+        	<set field="budgetRevisionImpact.invoiceItemTypeId" from-field="budgetItem.invoiceItemTypeId"/>
+        	<set field="budgetRevisionImpact.revisedAmount" from-field="budgetItem.amount"/>
+        	<set field="budgetRevisionImpact.budgetItemSeqId" from-field="budgetItem.budgetItemSeqId"/>
+        	<set field="budgetRevisionImpact.revisionReason" from-field="budgetItem.justification"/>
+        	<create-value value-field="budgetRevisionImpact"/> 
+        </iterate>
+    </simple-method>  
+</simple-methods>    
+    

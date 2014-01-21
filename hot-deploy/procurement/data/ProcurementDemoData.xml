@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	 <ProductStore productStoreId="DAIRY" storeName="Dairy" companyName="Dairy" title="Dairy"
+        subtitle="Dairy" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
+        inventoryFacilityId="MAIN_PLANT" oneInventoryFacility="Y" checkInventory="N" reserveInventory="N" balanceResOnOrderCreation="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        defaultLocaleString="en_US" defaultCurrencyUomId="INR" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
+        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
+        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="N"/>
+	 
+	 <ProdCatalog prodCatalogId="DAIRYCATALOG" catalogName="Dairy Catalog" useQuickAdd="N"/>
+	<ProdCatalogCategory prodCatalogId="DAIRYCATALOG" productCategoryId="MILK_PROCUREMENT" fromDate="2011-05-13 12:00:00.0"
+        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/> 
+        <ProductStoreCatalog productStoreId="DAIRY" prodCatalogId="DAIRYCATALOG" fromDate="2011-05-13 12:00:00.0" sequenceNum="1"/>
+        
+
+     <ProductCategory longDescription="Milk Procurement"
+        productCategoryId="MILK_PROCUREMENT" categoryName="Milk Procurement" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <Product productId="101" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_PROCUREMENT" internalName="Buffalo Milk" productName="Buffalo Milk" brandName="BM" description="Buffalo Milk" longDescription="Buffalo Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="101"/> 
+    
+    <Product productId="102" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_PROCUREMENT" internalName="Cow Milk" productName="Cow Milk" brandName="CM" description="Cow Milk" longDescription="Cow Milk" quantityUomId="VLIQ_L"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="102"/> 
+    
+ 	<ProductCategoryMember productCategoryId="MILK_PROCUREMENT" productId="101" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    <ProductCategoryMember productCategoryId="MILK_PROCUREMENT" productId="102" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+   
+ 
+ 	<ProcurementPriceChart procPriceChartId="100" regionId="_NA_" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00"/> 
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="100" productId="101" price="430.00" fatPercent="5.0" snfPercent="8.0" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" price="215.00" fatPercent="4.5" snfPercent="8.0" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" price="107.50" fatPercent="4.5" snfPercent="7.5" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="0.0" price="107.50" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="4.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="9.0" price="0.00" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.9" price="0.30" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.8" price="0.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.7" price="1.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.6" price="1.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.5" price="2.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	
+	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.4" price="2.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.3" price="3.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.2" price="3.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.1" price="4.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent="8.0" price="4.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<!-- Premium -->
+	<ProcurementPrice procPriceChartId="100" productId="101" fatPercent="0.0" snfPercent=".1" price="0.05" procurementPriceTypeId="PROC_PRICE_SNF_PRM" currencyUomId="INR" />
+	
+ 	
+
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="100" productId="102" price="163.00" fatPercent="3.0" snfPercent="8.0" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<!-- <ProcurementPrice procPriceChartId="100" productId="102" price="105.95" fatPercent="2.5" snfPercent="7.5" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" /> -->
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="0.0" price="54.33" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	
+ 	
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="2.49" snfPercent="7.49" price="0.00" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="4.9" snfPercent="0.00" price="0.00" procurementPriceTypeId="PROC_PRICE_MAX_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="8.5" price="0.00" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="8.4" price="0.30" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="8.3" price="0.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="8.2" price="1.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="8.1" price="1.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="8.0" price="2.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="7.9" price="2.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="7.8" price="3.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="7.7" price="3.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="7.6" price="4.10" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="102" fatPercent="0.0" snfPercent="7.5" price="4.60" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	
+ 	
+ 	<CustomTimePeriod customTimePeriodId="PROC_NOV-1-15-2012" periodTypeId="PROC_BILL_MONTH" periodNum="7" periodName="Nov(1-15)" fromDate="2012-11-01" thruDate="2012-11-15" isClosed="N" organizationPartyId="Company"/>
+    
+    <CustomTimePeriod customTimePeriodId="PROC_NOV-16-30-2012" periodTypeId="PROC_BILL_MONTH" periodNum="8" periodName="Nov(16-30)" fromDate="2012-11-16" thruDate="2012-11-30" isClosed="N" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="PROC_FEB-16-28-2013" periodTypeId="PROC_BILL_MONTH" periodNum="8" periodName="FEB(16-28)" fromDate="2013-02-16" thruDate="2013-02-28" isClosed="N" organizationPartyId="Company"/>
+    
+    <Party partyId="20626" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20627" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20628" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20629" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20630" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20631" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20632" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20633" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20634" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20635" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20636" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20637" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20638" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20639" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20640" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20641" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20642" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20643" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="20644" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="20626" groupName="MAHABUBNAGAR DAIRY"/>
+    <PartyGroup partyId="20627" groupName="MCC SHADNAGAR"/>
+    <PartyGroup partyId="20628" groupName="MCC KADTHAL"/>
+    <PartyGroup partyId="20629" groupName="MCC KALWAKURTHY"/>
+    <PartyGroup partyId="20630" groupName="MCC WANAPARTHY"/>
+    <PartyGroup partyId="20631" groupName="MCC ACHAMPET"/>
+    <PartyGroup partyId="20632" groupName="BCUKONDAREDDYPALLY"/>
+    <PartyGroup partyId="20633" groupName="BCU NAGARKURNOOL"/>
+    <PartyGroup partyId="20634" groupName="BCU KHILAGHANPUR"/>
+    <PartyGroup partyId="20635" groupName="BCU JADCHERLA"/>
+    <PartyGroup partyId="20636" groupName="BCU KOTHAKOTA"/>
+    <PartyGroup partyId="20637" groupName="BCU MOOSAPET"/>
+    <PartyGroup partyId="20638" groupName="BCU JAKINALAPALLY"/>
+    <PartyGroup partyId="20639" groupName="BCU THIMMARASIPALLY"/>
+    <PartyGroup partyId="20640" groupName="BCU GUNDURU"/>
+    <PartyGroup partyId="20641" groupName="BCU KOTRA"/>
+    <PartyGroup partyId="20642" groupName="BCU THANDRA"/>
+    <PartyGroup partyId="20643" groupName="BCU THIMMINONI PALLY-A"/>
+    <PartyGroup partyId="20644" groupName="BCU NARAYANAPET"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20626" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20627" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20628" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20629" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20630" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20631" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20632" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20633" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20634" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20635" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20636" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20637" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20638" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20639" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20640" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20641" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20642" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20643" statusDate="2012-12-06 00:00:00.000"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="20644" statusDate="2012-12-06 00:00:00.000"/>
+	<!--creation of sheds  -->
+    <Facility facilityId="MAIN_PLANT" primaryFacilityGroupId="" facilityTypeId="PLANT" parentFacilityId="" ownerPartyId="" facilityName="Main Plant" facilitySizeUomId="" categoryTypeEnum="" schemeTypeId="" destinationFacilityId="" size="" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="" description="Main plant"/>
+    <Facility facilityId="RR" primaryFacilityGroupId="" facilityTypeId="SHED" parentFacilityId="MAIN_PLANT" ownerPartyId="Company" facilityName="RR shed" facilitySizeUomId="" categoryTypeEnum="" schemeTypeId="" destinationFacilityId="" size="" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="2" description="RangaReddy shed"/>
+    <Facility facilityId="ANTP" primaryFacilityGroupId="" facilityTypeId="SHED" parentFacilityId="MAIN_PLANT" ownerPartyId="Company" facilityName="Antp shed" facilitySizeUomId="" categoryTypeEnum="" schemeTypeId="" destinationFacilityId="" size="" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="4" description="Anathapur shed"/>
+    <Facility facilityId="CHTR" primaryFacilityGroupId="" facilityTypeId="SHED" parentFacilityId="MAIN_PLANT" ownerPartyId="Company" facilityName="Chtr shed" facilitySizeUomId="" categoryTypeEnum="" schemeTypeId="" destinationFacilityId="" size="" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="3" description="Chittore shed"/>
+    <Facility facilityId="KDP" primaryFacilityGroupId="" facilityTypeId="SHED" parentFacilityId="MAIN_PLANT" ownerPartyId="Company" facilityName="KDP shed" facilitySizeUomId="" categoryTypeEnum="" schemeTypeId="" destinationFacilityId="" size="" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="5" description="Kadapa shed"/>
+    <Facility facilityId="MBNR" primaryFacilityGroupId="" facilityTypeId="SHED" parentFacilityId="MAIN_PLANT" ownerPartyId="Company" facilityName="Mbnr shed" facilitySizeUomId="" categoryTypeEnum="" schemeTypeId="" destinationFacilityId="" size="" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="1" description="Mahabubnager shed"/>
+    
+    
+    <Facility facilityId="20000" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20626" facilityName="MAHABUBNAGAR DAIRY" facilitySizeUomId="VLIQ_L" categoryTypeEnum="DAIRY" schemeTypeId="FED" destinationFacilityId="20000" size="12000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="1" description="Mahabubnagar Shed Unit"/>
+    <Facility facilityId="20001" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20627" facilityName="MCC SHADNAGAR" facilitySizeUomId="VLIQ_L" categoryTypeEnum="MCC" schemeTypeId="FED" destinationFacilityId="20001" size="18000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="2" description="Shadnagar"/>
+    <Facility facilityId="20002" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20628" facilityName="MCC KADTHAL" facilitySizeUomId="VLIQ_L" categoryTypeEnum="MCC" schemeTypeId="FED" destinationFacilityId="20002" size="12000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="3" description="Kadthal"/>
+    <Facility facilityId="20003" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20629" facilityName="MCC KALWAKURTHY" facilitySizeUomId="VLIQ_L" categoryTypeEnum="MCC" schemeTypeId="FED" destinationFacilityId="20003" size="12000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="4" description="Kalwakurthy"/>
+    <Facility facilityId="20004" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20630" facilityName="MCC WANAPARTHY" facilitySizeUomId="VLIQ_L" categoryTypeEnum="MCC" schemeTypeId="FED" destinationFacilityId="20004" size="12000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="5" description="Wanaparthy"/>
+    <Facility facilityId="20005" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20631" facilityName="MCC ACHAMPET" facilitySizeUomId="VLIQ_L" categoryTypeEnum="MCC" schemeTypeId="FED" destinationFacilityId="20005" size="6000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="6" description="Achampet"/>
+    <Facility facilityId="20006" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20632" facilityName="BCUKONDAREDDYPALLY" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="DRDA" destinationFacilityId="20003" size="3000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="7" description="Kondareddy Pally"/>
+    <Facility facilityId="20007" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20633" facilityName="BCU NAGARKURNOOL" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="DF" destinationFacilityId="20007" size="5000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="8" description="Nagarkurnool"/>
+    <Facility facilityId="20008" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20634" facilityName="BCU KHILAGHANPUR" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="TIFAC" destinationFacilityId="20004" size="2000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="12" description="Khilla Ghanpur"/>
+    <Facility facilityId="20009" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20635" facilityName="BCU JADCHERLA" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="IDDP_IX" destinationFacilityId="20003" size="10000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="14" description="Jadcherla"/>
+    <Facility facilityId="20010" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20636" facilityName="BCU KOTHAKOTA" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="TIFAC" destinationFacilityId="20004" size="1000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="15" description="Kothakota"/>
+    <Facility facilityId="20011" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20637" facilityName="BCU MOOSAPET" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="TIFAC" destinationFacilityId="20000" size="5000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="16" description="Moosapet"/>
+    <Facility facilityId="20012" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20638" facilityName="BCU JAKINALAPALLY" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="IDDP_IX" destinationFacilityId="20002" size="500" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="19" description="Jakinalapally"/>
+    <Facility facilityId="20013" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20639" facilityName="BCU THIMMARASIPALLY" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="IDDP_IX" destinationFacilityId="20003" size="500" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="20" description="Thimmarasipally"/>
+    <Facility facilityId="20014" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20640" facilityName="BCU GUNDURU" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="IDDP_IX" destinationFacilityId="20003" size="500" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="21" description="Gunduru"/>
+    <Facility facilityId="20015" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20641" facilityName="BCU KOTRA" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="IDDP_IX" destinationFacilityId="20003" size="500" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="22" description="Kotra"/>
+    <Facility facilityId="20016" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20642" facilityName="BCU THANDRA" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="IDDP_IX" destinationFacilityId="20003" size="500" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="23" description="Thanda"/>
+    <Facility facilityId="20017" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20643" facilityName="BCU THIMMINONI PALLY-A" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="IDDP_IX" destinationFacilityId="20003" size="500" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="24" description="Thimminonipally"/>
+    <Facility facilityId="20018" primaryFacilityGroupId="" facilityTypeId="UNIT" parentFacilityId="MBNR" ownerPartyId="20644" facilityName="BCU NARAYANAPET" facilitySizeUomId="VLIQ_L" categoryTypeEnum="BCU" schemeTypeId="DRDA" destinationFacilityId="20000" size="3000" sequenceNum="" facilitySizeUomId2="" openedDate="2011-01-12 0:00:00.00" closedDate="" facilityCode="26" description="Narayanpet"/>
+    
+    
+    <ProductCategory productCategoryId="MILK_PROC_TRN" productCategoryTypeId="CATALOG_CATEGORY" categoryName="MILK PROC TRANSFER" description="Milk proc transfers" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <Product productId="103" productTypeId="RAW_MATERIAL" primaryProductCategoryId="MILK_PROC_TRN" internalName="Mixed Milk" brandName="MM" productName="Mixed Milk" description="Mixed Milk" taxable="N" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00" autoCreateKeywords="Y" billOfMaterialLevel="0" chargeShipping="N" inShippingBox="N" isVariant="N" isVirtual="N" lastModifiedByUserLogin="kvarma" quantityIncluded="" quantityUomId="VLIQ_L" salesDiscountinuationDate=""/>
+    <ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="MILK_PROC_TRN" productId="103"/>
+    <ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="MILK_PROC_TRN" productId="101"/>
+    <ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="MILK_PROC_TRN" productId="102"/>
+    <ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="PROCUREMENT" productId="103"/>
+ 	
+</entity-engine-xml>

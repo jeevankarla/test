@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <ProductStore addToCartRemoveIncompat="Y" addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y" autoApproveOrder="Y" 
+    autoApproveReviews="N" autoInvoiceDigitalItems="Y" autoOrderCcTryExp="Y" autoOrderCcTryLaterNsf="Y" autoOrderCcTryOtherCards="Y"
+     autoSaveCart="N" balanceResOnOrderCreation="N" checkGcBalance="N" checkInventory="N" 
+    companyName="KMF" defaultCurrencyUomId="INR" 
+    defaultLocaleString="en_US" digitalItemApprovedStatus="ITEM_APPROVED" enableAutoSuggestionList="N" enableDigProdUpload="N" 
+    explodeOrderItems="N" headerApprovedStatus="ORDER_APPROVED" headerCancelStatus="ORDER_SENT" 
+    headerDeclinedStatus="ORDER_REJECTED" inventoryFacilityId="MOTHER_DAIRY" isDemoStore="Y" isFactoryStore="Y" isImmediatelyFulfilled="N" 
+    itemApprovedStatus="ITEM_APPROVED" itemCancelStatus="ITEM_CANCELLED" itemDeclinedStatus="ITEM_REJECTED" 
+     manualAuthIsCapture="N" oneInventoryFacility="Y" payToPartyId="Company" prodSearchExcludeVariants="Y" productStoreId="9003" 
+     prorateShipping="Y" prorateTaxes="Y" reqReturnInventoryReceive="N" reqShipAddrForDigItems="Y" requireCustomerRole="N" requireInventory="N" 
+     reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" retryFailedAuths="Y" selectPaymentTypePerItem="N" shipIfCaptureFails="Y"
+      showCheckoutGiftOptions="Y" showOutOfStockProducts="Y" showPricesWithVatTax="N" showTaxIsExempt="Y" splitPayPrefPerShpGrp="Y" 
+     storeName="MOTHER_DAIRY" subtitle="MOTHER_DAIRY" title="MOTHER_DAIRY" usePrimaryEmailUsername="N" viewCartOnAdd="N"/>
+     
+   <!--  <ProductStore addToCartRemoveIncompat="Y" addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y" autoApproveOrder="Y" 
+    autoApproveReviews="N" autoInvoiceDigitalItems="Y" autoOrderCcTryExp="Y" autoOrderCcTryLaterNsf="Y" autoOrderCcTryOtherCards="Y" 
+    autoSaveCart="N" balanceResOnOrderCreation="Y" checkGcBalance="N" checkInventory="Y" companyName="KMF" 
+     defaultCurrencyUomId="INR" defaultLocaleString="en_US" digitalItemApprovedStatus="ITEM_APPROVED" 
+     enableAutoSuggestionList="N" enableDigProdUpload="N" explodeOrderItems="N" headerApprovedStatus="ORDER_APPROVED" 
+     headerCancelStatus="ORDER_SENT" headerDeclinedStatus="ORDER_REJECTED" inventoryFacilityId="MOTHER_DAIRY" isDemoStore="Y" 
+     isFactoryStore="Y" isImmediatelyFulfilled="N" itemApprovedStatus="ITEM_APPROVED" itemCancelStatus="ITEM_CANCELLED" 
+     itemDeclinedStatus="ITEM_REJECTED" lastUpdatedStamp="2013-06-06 14:20:37.0" lastUpdatedTxStamp="2013-06-06 14:20:37.0"
+      manualAuthIsCapture="N" oneInventoryFacility="Y" payToPartyId="Company" prodSearchExcludeVariants="Y" productStoreId="9003" 
+      prorateShipping="Y" prorateTaxes="Y" reqReturnInventoryReceive="N" reqShipAddrForDigItems="Y" requireCustomerRole="N" requireInventory="N" 
+      reserveInventory="Y" reserveOrderEnumId="INVRO_FIFO_REC" retryFailedAuths="Y" selectPaymentTypePerItem="N"
+       shipIfCaptureFails="Y" showCheckoutGiftOptions="Y" showOutOfStockProducts="Y" showPricesWithVatTax="N" showTaxIsExempt="Y" 
+       splitPayPrefPerShpGrp="Y" storeName="MOTHER_DAIRY" subtitle="MOTHER_DAIRY" title="MOTHER_DAIRY" usePrimaryEmailUsername="N" viewCartOnAdd="N"/> -->
+      <!-- 
+       <ProductStore addToCartRemoveIncompat="Y" addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y" autoApproveOrder="Y" 
+    autoApproveReviews="N" autoInvoiceDigitalItems="Y" autoOrderCcTryExp="Y" autoOrderCcTryLaterNsf="Y" autoOrderCcTryOtherCards="Y"
+     autoSaveCart="N" balanceResOnOrderCreation="N" checkGcBalance="N" checkInventory="N" 
+    companyName="MANGALORE DAIRY" defaultCurrencyUomId="INR" 
+    defaultLocaleString="en_US" digitalItemApprovedStatus="ITEM_APPROVED" enableAutoSuggestionList="N" enableDigProdUpload="N" 
+    explodeOrderItems="N" headerApprovedStatus="ORDER_APPROVED" headerCancelStatus="ORDER_SENT" 
+    headerDeclinedStatus="ORDER_REJECTED" inventoryFacilityId="MANGALORE_DAIRY" isDemoStore="Y" isFactoryStore="Y" isImmediatelyFulfilled="N" 
+    itemApprovedStatus="ITEM_APPROVED" itemCancelStatus="ITEM_CANCELLED" itemDeclinedStatus="ITEM_REJECTED" 
+     manualAuthIsCapture="N" oneInventoryFacility="Y" payToPartyId="Company" prodSearchExcludeVariants="Y" productStoreId="9003" 
+     prorateShipping="Y" prorateTaxes="Y" reqReturnInventoryReceive="N" reqShipAddrForDigItems="Y" requireCustomerRole="N" requireInventory="N" 
+     reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" retryFailedAuths="Y" selectPaymentTypePerItem="N" shipIfCaptureFails="Y"
+      showCheckoutGiftOptions="Y" showOutOfStockProducts="Y" showPricesWithVatTax="N" showTaxIsExempt="Y" splitPayPrefPerShpGrp="Y" 
+     storeName="MANGALORE_DAIRY" subtitle="MANGALORE_DAIRY" title="MANGALORE_DAIRY" usePrimaryEmailUsername="N" viewCartOnAdd="N"/> -->
+</entity-engine-xml>

@@ -1,0 +1,316 @@
+
+<entity-engine-xml>
+
+    <PaymentMethodType description="Billing Account" paymentMethodTypeId="EXT_BILLACT" defaultGlAccountId="122000"/>
+    <PaymentMethodTypeGlAccount organizationPartyId="Company" paymentMethodTypeId="EXT_BILLACT" glAccountId="213000"/>
+
+    <RoleType description="Booth Owner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="BOOTH_OWNER"/>
+    <RoleType description="Zone Owner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ZONE_OWNER"/>    
+    <RoleType description="Distributor" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="DISTRIBUTOR"/>
+    <RoleType description="Supplier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SUPPLIER"/>
+	<RoleType description="Facility Role" hasTable="N" parentTypeId="" roleTypeId="FACILITY_ROLE"/>
+	<RoleType description="Facility Cashier" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="FACILITY_CASHIER"/>
+	<RoleType description="Route Cashier" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="ROUTE_CASHIER"/>
+	
+    <ProductPriceType description="Card Price" productPriceTypeId="CARD_PRICE"/>
+    <ProductPriceType description="Margin Price" productPriceTypeId="MARGIN_PRICE"/>
+    <Facility facilityId="MAIN_PLANT" facilityTypeId="PLANT" facilityName="Main Plant" description="Main Plant" ownerPartyId="Company" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" defaultWeightUomId="WT_lb" defaultDaysToShip="25" geoPointId="9000"/><!--
+    <ContactMechPurposeType contactMechPurposeTypeId="SHIPPING_LOCATION" description="Shipping Destination Address"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="SHIP_ORIG_LOCATION" description="Shipping Origin Address"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIPPING" description="Shipping Destination Phone Number"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIP_ORIG" description="Shipping Origin Phone Number"/>
+    
+    <ContactMechTypePurpose contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="SHIP_ORIG_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIPPING" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIP_ORIG" contactMechTypeId="TELECOM_NUMBER"/>
+        
+    <ContactMech contactMechId="9200" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="9201" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMech contactMechId="9202" contactMechTypeId="EMAIL_ADDRESS" infoString="vbiz@vasista.com"/>
+    <PostalAddress contactMechId="9200" toName="Arunodaya" attnName="ZJAA" address1="2003 Apparel Park Kompalli" city="Hyderabad" postalCode="84058" countryGeoId="IN"/>
+    <TelecomNumber contactMechId="9201" areaCode="040" contactNumber="23112311"/>
+    <FacilityContactMech facilityId="Godown1" contactMechId="9200" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="Godown1" contactMechId="9201" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="Godown1" contactMechId="9202" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9200" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9200" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9202" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2011-05-13 12:00:00.0"/>
+    
+    --><ProductStore productStoreId="9001" storeName="Vijaya" companyName="APDDCF" title="Vijaya"
+        subtitle="Vijaya" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
+        inventoryFacilityId="MAIN_PLANT" oneInventoryFacility="Y" checkInventory="N" reserveInventory="N" balanceResOnOrderCreation="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        defaultLocaleString="en_US" defaultCurrencyUomId="INR" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
+        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
+        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="N"/>
+
+    <ProductStoreFacility productStoreId="9001" facilityId="MAIN_PLANT" fromDate="2011-05-13 12:00:00.0"/>
+
+    <ProdCatalog prodCatalogId="VijayaCatalog" catalogName="Vijaya Catalog" useQuickAdd="N"/>
+    <ProductStoreCatalog productStoreId="9001" prodCatalogId="VijayaCatalog" fromDate="2011-05-13 12:00:00.0" sequenceNum="1"/>
+
+    <ProductCategory longDescription="MILK"
+        productCategoryId="100" categoryName="MILK" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProdCatalogCategory prodCatalogId="VijayaCatalog" productCategoryId="100" fromDate="2011-05-13 12:00:00.0"
+        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/> 
+        
+    <Product productId="11" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Double Toned 200ml" productName="DTM 200" brandName="DTM 200" description="Double Toned 200ml" longDescription="Double Toned 200ml" quantityUomId="VLIQ_L" quantityIncluded=".2" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="11" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="5.50" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="11" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="5.44" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="11"/> 
+    <ProductCategoryMember productCategoryId="100" productId="11" fromDate="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="11" attrName="FAT" attrValue="1.5" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="11" attrName="SNF" attrValue="9.00" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    
+    <Product productId="12" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Double Toned 1/2Ltr" productName="DTM 1/2" brandName="DTM 1/2" description="Double Toned 1/2Ltr" longDescription="Double Toned 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="12" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="13.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="12" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="12.85" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="12"/> 
+    <ProductCategoryMember productCategoryId="100" productId="12" fromDate="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="12" attrName="FAT" attrValue="1.5" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="12" attrName="SNF" attrValue="9.00" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="13" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Cow Milk 1/2Ltr" productName="COW 1/2"  brandName="COW 1/2" description="Cow Milk 1/2Ltr" longDescription="Cow Milk 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="13" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="15.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="13" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="14.85" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="13"/> 
+    <ProductCategoryMember productCategoryId="100" productId="13" fromDate="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="13" attrName="FAT" attrValue="3.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="13" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="21" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Toned Milk 200ml" productName="TM 200" brandName="TM  200" description="Toned Milk 200ml" longDescription="Toned Milk 200ml" quantityUomId="VLIQ_L" quantityIncluded=".2" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="21" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="6.50" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="21" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="6.44" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="21"/> 
+    <ProductCategoryMember productCategoryId="100" productId="21" fromDate="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="21" attrName="FAT" attrValue="3.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="21" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    
+    <Product productId="22" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Toned Milk 1/2Ltr" productName="TM 1/2" brandName="TM  1/2" description="Toned Milk 1/2Ltr" longDescription="Toned Milk 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="22" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="15.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="22" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="14.85" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="22"/> 
+    <ProductCategoryMember productCategoryId="100" productId="22" fromDate="2011-12-01 12:00:00.0"/>    
+    <ProductAttribute  productId="22" attrName="FAT" attrValue="3.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="22" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="23" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Toned Milk 1Ltr" productName="TM 1"  brandName="TM    1" description="Toned Milk 1 Ltr" longDescription="Toned Milk 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="23" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="30.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="23" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="29.70" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="23"/> 
+    <ProductCategoryMember productCategoryId="100" productId="23" fromDate="2011-12-01 12:00:00.0"/> 
+    <ProductAttribute  productId="23" attrName="FAT" attrValue="3.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="23" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    
+    <Product productId="32" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="SM 1/2Ltr" productName="SM 1/2" brandName="SM  1/2" description="SM 1/2Ltr" longDescription="SM 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="32" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="17.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="32" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="16.85" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="32"/> 
+    <ProductCategoryMember productCategoryId="100" productId="32" fromDate="2011-12-01 12:00:00.0"/> 
+    <ProductAttribute  productId="32" attrName="FAT" attrValue="4.5" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="32" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    
+    <Product productId="33" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="SM 1Ltr" productName="SM 1"  brandName="SM    1" description="SM 1Ltr" longDescription="SM 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="33" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="34.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="33" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="33.70" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="33"/> 
+    <ProductCategoryMember productCategoryId="100" productId="33" fromDate="2011-12-01 12:00:00.0"/>     
+    <ProductAttribute  productId="33" attrName="FAT" attrValue="4.5" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="33" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="42" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Whole Milk 1/2Ltr" productName="WM 1/2" brandName="WM  1/2" description="Whole Milk 1/2Ltr" longDescription="Whole Milk 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="42" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="19.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="42" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="18.85" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="42"/> 
+    <ProductCategoryMember productCategoryId="100" productId="42" fromDate="2011-12-01 12:00:00.0"/> 
+    <ProductAttribute  productId="42" attrName="FAT" attrValue="6.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="42" attrName="SNF" attrValue="9.00" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+            
+    <Product productId="43" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Whole Milk 1Ltr" productName="WM 1" brandName="WM    1" description="Whole Milk 1Ltr" longDescription="Whole Milk 1Ltr" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="43" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="38.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="43" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="38.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="43"/> 
+    <ProductCategoryMember productCategoryId="100" productId="43" fromDate="2011-12-01 12:00:00.0"/>     
+    <ProductAttribute  productId="43" attrName="FAT" attrValue="6.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="43" attrName="SNF" attrValue="9.00" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    
+    <Product productId="44" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Whole Milk 1Ltr Bulk" productName="WM 1(bulk)" brandName="WM1(BLK" description="Whole Milk 1Ltr Bulk" longDescription="Whole Milk 1Ltr Bulk" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="44" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="33.25" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="44" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="33.25" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="44"/> 
+    <ProductCategoryMember productCategoryId="100" productId="44" fromDate="2011-12-01 12:00:00.0"/>               
+    <ProductAttribute  productId="44" attrName="FAT" attrValue="6.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="44" attrName="SNF" attrValue="9.00" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="52" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Diet Milk 1/2Ltr" productName="VDM 1/2" brandName="VDM 1/2" description="Diet Milk 1/2Ltr" longDescription="Diet Milk 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="52" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="12.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="52" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="11.85" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="52"/> 
+    <ProductCategoryMember productCategoryId="100" productId="52" fromDate="2011-12-01 12:00:00.0"/> 
+    <ProductAttribute  productId="52" attrName="FAT" attrValue="0.1" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="52" attrName="SNF" attrValue="8.70" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="61" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Suprabhatam Style 1/2Ltr" productName="SBS 1/2"  brandName="SBS 1/2" description="Suprabatam Style 1/2Ltr" longDescription="Suprabatam Style 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="61" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="14.55" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="61" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="14.55" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="61"/> 
+    <ProductCategoryMember productCategoryId="100" productId="61" fromDate="2011-12-01 12:00:00.0"/> 
+    <ProductAttribute  productId="61" attrName="FAT" attrValue="1.5" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="61" attrName="SNF" attrValue="9.00" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    
+    <Product productId="62" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Tetrafibre Milk 1/2Ltr" productName="TFM 1/2" brandName="TFM 1/2"  description="Tetrafibre Milk 1/2Ltr" longDescription="Tetrafibre Milk 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="62" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="15.45" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="62" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="15.45" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="62"/> 
+    <ProductCategoryMember productCategoryId="100" productId="62" fromDate="2011-12-01 12:00:00.0"/>     
+    <ProductAttribute  productId="62" attrName="FAT" attrValue="3.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="62" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="63" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Extra Fresh 1/2Ltr" productName="VEF 1/2" brandName="VEF 1/2" description="Extra Fresh 1/2Ltr" longDescription="Extra Fresh 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="63" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="16.37" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="63" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="16.37" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="63"/> 
+    <ProductCategoryMember productCategoryId="100" productId="63" fromDate="2011-12-01 12:00:00.0"/>     
+    <ProductAttribute  productId="63" attrName="FAT" attrValue="4.5" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="63" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="72" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Family Milk 1/2Ltr" productName="FML 1/2" brandName="FML 1/2" description="Family Milk 1/2Ltr" longDescription="Family Milk 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5"  taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="72" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="13.50" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="72" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="13.35" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="72"/> 
+    <ProductCategoryMember productCategoryId="100" productId="72" fromDate="2011-12-01 12:00:00.0"/>  
+    <ProductAttribute  productId="72" attrName="FAT" attrValue="2.5" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="72" attrName="SNF" attrValue="9.00" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="73" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Vitamin Milk 1/2Ltr" productName="VTM 1/2" brandName="VTM 1/2" description="Vitamin Milk 1/2Ltr" longDescription="Vitamin Milk 1/2Ltr" quantityUomId="VLIQ_L" quantityIncluded=".5" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="73" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="16.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="73" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="15.85" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="73" productPricePurposeId="PURCHASE" productPriceTypeId="MARGIN_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="2.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="73"/> 
+    <ProductCategoryMember productCategoryId="100" productId="73" fromDate="2011-12-01 12:00:00.0"/>  
+    <ProductAttribute  productId="73" attrName="FAT" attrValue="3.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="73" attrName="SNF" attrValue="8.50" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+
+    <Product productId="91" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Curd 200ml" productName="CRD 200" brandName="CRD 200" description="Curd 200ml" longDescription="Curd 200ml" quantityUomId="VLIQ_L" quantityIncluded=".2" salesDiscontinuationDate="2012-01-01 12:00:00.0" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="91" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="5.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="91" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="5.00" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="91"/> 
+    <ProductCategoryMember productCategoryId="100" productId="91" fromDate="2011-12-01 12:00:00.0"/>
+
+    <Product productId="92" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="BMLK 200ml" productName="BML 200" brandName="BML 200" description="Buttermilk 200ml" longDescription="Buttermilk 200ml" quantityUomId="VLIQ_L" quantityIncluded=".2" salesDiscontinuationDate="2012-01-01 12:00:00.0" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="92" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="3.75" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="92" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="3.75" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="92"/> 
+    <ProductCategoryMember productCategoryId="100" productId="92" fromDate="2011-12-01 12:00:00.0"/>
+    
+    <Product productId="93" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Whole Milk 1Ltr Bulk" productName="WM 1(bulk)" brandName="WM(BLK" description="Whole Milk 1Ltr Bulk" longDescription="Whole Milk 1Ltr Bulk" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-12-01 12:00:00.0" lastModifiedDate="2011-12-01 12:00:00.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductPrice productId="93" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="33.25" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductPrice productId="93" productPricePurposeId="PURCHASE" productPriceTypeId="CARD_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-12-01 12:00:00.0" price="33.25" createdDate="2011-12-01 12:00:00.0"  lastModifiedDate="2011-12-01 12:00:00.0" />
+    <ProductFacility createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" facilityId="MAIN_PLANT" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0" minimumStock="0.000000" productId="93"/> 
+    <ProductCategoryMember productCategoryId="100" productId="93" fromDate="2011-12-01 12:00:00.0"/>               
+    <ProductAttribute  productId="93" attrName="FAT" attrValue="6.0" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    <ProductAttribute  productId="93" attrName="SNF" attrValue="9.00" createdStamp="2011-12-01 12:00:00.0" createdTxStamp="2011-12-01 12:00:00.0" lastUpdatedStamp="2011-12-01 12:00:00.0" lastUpdatedTxStamp="2011-12-01 12:00:00.0"/>
+    
+                     
+    <RoleType description="Ship-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="SHIP_TO_CUSTOMER"/>
+    <RoleType description="Ship-From Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="SHIP_FROM_VENDOR"/>
+    <RoleType description="Supplier Agent" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SUPPLIER_AGENT"/>
+    
+    <PartyRole partyId="Company" roleTypeId="CARRIER"/>
+    <PartyRole partyId="_NA_" roleTypeId="CARRIER"/> 
+    <ShipmentMethodType description="No Shipping" shipmentMethodTypeId="NO_SHIPPING"/>
+    <ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
+    
+    <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="5"/>
+
+
+    <ProductStoreShipmentMeth productStoreShipMethId="9001" productStoreId="9001" partyId="Company" includeNoChargeItems="Y" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="7"/>
+
+    <ShipmentCostEstimate productStoreId="9001" orderFlatPrice="0.0" orderItemFlatPrice="0.0" carrierPartyId="Company" carrierRoleTypeId="CARRIER" orderPricePercent="0.0" shipmentCostEstimateId="9002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+
+    <RoleType description="Packer" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="PACKER"/>
+
+    <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="INV_PROD_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="PINV_PROD_ITEM" parentTypeId=""/>    
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="INV_FPROD_ITEM" parentTypeId="INV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="PINV_FPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+
+    <PaymentMethodType description="Cash On Delivery" paymentMethodTypeId="EXT_COD"/>
+    <PaymentMethodType description="Offline Payment" paymentMethodTypeId="EXT_OFFLINE"/>                  
+    <PartyAcctgPreference partyId="Company"  cogsMethodId="COGS_LIFO" baseCurrencyUomId="INR"
+        invoiceSequenceEnumId="INVSQ_ENF_SEQ" invoiceIdPrefix="CI"
+        quoteSequenceEnumId="INVSQ_ENF_SEQ" quoteIdPrefix="CQ"
+        orderSequenceEnumId="INVSQ_ENF_SEQ" orderIdPrefix="CO"/>
+
+    <GlAccountType description="Uninvoiced Shipment Receipts" glAccountTypeId="UNINVOICED_SHIP_RCPT" hasTable="N" parentTypeId="CURRENT_LIABILITY"/>
+    <GlAccountTypeDefault organizationPartyId="Company" glAccountTypeId="UNINVOICED_SHIP_RCPT" glAccountId="214000"/>
+    <GlAccountOrganization organizationPartyId="Company" glAccountId="214000" fromDate="2011-01-01 00:00:00.0"/>
+
+    <RoleType description="Request Manager" hasTable="N" parentTypeId="" roleTypeId="REQ_MANAGER"/>
+    <RoleType description="Requesting Party" hasTable="N" parentTypeId="" roleTypeId="REQ_REQUESTER"/>
+    <RoleType description="Request Taker" hasTable="N" parentTypeId="" roleTypeId="REQ_TAKER"/>
+
+     <MilkCardType milkCardTypeId="100" name="DTM200" description="DTM 200" isMIS="Y"/>
+     <MilkCardType milkCardTypeId="101" name="TM1/2" description="TM 1/2LITRE" isMIS="Y" isLMS="Y"/>     
+     <MilkCardType milkCardTypeId="102" name="TM1" description="TM 1LITRE" isMIS="Y" isLMS="Y"/>     
+     <MilkCardType milkCardTypeId="103" name="SM1/2" description="SM 1/2LITRE" isMIS="Y" isLMS="Y"/>     
+     <MilkCardType milkCardTypeId="104" name="WM1/2" description="WM 1/2LITRE" isMIS="Y" isLMS="Y"/>
+     <MilkCardType milkCardTypeId="105" name="VDM1/2" description="VDM 1/2LITRE" isMIS="Y" isLMS="Y"/>
+     <MilkCardType milkCardTypeId="106" name="FM1/2" description="FM 1/2LITRE" isMIS="Y" isLMS="Y"/>
+     <MilkCardType milkCardTypeId="107" name="VTM1/2" description="VTM 1/2LITRE" isMIS="Y" isLMS="Y"/>
+     
+     
+     <MilkCardType milkCardTypeId="108" name="DTM25_200" description="5LITRES(DTM25*200ml)"  isLMS="Y"/>
+     <MilkCardType milkCardTypeId="109" name="TM1_1/2" description="TM 1-1/2 LITRES"  isLMS="Y"/>     
+     <MilkCardType milkCardTypeId="110" name="TM10_500" description="5LITRES(TM10*500ml)"  isLMS="Y"/>
+     <MilkCardType milkCardTypeId="111" name="TM5_1000" description="5LITRES(TM5*1000ml)"  isLMS="Y"/>
+     <MilkCardType milkCardTypeId="112" name="TM2" description="TM 2LITRES"  isLMS="Y"/>
+      
+     <MilkCardProductMap milkCardTypeId="100" productId="11" quantity="1"/>
+      <MilkCardProductMap milkCardTypeId="101" productId="22" quantity="1"/>
+      <MilkCardProductMap milkCardTypeId="102" productId="23" quantity="1"/>
+     <MilkCardProductMap milkCardTypeId="103" productId="32" quantity="1"/>			 
+     <MilkCardProductMap milkCardTypeId="104" productId="42" quantity="1"/>
+     <MilkCardProductMap milkCardTypeId="105" productId="52" quantity="1"/>
+     <MilkCardProductMap milkCardTypeId="106" productId="72" quantity="1"/>
+     <MilkCardProductMap milkCardTypeId="107" productId="73" quantity="1"/>     
+     <MilkCardProductMap milkCardTypeId="108" productId="11" quantity="25"/>
+     <MilkCardProductMap milkCardTypeId="109" productId="23" quantity="1"/>
+     <MilkCardProductMap milkCardTypeId="109" productId="22" quantity="1"/>    
+     <MilkCardProductMap milkCardTypeId="110" productId="22" quantity="10"/>
+     <MilkCardProductMap milkCardTypeId="111" productId="23" quantity="5"/>
+     <MilkCardProductMap milkCardTypeId="112" productId="23" quantity="2"/>
+     
+      <ProductCategory longDescription="Lms Products"
+        productCategoryId="LMS" categoryName="Lms" productCategoryTypeId="CATALOG_CATEGORY"/>
+     
+    <ProductCategoryMember productCategoryId="LMS" productId="11" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="12" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="13" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="21" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="22" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="23" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="32" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="33" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="34" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="42" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="43" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="52" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="61" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="62" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="63" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="72" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="91" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="92" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-07 13:21:04.0" lastUpdatedTxStamp="2012-06-07 13:21:04.0" createdStamp="2012-06-07 13:21:04.0" createdTxStamp="2012-06-07 13:21:04.0"/>
+  
+     
+     
+     </entity-engine-xml>

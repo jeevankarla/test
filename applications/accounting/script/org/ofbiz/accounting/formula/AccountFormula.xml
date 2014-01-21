@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods.xsd">
+
+    <!-- ========= AccountFormula methods ========= -->
+    <simple-method method-name="createAccountFormula" short-description="Create an AccountFormula">
+        <make-value entity-name="AcctgFormula" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+<!--  
+    <simple-method method-name="updateAccountFormula" short-description="Update an AccountFormula">
+        <make-value entity-name="AcctgFormula" value-field="lookupPKMap"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+-->    
+    <simple-method method-name="updateAccountFormula" short-description="Update an existing AccountFormula">
+    	<if>
+    	<condition>
+          <not> <if-has-permission permission="ACCOUNTING" action="_ADMIN"/></not>
+          </condition>
+            <then>
+                <add-error><fail-property resource="AccountingUiLabels" property="AccountingCreateFormulaError"/></add-error>
+            </then>
+        </if>
+        <check-errors/>
+        <entity-one entity-name="AcctgFormula" value-field="accountFormula" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map="parameters" value-field="accountFormula"/>
+        <store-value value-field="accountFormula"/>
+        <check-errors/>
+        <if-compare field="accountFormula.isSlabBased" operator="equals" value="N">
+        	<remove-related value-field="accountFormula" relation-name="AcctgFormulaSlabs"/>
+        </if-compare>          
+    </simple-method>    
+    <simple-method method-name="deleteAccountFormula" short-description="Delete an AccountFormula">
+    <if>
+    	<condition>
+          <not> <if-has-permission permission="ACCOUNTING" action="_ADMIN"/></not>
+          </condition>
+            <then>
+                <add-error><fail-property resource="AccountingUiLabels" property="AccountingCreateFormulaError"/></add-error>
+            </then>
+        </if>
+        <check-errors/>
+        <make-value entity-name="AcctgFormula" value-field="lookupPKMap"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
+        <remove-related value-field="lookedUpValue" relation-name="AcctgFormulaSlabs"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>    
+    <simple-method method-name="createAccountFormulaSlab" short-description="Create an AccountFormulaSlab">
+    	<if>
+    		<condition>
+         		 <not> <if-has-permission permission="ACCOUNTING" action="_ADMIN"/></not>
+          		</condition>
+          <then>
+            <add-error><fail-property resource="AccountingUiLabels" property="AccountingCreateFormulaError"/></add-error>
+           	 </then>
+        	</if>
+        <check-errors/>
+        <set field="acctgFormulaId" from-field="parameters.acctgFormulaId"/>
+        <make-value entity-name="AcctgFormulaSlabs" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateAccountFormulaSlab" short-description="Update an existing AccountFormulaSlab">
+    	<if>
+    	<condition>
+          <not> <if-has-permission permission="ACCOUNTING" action="_ADMIN"/></not>
+          </condition>
+            <then>
+                <add-error><fail-property resource="AccountingUiLabels" property="AccountingCreateFormulaError"/></add-error>
+            </then>
+        </if>
+        <check-errors/>
+        <entity-one entity-name="AcctgFormulaSlabs" value-field="accountFormulaSlab" auto-field-map="true"/>
+        <check-errors/>
+        <set-nonpk-fields map="parameters" value-field="accountFormulaSlab"/>
+        <store-value value-field="accountFormulaSlab"/>
+        <check-errors/>      
+    </simple-method>   
+    <simple-method method-name="deleteAccountFormulaSlab" short-description="Delete an AccountFormulaSlab">
+       <if>
+    	<condition>
+          <not> <if-has-permission permission="ACCOUNTING" action="_ADMIN"/></not>
+          </condition>
+            <then>
+                <add-error><fail-property resource="AccountingUiLabels" property="AccountingCreateFormulaError"/></add-error>
+            </then>
+        </if>
+        <check-errors/>
+        <make-value entity-name="AcctgFormulaSlabs" value-field="lookupPKMap"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>        
+</simple-methods>

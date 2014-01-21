@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="KkdmpcuApplication">
+        <value xml:lang="en">Kkdmpcu Application</value>
+        <value xml:lang="zh">Kkdmpcu应用程序</value>
+    </property>
+    <property key="KkdmpcuCompanyName">
+        <value xml:lang="en">Vbiz: Kkdmpcu</value>
+    </property>
+    <property key="KkdmpcuCompanySubtitle">
+        <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source Open For Business</value>
+        <value xml:lang="zh">开源软件OFBiz的组成部分</value>
+    </property>
+    <property key="KkdmpcuViewPermissionError">
+        <value xml:lang="en">You are not allowed to view this page.</value>
+        <value xml:lang="zh">不允许你浏览这个页面。</value>
+    </property>
+    <property key="KmpuDairyMsg">       
+        <value xml:lang="en">KRISHNAVENI KKDMPCU  LTD: VIJAYAWADA</value>        
+    </property>
+    <property key="CratesCans">       
+        <value xml:lang="en">Crates Cans Entry</value>        
+    </property>
+    <property key="EntryDate">       
+        <value xml:lang="en">Entry Date</value>        
+    </property>
+    <property key="CratesSent">       
+        <value xml:lang="en">Crates Sent</value>        
+    </property>
+    <property key="CratesReceived">       
+        <value xml:lang="en">Crates Received</value>        
+    </property>
+    <property key="CansSent">       
+        <value xml:lang="en">Cans Sent</value>        
+    </property>
+    <property key="CansReceived">       
+        <value xml:lang="en">Cans Received</value>        
+    </property>
+</resource>

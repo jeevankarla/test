@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	<form name="ListTruckSheets" list-name="listTruckSheets" title="" type="list" paginate-target="KVTruckSheet"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="shipmentId"><hidden/></field> 
+    	<field name="estimatedShipDate" title="${uiLabelMap.SupplyDate}" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>       
+        <field name="shipmentTypeId" title="Shipment Type"><display-entity entity-name="ShipmentType"/></field>
+         <field name="originFacilityId" title="Name"><display-entity entity-name="Facility"  key-field-name="facilityId" description="${facilityName}"/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="facilityId" title="Route Id" >
+            <drop-down allow-empty="false">
+                <option key="allRoutes" description="All-Routes"/>
+                <entity-options description="${facilityId}" entity-name="Facility" key-field-name="facilityId">
+                   <entity-constraint name="facilityTypeId" operator="equals" value="ROUTE"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="BoothSlips" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name = "truckSheet">
+            <hyperlink target="MLDGenerateTruckSheet.pdf" description="Booth Slips" target-window="_blank" >
+              	  <parameter param-name="shipmentId" from-field="shipmentId"/> 
+              	  <parameter param-name="reportTypeFlag" value="trucksheet"/>   
+            </hyperlink>
+        </field>
+        <field name="abstractReport" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name="routeAbstract">
+            <hyperlink target="MLDGenerateTruckSheet.pdf" description="Route Abstract Report" target-window="_blank" >
+                <parameter param-name="shipmentId" from-field="shipmentId" />  
+                <parameter param-name="reportTypeFlag" value="abstract"/>                                                
+            </hyperlink>
+        </field>
+        <field name="Route Dispatch  Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name="deliverySchedule">
+            <hyperlink target="MilkDeliveryScheduleReport.pdf" description="Route Dispatch  Sheet" target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="RouteDispatchSheet"/>                                                           
+            </hyperlink>
+        </field>
+        <field name="Route Collection Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name="deliverySchedule">
+            <hyperlink target="MilkDeliveryScheduleReport.pdf" description="Route Collection Sheet" target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="RouteCollectionSheet"/>                                                           
+            </hyperlink>
+        </field>
+         <field name="Main Truck Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name="loadingStatement">
+            <hyperlink target="MLDGenerateTruckSheet.pdf" description="Main Truck Sheet"   target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="consolidatedLoadingStatement"/>                                                           
+            </hyperlink>
+        </field>
+        <field name="DeliveryChallan" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:setSelectedRoute(this, ${shipmentId});" id-name="crDeliveryChallan">
+            <hyperlink target="DeliveryChallan.pdf" description="DeliveryChalan"   target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" /> 
+                <parameter param-name="reportTypeFlag" value="crInstDeliveryChalan"/>                                                           
+            </hyperlink>
+        </field>
+        <field name="cancelShipment" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target="cancelLMSShipment" description="${uiLabelMap.CommonCancel}" target-window="_blank">
+                <parameter param-name="shipmentId"  from-field="shipmentId" />                                                               
+            </hyperlink>
+        </field>
+    </form>
+
+</forms>

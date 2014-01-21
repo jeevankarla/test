@@ -1,0 +1,125 @@
+
+<entity-engine-xml>
+
+<!-- Abids AB1 Route -->
+
+    <GeoPoint geoPointId="1955" latitude="17.402684" longitude="78.478582" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="1955" facilityName="Avanthi Nagar" geoPointId="1955" />   
+
+    <GeoPoint geoPointId="1964" latitude="17.404578" longitude="78.482466" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="1964" facilityName="Urdhu Hall" geoPointId="1964" />       
+
+    <GeoPoint geoPointId="2055" latitude="17.406421" longitude="78.484504" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2055" facilityName="Himayath Nagar-B" geoPointId="2055" />  
+
+    <GeoPoint geoPointId="2059" latitude="17.399797" longitude="78.47885" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2059" facilityName="Hyder Guda" geoPointId="2059" /> 
+
+    <GeoPoint geoPointId="2060" latitude="17.397821" longitude="78.475084" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2060" facilityName="Gunfondry-A" geoPointId="2060" /> 
+
+    <GeoPoint geoPointId="2061" latitude="17.402735" longitude="78.480148" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2061" facilityName="Share Gate" geoPointId="2061" /> 
+  
+    <GeoPoint geoPointId="3547" latitude="17.386027" longitude="78.48032" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3547" facilityName="Vikram Nagar" geoPointId="3547" />     
+    
+
+    <GeoPoint geoPointId="3572" latitude="17.384839" longitude="78.486918" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3572" facilityName="Sanjaygandhi Nagar" geoPointId="3572" />  
+
+    <GeoPoint geoPointId="3740" latitude="17.392088" longitude="78.473325" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3740" facilityName="Suryalokcomplex Gf" geoPointId="3740" /> 
+    
+    <GeoPoint geoPointId="3795" latitude="17.399239" longitude="78.482772" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3795" facilityName="C D R Hospital" geoPointId="3795" />        
+
+    <GeoPoint geoPointId="4113" latitude="17.397227" longitude="78.488013" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="4113" facilityName="Saipadmadairyparlour" geoPointId="4113" /> 
+
+    <GeoPoint geoPointId="4280" latitude="17.395582" longitude="78.489541" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="4280" facilityName="Ss.Bazar Himayathngr" geoPointId="4280" /> 
+
+    <GeoPoint geoPointId="4484" latitude="17.399623" longitude="78.486865" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="4484" facilityName="Telugu Academy" geoPointId="4484" /> 
+
+    <GeoPoint geoPointId="4694" latitude="17.394601" longitude="78.478893" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="4694" facilityName="Rajarani Hotel" geoPointId="4694" /> 
+
+    <GeoPoint geoPointId="5041" latitude="17.395569" longitude="78.485202" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="5041" facilityName="Sy.Bank Old Mla Qtrs" geoPointId="5041" /> 
+
+    <GeoPoint geoPointId="5663" latitude="17.395633" longitude="78.47657" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="5663" facilityName="Convent School" geoPointId="5663" /> 
+
+<!-- Abids AB2 Route -->
+    <GeoPoint geoPointId="2107" latitude="17.386316" longitude="78.48348" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2107" facilityName="Guzrathi Gally" geoPointId="2107" /> 
+
+    <GeoPoint geoPointId="2108" latitude="17.386075" longitude="78.47723" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2108" facilityName="Troop Bazar" geoPointId="2108" />
+
+    <GeoPoint geoPointId="2113" latitude="17.389236" longitude="78.488149" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2113" facilityName="Sulthan Bazar X Road" geoPointId="2113" />
+
+    <GeoPoint geoPointId="2117" latitude="17.383508" longitude="78.476822" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2117" facilityName="Jam Bagh" geoPointId="2117" />
+       
+    <GeoPoint geoPointId="2120" latitude="17.394463" longitude="78.489976" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2120" facilityName="Venkateswara Colony" geoPointId="2117" />    
+
+    <GeoPoint geoPointId="3473" latitude="17.383111" longitude="78.47856" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3473" facilityName="Troopbazar X Road" geoPointId="3473" />  
+
+    <GeoPoint geoPointId="3803" latitude="17.388627" longitude="78.485706" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3803" facilityName="Kanda Swamy Lane" geoPointId="3803" />    
+       
+    <GeoPoint geoPointId="4082" latitude="17.406441" longitude="78.477252" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="4082" facilityName="Haridwar Hotel K Bus" geoPointId="4082" />     
+
+    <GeoPoint geoPointId="4953" latitude="17.389753" longitude="78.486913" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="4953" facilityName="Abansaab Majeed" geoPointId="4953" />           
+   
+
+
+
+<!-- Abids AB3 Route -->    
+    <GeoPoint geoPointId="2105" latitude="17.384946" longitude="78.486661" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2105" facilityName="K.S.Market" geoPointId="2105" />       
+
+    <GeoPoint geoPointId="2151" latitude="17.39165" longitude="78.497328" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2151" facilityName="Barakathpura-A" geoPointId="2151" />  
+
+    <GeoPoint geoPointId="2157" latitude="17.39196" longitude="78.465128" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2157" facilityName="Super Bazar" geoPointId="2157" />
+        
+    <GeoPoint geoPointId="2171" latitude="17.403022" longitude="78.484311" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="2171" facilityName="Nandan Apartment" geoPointId="2171" />    
+
+    <GeoPoint geoPointId="3654" latitude="17.391561" longitude="78.47826" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3654" facilityName="Methodiesschool Nfh" geoPointId="3654" />  
+
+    <GeoPoint geoPointId="3661" latitude="17.39217" longitude="78.474441" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3661" facilityName="Reddy Hostel Ngh" geoPointId="3661" />  
+
+    <GeoPoint geoPointId="3663" latitude="17.400498" longitude="78.474977" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3663" facilityName="Erose Hotel Op B X R" geoPointId="3663" />  
+    
+    <GeoPoint geoPointId="3911" latitude="17.395733" longitude="78.490545" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="3911" facilityName="Girls Reddy Col.Gate" geoPointId="3911" />      
+
+    <GeoPoint geoPointId="4680" latitude="17.391781" longitude="78.473175" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="4680" facilityName="Seven Eleven Bakary" geoPointId="4680" />      
+
+
+    <GeoPoint geoPointId="5174" latitude="17.397575" longitude="78.483292" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="5174" facilityName="S.B.I Barkath Pura" geoPointId="5174" />  
+
+    <GeoPoint geoPointId="5178" latitude="17.387849" longitude="78.489032" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="5178" facilityName="Sai Baba Milk Center" geoPointId="5178" />  
+ 
+
+    <GeoPoint geoPointId="6346" latitude="17.393521" longitude="78.482922" createdStamp="2011-12-01 00:00:00.0" createdTxStamp="2011-12-01 00:00:00.0" dataSourceId="GEOPT_GOOGLE"  lastUpdatedStamp="2011-12-01 00:00:00.0" lastUpdatedTxStamp="2011-12-01 00:00:00.0" />
+    <Facility facilityId="6346" facilityName="Hotel Hyline X Road King Koti" geoPointId="6346" />  
+                                                                                                                          
+</entity-engine-xml>    

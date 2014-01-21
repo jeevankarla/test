@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="listValidations" title="Validation List" type="list" list-name="validationList" target="doValidation" target-window="_BLANK" 
+    	odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        <field name="component"><display/></field>        
+        <field name="category"><display/></field>
+        <field name="id"><hidden/></field>
+        <field name="component"></field>        
+        <field name="name" title="Name"><display/></field>
+        <field name="description"><display/></field>
+        <field name="submitButton" title="Run" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form> 
+</forms>

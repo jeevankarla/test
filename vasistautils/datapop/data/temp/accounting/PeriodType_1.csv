@@ -1,0 +1,6 @@
+PeriodType_description,PeriodType_periodLength,PeriodType_periodTypeId,PeriodType_uomId
+Rate amount per Hour,1,RATE_HOUR,TF_hr
+Rate amount per Week,1,RATE_WEEK,TF_wk
+Rate amount per month,1,RATE_MONTH,TF_mon
+Rate amount per Quarter,3,RATE_QUARTER,TF_mon
+Fiscal Year,12,FISCAL_YEAR,TF_yr

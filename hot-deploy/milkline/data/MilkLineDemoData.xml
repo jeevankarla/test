@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	
+	
+	 <ProdCatalog prodCatalogId="DAIRYCATALOG" catalogName="Dairy Catalog" useQuickAdd="N"/>
+	<ProdCatalogCategory prodCatalogId="DAIRYCATALOG" productCategoryId="MILK_PROCUREMENT" fromDate="2011-05-13 12:00:00.0"
+        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/> 
+        <ProductStoreCatalog productStoreId="SMPL" prodCatalogId="DAIRYCATALOG" fromDate="2011-05-13 12:00:00.0" sequenceNum="1"/>
+        
+	
+	<Facility facilityId = "_NA_" />
+	
+	<ProcurementPriceChart procPriceChartId="99" regionId="_NA_" useBaseSnf="N" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00"/>
+	<ProcurementPriceChart procPriceChartId="100" regionId="B1"  uomId="VLIQ_L" useBaseSnf="N" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00"/>
+	<ProcurementPriceChart procPriceChartId="101" regionId="B2"  uomId="VLIQ_L"	useBaseSnf="N" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00"/>
+	<ProcurementPriceChart procPriceChartId="102" regionId="B3"  uomId="VLIQ_L"	useBaseSnf="N" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00"/>
+	<ProcurementPriceChart procPriceChartId="103" regionId="B4"  uomId="VLIQ_L"	useBaseSnf="N" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00"/>
+	<ProcurementPriceChart procPriceChartId="104" regionId="B5"  uomId="VLIQ_L"	useBaseSnf="N" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00"/>
+	<ProcurementPriceChart procPriceChartId="105" regionId="B7"  useBaseSnf="N" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00"/> 
+	
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="99" productId="200" price="445.00" fatPercent="5.00" snfPercent="8.40" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="99" productId="200" price="443.00" fatPercent="5.00" snfPercent="8.20" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="99" productId="200" price="440.00" fatPercent="5.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="99" productId="200" price="425.00" fatPercent="5.00" snfPercent="7.80" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="99" productId="200" price="395.00" fatPercent="5.00" snfPercent="7.60" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="99" productId="200" price="0.00"   fatPercent="4.99" snfPercent="7.59" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="99" productId="200" price="0.00"	fatPercent="0.00" snfPercent="0.00" procurementPriceTypeId="PROC_PRICE_SOUR" 	currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="99" productId="200" price="0.00"	fatPercent="0.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="99" productId="201" price="155.00" fatPercent="3.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="99" productId="201" price="143.00" fatPercent="3.00" snfPercent="7.80" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="99" productId="201" price="141.00" fatPercent="3.00" snfPercent="7.60" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="99" productId="201" price="136.00" fatPercent="3.00" snfPercent="7.50" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="99" productId="201" price="115.00" fatPercent="3.00" snfPercent="7.40" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="99" productId="201" price="0.00"   fatPercent="2.99" snfPercent="7.39" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="99" productId="201" price="0.00"	fatPercent="0.00" snfPercent="0.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="99" productId="201" price="0.00"	fatPercent="0.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" /> 	
+		 
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="100" productId="200" price="445.00" fatPercent="5.00" snfPercent="8.40" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="100" productId="200" price="443.00" fatPercent="5.00" snfPercent="8.20" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="100" productId="200" price="440.00" fatPercent="5.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="100" productId="200" price="425.00" fatPercent="5.00" snfPercent="7.80" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="100" productId="200" price="395.00" fatPercent="5.00" snfPercent="7.60" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="100" productId="200" price="0.00"   fatPercent="4.99" snfPercent="7.59" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="100" productId="200" price="0.00" 	fatPercent="0.00" snfPercent="0.00" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="100" productId="200" price="0.00"	fatPercent="0.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="100" productId="201" price="155.00" fatPercent="3.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="201" price="143.00" fatPercent="3.00" snfPercent="7.80" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="201" price="141.00" fatPercent="3.00" snfPercent="7.60" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="201" price="136.00" fatPercent="3.00" snfPercent="7.50" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="201" price="115.00" fatPercent="3.00" snfPercent="7.40" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="201" price="0.00"   fatPercent="2.99" snfPercent="7.39" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="100" productId="201" price="0.00" 	fatPercent="0.00" snfPercent="0.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="100" productId="201" price="0.00"	fatPercent="0.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" /> 	
+	
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="101" productId="200" price="450.00" fatPercent="5.00" snfPercent="8.40" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="101" productId="200" price="448.00" fatPercent="5.00" snfPercent="8.20" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="101" productId="200" price="445.00" fatPercent="5.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="101" productId="200" price="430.00" fatPercent="5.00" snfPercent="7.80" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="101" productId="200" price="400.00" fatPercent="5.00" snfPercent="7.60" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="101" productId="200" price="0.00"   fatPercent="4.99" snfPercent="7.59" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="101" productId="200" price="0.00" 	fatPercent="0.00" snfPercent="0.00" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="101" productId="200" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />	
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="101" productId="201" price="155.00" fatPercent="3.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="101" productId="201" price="143.00" fatPercent="3.00" snfPercent="7.80" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="101" productId="201" price="141.00" fatPercent="3.00" snfPercent="7.60" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="101" productId="201" price="136.00" fatPercent="3.00" snfPercent="7.50" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="101" productId="201" price="115.00" fatPercent="3.00" snfPercent="7.40" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="101" productId="201" price="0.00"   fatPercent="2.99" snfPercent="7.39" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="101" productId="201" price="0.00" 	fatPercent="0.00" snfPercent="0.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="101" productId="201" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	 
+ 	 
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="102" productId="200" price="450.00" fatPercent="5.00" snfPercent="8.40" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="102" productId="200" price="448.00" fatPercent="5.00" snfPercent="8.20" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="102" productId="200" price="445.00" fatPercent="5.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="102" productId="200" price="430.00" fatPercent="5.00" snfPercent="7.80" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="102" productId="200" price="400.00" fatPercent="5.00" snfPercent="7.60" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="102" productId="200" price="0.00"   fatPercent="4.99" snfPercent="7.59" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="102" productId="200" price="0.00" 	fatPercent="0.00" snfPercent="0.00" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="102" productId="200" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="102" productId="201" price="155.00" fatPercent="3.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="102" productId="201" price="143.00" fatPercent="3.00" snfPercent="7.80" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="102" productId="201" price="141.00" fatPercent="3.00" snfPercent="7.60" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="102" productId="201" price="136.00" fatPercent="3.00" snfPercent="7.50" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="102" productId="201" price="115.00" fatPercent="3.00" snfPercent="7.40" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="102" productId="201" price="0.00"   fatPercent="2.99" snfPercent="7.39" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="102" productId="201" price="0.00" 	fatPercent="0.00" snfPercent="0.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="102" productId="201" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	 
+ 	 
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="103" productId="200" price="450.00" fatPercent="5.00" snfPercent="8.40" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="103" productId="200" price="448.00" fatPercent="5.00" snfPercent="8.20" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="103" productId="200" price="445.00" fatPercent="5.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="103" productId="200" price="430.00" fatPercent="5.00" snfPercent="7.80" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="103" productId="200" price="400.00" fatPercent="5.00" snfPercent="7.60" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="103" productId="200" price="0.00"   fatPercent="4.99" snfPercent="7.59" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="103" productId="200" price="0.00"	fatPercent="0.00" snfPercent="0.00"  procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="103" productId="200" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="103" productId="201" price="155.00" fatPercent="3.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="103" productId="201" price="143.00" fatPercent="3.00" snfPercent="7.80" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="103" productId="201" price="141.00" fatPercent="3.00" snfPercent="7.60" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="103" productId="201" price="136.00" fatPercent="3.00" snfPercent="7.50" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="103" productId="201" price="115.00" fatPercent="3.00" snfPercent="7.40" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="103" productId="201" price="0.00"   fatPercent="2.99" snfPercent="7.39" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="103" productId="201" price="0.00"	fatPercent="0.00" snfPercent="0.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="103" productId="201" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	 
+ 	 
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="104" productId="200" price="450.00" fatPercent="5.00" snfPercent="8.40" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="104" productId="200" price="448.00" fatPercent="5.00" snfPercent="8.20" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="104" productId="200" price="445.00" fatPercent="5.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="104" productId="200" price="430.00" fatPercent="5.00" snfPercent="7.80" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="104" productId="200" price="400.00" fatPercent="5.00" snfPercent="7.60" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="104" productId="200" price="0.00"   fatPercent="4.99" snfPercent="7.59" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="104" productId="200" price="0.00"	fatPercent="0.00" snfPercent="0.00" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="104" productId="200" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="104" productId="201" price="155.00" fatPercent="3.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="104" productId="201" price="143.00" fatPercent="3.00" snfPercent="7.80" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="104" productId="201" price="141.00" fatPercent="3.00" snfPercent="7.60" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="104" productId="201" price="136.00" fatPercent="3.00" snfPercent="7.50" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="104" productId="201" price="115.00" fatPercent="3.00" snfPercent="7.40" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="104" productId="201" price="0.00"   fatPercent="2.99" snfPercent="7.39" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="104" productId="201" price="0.00" 	fatPercent="0.00" snfPercent="0.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="104" productId="201" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+ 	
+ 	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="105" productId="200" price="466.00" fatPercent="5.00" snfPercent="8.40" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="105" productId="200" price="464.00" fatPercent="5.00" snfPercent="8.20" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="105" productId="200" price="461.00" fatPercent="5.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="105" productId="200" price="446.00" fatPercent="5.00" snfPercent="7.80" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="105" productId="200" price="416.00" fatPercent="5.00" snfPercent="7.60" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="105" productId="200" price="0.00"   fatPercent="4.99" snfPercent="7.59" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="105" productId="200" price="0.00"	fatPercent="0.00" snfPercent="0.00"  procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="105" productId="200" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="105" productId="201" price="159.00" fatPercent="3.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="105" productId="201" price="147.00" fatPercent="3.00" snfPercent="7.80" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="105" productId="201" price="145.00" fatPercent="3.00" snfPercent="7.60" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="105" productId="201" price="140.00" fatPercent="3.00" snfPercent="7.50" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="105" productId="201" price="119.00" fatPercent="3.00" snfPercent="7.40" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="105" productId="201" price="0.00"   fatPercent="2.99" snfPercent="7.39" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="105" productId="201" price="0.00" 	fatPercent="0.00" snfPercent="0.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="105" productId="201" price="0.00"	fatPercent="0.00" snfPercent="8.50" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+
+
+	<!-- Premium price charts -->
+	
+	<ProcurementPriceChart procPriceChartId="106" regionId="IT1013" useBaseSnf="N" fromDate="2012-07-01 00:00:00" createdDate="2012-07-01 00:00:00" lastModifiedDate="2012-07-01 00:00:00" isPremiumChart="Y"/> 
+	
+	<!-- Buffalo Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="106" productId="200" price="500.00" fatPercent="5.00" snfPercent="8.40" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="106" productId="200" price="443.00" fatPercent="5.00" snfPercent="8.20" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="106" productId="200" price="440.00" fatPercent="5.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="106" productId="200" price="425.00" fatPercent="5.00" snfPercent="7.80" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR"/>
+ 	<ProcurementPrice procPriceChartId="106" productId="200" price="395.00" fatPercent="5.00" snfPercent="7.60" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="106" productId="200" price="0.00"   fatPercent="4.99" snfPercent="7.59" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="106" productId="200" price="0.00"	fatPercent="0.00" snfPercent="0.00" procurementPriceTypeId="PROC_PRICE_SOUR" 	currencyUomId="INR" />
+	<ProcurementPrice procPriceChartId="106" productId="200" price="0.00"	fatPercent="0.00" snfPercent="8.00" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" />
+	<!-- Cow Milk Pricing-->
+ 	<ProcurementPrice procPriceChartId="106" productId="201" price="200.00" fatPercent="3.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB1" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="106" productId="201" price="143.00" fatPercent="3.00" snfPercent="7.80" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB2" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="106" productId="201" price="141.00" fatPercent="3.00" snfPercent="7.60" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB3" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="106" productId="201" price="136.00" fatPercent="3.00" snfPercent="7.50" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB4" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="106" productId="201" price="115.00" fatPercent="3.00" snfPercent="7.40" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SLAB5" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="106" productId="201" price="0.00"   fatPercent="2.99" snfPercent="7.39" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_MIN_QLTY" currencyUomId="INR" />
+ 	<ProcurementPrice procPriceChartId="106" productId="201" price="0.00"	fatPercent="0.00" snfPercent="0.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SOUR" currencyUomId="INR"/>
+	<ProcurementPrice procPriceChartId="106" productId="201" price="0.00"	fatPercent="0.00" snfPercent="8.00" useTotalSolids="Y" procurementPriceTypeId="PROC_PRICE_SNF_DED" currencyUomId="INR" /> 	
+		
+
+	<Subscription subscriptionId="114AM" facilityId="114" subscriptionTypeId="AM"/>
+	<Subscription subscriptionId="115AM" facilityId="115" subscriptionTypeId="AM"/>
+	<Subscription subscriptionId="114PM" facilityId="114" subscriptionTypeId="PM"/>
+	<Subscription subscriptionId="115PM" facilityId="115" subscriptionTypeId="PM"/>
+	<SubscriptionProduct subscriptionId="114AM" productId="12" quantity="50" productSubscriptionTypeId="CASH" fromDate="2011-12-14 15:15:46.0"  sequenceNum="_NA_"/>
+	<SubscriptionProduct subscriptionId="114AM" productId="13" quantity="51" productSubscriptionTypeId="CASH" fromDate="2011-12-14 15:15:46.0"  sequenceNum="_NA_"/>
+	<SubscriptionProduct subscriptionId="114PM" productId="12" quantity="52" productSubscriptionTypeId="CASH" fromDate="2011-12-14 15:15:46.0"  sequenceNum="_NA_"/>
+	<SubscriptionProduct subscriptionId="114PM" productId="13" quantity="53" productSubscriptionTypeId="CASH" fromDate="2011-12-14 15:15:46.0"  sequenceNum="_NA_"/>
+	
+	<SubscriptionProduct subscriptionId="115AM" productId="12" quantity="50" productSubscriptionTypeId="CASH" fromDate="2011-12-14 15:15:46.0"  sequenceNum="_NA_"/>
+	<SubscriptionProduct subscriptionId="115AM" productId="13" quantity="51" productSubscriptionTypeId="CASH" fromDate="2011-12-14 15:15:46.0"  sequenceNum="_NA_"/>
+	<SubscriptionProduct subscriptionId="115PM" productId="12" quantity="52" productSubscriptionTypeId="CASH" fromDate="2011-12-14 15:15:46.0"  sequenceNum="_NA_"/>
+	<SubscriptionProduct subscriptionId="115PM" productId="13" quantity="53" productSubscriptionTypeId="CASH" fromDate="2011-12-14 15:15:46.0"  sequenceNum="_NA_"/>
+
+	
+	<FacilityGroupType facilityGroupTypeId="DAIRY_LMD_TYPE" description="Dairy Liquid Milk Distribution"/>
+	<FacilityGroup facilityGroupId="RSO1_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Gajuwaka" description="Gajuwaka" ownerFacilityId="RSO1"/>	
+	<FacilityGroup facilityGroupId="RSO2_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Old Post Office" description="Old Post Office" ownerFacilityId="RSO2"/>	
+	<FacilityGroup facilityGroupId="RSO3_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Head Office" description="Head Office" ownerFacilityId="RSO3"/>	
+	
+	<FacilityGroup facilityGroupId="RSO5_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Nad" description="Nad" ownerFacilityId="RSO5"/>	
+	<FacilityGroup facilityGroupId="RSO6_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Vizagrural" description="Vizagrural" ownerFacilityId="RSO6"/>	
+	<FacilityGroup facilityGroupId="RSO7_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Navy" description="Navy" ownerFacilityId="RSO7"/>	
+	<FacilityGroup facilityGroupId="RSO8_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Vzm" description="Vzm" ownerFacilityId="RSO8"/>	
+	<FacilityGroup facilityGroupId="RSO9_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Skklm" description="Skklm" ownerFacilityId="RSO9"/>	
+	
+		
+	<FacilityGroupMember facilityGroupId="RSO1_DAIRY_LMD" facilityId="RSO1" fromDate="2011-01-12 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="RSO2_DAIRY_LMD" facilityId="RSO2" fromDate="2011-01-12 00:00:00.00"/>
+	<FacilityGroupMember facilityGroupId="RSO3_DAIRY_LMD" facilityId="RSO3" fromDate="2011-01-12 00:00:00.00"/>
+	
+	<FacilityGroupMember facilityGroupId="RSO5_DAIRY_LMD" facilityId="RSO5" fromDate="2011-01-12 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="RSO6_DAIRY_LMD" facilityId="RSO6" fromDate="2011-01-12 00:00:00.00"/>
+	<FacilityGroupMember facilityGroupId="RSO7_DAIRY_LMD" facilityId="RSO7" fromDate="2011-01-12 00:00:00.00"/>
+	<FacilityGroupMember facilityGroupId="RSO8_DAIRY_LMD" facilityId="RSO8" fromDate="2011-01-12 00:00:00.00"/>
+    <FacilityGroupMember facilityGroupId="RSO9_DAIRY_LMD" facilityId="RSO9" fromDate="2011-01-12 00:00:00.00"/>
+	<!-- data for supervisors   -->
+		<RoleType roleTypeId="SUPERVISOR" parentTypeId="" hasTable="N" description="supervisor"/>
+		
+		<Party partyId="9000" partyTypeId="PERSON"/>
+	    <Party partyId="9001" partyTypeId="PERSON"/>
+	    <Party partyId="9002" partyTypeId="PERSON"/>
+	    <Party partyId="9003" partyTypeId="PERSON"/>
+	    <Party partyId="9004" partyTypeId="PERSON"/>
+	    <Party partyId="9005" partyTypeId="PERSON"/>
+	    <Party partyId="9006" partyTypeId="PERSON"/>
+	    <Party partyId="9007" partyTypeId="PERSON"/>
+		<Party partyId="9008" partyTypeId="PERSON"/>
+		
+		<PartyStatus statusId="PARTY_ENABLED" partyId="9000" statusDate="2013-03-25 00:00:00.000"/>
+	    <PartyStatus statusId="PARTY_ENABLED" partyId="9001" statusDate="2013-03-25 00:00:00.000"/>
+	    <PartyStatus statusId="PARTY_ENABLED" partyId="9002" statusDate="2013-03-25 00:00:00.000"/>
+	    <PartyStatus statusId="PARTY_ENABLED" partyId="9003" statusDate="2013-03-25 00:00:00.000"/>
+	    <PartyStatus statusId="PARTY_ENABLED" partyId="9004" statusDate="2013-03-25 00:00:00.000"/>
+	    <PartyStatus statusId="PARTY_ENABLED" partyId="9005" statusDate="2013-03-25 00:00:00.000"/>
+	    <PartyStatus statusId="PARTY_ENABLED" partyId="9006" statusDate="2013-03-25 00:00:00.000"/>
+	    <PartyStatus statusId="PARTY_ENABLED" partyId="9007" statusDate="2013-03-25 00:00:00.000"/>
+	    <PartyStatus statusId="PARTY_ENABLED" partyId="9008" statusDate="2013-03-25 00:00:00.000"/>
+	    
+		<PartyRole partyId="9000" roleTypeId="SUPERVISOR"/>
+	    <PartyRole partyId="9001" roleTypeId="SUPERVISOR"/>
+	    <PartyRole partyId="9002" roleTypeId="SUPERVISOR"/>
+	    <PartyRole partyId="9003" roleTypeId="SUPERVISOR"/>
+	    <PartyRole partyId="9004" roleTypeId="SUPERVISOR"/>
+	    <PartyRole partyId="9005" roleTypeId="SUPERVISOR"/>
+	    <PartyRole partyId="9006" roleTypeId="SUPERVISOR"/>
+	    <PartyRole partyId="9007" roleTypeId="SUPERVISOR"/>
+	    <PartyRole partyId="9008" roleTypeId="SUPERVISOR"/>
+	
+		
+		<Person partyId="9000" firstName="VASU APPARA RAO" lastName="B" gender=""/>
+    	<Person partyId="9001" firstName="SURYA NARAYANA" lastName="G." gender=""/>
+	    <Person partyId="9002" firstName="RAMBABU" lastName="T" gender=""/>
+	    <Person partyId="9003" firstName="MURTHY" lastName="M. A.N." gender=""/>
+	    <Person partyId="9004" firstName="RAMU" lastName="R." gender=""/>
+	    <Person partyId="9005" firstName="SAMBA SIVA" lastName="B." gender=""/>
+	    <Person partyId="9006" firstName="BULLI DORA" lastName="K." gender=""/>
+	    <Person partyId="9007" firstName="CHINNA BABU" lastName="CH" gender=""/>
+	    <Person partyId="9008" firstName="VARMA" lastName="" gender=""/>
+	    
+		<FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B1_01" partyId="9000" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B1_02" partyId="9000" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B1_03" partyId="9000" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B1_04" partyId="9000" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B2_05" partyId="9001" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B2_06" partyId="9002" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B2_07" partyId="9001" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B3_01" partyId="9003" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B3_02" partyId="9003" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B3_03" partyId="9004" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B3_04" partyId="9004" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B3_05" partyId="9003" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B3_06" partyId="9003" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B3_07" partyId="9003" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B4_01" partyId="9005" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B4_02" partyId="9005" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B4_03" partyId="9006" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B4_04" partyId="9006" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B5_04" partyId="9007" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B5_06" partyId="9007" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B5_07" partyId="9007" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B7_02" partyId="9008" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B7_03" partyId="9008" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	    <FacilityParty  fromDate="2012-01-01 00:00:00"    facilityId="B7_04" partyId="9008" roleTypeId="SUPERVISOR" lastUpdatedStamp="2013-01-01 00:00:00.00" lastUpdatedTxStamp="2013-01-01 00:00:00.00" createdStamp="2013-01-01 00:00:00.00" createdTxStamp="2013-01-01 00:00:00.00"/>
+	<!-- end of data for supervisors -->
+</entity-engine-xml>

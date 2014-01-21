@@ -1,0 +1,7 @@
+PartyQualType_description,PartyQualType_hasTable,PartyQualType_parentTypeId,PartyQualType_partyQualTypeId
+Degree,N,,DEGREE
+Certification,N,,CERTIFICATION
+Bachelor of Technology,,DEGREE,B.Tech
+Masters of business administration,,DEGREE,MBA
+Masters of Science,,DEGREE,MSC
+Bachelor of Science,,DEGREE,BSC

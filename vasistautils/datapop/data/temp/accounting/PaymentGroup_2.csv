@@ -1,0 +1,4 @@
+PaymentGroup_paymentGroupId,PaymentGroup_paymentGroupTypeId,PaymentGroup_paymentGroupName
+PAYROLL,CHECK_RUN,Payroll processing
+COMMISSION,BATCH_PAYMENT,Commission Processing
+MAINTENANCE,ECS_COLLECTION,ECS Collection

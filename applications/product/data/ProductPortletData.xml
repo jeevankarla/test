@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<entity-engine-xml>
+    
+    <PortletCategory portletCategoryId="PRODUCTS" description="List of Products"/>
+    <PortalPortlet portalPortletId="BestSellingProducts"
+        portletName="List of Days Best Selling Products"
+        screenName="BestSellingProducts"
+        screenLocation="component://product/widget/catalog/ProductScreens.xml"
+        description="List of best selling products of the day"/>
+    <PortletPortletCategory portalPortletId="BestSellingProducts" portletCategoryId="PRODUCTS"/>
+
+    <PortletCategory portletCategoryId="PRODUCTSTORE" description="ProductStore Management"/>
+    <PortalPortlet portalPortletId="PrdStoreFacilityMgmt"
+        portletName="Facility associated to ProductStore management"
+        screenName="ListProductStoreFacility"
+        screenLocation="component://product/widget/catalog/StoreScreens.xml"
+        description="List of best selling products of the day"/>
+    <PortletPortletCategory portalPortletId="PrdStoreFacilityMgmt" portletCategoryId="PRODUCTSTORE"/>
+    <PortalPage portalPageId="ProductStoreFacility" sequenceNum="100" portalPageName="ProductStore Facility Management"
+                description="The page to manage productStoreFacility data" ownerUserLoginId="_NA_" />
+      <PortalPageColumn portalPageId="ProductStoreFacility" columnSeqId="00001"/>
+        <PortalPagePortlet portalPageId="ProductStoreFacility" portalPortletId="PrdStoreFacilityMgmt" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>	 
+		 
+		 <SecurityPermission permissionId="MYPORTAL_FACILITY" description="Use the Facility screens in myportal."/>
+        <SecurityGroup description="Facility user of myportal, Limited access to the Facility" groupId="MYPORTAL_FACILITY"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_FACILITY" permissionId="MYPORTAL_FACILITY"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_FACILITY" permissionId="FACILITY_VIEW"/>	 	
+	 	 <SecurityGroupPermission groupId="MYPORTAL_FACILITY" permissionId="MYPORTALBASE_ADMIN"/>
+		 <PortalPage portalPageId="MYPORTAL_FACILITY" sequenceNum="0" portalPageName="Main" description="The Vbiz System Facility page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_FACILITY"/>
+			
+		 <PortalPortlet portalPortletId="Facility" portletName="Facility"
+        	screenName="MyPortalFacilityTree"
+        screenLocation="component://product/widget/facility/CommonScreens.xml"
+        description="Facility"/>                
+    	<PortletPortletCategory portalPortletId="Facility" portletCategoryId="PRODUCTS"/>
+    	
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_FACILITY" sequenceNum="0" portalPageName="LMS" description="The Vbiz System Facility page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_FACILITY"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_FACILITY" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_FACILITY" portalPortletId="Facility" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+</entity-engine-xml>

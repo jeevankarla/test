@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
+	 <include location="component://order/webapp/ordermgr/WEB-INF/controller.xml"/>    
+    <include location="component://product/webapp/facility/WEB-INF/controller.xml"/>
+     <include location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/controller.xml"/>
+    <description>MilkLine Component Site Configuration File</description>
+	
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+    <preprocessor>
+    </preprocessor>
+    -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+    <postprocessor>
+        <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
+    </postprocessor>
+    -->
+	<request-map uri="TruckSheetMilkLine">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TruckSheet"/>
+    </request-map>
+    <request-map uri="createLMSShipment">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createLMSShipment"/>
+       <response name="success" type="request" value="TruckSheet"/>
+        <response name="failed" type="view" value="TruckSheet"/>
+        <response name="error" type="view" value="TruckSheet"/>
+    </request-map>
+     <request-map uri="LMSReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LMSReports"/>
+    </request-map>
+    <request-map uri="DeliveryChallan.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DeliveryChallanPDF"/>
+    </request-map>
+    
+     <request-map uri="CRInstBillInvoice.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CRInstBillInvoicePDF"/>
+    </request-map>
+    
+    <request-map uri="MilkDeliveryScheduleReport.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="MilkDeliveryScheduleReport"/>
+    </request-map>
+    <request-map uri="MLDGenerateTruckSheet.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="MLDGenerateTruckSheetTXT"/>
+    </request-map>
+     <request-map uri="CumulativeSalesReport.pdf">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="CumulativeSalesReportPDF"/>    	
+    </request-map>
+     <request-map uri="consolidatedRouteCollection.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="ConsolidatedRouteCollectionSheetPDF"/>
+    </request-map>
+    <request-map uri="DayWiseSalesAndCollection.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="DayWiseSalesAndCollectionPDF"/>
+    </request-map>
+    <request-map uri="agentWiseCommission">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="AgentWiseCommission"/>
+    </request-map>
+    
+     <request-map uri="ReconsilationReport.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="ReconsilationReportPDF"/>
+    </request-map>
+     <request-map uri="DailySalesAndCollectionReport">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="DailySalesAndCollectionReport"/>
+    </request-map>
+     <request-map uri="agentSalesVariation.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AgentWiseSalesVariation"/>
+    </request-map>
+     <request-map uri="routeWiseOBCBSales.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RouteWiseOBCBSale"/>
+    </request-map>
+     <request-map uri="AgentTargetAndPerformanceReport.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="AgentTargetAndPerformanceReportPDF"/>
+    </request-map>
+     <request-map uri="AgentDailySalesAndCollectionReport.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="AgentDailySalesAndCollectionReportPDF"/>
+    </request-map>
+      <request-map uri="DayWiseRouteSalesReport.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="DayWiseRouteSalesReportPDF"/>
+    </request-map>
+    
+      <request-map uri="LeaksFreesReport.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="LeaksFreesReportPDF"/>
+    </request-map>
+    
+   
+     <!-- Procurement Requests -->
+     <request-map uri="passOrder.pdf">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="PassOrderReport"/>    	
+    </request-map>
+    <request-map uri="gradesReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GradesReport"/>
+    </request-map> 
+    <request-map uri="unitWiseCenterWisePayment.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CenterWisePaymentLtrs"/>
+    </request-map>    
+     <request-map uri="CenterWiseBonusStmt.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CenterWiseBonusReport"/>
+    </request-map>
+    <!-- Request Mappings -->
+    <request-map uri="main"><security https="true" auth="true"/>
+    <response name="success" type="view" value="main"/></request-map>
+    <!-- View Mappings -->
+    <view-map name="main" type="screen" page="component://milkline/widget/MilkLineScreens.xml#FacilityTree"/>
+    <view-map name="TruckSheet" type="screen" page="component://milkline/widget/MilkLineScreens.xml#TruckSheet"/>
+    <view-map name="LMSReports" type="screen" page="component://milkline/widget/MilkLineScreens.xml#LMSReports"/>
+    <view-map name="MLDGenerateTruckSheetTXT" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#MLDGenerateTruckSheetTXT" content-type="application/pdf"/>
+    <view-map name="MilkDeliveryScheduleReport" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#MilkDeliveryScheduleReport" content-type="application/pdf"/>
+    <view-map name="DeliveryChallanPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#DeliveryChallanPDF" content-type="application/pdf"/>
+    <view-map name="CRInstBillInvoicePDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#CRInstBillInvoicePDF" content-type="application/pdf"/>
+    <view-map name="CumulativeSalesReportPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#CumulativeSalesReportPDF" content-type="application/pdf"/>
+	<view-map name="ConsolidatedRouteCollectionSheetPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#ConsolidatedRouteCollectionSheetPDF" content-type="application/pdf"/>
+	<view-map name="DayWiseSalesAndCollectionPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#DayWiseSalesAndCollectionPDF" content-type="application/pdf"/>
+	<view-map name="ReconsilationReportPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#ReconsilationReportPDF" content-type="application/pdf"/>
+	<view-map name="AgentWiseCommission" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#AgentWiseCommission" content-type="application/pdf"/>
+	<view-map name="AgentWiseSalesVariation" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#AgentWiseSalesVariation" content-type="application/pdf"/>
+	<view-map name="RouteWiseOBCBSale" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#RouteWiseOBCBSale" content-type="application/pdf"/>
+	<view-map name="DailySalesAndCollectionReport" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#DailySalesAndCollectionReport" content-type="application/pdf"/>
+	<view-map name="AgentTargetAndPerformanceReportPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#AgentTargetAndPerformanceReportPDF" content-type="application/pdf"/>
+	<view-map name="AgentDailySalesAndCollectionReportPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#AgentDailySalesAndCollectionReportPDF" content-type="application/pdf"/>
+	<view-map name="DayWiseRouteSalesReportPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#DayWiseRouteSalesReportPDF" content-type="application/pdf"/>
+	<view-map name="LeaksFreesReportPDF" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#LeaksFreesReportPDF" content-type="application/pdf"/>
+	
+	<!-- View Mappings for Procurement-->
+	<view-map name="GradesReport" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#GradesReport" content-type="application/pdf"/>
+	<view-map name="PassOrderReport" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#PassOrderReport" content-type="application/pdf"/>
+	<view-map name="CenterWisePaymentLtrs" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#CenterWisePaymentLtrs" content-type="application/pdf"/>
+	<view-map name="CenterWiseBonusReport" type="screenfop" page="component://milkline/widget/MilkLineScreens.xml#CenterWiseBonusReport" content-type="application/pdf"/>
+</site-conf>

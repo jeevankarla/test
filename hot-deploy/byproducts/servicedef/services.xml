@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>ByProducts Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+    <service name="createPostPayment" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createPostPayment">
+        <description>create new payment and associate with respective financial account in FinAccountTrans Entity.</description>
+       
+        <!-- <attribute name="isDepositWithDrawPayment" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentGroupTypeId" type="String" mode="IN" optional="true"/> -->
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentPurposeType" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentDate" type="String" mode="IN" optional="true"/>
+        <attribute name="effectiveDate" type="String" mode="IN" optional="true"/>
+        <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
+        <attribute name="issuingAuthorityBranch" type="String" mode="IN" optional="true"/>
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>  
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdFrom" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="getPartyDiscountAmount" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getPartyDiscountAmount">
+        <description>Get Rate Amount</description>
+        <attribute name="rateAmount" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="rateCurrencyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="rateTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="rateAmountEntry" type="org.ofbiz.entity.GenericValue" optional="true" mode="OUT"/> 
+        <attribute name="thruDate" type="Timestamp" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="processChangeIndentRoute" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processChangeIndentRoute">
+        <description>Change Route for Indent Entry</description>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="supplyDate" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="newRouteId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createByProduct" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createByProduct" auth="true">
+        <description>Create ByProducts</description>
+        <attribute name="productId" type="String" optional="false" mode="INOUT" />
+        <attribute name="productTypeId" type="String" optional="true" mode="IN" />
+        <attribute name="primaryProductCategoryId" type="String" optional="true" mode="IN" />
+        <attribute name="introductionDate" type="Timestamp" optional="true" mode="IN" />
+        <attribute name="salesDiscontinuationDate" type="Timestamp" optional="true" mode="IN"/>
+        <attribute name="internalName" type="String" optional="true" mode="IN"/>
+        <attribute name="brandName" type="String" optional="true" mode="IN"/>
+        <attribute name="productName" type="String" optional="true" mode="IN"/>
+        <attribute name="description" type="String" optional="true" mode="IN"/>
+        <attribute name="requireInventory" type="String" optional="true" mode="IN"/>
+        <attribute name="quantityUomId" type="String" optional="true" mode="IN"/>
+        <attribute name="quantityIncluded" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="piecesIncluded" type="Long" optional="true" mode="IN"/>
+        <attribute name="productStoreGroupId" type="String" optional="true" mode="IN"/>
+        <attribute name="taxable" type="String" optional="true" mode="IN"/>
+        <attribute name="autoCreateKeywords" type="String" optional="true" mode="IN"/>
+        <attribute name="isVirtual" type="String" optional="true" mode="IN"/>
+        <attribute name="isVariant" type="String" optional="true" mode="IN"/>
+        <attribute name="pricesEffectiveDate" type="Timestamp" optional="true" mode="IN" />
+    </service>
+    
+    <service name="processDSCorrectionHelper" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="processDSCorrectionHelper" auth="true">
+        <description>order correction</description>
+        
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+        <attribute name="indentChangeFlag" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="updateByProductPrice" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="updateByProductPrice" auth="true">
+        <description>Update ByProduct Prices</description>
+        <attribute name="productId" type="String" optional="false" mode="INOUT" />
+        <attribute name="productPriceTypeId" type="String" optional="true" mode="IN" />
+        <attribute name="productPricePurposeId" type="String" optional="true" mode="IN" />
+        <attribute name="currencyUomId" type="String" optional="true" mode="IN" />
+        <attribute name="productStoreGroupId" type="String" optional="true" mode="IN"/>
+        <attribute name="fromDate" type="Timestamp" optional="true" mode="INOUT" />
+        <attribute name="thruDate" type="Timestamp" optional="true" mode="IN" />
+        <attribute name="price" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="VAT_SALE_Price" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="VAT_SALE_Rate" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="BED_SALE_Price" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="BED_SALE_Rate" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="BEDCESS_SALE_Price" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="BEDCESS_SALE_Rate" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="BEDSECCESS_SALE_Price" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="BEDSECCESS_SALE_Rate" type="BigDecimal" optional="true" mode="IN"/>
+    </service>
+    <service name="deleteByProductPrice" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="deleteByProductPrice">
+        <description>Delete Price</description>
+        <attribute name="productId" mode="INOUT" type="String" optional="false"/>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="productStoreGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceTypeId" mode="INOUT" type="String" optional="false"/>                
+    </service>
+    <service name="updateCrateQtyConfig" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="updateCrateQtyConfig">
+        <description>Change Route for Indent Entry</description>
+        <attribute name="uomId" type="String" mode="IN" optional="false"/>
+        <attribute name="uomIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="liters" type="Double" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="processChangePartyCode" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processChangePartyCode">
+        <description>Change Route for Indent Entry</description>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="supplyDate" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="newBoothId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="processChangeIndentParty" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processChangeIndentParty">
+        <description>Change Route for Indent Entry</description>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="supplyDate" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="newBoothId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="cancelParlorSalesOrder" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelParlorSalesOrder">
+        <description> Cancel Parlor Sales Order</description>        
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="productStoreId" mode="IN" type="String" optional="true"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+        <!-- <attribute name="oldStatusId" mode="OUT" type="String" optional="false"/> -->
+    </service>
+    <service name="processParlorSalesOrder" engine="java" auth="true" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processParlorSalesOrder" transaction-timeout="800">
+        <description>process parlor sales order</description>
+        <attribute name="prodQuant" mode="IN" type="Map" optional="false"/>
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="productPriceTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="supplyDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="orderId" mode="INOUT" type="String" optional="true"/>
+    </service>
+    
+    <service name="createPhysicalInventoryAndStockVariance" engine="java" auth="true" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createPhysicalInventoryAndStockVariance">
+        <description>create Physical Inventory And stock variance</description>
+       
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="varianceReasonId" mode="IN" type="String" optional="false"/>  
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="comments" mode="IN" type="String" optional="true"/>
+        <attribute name="effectiveDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="physicalInventoryId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="requestToOrder" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="requestToOrder">
+        <description> Initiate Order for CustRequest</description>        
+        <attribute name="custRequestId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="true"/>
+        <attribute name="shipmentId" mode="OUT" type="String" optional="true"/>
+    </service>
+    
+    <service name="sendLVDSms" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="sendLVDSms">
+        <description>Send sales summary sms</description>                                             
+    </service>
+    
+    <service name="makeAdvancePayment" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="makeAdvancePayment">
+        <description> create Advance Cash Payment For Party</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdFrom" mode="IN" type="String" optional="true"/>
+        <attribute name="organizationPartyId" mode="IN" type="String" optional="false"/>
+        <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/>
+        <attribute name="issuingAuthority" mode="IN" type="String" optional="true"/>
+        <attribute name="issuingAuthorityBranch" mode="IN" type="String" optional="true"/>
+        <attribute name="effectiveDate" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentPurposeType" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="paymentDate" type="String" mode="IN" optional="true"/>            
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>             
+        <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="createByProductFacility" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createByProductFacility">
+        <description> create Facility</description>        
+        <attribute name="facilityId" mode="INOUT" type="String" optional="false"/>
+        <attribute name="facilityTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="subscriptionTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityName" mode="IN" type="String" optional="false"/>
+        <attribute name="categoryTypeEnum" mode="IN" type="String" optional="false"/>
+        <attribute name="zoneId" mode="IN" type="String" optional="false"/>
+        <attribute name="byProdRouteId" mode="IN" type="String" optional="false"/>
+        <attribute name="openedDate" mode="IN" type="String" optional="true"/>
+        <attribute name="closedDate" mode="IN" type="String" optional="true"/>
+        <attribute name="inchargeName" mode="IN" type="String" optional="false"/> 
+        <!-- <attribute name="description" mode="IN" type="String" optional="true"/> -->
+        <attribute name="city" mode="IN" type="String" optional="true"/>
+        <attribute name="address1" mode="IN" type="String" optional="true"/>
+        <attribute name="address2" mode="IN" type="String" optional="true"/> 
+        <attribute name="contactNumber" type="String" mode="IN" optional="true"/>            
+        <attribute name="pinCode" type="String" mode="IN" optional="true"/>             
+        <attribute name="deposit" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="bankBranch" mode="IN" type="String" optional="true"/>
+        <attribute name="bankName" mode="IN" type="String" optional="true"/>     
+        <!-- <attribute name="useEcs" mode="IN" type="String" optional="false"/>     -->    
+    </service>
+    
+    <service name="UpdateByProductFacility" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="UpdateByProductFacility">
+        <description> update Facility</description>        
+        <attribute name="facilityId" mode="INOUT" type="String" optional="false"/>
+        <attribute name="facilityTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="subscriptionTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="facilityName" mode="IN" type="String" optional="true"/>
+        <attribute name="categoryTypeEnum" mode="IN" type="String" optional="true"/>
+        <attribute name="zoneId" mode="IN" type="String" optional="true"/>
+        <attribute name="byProdRouteId" mode="IN" type="String" optional="true"/>
+        <attribute name="openedDate" mode="IN" type="String" optional="true"/>
+        <attribute name="closedDate" mode="IN" type="String" optional="true"/>
+        <attribute name="inchargeName" mode="IN" type="String" optional="true"/> 
+        <attribute name="city" mode="IN" type="String" optional="true"/>
+        <attribute name="address1" mode="IN" type="String" optional="true"/>
+        <attribute name="address2" mode="IN" type="String" optional="true"/> 
+        <attribute name="contactNumber" type="String" mode="IN" optional="true"/>            
+        <attribute name="pinCode" type="String" mode="IN" optional="true"/>             
+        <attribute name="deposit" mode="IN" type="BigDecimal" optional="true"/>    
+        <attribute name="bankBranch" mode="IN" type="String" optional="true"/>
+        <attribute name="finAccountId" mode="IN" type="String" optional="true"/>
+        <attribute name="bankName" mode="IN" type="String" optional="true"/>   
+    </service>
+    <service name="byProdSetOrderStatus" engine="java" auth="true"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="byProdSetOrderStatus">
+        <description>Change the status of an existing order</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="setItemStatus" type="String" mode="IN" optional="true"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
+        <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="orderTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
+        <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
+        <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="byProdIssueOrderItemShipGrpInvResToShipment" engine="simple"
+            location="component://byproducts/script/ByProductServices.xml" invoke="byProdIssueOrderItemShipGrpInvResToShipment" auth="true">
+        <description>Add an OrderItemShipGrpInvRes to a Shipment - only for sales orders</description>
+        <required-permissions join-type="AND">
+            <permission-service service-name="facilityGenericPermission" main-action="CREATE"/>
+            <permission-service service-name="facilityGenericPermission" main-action="UPDATE"/>
+        </required-permissions>
+        <auto-attributes entity-name="Shipment" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="OrderItemShipGrpInvRes" include="pk" mode="IN" optional="false"/>
+        <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="true"/>
+        <attribute name="itemIssuanceId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="createInvoiceAndSettlePayments" engine="simple"
+            location="component://byproducts/script/ByProductServices.xml" invoke="createInvoiceAndSettlePayments" auth="true">
+        <description>Create Invoice for ShipmentId and Run Settle Payments against invoices</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="createCustRequest" engine="simple" default-entity-name="CustRequest"
+            location="component://byproducts/script/ByProductServices.xml" invoke="createCustRequest" auth="true">
+        <description>Create a custRequest record and optionally create a custRequest item.</description>
+        <permission-service service-name="custRequestPermissionCheck" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="all" mode="IN" entity-name="CustRequestItem" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/><!-- for notification services -->
+        <override name="custRequestName" allow-html="safe"/>
+        <override name="description" allow-html="safe"/>
+        <override name="story" allow-html="safe"/>
+    </service>
+    
+    <service name="getCustReqATP" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getCustReqATP">
+        <description>Service to get the availableToPromise totals for given custRequestId</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute type="Map" mode="OUT" name="ATPTotalsMap" optional="true"/>
+    </service> 
+    <service name="getProdStoreProducts" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getProdStoreProducts">
+        <description>Service to get the availableToPromise totals for given custRequestId</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="isVariant" type="String" mode="IN" optional="true"/>
+        <attribute name="salesDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute type="List" mode="OUT" name="productList" optional="true"/>
+        <attribute type="List" mode="OUT" name="categoryProduct" optional="true"/>
+    </service>
+    
+    <service name="getInventory" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getInventory">
+        <description>Service to get the Inventory Details for given facility or store</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="effectiveDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute type="Map" mode="OUT" name="facilityInventoryMap" optional="true"/>
+    </service>
+    
+    <service name="deleteCustRequestItem" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="deleteCustRequestItem" auth="true">
+        <description>Create a note for a IndentItem</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createByProdShipment" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createByProdShipment">
+        <description>Create Shipment.</description>
+        <attribute name="estimatedDeliveryDate" mode="IN" type="String" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="shipmentIdsList" type="List" mode="OUT" optional="true"/>
+        <attribute name="facilityGroupId" mode="IN" type="String" optional="true"/>
+        <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="tripId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/>                
+    </service>
+    <service name="runSubscriptionAutoCreateByprodOrders" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="runSubscriptionAutoCreateByprodOrders">
+        <description>Bulk create test sales orders.</description>
+        <attribute name="estimatedDeliveryDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="facilityGroupId" mode="IN" type="String" optional="true"/>
+        <attribute name="shipmentIds" mode="IN" type="List" optional="false"/>
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>  
+        <attribute name="routeId" mode="IN" type="String" optional="true"/>        
+    </service>
+    <service name="cancelByProdShipment" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelByProdShipment">
+        <description>Create Shipment.</description>        
+        <attribute name="shipmentId" type="String" mode="IN" optional="true"/> 
+        <attribute name="routeId" type="String" mode="IN" optional="true"/>
+        <attribute name="tripId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/> 
+        <attribute name="estimatedDeliveryDate" type="Timestamp" mode="IN" optional="true"/>              
+    </service>
+    <service name="cancelByProdShipmentInternal" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelByProdShipmentInternal">
+        <description>Create Shipment.</description>        
+        <attribute name="shipmentIds" type="List" mode="IN" optional="false"/>               
+    </service> 
+    
+    <service name="createByprodSOorGiftBooth" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createByprodSOorGiftBooth">
+        <description>Create Byprod Special Order Booth.</description> 
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>         
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="name" mode="IN" type="String" optional="false"/>
+        <attribute name="firstName" type="String" mode="IN" optional="true"/>
+        <attribute name="lastName" type="String" mode="IN" optional="true"/>
+        <attribute name="customerName" type="String" mode="IN" optional="true"/>
+        <attribute name="contactNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityName" type="String" mode="IN" optional="true"/>
+         <attribute name="address" type="String" mode="IN" optional="true"/>
+        <attribute name="address1" type="String" mode="IN" optional="true"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="pinNumber" type="String" mode="IN" optional="true"/>             
+    </service>
+    
+    <service name="getBoothOwnerContactInfo" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getBoothOwnerContactInfo" auth="true">
+        <description>Get Special order Contact details.</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactInfo" type="Map" optional="true" mode="OUT"/>       
+    </service>
+    
+    <service name="getPartyFinAccountInfo" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getPartyFinAccountInfo" auth="true">
+        <description>Get Special order Contact details.</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="accountInfo" type="Map" optional="true" mode="OUT"/>       
+    </service>
+    
+    <service name="receiveInventoryIntoAllParlours" engine="java" transaction-timeout="12000"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="receiveInventoryIntoAllParlours">
+        <description> receives Inventory for all parlours</description>  
+        <attribute name="parlourId" type="String" mode="IN" optional="true"/>      
+    </service>
+    <service name="receiveOpeningBalanceForParlours" engine="java" transaction-timeout="12000"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="receiveOpeningBalanceForParlours">
+        <description> receives Inventory for all parlours</description>  
+        <attribute name="isUpdateOB" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="receiveParlorInventory" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="receiveParlorInventory" auth="true">
+        <description>Stock transfer for Parlours at the time of delevery Schedule</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="estimatedDeliveryDate" type="java.sql.Timestamp" optional="false" mode="IN"/>
+        <attribute name="subscriptionProductsList" type="java.util.List" optional="false" mode="IN"/>
+                 
+    </service>
+    <service name="createSalesOrderSubscriptionProductType" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createSalesOrderSubscriptionProductType" auth="true">
+        <description>Stock transfer for Parlours at the time of delevery Schedule</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="estimatedDeliveryDate" type="java.sql.Timestamp" optional="false" mode="IN"/>
+        <attribute name="subscriptionProductsList" type="java.util.List" optional="false" mode="IN"/>
+        <attribute name="orderId" type="String" optional="true" mode="OUT"/>
+         <attribute name="invoiceId" type="String" optional="true" mode="OUT"/>
+        <attribute name="quantity" type="BigDecimal" optional="true" mode="OUT"/>        
+    </service>
+    <service name="adjustInventory" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="adjustInventory" auth="true">
+        <description>Stock transfer for Parlours at the time of delevery Schedule</description>
+        <attribute name="facilityId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="effectiveDate" type="java.sql.Timestamp" optional="true" mode="INOUT"/>
+        <attribute name="productId" type="String" optional="true" mode="INOUT"/>
+        <attribute name="shipmentId" type="String" optional="true" mode="IN"/>
+        <attribute name="quantity" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="unitCost" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="productSubscriptionTypeId" type="String" optional="true" mode="IN"/>
+        <attribute name="inventoryItem" type="org.ofbiz.entity.GenericValue" optional="true" mode="IN"/> 
+        <attribute name="isSale" type="Boolean" optional="true" mode="IN"/>
+        <attribute name="isReceipt" type="Boolean" optional="true" mode="IN"/>
+        <attribute name="isXferIn" type="Boolean" optional="true" mode="IN"/>
+        <attribute name="isXferOut" type="Boolean" optional="true" mode="IN"/>
+        <attribute name="saleQty" type="BigDecimal" optional="true" mode="OUT"/>
+        <attribute name="receivedQty" type="BigDecimal" optional="true" mode="OUT"/>
+        <attribute name="xferIn" type="BigDecimal" optional="true" mode="OUT"/>
+        <attribute name="xferOut" type="BigDecimal" optional="true" mode="OUT"/>
+    </service>
+    <service name="populateInventorySummary" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="populateInventorySummary" auth="true">
+        <description>Stock transfer for Parlours at the time of delevery Schedule</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="effectiveDate" type="java.sql.Timestamp" optional="true" mode="IN"/>
+        <attribute name="productId" type="String" optional="true" mode="IN"/>
+        <attribute name="saleQty" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="receivedQty" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="xferIn" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="xferOut" type="BigDecimal" optional="true" mode="IN"/>
+        <attribute name="isUpdateOB" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="updatedOBQty" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="adjustments" type="BigDecimal" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="getByProductPricesForFacility" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="getByProductPricesForFacility" auth="true">
+        <description>Get ByProduct Prices For Facility</description>
+        <attribute name="facilityId" type="String" optional="true" mode="IN" />
+        <attribute name="priceDate" type="Timestamp" optional="true" mode="IN" />
+        <attribute name="partyClassificationId" type="String" optional="true" mode="IN" />
+        <attribute name="productsPrice" type="Map" optional="true" mode="OUT"/>
+    </service>
+    <service name="makeStockXfer" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="makeStockXfer" auth="true">
+        <description>Get ByProduct Prices For Facility</description>
+        <attribute name="fromFacilityId" type="String" optional="false" mode="IN" />
+        <attribute name="facilityIdTo" type="String" optional="false" mode="IN" />
+        <attribute name="productId" type="String" optional="false" mode="IN" />
+        <attribute name="effectiveDate" type="Timestamp" optional="true" mode="IN" />
+        <attribute name="quantity" type="BigDecimal" optional="false" mode="IN"/>
+        <attribute name="inventoryTransferId" type="String" optional="true" mode="OUT"/>
+    </service>
+    
+    <service name="getBoothChandentIndent" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getBoothChandentIndent" auth="true">
+        <attribute name="boothId" mode="IN" type="String" optional="false"/>
+        <attribute name="productSubscriptionTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="subscriptionTypeId" mode="IN" type="String" optional="false"/>      
+        <attribute name="supplyDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="changeIndentProductList" mode="OUT" type="List" optional="true"/>
+        <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="tempRouteId" mode="OUT" type="String" optional="true"/>
+        <attribute name="boothName" mode="OUT" type="String" optional="true"/>
+        <attribute name="routeCrateTotal" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="categoryTotals" mode="OUT" type="List" optional="true"/>
+        <attribute name="routeTotalLtr" mode="OUT" type="BigDecimal" optional="true"/> 
+        <attribute name="routeName" mode="OUT" type="String" optional="true"/> 
+        <attribute name="securityDeposit" mode="OUT" type="BigDecimal" optional="true"/> 
+        <attribute name="routeCapacity" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="productPrice" mode="OUT" type="Map" optional="true"/>   
+        <attribute name="prodIndentQtyCat" mode="OUT" type="Map" optional="true"/>
+        <attribute name="tripId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="qtyInPieces" mode="OUT" type="Map" optional="true"/>       
+    </service>
+    
+    <service name="getBoothOrderDetails" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getBoothOrderDetails" auth="true">
+        <attribute name="boothId" mode="IN" type="String" optional="false"/>
+        <attribute name="productSubscriptionTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="subscriptionTypeId" mode="IN" type="String" optional="false"/>      
+        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
+        <attribute name="changeIndentProductList" mode="OUT" type="List" optional="true"/>
+        <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="boothName" mode="OUT" type="String" optional="true"/>
+        <attribute name="routeName" mode="OUT" type="String" optional="true"/> 
+        <attribute name="securityDeposit" mode="OUT" type="BigDecimal" optional="true"/> 
+        <attribute name="productPrice" mode="OUT" type="Map" optional="true"/>   
+        <attribute name="tripId" mode="INOUT" type="String" optional="true"/>
+        <!-- <attribute name="qtyInPieces" mode="OUT" type="Map" optional="true"/>  -->      
+    </service>
+    
+    <service name="getRouteIssuanceDetails" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getRouteIssuanceDetails" auth="true">
+        <attribute name="routeId" mode="IN" type="String" optional="false"/>
+        <attribute name="tripId" mode="IN" type="String" optional="false"/>
+        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
+        <attribute name="routeProductList" mode="OUT" type="List" optional="true"/>
+        <attribute name="routeName" mode="OUT" type="String" optional="true"/>
+        <attribute name="routeId" mode="OUT" type="String" optional="true"/>
+    </service>
+    
+    <!-- <service name="getByProductPeriodTotals" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="getByProductPeriodTotals" auth="true">
+        <description>Stock transfer for Parlours at the time of delevery Schedule</description>
+        <attribute name="categoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" optional="false" mode="IN"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" optional="false" mode="IN"/>
+    </service> -->
+</services>

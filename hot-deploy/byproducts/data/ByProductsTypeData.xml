@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    
+    <FacilityGroupType facilityGroupTypeId="FGS_TYPE" description="FGS Specific"/>
+    <CustRequestType custRequestTypeId="REQ_ORDER" hasTable="N" description="Request For Order"/>
+	<CustRequestType custRequestTypeId="STOCK_XFER_REQUEST" hasTable="N" description="Request For Stock Transfer"/>
+		
+    <FacilityType facilityTypeId="DISTRIBUTOR" hasTable="N" description="Distributor"/>
+    <FacilityType facilityTypeId="GODOWN" hasTable="N" description="Godown"/>
+    <FacilityType facilityTypeId="PLANT" hasTable="N" description="Plant"/>
+    <FacilityType facilityTypeId="PARLOURS" hasTable="N" description="Parlours"/>
+    <FacilityType facilityTypeId="COLD_STORAGE" parentTypeId="GODOWN" hasTable="N" description="Cold Storage"/>
+    
+    <ProductCategoryType productCategoryTypeId="BEAVERAGES_CATEGORY" description="Beaverages Category" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="BUTTER_CATEGORY" description="Butter Category" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="FRESH_PRODUCTS" description="Fresh Products" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="GHEE_CATEGORY" description="Ghee Category" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="PANNER_CATEGORY" description="Panner Category" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="MILK_POWDER" description="Milk Powder" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="UHTPACK_CATEGORY" description="Uhtpack Category" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="WATER_CATEGORY" description="Water Category" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="CREAM_CATEGORY" description="Cream Category" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategoryType productCategoryTypeId="CHEESE_CATEGORY" description="Cheese Category" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    
+    <RoleType roleTypeId="SUPPLIER" parentTypeId="ORGANIZATION_ROLE" hasTable="N" description="Supplier" lastUpdatedStamp="2012-03-09 12:04:10.10" lastUpdatedTxStamp="2012-03-09 12:04:10.10" createdStamp="2012-03-09 12:04:10.10" createdTxStamp="2012-03-09 12:04:10.10"/>
+    <RoleType roleTypeId="SHIP_FROM_VENDOR" parentTypeId="VENDOR" hasTable="N" description="Ship-From Vendor" lastUpdatedStamp="2012-03-09 12:04:10.10" lastUpdatedTxStamp="2012-03-09 12:04:10.10" createdStamp="2012-03-09 12:04:10.10" createdTxStamp="2012-03-09 12:04:10.10"/>
+    <RoleType roleTypeId="SUPPLIER_AGENT" parentTypeId="PERSON_ROLE" hasTable="N" description="Supplier Agent" lastUpdatedStamp="2012-03-09 12:04:10.10" lastUpdatedTxStamp="2012-03-09 12:04:10.10" createdStamp="2012-03-09 12:04:10.10" createdTxStamp="2012-03-09 12:04:10.10"/>
+    
+    <ProductPriceType productPriceTypeId="AVERAGE_COST" parentTypeId="" description="Average Cost" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="BEDCESS_SALE" parentTypeId="TAX" description="Educational Cess Bed On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="BEDSECCESS_SALE" parentTypeId="TAX" description="Sec. Educational Cess Bed On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="BED_SALE" parentTypeId="TAX" description="Basic Excise Duty  On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="BOX_PRICE" parentTypeId="" description="Box Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="COMPETITIVE_PRICE" parentTypeId="" description="Competitive Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="CSTCESS_SALE" parentTypeId="TAX" description="CST - EDUCATION CESS On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="CSTSECCESS_SALE" parentTypeId="TAX" description="CST - SEC. EDUCATION CESS On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="CST_SALE" parentTypeId="TAX" description="Central Sales Tax On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="DEFAULT_PRICE" parentTypeId="" description="Default Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="LIST_PRICE" parentTypeId="" description="List Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="MAXIMUM_PRICE" parentTypeId="" description="Maximum Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="MINIMUM_ORDER_PRICE" parentTypeId="" description="Minimum Order Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="MINIMUM_PRICE" parentTypeId="" description="Minimum Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="PROMO_PRICE" parentTypeId="" description="Promotional Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="SPECIAL_PROMO_PRICE" parentTypeId="" description="Special Promo Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="TAX" parentTypeId="" description="Tax" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="VATCESS_SALE" parentTypeId="TAX" description="Educational Cess VAT On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="VATSECCESS_SALE" parentTypeId="TAX" description="Sec. Educational Cess VAT On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="VAT_SALE" parentTypeId="TAX" description="Value Added Tax On Sale" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <ProductPriceType productPriceTypeId="WHOLESALE_PRICE" parentTypeId="" description="Wholesale Price" lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    
+    <OrderAdjustmentType orderAdjustmentTypeId="ADDITIONAL_FEATURE" parentTypeId="" hasTable="N" description="Additional_Feature"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="BEDCESS_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Bedcess_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="BEDSECCESS_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Bedseccess_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="BED_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Bed_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CSTCESS_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Cstcess_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CSTSECCESS_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Cstseccess_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="CST_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Cst_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="DISCOUNT_ADJUSTMENT" parentTypeId="" hasTable="N" description="Discount_Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="DONATION_ADJUSTMENT" parentTypeId="" hasTable="N" description="Donation_Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="FEE" parentTypeId="" hasTable="N" description="Fee"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="MISCELLANEOUS_CHARGE" parentTypeId="" hasTable="N" description="Miscellaneous_Charge"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="MKTG_PKG_AUTO_ADJUST" parentTypeId="" hasTable="N" description="Mktg_Pkg_Auto_Adjust"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" parentTypeId="" hasTable="N" description="Promotion_Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="REPLACE_ADJUSTMENT" parentTypeId="" hasTable="N" description="Replace_Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="SALES_TAX" parentTypeId="" hasTable="N" description="Sales_Tax"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="SHIPPING_CHARGES" parentTypeId="" hasTable="N" description="Shipping_Charges"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="SURCHARGE_ADJUSTMENT" parentTypeId="" hasTable="N" description="Surcharge_Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VATCESS_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Vatcess_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VATSECCESS_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Vatseccess_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VAT_PRICE_CORRECT" parentTypeId="" hasTable="N" description="Vat_Price_Correct"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VAT_SALE" parentTypeId="SALES_TAX" hasTable="N" description="Vat_Sale"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="VAT_TAX" parentTypeId="" hasTable="N" description="Vat_Tax"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <OrderAdjustmentType orderAdjustmentTypeId="WARRANTY_ADJUSTMENT" parentTypeId="" hasTable="N" description="Warranty_Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    
+    <SubscriptionType subscriptionTypeId="BYPRODUCTS" hasTable="N" description="BYPRODUCTS"/>
+    
+    <Enumeration enumId="PARLOR_SALES_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="PARLOR SALES CHANNEL" description="ByProducts Parlor Sales Channel" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+	<Enumeration enumId="BYPROD_SALES_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="BYPRODUCTS_CHANNEL" description="ByProducts Sales Channel" lastUpdatedStamp="2012-12-18 20:02:53.0" lastUpdatedTxStamp="2012-12-18 20:02:53.0" createdStamp="2012-12-18 20:02:53.0" createdTxStamp="2012-12-18 20:02:53.0"/>
+    
+    <EnumerationType description="ByProduct Routes" enumTypeId="BYPRODUCTS" hasTable="N" parentTypeId=""/>
+    <Enumeration enumId="BYPRODUCTS" enumTypeId="BYPRODUCTS" enumCode="BYPRODUCTS" description="ByProduct Routes" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    
+    <EnumerationType description="ByProduct Facility Category" enumTypeId="BYPROD_FA_CAT" hasTable="N" parentTypeId=""/>
+    <Enumeration enumId="DEWS_PARLOURS" enumTypeId="BYPROD_FA_CAT" enumCode="DEWS_PARLOURS" sequenceId="04" description="Dews Parlours" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    <Enumeration enumId="FROS" enumTypeId="BYPROD_FA_CAT" enumCode="FROS" sequenceId="02" description="Fros" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    <Enumeration enumId="KFROS" enumTypeId="BYPROD_FA_CAT" enumCode="KFROS" sequenceId="07" description="KFros" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    <Enumeration enumId="MCCS" enumTypeId="BYPROD_FA_CAT" enumCode="MCCS" sequenceId="03" description="MCCS" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    <Enumeration enumId="AVM_FROS" enumTypeId="BYPROD_FA_CAT" enumCode="AVM_FROS" sequenceId="08" description="Avm Fros" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    <Enumeration enumId="INSTITUTIONS" enumTypeId="BYPROD_FA_CAT" enumCode="INSTITUTIONS" sequenceId="06" description="Institutions" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    <Enumeration enumId="PARLOUR" enumTypeId="BYPROD_FA_CAT" enumCode="PARLOUR" sequenceId="05" description="Parlours" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    <Enumeration enumId="WHOLESALE_DEALERS" enumTypeId="BYPROD_FA_CAT" enumCode="WHOLESALE_DEALERS" sequenceId="01" description="Wholesale Dealers" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    <Enumeration enumId="SP_SALES" enumTypeId="BYPROD_FA_CAT" enumCode="SP_SALES" sequenceId="09" description="SP Sales" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    
+    <Enumeration enumId="BYPROD_SO" enumTypeId="BYPROD_FA_CAT" enumCode="BYPROD_SO" sequenceId="10" description="Special Order ByProduct" lastUpdatedStamp="2013-02-08 14:23:49.0" lastUpdatedTxStamp="2013-02-08 14:23:49.0" createdStamp="2013-02-08 14:23:49.0" createdTxStamp="2013-02-08 14:23:49.0"/>
+    <Enumeration enumId="BYPROD_GIFT" enumTypeId="BYPROD_FA_CAT" enumCode="BYPROD_GIFT" sequenceId="11" description="Gift Sales" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
+    
+    <RoleType roleTypeId="TRANSPORT_BOOTH" parentTypeId="ORGANIZATION_ROLE" hasTable="N" description="Transport Booth" lastUpdatedStamp="2013-02-08 14:12:38.0" lastUpdatedTxStamp="2013-02-08 14:12:38.0" createdStamp="2013-02-08 14:12:38.0" createdTxStamp="2013-02-08 14:12:38.0"/>
+    
+    <PeriodType description="Margin Month" periodTypeId="MARGIN_MONTH"/>
+    <CustomTimePeriod customTimePeriodId="JAN-1-31" periodTypeId="MARGIN_MONTH" periodNum="1" periodName="January(1-31)" fromDate="2013-01-01" thruDate="2013-01-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="FEB-1-28" periodTypeId="MARGIN_MONTH" periodNum="2" periodName="February(1-28)" fromDate="2013-02-01" thruDate="2013-02-28" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="MAR-1-31" periodTypeId="MARGIN_MONTH" periodNum="3" periodName="March(1-31)" fromDate="2013-03-01" thruDate="2013-03-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="APR-1-31" periodTypeId="MARGIN_MONTH" periodNum="4" periodName="April(1-30)" fromDate="2013-04-01" thruDate="2013-04-30" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="MAY-1-31" periodTypeId="MARGIN_MONTH" periodNum="5" periodName="May(1-31)" fromDate="2013-05-01" thruDate="2013-05-31" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="JUNE-1-31" periodTypeId="MARGIN_MONTH" periodNum="6" periodName="June(1-30)" fromDate="2013-06-01" thruDate="2013-06-30" isClosed="N" lastUpdatedStamp="2011-12-17 15:54:30.0" lastUpdatedTxStamp="2011-12-17 15:54:30.0" createdStamp="2011-12-17 15:54:30.0" createdTxStamp="2011-12-17 15:54:30.0" organizationPartyId="Company"/>
+    
+    
+    <ShipmentType description="Byprod Shipment" hasTable="N" parentTypeId="" shipmentTypeId="BYPROD_SHIPMENT"/>
+	
+    <ShipmentType description="Delivery Schedule" hasTable="N" parentTypeId="BYPROD_SHIPMENT" shipmentTypeId="BYPRODUCTS"/>
+    <ShipmentType description="ByProduct Parlour Sales" hasTable="N" parentTypeId="BYPROD_SHIPMENT" shipmentTypeId="BYPRODUCTS_PRSALE"/>
+    <ShipmentType description="ByProduct Supplementary Schdule"  hasTable="N" parentTypeId="BYPROD_SHIPMENT" shipmentTypeId="BYPRODUCTS_SUPPL"/>
+    
+    <!--Product Subscription Type For   ByProduct Component -->
+    
+    <EnumerationType description="Subscription Product Type For ByProduct Component" enumTypeId="SUB_BY_PROD_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Cash" enumCode="CASH_BYPROD" enumId="CASH_BYPROD" sequenceId="01" enumTypeId="SUB_BY_PROD_TYPE"/>    
+    <Enumeration description="Special Order" enumCode="SPECIAL_ORDER_BYPROD" enumId="SPECIAL_ORDER_BYPROD" sequenceId="02" enumTypeId="SUB_BY_PROD_TYPE"/>
+    <Enumeration description="Gift" enumCode="GIFT_BYPROD" enumId="GIFT_BYPROD" sequenceId="03" enumTypeId="SUB_BY_PROD_TYPE"/>
+    <Enumeration description="Replacement" enumCode="REPLACEMENT_BYPROD" enumId="REPLACEMENT_BYPROD" sequenceId="04" enumTypeId="SUB_BY_PROD_TYPE"/>    
+   
+    <EnumerationType enumTypeId="PAYMENT_PURPOSE" hasTable="N" description="Payment Purpose Type" />
+	<Enumeration enumId="BYPROD_PAYMENT" enumTypeId="PAYMENT_PURPOSE" enumCode="BYPROD_PAYMENT" description="ByProducts Payment Purpose" />
+	
+	<Enumeration enumId="INV_CHECK" enumTypeId="TENANTCONF_TYPE" description="Inventory Check" lastUpdatedStamp="2013-03-09 20:57:52.0" lastUpdatedTxStamp="2013-03-09 20:57:52.0" createdStamp="2013-03-09 20:57:52.0" createdTxStamp="2013-03-09 20:57:52.0"/>
+	<TenantConfiguration propertyName="enableInvCheck" propertyTypeEnumId="INV_CHECK" propertyValue="Y" description="Enable Inventory Check for Parlour Sales" lastUpdatedStamp="2013-03-09 20:59:27.0" lastUpdatedTxStamp="2013-03-09 20:59:27.0" createdStamp="2013-03-09 20:59:27.0" createdTxStamp="2013-03-09 20:59:27.0"/>
+	
+	<Uom uomId="VLIQ_N" uomTypeId="WEIGHT_MEASURE" abbreviation="Nos" description="Numbers"/>
+	<Uom uomId="VLIQ_U" uomTypeId="WEIGHT_MEASURE" abbreviation="Units" description="Units"/>
+</entity-engine-xml>

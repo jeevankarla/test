@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <property-map resource="ProcurementUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            	<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.ProcurementCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ProcurementCompanySubtitle" global="true"/><!--
+				 <set field="defaultOrganizationPartyId" value="${userPreferences.ORGANIZATION_PARTY}" global="true"/>
+                        <property-to-field resource="general" property="currency.uom.id.default" field="defaultCurrencyUomId"/>
+                        <entity-one entity-name="PartyAcctgPrefAndGroup" value-field="orgParty">
+                            <field-map field-name="partyId" from-field="defaultOrganizationPartyId"/>
+                        </entity-one>
+                 <set field="defaultOrganizationPartyCurrencyUomId" from-field="orgParty.baseCurrencyUomId" default-value="${defaultCurrencyUomId}" global="true"/>
+                --><set field="activeApp" value="procurement" global="true"/>
+                <set field="applicationMenuName" value="ProcurementAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://procurement/widget/ProcurementMenus.xml" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.ProcurementApplication}" global="true"/>
+            </actions>
+            <widgets>
+                <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+											
+    <screen name="ProcurementCommonDecorator">
+        <section>
+            <actions>
+            	<set field="headerItem" value="procurement"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PROCUREMENT" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <widgets>
+                                        <include-menu name="ProcurementTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+                                        <decorator-section-include name="body"/>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ProcurementViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>                 
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MyPortalProcurementTree">
+        <section>
+            <actions>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="ProductFacilityMain"/>
+         
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="main"/>
+                <set field="isTreeRoot" value="Y"/>
+				<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/facilityTree.groovy" />
+            </actions>
+            <widgets>         
+                <include-menu name="ProcurementTabBar" location="component://procurement/widget/ProcurementMenus.xml"/>
+            	<container style="lefthalf"> 
+             		<screenlet title="Location Network">  
+            			 <platform-specific><html><html-template location="component://procurement/webapp/procurement/facility/facilityTree.ftl"></html-template></html></platform-specific>
+					</screenlet>
+				</container>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+</screens>

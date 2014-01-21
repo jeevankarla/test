@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the MotherDairy Component." permissionId="MOTHERDAIRY_VIEW"/>
+    <SecurityPermission description="Create operations in the MotherDairy Component." permissionId="MOTHERDAIRY_CREATE"/>
+    <SecurityPermission description="Update operations in the MotherDairy Component." permissionId="MOTHERDAIRY_UPDATE"/>
+    <SecurityPermission description="Delete operations in the MotherDairy Component." permissionId="MOTHERDAIRY_DELETE"/>
+    <SecurityPermission description="ALL operations in the MotherDairy Component." permissionId="MOTHERDAIRY_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MOTHERDAIRY_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MOTHERDAIRY_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MOTHERDAIRY_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MOTHERDAIRY_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MOTHERDAIRY_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MOTHERDAIRY_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="MOTHERDAIRY_ADMIN"/>
+</entity-engine-xml>

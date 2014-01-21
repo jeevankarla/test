@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>
+  <EmplPositionType emplPositionTypeId="_NA_"/>
+
+    <WebSite webSiteId="ACCOUNTING" siteName="Accounting Manager" visualThemeSetId="BACKOFFICE"/>
+    <WebSite webSiteId="ACCOUNTING_P" siteName="Account Payable Manager" visualThemeSetId="BACKOFFICE"/>
+    <WebSite webSiteId="ACCOUNTING_R" siteName="Account Receivable Manager" visualThemeSetId="BACKOFFICE"/>
+  
+
+    <!-- Store Credit Account Type Data, to be set in Product Store -->
+    <EnumerationType description="Store Credit Account" enumTypeId="STR_CRDT_ACT" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Financial Account" enumCode="FINACCOUNT" enumId="FIN_ACCOUNT" sequenceId="01" enumTypeId="STR_CRDT_ACT"/>
+    <Enumeration description="Billing Account" enumCode="BILLACCOUNT" enumId="BILLING_ACCOUNT" sequenceId="02" enumTypeId="STR_CRDT_ACT"/>
+
+    <!--GlReconciliation Status-->
+    <StatusType statusTypeId="GLREC_STATUS" description="Gl Reconciliation Status" hasTable="N" parentTypeId=""/>
+    <StatusItem statusId="GLREC_CREATED" statusTypeId="GLREC_STATUS" statusCode="CREATED" sequenceId="11" description="Created"/>
+    <StatusItem statusId="GLREC_RECONCILED" statusTypeId="GLREC_STATUS" statusCode="RECONCILED" sequenceId="12" description="Reconciled"/>
+    <StatusValidChange condition="" statusId="GLREC_CREATED" statusIdTo="GLREC_RECONCILED" transitionName="Set Created to Reconciled"/>
+
+    <!--Depreciation Formulae-->
+    <CustomMethodType customMethodTypeId="DEPRECIATION_FORMULA" description="Formula for calculating depreciation for fixed asset"/>
+    <CustomMethod customMethodId="STR_LINE_DEP_FORMULA" customMethodTypeId="DEPRECIATION_FORMULA" customMethodName="straightLineDepreciation" description="Straight Line depreciatiion algorithm for fixed asset((purchaseCost - salvageCost)/expectedLifeInYears)"/>
+    <CustomMethod customMethodId="DBL_DECL_DEP_FORMULA" customMethodTypeId="DEPRECIATION_FORMULA" customMethodName="doubleDecliningBalanceDepreciation" description="Double decline depreciatiion algorithm for fixed asset((NetBookValue - salvageCost)*2/remainingLifeInYears)"/>
+
+    <Enumeration enumId="ACCOUNT_BUDGET" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Budget Configurations"/>
+	<TenantConfiguration propertyName="enableBudget" propertyValue="Y" propertyTypeEnumId="ACCOUNT_BUDGET" description="Enable Budget functionality"/>
+	<TenantConfiguration propertyName="enforceBudget" propertyValue="Y" propertyTypeEnumId="ACCOUNT_BUDGET" description="Enforce Budget controls"/>
+
+</entity-engine-xml>

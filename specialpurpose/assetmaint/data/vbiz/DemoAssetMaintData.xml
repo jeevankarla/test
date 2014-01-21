@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <!-- Asset Maintenance demo data -->
+    <Product productId="PRINTING_MACHINE" productTypeId="ASSET_USAGE" productName="Printing Machine" internalName="Printing Machine" description="Printing Machine - Basic"/>
+    <FixedAsset fixedAssetId="PRINTING_MACHINE_01" instanceOfProductId="PRINTING_MACHINE" fixedAssetName="Printing Machine Basic" fixedAssetTypeId="GROUP_EQUIPMENT" purchaseCost="6000000" purchaseCostUomId="INR"/>
+    <ProductMaint productId="PRINTING_MACHINE" productMaintSeqId="seq01" productMaintTypeId="TUNE_UP" maintName="Tune Up" intervalQuantity="1" intervalUomId="TF_mon"/>
+</entity-engine-xml>

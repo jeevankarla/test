@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="MainAppBar" title="${uiLabelMap.MilkLineApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
+    </menu>
+    
+  <menu name="FacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditFacility">
+		<actions> 
+            <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+		</actions>          
+        <menu-item name="main" title="${uiLabelMap.ProductFacilityLocationNetwork}">
+            <link target="main">
+            </link>
+        </menu-item><!--        
+        <menu-item name="FacilityChildren" title="${uiLabelMap.ProductFacilityLocationNetwork}">
+            <link target="FacilityChildren">
+            </link>
+        </menu-item>e
+        <menu-item name="ViewContactMechs" title="${uiLabelMap.PartyContactMechs}">
+            <link target="ViewContactMechs">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        -->      
+        <menu-item name="facility" title="${uiLabelMap.ProductFindFacilities}">
+			<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="FACILITY"  action="_UPDATE"/>
+            		<if-has-permission permission="FACILITY"  action="_FIND"/>
+            	</or>
+            </condition>        
+        	<link target="FindFacility"/>
+        </menu-item>
+        <menu-item name="EditFacilityGroups" title="Facility Groups">
+        	<condition>
+				<or>
+            		<if-has-permission permission="FACILITYGRP"  action="_ADMIN"/>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            	</or>
+            </condition>
+            <link target="FindFacilityGroup">
+            </link>
+        </menu-item> 
+        <menu-item name="TruckSheet" title="${uiLabelMap.ProductFacilityTruckSheet}">
+			<condition>
+				<or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="TRUCKSHEET"  action="_ADMIN"/>
+				</or>
+            	
+            </condition>         
+            <link target="TruckSheetMilkLine">
+            </link>
+        </menu-item>   
+        <menu-item name="VendorMargins" title="MarginReports">
+            <condition>
+					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
+            </condition>
+			<link target="VendorMargins"></link>
+        </menu-item>  
+        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+			<!-- <condition>
+				<and>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            	</and>            
+            </condition>  -->   
+            <link target="LMSReports">
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+        </menu-item> 
+        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+			<condition>
+				<and>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            	</and>            
+            </condition>         
+            <link target="LMSReports">
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+        </menu-item>   
+        <menu-item name="LMSCharts" title="Charts">
+			<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>            
+            </condition>         
+            <link target="LMSChartsDayVolumeTotals">
+            </link>
+        </menu-item>                              
+        <menu-item name="EditFacility" title="${uiLabelMap.ProductFacility}">
+			<condition>				
+				<and>
+					<not><if-empty field="ctxFacilityId"/></not>
+					<or>
+	            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+	            		<if-has-permission permission="FACILITY"  action="_UPDATE"/>
+            		</or>            		
+           		</and>				
+            </condition>        
+            <link target="EditFacility">
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+        </menu-item>        
+       <menu-item name="FacilityOrders" title="${uiLabelMap.ProductFacilityNewSpecialOrder}">
+            <condition>
+                <if-compare field="enablePhase2" operator="equals" value="true"/>
+            </condition>         
+            <link target="FindFacilitySpecialOrders" >
+                <parameter param-name="displayFacilityTabs" value="Y"/>
+			</link>            
+        </menu-item>      
+        <menu-item name="FindFacilityLocation" title="${uiLabelMap.ProductLocations}">
+            <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>          
+            <link target="FindFacilityLocation">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditFacilityParties" title="${uiLabelMap.PartyRoles}">
+        	<condition>
+        		<and>
+        			<not><if-empty field="ctxFacilityId"/></not>
+        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		</and>        		
+        	</condition>        	
+            <link target="EditFacilityParties">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+       <menu-item name="ViewFacilityInventoryByProduct" title="${uiLabelMap.ProductInventory}">
+            <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>          
+            <link target="ViewFacilityInventoryByProduct">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditFacilityInventoryItems" title="${uiLabelMap.ProductInventoryItems}">
+            <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>          
+            <link target="EditFacilityInventoryItems">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ViewFacilityInventoryItemsDetails" title="${uiLabelMap.ProductInventoryItemsDetails}">
+            <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>         
+            <link target="ViewFacilityInventoryItemsDetails">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ReceiveInventory" title="${uiLabelMap.ProductInventoryReceive}">
+            <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>          
+            <link target="ReceiveInventory">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="PhysicalInventory" title="${uiLabelMap.ProductPhysicalInventory}">
+            <condition>
+                <if-compare field="enableInventory" operator="equals" value="true"/>
+            </condition>          
+            <link target="FindFacilityPhysicalInventory">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="FindFacilityTransfers" title="${uiLabelMap.ProductInventoryXfers}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>          
+            <link target="FindFacilityTransfers">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ReceiveReturn" title="${uiLabelMap.ProductReceiveReturn}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="ReceiveReturn">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="PicklistOptions" title="${uiLabelMap.ProductPicking}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="PicklistOptions">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="PickMoveStock" title="${uiLabelMap.ProductStockMoves}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="PickMoveStock">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="PicklistManage" title="${uiLabelMap.ProductPicklistManage}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="PicklistManage">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="VerifyPick" title="${uiLabelMap.ProductVerifyPick}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="VerifyPick">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="PackOrder" title="${uiLabelMap.ProductPacking}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="PackOrder">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="Scheduling" title="${uiLabelMap.ProductScheduling}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="Scheduling">
+                <parameter param-name="facilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="FindShipmentIn" title="${uiLabelMap.ProductIncomingShipments}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="FindShipment">
+                <parameter param-name="destinationFacilityId" from-field="facilityId"/>
+                <parameter param-name="lookupFlag" value="Y"/>
+            </link>
+        </menu-item>
+        <menu-item name="FindShipmentOut" title="${uiLabelMap.ProductOutgoingShipments}">
+            <condition>
+                <if-compare field="enableShipping" operator="equals" value="true"/>
+            </condition>           
+            <link target="FindShipment">
+                <parameter param-name="originFacilityId" from-field="facilityId"/>
+                <parameter param-name="lookupFlag" value="Y"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditFacilityContent" title="${uiLabelMap.ProductContent}">
+			<condition>				
+				<and>
+					<not><if-empty field="ctxFacilityId"/></not>
+					<or>
+	            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+	            		<if-has-permission permission="FACILITY"  action="_UPDATE"/> 
+            		</or>             		           		
+           		</and>	          
+            </condition>         
+            <link target="EditFacilityContent">            
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditFacilityGeoPoint" title="${uiLabelMap.CommonGeoLocation}">  
+			<condition>
+				<and>
+					<not><if-empty field="ctxFacilityId"/></not>
+					<or>
+						<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+						<if-has-permission permission="FACILITY"  action="_GEOPOINT"/>
+					</or>            		
+            	</and>            
+            </condition>                 
+            <link target="EditFacilityGeoPoint">
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+        </menu-item>
+        <menu-item name="FindSubscription" title="${uiLabelMap.ProductSubscriptions}"> 
+            <condition>
+            	<and>
+	            	<if-compare field="ctxFacility.facilityTypeId" operator="equals" value="BOOTH"/>
+	            	<or>
+	            		<if-has-permission permission="SUBSCRIPTION"  action="_ADMIN"/>
+	            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+	            	</or>	            	
+            	</and>
+            </condition>                 
+            <link target="FindSubscription">
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+       </menu-item>
+        <menu-item name="QuotaList" title="Quota Listing">
+			<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="INDENT"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>            
+            </condition>         
+            <link target="QuotaList">
+            </link>
+        </menu-item>        
+       <menu-item name="BulkCardSale" title="${uiLabelMap.BulkCardSale}">
+       		<condition>
+       			<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+            		<if-has-permission permission="CARDSALE"  action="_ADMIN"/>
+            	</or>
+            </condition>
+            <link target="BulkCardSale">
+             <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+       </menu-item>         
+       <menu-item name="ChangeIndentInit" title="${uiLabelMap.ChangeIndentMIS}">
+			<condition>
+				<or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="INDENT"  action="_ADMIN"/>
+				</or>
+            	
+            </condition>         
+            <link target="ChangeIndentInit">
+            </link>
+       </menu-item>       
+       <menu-item name="GatePassInit" title="${uiLabelMap.GatePass}">
+			<condition>
+				<or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="GATEPASS"  action="_ADMIN"/>
+				</or>            	
+            </condition>         
+       	    <link target="GatePassInit">
+            </link>
+       </menu-item>
+       <menu-item name="TruckSheetCorrectionInit" title="${uiLabelMap.TruckSheetCorrection}">
+			<condition>
+				<or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="TRUCKSHEETCORRECTION"  action="_ADMIN"/>
+				</or>            	
+            </condition>         
+       	    <link target="TruckSheetCorrectionInit">
+            </link>
+       </menu-item>
+       <menu-item name="ChangeOrderForm" title="${uiLabelMap.ChangeOrderForm}">
+            <condition>
+                <if-compare field="enablePhase2" operator="equals" value="true"/>
+            </condition>        
+            <link target="ChangeOrderEntryForm">
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
+            </link>
+       </menu-item>       
+      <!--  <menu-item name="Payments" title="${uiLabelMap.DuesPayment}"> 
+       		<condition>
+                <or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="CASH"  action="_ADMIN"/>
+				</or>
+            </condition>       
+            <link target="FindBoothPayments"/>        
+       </menu-item> -->
+       <menu-item name="PastPayments" title="Payments Entry"> 
+       		<condition>
+       			<or>
+       				<if-has-permission permission="PASTDUE"  action="_PAYMENT"/>       				
+	       			<and>
+	       				<if-compare field="enablePastPaymentService" operator="equals" value="true"/>
+		                <or>
+							<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+							<if-has-permission permission="CASH"  action="_ADMIN"/>
+						</or>
+					</and>
+				</or>	
+            </condition>         
+            <link target="FindPastBoothPayments"/>        
+       </menu-item>
+       <!-- <menu-item name="OtherPayments" title="${uiLabelMap.OtherPayments}"> 
+       		<condition>
+                <or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="CASH"  action="_ADMIN"/>
+				</or>
+            </condition>       
+            <link target="FindProductPayments"/>        
+       </menu-item> -->
+        <menu-item name="AbsenteeOverride" title="${uiLabelMap.AbsenteeOverride}">
+            <link target="AbsenteeOverride"/>
+        </menu-item> 
+        <menu-item name="FinancialHistory" title="${uiLabelMap.PartyFinancialHistory}">
+            <condition>
+            	<and>
+           			<if-compare field="ctxFacility.facilityTypeId" operator="equals" value="BOOTH"/>
+            		<or>
+                		<if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+						<if-compare-field field="ctxFacility.ownerPartyId" operator="equals" to-field="userLogin.partyId"/>
+					</or>
+				</and>
+            </condition>            
+            <link target="PartyFinancialHistory">
+                <parameter param-name="partyId" from-field="ctxFacility.ownerPartyId"/>
+                <parameter param-name="facilityId" from-field="ctxFacilityId"/>                
+            </link>
+        </menu-item>
+        <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
+            <link target="FindTransporterDue"/>
+        </menu-item>  
+        <menu-item name="CrateCanEntries" title="${uiLabelMap.CratesCans}">
+            <link target="CrateCanEntries"/>
+        </menu-item>
+         <menu-item name="FindBankRemittance" title="${uiLabelMap.BankRemittance}">
+            <link target="FindBankRemittance"/>
+        </menu-item>
+         <menu-item name="FindFacilityRates" title="Special Discount">
+            <link target="FindFacilityRates"/>
+        </menu-item>
+        <menu-item name="FacilityRecovery" title="${uiLabelMap.Recovery}">
+            <link target="FacilityRecovery"/>
+        </menu-item>   
+    </menu>   
+     
+</menus>

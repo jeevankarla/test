@@ -1,0 +1,5 @@
+StatusType_description,StatusType_hasTable,StatusType_parentTypeId,StatusType_statusTypeId
+Degree status,N,,HR_DEGREE_STATUS
+Job status,N,,HR_JOB_STATUS
+Employee Leave Status,N,,LEAVE_STATUS
+Employee Position Status,N,,EMPL_POSITION_STATUS

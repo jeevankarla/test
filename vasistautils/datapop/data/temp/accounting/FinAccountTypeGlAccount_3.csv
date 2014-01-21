@@ -1,0 +1,6 @@
+FinAccountTypeGlAccount_organizationPartyId,FinAccountTypeGlAccount_finAccountTypeId,FinAccountTypeGlAccount_glAccountId
+100,DEPOSIT_ACCOUNT,111500
+100,BANK_ACCOUNT,111600
+100,INVESTMENT_ACCOUNT,111500
+100,LOAN_ACCOUNT,231000
+100,CASH,111000

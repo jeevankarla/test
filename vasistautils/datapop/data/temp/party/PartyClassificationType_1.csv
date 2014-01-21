@@ -1,0 +1,7 @@
+PartyClassificationType_description,PartyClassificationType_hasTable,PartyClassificationType_parentTypeId,PartyClassificationType_partyClassificationTypeId
+Income,N,,INCOME_CLASSIFICATIO
+Organization,N,,ORGANIZATION_CLASSIF
+Person,N,,PERSON_CLASSIFICATIO
+Size,N,,SIZE_CLASSIFICATION
+Value Rating,N,,VALUE_RATING
+Ownership,N,,OWNERSHIP

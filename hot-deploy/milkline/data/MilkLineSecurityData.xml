@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the MilkLine Component." permissionId="MILKLINE_VIEW"/>
+    <SecurityPermission description="Create operations in the MilkLine Component." permissionId="MILKLINE_CREATE"/>
+    <SecurityPermission description="Update operations in the MilkLine Component." permissionId="MILKLINE_UPDATE"/>
+    <SecurityPermission description="Delete operations in the MilkLine Component." permissionId="MILKLINE_DELETE"/>
+    <SecurityPermission description="ALL operations in the MilkLine Component." permissionId="MILKLINE_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MILKLINE_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MILKLINE_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MILKLINE_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MILKLINE_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MILKLINE_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MILKLINE_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="MILKLINE_ADMIN"/>
+</entity-engine-xml>

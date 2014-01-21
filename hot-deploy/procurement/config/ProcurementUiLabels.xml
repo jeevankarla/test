@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="ProcurementApplication">
+        <value xml:lang="en">Milk Procurement</value>
+    </property>
+    <property key="ProcurementCompanyName">
+        <value xml:lang="en">Vbiz: Procurement</value>
+    </property>
+    <property key="ProcurementCompanySubtitle">
+        <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source Open For Business</value>
+        <value xml:lang="zh">开源软件OFBiz的组成部分</value>
+    </property>
+    <property key="ProcurementFacilityMain">
+        <value xml:lang="en">Procurement</value>
+    </property>    
+    <property key="ProcurementViewPermissionError">
+        <value xml:lang="en">You are not allowed to view this page.</value>
+        <value xml:lang="zh">不允许你浏览这个页面。</value>
+    </property>
+     <property key="PageTitleProcurementAnalysis">
+        <value xml:lang="en">Procurement Location Analytics</value>        
+    </property>
+     <property key="PageTitleProcurementReports">
+        <value xml:lang="en">Procurement Reports</value>        
+    </property>
+    <property key="PageTitleProcurementBilling">
+        <value xml:lang="en">Procurement Billing</value>        
+    </property>
+     <property key="PageTitleProcurementAnalysisDailyTrend">
+        <value xml:lang="en">Daily Procurement Trend</value>        
+    </property>     
+     <property key="PageTitleProcurementAnalysisLocationComp">
+        <value xml:lang="en">Procurement Location Comparison Analytics</value>        
+    </property>
+    <property key="PageTitleProcurementProducerMigr">
+        <value xml:lang="en">Procurement Producer Data</value>        
+    </property>           
+     <property key="PageTitleProcurementEntry">
+        <value xml:lang="en">Procurement Entry</value>        
+    </property>
+    <property key="ProcurementEntry">
+        <value xml:lang="en">Procurement Entry</value>        
+    </property>
+    <property key="PriceCalculator">
+        <value xml:lang="en">Price Calculator</value>        
+    </property>
+     <property key="SearchProcurementEntry">
+        <value xml:lang="en">Search Procurement Entry</value>        
+    </property>
+    <property key="CommonGenerate">
+        <value xml:lang="en">Generate</value>        
+    </property>
+    <property key="ProcurementDate">
+        <value xml:lang="en">Procurement Date</value>        
+    </property>
+    <property key="SQuantityLtrs">
+        <value xml:lang="en">SourQtyLts</value>        
+    </property>
+    <property key="CQuantityLtrs">
+        <value xml:lang="en">CurdQtyLts</value>        
+    </property>
+    <property key="CommonRates">
+        <value xml:lang="en">Rates</value>        
+    </property>
+    <property key="CommonCalculate">
+        <value xml:lang="en">Calculate</value>        
+    </property>
+    <property key="BillingAdjustments">
+        <value xml:lang="en">Billing Adjustments</value>        
+    </property>
+    <property key="BillingAdjustmentAdditions">
+        <value xml:lang="en">Additions</value>        
+    </property>
+    <property key="BillingAdjustmentDeductions">
+        <value xml:lang="en">Deductions</value>        
+    </property>
+    <property key="AdjustmentAdditions">
+        <value xml:lang="en">Adjustment Additions</value>        
+    </property> 
+    <property key="AdditionsList">
+        <value xml:lang="en">Additions List</value>        
+    </property> 
+    <property key="AdjustmentsDeductions">
+        <value xml:lang="en">Adjustments Deductions</value>        
+    </property>
+    <property key="DeductionsList">
+        <value xml:lang="en">Deductions List</value>        
+    </property>
+    <property key="SearchAdjustments">
+        <value xml:lang="en">Find Adjustments</value>        
+    </property>
+    <property key="ProducerMigration">
+        <value xml:lang="en">Producer Migration</value>        
+    </property>    
+    <property key="PageTitleProcurementFacilityOutputEntry">
+        <value xml:lang="en">Facility Output Entry</value>        
+    </property>
+    <property key="FacilityOutputEntry">
+        <value xml:lang="en">Facility Output Entry</value>        
+    </property>
+    <property key="ImportREILData">
+        <value xml:lang="en">Import REIL Data</value>        
+    </property>
+    <property key="CreateOutputEntry">
+        <value xml:lang="en">Create Output Entry</value>        
+    </property>
+    <property key="FindOutputEntry">
+        <value xml:lang="en">Find Output Entry</value>        
+    </property>    
+</resource>

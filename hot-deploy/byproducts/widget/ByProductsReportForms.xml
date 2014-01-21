@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        
+   <form name="FIRReportForms" type="list" list-name="productSalesList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        
+        <field name="sNo" title="SL." ><display/></field>
+        <field name="FIRCategory" title="NAME OF PRODUCT" ><display/></field>
+        <field name="unit" title="Unit" ><display/></field>
+        <field name="totalSaleQty" title="Sale Qty" ><display/></field>
+        <field name="totalSaleValue" title="TOTAL SALES VALUE" ><display/></field>
+        <field name="totalParlourSaleQty" title="Parlour Sales Qty" ><display/></field>
+        <field name="totalParlourSaleValue" title="PARLOUR" ><display/></field>
+        <field name="OthersSaleQty" title="OTHERS QTY" ><display/></field>
+        <field name="OthersSaleValue" title="OTHERS VAL" ><display/></field>
+        <field name="cumulativeSaleQty" title="Cumulative Sales Qty" ><display/></field>
+        <field name="cumulativeSaleValue" title="CUMULATIVE SALES" ><display/></field>
+        <field name="avgCumulativeSaleValue" title="AVG CUMULATIVE SALES" ><display/></field>
+    </form>  
+    <form name="DespatchReportForms" type="list" list-name="productDespatchList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="sNo" title="SL." ><display/></field>
+         <field name="productId" title="PRODUCT CODE" ><display/></field>
+        <field name="productName" title="NAME OF PRODUCT" ><display/></field>
+        <field name="CR_INST_Qty" title="CR_INST_Qty" ><display/></field>
+        <field name="CR_INST_Val" title="CR_INST_Val" ><display/></field>
+        <field name="RENTAL_Qty" title="RENTAL_Qty" ><display/></field>
+      <!--  <field name="RENTAL_Val" title="RENTAL_Val" ><display/></field>
+        <field name="RETAILER_Qty" title="RETAILER_Qty" ><display/></field>-->
+        <field name="RETAILER_Val" title="RETAILER_Val" ><display/></field>
+        <field name="SHOPPEE_Qty" title="Soppe qty" ><display/></field>
+        <field name="SHOPPEE_Val" title="Shoppe val" ><display/></field>
+        <!--  <field name="SHOPS_Qty" title="SHOPS_Qty" ><display/></field>
+        <field name="SHOPS_Val" title="SHOPS_Val" ><display/></field>
+        <field name="WHOLESALES_DEALER_Qty" title="WSD_Qty" ><display/></field>
+        <field name="WHOLESALES_DEALER_Val" title="WSD_Val" ><display/></field>
+        <field name="KFROS_Qty" title="KFROS_Qty" ><display/></field>
+        <field name="KFROS_Val" title="KFROS_Val" ><display/></field>
+        <field name="INSTITUTIONS_Qty" title="Institutions_Qty" ><display/></field>
+        <field name="INSTITUTIONS_Val" title="Institutions_Val" ><display/></field>
+        <field name="DEWS_PARLOURS_Qty" title="Dews_Qty" ><display/></field>
+        <field name="DEWS_PARLOURS_Val" title="Dews_Val" ><display/></field>
+        
+        <field name="AVM_FROS_Qty" title="AVM_FROS_Qty" ><display/></field>
+        <field name="AVM_FROS_Val" title="AVM_FROS_Val" ><display/></field> -->
+        
+        <field name="totalDispatchQty" title="totalDispatchQty" ><display/></field>
+        <field name="totalDispatchValue" title="totalDispatchValue" ><display/></field>
+        
+        <!-- <field name="parlourSaleQty" title="parlourSaleQty" ><display/></field>
+        <field name="parlourSaleValue" title="parlourSaleValue" ><display/></field> -->
+    </form>
+    
+    <form name="SalesReportForms" type="list" list-name="productDespatchList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        
+        <field name="sNo" title="SL." ><display/></field>
+         <field name="productId" title="PRODUCT CODE" ><display/></field>
+        <field name="productName" title="NAME OF PRODUCT" ><display/></field>
+        <field name="FROS_Qty" title="FROS_Qty" ><display/></field>
+        <field name="FROS_Val" title="FROS_Val" ><display/></field>
+        <field name="WHOLESALE_DEALERS_Qty" title="WSD_Qty" ><display/></field>
+        <field name="WHOLESALE_DEALERS_Val" title="WSD_Val" ><display/></field>
+        <field name="PARLOUR_Qty" title="Parlour_Qty" ><display/></field>
+        <field name="PARLOUR_Val" title="Parlour_Val" ><display/></field>
+        <field name="MCCS_Qty" title="MCCS_Qty" ><display/></field>
+        <field name="MCCS_Val" title="MCCS_Val" ><display/></field>
+        <field name="BYPROD_SO_Qty" title="Special Order_Qty" ><display/></field>
+        <field name="BYPROD_SO_Val" title="Special Order_Val" ><display/></field>
+        <field name="BYPROD_GIFT_Qty" title="Gift_Qty" ><display/></field>
+        <field name="BYPROD_GIFT_Val" title="Gift_Val" ><display/></field>
+        <field name="REPLACEMENT_BYPROD_Qty" title="Replacement_Qty" ><display/></field>
+        <field name="REPLACEMENT_BYPROD_Val" title="Replacement_Val" ><display/></field>
+        
+        <field name="KFROS_Qty" title="KFROS_Qty" ><display/></field>
+        <field name="KFROS_Val" title="KFROS_Val" ><display/></field>
+        <field name="INSTITUTIONS_Qty" title="Institutions_Qty" ><display/></field>
+        <field name="INSTITUTIONS_Val" title="Institutions_Val" ><display/></field>
+        <field name="DEWS_PARLOURS_Qty" title="Dews_Qty" ><display/></field>
+        <field name="DEWS_PARLOURS_Val" title="Dews_Val" ><display/></field>
+        
+        <field name="AVM_FROS_Qty" title="AVM_FROS_Qty" ><display/></field>
+        <field name="AVM_FROS_Val" title="AVM_FROS_Val" ><display/></field>
+        
+        <field name="totalDispatchQty" title="totalDispatchQty" ><display/></field>
+        <field name="totalDispatchValue" title="totalDispatchValue" ><display/></field>
+        
+        <field name="parlourSaleQty" title="parlourSaleQty" ><display/></field>
+        <field name="parlourSaleValue" title="parlourSaleValue" ><display/></field>
+    </form>     
+    
+    <form name="IndentVsDespatchReportForms" type="list" list-name="indentVsDespatchList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        
+        <field name="productId" title="PRODUCT CODE" ><display/></field>
+        <field name="productName" title="PRODUCT NAME" ><display/></field>
+        
+        <field name="Day1_Indent" title="${columnTitleMap.Day1_IndentTitle}" title-area-style="tableheadwide"><display/></field>
+        <field name="Day1_Despatch" title="${columnTitleMap.Day1_DespatchTitle}" ><display/></field>
+        
+        <field name="Day2_Indent" title="${columnTitleMap.Day2_IndentTitle}" ><display/></field>
+        <field name="Day2_Despatch" title="${columnTitleMap.Day2_DespatchTitle}" ><display/></field>
+        
+        <field name="Day3_Indent" title="${columnTitleMap.Day3_IndentTitle}" ><display/></field>
+        <field name="Day3_Despatch" title="${columnTitleMap.Day3_DespatchTitle}" ><display/></field>
+        
+        <field name="Day4_Indent" title="${columnTitleMap.Day4_IndentTitle}" ><display/></field>
+        <field name="Day4_Despatch" title="${columnTitleMap.Day4_DespatchTitle}" ><display/></field>
+        
+        <field name="Day5_Indent" title="${columnTitleMap.Day5_IndentTitle}" ><display/></field>
+        <field name="Day5_Despatch" title="${columnTitleMap.Day5_DespatchTitle}" ><display/></field>
+        
+        <field name="Day6_Indent" title="${columnTitleMap.Day6_IndentTitle}" ><display/></field>
+        <field name="Day6_Despatch" title="${columnTitleMap.Day6_DespatchTitle}" ><display/></field>
+        
+        <field name="Day7_Indent" title="${columnTitleMap.Day7_IndentTitle}" ><display/></field>
+        <field name="Day7_Despatch" title="${columnTitleMap.Day7_DespatchTitle}" ><display/></field>
+        
+        <field name="Day8_Indent" title="${columnTitleMap.Day8_IndentTitle}" ><display/></field>
+        <field name="Day8_Despatch" title="${columnTitleMap.Day8_DespatchTitle}" ><display/></field>
+        
+        <field name="Day9_Indent" title="${columnTitleMap.Day9_IndentTitle}" ><display/></field>
+        <field name="Day9_Despatch" title="${columnTitleMap.Day9_DespatchTitle}" ><display/></field>
+        
+        <field name="Day10_Indent" title="${columnTitleMap.Day10_IndentTitle}" ><display/></field>
+        <field name="Day10_Despatch" title="${columnTitleMap.Day10_DespatchTitle}" ><display/></field>
+        
+        <field name="Day11_Indent" title="${columnTitleMap.Day11_IndentTitle}" ><display/></field>
+        <field name="Day11_Despatch" title="${columnTitleMap.Day11_DespatchTitle}" ><display/></field>
+        
+        <field name="Day12_Indent" title="${columnTitleMap.Day12_IndentTitle}" ><display/></field>
+        <field name="Day12_Despatch" title="${columnTitleMap.Day12_DespatchTitle}" ><display/></field>
+        
+        <field name="Day13_Indent" title="${columnTitleMap.Day13_IndentTitle}" ><display/></field>
+        <field name="Day13_Despatch" title="${columnTitleMap.Day13_DespatchTitle}" ><display/></field>
+        
+        <field name="Day14_Indent" title="${columnTitleMap.Day14_IndentTitle}" ><display/></field>
+        <field name="Day14_Despatch" title="${columnTitleMap.Day14_DespatchTitle}" ><display/></field>
+        
+        <field name="Day15_Indent" title="${columnTitleMap.Day15_IndentTitle}" ><display/></field>
+        <field name="Day15_Despatch" title="${columnTitleMap.Day15_DespatchTitle}" ><display/></field>
+        
+        <field name="Day16_Indent" title="${columnTitleMap.Day16_IndentTitle}" ><display/></field>
+        <field name="Day16_Despatch" title="${columnTitleMap.Day16_DespatchTitle}" ><display/></field>
+        
+        <field name="Day17_Indent" title="${columnTitleMap.Day17_IndentTitle}" ><display/></field>
+        <field name="Day17_Despatch" title="${columnTitleMap.Day17_DespatchTitle}" ><display/></field>
+        
+        <field name="Day18_Indent" title="${columnTitleMap.Day18_IndentTitle}" ><display/></field>
+        <field name="Day18_Despatch" title="${columnTitleMap.Day18_DespatchTitle}" ><display/></field>
+        
+        <field name="Day19_Indent" title="${columnTitleMap.Day19_IndentTitle}" ><display/></field>
+        <field name="Day19_Despatch" title="${columnTitleMap.Day19_DespatchTitle}" ><display/></field>
+        
+        <field name="Day20_Indent" title="${columnTitleMap.Day20_IndentTitle}" ><display/></field>
+        <field name="Day20_Despatch" title="${columnTitleMap.Day20_DespatchTitle}" ><display/></field>
+        
+        <field name="Day21_Indent" title="${columnTitleMap.Day21_IndentTitle}" ><display/></field>
+        <field name="Day21_Despatch" title="${columnTitleMap.Day21_DespatchTitle}" ><display/></field>
+        
+        <field name="Day22_Indent" title="${columnTitleMap.Day22_IndentTitle}" ><display/></field>
+        <field name="Day22_Despatch" title="${columnTitleMap.Day22_DespatchTitle}" ><display/></field>
+        
+        <field name="Day23_Indent" title="${columnTitleMap.Day23_IndentTitle}" ><display/></field>
+        <field name="Day23_Despatch" title="${columnTitleMap.Day23_DespatchTitle}" ><display/></field>
+        
+        <field name="Day24_Indent" title="${columnTitleMap.Day24_IndentTitle}" ><display/></field>
+        <field name="Day24_Despatch" title="${columnTitleMap.Day24_DespatchTitle}" ><display/></field>
+        
+        <field name="Day25_Indent" title="${columnTitleMap.Day25_IndentTitle}" ><display/></field>
+        <field name="Day25_Despatch" title="${columnTitleMap.Day25_DespatchTitle}" ><display/></field>
+        
+        <field name="Day26_Indent" title="${columnTitleMap.Day26_IndentTitle}" ><display/></field>
+        <field name="Day26_Despatch" title="${columnTitleMap.Day26_DespatchTitle}" ><display/></field>
+        
+        <field name="Day27_Indent" title="${columnTitleMap.Day27_IndentTitle}" ><display/></field>
+        <field name="Day27_Despatch" title="${columnTitleMap.Day27_DespatchTitle}" ><display/></field>
+        
+        <field name="Day28_Indent" title="${columnTitleMap.Day28_IndentTitle}" ><display/></field>
+        <field name="Day28_Despatch" title="${columnTitleMap.Day28_DespatchTitle}" ><display/></field>
+        
+        <field name="Day29_Indent" title="${columnTitleMap.Day29_IndentTitle}" ><display/></field>
+        <field name="Day29_Despatch" title="${columnTitleMap.Day29_DespatchTitle}" ><display/></field>
+        
+        <field name="Day30_Indent" title="${columnTitleMap.Day30_IndentTitle}" ><display/></field>
+        <field name="Day30_Despatch" title="${columnTitleMap.Day30_DespatchTitle}" ><display/></field>
+        
+        <field use-when="${intervalDaysMap.intervalDays} == 31" name="Day31_Indent" title="${columnTitleMap.Day31_IndentTitle}"><display/></field>
+        <field use-when="${intervalDaysMap.intervalDays} == 31" name="Day31_Despatch" title="${columnTitleMap.Day31_DespatchTitle}"><display/></field>
+        
+		<field name="totalIndent" title="TOT INDENT" ><display/></field>
+        <field name="totalDespatch" title="TOT DESPATCH" ><display/></field>
+		        
+    </form>
+    
+        
+</forms>

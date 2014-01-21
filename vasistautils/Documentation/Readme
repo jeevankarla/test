@@ -1,0 +1,41 @@
+PreRequsites to run Documentation project
+1)jxl.jar file should be added to the project libraries folder.
+
+Packages:
+
+in.vasista.util
+The java files to write Xpath,XpathExpression are present in this package.
+
+Documentation
+java files to parse the xml files are present in this package.
+
+1)java files to parse entitydef
+Attribute.java,Entity.java,EntityBase.java,EntityExcelUtil.java,EntityXMLUtil.java,Main.java,PrimaryKey.java,Relation.java,ViewEntity.java
+file having main method is Main.java
+Provide the entitymodel.xml path in the main method.
+2)Services.java
+file having main method is Services.java
+
+3)Screens.java
+file having main method is Screens.java
+Provide the appropiate screens folder path in the main method.
+
+4)ScreenstoForms1.java
+file having main method is ScreenstoForms1.java
+Provide the appropiate screens folder path in the main method.
+
+5)ScreenstoForms2.java
+file having main method is ScreenstoForms2.java
+Provide the appropiate screens folder path in the main method.
+
+6)RequestMap.java
+file having main method is RequestMap.java
+Provide the controller.xml path in the main method.
+
+7)Master.java
+file having main method is Master.java
+Provide the entitymodel.xml path in the main method.
+
+
+in.vasista.vbiz.entityanalysis
+The java class files to log the output of the program are present in this package

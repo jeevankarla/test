@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="MilkLineCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="FacilityTree">
+        <section>
+            <actions>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>               
+                <set field="titleProperty" value="ProductFacilityMain"/>
+         
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="main"/>
+<!--                <set field="facilityId" from-field="parameters.facilityId"/>-->
+<!--                <set field="isTreeRoot" value="Y"/>-->
+				<script  
+					location="component://product/webapp/facility/WEB-INF/actions/facility/facilityTree.groovy" />                                
+            </actions>          
+            <widgets>
+            <section>
+            <condition>
+                <if-empty field="parameters.ajaxLookup"/>
+            </condition> 
+            <widgets>
+            	<decorator-screen name="MilkLineCommonDecorator" location="component://milkline/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="lefthalf"> 
+                                	<screenlet title="${uiLabelMap.FormFieldTitle_company}">    
+   										<platform-specific><html><html-template location="component://product/webapp/facility/facility/facilityTree.ftl"></html-template></html></platform-specific>
+									</screenlet>
+								</container>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+   				<platform-specific><html><html-template location="component://product/webapp/facility/facility/facilityTree.ftl"></html-template></html></platform-specific>
+            </fail-widgets>
+        </section>         
+        </widgets>     
+		</section>
+    </screen>
+    <screen name="LMSReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/>            
+                <set field="reportDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDate()}" type="Date"/>                
+				<set field="reportDateStr" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String"/>                
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <entity-one entity-name="Facility" value-field="facility" use-cache="true"/>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
+                	<condition-expr field-name="fromDate" operator="less" value="${reportDate}"/>   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+               <entity-condition list="facilityList" entity-name="Facility" use-cache="true" filter-by-date="false" >
+                	<condition-list>
+                	<condition-expr field-name="facilityTypeId" operator="equals" value="ROUTE"/>
+                	</condition-list>
+                </entity-condition>
+                <entity-condition list="cardPeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-list combine="and">
+                	<condition-expr field-name="periodTypeId" operator="equals" value="CARD_MONTH"/>
+                	<condition-expr field-name="isClosed" operator="equals" value="N"/>   
+                	</condition-list>             	
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+                <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true" filter-by-date="false">
+                	<condition-list>
+                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
+                		<condition-expr field-name="enumId" operator="in" value="SO_INST,CR_INST"/>
+                	</condition-list>
+                	<order-by field-name="enumId"/>
+                </entity-condition>  
+                 <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+               </entity-one>
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+               
+            </actions>
+            <widgets>
+            	<decorator-screen name="MilkLineCommonDecorator" location="component://milkline/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    	<container>
+                        	<label style="h1">LMS Reports</label>                       	
+                        </container>  
+   							<platform-specific><html><html-template location="component://milkline/webapp/milkline/reports/LMSReports.ftl"></html-template></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="TruckSheet">
+		<section>
+			<actions>
+			    <set field="layoutSettings.javaScripts[]" value="/facility/images/carryRouteId.js" global="true"/> 
+				<set field="titleProperty" value="PageTitleTruckSheet"/> 
+				<set field="tabButtonItem" value="TruckSheet" />
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>  
+                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>                
+                <entity-condition list="listTruckSheets" entity-name="Shipment">
+                	<order-by field-name="-estimatedShipDate"/>
+                	<order-by field-name="statusId"/>
+                </entity-condition> 
+                <entity-condition list="lmsShipTypeList" entity-name="ShipmentType">
+               		<condition-expr field-name="parentTypeId" operator="equals" value="LMS_SHIPMENT"/>
+               </entity-condition>
+                <entity-condition list="lmdDairyList" entity-name="FacilityGroup">
+                	<condition-expr field-name="facilityGroupTypeId" operator="equals" value="DAIRY_LMD_TYPE"/>
+               </entity-condition> 					
+			</actions>
+			<widgets>
+				<decorator-screen name="MilkLineCommonDecorator" location="component://milkline/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<or>
+									<if-has-permission permission="TRUCKSHEET" action="_ADMIN"/>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+								</or>
+							</condition>
+							<widgets>
+								<container style="button-bar">
+									<platform-specific><html><html-template location="component://product/webapp/facility/facility/NewTruckSheet.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showTruckSheetGenerateForm();" text="Create Truck Sheet" style="buttontext create"  link-type="anchor"/>
+								</container>
+								<screenlet title="Truck Sheets ${enableLmsPmSales}">				
+									<include-form name="ListTruckSheets" location="component://milkline/widget/MilkLineForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>						
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>	
+	 <screen name="MilkDeliveryScheduleReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>				
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>				
+				<script	location="component://milkline/webapp/milkline/WEB-INF/actions/ConsolidatedRouteCollection.groovy" />
+			</actions>
+			<widgets>				
+				<platform-specific>
+					<xsl-fo>
+						<html-template
+							location="component://milkline/webapp/milkline/reports/ConsolidatedRouteCollection.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>					
+			</widgets>
+		</section>
+	</screen>	
+	<screen name="ConsolidatedRouteCollectionSheetPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>				
+				<script	location="component://milkline/webapp/milkline/WEB-INF/actions/ConsolidatedRouteCollection.groovy" />
+			</actions>
+			<widgets>				
+				<platform-specific>
+					<xsl-fo>
+						<html-template	location="component://milkline/webapp/milkline/reports/ConsolidatedRouteCollection.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>					
+			</widgets>
+		</section>
+	</screen>	
+	<screen name="MLDGenerateTruckSheetTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>				
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="logoImageUrl" value="/images/apddcf_logo.gif"/>
+				<script	location="component://milkline/webapp/milkline/WEB-INF/actions/TruckSheetReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="abstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://milkline/webapp/milkline/reports/TruckSheetAbstractReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="trucksheet" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://milkline/webapp/milkline/reports/TruckSheetReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="consolidatedLoadingStatement" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template	location="component://milkline/webapp/milkline/reports/ConsolidatedLoadingSlip.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DeliveryChallanPDF">
+	    <section>
+	    	<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>				
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="logoImageUrl" value="/images/apddcf_logo.gif"/>
+				<script	location="component://milkline/webapp/milkline/WEB-INF/actions/TruckSheetReport.groovy" />	
+			</actions>
+			<widgets>
+				<platform-specific>
+				 	<xsl-fo>
+						<html-template	location="component://milkline/webapp/milkline/reports/CreditInstutionsDeliveryChallan.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+		
+	</screen>
+	<screen name="CRInstBillInvoicePDF">
+	    <section>
+	    	<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>				
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="logoImageUrl" value="/images/apddcf_logo.gif"/>
+				<script	location="component://order/webapp/ordermgr/WEB-INF/actions/reports/SOandCRReport.groovy" />	
+			</actions>
+			<widgets>
+				<platform-specific>
+				 	<xsl-fo>
+						<html-template	location="component://milkline/webapp/milkline/reports/CRInstBillInvoice.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+		
+	</screen>
+	<screen name="CumulativeSalesReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/CumulativeSalesReportPDF.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://milkline/webapp/milkline/reports/CumulativeSalesReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PassOrderReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/MilkBillReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://milkline/webapp/milkline/procurement/PassOrderReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="GradesReport">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>            
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/> 
+                <script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitRoutes.groovy"/>
+                <set field="unitsList" value="${unitsList}" global="true"/>
+                <script location="component://milkline/webapp/milkline/WEB-INF/actions/GradesReport.groovy"/>                               
+            </actions>
+            <widgets>
+                 <platform-specific>
+                    <xsl-fo><html-template location="component://milkline/webapp/milkline/procurement/GradesReport.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CenterWisePaymentLtrs">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://procurement/webapp/procurement/WEB-INF/actions/facility/UnitWiseCenterWiseBankStmt.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+						<html-template location="component://milkline/webapp/milkline/procurement/UnitCenterWisePayment.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CenterWiseBonusReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/procurement/CenterWiseBonusReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/procurement/CenterWiseBonusReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>		
+	</screen>
+    <screen name="DayWiseSalesAndCollectionPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/DayWiseSalesAndCollection.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/DayWiseSalesAndCollectionReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ReconsilationReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/ReconsilationReport.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/ReconsilationReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="AgentWiseCommission">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/AgentWiseCommission.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/AgentWiseCommission.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="AgentWiseSalesVariation">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/AgentWiseSaleList.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/AgentWiseSalesVariation.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>	
+	<screen name="RouteWiseOBCBSale">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://kkdmpcu/webapp/kkdmpcu/WEB-INF/actions/AgentWiseSaleList.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/RouteWiseOBCBSales.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DailySalesAndCollectionReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/DailySalesAndCollectionReport.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/DailySalesAndCollectionReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="AgentTargetAndPerformanceReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/AgentTargetAndPerformanceReportPDF.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/AgentTargetAndPerformanceReportPDF.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="AgentDailySalesAndCollectionReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/AgentDailySalesAndCollectionReport.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/AgentDailySalesAndCollectionReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="DayWiseRouteSalesReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/DailySalesAndCollectionReport.groovy"/> 
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/DayWiseRouteSalesReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+		<screen name="LeaksFreesReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://milkline/webapp/milkline/WEB-INF/actions/freesAndLeaksReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					    <html-template location="component://milkline/webapp/milkline/reports/freesAndLeaksReport.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+</screens>

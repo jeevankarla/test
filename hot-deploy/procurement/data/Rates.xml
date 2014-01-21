@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+	
+	
+	<FacilityRate facilityId ="MBNR" productId="101" supplyTypeEnumId="_NA_" rateTypeId="PROC_TIP_AMOUNT" rateAmount="4.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	<FacilityRate facilityId ="MBNR" productId="102" supplyTypeEnumId="_NA_" rateTypeId="PROC_TIP_AMOUNT" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	
+	
+	<!-- <FacilityRate facilityId ="8_1" productId="_NA_" supplyTypeEnumId="_NA_" rateTypeId="PROC_AGENT_MRGN" rateAmount="2.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	<FacilityRate facilityId ="8_1" productId="_NA_" supplyTypeEnumId="_NA_" rateTypeId="PROC_CARTAGE" rateAmount="1.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+	 -->
+	
+	 <AcctgFormula acctgFormulaId="PROC_OP_COST_MBNR"  description="OP Cost Formula" isSlabBased="Y"/>
+    
+	<AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNR" slabStart="0" slabEnd="500" formula="1.25*${QUANTITY}" description="0-500Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNR" slabStart="500.01" slabEnd="2000" formula="1.65*${QUANTITY}" description="500-2000Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNR" slabStart="2000.01" slabEnd="5000" formula="2.00*${QUANTITY}" description="2000-5000Ltr Incentive"/>
+    
+    <!-- <AcctgFormula acctgFormulaId="PROC_OP_COST_UN08AM"  description="OP Cost Formula" isSlabBased="Y"/>
+    <AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_UN08AM" slabStart="0" slabEnd="500" formula="1.0*${QUANTITY}" description="0-500Ltr Incentive"/> -->
+	<!-- <FacilityRate facilityId ="UN08" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  acctgFormulaId="PROC_OP_COST_UN08"  rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<FacilityRate facilityId ="UN08" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="PM"  acctgFormulaId="PROC_OP_COST_UN08"  rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate="" /> -->
+	
+	<!-- <FacilityRate facilityId ="20000" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="_NA_"  acctgFormulaId="PROC_OP_COST_UN08"  rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate="" /> -->
+	
+	<FacilityRate facilityId ="MBNR" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="_NA_"  acctgFormulaId="PROC_OP_COST_MBNR"  rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<!-- <FacilityRate facilityId ="MBNR" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="AM"  acctgFormulaId="PROC_OP_COST_UN08AM"  rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate="" /> -->
+	<FacilityRate facilityId ="20000" rateTypeId="PROC_OP_COST" productId="_NA_" supplyTypeEnumId="_NA_"  rateAmount="0.00" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	
+	<FacilityRate facilityId ="MBNR" productId="_NA_" supplyTypeEnumId="_NA_" rateTypeId="PROC_PENALTY_AMOUNT" rateAmount="0.55" rateCurrencyUomId="INR" fromDate="2012-01-01 0:00:00.000" thruDate=""/>
+
+    <AcctgFormula acctgFormulaId="PROC_OP_COST_MBNRAM"  description="OP Cost For MBNR AM" isSlabBased="Y"/>
+	<AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNRAM" slabStart="0" slabEnd="500" formula="1.25*${QUANTITY}" description="0-500Ltr Incentive"/>
+	<AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNRAM" slabStart="500.01" slabEnd="2000" formula="1.65*${QUANTITY}" description="500-2000Ltr Incentive"/>
+	<AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNRAM" slabStart="2000.01" slabEnd="999999" formula="2.00*${QUANTITY}" description="2000-5000Ltr Incentive"/>
+
+    <AcctgFormula acctgFormulaId="PROC_OP_COST_MBNRPM"  description="OP Cost MBNR PM" isSlabBased="Y"/>
+    <AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNRPM" slabStart="0" slabEnd="500" formula="1.50*${QUANTITY}" description="0-500Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNRPM" slabStart="500.01" slabEnd="2000" formula="1.90*${QUANTITY}" description="500-2000Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="PROC_OP_COST_MBNRPM" slabStart="2000.01" slabEnd="999999" formula="2.25*${QUANTITY}" description="2000-5000Ltr Incentive"/>
+    
+</entity-engine-xml>
+	
+

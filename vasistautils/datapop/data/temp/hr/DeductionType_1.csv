@@ -1,0 +1,6 @@
+DeductionType_deductionTypeId,DeductionType_description,DeductionType_parentTypeId
+STATE_TAX,State Tax,
+INSURANCE,Insurance,
+PF,Provident Fund,
+ESI,Employee State Insurance,
+TDS,Tax Deduction at Source,

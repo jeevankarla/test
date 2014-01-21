@@ -1,0 +1,11 @@
+PartyClassificationGroup_description,PartyClassificationGroup_parentGroupId,PartyClassificationGroup_partyClassificationTypeId,PartyClassificationGroup_partyClassificationGroupId
+Owner,,OWNERSHIP,OWNER
+Tenent,,OWNERSHIP,TENENT
+Resident Owners,OWNER,OWNERSHIP,RESIDENT_OWNER
+Bachelor Tenent,TENENT,OWNERSHIP,BACHELOR_TENENT
+Family Tenents,TENENT,OWNERSHIP,FAMILY_TENENT
+Non-resident owner,OWNER,OWNERSHIP,NON_RESIDENT_OWNER
+RTPIAN Person,,PERSON_CLASSIFICATIO,RTPIAN_PER
+Non-RTPIAN Person,,PERSON_CLASSIFICATIO,NON_RTPIAN_PER
+RTPIAN Organization,,ORGANIZATION_CLASSIF,RTPIAN_ORG
+Non-RTPIAN Organization,,ORGANIZATION_CLASSIF,NON_RTPIAN_ORG

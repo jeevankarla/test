@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <GlAccountOrganization glAccountId="180000" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="166178.00"/>
+    <GlAccountOrganization glAccountId="162000" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="33999873.36"/>
+    <GlAccountOrganization glAccountId="172000" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="76650.00"/>
+    <GlAccountOrganization glAccountId="170000" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="2735109.00"/>
+    <GlAccountOrganization glAccountId="161000" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="1241464.00"/>
+    <GlAccountOrganization glAccountId="160000" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="36750.00"/>
+    <GlAccountOrganization glAccountId="180001" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="2771510.20"/>
+    <GlAccountOrganization glAccountId="160001" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="102340.00"/>
+    <GlAccountOrganization glAccountId="310001" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="413000.00"/>
+    <GlAccountOrganization glAccountId="310002" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="100000.00"/>
+    <GlAccountOrganization glAccountId="310003" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="413000.00"/>
+    <GlAccountOrganization glAccountId="310004" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="726000.00"/>
+    <GlAccountOrganization glAccountId="310005" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="2538000.00"/>
+    <GlAccountOrganization glAccountId="310006" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="1652000.00"/>
+    <GlAccountOrganization glAccountId="310008" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="2105000.00"/>
+    <GlAccountOrganization glAccountId="310007" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="413000.00"/>
+    <GlAccountOrganization glAccountId="241001" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="22426482.10"/>
+    <GlAccountOrganization glAccountId="231001" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="5803625.00"/>
+    <GlAccountOrganization glAccountId="152900" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="3380945.78"/>
+    <GlAccountOrganization glAccountId="121001" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="2370843.00"/>
+    <GlAccountOrganization glAccountId="111201" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="13037.00"/>
+    <GlAccountOrganization glAccountId="120000" organizationPartyId="Company" fromDate="2011-09-30  10:33:26.26" postedBalance="187855.00"/>
+    <GlAccountOrganization glAccountId="152900" organizationPartyId="Company" fromDate="2011-10-01  10:33:26.26" postedBalance="10000.00"/>
+    <GlAccountOrganization glAccountId="180003" organizationPartyId="Company" fromDate="2011-10-02  10:33:26.26" postedBalance="164280.00"/>
+    <GlAccountOrganization glAccountId="231009" organizationPartyId="Company" fromDate="2011-10-03  10:33:26.26" postedBalance="640721.17"/>
+    <GlAccountOrganization glAccountId="231008" organizationPartyId="Company" fromDate="2011-10-04  10:33:26.26" postedBalance="102500.00"/>
+    <GlAccountOrganization glAccountId="231005" organizationPartyId="Company" fromDate="2011-10-05  10:33:26.26" postedBalance="3740920.00"/>
+    <GlAccountOrganization glAccountId="231006" organizationPartyId="Company" fromDate="2011-10-06  10:33:26.26" postedBalance="1175005.00"/>
+</entity-engine-xml>

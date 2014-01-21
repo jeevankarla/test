@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    	
+     <FacilityGroupType facilityGroupTypeId="DAIRY_LMD_TYPE" description="Dairy LMD Type"/>
+     
+    
+   
+  	 <FacilityGroup  facilityGroupId="SUPPLYTIME_RT_GROUP" facilityGroupName="Supply Time Route Group" description="Supply Time Route Group"  facilityGroupTypeId ="DAIRY_LMD_TYPE"/>
+	 <FacilityGroup  facilityGroupId="AM_RT_GROUP" facilityGroupName="AM Route Group" description="AM Route Group"  facilityGroupTypeId ="DAIRY_LMD_TYPE" primaryParentGroupId="SUPPLYTIME_RT_GROUP"/>
+	 <FacilityGroup  facilityGroupId="PM_RT_GROUP" facilityGroupName="PM Route Group" description="PM Route Group"  facilityGroupTypeId ="DAIRY_LMD_TYPE" primaryParentGroupId="SUPPLYTIME_RT_GROUP"/>
+	
+     <FacilityGroupMember facilityGroupId="AM_RT_GROUP" facilityId="RSO1_RT01"  fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="AM_RT_GROUP" facilityId="RSO1_RT02" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="AM_RT_GROUP" facilityId="RSO1_RT03" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="AM_RT_GROUP" facilityId="RSO3_RT07" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="AM_RT_GROUP" facilityId="RSO5_RT24" fromDate="2013-02-26 13:19:27.000"/>
+     
+     <FacilityGroupMember facilityGroupId="PM_RT_GROUP" facilityId="RSO5_RT10" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="PM_RT_GROUP" facilityId="RSO5_RT11" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="PM_RT_GROUP" facilityId="RSO5_RT12" fromDate="2013-02-26 13:19:27.000"/>
+     <FacilityGroupMember facilityGroupId="PM_RT_GROUP" facilityId="RSO5_RT24" fromDate="2013-02-26 13:19:27.000"/>
+     
+      <FacilityGroupType facilityGroupTypeId="RT_BOOTH_GROUP" description="Booth ,Route Mapping Group"/>
+		<!-- AM -->	
+     <FacilityGroup  facilityGroupId="RSO1_RT01" facilityGroupName="RT01 Group" description="RT01 Group"  facilityGroupTypeId="RT_BOOTH_GROUP" ownerFacilityId="RSO1_RT01"/>
+	 <FacilityGroupMember facilityGroupId="RSO1_RT01" facilityId="2112" fromDate="2013-02-26 13:19:27.000" />
+	 <FacilityGroupMember facilityGroupId="RSO1_RT01" facilityId="1352" fromDate="2013-02-26 13:19:27.000" />
+	<FacilityGroupMember facilityGroupId="S01" facilityId="S1142" fromDate="2013-02-26 13:19:27.000" />
+	<FacilityGroupMember facilityGroupId="S01" facilityId="S1132" fromDate="2013-02-26 13:19:27.000" />
+		
+		<!--PM  -->	
+     <FacilityGroup  facilityGroupId="RSO1_RT02" facilityGroupName="RT02 Group" description="RT02 Group"  facilityGroupTypeId="RT_BOOTH_GROUP" ownerFacilityId="RSO1_RT02"/>
+	 <FacilityGroupMember facilityGroupId="RSO1_RT02" facilityId="2112" fromDate="2013-02-26 13:19:27.000" />
+	 <FacilityGroupMember facilityGroupId="RSO1_RT02" facilityId="1352" fromDate="2013-02-26 13:19:27.000" />
+	
+	<!-- AM PM -->
+	<FacilityGroup  facilityGroupId="RSO5_RT24" facilityGroupName="RT24 Group" description="RT24 Group"  facilityGroupTypeId="RT_BOOTH_GROUP" ownerFacilityId="RSO5_RT24"/>
+ 	<FacilityGroupMember facilityGroupId="RSO5_RT24" facilityId="1353" fromDate="2013-02-26 13:19:27.000" />
+
+	<FacilityGroupType facilityGroupTypeId="ZONE_ROUTE_GROUP" description="Zone ,Route Mapping Group"/>
+	<FacilityGroupType facilityGroupTypeId="REGION_ZONE_GROUP" description="Region,Zone Mapping Group"/>
+	
+  </entity-engine-xml>

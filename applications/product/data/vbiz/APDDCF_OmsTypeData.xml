@@ -1,0 +1,200 @@
+<entity-engine-xml>
+
+ 	<DataCategory dataCategoryId="APDDCF_OMS" parentCategoryId="" categoryName=""/>
+    <DataCategory dataCategoryId="PERSONAL_HO" parentCategoryId="APDDCF_OMS" categoryName="HO-Personnel"/>
+    <DataCategory dataCategoryId="DD_MIS" parentCategoryId="APDDCF_OMS" categoryName="DD-MIS"/>
+    <DataCategory dataCategoryId="PROCURMNT_HO" parentCategoryId="APDDCF_OMS" categoryName="HO- Procurement &amp; Inputs"/>
+    <DataCategory dataCategoryId="ACCOUNTS_HO" parentCategoryId="APDDCF_OMS" categoryName="HO - Finance &amp; Accounts"/>
+    <DataCategory dataCategoryId="DD_WESTGDV" parentCategoryId="APDDCF_OMS" categoryName="DD-WestGodavari"/>
+    <DataCategory dataCategoryId="DD_KHAMMAM" parentCategoryId="APDDCF_OMS" categoryName="DD-Khammam"/>
+    <DataCategory dataCategoryId="DD_WARANGAL" parentCategoryId="APDDCF_OMS" categoryName="DD-Warangal"/>
+    <DataCategory dataCategoryId="DD_RANGAREDDY" parentCategoryId="APDDCF_OMS" categoryName="DD-RangaReddy"/>
+    <DataCategory dataCategoryId="DD_EASTGDV" parentCategoryId="APDDCF_OMS" categoryName="DD-EastGodavari"/>
+    <DataCategory dataCategoryId="DD_CHITTOR" parentCategoryId="APDDCF_OMS" categoryName="DD-Chittoor"/>
+    <DataCategory dataCategoryId="DD_KRISHNAV" parentCategoryId="APDDCF_OMS" categoryName="DD-Krishnaveni"/>
+    <DataCategory dataCategoryId="DD_MAHBNAGAR" parentCategoryId="APDDCF_OMS" categoryName="DD-Mahabubnagar"/>
+    <DataCategory dataCategoryId="DD_MEDAK" parentCategoryId="APDDCF_OMS" categoryName="DD-Medak"/>    
+    <DataCategory dataCategoryId="GM_KADAPA" parentCategoryId="APDDCF_OMS" categoryName="GM-Kadapa"/>
+    <DataCategory dataCategoryId="GM_EASTGDV" parentCategoryId="APDDCF_OMS" categoryName="GM-EastGodavari"/>
+    <DataCategory dataCategoryId="GM_NIZAMABAD" parentCategoryId="APDDCF_OMS" categoryName="GM-Nizamabad"/>
+    <DataCategory dataCategoryId="GM_ANANTAPUR" parentCategoryId="APDDCF_OMS" categoryName="GM-Anantapur"/>
+    <DataCategory dataCategoryId="GM_MARKETING" parentCategoryId="APDDCF_OMS" categoryName="GM-Marketing"/>
+    <DataCategory dataCategoryId="MPF_HYD" parentCategoryId="APDDCF_OMS" categoryName="MPF - Hyderabad"/>   
+    <DataCategory dataCategoryId="EE_CIVIL" parentCategoryId="APDDCF_OMS" categoryName="EE-Civil"/>
+    
+    <ContentType contentTypeId="APDDCF_OMS" description="Apddcf Oms" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="CIRCULARS" description="Circulars" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="TRANSFERS" description="Transfers" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="LEGAL_CELL" description="LegalCell" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="DISCIPLINARY_CASES" description="Disciplinary Cases" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="MEDICAL_BILLS" description="Medical Bills" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="GENERAL_FILES" description="General Files" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="BOARD_ITEMS" description="Board Items" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="GOVT_GOS" description="Govt GOs" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="PROMOTIONS" description="Promotions" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="LEAVES" description="Leaves" hasTable="N" parentTypeId="APDDCF_OMS"/>    
+    <ContentType contentTypeId="SENIORITY_LIST" description="Seniority List" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="STAFFING_PATTERN" description="Staffing Pattern" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="RECRUITMENT_DR" description="Recruitment Under DR" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="OUTSOURCING_FILES" description="Outsourcing Files" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="RTA_ACT" description="RTA Act" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="EL_ENCASHMENTS" description="EL Encashments" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="RETIREMENTS" description="Retirements" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="DPC_MEETINGS" description="DPC / PC Meetings" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="INCREMENTS" description="Increments" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="PAYMENTS" description="Payments" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    
+    <ContentType contentTypeId="MEMOS" description="Memos" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="LETTERS" description="Letters" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="PROCEEDINGS" description="Proceedings" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="DUE_STATUS" description="Dues Status" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="RECEIVABLES" description="Receivables" hasTable="N" parentTypeId="APDDCF_OMS"/>
+    <ContentType contentTypeId="RECEIPTS" description="Receipts" hasTable="N" parentTypeId="APDDCF_OMS"/>
+   
+   	<RoleType hasTable="N" parentTypeId="" roleTypeId="APDDCF_OMS_CNT_CR"  description="APDDCF OMS Roles"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="PERSONAL_HO_CNT_CR"  description="HO-Personnel"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_HO_CNT_CR"  description="DD-MIS"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="PROCURMNT_HO_CNT_CR"  description="HO- Procurement &amp; Inputs"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="ACCOUNTS_HO_CNT_CR"  description="HO - Finance &amp; Accounts"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_WESTGDV_CNT_CR"  description="DD-WestGodavari"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_KHAMMAM_CNT_CR"  description="DD-Khammam"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_WARANGAL_CNT_CR"  description="DD-Warangal"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_RANGAREDDY_CNT_CR"  description="DD-RangaReddy"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_EASTGDV_CNT_CR"  description="DD-EastGodavari"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_CHITTOR_CNT_CR"  description="DD-Chittoor"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_KRISHNAV_CNT_CR"  description="DD-Krishnaveni"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_MAHBNAGAR_CNT_CR"  description="DD-Mahabubnagar"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="DD_MEDAK_CNT_CR"  description="DD-Medak"/>    
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="GM_KADAPA_CNT_CR"  description="GM-Kadapa"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="GM_EASTGDV_CNT_CR"  description="GM-EastGodavari"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="GM_NIZAMABAD_CNT_CR"  description="GM-Nizamabad"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="GM_ANANTAPUR_CNT_CR"  description="GM-Anantapur"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="GM_MARKETING_CNT_CR"  description="GM-Marketing"/>
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="MPF_HYD_CNT_CR"  description="MPF - Hyderabad"/>   
+    <RoleType hasTable="N" parentTypeId="APDDCF_OMS_CNT_CR" roleTypeId="EE_CIVIL_CNT_CR"  description="EE-Civil"/>
+    
+    <!-- OMS SecurityGroups  -->        
+    <SecurityGroup description="OMS Basic User Group" groupId="OMS_BASIC_USER"/>    
+    <SecurityGroupPermission groupId="OMS_BASIC_USER" permissionId="CONTENTMGR_VIEW"/>
+    <SecurityGroupPermission groupId="OMS_BASIC_USER" permissionId="CONTENTMGR_CREATE"/>
+    <SecurityGroupPermission groupId="OMS_BASIC_USER" permissionId="CONTENTMGR_UPDATE"/>
+    
+    <SecurityGroup description="OMS Admin Group" groupId="OMS_ADMIN"/>    
+    <SecurityGroupPermission groupId="OMS_ADMIN" permissionId="CONTENTMGR_VIEW"/>
+    <SecurityGroupPermission groupId="OMS_ADMIN" permissionId="CONTENTMGR_CREATE"/>
+    <SecurityGroupPermission groupId="OMS_ADMIN" permissionId="CONTENTMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="OMS_ADMIN" permissionId="CONTENTMGR_ADMIN"/>
+    <!-- usserLogin Data for OMS     -->
+    
+    <Party partyId="PERSONAL_HO" partyTypeId="PERSON"/>
+    <Party partyId="PROCURMNT_HO" partyTypeId="PERSON"/>
+    <Party partyId="ACCOUNTS_HO" partyTypeId="PERSON"/>
+    <Party partyId="DD_WESTGDV" partyTypeId="PERSON"/>
+    <Party partyId="DD_KHAMMAM" partyTypeId="PERSON"/>
+    <Party partyId="DD_WARANGAL" partyTypeId="PERSON"/>
+    <Party partyId="DD_RANGAREDDY" partyTypeId="PERSON"/>
+    <Party partyId="DD_EASTGDV" partyTypeId="PERSON"/>
+    <Party partyId="DD_CHITTOR" partyTypeId="PERSON"/>
+    <Party partyId="DD_KRISHNAV" partyTypeId="PERSON"/>
+    <Party partyId="DD_MAHBNAGAR" partyTypeId="PERSON"/>
+    <Party partyId="DD_MEDAK" partyTypeId="PERSON"/>    
+    <Party partyId="GM_KADAPA" partyTypeId="PERSON"/>
+    <Party partyId="GM_EASTGDV" partyTypeId="PERSON"/>
+    <Party partyId="GM_NIZAMABAD" partyTypeId="PERSON"/>
+    <Party partyId="GM_ANANTAPUR" partyTypeId="PERSON"/>
+    <Party partyId="GM_MARKETING" partyTypeId="PERSON"/>
+    <Party partyId="MPF_HYD" partyTypeId="PERSON"/>   
+    <Party partyId="EE_CIVIL" partyTypeId="PERSON"/>
+    
+    
+    
+   
+    <Person partyId="PERSONAL_HO" firstName="HO-Personnel"/>
+    <Person partyId="PROCURMNT_HO" firstName="HO- Procurement &amp; Inputs" />
+    <Person partyId="ACCOUNTS_HO" firstName="HO - Finance &amp; Accounts" />
+    <Person partyId="DD_WESTGDV" firstName="DD-WestGodavari" />
+    <Person partyId="DD_KHAMMAM" firstName="DD-Khammam" />
+    <Person partyId="DD_WARANGAL" firstName="DD-Warangal" />
+    <Person partyId="DD_RANGAREDDY" firstName="DD-RangaReddy" />
+    <Person partyId="DD_EASTGDV" firstName="DD-EastGodavari" />
+    <Person partyId="DD_CHITTOR" firstName="DD-Chittoor" />
+    <Person partyId="DD_KRISHNAV" firstName="DD-Krishnaveni" />
+    <Person partyId="DD_MAHBNAGAR" firstName="DD-Mahabubnagar" />
+    <Person partyId="DD_MEDAK" firstName="DD-Medak" />    
+    <Person partyId="GM_KADAPA" firstName="GM-Kadapa" />
+    <Person partyId="GM_EASTGDV" firstName="GM-EastGodavari" />
+    <Person partyId="GM_NIZAMABAD" firstName="GM-Nizamabad" />
+    <Person partyId="GM_ANANTAPUR" firstName="GM-Anantapur" />
+    <Person partyId="GM_MARKETING" firstName="GM-Marketing" />
+    <Person partyId="MPF_HYD" firstName="MPF - Hyderabad" />   
+    <Person partyId="EE_CIVIL" firstName="EE-Civil" />
+    
+    <PartyRole partyId="PERSONAL_HO" roleTypeId="PERSONAL_HO_CNT_CR"/>
+    <PartyRole partyId="PROCURMNT_HO" roleTypeId="PROCURMNT_HO_CNT_CR"/>
+    <PartyRole partyId="ACCOUNTS_HO" roleTypeId="ACCOUNTS_HO_CNT_CR"/>
+    <PartyRole partyId="DD_WESTGDV" roleTypeId="DD_WESTGDV_CNT_CR"/>
+    <PartyRole partyId="DD_KHAMMAM" roleTypeId="DD_KHAMMAM_CNT_CR"/>
+    <PartyRole partyId="DD_WARANGAL" roleTypeId="DD_WARANGAL_CNT_CR"/>
+    <PartyRole partyId="DD_RANGAREDDY" roleTypeId="DD_RANGAREDDY_CNT_CR"/>
+    <PartyRole partyId="DD_EASTGDV" roleTypeId="DD_EASTGDV_CNT_CR"/>
+    <PartyRole partyId="DD_CHITTOR" roleTypeId="DD_CHITTOR_CNT_CR"/>
+    <PartyRole partyId="DD_KRISHNAV" roleTypeId="DD_KRISHNAV_CNT_CR"/>
+    <PartyRole partyId="DD_MAHBNAGAR" roleTypeId="DD_MAHBNAGAR_CNT_CR"/>
+    <PartyRole partyId="DD_MEDAK" roleTypeId="DD_MEDAK_CNT_CR"/>    
+    <PartyRole partyId="GM_KADAPA" roleTypeId="GM_KADAPA_CNT_CR"/>
+    <PartyRole partyId="GM_EASTGDV" roleTypeId="GM_EASTGDV_CNT_CR"/>
+    <PartyRole partyId="GM_NIZAMABAD" roleTypeId="GM_NIZAMABAD_CNT_CR"/>
+    <PartyRole partyId="GM_ANANTAPUR" roleTypeId="GM_ANANTAPUR_CNT_CR"/>
+    <PartyRole partyId="GM_MARKETING" roleTypeId="GM_MARKETING_CNT_CR"/>
+    <PartyRole partyId="MPF_HYD" roleTypeId="MPF_HYD_CNT_CR"/>   
+    <PartyRole partyId="EE_CIVIL" roleTypeId="EE_CIVIL_CNT_CR"/>
+    
+     
+    <UserLogin userLoginId="HO-Personnel" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="PERSONAL_HO"/>
+    <UserLogin userLoginId="HO-Procurement" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="PROCURMNT_HO"/>
+    <UserLogin userLoginId="HO-Finance" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="ACCOUNTS_HO"/>
+    <UserLogin userLoginId="DD-WestGodavari" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_WESTGDV"/>
+    <UserLogin userLoginId="DD-Khammam" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_KHAMMAM"/>
+    <UserLogin userLoginId="DD-Warangal" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_WARANGAL"/>
+    <UserLogin userLoginId="DD-RangaReddy" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_RANGAREDDY"/>
+    <UserLogin userLoginId="DD-EastGodavari" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_EASTGDV"/>
+    
+    <UserLogin userLoginId="DD-Chittoor" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_CHITTOR"/>
+    <UserLogin userLoginId="DD-Krishnaveni" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_KRISHNAV"/>
+    <UserLogin userLoginId="DD-Mahabubnagar" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_MAHBNAGAR"/>
+    <UserLogin userLoginId="DD-Medak" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="DD_MEDAK"/>
+    <UserLogin userLoginId="GM-Kadapa" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="GM_KADAPA"/>
+    <UserLogin userLoginId="GM-EastGodavari" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="GM_EASTGDV"/>
+    <UserLogin userLoginId="GM-Nizamabad" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="GM_NIZAMABAD"/>
+    <UserLogin userLoginId="GM-Anantapur" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="GM_ANANTAPUR"/>
+     
+    <UserLogin userLoginId="GM-Marketing" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="GM_MARKETING"/>
+    <UserLogin userLoginId="MPF-Hyderabad" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="MPF_HYD"/>
+    <UserLogin userLoginId="EE-Civil" currentPassword="{SHA}35675e68f4b5af7b995d9205ad0fc43842f16450" passwordHint="vbiz" enabled="Y" requirePasswordChange="Y" partyId="EE_CIVIL"/>
+        
+    
+     
+   <UserLoginSecurityGroup userLoginId="HO-Personnel" groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="HO-Procurement"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="HO-Finance"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="DD-WestGodavari"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="DD-Khammam"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="DD-Warangal"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="DD-RangaReddy"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="DD-EastGodavari"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />    
+   <UserLoginSecurityGroup userLoginId="DD-Chittoor"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="DD-Krishnaveni"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="DD-Mahabubnagar"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="DD-Medak"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="GM-Kadapa"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="GM-EastGodavari"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="GM-Nizamabad"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="GM-Anantapur"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />     
+   <UserLoginSecurityGroup userLoginId="GM-Marketing"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="MPF-Hyderabad"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+   <UserLoginSecurityGroup userLoginId="EE-Civil"  groupId="OMS_BASIC_USER"  fromDate="2011-03-28 13:24:48.000" />
+    
+    
+    
+    
+</entity-engine-xml>

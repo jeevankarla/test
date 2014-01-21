@@ -1,0 +1,10 @@
+FinAccount_finAccountId,FinAccount_finAccountTypeId,FinAccount_statusId,FinAccount_finAccountName,FinAccount_finAccountCode,FinAccount_finAccountPin,FinAccount_currencyUomId,FinAccount_organizationPartyId,FinAccount_ownerPartyId,FinAccount_postToGlAccountId,FinAccount_isRefundable,FinAccount_replenishPaymentId,FinAccount_replenishLevel,FinAccount_actualBalance,FinAccount_availableBalance
+BOB_CHEQUE,DEPOSIT_ACCOUNT,FNACT_ACTIVE,BOB Savings Account,,,INR,100,100,111600,Y,,,,
+BOB_FD,INVESTMENT_ACCOUNT,FNACT_ACTIVE,BOB Fixed Deposit,,,INR,100,100,111500,Y,,,,
+CASH_ONHAND,CASH,FNACT_ACTIVE,Cash on Hand,,,INR,100,100,111000,Y,,,,
+BOB_LOAN,LOAN_ACCOUNT,FNACT_ACTIVE,Loan Account,,,INR,100,100,231000,Y,,,,
+PARTY_CHEQUE,DEPOSIT_ACCOUNT,FNACT_ACTIVE,BOB Savings Account,,,INR,100,100,111600,Y,,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,

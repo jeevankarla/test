@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <Product productId="101" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="TM 1000ML" brandName="TM 1000ML" productName="TM 1000ML" description="TM 1000ML" taxable="N" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00" autoCreateKeywords="Y" billOfMaterialLevel="0" chargeShipping="N" inShippingBox="N" isVariant="N" isVirtual="N" lastModifiedByUserLogin="kvarma" quantityIncluded="1" quantityUomId="VLIQ_L" salesDiscountinuationDate=""/>
+    <Product productId="102" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="TM500 ML" brandName="TM500 ML" productName="TM500 ML" description="TM500 ML" taxable="N" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00" autoCreateKeywords="Y" billOfMaterialLevel="0" chargeShipping="N" inShippingBox="N" isVariant="N" isVirtual="N" lastModifiedByUserLogin="kvarma" quantityIncluded="0.5" quantityUomId="VLIQ_L" salesDiscountinuationDate=""/>
+    <Product productId="103" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="SM 500 ML" brandName="SM 500 ML" productName="SM 500 ML" description="SM 500 ML" taxable="N" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00" autoCreateKeywords="Y" billOfMaterialLevel="0" chargeShipping="N" inShippingBox="N" isVariant="N" isVirtual="N" lastModifiedByUserLogin="kvarma" quantityIncluded="0.5" quantityUomId="VLIQ_L" salesDiscountinuationDate=""/>
+    <Product productId="104" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="FCM500 ML" brandName="FCM500 ML" productName="FCM500 ML" description="FCM500 ML" taxable="N" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00" autoCreateKeywords="Y" billOfMaterialLevel="0" chargeShipping="N" inShippingBox="N" isVariant="N" isVirtual="N" lastModifiedByUserLogin="kvarma" quantityIncluded="0.5" quantityUomId="VLIQ_L" salesDiscountinuationDate=""/>
+    <Product productId="105" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="DTM 500ML" brandName="DTM 500ML" productName="DTM 500ML" description="DTM 500ML" taxable="N" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00" autoCreateKeywords="Y" billOfMaterialLevel="0" chargeShipping="N" inShippingBox="N" isVariant="N" isVirtual="N" lastModifiedByUserLogin="kvarma" quantityIncluded="0.5" quantityUomId="VLIQ_L" salesDiscountinuationDate=""/>
+	
+	<ProductFacility productId="101" facilityId="MAIN_PLANT" minimumStock="0" lastInventoryCount="0" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductFacility productId="102" facilityId="MAIN_PLANT" minimumStock="0" lastInventoryCount="0" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductFacility productId="103" facilityId="MAIN_PLANT" minimumStock="0" lastInventoryCount="0" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductFacility productId="104" facilityId="MAIN_PLANT" minimumStock="0" lastInventoryCount="0" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductFacility productId="105" facilityId="MAIN_PLANT" minimumStock="0" lastInventoryCount="0" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+	 
+	<ContactMechPurposeType contactMechPurposeTypeId="SHIPPING_LOCATION" description="Shipping Destination Address"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="SHIP_ORIG_LOCATION" description="Shipping Origin Address"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIPPING" description="Shipping Destination Phone Number"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIP_ORIG" description="Shipping Origin Phone Number"/>
+	
+	<ContactMechTypePurpose contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="SHIP_ORIG_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIPPING" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIP_ORIG" contactMechTypeId="TELECOM_NUMBER"/>
+	
+	<ContactMech contactMechId="9200" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="9201" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMech contactMechId="9202" contactMechTypeId="EMAIL_ADDRESS"/>
+    
+	<ProductStore productStoreId="AMBATTURDAIRY" primaryStoreGroupId="" storeName="AAVIN" companyName="AVVIN" title="AAVIN" subtitle="AAVIN" payToPartyId="Company" manualAuthIsCapture="N" prorateShipping="Y" prorateTaxes="Y" viewCartOnAdd="N" autoSaveCart="N" autoApproveReviews="N" isDemoStore="Y" isImmediatelyFulfilled="N" oneInventoryFacility="Y" checkInventory="N" reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N" balanceResOnOrderCreation="Y" defaultLocaleString="en_US" defaultCurrencyUomId="INR" allowPassword="Y" explodeOrderItems="N" checkGcBalance="N" retryFailedAuths="Y" headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED" itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_SENT" itemCancelStatus="ITEM_CANCELLED" usePrimaryEmailUsername="N" requireCustomerRole="N" autoInvoiceDigitalItems="Y" reqShipAddrForDigItems="Y" showCheckoutGiftOptions="Y" selectPaymentTypePerItem="N" showPricesWithVatTax="N" showTaxIsExempt="Y" enableAutoSuggestionList="N" enableDigProdUpload="N" prodSearchExcludeVariants="Y" autoOrderCcTryExp="Y" autoOrderCcTryOtherCards="Y" autoOrderCcTryLaterNsf="Y" autoApproveInvoice="Y" autoApproveOrder="Y" shipIfCaptureFails="Y" reqReturnInventoryReceive="N" addToCartRemoveIncompat="Y" addToCartReplaceUpsell="Y" splitPayPrefPerShpGrp="Y" showOutOfStockProducts="Y" lastUpdatedStamp="2012-03-09 12:04:10.10" lastUpdatedTxStamp="2012-03-09 12:04:10.10" createdStamp="2012-03-09 12:04:10.10" createdTxStamp="2012-03-09 12:04:10.10"/>
+	<ProductStoreFacility facilityId="MAIN_PLANT" fromDate="2011-05-13 12:00:00.0" productStoreId="AMBATTURDAIRY"/>
+	<ProdCatalog catalogName="AMBATTUR DAIRY" prodCatalogId="AMBATTUR_DAIRY" useQuickAdd="N"/>
+	<ProductStoreCatalog fromDate="2011-05-13 12:00:00.0" prodCatalogId="AMBATTUR_DAIRY" productStoreId="AMBATTURDAIRY" sequenceNum="1"/>
+	
+	<ProductCategoryGlaccount productCategoryId="100" organisationPartyId="Company" glaccountTypeId="SALES_ACCOUNT" glaccountId="402000"/>
+	<ProductCategoryType productCategoryTypeId="CATALOG_CATEGORY" description="Milk" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+	<ProductCategory productCategoryId="100" productCategoryTypeId="CATALOG_CATEGORY" categoryName="Milk" description="Milk" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductCategory productCategoryId="LMS" productCategoryTypeId="CATALOG_CATEGORY" categoryName="LMS Category" description="LMS" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+	
+	<ProdCatalogCategory fromDate="2011-05-13 12:00:00.0" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT" prodCatalogId="AMBATTUR_DAIRY" productCategoryId="100" sequenceNum="1"/>
+	
+	<ProductPriceType description="Card Price" productPriceTypeId="CARD_PRICE"/>
+	 
+    <ProductPrice productId="101" productPriceTypeId="DEFAULT_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="27" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="102" productPriceTypeId="DEFAULT_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="13.5" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="103" productPriceTypeId="DEFAULT_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="15.5" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="104" productPriceTypeId="DEFAULT_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="17.5" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="105" productPriceTypeId="DEFAULT_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="12" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="101" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="24" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="102" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="12" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="103" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="14.5" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="104" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="16.5" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+    <ProductPrice productId="105" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-05-30 00:00:00.00" price="11.5" createdDate="2012-05-30 00:00:00.00" lastModifiedDate="2012-05-30 00:00:00.00"/>
+	
+	<ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="100" productId="101"/>
+    <ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="100" productId="102"/>
+    <ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="100" productId="103"/>
+    <ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="100" productId="104"/>
+    <ProductCategoryMember fromDate="2012-05-30 00:00:00.000" productCategoryId="100" productId="105"/>
+    <ProductCategoryMember fromDate="1900-01-00 00:00:00.000" productCategoryId="LMS" productId="101"/>
+    <ProductCategoryMember fromDate="1900-01-00 00:00:00.000" productCategoryId="LMS" productId="102"/>
+    <ProductCategoryMember fromDate="1900-01-00 00:00:00.000" productCategoryId="LMS" productId="103"/>
+    <ProductCategoryMember fromDate="1900-01-00 00:00:00.000" productCategoryId="LMS" productId="104"/>
+    <ProductCategoryMember fromDate="1900-01-00 00:00:00.000" productCategoryId="LMS" productId="105"/>
+    
+    <ProductAttribute productId="101" attrName="FAT" attrValue="3" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="101" attrName="SNF" attrValue="8.5" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="102" attrName="FAT" attrValue="3" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="102" attrName="SNF" attrValue="8.5" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="103" attrName="FAT" attrValue="4.5" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="103" attrName="SNF" attrValue="8.5" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="104" attrName="FAT" attrValue="6" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="104" attrName="SNF" attrValue="9" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="105" attrName="FAT" attrValue="1.5" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    <ProductAttribute productId="105" attrName="SNF" attrValue="9" lastUpdatedStamp="2012-05-30 00:00:00.00" lastUpdatedTxStamp="2012-05-30 00:00:00.00" createdStamp="2012-05-30 00:00:00.00" createdTxStamp="2012-05-30 00:00:00.00"/>
+    
+    <RoleType description="Booth Owner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="BOOTH_OWNER"/>
+    <RoleType description="Zone Owner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ZONE_OWNER"/>
+    <RoleType description="Distributor" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="DISTRIBUTOR"/>
+    <RoleType description="Supplier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SUPPLIER"/>    
+    <RoleType description="Facility Role" hasTable="N" roleTypeId="FACILITY_ROLE"/>    
+    <RoleType description="Facility Cashier" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="FACILITY_CASHIER"/>    
+    <RoleType description="Route Cashier" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="ROUTE_CASHIER"/>
+    <RoleType description="Ship-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="SHIP_TO_CUSTOMER"/>
+    <RoleType description="Ship-From Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="SHIP_FROM_VENDOR"/>
+    <RoleType description="Supplier Agent" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SUPPLIER_AGENT"/>
+    <RoleType description="Packer" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="PACKER"/>    
+    <RoleType description="Request Manager" hasTable="N" roleTypeId="REQ_MANAGER"/>    
+    <RoleType description="Requesting Party" hasTable="N" roleTypeId="REQ_REQUESTER"/>
+    <RoleType description="Request Taker" hasTable="N" roleTypeId="REQ_TAKER"/>
+    
+    <PartyRole partyId="Company" roleTypeId="CARRIER"/>
+    <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
+    <ShipmentMethodType description="No Shipping" shipmentMethodTypeId="NO_SHIPPING"/>
+    <ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
+    
+    <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" sequenceNumber="5" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    
+    <ProductStoreShipmentMeth allowUspsAddr="N" includeNoChargeItems="Y" partyId="Company" productStoreId="9003" productStoreShipMethId="9001" requireUspsAddr="N" roleTypeId="CARRIER" sequenceNumber="7" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    
+    <ShipmentCostEstimate carrierPartyId="Company" carrierRoleTypeId="CARRIER" orderFlatPrice="0" orderItemFlatPrice="0" orderPricePercent="0" productStoreId="9001" shipmentCostEstimateId="9002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    
+    <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="INV_PROD_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="PINV_PROD_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="INV_FPROD_ITEM" parentTypeId="INV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="PINV_FPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+    
+    <PartyAcctgPreference baseCurrencyUomId="INR" cogsMethodId="COGS_LIFO" invoiceIdPrefix="CI" invoiceSequenceEnumId="INVSQ_ENF_SEQ" orderIdPrefix="CO" orderSequenceEnumId="INVSQ_ENF_SEQ" partyId="Company" quoteIdPrefix="CQ" quoteSequenceEnumId="INVSQ_ENF_SEQ"/>
+    
+    <!--Enumerations-->
+	
+	<EnumerationType description="Facility Managed By" enumTypeId="FACILITY_MNG_BY" hasTable="N" parentTypeId=""/>
+   	<Enumeration description="Society" enumCode="SOCIETY" enumId="SOCIETY" sequenceId="01" enumTypeId="FACILITY_MNG_BY"/>
+   	<Enumeration description="Federation" enumCode="FEDERATION" enumId="FEDERATION" sequenceId="01" enumTypeId="FACILITY_MNG_BY"/>
+	
+	<EnumerationType description="Facility Category Type" enumTypeId="FACILITY_CAT_TYPE" hasTable="N" parentTypeId=""/>
+	<EnumerationType description="Booth Facility Category Type" enumTypeId="BOOTH_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
+    <Enumeration description="Parlor" enumCode="PARLOR" enumId="PARLOR" sequenceId="01" enumTypeId="BOOTH_CAT_TYPE"/>
+	
+	<ShipmentType shipmentTypeId="LMS_SHIPMENT" hasTable="N" description="LMS Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+    <ShipmentType shipmentTypeId="AM_SHIPMENT" parentTypeId="LMS_SHIPMENT" hasTable="N" description="AM Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+	<ShipmentType shipmentTypeId="SUPPLIMENTARY" hasTable="N" description="Supplimentary Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+    <ShipmentType shipmentTypeId="AM_SHIPMENT_SUPPL" parentTypeId="SUPPLIMENTARY" hasTable="N" description="AM Gate Pass" lastUpdatedStamp="2012-01-25 10:47:04.0" lastUpdatedTxStamp="2012-01-25 10:47:04.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+    <ShipmentType shipmentTypeId="PM_SHIPMENT" parentTypeId="LMS_SHIPMENT" hasTable="N" description="PM Shipment" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+    <ShipmentType shipmentTypeId="PM_SHIPMENT_SUPPL" parentTypeId="SUPPLIMENTARY" hasTable="N" description="PM Gate Pass" lastUpdatedStamp="2012-01-25 10:47:04.0" lastUpdatedTxStamp="2012-01-25 10:47:04.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>    
+
+	<StatusItem statusId="COM_COMPLETE" statusTypeId="COM_EVENT_STATUS" statusCode="COMPLETE" sequenceId="20" description="Closed" lastUpdatedStamp="2011-09-07 11:40:37.0" lastUpdatedTxStamp="2011-09-07 11:40:36.0" createdStamp="2011-09-07 11:40:37.0" createdTxStamp="2011-09-07 11:40:36.0"/>    
+    <StatusItem statusId="GENERATED" statusTypeId="SHIPMENT_STATUS" statusCode="GENERATED" sequenceId="02" description="Generated" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+    <StatusItem statusId="GENERATION_FAIL" statusTypeId="SHIPMENT_STATUS" statusCode="GENERATION_FAIL" sequenceId="02" description="Generation Failed" lastUpdatedStamp="2012-01-25 10:47:04.0" lastUpdatedTxStamp="2012-01-25 10:47:04.0" createdStamp="2012-01-25 10:47:04.0" createdTxStamp="2012-01-25 10:47:04.0"/>
+    <StatusItem statusId="IN_PROCESS" statusTypeId="SHIPMENT_STATUS" statusCode="IN_PROCESS" sequenceId="01" description="In-Process" lastUpdatedStamp="2012-01-09 11:14:53.0" lastUpdatedTxStamp="2012-01-09 11:14:52.0" createdStamp="2012-01-09 11:14:53.0" createdTxStamp="2012-01-09 11:14:52.0"/>
+
+ 	<CustomTimePeriod organizationPartyId="Company" customTimePeriodId="APRL_MAR12" periodTypeId="FISCAL_YEAR" fromDate="2011-04-01" thruDate="2012-03-31" isClosed="N" periodNum="1" periodName="FIN_YR1" parentPeriodId=""/>
+ 	<CustomTimePeriod organizationPartyId="Company" customTimePeriodId="APRL_MAR13" periodTypeId="FISCAL_YEAR" fromDate="2012-04-01" thruDate="2013-03-31" isClosed="N" periodNum="2" periodName="FIN_YR2" parentPeriodId=""/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="APRL_JUN12" periodTypeId="FISCAL_QUARTER" fromDate="2012-04-01" thruDate="2012-06-30" isClosed="N" periodNum="10" periodName="12-13Q1" parentPeriodId="APRL_MAR13"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="JUL_SEP12" periodTypeId="FISCAL_QUARTER" fromDate="2012-07-01" thruDate="2012-09-30" isClosed="N" periodNum="11" periodName="12-13Q2" parentPeriodId="APRL_MAR13"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="OCT_DEC12" periodTypeId="FISCAL_QUARTER" fromDate="2012-10-01" thruDate="2012-12-31" isClosed="N" periodNum="12" periodName="12-13Q3" parentPeriodId="APRL_MAR13"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="JAN_MAR13" periodTypeId="FISCAL_QUARTER" fromDate="2013-01-01" thruDate="2013-03-31" isClosed="N" periodNum="13" periodName="12-13Q4" parentPeriodId="APRL_MAR13"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="JAN_DEC12" periodTypeId="HR_YEAR" fromDate="2012-01-01" thruDate="2012-12-31" isClosed="N" periodNum="27" periodName="HR_YR2" parentPeriodId=""/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="JAN_DEC13" periodTypeId="HR_YEAR" fromDate="2013-01-01" thruDate="2013-12-31" isClosed="N" periodNum="28" periodName="HR_YR3" parentPeriodId=""/> 
+ 	<CustomTimePeriod organizationPartyId="Company" customTimePeriodId="APRL_12" periodTypeId="HR_MONTH" fromDate="2012-04-01" thruDate="2012-04-30" isClosed="N" periodNum="46" periodName="HR_APRL_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="MAY_12" periodTypeId="HR_MONTH" fromDate="2012-05-01" thruDate="2012-05-31" isClosed="N" periodNum="47" periodName="HR_MAY_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="JUN_12" periodTypeId="HR_MONTH" fromDate="2012-06-01" thruDate="2012-06-30" isClosed="N" periodNum="48" periodName="HR_JUN_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="JUL_12" periodTypeId="HR_MONTH" fromDate="2012-07-01" thruDate="2012-07-31" isClosed="N" periodNum="49" periodName="HR_JUL_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="AUG_12" periodTypeId="HR_MONTH" fromDate="2012-08-01" thruDate="2012-08-31" isClosed="N" periodNum="50" periodName="HR_AUG_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="SEP_12" periodTypeId="HR_MONTH" fromDate="2012-09-01" thruDate="2012-09-30" isClosed="N" periodNum="51" periodName="HR_SEP_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="OCT_12" periodTypeId="HR_MONTH" fromDate="2012-10-01" thruDate="2012-10-31" isClosed="N" periodNum="52" periodName="HR_0CT_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="NOV_12" periodTypeId="HR_MONTH" fromDate="2012-11-01" thruDate="2012-11-30" isClosed="N" periodNum="53" periodName="HR_NOV_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="DEC_12" periodTypeId="HR_MONTH" fromDate="2012-12-01" thruDate="2012-12-31" isClosed="N" periodNum="54" periodName="HR_DEC_12" parentPeriodId="JAN_DEC12"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="JAN_13" periodTypeId="HR_MONTH" fromDate="2013-01-01" thruDate="2013-01-31" isClosed="N" periodNum="55" periodName="HR_JAN_13" parentPeriodId="JAN_DEC13"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="FEB_13" periodTypeId="HR_MONTH" fromDate="2013-02-01" thruDate="2013-02-28" isClosed="N" periodNum="56" periodName="HR_FEB_13" parentPeriodId="JAN_DEC13"/>
+    <CustomTimePeriod organizationPartyId="Company" customTimePeriodId="MAR_13" periodTypeId="HR_MONTH" fromDate="2013-03-01" thruDate="2013-03-31" isClosed="N" periodNum="57" periodName="HR_MAR_13" parentPeriodId="JAN_DEC13"/>
+
+</entity-engine-xml>

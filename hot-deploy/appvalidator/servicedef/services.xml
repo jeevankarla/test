@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>AppValidator Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    <service name="doValidation" engine="groovy" location="component://appvalidator/webapp/appvalidator/WEB-INF/actions/doValidation.groovy" invoke="">
+        <description>Perform validation </description>
+        <attribute name="id" type="String" mode="IN" optional="false"/>     
+        <attribute name="validationResult" type="String" mode="OUT"/>
+    </service>
+</services>

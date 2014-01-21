@@ -1,0 +1,4 @@
+FinAccountTransType_description,FinAccountTransType_finAccountTransTypeId,FinAccountTransType_hasTable,FinAccountTransType_parentTypeId
+Deposit,DEPOSIT,N,
+Withdraw,WITHDRAWAL,N,
+Adjustment,ADJUSTMENT,N,

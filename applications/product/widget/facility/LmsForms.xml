@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	
+    <form name="TransporterDue"  title="" type="single" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" target="FindTransporterDue">
+    	<field name="hideSearch"><hidden value="N"/></field>
+    	<field name="facilityId" title="Route"><text></text></field>
+    	<field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time></date-time></field>
+    	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time></date-time></field>
+    	<field name="submitButton" title="Find"><submit button-type="button"/></field>
+    </form>
+    <form name="ListTransporterDues"  title="" type="list" list-name="transporterDueInvoiceList" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" >
+    	<field name="facilityId" title="Route"><display description="${groovy: facilityId.toUpperCase()}"></display></field>
+    	<field name="supplyDate" title="supply Date"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(supplyDate,&quot; dd/MM/yyyy&quot;)}"></display></field>
+    	<field name="amount"><display></display></field>
+    	<field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="cancelTransporterDueInvoice" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
+                <parameter param-name="invoiceId"/>
+                <parameter param-name="statusId" value="INVOICE_CANCELLED"/>
+            </hyperlink>
+        </field>
+    </form>
+     <form name="ListTransporterDuesCSV" type="list" list-name="transporterDueInvoiceList" paginate="false"
+     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+ 		<field name="facilityId" title="ROUTE"><display/></field>
+        <field name="invoiceDate" title="SUPPLYDATE"><display description="${groovy: org.ofbiz.base.util.UtilDateTime.toDateString(invoiceDate,&quot; dd/MM/yyyy&quot;)}"></display></field>
+        <field name="amount" title="AMOUNT"><display/></field>
+     </form>
+    <form name="CreateNewTransporterDue"  title="" type="single" target="CreateTransporterDue">
+    	<field name="facilityId" title="Route Id" required-field="true"><text></text></field>
+    	<field name="supplyDate" title="supply Date"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"></date-time></field>
+    	<field name="amount"><text></text></field>
+    	<field name="submitButton" title="create"><submit button-type="button"/></field>
+    </form>
+    <form name="AdjustTransporterDue"  title="" type="single" target="createTransporterDuePayment">
+    	<field name="facilityId" title="Route Id" required-field="true"><text></text></field>    	
+    	<field name="amount"><text></text></field>
+    	<field name="submitButton" title="create"><submit button-type="button"/></field>
+    </form>
+    <form name="ListTransporterDuePayments"  title="" type="list" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" list-name="transporterDuePaymentsList">
+    	<actions>
+    		<entity-condition entity-name="Payment" list="transporterDuePaymentsList" filter-by-date="false">
+    			<condition-list combine="and">
+    				<condition-expr field-name="paymentTypeId" value="TRANSPORTER_PAYIN"/>
+    				<condition-expr field-name="statusId" value="PMNT_VOID" operator="not-equals"/>
+    				<condition-expr field-name="paymentDate" operator="greater-equals" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+    				<condition-expr field-name="paymentDate" operator="less-equals" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>    				
+    			</condition-list>
+    		</entity-condition>
+    	</actions>
+    	<field name="paymentId"><hidden/></field>
+    	<field name="facilityId" title="Route"><display/></field>
+    	<field name="createdDate" title="Payment Time"><display/></field>
+    	<field name="amount"><display></display></field>
+    	<field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="cancelTransporterDuePayment" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
+                <parameter param-name="paymentId" />
+            </hyperlink>
+        </field>
+    </form>
+   <form name="CreateProductPayment"  title="" type="single" target="createProductPayment">
+     	<actions>
+    		<entity-condition entity-name="FacilityParty" list="facilityParty" filter-by-date="true">
+    			<condition-list>
+    				<condition-expr field-name="partyId" value="${userLogin.partyId}"/>
+    				<condition-expr field-name="roleTypeId" value="FACILITY_CASHIER"/>
+    			</condition-list>
+    		</entity-condition>
+    		<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>
+    		<set field="paymentMethodTypeId" value="CASH_${paymentLocationId}_PAYIN"/>
+    	</actions>
+        <field name="paymentMethodTypeId"><hidden value="${paymentMethodTypeId}"/></field>
+    	<field name="paymentTypeId">
+	    	<drop-down allow-empty="false" >
+	    		<entity-options description="${description}" entity-name="PaymentType" key-field-name="paymentTypeId">
+	    			<entity-constraint name="parentTypeId" operator="equals" value="SALES_PAYIN"/>
+	    		</entity-options>
+	    	</drop-down>
+    	</field>
+    	<!-- <field name="paymentDate" title="payment Date"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> -->
+    	<field name="facilityId" title="Route/Booth Id" tooltip="Booth Id is mandatory field for Advance payment"><text></text></field>    	
+    	<field name="amount"><text></text></field>
+    	<field name="submitButton" title="create"><submit button-type="button"/></field>
+    </form>   
+    <form name="FindBankRemittance" type="single" target="FindBankRemittance" title="Find and list Bank Remittances"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="supplyDate" title="supply Date"><date-find></date-find></field>
+        <field name="vocherNumber" title="Vocher Number"><text></text></field>
+        <field name="amountRemited" title="Amount Remited"><text></text></field>
+        <field name="createdDate" title="Created Date"><date-find></date-find></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+   <form name="ListBankRemittance" type="list" target="FindBankRemittance" title="Find and list Bank Remittances"
+        header-row-style="header-row" default-table-style="basic-table" list-name="listIt">
+       <actions>
+            <set field="parameters.sortField" from-field="parameters.sortField" default-value="-supplyDate"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="BankRemittance"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="supplyDate" title="supply Date"><display/></field>
+        <field name="vocherNumber" title="Vocher Number"><display/></field>
+        <field name="amountRemitted" title="Amount Remited"><display/></field>
+        <field name="closingBalance" title="Closing Balance"><display/></field>
+        <field name="createdDate" title="Created Date"><display/></field>
+         <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="deleteBankRemittance" also-hidden="false" description="${uiLabelMap.CommonDelete}">
+                <parameter param-name="bankRemittanceId" />
+            </hyperlink>
+        </field>        
+    </form>
+    <form name="CreateBankRemittance"  title="" type="single" target="createBankRemittance">     	
+    	 <field name="supplyDate" title="supply Date"><date-time type="date"/></field>
+    	<field name="vocherNumber" title="Vocher Number"><text></text></field>    	
+    	<field name="amountRemitted"><text></text></field>
+    	<field name="submitButton" title="create"><submit button-type="button"/></field>
+    </form>
+    <form name="FindProductPayments" type="single" target="FindProductPayments"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="paymentId"><text-find ignore-case="true"/></field>
+        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+            <drop-down allow-empty="false" >
+	    		<entity-options description="${description}" entity-name="PaymentType" key-field-name="paymentTypeId">
+	    			<entity-constraint name="parentTypeId" operator="equals" value="SALES_PAYIN"/>
+	    		</entity-options>
+	    	</drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="PMNT_RECEIVED">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+      <!--   <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field> -->
+        <field position="1" name="amount"><text/></field>
+        <field name="paymentRefNum"><text-find ignore-case="true"/></field>
+        <!--<field name="paymentGatewayResponseId"><text/></field>-->
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListProductPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="FindProductPayments" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Payment"/>
+                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="paymentId" widget-style="buttontext">
+            <hyperlink description="${paymentId}" target="paymentOverview">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
+        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
+        <field name="comments"><display/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
+                    <parameter param-name="partyId" from-field="partyIdFrom"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" >
+                    <parameter param-name="partyId" from-field="partyIdTo"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>        
+        <field name="effectiveDate"><display/></field>
+        <field name="currencyUomId"><hidden/></field>
+        <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit" use-when="${statusId != 'PMNT_VOID'}">
+            <hyperlink target="cancelAdvancePaymentForBooth" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
+                <parameter param-name="paymentId" />
+            </hyperlink>
+        </field>
+<!--        <field name="amountToApply"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>-->
+    </form>
+    
+    
+    <form name="FindFacilityRecovery" type="single" target="FacilityRecovery" title="Find and list invoices"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <field name="description"><text-find ignore-case="true"/></field>
+        <field position="1" name="invoiceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="InvoiceType"/>
+            </drop-down>
+        </field>        
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="invoiceDate"><date-find type="timestamp"/></field>
+        <field name="dueDate"><hidden/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="RecoveriesList" type="list" separate-columns="true" title="Invoice List" list-name="listIt" target="" default-entity-name="Invoice" paginate-target="FacilityRecovery"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <set field="parameters.sortField" from-field="parameters.sortField" default-value="-invoiceDate"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="InvoiceAndType"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>
+            <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
+                <field-map field-name="partyId" from-field="partyIdFrom"/>
+                <field-map field-name="compareDate" from-field="invoiceDate"/>
+                <field-map field-name="lastNameFirst" value="Y"/>
+            </service>
+            <service service-name="getPartyNameForDate" result-map="partyNameResultTo">
+                <field-map field-name="partyId" from-field="partyId"/>
+                <field-map field-name="compareDate" from-field="invoiceDate"/>
+                <field-map field-name="lastNameFirst" value="Y"/>
+            </service>
+            <set field="amountToApply" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(delegator,invoiceId)
+                .multiply(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceCurrencyConversionRate(delegator,invoiceId))}"/>
+            <set field="total" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)
+                .multiply(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceCurrencyConversionRate(delegator,invoiceId))}"/>
+            <set field="currencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
+        </row-actions>
+        <field name="invoiceId" widget-style="buttontext" sort-field="true">
+            <hyperlink description="${invoiceId}" target="invoiceOverview">
+                <parameter param-name="invoiceId"/>
+            </hyperlink>
+        </field>
+        <field name="invoiceTypeId" sort-field="true"><display-entity entity-name="InvoiceType"/></field>
+        <field name="invoiceDate" sort-field="true"><display type="date"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true"><display-entity entity-name="StatusItem"/></field>
+        <field name="description" sort-field="true" encode-output="false"><display/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" sort-field="true">
+            <hyperlink target="/partymgr/control/PartyFinancialHistory" target-type="inter-app" description="${partyNameResultFrom.fullName} [${partyIdFrom}]">
+                <parameter param-name="partyId" from-field="partyIdFrom"/>
+            </hyperlink>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}" parameter-name="partyId">
+            <hyperlink target="/partymgr/control/PartyFinancialHistory" target-type="inter-app" description="${partyNameResultTo.fullName} [${partyId}]">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+        <field name="total" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amountToApply" widget-area-style="align-text"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="cancelRecoveryInvoice" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
+                <parameter param-name="invoiceId"/>
+                <parameter param-name="statusId" value="INVOICE_CANCELLED"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="CreateRecovery"  title="" type="single" target="createFacilityRecovery">
+     	<field position="1" name="invoiceTypeId" event="onchange" action="javascript:invoiceTypeOnChangeHandler();">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="InvoiceType">
+                	<entity-constraint name="invoiceTypeId" value="%RECOVERY_IN%" operator="like"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>    	
+        <field name="facilityId" title="Booth Id" tooltip="Booth Id is mandatory field for Create Recovery"><text></text></field>
+    	<field name="supplyDate" title="Supply Date"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field>
+    	<field name="amount"><text></text></field>
+    	<field name="submitButton" title="create"><submit button-type="button"/></field>
+    </form>
+</forms>

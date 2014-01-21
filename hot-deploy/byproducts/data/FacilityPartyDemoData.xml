@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+	<Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Venkateswararao" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/> 
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Prasad" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Ilango" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Bharathi" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Srinu" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Laxmi" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Phanirajasekhar" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Hemakumar" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Vishnu" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <Party createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Janakiramaiah" partyTypeId="PERSON" description="Stockist" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    
+    <RoleType createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" description="Stockist" hasTable="N" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0" roleTypeId="STOCKIST"/>
+    
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Venkateswararao" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/> 
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Prasad" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Ilango" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Bharathi" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Srinu" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Laxmi" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Phanirajasekhar" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Hemakumar" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Vishnu" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    <PartyRole createdStamp="2012-05-31 14:57:01.0" createdTxStamp="2012-05-31 14:57:01.0" partyId="Janakiramaiah" roleTypeId="STOCKIST" lastUpdatedStamp="2012-07-19 10:57:52.0" lastUpdatedTxStamp="2012-07-19 10:57:52.0"/>
+    
+    <FacilityParty facilityId="FGS_BUTTER_CS" partyId="Venkateswararao" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="FOSTER_CS_LB" partyId="Prasad" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="GHEE_GDWN" partyId="Ilango" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="PVT_CS" partyId="Bharathi" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="SFM_GDWN" partyId="Srinu" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="SMP_GDWN" partyId="Laxmi" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="UHT_MILK_GDWN" partyId="Phanirajasekhar" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="COLDCARE_WH_AT" partyId="Hemakumar" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="GUBBA_CS" partyId="Vishnu" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    <FacilityParty facilityId="RIDDHI_CS_MED" partyId="Janakiramaiah" roleTypeId="STOCKIST" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+    
+</entity-engine-xml>

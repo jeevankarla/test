@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	<EnumerationType enumTypeId="PROC_PRICE_TYPE" hasTable = "N" DESCRIPTION = "Procurement Price Type"/>
+
+	<EnumerationType description="Procurement Price Type" enumTypeId="PROC_PRICE_TYPE" hasTable="N" parentTypeId=""/>
+  	<Enumeration description="Slab1" enumCode="PROC_PRICE_SLAB1" enumId="PROC_PRICE_SLAB1" sequenceId="01" enumTypeId="PROC_PRICE_TYPE"/>
+ 	<Enumeration description="Slab2" enumCode="PROC_PRICE_SLAB2" enumId="PROC_PRICE_SLAB2" sequenceId="02" enumTypeId="PROC_PRICE_TYPE"/>
+ 	<Enumeration description="Slab3" enumCode="PROC_PRICE_SLAB3" enumId="PROC_PRICE_SLAB3" sequenceId="03" enumTypeId="PROC_PRICE_TYPE"/>
+ 	<Enumeration description="Slab4" enumCode="PROC_PRICE_SLAB4" enumId="PROC_PRICE_SLAB4" sequenceId="04" enumTypeId="PROC_PRICE_TYPE"/>
+ 	<Enumeration description="Slab5" enumCode="PROC_PRICE_SLAB5" enumId="PROC_PRICE_SLAB5" sequenceId="05" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Minimum Quality" enumCode="PROC_PRICE_MIN_QLTY" enumId="PROC_PRICE_MIN_QLTY" sequenceId="06" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Maximum Quality" enumCode="PROC_PRICE_MAX_QLTY" enumId="PROC_PRICE_MAX_QLTY" sequenceId="10" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Snf Deduction" enumCode="PROC_PRICE_SNF_DED" enumId="PROC_PRICE_SNF_DED" sequenceId="07" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Snf Premium" enumCode="PROC_PRICE_SNF_PRM" enumId="PROC_PRICE_SNF_PRM" sequenceId="08" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Sour Price" enumCode="PROC_PRICE_SOUR" enumId="PROC_PRICE_SOUR" sequenceId="09" enumTypeId="PROC_PRICE_TYPE"/>
+	<TenantConfiguration propertyName="enableConvertKgToLtrSetScale" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable setScale while converting Kgs to Litre"/>
+	<TenantConfiguration propertyName="enableCenterCodeRetain" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable retaining of centerCode"/>
+	<!--  To enable default product subscription type-->
+	<TenantConfiguration propertyName="enableLmsDefaultProductSubscriptionType" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable default product subscription type at the time of indent entry"/>
+	
+	
+	 <RateType rateTypeId="PROC_AGENT_BONUS"  description="Agent Bonus"/>
+	 <FacilityRate facilityId ="_NA_" productId="200" supplyTypeEnumId="_NA_" rateTypeId="PROC_AGENT_BONUS" rateAmount="0.40" rateCurrencyUomId="INR" fromDate="2013-01-01 0:00:00.000" thruDate=""/>
+	 <FacilityRate facilityId ="_NA_" productId="201" supplyTypeEnumId="_NA_" rateTypeId="PROC_AGENT_BONUS" rateAmount="0.25" rateCurrencyUomId="INR" fromDate="2013-01-01 0:00:00.000" thruDate=""/>
+	 <RateType rateTypeId="PROC_AGENT_RETNBONUS"  description="Agent Return Bonus"/>
+	 <FacilityRate facilityId ="_NA_" productId="_NA_" supplyTypeEnumId="_NA_" rateTypeId="PROC_AGENT_RETNBONUS" rateAmount="0.50" rateCurrencyUomId="INR" fromDate="2013-01-01 0:00:00.000" thruDate=""/>
+</entity-engine-xml>

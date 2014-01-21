@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods.xsd">
+	
+	<simple-method method-name="createNewComplaint" short-description="Creates complaint">
+        <make-value entity-name="CustRequest" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- CustRequest uses a sequenced id, so get the next one now and set it... -->
+        <if-empty field="parameters.custRequestId">
+            <sequenced-id sequence-name="CustRequest" field="newEntity.custRequestId"/>
+        <else>
+            <set-pk-fields map="parameters" value-field="newEntity"/>
+        </else>
+        </if-empty>
+        <now-timestamp field="nowTimestamp"/>
+        <set-current-user-login value-field="userLogin"/>
+        <set field="newEntity.createdDate" from-field="nowTimestamp" type="Timestamp"/>
+        <set field="newEntity.lastModifiedDate" from-field="nowTimestamp" type="Timestamp"/>
+        <set field="newEntity.createdByUserLogin" from-field="userLogin.userLoginId" type="String"/>
+        <set field="newEntity.lastModifiedByUserLogin" from-field="userLogin.userLoginId" type="String"/>
+        <field-to-result field="newEntity.custRequestId" result-name="custRequestId"/>
+        <create-value value-field="newEntity"/>
+        <if-not-empty field="parameters.statusId">
+            <set field="setStat.statusId" from-field="parameters.statusId"/>
+            <set field="setStat.custRequestId" from-field="newEntity.custRequestId"/>
+            <if-not-empty field="parameters.webSiteId">
+                <set field="setStat.webSiteId" from-field="parameters.webSiteId"/>
+            </if-not-empty>
+            <call-service service-name="createCustRequestStatus" in-map-name="setStat"/>
+        </if-not-empty>
+    </simple-method>
+     <simple-method method-name="deleteCustRequestParty" short-description="Delete Customer CustRequestParty">
+        <!-- <call-simple-method method-name="checkStatusCustRequest"/> -->
+        <entity-one entity-name="CustRequestParty" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+        <entity-condition list="partyList" entity-name="CustRequestParty">
+            <condition-expr field-name="custRequestId" from-field="parameters.custRequestId"/>
+        </entity-condition>
+        <if-empty field="partyList">
+            <set field="setStat.statusId" value="OPEN"/>
+            <set field="setStat.custRequestId" from-field="parameters.custRequestId"/>
+            <call-service service-name="createCustRequestStatus" in-map-name="setStat"/>
+            <entity-one value-field="custRequest" entity-name="CustRequest">
+            <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+            </entity-one>
+	        <set field="custRequest.statusId" from-field="setStat.statusId"/>
+	        <store-value value-field="custRequest"/>
+        </if-empty>
+    </simple-method>
+    <simple-method method-name="createCustRequestParty" short-description="Create Customer RequestParty">
+        <call-simple-method method-name="checkStatusCustRequest" xml-resource="component://order/script/org/ofbiz/order/request/CustRequestServices.xml"/>        
+        <set from-field="parameters.partyId" field="lookupPKMap.partyId"/>
+        <set from-field="parameters.roleTypeId" field="lookupPKMap.roleTypeId"/>
+        <find-by-primary-key entity-name="PartyRole" map="lookupPKMap" value-field="partyRole"/>
+        <if-empty field="partyRole.partyId">
+            <make-value value-field="partyRole" entity-name="PartyRole"/>
+            <set-pk-fields map="lookupPKMap" value-field="partyRole"/>
+            <create-value value-field="partyRole"/>
+        </if-empty>
+        <make-value value-field="newEntity" entity-name="CustRequestParty"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.fromDate">
+            <now-timestamp field="newEntity.fromDate"/>
+        </if-empty>
+        <create-value value-field="newEntity"/>
+        <call-simple-method method-name="updateCustRequestLastModifiedDate" xml-resource="component://order/script/org/ofbiz/order/request/CustRequestServices.xml"/>
+        <set field="setStat.statusId" value="assigned"/>
+        <set field="setStat.custRequestId" from-field="newEntity.custRequestId"/>
+        <call-service service-name="createCustRequestStatus" in-map-name="setStat"/>
+        <entity-one value-field="custRequest" entity-name="CustRequest">
+            <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+        </entity-one>
+        <set field="custRequest.statusId" from-field="setStat.statusId"/>
+        <store-value value-field="custRequest"/>
+    </simple-method>
+</simple-methods>

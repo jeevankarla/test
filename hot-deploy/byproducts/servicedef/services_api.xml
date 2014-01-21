@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>POS API services</description>
+    <vendor>Vasista</vendor>
+    
+    <service name="createPOSOrder" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.byproducts.POSApiServices" invoke="createPOSOrder">
+        <description>Service to create POS order</description>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>   
+        <attribute name="saleDate" mode="IN" type="Timestamp" optional="false"/>                    
+        <attribute type="List" mode="IN" name="orderItems" optional="false"/>                      
+        <attribute type="Map" mode="OUT" name="orderResults" optional="true"/>
+    </service>
+
+    <service name="cancelPOSOrder" engine="java" auth="true" export="true"
+        location="in.vasista.vbiz.byproducts.POSApiServices" invoke="cancelPOSOrder">
+        <description> Cancel Parlor Sales Order</description>        
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="boothId" mode="IN" type="String" optional="true"/>
+        <attribute type="Map" mode="OUT" name="cancelResults" optional="true"/>
+    </service>
+        
+    <service name="createSubscriptionIndent" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.byproducts.POSApiServices" invoke="createSubscriptionIndent">
+        <description>Service to create a subscription indent</description>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>    
+        <attribute name="supplyDate" mode="IN" type="Timestamp" optional="false"/>                                       
+        <attribute type="List" mode="IN" name="indentItems" optional="false"/>                      
+        <attribute type="Map" mode="OUT" name="indentResults" optional="true"/>
+    </service>  
+    
+    <service name="getProductPrices" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.byproducts.POSApiServices" invoke="getProductPrices">
+        <description>Service to get products price list</description>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>               
+        <attribute type="Map" mode="OUT" name="productsPrice" optional="true"/>
+    </service>        
+        
+</services>   

@@ -1,0 +1,5 @@
+FixedAssetIdentType_description,FixedAssetIdentType_fixedAssetIdentTypeId
+Mfg Serial Number,MFG_SERIAL
+Vendor Tracking/Inventory Number,TRACKING_VENDOR
+Internal Tracking Label Number,TRACKING_LABEL
+Vehicle Identification Number (VIN),VIN

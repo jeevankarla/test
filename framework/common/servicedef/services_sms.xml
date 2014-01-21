@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Content Component Services</description>
+    <vendor>Vasista</vendor>
+    
+    <service name="sendSms" engine="java"
+            location="org.ofbiz.common.sms.SmsServices" invoke="sendSms">
+        <description>Send SMS Service. </description>
+        <attribute name="contactNumberTo" type="String" mode="IN" optional="false"/>        
+        <attribute name="text" type="String" mode="IN" optional="false"/> 
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>     
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>                   
+        <!--  used for parsing and ECAs -->
+        <attribute name="communicationEventId" type="String" mode="INOUT" optional="true"/>                            
+   </service> 
+</services>    

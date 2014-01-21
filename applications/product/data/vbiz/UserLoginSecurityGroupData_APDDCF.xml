@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <UserLoginSecurityGroup userLoginId="pprakash" groupId="REPORTS_ADMIN" fromDate="2011-03-28 13:24:48.000" />
+    <UserLoginSecurityGroup userLoginId="ramdask" groupId="REPORTS_ADMIN" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="sudhakar" groupId="MARKETING_WING" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="suresh" groupId="ACCOUNTING_WING" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="murali" groupId="DISPATCH_ADMIN" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="nreddy" groupId="ZONEOWNER" fromDate="2011-04-15 11:25:27.000" />
+    
+    <UserLoginSecurityGroup userLoginId="pprakash" groupId="MYPORTAL_FACILITY" fromDate="2011-03-28 13:24:48.000" />
+    <UserLoginSecurityGroup userLoginId="ramdask" groupId="MYPORTAL_FACILITY" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="sudhakar" groupId="MYPORTAL_FACILITY" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="suresh" groupId="MYPORTAL_FACILITY" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="murali" groupId="MYPORTAL_FACILITY" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="nreddy" groupId="MYPORTAL_FACILITY" fromDate="2011-04-15 11:25:27.000" />
+      
+    <UserLoginSecurityGroup userLoginId="eseva" groupId="PAYMENT_OPS" fromDate="2011-04-15 11:25:27.000" />
+    <UserLoginSecurityGroup userLoginId="aponline" groupId="PAYMENT_OPS" fromDate="2011-04-15 11:25:27.000" />
+    
+  
+</entity-engine-xml>
+

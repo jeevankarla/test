@@ -1,0 +1,19 @@
+<entity-engine-xml>
+	<EnumerationType description="Period Billing Type" enumTypeId="PERIOD_BILL_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="LMS Vendor Margin Billing" enumCode="LMS_VNDR_MRGN_BILL" enumId="LMS_VNDR_MRGN_BILL" sequenceId="01" enumTypeId="PERIOD_BILL_TYPE"/>
+    <Enumeration description="Procurement Billing" enumCode="PROCUREMENT_BILL" enumId="PROCUREMENT_BILL" sequenceId="02" enumTypeId="PERIOD_BILL_TYPE"/>
+
+     <!-- Period Billing status -->
+    <StatusType description="Period Billing" hasTable="N" parentTypeId="" statusTypeId="PERIOD_BILL_STATUS"/>
+    <StatusItem description="In-Process" sequenceId="01" statusCode="PB_IN_PROCESS" statusId="PB_IN_PROCESS" statusTypeId="PERIOD_BILL_STATUS"/>
+    <StatusItem description="Generated" sequenceId="02" statusCode="PB_GENERATED" statusId="PB_GENERATED" statusTypeId="PERIOD_BILL_STATUS"/>
+    <StatusItem description="Generation Failed" sequenceId="03" statusCode="PB_GENERATION_FAIL" statusId="PB_GENERATION_FAIL" statusTypeId="PERIOD_BILL_STATUS"/>
+    <StatusItem description="Cancellation In-Process" sequenceId="04" statusCode="PB_CANCEL_INPROCESS" statusId="PB_CANCEL_INPROCESS" statusTypeId="PERIOD_BILL_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="05" statusCode="PB_CANCELLED" statusId="PB_CANCELLED" statusTypeId="PERIOD_BILL_STATUS"/>
+    <StatusValidChange condition="" statusId="PB_IN_PROCESS" statusIdTo="PB_GENERATED" transitionName="Generated"/>
+    <StatusValidChange condition="" statusId="PB_IN_PROCESS" statusIdTo="PB_GENERATION_FAIL" transitionName="Generation Failed"/>
+    <StatusValidChange condition="" statusId="PB_GENERATED" statusIdTo="PB_CANCEL_INPROCESS" transitionName="Cancellation In-Process"/>
+    <StatusValidChange condition="" statusId="PB_CANCEL_INPROCESS" statusIdTo="PB_CANCELLED" transitionName="Cancelled"/>
+    
+
+</entity-engine-xml>

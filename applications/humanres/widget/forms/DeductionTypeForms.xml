@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+    <form name="FindDeductionTypes" type="single" target="FindDeductionTypes" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="createDeductionType" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="deductionTypeId"><lookup target-form-name="LookupDeductionTypes"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+     
+    <form name="ListDeductionTypes" type="list" list-name="listIt" title="" target="updateDeductionType" paginate-target="FindDeductionTypes"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="deductionTypeCtx"/>
+                <field-map field-name="entityName" value="DeductionType"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <auto-fields-service default-field-type="display" service-name="updateDeductionType"/>
+        <field name="deductionTypeId" use-when="hasGlobalHREditPermission"  widget-style="linktext">
+            <hyperlink also-hidden="true" target="EditDeductionType" target-type="plain" description="${deductionTypeId}">
+                <parameter param-name="deductionTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="deleteLink" use-when="hasGlobalHREditPermission" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteDeductionType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="deductionTypeId"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="EditDeductionType" type="single" target="updateDeductionType" title=""
+        header-row-style="header-row" default-table-style="basic-table" default-map-name="deductionType">
+        <alt-target use-when="deductionTypeId==null" target="createDeductionType"/>
+        <auto-fields-service service-name="updateDeductionType"/>
+        <field use-when="deductionType!=null" name="deductionTypeId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="deductionType==null" name="deductionTypeId"><text/></field>
+        <field name="deductionTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="deductionCategoryId" >
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+                    <entity-constraint name="enumTypeId" value="PAYROL_DED_CAT"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+       <field name="acctgFormulaId" parameter-name="acctgFormulaId" >
+            <drop-down allow-empty="false">
+                <entity-options description="${acctgFormulaId}" entity-name="AcctgFormula" key-field-name="acctgFormulaId">
+                   <entity-order-by field-name="acctgFormulaId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="deductionType!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListSalarySteps" type="multi" target="updateSalaryStep?salaryStepSeqId=${salaryStepSeqId}&amp;payGradeId=${payGradeId}" paginate-target="findSalarySteps"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-one entity-name="SalaryStep" auto-field-map="true"/>
+            <entity-condition entity-name="SalaryStep"> <condition-expr field-name="payGradeId" operator="equals" from-field="payGradeId"/><order-by field-name="salaryStepSeqId"/></entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateSalaryStep"/>
+        <field name="salaryStepSeqId" title="${uiLabelMap.HumanResSalaryStepSeqId}"><display also-hidden="true"/></field>
+        <field name="payGradeId"><hidden/></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext">
+            <hyperlink target="deleteSalaryStep" description="${uiLabelMap.CommonDelete}">
+                <parameter param-name="salaryStepSeqId"/>
+                <parameter param-name="payGradeId"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="AddSalaryStep" type="single" target="createSalaryStep"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="createSalaryStep"/>
+        <field name="salaryStepSeqId"><ignored/></field>
+        <field name="payGradeId"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+</forms>

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of Procurement Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+
+    <entity entity-name="ProcurementPriceChart"
+            package-name="in.vasista.vbiz.procurement.price"
+            title="Procurement Price Chart Entity">
+      <field name="procPriceChartId" type="id-ne"/>
+      <field name="regionId" type="id"/>
+      <field name="categoryTypeEnum" type="id"/>
+      <field name="supplyTypeEnumId" type="id"/>      
+      <field name="useBaseSnf" type="indicator"/>
+      <field name="isPremiumChart" type="indicator"/>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field> 
+      <field name="uomId" type="id"/> 
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>   
+      <prim-key field="procPriceChartId"/>  
+      <relation type="one" fk-name="PPC_FAC" rel-entity-name="Facility">
+      	<key-map field-name="regionId" rel-field-name="facilityId"/>
+      </relation> 
+      <relation type="one" fk-name="PPC_CTENUM" rel-entity-name="Enumeration">
+        <key-map field-name="categoryTypeEnum" rel-field-name="enumId"/>        
+      </relation>  
+      <relation type="one" fk-name="PPC_STENUM" rel-entity-name="Enumeration">
+        <key-map field-name="supplyTypeEnumId" rel-field-name="enumId"/>        
+      </relation>             
+      <relation type="one" fk-name="PROD_PRICE_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PPRICECHART_UOMID_UOM" title="Quantity" rel-entity-name="Uom">
+            <key-map field-name="uomId" rel-field-name="uomId"/>
+      </relation>                            
+    </entity>
+    
+    <entity entity-name="ProcurementPrice"
+            package-name="in.vasista.vbiz.procurement.price"
+            title="Procurement Price Entity">
+      <field name="procPriceChartId" type="id-ne"/>            
+      <field name="productId" type="id-ne"></field>
+      <field name="procurementPriceTypeId" type="id-ne"></field>
+      <field name="currencyUomId" type="id-ne"></field>
+      <field name="fatPercent" type="fixed-point"></field>  
+      <field name="snfPercent" type="fixed-point"></field>  
+      <field name="useTotalSolids" type="indicator"></field>
+      <field name="price" type="currency-precise"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="procPriceChartId"/>        
+      <prim-key field="productId"/>
+      <prim-key field="procurementPriceTypeId"/>
+      <prim-key field="currencyUomId"/>
+      <prim-key field="fatPercent"/>
+      <prim-key field="snfPercent"/>
+      <relation type="one" fk-name="PROC_PRICE_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROC_PRICE_TYPE" rel-entity-name="Enumeration">
+        <key-map field-name="procurementPriceTypeId" rel-field-name="enumId"/>        
+      </relation>
+      <relation type="one" fk-name="PROC_PRICE_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="ProcurementMigration"
+            package-name="in.vasista.vbiz.procurement.migration"
+            title="Procurement Migration Temp table">
+       <field name="ddate" type="date-time"></field>
+        <field name="scode" type="id"></field> 
+       <field name="ucode" type="id"></field>
+       <field name="ccode" type="id"></field>                  
+       <field name="daytyp" type="id"/>                 
+       <field name="typmlk" type="id-ne"></field>
+       <field name="gqty" type="fixed-point" ></field>
+       <field name="gqtyLtrs" type="fixed-point" ></field>       
+       <field name="gfat" type="fixed-point" ></field>
+       <field name="gsnf" type="fixed-point" ></field> 
+      <field name="sqty" type="fixed-point"></field>              
+      <field name="sfat" type="fixed-point"></field>
+      <field name="cqty" type="fixed-point"></field>  
+      <field name="cans" type="fixed-point"></field>
+      <prim-key field="ddate"/>
+      <prim-key field="ccode"/>
+      <prim-key field="ucode"/>
+      <prim-key field="scode"/>
+      <prim-key field="daytyp"/>
+      <prim-key field="typmlk"/> 	      	
+      <relation type="one" fk-name="PROC_MIGR_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="typmlk" rel-field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROC_MIGR_STENUM" title="SupplyType" rel-entity-name="Enumeration">
+        <key-map field-name="daytyp" rel-field-name="enumId"/>
+      </relation>             	   
+    </entity>    
+    <entity entity-name="FacilityRelationship"
+            package-name="in.vasista.vbiz.procurement.facility"
+            title="Facility Relationship Entity">
+      <field name="facilityIdFrom" type="id-ne"></field>
+      <field name="facilityIdTo" type="id-ne"></field>
+      <field name="roleTypeIdFrom" type="id-ne"></field>
+      <field name="roleTypeIdTo" type="id-ne"></field>
+      <field name="facilityRelationshipTypeId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="statusId" type="id"></field>         
+      <field name="comments" type="comment"></field>
+      <prim-key field="facilityIdFrom"/>
+      <prim-key field="facilityIdTo"/>
+      <prim-key field="roleTypeIdFrom"/>
+      <prim-key field="roleTypeIdTo"/>
+      <prim-key field="fromDate"/>
+      <relation type="one-nofk" title="From" rel-entity-name="Facility">
+        <key-map field-name="facilityIdFrom" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="Facility">
+        <key-map field-name="facilityIdTo" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" title="From" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_REL_FPROLE" title="From" rel-entity-name="FacilityParty">
+        <key-map field-name="facilityIdFrom" rel-field-name="facilityId"/>
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_REL_TPROLE" title="To" rel-entity-name="FacilityParty">
+        <key-map field-name="facilityIdTo" rel-field-name="facilityId"/>
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_REL_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>     
+      <relation type="one" fk-name="FACILITY_REL_TYPE" rel-entity-name="Enumeration">
+        <key-map field-name="facilityRelationshipTypeId" rel-field-name="enumId"/>
+      </relation>   
+    </entity>
+    <entity entity-name="ProcProducerMigration"
+            package-name="in.vasista.vbiz.procurement.facility"
+            title="Procurement Producer Migration">
+      <field name="recordId" type="id-ne"/>      
+      <field name="shedCode" type="id"/>
+      <field name="bmcuCode" type="id"/>
+      <field name="bmcuName" type="name"/>
+      <field name="routeId" type="id"/>      
+      <field name="centerCode" type="id"/>
+      <field name="centerName" type="name"/>
+      <field name="firstName" type="name"/>
+      <field name="lastName" type="name"/>
+      <field name="fullName" type="name"/>
+      <field name="mobileNo" type="id"/>
+      <field name="avgMilkProduced" type="fixed-point"/>
+      <field name="isMigrated" type="indicator"/>  
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="recordId"/>                            
+    </entity>
+    <entity entity-name="ProcFacilityOutput"
+            package-name="in.vasista.vbiz.procurement.facility"
+            title="Procurement Facility Output">
+      <field name="facilityId" type="id-ne"/>      
+      <field name="customTimePeriodId" type="id-ne"></field>
+      <field name="outputTypeId" type="id-ne"></field>
+      <field name="qty" type="fixed-point"></field>
+      <field name="kgFat" type="fixed-point"></field>
+      <field name="kgSnf" type="fixed-point"></field>
+      <field name="quantityLtrs" type="fixed-point"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="customTimePeriodId"/>
+      <prim-key field="outputTypeId"/> 
+       <relation type="one" fk-name="PROC_OUTPUT_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId" rel-field-name="facilityId"/>
+      </relation>  
+       <relation type="one" fk-name="PROC_OUTPUT_PERIOD" rel-entity-name="CustomTimePeriod">
+			<key-map field-name="customTimePeriodId" />
+	  </relation>  
+	   <relation type="one" fk-name="PROC_OUTPUT_ENUM" rel-entity-name="Enumeration">
+          <key-map field-name="outputTypeId" rel-field-name="enumId"/>
+      </relation>                       
+    </entity>
+    <entity entity-name="ProcBillingValidation"
+            package-name="in.vasista.vbiz.procurement.facility"
+            title="Procurement Billing Validation">
+      <field name="shedId" type="id-ne"/>      
+      <field name="customTimePeriodId" type="id-ne"></field>
+      <field name="validationTypeId" type="id-ne"></field>
+      <field name="sequenceNum" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="centerId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="approvedDate" type="date-time"></field>
+      <field name="approvedByUserLoginId" type="id-ne"></field>   
+      <prim-key field="shedId"/>
+      <prim-key field="customTimePeriodId"/>
+      <prim-key field="validationTypeId"/>
+      <prim-key field="sequenceNum"/> 
+      <relation type="one" fk-name="PROC_BILV_SHE" rel-entity-name="Facility">
+        <key-map field-name="shedId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="PROC_BILV_CEN" rel-entity-name="Facility">
+        <key-map field-name="centerId" rel-field-name="facilityId"/>
+      </relation>   
+       <relation type="one" fk-name="PROC_BILV_PERIOD" rel-entity-name="CustomTimePeriod">
+			<key-map field-name="customTimePeriodId" />
+	  </relation>
+	   <relation type="one" fk-name="PROC_BILV_ENUM" rel-entity-name="Enumeration">
+          <key-map field-name="validationTypeId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="many" rel-entity-name="StatusValidChange">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PROC_BILV_OIT" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+	  <relation type="one" fk-name="PROC_BILV_LMBUL" rel-entity-name="UserLogin">
+      	  <key-map field-name="approvedByUserLoginId" rel-field-name="userLoginId"/>
+      </relation>                      
+    </entity>
+     
+   <entity entity-name="ProcBillingValidationRule"
+            package-name="in.vasista.vbiz.procurement.facility"
+            title="Procurement Billing Validation Rule">
+      <field name="shedId" type="id-ne"/>
+      <field name="validationTypeId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="minFat" type="fixed-point"></field>
+      <field name="maxFat" type="fixed-point"></field>
+      <field name="minSnf" type="fixed-point"></field>
+      <field name="maxSnf" type="fixed-point"></field>
+      <field name="quantity" type="fixed-point"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLoginId" type="id-ne"></field>   
+      <prim-key field="shedId"/>
+      <prim-key field="productId"/>     
+      <prim-key field="validationTypeId"/>
+      <prim-key field="fromDate"/> 
+      <relation type="one" fk-name="PROC_BILV_SHE" rel-entity-name="Facility">
+        <key-map field-name="shedId" rel-field-name="facilityId"/>
+      </relation>
+       <relation type="one" fk-name="PROC_PRICE_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>      
+	   <relation type="one" fk-name="PROC_BILV_ENUM" rel-entity-name="Enumeration">
+          <key-map field-name="validationTypeId" rel-field-name="enumId"/>
+      </relation>     
+	  <relation type="one" fk-name="PROC_BILV_LMBUL" rel-entity-name="UserLogin">
+      	  <key-map field-name="createdByUserLoginId" rel-field-name="userLoginId"/>
+      </relation>                           
+    </entity>
+      <entity entity-name="MilkTransferAdvice"
+            package-name="org.ofbiz.product.inventory"
+            title="Milk Transfer Advice Entity">
+      <field name="milkTransferId" type="id-ne"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="quantityLtrs" type="fixed-point"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="milkTransferId"/>
+      <prim-key field="facilityId"/>
+      <relation rel-entity-name="MilkTransfer" type="one" fk-name="SD_MXFID_MXF">
+           <key-map field-name="milkTransferId"/>
+      </relation>
+      <relation rel-entity-name="Facility" type="one" fk-name="SD_FAC_FACILITY">
+           <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="SD_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="SD_LMBUL" title="ModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>        
+    <entity entity-name="MilkTransfer"
+            package-name="org.ofbiz.product.inventory"
+            title="Milk Transfer Entity">
+      <field name="milkTransferId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="facilityIdTo" type="id"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="quantity" type="fixed-point"></field>
+      <field name="snf" type="fixed-point"></field>
+      <field name="fat" type="fixed-point"></field>
+      <field name="sendKgFat" type="fixed-point"></field>
+      <field name="sendKgSnf" type="fixed-point"></field>
+      <field name="sendLR" type="fixed-point"></field>
+      <field name="sQuantityLtrs" type="fixed-point"></field>
+      <field name="sFat" type="fixed-point"></field>
+      <field name="cQuantityLtrs" type="fixed-point"></field>
+      <field name="receivedQuantity" type="fixed-point"></field>
+      <field name="milkType" type="indicator"></field>
+      <field name="receivedSnf" type="fixed-point"></field>
+      <field name="receivedFat" type="fixed-point"></field>
+      <field name="receivedKgFat" type="fixed-point"></field>
+      <field name="receivedKgSnf" type="fixed-point"></field>
+      <field name="receivedLR" type="fixed-point"></field>
+      <field name="gheeYield" type="fixed-point"></field>
+      <field name="containerId" type="id"></field>
+      <field name="sendDate" type="date-time"></field>
+      <field name="receiveDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="milkTransferId"/>
+      <relation type="one" fk-name="MILK_XFER_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_LMBUL" title="ModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_XFER_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_RECEIVEDFROM_FAC" rel-entity-name="Facility">
+        <key-map field-name="receivedFromFacilityId"/>
+      </relation>
+      <relation type="one" fk-name="MILK_SENDTO_FAC" rel-entity-name="Facility">
+        <key-map field-name="sendToFacilityId"/>
+      </relation>     
+    </entity>       
+</entitymodel>

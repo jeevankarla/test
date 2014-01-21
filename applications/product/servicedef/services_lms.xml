@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Kkdmpcu Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+	<service name="CreateTransporterDue" engine="java"
+                location="org.ofbiz.network.LmsServices" invoke="CreateTransporterDue" auth="true">
+        <description> Create invoice for transporter due
+        </description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="supplyDate" type="Timestamp" mode="IN" optional="true"/> 
+        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
+        <attribute name="facilitId" type="String" mode="OUT" optional="true"/>               
+    </service>
+    <service name="createTransporterDuePayment" engine="java"
+                location="org.ofbiz.network.LmsServices" invoke="createTransporterDuePayment" auth="true">
+        <description>Create payment for transporter due
+        </description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>       
+        <attribute name="paymentId" type="String" mode="OUT" optional="false"/> 
+        <attribute name="enablePaymentSms" mode="OUT" type="Boolean" optional="true"/>                 
+    </service>
+    <service name="createTransporterMarginDuePayment" engine="java"
+                location="org.ofbiz.network.LmsServices" invoke="createTransporterMarginDuePayment" auth="true">
+        <description>Create payment for transporter due
+        </description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>       
+        <attribute name="paymentId" type="String" mode="OUT" optional="false"/>               
+    </service>
+    <service name="createBankRemittance" engine="java"
+                location="org.ofbiz.network.LmsServices" invoke="createBankRemittance" auth="true" default-entity-name="BankRemittance">
+        <description>Create Bank Remittance
+        </description>
+        <attribute name="supplyDate" type="java.sql.Date" mode="IN" optional="false"/>            
+        <attribute name="vocherNumber" type="Long" mode="IN" optional="true"/>
+        <attribute name="amountRemitted" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="bankRemittanceId" type="String" mode="OUT" optional="false"/>                             
+    </service>
+    <service name="deleteBankRemittance" engine="simple"
+                location="component://product/script/org/ofbiz/product/subscription/SubscriptionServices.xml" invoke="deleteBankRemittance" auth="true" default-entity-name="BankRemittance">
+        <description>Delete Bank Remittance
+        </description>
+       <attribute name="bankRemittanceId" type="String" mode="IN" optional="false"/>                             
+    </service>
+    <service name="createProductPayment" engine="java"
+                location="org.ofbiz.network.LmsServices" invoke="createProductPayment">
+        <description> create Cash Payment For Booth</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="paymentTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="paymentDate" type="Timestamp" mode="IN" optional="true"/>            
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>             
+        <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
+        <attribute name="enablePaymentSms" mode="OUT" type="Boolean" optional="true"/>
+    </service>
+     <service name="depositBoothPayment" engine="java"
+                location="org.ofbiz.network.LmsServices" invoke="depositBoothPayment" auth="true">
+        <description>Deposit Booth Payment
+        </description>
+       <attribute name="paymentId" type="String" mode="IN" optional="false"/>                                   
+    </service>
+    <service name="createFacilityRecovery" engine="java"
+                location="org.ofbiz.network.LmsServices" invoke="createFacilityRecovery" auth="true" default-entity-name="Invoice">
+        <description> Create invoice for Recovery
+        </description>        
+        <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="supplyDate" type="Timestamp" mode="IN" optional="true"/> 
+        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
+        <attribute name="facilitId" type="String" mode="OUT" optional="true"/>               
+    </service>
+</services>

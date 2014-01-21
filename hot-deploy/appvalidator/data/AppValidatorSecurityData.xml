@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the AppValidator Component." permissionId="APPVALIDATOR_VIEW"/>
+    <SecurityPermission description="Create operations in the AppValidator Component." permissionId="APPVALIDATOR_CREATE"/>
+    <SecurityPermission description="Update operations in the AppValidator Component." permissionId="APPVALIDATOR_UPDATE"/>
+    <SecurityPermission description="Delete operations in the AppValidator Component." permissionId="APPVALIDATOR_DELETE"/>
+    <SecurityPermission description="ALL operations in the AppValidator Component." permissionId="APPVALIDATOR_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="APPVALIDATOR_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="APPVALIDATOR_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="APPVALIDATOR_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="APPVALIDATOR_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="APPVALIDATOR_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="APPVALIDATOR_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="APPVALIDATOR_ADMIN"/>
+</entity-engine-xml>

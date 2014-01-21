@@ -1,0 +1,3 @@
+TerminationType_description,TerminationType_hasTable,TerminationType_parentTypeId,TerminationType_terminationTypeId
+Resignation,N,,RESIGN
+Retirement,N,,RETIRE

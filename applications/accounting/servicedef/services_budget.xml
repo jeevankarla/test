@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Accounting Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+   
+    <!-- Budget Services  -->  
+    <service name="createBudget" engine="simple" default-entity-name="Budget"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="createBudget">
+        <description>Create Budget Record</description>
+        <required-permissions join-type="OR">
+        	<permission-service service-name="acctgBasePermissionCheck" main-action="BUDGET_EDIT"/>
+        </required-permissions>                         
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="budgetypeId" mode="IN" optional="false"/>
+        <override name="comments" allow-html="safe"/>
+        <override name="customTimePeriodId" mode="IN" optional="false"/>
+        <override name="organizationPartyId" mode="IN" optional="false"/>       
+    </service>
+   <service name="createBudgetItem" engine="simple" default-entity-name="BudgetItem"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="createBudgetItem">
+        <description>Create a new Budget Item Record</description>
+         <required-permissions join-type="OR">        	
+       		<permission-service service-name="acctgBasePermissionCheck" main-action="BUDGET_EDIT"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="budgetItemSeqId" mode="INOUT" optional="true"/><!-- will optionally assign by the system -->
+    </service> 
+    <service name="updateBudgetItem" engine="simple" default-entity-name="BudgetItem"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="updateBudgetItem">
+        <description>Update existing Budget Item Record</description>
+         <required-permissions join-type="OR">
+        	<permission-service service-name="acctgBasePermissionCheck" main-action="BUDGET_EDIT"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="removeBudgetItem" engine="simple" default-entity-name="BudgetItem"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="removeBudgetItem">
+        <description>Remove an existing Budget Item Record</description>
+         <required-permissions join-type="OR">
+        	<permission-service service-name="acctgBasePermissionCheck" main-action="BUDGET_EDIT"/>
+      </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+     <service name="createBudgetRevision" engine="simple" default-entity-name="BudgetRevision"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="createBudgetRevision">
+        <description> Create a new Budget Revision Record</description>
+         <required-permissions join-type="OR">
+        	<permission-service service-name="acctgBasePermissionCheck" main-action="BUDGETREVISION_CREATE"/>
+      </required-permissions>  
+       	<auto-attributes mode="IN" include="pk" optional="false"/>      
+        <override name="budgetId" mode="IN" optional="false"/>
+        <override name="revisionSeqId" mode="INOUT" optional="true"/><!-- will optionally assign by the system -->
+    </service>
+</services>    

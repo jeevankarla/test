@@ -1,0 +1,7 @@
+GlResourceType_description,GlResourceType_glResourceTypeId
+Money,MONEY
+Raw Materials,RAW_MATERIALS
+Labor,LABOR
+Services,SERVICES
+Finished Goods,FINISHED_GOODS
+Delivered Goods,DELIVERED_GOODS

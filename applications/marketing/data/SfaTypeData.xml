@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Set up some defaults that can be overriden by individual customers -->
+<entity-engine-xml>
+
+    <SalesOpportunityStage opportunityStageId="SOSTG_PROSPECT" description="Prospect" defaultProbability="0.050000" sequenceNum="1" lastUpdatedStamp="2009-04-20 10:23:33.982" lastUpdatedTxStamp="2009-04-20 10:23:33.972" createdStamp="2009-04-20 10:23:33.982" createdTxStamp="2009-04-20 10:23:33.972"/>
+    <SalesOpportunityStage opportunityStageId="SOSTG_PROPOSAL" description="Proposal" defaultProbability="0.200000" sequenceNum="2" lastUpdatedStamp="2009-04-20 10:23:33.98" lastUpdatedTxStamp="2009-04-20 10:23:33.972" createdStamp="2009-04-20 10:23:33.98" createdTxStamp="2009-04-20 10:23:33.972"/>
+    <SalesOpportunityStage opportunityStageId="SOSTG_QUOTED" description="Quoted" defaultProbability="0.400000" sequenceNum="3" lastUpdatedStamp="2009-04-20 10:23:33.983" lastUpdatedTxStamp="2009-04-20 10:23:33.972" createdStamp="2009-04-20 10:23:33.983" createdTxStamp="2009-04-20 10:23:33.972"/>
+    <SalesOpportunityStage opportunityStageId="SOSTG_CLOSED" description="Closed" defaultProbability="1.000000" sequenceNum="4" lastUpdatedStamp="2009-04-20 10:23:33.978" lastUpdatedTxStamp="2009-04-20 10:23:33.972" createdStamp="2009-04-20 10:23:33.978" createdTxStamp="2009-04-20 10:23:33.972"/>
+
+</entity-engine-xml>

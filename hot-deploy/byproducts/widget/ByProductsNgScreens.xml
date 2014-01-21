@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="mainNg">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	<screen name="FacilityTree">
+        <section>
+            <actions>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>               
+                <set field="titleProperty" value="ProductFacilityMain"/>
+         
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="main"/>
+<!--                <set field="facilityId" from-field="parameters.facilityId"/>-->
+<!--                <set field="isTreeRoot" value="Y"/>-->
+				<script  
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/facilityTreeNetwork.groovy" />                                
+            </actions>          
+            <widgets>
+            <section>
+            <condition>
+                <if-empty field="parameters.ajaxLookup"/>
+            </condition> 
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="lefthalf"> 
+                                	<screenlet title="${uiLabelMap.FormFieldTitle_company}">    
+   										<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/facilityTree.ftl"></html-template></html></platform-specific>
+									</screenlet>
+								</container>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+   				<platform-specific><html><html-template location="component://product/webapp/facility/facility/facilityTree.ftl"></html-template></html></platform-specific>
+            </fail-widgets>
+        </section>         
+        </widgets>     
+		</section>
+    </screen>
+    <screen name="TruckSheet">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Delivery Schedule"/> 
+				<set field="tabButtonItem" value="TruckSheet" />
+				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/appendRoute.js" global="true"/> 
+				<set field="tabButtonItem2" value="TruckSheet" />				
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>   
+                 <entity-condition list="listTruckSheets" entity-name="Shipment">
+                	<order-by field-name="-estimatedShipDate"/>
+                	<order-by field-name="statusId"/>
+                </entity-condition> 
+                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/shipmentList.groovy"/>          
+               <!--  <set field="routeList" value="${groovy:in.vasista.vbiz.byproducts.ByProductServices.getByproductRoutes(delegator).get(&quot;routesList&quot;);}" type="List"/>  -->
+                <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/SeperateRoutesList.groovy" />
+                <!-- <entity-condition list="routeList" entity-name="Facility">
+                	<condition-list combine="and">
+                		<condition-expr field-name="facilityTypeId" operator="equals" value="ROUTE"/>
+                		<condition-expr field-name="categoryTypeEnum" operator="equals" value="BYPRODUCTS"/>
+                	</condition-list>
+                	<select-field field-name="facilityId"/>
+                	<order-by field-name="sequenceNum"/>
+                </entity-condition>	 -->
+                 <entity-condition list="lmsShipTypeList" entity-name="ShipmentType">
+               		<condition-expr field-name="parentTypeId" operator="equals" value="LMS_SHIPMENT"/>
+               </entity-condition>
+               <entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>			
+			</actions>
+			<widgets>
+				<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="DeliveryScheduleTabBar"/> -->
+						<section>
+							<!-- <condition>
+								<or>
+									<if-has-permission permission="TRUCKSHEET" action="_ADMIN"/>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+								</or>
+							</condition> -->
+							<widgets>
+								<container style="button-bar">
+									<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/NewDeliverySchedule.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showTruckSheetGenerateForm();" text="Generate Delivery Schedule" style="buttontext create"  link-type="anchor"/>
+								</container>	
+								<screenlet title="Trucksheet List">				
+									<include-form name="ListTruckSheets" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>						
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+  
+	<screen name="MilkDeliveryScheduleReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>				
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/MilkDeliverySchedule.groovy" />
+			</actions>
+			<widgets>				
+				<platform-specific>
+					<xsl-fo>
+						<html-template
+							location="component://byproducts/webapp/byproducts/reports/MilkDeliverySchedule.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>					
+			</widgets>
+		</section>
+	</screen>	
+	<screen name="ConfigChange">
+		<section>
+			<actions>
+               <set field="titleProperty" value="Config"/>	            
+               <set field="tabButtonItem" value="config"/>            
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+			   <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/quotaListing.groovy" /> -->	
+			   <entity-one value-field="conversionFac" entity-name="UomConversion">
+			   		<field-map field-name="uomId" value="VLIQ_CRT"/>
+			   		<field-map field-name="uomIdTo" value="VLIQ_L"/>
+			   		<select-field field-name="conversionFactor"/>
+			   </entity-one>
+			   <set field="liters" type="Double" value="${conversionFac.conversionFactor}"/>
+			</actions>
+			<widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<container style="lefthalf">
+                    		<screenlet title="Crates Configuration" >
+								<include-form name="configCrates" location="component://byproducts/widget/ByProductsNgForms.xml" />
+							</screenlet>
+                    	</container>  							  	
+														
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DispatchReconciliation">
+		<section>
+			<actions>
+               <set field="titleProperty" value="DispatchReconciliation"/>	            
+               <set field="tabButtonItem" value="dispatchReconciliation"/>            
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+               <entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+               <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/>
+			</actions>
+			<widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                   		<section>
+                   			<condition>
+	               				<or>
+	          						<if-has-permission permission="INDENT" action="_ADMIN"/>
+	          						<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+	                   			</or>
+           				 	</condition>
+                      		<widgets>
+                           		<include-screen name="DispatchReconciliationInner"/>                        
+                           	</widgets>
+                    	</section>  							  	
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="DispatchReconciliationInner">
+         <section>
+            <actions>
+               <set field="titleProperty" value="Change Indent MIS"/>	
+               <set field="tabButtonItem" value="ChangeIndentInit"/>
+               <set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />               
+               <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
+               <script location="component://product/webapp/facility/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/> 
+              <!--  <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/>  -->
+               <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>
+                --><!-- <set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/> -->          
+            </actions>
+            <widgets>	            
+               	<section>
+               		<condition>
+               			<or>
+          					<if-has-permission permission="INDENT" action="_ADMIN"/>
+          					<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+                   		</or>
+               		</condition>
+                 	<widgets>
+          					<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/reconcilEntryNew.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="TruckSheetReportTXT">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="logoImageUrl" value="/images/apddcf_logo.gif"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/TruckSheetReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="abstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/TruckSheetAbstractReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="trucksheet" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/GatePassCumDistribution.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="milkDeliverySchedule" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template	location="component://byproducts/webapp/byproducts/reports/MilkDeliverySchedule.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	  <screen name="ChangeIndentInit">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Indent Entry"/>	
+               <set field="tabButtonItem" value="ChangeIndentInit"/>
+               <set field="ChangeIndentTitle" from-field="parameters.ChangeIndentTitle"/> 
+               <set field="tabButtonItem2" value="${ChangeIndentTitle}"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="screenFlag" from-field="parameters.screenFlag"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/dateFormatter.groovy"/>
+               <set field="changeFlag" value="newIndent"/>               
+                <set field="defaultEffectiveDateTime" value="${supDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/>  
+				<!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>   -->                            	    
+            </actions>
+            <widgets>
+               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="IndentSubTabBar"/>
+                      	<section>
+                      		<condition>
+		               			<or>
+		          					<if-has-permission permission="INDENT" action="_ADMIN"/>
+		          					<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+		                   		</or>
+               				 </condition>
+                        	<widgets>
+                            	<include-screen name="ChangeIndentInitInner"/>                        
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>	
+	<screen name="ChangeIndentInitInner">
+         <section>
+            <actions>
+               <set field="titleProperty" value="Change Indent MIS"/>	
+               <set field="tabButtonItem" value="ChangeIndentInit"/>
+               <set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+               <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+               </entity-one>
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               <!-- <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			     -->
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />               
+                <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>
+                    	<!-- <condition-expr field-name="enumId" operator="not-equals" value="CARD"/> -->
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                <entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                <set field="productList" value="${groovy:import org.ofbiz.base.util.*; return org.ofbiz.network.NetworkServices.getLmsProducts(dispatcher.getDispatchContext(),UtilMisc.toMap());}" type="List"/>
+                <!-- <script location="component://product/webapp/facility/WEB-INF/actions/facility/recentChangeIndents.groovy"/> -->
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>
+                <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
+                    </condition-list>                    
+                </entity-condition>
+            
+               <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
+               <script location="component://product/webapp/facility/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> 
+               <set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/>          
+               <set field="routeId" from-field="parameters.routeId"/>                       
+            </actions>
+            <widgets>	            
+               	<section>
+               		<condition>
+               			<or>
+          					<if-has-permission permission="INDENT" action="_ADMIN"/>
+          					<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+                   		</or>
+               		</condition>
+                 	<widgets>
+          					<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentEntryNew.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen>
+    
+    
+	<screen name="FindFacilityQuotaListing">
+		<section>
+			<actions>
+               <set field="titleProperty" value="Indent History"/>	            
+               <set field="tabButtonItem" value="QuotaList"/>            
+                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/date.js" global="true"/>         
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+			   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/quotaListing.groovy" />		
+			</actions>
+			<widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">  							  	
+						<screenlet title="Indent History">
+							<include-form name="FindQuotaListing" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								<platform-specific>
+	                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/byProdQuotaList.ftl"/></html>
+	                            </platform-specific>
+						</screenlet>								
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	 <screen name="ChannelWiseSalesChart">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>
+ 				<set field="tabButtonItem2" value="channelSalesChart" />                                           
+                <set field="headerItem" value="charts"/>
+				<!-- <set field="ajaxUrl" value="ProductWiseSalesVolumeTotalsInternal" type="String"/>    -->
+				<set field="chartType" value="SalesMix"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/ChannelWiseSales.groovy"/>                             
+            </actions>            
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">     
+                        <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>                                                        
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/salesMixedTrend.ftl"/></html>
+                        	</platform-specific>   
+                            <platform-specific> 
+                				<html><html-template location="component://byproducts/webapp/byproducts/byproducts/channelWiseSalesCharts.ftl"/></html>
+                			</platform-specific>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+     <screen name="DailySalesRevenueTrend">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>  
+ 				<set field="tabButtonItem2" value="salesRevenueTrend" />                                                                                    
+                <set field="headerItem" value="charts"/>
+                <set field="dailySalesRevenueTrend" value="true"></set>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/ChannelWiseSales.groovy"/>                                                 
+            </actions>            
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                   	 <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>
+                        <container>
+                        	<!-- <platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/analyticsRevenueDateSelection.ftl"/></html>
+                        	</platform-specific> --> 
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/daySalesRevenueGraph.ftl"/></html>
+                        	</platform-specific>                        
+                        </container>                      
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ShopeeComparison">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>  
+ 				<set field="tabButtonItem2" value="ShopeeDespatchChart" />   
+ 				<set field="reportTarget" value="ShopeeComparison"/>                                                                               
+                <set field="headerItem" value="charts"/>
+                <set field="parlourComparison" value="true"></set>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/parlourComparison.groovy"/>                                                 
+            </actions>            
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                   	 <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>
+                        <container>
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/parlourComparisonSelection.ftl"/></html>
+                        	</platform-specific>                         
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/parlourComparison.ftl"/></html>
+                        	</platform-specific>                        
+                        </container>                      
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="RouteComparison">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>  
+ 				<set field="tabButtonItem2" value="RouteComparison" />   
+                <set field="parlourComparison" value="true"></set>
+                <set field="reportTarget" value="RouteComparison"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/routeComparison.groovy"/>                                                 
+            </actions>            
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                   	 <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>
+                        <container>
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/parlourComparisonSelection.ftl"/></html>
+                        	</platform-specific>                         
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/parlourComparison.ftl"/></html>
+                        	</platform-specific>                        
+                        </container>                      
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FieldStaffComparison">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>  
+ 				<set field="tabButtonItem2" value="FieldStaffComparison" />   
+ 				                                                                                
+                <set field="headerItem" value="charts"/>
+                <set field="parlourComparison" value="true"></set>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/FieldStaffComparison.groovy"/>                                                 
+            </actions>            
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                   	 <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>
+                        <container>
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/reports/fieldStaffComparisonSelection.ftl"/></html>
+                        	</platform-specific>                         
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/reports/fieldStaffComparison.ftl"/></html>
+                        	</platform-specific>                        
+                        </container>                      
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="LMSChartsDayCashReceivables">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>
+ 				<set field="tabButtonItem2" value="LMSChartsDayCashReceivables" />                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="LMSChartsDayCashReceivablesInternal" type="String"/>                                
+            </actions>            
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">     
+                        <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>                                                        
+                        	<platform-specific> 
+                            	<html><html-template location="component://order/webapp/ordermgr/order/dayTotalsDateSelection.ftl"/></html>
+                        	</platform-specific>             
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>  
+    <screen name="LMSChartsDayCashReceivablesInternal">
+        <section>      
+    		<actions>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/reports/CashReceivablesChart.groovy"/>                                              
+    		</actions>          
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://order/webapp/ordermgr/order/CashReceivablesChart.ftl"/></html>
+                </platform-specific>                 
+            </widgets>
+        </section>
+    </screen>
+    <screen name="Reports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/>            
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+                <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
+                	<condition-list combine="and">
+                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
+                		<!-- <condition-expr field-name="enumId" operator="equals" value="SO_INST"/>
+                		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/> -->                 	 
+                	</condition-list>
+                </entity-condition>
+                <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return org.ofbiz.network.NetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/>
+            </actions>
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+   							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ByProdReports.ftl"></html-template></html></platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="DSCorrectionEntryInit">
+    	<section>
+            <actions>
+               <set field="titleProperty" value="Trucksheet Correction"/>	
+               <set field="tabButtonItem" value="DSCorrectionEntryInit"/>
+               <set field="ChangeIndentTitle" from-field="parameters.ChangeIndentTitle"/> 
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="screenFlag" from-field="parameters.screenFlag"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/dateFormatter.groovy"/>
+               <set field="changeFlag" value="newIndent"/>               
+                <set field="defaultEffectiveDateTime" value="${supDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/>  
+				<!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>   -->                            	    
+            </actions>
+            <widgets>
+               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      <section>
+                      	<condition>
+                      		<if-compare operator="not-equals" value="DSCorrection" field="screenFlag"/>
+                      	</condition>
+                      	<widgets>
+                      		<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="IndentSubTabBar"/>	
+                      	</widgets>
+                      </section>
+                      	<section>
+                      		<condition>
+		               			<or>
+		          					<if-has-permission permission="INDENT" action="_ADMIN"/>
+		          					<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+		                   		</or>
+               				 </condition>
+                        	<widgets>
+                            	<include-screen name="ChangeIndentInitInner"/>                        
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>	
+    <screen name="FindDealerPayments">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="PastPayments" />
+				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;dd MMMMM, yyyy&quot;);}" /> 				
+				<script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/getDealerPayments.groovy" />
+				<entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+					<condition-list combine="or">
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
+                	</condition-list>
+                	<select-field field-name="paymentMethodTypeId"/>
+                	<select-field field-name="description"/>
+                 	<order-by field-name="-description"/>
+           		</entity-condition>	
+			</actions>
+			<widgets>
+				<section>					
+					<widgets>
+						<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+							<decorator-section name="body">
+								<section>
+									<condition>
+										<and>
+											<or>
+												<if-has-permission permission="CASH" action="_ADMIN"/>
+												<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+											</or>
+											<or>
+												<if-empty field="statusId"/>
+												<if-compare operator="equals" value="NOT_PAID" field="statusId"/>
+											</or>																
+										</and>
+									</condition>
+									<widgets>							  
+									   <section>
+									        <widgets> 		
+										        <screenlet title="Find Dues Payments">
+												        	<platform-specific><html><html-template location="component://product/webapp/facility/facility/PaymentCheckList.ftl"/></html></platform-specific>
+												        	<include-form name="FindDealerPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
+												        </screenlet>
+												<screenlet title="Total ${uiLabelMap.PaymentSearchResults} :(${invoicesTotalDueAmount})">				
+									  	        	<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="onlyCurrentDues" value="false"/>
+														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>	
+									  	        	</link>	
+												    <platform-specific><html><html-template location="component://product/webapp/facility/facility/DuesHistory.ftl"/></html></platform-specific>							  	        		
+									  	        	<!-- <include-form name="ListDealerPayments" location="component://motherdairy/widget/MotherDairyForms.xml" /> -->
+									  	        	<platform-specific>
+                            							<html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListPayments.ftl"/></html>
+                        							</platform-specific>
+										        </screenlet>
+										    </widgets> 
+										   </section>
+									</widgets>
+									<fail-widgets>
+										<section>
+											<condition>
+												<and>
+													<or>
+														<if-has-permission permission="CASH" action="_ADMIN"/>
+														<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+													</or>
+													<if-compare operator="equals" value="PAID" field="statusId"/>
+												</and>
+											</condition>
+											<widgets>															  	
+										        <screenlet title="Dues Payments">
+												        	<platform-specific><html><html-template location="component://product/webapp/facility/facility/PaymentCheckList.ftl"/></html></platform-specific>
+												        	<include-form name="FindPastBoothPayments" location="component://product/widget/facility/FacilityForms.xml" />
+												        </screenlet>
+												<screenlet title="Vendor ${uiLabelMap.PaymentSearchResults} :(${invoicesTotalAmount})">
+									  	       		<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>												
+									  	        	</link>	
+									  	        	<include-form name="ListPaidBoothPayments" location="component://product/widget/facility/FacilityForms.xml" />
+										        </screenlet>								    
+											</widgets>
+										</section>
+									</fail-widgets>
+								</section>						
+							</decorator-section>	
+						</decorator-screen>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="FindByProduct">
+        <section>
+        	<actions>
+                <set field="titleProperty" value="Prouducts"/>
+                <set field="tabButtonItem" value="Product"/>
+ 				<set field="productTabButtonItem" value="FindProduct" />                                           
+                <set field="headerItem" value="byProductsOrderEntry"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/ByProductsList.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<!-- <include-menu name="ProductSubTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> -->
+                        <section>
+                            <condition>
+                            	<or>
+                            		<if-service-permission service-name="acctgAgreementPermissionCheck" main-action="VIEW"/>
+                            		<if-has-permission permission="CATALOG" action="_VIEW"/>
+                            	</or>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                	<decorator-section name="menu-bar">
+                                    	<section>
+                                    		<widgets>
+                                               <container style="button-bar">
+                                                  <link target="EditByProduct" text="New Product" style="buttontext">
+                                                  	 <parameter param-name="showEditProduct" value="true"/>
+                                                  </link>
+                                                  <!-- <link target="boothMaster.csv" text="Export As CSV" style="buttontext create" /> -->		
+                                               </container>
+                                            </widgets>
+                                    	</section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindByProduct" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListByProducts" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+	<screen name="EditByProduct">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Facilities"/>
+                <set field="tabButtonItem" value="Product"/>
+ 				<!-- <set field="productTabButtonItem" value="EditProduct" /> -->
+ 				<set field="productTabButtonItem" value="EditProduct" />
+ 				<set field="productEditTabButtonItem" value="EditProductDetails" />                                           
+                <set field="headerItem" value="byProductsOrderEntry"/>
+
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-field="product"/>
+                <set field="parameters.bypassIfNoProduct" value="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/facility/images/autofillProdName.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProductSubTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                    	<include-menu name="prodEditSubTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                        <screenlet title="${uiLabelMap.PageTitleEditProduct}">
+                            <include-form name="EditByProduct" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        </screenlet>
+                        <section>
+                            <condition>
+                                <not><if-empty field="product"/></not>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare field="product.isVirtual" operator="equals" type="String" value="Y"/>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap.ProductUpdateProductVariants}">
+                                            <include-form name="UpdateProductVariants" location="component://product/widget/catalog/ProductForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditByProductPrices">
+        <section>
+            <actions>
+            	<set field="titleProperty" value="Facilities"/>
+                <set field="tabButtonItem" value="Product"/>
+ 				<!-- <set field="productTabButtonItem" value="EditProduct" /> -->
+ 				<set field="productTabButtonItem" value="EditProduct" />
+ 				<set field="productEditTabButtonItem" value="EditProductPrices" />                                           
+                <set field="headerItem" value="byProductsOrderEntry"/>
+                
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-field="product"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/productPricesList.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProductSubTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                    	<include-menu name="prodEditSubTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                    	<!-- <container style="button-bar">
+							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/NewPrice.ftl"/></html></platform-specific>							  	        					
+							<link url-mode="plain" target="javascript:showNewPriceForm('${productId}');" text="Create New Price" style="buttontext create"/>
+						</container> -->
+                    	<!-- <container>                 
+	                        <screenlet title="${uiLabelMap.PageTitleAddProductPrices}">
+	                            <label style="h3" text="${uiLabelMap.ProductPricesWarning}"/>
+	                            <include-form name="AddProductPrice" location="component://byproducts/widget/ByProductsForms.xml"/>
+	                        </screenlet>
+                        </container> -->
+                        <screenlet title="Edit Prices for Product: [${product.productName}]">
+                            <include-form name="UpdateByProductPrice" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditByProductCategories">
+        <section>
+            <actions>
+            	<set field="titleProperty" value="Facilities"/>
+                <set field="tabButtonItem" value="Product"/>
+ 				<!-- <set field="productTabButtonItem" value="EditProduct" /> -->
+ 				<set field="productTabButtonItem" value="EditProduct" />
+ 				<set field="productEditTabButtonItem" value="EditProductCategories" />                                           
+                <set field="headerItem" value="byProductsOrderEntry"/>
+                
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-field="product"/>
+               <entity-condition entity-name="ProductCategoryAndMember" list="productCategoryMembers">
+                    <condition-expr field-name="productId" from-field="productId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="productCategoryId"/>
+                </entity-condition>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/productCategoriesList.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="ProductSubTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                    	<include-menu name="prodEditSubTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                    	<screenlet title="${uiLabelMap.PageTitleAddProductCategories}">
+                            <include-form name="AddProductCategoryMember" location="component://byproducts/widget/ByProductsForms.xml"/>
+                        </screenlet>
+                    	<screenlet title="${uiLabelMap.PageTitleEditProductCategories}">
+                            <include-form name="UpdateProductCategoryMember" location="component://byproducts/widget/ByProductsForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+	<screen name="InvoiceTXT">
+            <section>
+                <actions>
+                   <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                   <!-- <set field="invoiceIds" from-field="parameters.invoiceIds" type="List"/> -->
+                   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/invoiceSlips.groovy"/>
+                   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/printInvoices.groovy"/> 
+                </actions>           
+                <widgets>
+                    	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/invoiceSlips.fo.ftl"/></html></platform-specific>                 
+                </widgets>
+            </section>
+   </screen>       
+</screens>

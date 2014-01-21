@@ -1,0 +1,1011 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+	<screen name="LeaveTypes">
+		<section>
+			<actions>
+			<set field="tabButtonItem" value="LeaveTypes"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>  
+			</actions>
+			<widgets>		
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+                            <widgets>	
+                            <link text="${uiLabelMap.LeaveTypeExportAsCsv}" style="button"
+										target="LeaveTypeListCsv.csv">
+									</link>
+									<link text="${uiLabelMap.LeaveTypeExportAsPdf}" style="button"
+										target="LeaveTypeListPdf.pdf">
+									</link>													
+								<screenlet title="${uiLabelMap.HumanResEmployeeLeaveTypes}">							
+								<include-form name="LeaveTypes"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</screenlet>
+							</widgets>
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>								
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="LeaveTypeListPdf">
+		<section>
+			<actions>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>			
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>  
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+                            <widgets>					
+								<container style="h1">
+									<label  text="${uiLabelMap.HumanResEmployeeLeaveTypes}" />
+								</container>
+								<include-form name="LeaveTypes"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />								
+							</widgets>
+		                    <fail-widgets>
+		                    	<container style="h3">
+                                	<label>${uiLabelMap.HumanResViewPermissionError}</label>
+                                </container>                                                        			                    
+		                    </fail-widgets>
+		            	</section>								
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="LeaveTypeListCsv">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>  
+			</actions>
+			<widgets>
+            	<section>
+                	<condition>
+                    	<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                    </condition>
+                    <widgets>			
+						<label style="h3" text="${uiLabelMap.HumanResEmployeeLeaveTypes}" />
+						<include-form name="LeaveTypes"
+						location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					</widgets>
+		            <fail-widgets>
+                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		            </fail-widgets>
+		    	</section>						
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="EmployeeType">
+		<section>
+			<actions>
+            
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					</decorator-section>
+
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EmployeeGroups">
+		<section>
+			<actions>
+
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					</decorator-section>
+
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+<!--  TODO:: NEEDS TO BE FIXED NOT WORKING -->
+	<screen name="Employees">
+		<section>
+			<actions>
+			<set field="tabButtonItem" value="Employees"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>  
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+            			<section>
+                			<condition>
+                    			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                    		</condition>
+                    		<widgets>					
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="search-options">
+										<include-form name="OrganizationSelection"
+											location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+									</decorator-section>
+									<decorator-section name="search-results">
+										<section>
+											<condition>
+												<if-compare field="parameters.showSearchResults"
+													operator="equals" value="Y" />
+											</condition>
+											<widgets>
+												<link text="${uiLabelMap.EmployeesExportAsCsv}" style="button"
+													target="EmployeesListCsv.csv">
+													<parameter param-name="partyId" from-field="parameters.partyId"/>
+													<parameter param-name="viewIndex" from-field="viewIndex"/>
+            										<parameter param-name="viewSize" from-field="viewSize"/>           
+												</link>
+												<link text="${uiLabelMap.EmployeesExportAsPdf}" style="button"
+													target="EmployeesListPdf.pdf" target-window="_BLANK">
+													<parameter param-name="partyId" from-field="parameters.partyId"/>
+												</link>
+												<screenlet title="${uiLabelMap.EmployeeList}">		
+													<include-form name="Employees"
+														location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+												</screenlet>
+											</widgets>
+										</section>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+		            		<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		            		</fail-widgets>
+		    			</section>		
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EmployeesListPdf">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>  
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+            			<section>
+                			<condition>
+                    			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                    		</condition>
+                    		<widgets>				
+								<container>
+									<label style="h1" text="${uiLabelMap.EmployeeList}" />		
+									<include-form name="Employees"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</container>
+							</widgets>
+		            		<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		            		</fail-widgets>
+		    			</section>									
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="EmployeesListCsv">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/> 
+			</actions>
+			<widgets>
+         		<section>
+             		<condition>
+                 		<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                 	</condition>
+                 	<widgets>				
+						<label style="h3" text="${uiLabelMap.EmployeesList}" />
+						<container>
+						<include-form name="Employees"
+							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+							</container>
+					</widgets>
+					<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PayHeadTypes">
+		<section>
+			<actions>
+				<set field="tabButtonItem" value="PayHeadTypes"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/getPayHeadTypes.groovy"/>		
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+         				<section>
+             				<condition>
+                 				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                 			</condition>
+                 			<widgets>
+                 				<screenlet title="${uiLabelMap.PayHeadTypes}">
+                 				 	<include-form name="findPayHeadTypes" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+                 				 </screenlet>							
+								<screenlet title="${uiLabelMap.ListPayHeadTypes}">
+									<link text="${uiLabelMap.PayHeadTypesExportAsCsv}" style="button"
+										target="PayHeadTypesCsv.csv?partyId=${partyId}">
+									</link>
+									<link text="${uiLabelMap.PayHeadTypesExportAsPdf}" style="button"
+										target="PayHeadTypesPdf.pdf?partyId=${partyId}">
+									</link>		
+									<include-form name="ListPayGrades"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+									<include-form name="ListDeductionTypes"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+									<include-form name="ListBenefits"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />				
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>								
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PayHeadTypesPdf">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/getPayHeadTypes.groovy"/> 
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+         				<section>
+             				<condition>
+                 				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                 			</condition>
+                 			<widgets>					
+								<container>
+									<label style="h1" text="${uiLabelMap.EmployeeList}" />		
+									<include-form name="ListPayGrades"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+									<include-form name="ListDeductionTypes"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+									<include-form name="ListBenefits"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</container>
+							</widgets>
+							<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>									
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PayHeadTypesCsv">
+        <section>
+            <actions>
+             	<set field="viewSize" value="99999"/>
+                <set field="roleTypeId" from-field="parameters.partyId"/> 
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/getPayHeadTypes.groovy"/>                    
+            </actions>
+            <widgets>
+      			<section>
+          			<condition>
+              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+              		</condition>
+              		<widgets>	            
+                <container>                	
+                 	<include-form name="ListPayGrades" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					<include-form name="ListDeductionTypes"	location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					<include-form name="ListBenefits" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+                </container>
+					</widgets>
+					<fail-widgets>
+                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets>
+				</section>                
+            </widgets>
+        </section>
+    </screen>   
+
+	<screen name="EmployeeProfileCsv">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>			
+			</actions>
+			<widgets>
+        		<section>
+            		<condition>
+                		<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                	</condition>
+                	<widgets>				
+						<include-form name="PayGrades"
+							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						<include-form name="PayHeadTypes"
+							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						<include-form name="Benefits"
+							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					</widgets>
+					<fail-widgets>
+                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets>
+				</section>							
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EmployeeProfileReport">
+		<section>
+			<actions>
+			<set field="tabButtonItem" value="EmployeeProfile"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>				
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+        				<section>
+            				<condition>
+                				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                			</condition>
+                			<widgets>					
+								<screenlet title="${uiLabelMap.EmployeeProfile}">
+									<link text="${uiLabelMap.EmployeeProfileExportAsCsv}" style="button"
+										target="EmployeeProfileCsv.csv">
+									</link>
+									<link text="${uiLabelMap.EmployeeProfileExportAsPdf}" style="button"
+										target="EmployeeProfilePdf.pdf">
+									</link>
+
+									<include-form name="EmployeeProfileReport"
+									location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</screenlet>					
+							</widgets>
+							<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>	
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EmployeeProfilePdf">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>	
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+        				<section>
+            				<condition>
+                				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                			</condition>
+                			<widgets>						
+								<container>
+
+									<include-form name="EmployeeProfile"
+									location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</container>
+							</widgets>
+							<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>							
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="EmployeeProfileCsv">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+			</actions>
+			<widgets>
+        		<section>
+            		<condition>
+                		<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                	</condition>
+                	<widgets>	
+						<include-form name="EmployeeProfile"
+							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					</widgets>
+					<fail-widgets>
+                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets>
+				</section>							
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="PartyProfile">
+		<section>
+			<actions>
+			<set field="tabButtonItem" value="PartyProfile"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+        				<section>
+            				<condition>
+                				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                			</condition>
+                			<widgets>					
+								<screenlet title="${uiLabelMap.PartyProfile}">
+									<link text="${uiLabelMap.PartyProfileExportAsCsv}" style="button"
+										target="PartyProfileCsv.csv">
+									</link>
+									<link text="${uiLabelMap.PartyProfileExportAsPdf}" style="button"
+										target="PartyProfilePdf.pdf">
+									</link>
+
+									<include-form name="PartyProfile"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>												
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PartyProfilePdf">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+        				<section>
+            				<condition>
+                				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                			</condition>
+                			<widgets>					
+								<container>
+
+									<include-form name="PartyProfile"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</container>
+							</widgets>
+							<fail-widgets>
+                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>								
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="PartyProfileCsv">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+			</actions>
+			<widgets>
+      			<section>
+          			<condition>
+              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+              		</condition>
+              		<widgets>	
+						<include-form name="PartyProfile"
+						location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					</widgets>
+					<fail-widgets>
+                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets>
+				</section>	
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PaySheet">
+		<section>
+			<actions>
+			
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					</decorator-section>
+
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EmployeeContactDetails">
+		<section>
+			<actions>
+			<set field="tabButtonItem" value="EmployeeContactDetails"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+		      			<section>
+		          			<condition>
+		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+		              		</condition>
+		              		<widgets>						
+								<screenlet title="${uiLabelMap.EmployeeContactDetails}">
+									<link text="${uiLabelMap.EmployeeContactDetailsExportAsCsv}"
+										style="button" target="EmployeeContactDetailsCsv.csv">
+									</link>
+									<link text="${uiLabelMap.EmployeeContactDetailsExportAsPdf}"
+										style="button" target="EmployeeContactDetailsPdf.pdf">
+									</link>
+									<label style="h3" text="${uiLabelMap.EmployeeContactDetails}" />
+									<include-form name="EmployeeContactDetails"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>							
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EmployeeContactDetailsPdf">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+		      			<section>
+		          			<condition>
+		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+		              		</condition>
+		              		<widgets>						
+								<container>
+									<label style="h1" text="${uiLabelMap.EmployeeContactDetails}" />
+		
+									<include-form name="EmployeeContactDetails"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+								</container>
+							</widgets>
+							<fail-widgets>
+		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>							
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="EmployeeContactDetailsCsv">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+			</actions>
+			<widgets>
+      			<section>
+          			<condition>
+              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+              		</condition>
+              		<widgets>				
+						<label style="h3" text="${uiLabelMap.EmployeeContactDetails}" />
+						<include-form name="EmployeeContactDetails"
+							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					</widgets>
+					<fail-widgets>
+                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets>
+				</section>						
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PaySlipEmployeeWise">
+		<section>
+			<actions>
+				<set field="tabButtonItem" value="PaySlipEmployeeWise"/>				
+            </actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="PaySlipEmployeeWise">									
+							<include-form name="paySlipEmployeeWise"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PrintPaySlipsPdf">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+    			<entity-condition entity-name="InvoiceAndAttribute" list="timePeriodInvoices">
+            		<condition-list combine="and">
+                		<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+                		<condition-expr field-name="invoiceAttrName" operator="equals" value="TIME_PERIOD_ID"/>
+                		<condition-expr field-name="invoiceAttrValue" operator="equals" from-field="parameters.customTimePeriodId"/>
+            		</condition-list>
+            		<select-field field-name="invoiceId"/>
+        		</entity-condition>
+    			<script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/MapToList.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/PrintInvoices.groovy"/>       
+    		</actions>    		   			  
+            <widgets>           	
+		      			<section>
+            	
+            		<condition>
+    				 	<not><if-empty field="timePeriodInvoices"/></not>
+    				</condition>
+    				<actions>
+    				</actions>
+    				<widgets>
+    					<platform-specific>
+                    		<xsl-fo>
+                    			<html-template location="component://accounting/webapp/accounting/invoice/PrintInvoices.fo.ftl"/>
+                    		</xsl-fo>
+                		</platform-specific>
+    				</widgets>
+    				<fail-widgets>
+    					<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+							<decorator-section name="body">
+		      					<section>            	
+            						<condition>
+    				 					<not><if-empty field="timePeriodInvoices"/></not>
+    								</condition>
+    								<widgets>
+    									<platform-specific>
+                    						<xsl-fo>
+                    							<html-template location="component://accounting/webapp/accounting/invoice/PrintInvoices.fo.ftl"/>
+                    						</xsl-fo>
+                						</platform-specific>
+    								</widgets>
+    							</section>
+            				</decorator-section>
+            			</decorator-screen>
+    				</fail-widgets> 
+            	</section>               
+            </widgets>
+        </section>
+    </screen>
+	<screen name="EmployeeWiseSalaryDetails">
+		<section>
+			<actions>
+			<set field="tabButtonItem" value="EmployeeWiseSalaryDetails"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                <set field="employeeId" from-field="parameters.employeeId"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeWiseSalaryDetails.groovy"/>		                
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+		      			<section>
+		          			<condition>
+		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+		              		</condition>
+		              		<widgets>	
+		              		<screenlet title="${uiLabelMap.EmployeeWiseSalaryDetails}">
+								<include-form name="employeeLookup"
+										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />									
+							</screenlet>	
+		              		<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsCsv}" style="button" target="EmployeeWiseSalaryDetailsCsv.csv?employeeId=${employeeId}"/>
+							<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsPdf}" style="button" target="EmployeeWiseSalaryDetailsPdf.pdf?employeeId=${employeeId}"/>
+							<platform-specific>
+		                        <html><html-template location="component://humanres/webapp/humanres/humanres/employeeSalaryDetails.ftl"/></html>
+		                     </platform-specific>
+							</widgets>
+							<fail-widgets>
+		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>							
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EmployeeWiseSalaryDetailsPdf">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/> 
+                <set field="employeeId" from-field="parameters.employeeId"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeWiseSalaryDetails.groovy"/>                
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecorator"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+		      			<section>
+		          			<condition>
+		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+		              		</condition>
+		              		<widgets>					
+								<container>
+									<label style="h1" text="${uiLabelMap.EmployeeWiseSalaryDetails}" />
+		
+									<platform-specific>
+		                        <html><html-template location="component://humanres/webapp/humanres/humanres/employeeSalaryDetailsReport.ftl"/></html>
+		                     </platform-specific>
+								</container>
+							</widgets>
+							<fail-widgets>
+		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>							
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="EmployeeWiseSalaryDetailsCsv">
+		<section>
+			<actions>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                <set field="employeeId" from-field="parameters.employeeId"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeWiseSalaryDetails.groovy"/> 
+			</actions>
+			<widgets>
+      			<section>
+          			<condition>
+              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+              		</condition>
+              		<widgets>
+              		<container>					
+						<include-form name="EmployeeWiseSalaryDetails"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+		                    </container> 
+					</widgets>
+					<fail-widgets>
+                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets>
+				</section>	
+			</widgets>
+		</section>
+	</screen>
+	<screen name="LeaveTypeListPdf.pdf">
+		<section>
+			<actions>
+
+			</actions>
+			<widgets>
+
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EmployeeGroups">
+        <section>
+            <actions>
+                <set field="labelTitleProperty" value="HumanresEmployeeGroups"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonHumanresReportsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+		      			<section>
+		          			<condition>
+		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+		              		</condition>
+		              		<widgets>	                    
+		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+		                            <decorator-section name="search-options">
+		                                <include-form name="OrganizationSelection" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+		                            </decorator-section>
+		                            <decorator-section name="search-results">
+		                                <section>
+		                                    <condition>
+		                                        <if-compare field="parameters.showSearchResults" operator="equals" value="Y"/>
+		                                    </condition>
+		                                    <widgets>
+		                                        <link text="${uiLabelMap.ExportAsPdf}" style="button" target="EmployeeGroupsListPdf.pdf">
+		                                            <parameter param-name="partyId" from-field="parameters.partyId"/>
+		                                           </link>
+		                                        <link text="${uiLabelMap.ExportAsCsv}" style="button" target="EmployeeGroupsListCsv.csv">
+		                                            <parameter param-name="partyId" from-field="parameters.partyId"/>
+		                                            </link>
+		                                        <screenlet title="${uiLabelMap.AccountingInventoryValuationList}">
+		                                            <include-form name="EmployeeGroupsList" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+		                                        </screenlet>
+		                                    </widgets>
+		                                </section>
+		                            </decorator-section>
+		                        </decorator-screen>
+							</widgets>
+							<fail-widgets>
+		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>	                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EmployeeGroupsListPdf">
+        <section>
+            <actions>
+                  <set field="viewSize" value="99999"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>                   
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+		      			<section>
+		          			<condition>
+		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+		              		</condition>
+		              		<widgets>                    
+		                        <container>
+		                            <label style="h1" text="${uiLabelMap.EmployeeGroups}"/>
+		                            <include-form name="EmployeeGroupsList" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+		                        </container>
+							</widgets>
+							<fail-widgets>
+		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+							</fail-widgets>
+						</section>	                             
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EmployeeGroupsListCsv">
+        <section>
+            <actions>
+             	<set field="viewSize" value="99999"/>
+                <set field="roleTypeId" from-field="parameters.partyId"/> 
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                </service>
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>                    
+            </actions>
+            <widgets>
+      			<section>
+          			<condition>
+              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+              		</condition>
+              		<widgets>	            
+                		<container>
+                    		<include-form name="EmployeeGroupsList" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+                		</container>
+					</widgets>
+					<fail-widgets>
+                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
+					</fail-widgets>
+				</section>	                
+            </widgets>
+        </section>
+    </screen>   
+
+</screens>
+    
+    

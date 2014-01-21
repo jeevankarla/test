@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Kkdmpcu Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    <service name="createOrUpdateCrateCanEntryService" engine="java"
+        location="org.ofbiz.product.product.ProductServices" invoke="createOrUpdateCrateCanEntryService" auth="true">
+        <description>New Crate/Cans Entry Service</description>
+        <attribute name="routeId" mode="IN" type="String" optional="true"/>
+        <attribute name="cratesSent" type="BigDecimal" mode="IN" optional="true"/> 
+        <attribute name="cratesReceived" type="BigDecimal" mode="IN" optional="true"/> 
+        <attribute name="cansSent" type="BigDecimal" mode="IN" optional="true"/> 
+        <attribute name="cansReceived" type="BigDecimal" mode="IN" optional="true"/> 
+    </service>
+</services>

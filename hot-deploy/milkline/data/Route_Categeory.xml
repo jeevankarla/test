@@ -1,0 +1,81 @@
+    <Enumeration description="Leak Booth" enumCode="LEAKS" enumId="LEAKS" sequenceId="07" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Free Samples Booth" enumCode="FREES" enumId="FREES" sequenceId="07" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Samples booth" enumCode="SAMPLES" enumId="SAMPLES" sequenceId="08" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Auto Shortage booth" enumCode="AUTO_SHORT" enumId="AUTO_SHORT" sequenceId="09" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Van Shortage booth" enumCode="VAN_SHORT" enumId="VAN_SHORT" sequenceId="10" enumTypeId="BOOTH_CAT_TYPE"/>
+    <Enumeration description="Spoilege  booth" enumCode="SPOILS" enumId="SPOILS" sequenceId="11" enumTypeId="BOOTH_CAT_TYPE"/>
+
+ 
+  <Facility facilityId="1001" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+  <Facility facilityId="127" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+  <Facility facilityId="2455" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+  <Facility facilityId="2469" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+  <Facility facilityId="2824" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+  <Facility facilityId="383" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+  <Facility facilityId="39" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+  <Facility facilityId="451" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="553" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="606" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  /> 
+	<Facility facilityId="644" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="651" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="706" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="73" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="778" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="8" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="897" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+	<Facility facilityId="912" facilityTypeId="BOOTH"   categoryTypeEnum="LEAKS"  />
+
+	<Facility facilityId="126" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="1364" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="2453" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="1375" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="2466" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="3173" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="382" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="535" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="594" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="642" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="800" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	<Facility facilityId="861" facilityTypeId="BOOTH"   categoryTypeEnum="FREES"  />
+	
+				 
+  <Facility facilityId="1240" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="1270" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="128" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="16" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />	
+  <Facility facilityId="2160" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="2221" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="2454" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="2467" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="2593" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="3210" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="609" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="655" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="711" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="75" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="928" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+  <Facility facilityId="968" facilityTypeId="BOOTH"   categoryTypeEnum="SAMPLES"  />
+
+	    
+<Facility facilityId="1906" facilityTypeId="BOOTH"   categoryTypeEnum="AUTO_SHORT"  />
+<Facility facilityId="2534" facilityTypeId="BOOTH"   categoryTypeEnum="AUTO_SHORT"  />
+<Facility facilityId="2669" facilityTypeId="BOOTH"   categoryTypeEnum="AUTO_SHORT"  />
+
+
+<Facility facilityId="1247" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="503" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="615" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="940" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="1307" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="131" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="2790" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="34" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="381" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="722" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="733" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+<Facility facilityId="984" facilityTypeId="BOOTH"   categoryTypeEnum="VAN_SHORT"  />
+
+<Facility facilityId="1416" facilityTypeId="BOOTH"   categoryTypeEnum="SPOILS"  />
+<Facility facilityId="2713" facilityTypeId="BOOTH"   categoryTypeEnum="SPOILS"  />
+<Facility facilityId="611" facilityTypeId="BOOTH"   categoryTypeEnum="SPOILS"  />
+

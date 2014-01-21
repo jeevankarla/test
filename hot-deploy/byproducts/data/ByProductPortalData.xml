@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>	
+		<SecurityPermission permissionId="MYPORTAL_BYPRODUCTS" description="Use the Byproduct component screens in myportal."/>
+        <SecurityGroup description="Byproduct user of myportal, Limited access to the Byproduct component" groupId="MYPORTAL_BYPRODUCTS"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_BYPRODUCTS" permissionId="MYPORTAL_BYPRODUCTS"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_BYPRODUCTS" permissionId="FACILITY_VIEW"/>
+	 	  <SecurityGroupPermission groupId="MYPORTAL_BYPRODUCTS" permissionId="BYPRODUCTS_VIEW"/>	 	
+	 	 <SecurityGroupPermission groupId="MYPORTAL_BYPRODUCTS" permissionId="MYPORTALBASE_ADMIN"/>
+		 <PortalPage portalPageId="MYPORTAL_BYPRODUCTS" sequenceNum="0" portalPageName="Main" description="The Milkosoft System ByProduct page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_BYPRODUCTS"/>
+			
+		 <PortalPortlet portalPortletId="BYPRODUCT" portletName="ByProducts"
+        	screenName="MyPortalByProductFacilityTreeNg"
+        screenLocation="component://byproducts/widget/CommonScreens.xml"
+        description="ByProduct"/>                
+    	<PortletPortletCategory portalPortletId="Facility" portletCategoryId="PRODUCTS"/>
+    	
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_BYPRODUCTS" sequenceNum="0" portalPageName="BYPRODUCTS" description="The Milkosoft System ByProduct page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_BYPRODUCTS"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_BYPRODUCTS" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_BYPRODUCTS" portalPortletId="BYPRODUCT" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+
+</entity-engine-xml>
+
+
+ 

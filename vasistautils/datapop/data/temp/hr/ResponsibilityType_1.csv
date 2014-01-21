@@ -1,0 +1,7 @@
+ResponsibilityType_description,ResponsibilityType_hasTable,ResponsibilityType_parentTypeId,ResponsibilityType_responsibilityTypeId
+Finance Management,N,,FIN_MGMT
+Inventory Management,N,,INV_MGMT
+Purchase Management,N,,PUR_MGMT
+Resource Management,N,,RES_MGMT
+Production Management,N,,PROD_MGMT
+Sales Management,N,,SALES_MGMT

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        
+    <form name="lookupFixedAsset" target="LookupFixedAsset" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden"/>
+        <field name="fixedAssetId"><text-find/></field>
+        <field name="fixedAssetName"><text-find/></field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}" >
+        	<hidden value="GROUP_EQUIPMENT"/>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupFixedAsset" list-name="listIt" title="" type="list" paginate-target="LookupFixedAsset"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FixedAsset"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="fixedAssetId" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
+        </field>
+        <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}"><display-entity entity-name="FixedAssetType"/></field>
+    </form>        
+        
+    <!-- list all assets in a tabular format -->
+    <form name="ListFixedAssets" type="list" list-name="listIt" paginate-target="ListFixedAssets"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FixedAsset"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>
+            <service service-name="calculateFixedAssetDepreciation" result-map="assetDepreciationResultMap">
+                <field-map field-name="fixedAssetId" from-field="fixedAssetId"/>
+            </service>
+        </row-actions>
+        <field name="fixedAssetId" widget-style="linktext">
+            <hyperlink also-hidden="false" description="${fixedAssetId}" target="ViewFixedAsset">
+                <parameter param-name="fixedAssetId"/>
+            </hyperlink>
+        </field>
+        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}">
+            <display/>
+        </field>
+        <field name="locatedAtFacilityId">
+            <hyperlink target-type="inter-app" description="${locatedAtFacilityId}" target="/facility/control/EditFacility">
+                <parameter param-name="facilityId" from-field="locatedAtFacilityId"/>
+            </hyperlink>
+        </field>        
+        <field name="dateAcquired"><display/></field>
+        <field name="purchaseCost"><display type="currency" currency="${purchaseCostUomId}"/></field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="FixedAssetSearchResults"/>
+    </form>
+
+    <form name="FindFixedAssetOptions" extends="lookupFixedAsset"
+        target="ListFixedAssets">
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <!-- create and update a fixed asset -->
+    <form name="ViewFixedAsset" type="single" title="" default-map-name="fixedAsset"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset" default-field-type="display"/>
+    </form>
+
+
+    <form name="WorkEffortSummary" type="single" default-map-name="workEffort"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="workEffortId"><display/></field>
+        <field name="workEffortName" title="${uiLabelMap.CommonName}"><display/></field>
+        <field name="workEffortTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="WorkEffortType" description="${description}"/>
+        </field>
+        <field name="workEffortPurposeTypeId" title="${uiLabelMap.CommonPurpose}">
+            <display-entity entity-name="WorkEffortPurposeType" description="${description}"/>
+        </field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+        <field name="percentComplete"><display/></field>
+        <field name="estimatedStartDate"><display/></field>
+        <field name="estimatedCompletionDate"><display/></field>
+        <field name="actualStartDate"><display/></field>
+        <field name="actualCompletionDate"><display/></field>
+    </form>
+
+    <!-- =====================Party Fixed Asset Assignment Forms============== -->
+    <form name="ListFixedAssetAssignments" type="list"  list-name="listFixedAssetAssignments"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="workEffortId"><display/></field>
+        <field name="workEffortName" title="${uiLabelMap.CommonName}"><display/></field>
+        <field name="workEffortTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="WorkEffortType" description="${description}"/>
+        </field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+        <field name="percentComplete"><display/></field>
+        <field name="estimatedCompletionDate"><display/></field>
+        <field name="actualStartDate"><display/></field>
+        <field name="actualCompletionDate"><display/></field>
+    </form>
+
+</forms>

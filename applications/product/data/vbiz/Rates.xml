@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <WorkEffort workEffortId="_NA_"/>
+    <EmplPositionType emplPositionTypeId="_NA_"/>
+
+    <RateType rateTypeId="VENDOR_MRGN"  description="Vendor margin"/>
+    <RateType rateTypeId="VENDOR_CD_ADTL_MRGN" description="Additional margin for card orders"/>
+    
+    <!-- Note the next 3 are really product discounts but APDDCF calls them margins -->
+    <RateType rateTypeId="SO_INST_MRGN"  description="Institutional Special Order margin"/>
+    <RateType rateTypeId="CR_INST_MRGN"  description="Credit Institution margin"/>
+    <RateType rateTypeId="FRANCHISEE_MRGN"  description="Franchisee margin"/>
+	
+    <RateType rateTypeId="ML_ZN_MRGN"  description="ML Zone margin"/>
+    <RateType rateTypeId="TR_ZN_MRGN"  description="TR Zone margin"/>
+    <RateType rateTypeId="VP_ZN_MRGN"  description="VP Zone margin"/>
+    <RateType rateTypeId="AB_ZN_MRGN"  description="AB Zone margin"/>
+    <RateType rateTypeId="CM_ZN_MRGN"  description="CM Zone margin"/>
+    <RateType rateTypeId="SB_ZN_MRGN"  description="SB Zone margin"/>
+    <RateType rateTypeId="ZB_ZN_MRGN"  description="ZB Zone margin"/>
+    <RateType rateTypeId="MB_ZN_MRGN"  description="MB Zone margin"/>
+    <RateType rateTypeId="SR_ZN_MRGN"  description="SR Zone margin"/>
+    <RateType rateTypeId="BL_ZN_MRGN"  description="BL Zone margin"/>
+    <RateType rateTypeId="AP_ZN_MRGN"  description="AP Zone margin"/>
+    <RateType rateTypeId="YR_ZN_MRGN"  description="YR Zone margin"/>
+    <RateType rateTypeId="CN_ZN_MRGN"  description="CN Zone margin"/>
+    <RateType rateTypeId="RP_ZN_MRGN"  description="RP Zone margin"/>
+    <RateType rateTypeId="MP_ZN_MRGN"  description="MP Zone margin"/>
+    <RateType rateTypeId="ST_ZN_MRGN"  description="ST Zone margin"/>
+    <RateType rateTypeId="GB_ZN_MRGN"  description="GB Zone margin"/>
+    <RateType rateTypeId="BB_ZN_MRGN"  description="BB Zone margin"/>
+    <RateType rateTypeId="AG_ZN_MRGN"  description="AG Zone margin"/>
+
+    <RateType rateTypeId="MG_ZN_MRGN"  description="MG Zone margin (Rs7.52*368km)"/>
+    <RateType rateTypeId="NL_ZN_MRGN"  description="NL Zone margin (Rs7.78*224km)"/>
+    <RateType rateTypeId="TN_ZN_MRGN"  description="TN Zone margin (Rs12.27*288km"/>
+    <RateType rateTypeId="SP_ZN_MRGN"  description="SP Zone margin (Rs7.52*320km)"/>
+    
+    
+    <!-- period type is not relevant here and so leave it to the default RATE_HOUR -->
+    <RateAmount rateTypeId="VENDOR_MRGN" rateAmount="1.10" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="VENDOR_CD_ADTL_MRGN" rateAmount=".15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+
+    <RateAmount rateTypeId="SO_INST_MRGN" rateAmount="0.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="Company" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="SO_INST_MRGN" rateAmount="0.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="SO_INST_MRGN" rateAmount="2.20" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="8310" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-05-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="SO_INST_MRGN" rateAmount="2.20" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="8343" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-05-01 0:00:00.000" thruDate="" />
+    
+<!--    <RateAmount rateTypeId="SO_INST_MRGN" partyId="100" rateAmount="1.60" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />-->
+<!--    <PartyRate  rateTypeId="SO_INST_MRGN" partyId="100" periodTypeId="RATE_HOUR" fromDate="2012-01-01 0:00:00.000" thruDate="" percenatgeUsed="" defaultRate="Y"  />-->
+	<RateAmount rateTypeId="CR_INST_MRGN" rateAmount="0.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	<RateAmount rateTypeId="CR_INST_MRGN" rateAmount="0.95" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="8158" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-05-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="CR_INST_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="8164" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-05-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="CR_INST_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="8165" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-05-01 0:00:00.000" thruDate="" />
+<!--    <RateAmount rateTypeId="CR_INST_MRGN" partyId="100" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />-->
+<!--    <PartyRate  rateTypeId="CR_INST_MRGN" partyId="100" periodTypeId="RATE_HOUR" fromDate="2012-01-01 0:00:00.000" thruDate="" percenatgeUsed="" defaultRate="Y"  />-->
+
+    <RateAmount rateTypeId="FRANCHISEE_MRGN" rateAmount="2.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	
+    <RateAmount rateTypeId="ML_ZN_MRGN" rateAmount="0.74" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="TR_ZN_MRGN" rateAmount="0.53" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="VP_ZN_MRGN" rateAmount="0.74" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="AB_ZN_MRGN" rateAmount="0.4598" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="CM_ZN_MRGN" rateAmount="0.4598" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="SB_ZN_MRGN" rateAmount="0.4598" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="ZB_ZN_MRGN" rateAmount="1.90" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="MB_ZN_MRGN" rateAmount="0.485" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="SR_ZN_MRGN" rateAmount="0.635" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="YR_ZN_MRGN" rateAmount="0.55" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="CN_ZN_MRGN" rateAmount="0.64" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="RP_ZN_MRGN" rateAmount="0.51" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="MP_ZN_MRGN" rateAmount="0.515" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="ST_ZN_MRGN" rateAmount="0.515" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="GB_ZN_MRGN" rateAmount="0.515" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="BB_ZN_MRGN" rateAmount="0.725" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="AG_ZN_MRGN" rateAmount="0.725" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />	
+	
+    <RateAmount rateTypeId="MG_ZN_MRGN" rateAmount="2767.36" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="NL_ZN_MRGN" rateAmount="1742.72" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="TN_ZN_MRGN" rateAmount="3533.76" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="SP_ZN_MRGN" rateAmount="2406.40" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+
+    <RateAmount rateTypeId="AP_ZN_MRGN" rateAmount="0.64" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-03-31 23:59:59.000" />
+    <RateAmount rateTypeId="BL_ZN_MRGN" rateAmount="0.64" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-03-31 23:59:59.000" />
+    <RateAmount rateTypeId="CN_ZN_MRGN" rateAmount="0.64" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-03-31 23:59:59.000" />
+    <RateAmount rateTypeId="YR_ZN_MRGN" rateAmount="0.55" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-03-31 23:59:59.000" />
+ 
+    <RateAmount rateTypeId="AP_ZN_MRGN" rateAmount="0.70" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-04-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="BL_ZN_MRGN" rateAmount="0.70" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-04-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="CN_ZN_MRGN" rateAmount="0.70" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-04-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="YR_ZN_MRGN" rateAmount="0.52" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-04-01 0:00:00.000" thruDate="" />
+ 
+ 
+ <!-- Vita Milk gets special margin -->
+     <RateType rateTypeId="VENDOR_VTM_MRGN"  description="Vita Milk margin for vendors"/>
+     <RateAmount rateTypeId="VENDOR_VTM_MRGN" rateAmount="2.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+
+<!--  Vendor Deductions -->
+    <RateType rateTypeId="VENDOR_DEDUCTION"  description="Vendor price deduction at source"/>  
+    <RateAmount rateTypeId="VENDOR_DEDUCTION" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" productId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="VENDOR_DEDUCTION" rateAmount="2" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="950" productId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+       
+</entity-engine-xml>

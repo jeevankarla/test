@@ -1,0 +1,10 @@
+FixedAssetType_description,FixedAssetType_fixedAssetTypeId,FixedAssetType_hasTable,FixedAssetType_parentTypeId
+Equipment,EQUIPMENT,N,
+The fixed asset used in the operation-routing definition,PRODUCTION_EQUIPMENT,N,
+"Group of machines; used for task and routing definition",GROUP_EQUIPMENT,N,
+Other Fixed Asset,OTHER_FIXED_ASSET,N,
+Property,PROPERTY,N,
+Vehicle,VEHICLE,N,
+Real Estate,REAL_ESTATE,N,
+Computer Software,COMPUTER_SOFTWARE,N,
+Computer Hardware,COMPUTER_HARDWARE,N,

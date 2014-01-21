@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityPermission description="View operations in the Kkdmpcu Component." permissionId="KKDMPCU_VIEW"/>
+    <SecurityPermission description="Create operations in the Kkdmpcu Component." permissionId="KKDMPCU_CREATE"/>
+    <SecurityPermission description="Update operations in the Kkdmpcu Component." permissionId="KKDMPCU_UPDATE"/>
+    <SecurityPermission description="Delete operations in the Kkdmpcu Component." permissionId="KKDMPCU_DELETE"/>
+    <SecurityPermission description="ALL operations in the Kkdmpcu Component." permissionId="KKDMPCU_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="KKDMPCU_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="KKDMPCU_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="KKDMPCU_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="KKDMPCU_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="KKDMPCU_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="KKDMPCU_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="KKDMPCU_ADMIN"/>
+     <SecurityGroupPermission groupId="DISPATCH_ADMIN" permissionId="KKDMPCU_ADMIN"/>
+</entity-engine-xml>

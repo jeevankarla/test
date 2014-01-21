@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+	 <ProductCategory longDescription="Lms Products" productCategoryId="LMS" categoryName="Lms" productCategoryTypeId="CATALOG_CATEGORY"/>
+    
+    <ProductCategoryMember productCategoryId="LMS" productId="11" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="12" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="13" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="14" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="15" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="16" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="17" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="18" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="19" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="20" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    <ProductCategoryMember productCategoryId="LMS" productId="21" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    
+    <ProductCategory longDescription="Lms Bulk Products"  productCategoryId="LMS_BULK" categoryName="Lms Bulk Products" productCategoryTypeId="CATALOG_CATEGORY"  primaryParentCategoryId="LMS"/>
+     
+    <ProductCategoryMember productCategoryId="LMS_BULK" productId="13" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    <ProductCategoryMember productCategoryId="LMS_BULK" productId="15" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    <ProductCategoryMember productCategoryId="LMS_BULK" productId="17" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+ 	<ProductCategoryMember productCategoryId="LMS_BULK" productId="19" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/>
+    <ProductCategoryMember productCategoryId="LMS_BULK" productId="21" fromDate="2011-12-01 12:00:00.0" lastUpdatedStamp="2012-01-10 18:53:58.0" lastUpdatedTxStamp="2012-01-10 18:53:57.0" createdStamp="2012-01-10 18:53:58.0" createdTxStamp="2012-01-10 18:53:57.0"/> 
+	
+    <ProductPrice productId="11" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="28.5" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-14 12:06:06.0" lastModifiedByUserLogin="kvarma" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="11" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="31" createdDate="2012-07-31 14:01:39.0" lastModifiedDate="2012-08-01 11:07:04.0" lastModifiedByUserLogin="sujatha"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="12" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="30" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-14 12:07:14.0" lastModifiedByUserLogin="kvarma" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="12" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="32" createdDate="2012-07-31 14:27:35.0" lastModifiedDate="2012-07-31 14:27:35.0" lastModifiedByUserLogin="sujatha"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="13" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="29.3" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-12 00:00:00.0" lastModifiedByUserLogin="" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="13" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="31.3" createdDate="2012-07-31 14:03:17.0" lastModifiedDate="2012-07-31 14:29:21.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="14" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="32" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-14 12:08:29.0" lastModifiedByUserLogin="kvarma" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="14" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="34" createdDate="2012-07-31 14:03:59.0" lastModifiedDate="2012-07-31 14:29:52.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="15" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="31.3" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-12 00:00:00.0" lastModifiedByUserLogin="" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="15" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="33.3" createdDate="2012-07-31 14:05:30.0" lastModifiedDate="2012-07-31 14:30:28.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="16" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="34" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-14 12:09:24.0" lastModifiedByUserLogin="kvarma" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="16" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="36" createdDate="2012-07-31 14:06:53.0" lastModifiedDate="2012-07-31 14:30:57.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="17" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="33.3" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-12 00:00:00.0" lastModifiedByUserLogin="" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="17" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="35.3" createdDate="2012-07-31 14:08:35.0" lastModifiedDate="2012-07-31 14:31:24.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="18" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-04-11 12:11:02.0" price="38" createdDate="2012-06-14 12:11:31.0" lastModifiedDate="2012-06-14 12:11:31.0" lastModifiedByUserLogin="kvarma" thruDate="2012-08-09 23:59:59.0" createdByUserLogin="kvarma"/>
+    <ProductPrice productId="18" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="40" createdDate="2012-07-31 14:09:37.0" lastModifiedDate="2012-07-31 14:31:50.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="19" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="37.3" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-12 00:00:00.0" lastModifiedByUserLogin="" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="19" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="39.3" createdDate="2012-07-31 14:11:32.0" lastModifiedDate="2012-07-31 14:32:20.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="20" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="40" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-14 12:12:29.0" lastModifiedByUserLogin="kvarma" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="20" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="42" createdDate="2012-07-31 14:14:21.0" lastModifiedDate="2012-07-31 14:32:51.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+    <ProductPrice productId="21" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-06-12 00:00:00.0" price="39.3" createdDate="2012-06-12 00:00:00.0" lastModifiedDate="2012-06-12 00:00:00.0" lastModifiedByUserLogin="" thruDate="2012-08-09 23:59:59.0" createdByUserLogin=""/>
+    <ProductPrice productId="21" productPriceTypeId="CARD_PRICE" productPricePurposeId="PURCHASE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2012-08-10 00:00:00.0" price="41.3" createdDate="2012-07-31 14:15:39.0" lastModifiedDate="2012-07-31 14:33:15.0" lastModifiedByUserLogin="srinivass"  createdByUserLogin="sujatha"/>
+     
+     
+    <PaymentType paymentTypeId="ADVDEPOSIT_PAYIN" parentTypeId="SALES_PAYIN" hasTable="N" description="Advance Payment" />
+    <PaymentType paymentTypeId="CARDDEPOSIT_PAYIN" parentTypeId="SALES_PAYIN" hasTable="N" description="Card Payment" />
+    <PaymentType paymentTypeId="OTHER_PAYIN" parentTypeId="SALES_PAYIN" hasTable="N" description="Other Cash" /> 
+    <PaymentGlAccountTypeMap organizationPartyId="Company" paymentTypeId="CARDDEPOSIT_PAYIN" glAccountTypeId="ACCREC_UNAPPLIED"/>
+    <PaymentGlAccountTypeMap organizationPartyId="Company" paymentTypeId="OTHER_PAYIN" glAccountTypeId="ACCREC_UNAPPLIED"/>
+    <PaymentType paymentTypeId="CREAM_PAYIN" parentTypeId="SALES_PAYIN" hasTable="N" description="cream Cash" /> 
+    <PaymentGlAccountTypeMap organizationPartyId="Company" paymentTypeId="CREAM_PAYIN" glAccountTypeId="ACCREC_UNAPPLIED"/>
+    <PaymentGlAccountTypeMap organizationPartyId="Company" paymentTypeId="CREAM_PAYIN" glAccountTypeId="ACCREC_UNAPPLIED"/>
+    <PaymentType paymentTypeId="ADVDEPOSIT_PAYIN" parentTypeId="SALES_PAYIN" hasTable="N" description="Advance Payment" />
+    
+    
+    <Product productId="11" isExcludeFromIncTotal="Y"/>   
+    <Product productId="13" isExcludeFromIncTotal="Y"/>   
+    <Product productId="15" isExcludeFromIncTotal="Y"/>   
+    <Product productId="17" isExcludeFromIncTotal="Y"/>   
+    <Product productId="19" isExcludeFromIncTotal="Y"/>
+    <Product productId="21" isExcludeFromIncTotal="Y"/>
+   	
+   	<EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="LMS Vendor Margin Period Billing" enumCode="PB_LMS_VNDR_MRGN" enumId="PB_LMS_VNDR_MRGN" sequenceId="01" enumTypeId="PBILLING_TYPE"/>
+    <Enumeration description="LMS Transporter Margin Period Billing" enumCode="PB_LMS_TRSPT_MRGN" enumId="PB_LMS_TRSPT_MRGN" sequenceId="02" enumTypeId="PBILLING_TYPE"/>
+   	
+   	<RateAmount rateTypeId="VENDOR_DEDUCTION" rateAmount="-0.70" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="10221" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />   
+    
+   
+    
+    <RecurrenceRule recurrenceRuleId="100" untilDateTime="" frequency="HOURLY" intervalNumber="6" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="100" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="100" recurrenceCount="0"/>
+    <JobSandbox jobId="100" jobName="Auto populate LMSSalesHistory summary " runTime="2000-01-01 00:00:00.000" serviceName="populateLMSSalesHistorySummary" poolId="pool" runAsUser="system" recurrenceInfoId="100"/>
+    
+    
+    
+     <ProductAssocType description="Product Variant" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_VARIANT"/>
+     <ProductCategory longDescription="Lms Virtual"
+        productCategoryId="LMS_VIRTUAL" categoryName="Lms Virtual" productCategoryTypeId="CATALOG_CATEGORY"/>
+    
+    <Product productId="01" productTypeId="FINISHED_GOOD" primaryProductCategoryId="LMS_VIRTUAL" internalName="Double Toned Milk " productName="Double Toned Milk" brandName="Double Toned Milk" description="Double Toned Milk" longDescription="Double Toned Milk" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" billOfMaterialLevel="0"/>
+    <Product productId="03" productTypeId="FINISHED_GOOD" primaryProductCategoryId="LMS_VIRTUAL" internalName="Standard Milk" productName="Standard Milk" brandName="Standard Milk" description="Standard Milk" longDescription="Whole Milk 1Ltr Bulk" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" billOfMaterialLevel="0"/>
+    <Product productId="02" productTypeId="FINISHED_GOOD" primaryProductCategoryId="LMS_VIRTUAL" internalName="Toned Milk" productName="Toned Milk" brandName="Toned Milk" description="Toned Milk" longDescription="Toned Milk" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" billOfMaterialLevel="0"/>
+    <Product productId="04" productTypeId="FINISHED_GOOD" primaryProductCategoryId="LMS_VIRTUAL" internalName="Whole Milk" productName="Whole Milk" brandName="Whole Milk" description="Whole Milk" longDescription="Whole Milk" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" billOfMaterialLevel="0"/>
+    <Product productId="05" productTypeId="FINISHED_GOOD" primaryProductCategoryId="LMS_VIRTUAL" internalName="VDM Diet " productName="VDM" brandName="VDM" description="VDM" longDescription="VDM" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" billOfMaterialLevel="0"/>
+    <Product productId="06" productTypeId="FINISHED_GOOD" primaryProductCategoryId="LMS_VIRTUAL" internalName="FML" productName="FML" brandName="FML" description="FML" longDescription="FML" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" billOfMaterialLevel="0"/> 
+    <Product productId="07" productTypeId="FINISHED_GOOD" primaryProductCategoryId="LMS_VIRTUAL" internalName="Vita Milk" productName="Vita Milk" brandName="Vita Milk" description="Vita Milk" longDescription="Vita Milk" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" billOfMaterialLevel="0"/>
+    <Product productId="08" productTypeId="FINISHED_GOOD" primaryProductCategoryId="LMS_VIRTUAL" internalName="Cow Milk" productName="Cow Milk" brandName="Cow Milk" description="Cow Milk" longDescription="Cow Milk" quantityUomId="VLIQ_L" quantityIncluded="1" taxable="N" chargeShipping="N" autoCreateKeywords="Y" isVirtual="Y" isVariant="N" billOfMaterialLevel="0"/>
+    
+    
+    <ProductCategoryMember productCategoryId="LMS_VIRTUAL" productId="01" fromDate="2011-12-01 12:00:00.0" />
+    <ProductCategoryMember productCategoryId="LMS_VIRTUAL" productId="02" fromDate="2011-12-01 12:00:00.0" />
+    <ProductCategoryMember productCategoryId="LMS_VIRTUAL" productId="03" fromDate="2011-12-01 12:00:00.0" />
+    <ProductCategoryMember productCategoryId="LMS_VIRTUAL" productId="04" fromDate="2011-12-01 12:00:00.0" />
+    <ProductCategoryMember productCategoryId="LMS_VIRTUAL" productId="05" fromDate="2011-12-01 12:00:00.0" />
+    <ProductCategoryMember productCategoryId="LMS_VIRTUAL" productId="06" fromDate="2011-12-01 12:00:00.0" />
+    <ProductCategoryMember productCategoryId="LMS_VIRTUAL" productId="07" fromDate="2011-12-01 12:00:00.0" />
+    <ProductCategoryMember productCategoryId="LMS_VIRTUAL" productId="08" fromDate="2011-12-01 12:00:00.0" />
+    
+    <ProductAssoc productId="01" productIdTo="11" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="01" productIdTo="12" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="02" productIdTo="13" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="02" productIdTo="14" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="02" productIdTo="15" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="03" productIdTo="16" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="03" productIdTo="17" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    
+    <ProductAssoc productId="04" productIdTo="18" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="04" productIdTo="19" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="04" productIdTo="20" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+    <ProductAssoc productId="04" productIdTo="21" productAssocTypeId="PRODUCT_VARIANT" fromDate="2012-01-01 00:00:00.0" quantity="1.000000"/>
+   
+    <ProductCategoryMember productCategoryId="LMS" productId="30" fromDate="2012-05-30 00:00:00.0" lastUpdatedStamp="2012-06-13 18:40:27.0" lastUpdatedTxStamp="2012-06-13 18:40:27.0" createdStamp="2012-06-13 18:40:27.0" createdTxStamp="2012-06-13 18:40:27.0"/>
+    
+     <!-- Shipment status -->
+    <StatusType description="Shipment" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="In-Process" sequenceId="01" statusCode="IN_PROCESS" statusId="IN_PROCESS" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Generated" sequenceId="02" statusCode="GENERATED" statusId="GENERATED" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Generation Failed" sequenceId="02" statusCode="GENERATION_FAIL" statusId="GENERATION_FAIL" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem description="Cancellation In-Process" sequenceId="02" statusCode="CANCEL_INPROCESS" statusId="CANCEL_INPROCESS" statusTypeId="SHIPMENT_STATUS"/>
+    <StatusItem statusId="ADJUSTED" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTED" description="Margin Adjusted"/>
+    <StatusItem statusId="ADJUSTMENT_FAIL" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTMENT FAIL" description="Adjustment Failed"/>
+    <StatusItem statusId="ADJUST_IN_PROCESS" statusTypeId="SHIPMENT_STATUS" statusCode="ADJUSTMENT IN PROCESS" description="Adjustment in Process"/>
+    <StatusItem statusId="CANCEL_ADJ_INPROCESS" statusTypeId="SHIPMENT_STATUS" statusCode="CANCEL ADJUSTMENT IN PROCESS" description="Cancel Adjustment in Process"/>
+    <StatusValidChange statusId="ADJUSTED" statusIdTo="CANCEL_ADJ_INPROCESS" transitionName="Cancel Adjustment in Process"/>
+    <StatusValidChange statusId="ADJUST_IN_PROCESS" statusIdTo="ADJUSTED" transitionName="Margin Adjusted"/>
+    <StatusValidChange statusId="ADJUST_IN_PROCESS" statusIdTo="ADJUSTMENT_FAIL" transitionName="Adjustment Failed"/>
+    <StatusValidChange statusId="CANCEL_ADJ_INPROCESS" statusIdTo="GENERATED" transitionName="Cancelled Adjustment"/>
+    <StatusValidChange statusId="GENERATED" statusIdTo="ADJUST_IN_PROCESS" transitionName="Margin Adjustment in Process"/>
+    <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATED" transitionName="Generated"/>
+    <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATION_FAIL" transitionName="Generated"/>
+    <StatusValidChange condition="" statusId="GENERATED" statusIdTo="CANCEL_INPROCESS" transitionName="Cancellation In-Process"/>     
+    
+    <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Adjustment Vehicle Short Payment screen"/>
+    <PaymentType createdStamp="2012-11-27 00:00:00.0" createdTxStamp="2012-11-27 00:00:00.0" description="Transporter credit payin" hasTable="N" lastUpdatedStamp="2012-11-27 00:00:00.0" lastUpdatedTxStamp="2012-11-27 00:00:00.0" parentTypeId="RECEIPT" paymentTypeId="TRANS_CREDIT_PAYIN"/>
+  	<GlAccount accountCode="516102" accountName="Transporter_CreditNote" createdStamp="2012-10-05 12:32:08.0" createdTxStamp="2012-10-05 12:32:08.0" description="Transporter_CreditNote" glAccountClassId="NON_CASH_EXPENSE" glAccountId="516102" glAccountTypeId="OPERATING_EXPENSE" glResourceTypeId="MONEY" lastUpdatedStamp="2012-10-05 12:32:08.0" lastUpdatedTxStamp="2012-10-05 12:32:08.0" parentGlAccountId="516100"/>
+ 	<GlAccountOrganization createdStamp="2012-10-03 12:22:38.0" createdTxStamp="2012-10-03 12:22:38.0" fromDate="2012-05-05 12:00:00.0" glAccountId="516102" lastUpdatedStamp="2012-10-05 12:42:31.0" lastUpdatedTxStamp="2012-10-05 12:42:30.0" organizationPartyId="Company" postedBalance="" roleTypeId="INTERNAL_ORGANIZATIO"/>
+  	<PaymentMethodTypeGlAccount createdStamp="2012-06-13 19:18:10.0" createdTxStamp="2012-06-13 19:18:10.0" glAccountId="516102" lastUpdatedStamp="2012-06-13 19:18:10.0" lastUpdatedTxStamp="2012-06-13 19:18:10.0" organizationPartyId="COMPANY" paymentMethodTypeId="TRANS_CREDIT_PAYIN"/>
+  	<PaymentMethodType createdStamp="2012-06-13 19:17:28.0" createdTxStamp="2012-06-13 19:17:28.0" description="Transporter Credit note" lastUpdatedStamp="2012-06-13 19:17:28.0" lastUpdatedTxStamp="2012-06-13 19:17:28.0" paymentMethodTypeId="TRANS_CREDIT_PAYIN"/>
+  	<PaymentGlAccountTypeMap paymentTypeId="TRANS_CREDIT_PAYIN" glAccountTypeId="ACCREC_UNAPPLIED"  organizationPartyId="Company" createdStamp="2012-06-29 15:00:39.0" createdTxStamp="2012-06-29 15:00:38.0" lastUpdatedStamp="2012-06-29 15:00:39.0" lastUpdatedTxStamp="2012-06-29 15:00:38.0"/> 
+  	
+</entity-engine-xml>

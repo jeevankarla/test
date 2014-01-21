@@ -1,0 +1,8 @@
+TaxAuthorityRateType_description,TaxAuthorityRateType_taxAuthorityRateTypeId
+Central Sales Tax,SALES_TAX
+Service Tax,USE_TAX
+Income Tax,INCOME_TAX
+Export Tax,EXPORT_TAX
+Import Tax,IMPORT_TAX
+Value Added Tax,VAT_TAX
+Excise Duty,EXCISE_DUTY

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+
+    <SubscriptionProduct subscriptionId="10637" productId="K02" quantity="60" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="K09" quantity="150" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="K04" quantity="60" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="K14" quantity="20" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="M10" quantity="50" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="Y03" quantity="50" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="Y10" quantity="24" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I22" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I26" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I28" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I21" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I01" quantity="30" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I02" quantity="5" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I04" quantity="20" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I06" quantity="50" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10637" productId="I08" quantity="30" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+
+    <SubscriptionProduct subscriptionId="10681" productId="K04" quantity="15" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="K09" quantity="10" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="J26" quantity="3" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="Y01" quantity="5" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="I21" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="I22" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="I23" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="I01" quantity="20" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="I04" quantity="5" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="I05" quantity="5" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10681" productId="I06" quantity="20" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+
+    <SubscriptionProduct subscriptionId="10936" productId="K02" quantity="60" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="K09" quantity="150" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="K04" quantity="60" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="K14" quantity="20" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="M10" quantity="50" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="Y03" quantity="50" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="Y10" quantity="24" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I22" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I26" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I28" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I21" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I01" quantity="30" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I02" quantity="5" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I04" quantity="20" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I06" quantity="50" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10936" productId="I08" quantity="30" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+
+    <SubscriptionProduct subscriptionId="10949" productId="K04" quantity="15" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="K09" quantity="10" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="J26" quantity="3" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="Y01" quantity="5" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="I21" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="I22" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="I23" quantity="16" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="I01" quantity="20" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="I04" quantity="5" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="I05" quantity="5" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+    <SubscriptionProduct subscriptionId="10949" productId="I06" quantity="20" productSubscriptionTypeId="CASH" fromDate="2013-02-05 00:00:00.000" sequenceNum="_NA_" thruDate="2013-02-05 23:59:59.999"/>
+
+</entity-engine-xml>

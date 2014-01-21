@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="TenantConfiguration">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleTenantConfiguration"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                      		<condition>
+                            	<if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                          	</condition>
+                          	<widgets>
+                            	<screenlet title="${uiLabelMap.WebtoolsTenantConfigurationFormDescription}">
+                                	<include-form name="ListConfig" location="component://webtools/widget/TenantConfigForms.xml"/>
+                         	  	</screenlet>                            
+                         	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+
+ </screens>

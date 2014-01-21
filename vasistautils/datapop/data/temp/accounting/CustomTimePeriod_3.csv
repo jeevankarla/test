@@ -1,0 +1,2 @@
+CustomTimePeriod_organizationPartyId,CustomTimePeriod_customTimePeriodId,CustomTimePeriod_periodTypeId,CustomTimePeriod_fromDate,CustomTimePeriod_thruDate,CustomTimePeriod_isClosed,CustomTimePeriod_periodNum,CustomTimePeriod_periodName,CustomTimePeriod_parentPeriodId
+100,FISCAL,FISCAL_YEAR,2010-04-01,2010-04-01,N,1,FISCAL,FISCAL

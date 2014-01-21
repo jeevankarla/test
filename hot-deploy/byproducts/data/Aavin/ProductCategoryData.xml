@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <ProductCategory productCategoryId="BYPROD" productCategoryTypeId="BYPROD" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="BUTTER" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="CHEESE" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="GHEE" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="HOT_MILK" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="ICE_CREAM" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="MILK_KHOVA" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="MILK_SWEETS" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="FMILK_CATEGORY" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="2012-12-17 00:00:00.00" createdTxStamp="2012-12-17 00:00:00.00"/>
+    <ProductCategory productCategoryId="MILK_POWDER" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="CURD" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="BAKERY_CATEGORY" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="TEA_POWDER" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="JUICE_CATEGORY" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="DAIRY_PRODUCTS" productCategoryTypeId="BYPROD_MFG_LOC" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="UNION_PRODUCTS" productCategoryTypeId="BYPROD_MFG_LOC" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="PARLOUR_PRODUCTS" productCategoryTypeId="BYPROD_MFG_LOC" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="TEA POWDER" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+    <ProductCategory productCategoryId="OTHER" productCategoryTypeId="BYPROD_CAT" primaryParentCategoryId="" categoryName="" description="" lastUpdatedStamp="" lastUpdatedTxStamp="" createdStamp="" createdTxStamp=""/>
+</entity-engine-xml>

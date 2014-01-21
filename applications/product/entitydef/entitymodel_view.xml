@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    
+    <view-entity entity-name="ContentApprovalProductContentAndInfo"
+            package-name="org.ofbiz.content.content"
+            title="ContentApproval, ProductContent, Content and DataResource View Entity">
+      <member-entity entity-alias="CA" entity-name="ContentApproval"/>
+      <member-entity entity-alias="PRC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <alias-all entity-alias="CA"/>
+      <alias-all entity-alias="PRC">
+        <exclude field="contentId"/>
+        <exclude field="sequenceNum"/>
+      </alias-all>
+      <alias-all entity-alias="CO">
+        <exclude field="contentId"/>
+      </alias-all>
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <view-link entity-alias="CA" rel-entity-alias="PRC">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="PRC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="DR">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ElectronicText">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ImageDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OtherDataResource">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
+        <key-map field-name="contentId" rel-field-name="contentIdStart"/>
+      </relation>
+      <relation type="many" rel-entity-name="ContentAssocDataResourceViewTo">
+        <key-map field-name="contentId" rel-field-name="contentIdStart"/>
+      </relation>
+    </view-entity>
+    
+    <view-entity entity-name="ProductCategoryMemberAndPrice" package-name="org.ofbiz.product.category" title="ProductCategoryMember And ProductPrice View Entiry">
+        <member-entity entity-alias="PCM" entity-name="ProductCategoryMember"/>
+        <member-entity entity-alias="PD" entity-name="Product"/>
+        <member-entity entity-alias="PP" entity-name="ProductPrice"/>
+        <alias-all entity-alias="PCM"/>
+        <alias-all entity-alias="PD" prefix="product">
+            <exclude field="productId"/>
+        </alias-all>
+        <alias-all entity-alias="PP" prefix="price">
+            <exclude field="productId"/>
+        </alias-all>
+        <view-link entity-alias="PCM" rel-entity-alias="PD">
+            <key-map field-name="productId"/>
+        </view-link>
+        <view-link entity-alias="PD" rel-entity-alias="PP">
+            <key-map field-name="productId"/>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="SubscriptionAndFacility" package-name="org.ofbiz.product.category" title="ProductCategoryMember And ProductPrice View Entiry">
+        <member-entity entity-alias="SUB" entity-name="Subscription"/>
+        <member-entity entity-alias="FAC" entity-name="Facility"/>       
+        <alias-all entity-alias="FAC"/>
+        <alias-all entity-alias="SUB"/>       
+        <view-link entity-alias="SUB" rel-entity-alias="FAC">
+            <key-map field-name="facilityId"/>
+        </view-link>        
+    </view-entity>
+    <view-entity entity-name="SubscriptionFacilityAndSubscriptionProduct" package-name="org.ofbiz.product.category" title="ProductCategoryMember And ProductPrice View Entiry">
+        <member-entity entity-alias="SUB" entity-name="Subscription"/>
+        <member-entity entity-alias="FAC" entity-name="Facility"/>
+        <member-entity entity-alias="SUBPROD" entity-name="SubscriptionProduct"/>       
+              
+        <alias-all entity-alias="FAC">
+        	<exclude field="sequenceNum"/>
+        </alias-all>
+        <alias-all entity-alias="SUB"> 
+        	<exclude field="productId"/>         
+        	<exclude field="fromDate"/> 
+        	<exclude field="thruDate"/>                	       
+        </alias-all>
+        <alias-all entity-alias="SUBPROD"/>       
+        <alias entity-alias="SUBPROD" name="destinationFacilityId"/>      
+        <view-link entity-alias="SUB" rel-entity-alias="FAC">
+            <key-map field-name="facilityId"/>
+        </view-link>   
+        <view-link entity-alias="SUB" rel-entity-alias="SUBPROD">
+            <key-map field-name="subscriptionId"/>
+        </view-link>               
+    </view-entity>    
+    <view-entity entity-name="MilkCardOrderAndItem"
+        package-name="org.ofbiz.product.category"
+        title="MilkCardOrder And MilkCardOrderItem View Entity">
+        <member-entity entity-alias="MCO" entity-name="MilkCardOrder"/>
+        <member-entity entity-alias="MCOI" entity-name="MilkCardOrderItem"/>
+        <alias-all entity-alias="MCO"/>
+        <alias-all entity-alias="MCOI"/>
+        <view-link entity-alias="MCO" rel-entity-alias="MCOI" rel-optional="true">
+            <key-map field-name="orderId"/>
+        </view-link>
+    </view-entity> 
+    
+    <view-entity entity-name="MilkCardOrderAndItemAndFacility"
+        package-name="org.ofbiz.product.category"
+        title="MilkCardOrder And Item Facility View Entity">
+        <member-entity entity-alias="MCO" entity-name="MilkCardOrder"/>
+        <member-entity entity-alias="MCOI" entity-name="MilkCardOrderItem"/>
+        <member-entity entity-alias="FA" entity-name="Facility"/>
+        <alias-all entity-alias="MCO"/>
+        <alias-all entity-alias="MCOI"/>
+        <alias-all entity-alias="FA"/>
+        <view-link entity-alias="MCO" rel-entity-alias="MCOI" rel-optional="true">
+            <key-map field-name="orderId"/>
+        </view-link>
+        <view-link entity-alias="MCO" rel-entity-alias="FA">
+       		<key-map field-name="boothId" rel-field-name="facilityId"/>
+     	</view-link>
+    </view-entity>
+    <view-entity entity-name="FacilityPersonAndFinAccount"
+        package-name="org.ofbiz.product.category"
+        title="Facility, Person And FinAccount View Entity">
+        <member-entity entity-alias="FA" entity-name="Facility"/>
+        <member-entity entity-alias="PA" entity-name="Person"/>
+        <member-entity entity-alias="FIN" entity-name="FinAccount"/>
+        <alias-all entity-alias="FA"/>
+        <alias-all entity-alias="PA"/>
+        <alias-all entity-alias="FIN"/>
+        <view-link entity-alias="FA" rel-entity-alias="FIN" rel-optional="true">
+            <key-map field-name="ownerPartyId" />
+        </view-link>
+        <view-link entity-alias="FA" rel-entity-alias="PA" rel-optional="true">
+       		<key-map field-name="ownerPartyId" rel-field-name="partyId"/>
+     	</view-link>
+    </view-entity>
+    
+    <view-entity entity-name="PaymentAndFacility"
+          package-name="org.ofbiz.order.order" 
+          title="Payment and Facility View Entity">
+	    <member-entity entity-alias="PY" entity-name="Payment"/>
+	    <member-entity entity-alias="FA" entity-name="Facility"/>	    
+		<alias-all entity-alias="PY" />    
+	    <alias entity-alias="FA" name="facilityName"/>
+	    <alias entity-alias="FA" name="parentFacilityId"/>		
+	    <alias entity-alias="FA" name="categoryTypeEnum"/>	    	        
+      	<view-link entity-alias="PY" rel-entity-alias="FA">
+        	<key-map field-name="facilityId"/>
+      	</view-link> 	        
+  </view-entity>
+  <view-entity entity-name="PaymentFacilityAndApplication"
+		package-name="org.ofbiz.accounting.payment" never-cache="true"
+		title="Payment and Application View Entity">
+		<member-entity entity-alias="PY" entity-name="Payment" />
+		<member-entity entity-alias="FA" entity-name="Facility" />
+		<member-entity entity-alias="PA" entity-name="PaymentApplication" />
+		<alias-all entity-alias="PY">
+			<exclude field="overrideGlAccountId" /><!-- already existing in 
+				PaymentApplication -->
+		</alias-all>
+		<alias-all entity-alias="PA" />
+		<alias-all entity-alias="FA" />
+		<view-link entity-alias="PY" rel-entity-alias="PA">
+			<key-map field-name="paymentId" />
+		</view-link>
+		<view-link entity-alias="PY" rel-entity-alias="FA">
+			<key-map field-name="facilityId" />
+		</view-link>
+		<relation type="one-nofk" rel-entity-name="Payment">
+			<key-map field-name="paymentId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="PaymentApplication">
+			<key-map field-name="paymentApplicationId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="StatusItem">
+			<key-map field-name="statusId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="PaymentType">
+			<key-map field-name="paymentTypeId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="PaymentMethodType">
+			<key-map field-name="paymentMethodTypeId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="PaymentGatewayResponse">
+			<key-map field-name="paymentGatewayResponseId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="Geo">
+			<key-map field-name="taxAuthGeoId" rel-field-name="geoId" />
+		</relation>
+	</view-entity>
+	<view-entity entity-name="FacilityGroupMemberAndFacility" package-name="org.ofbiz.product.facility" title="Facility Group Member and Facility">
+        <member-entity entity-alias="FGM" entity-name="FacilityGroupMember"/>
+        <member-entity entity-alias="FA" entity-name="Facility"/>
+        <alias-all entity-alias="FGM"/>
+        <alias entity-alias="FA" name="facilityName"/>
+	    <alias entity-alias="FA" name="parentFacilityId"/>
+	    <alias entity-alias="FA" name="facilityTypeId"/>
+	    <alias entity-alias="FA" name="openedDate"/>
+	    <alias entity-alias="FA" name="closedDate"/>
+        <view-link entity-alias="FGM" rel-entity-alias="FA">
+            <key-map field-name="facilityId"/>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="FacilityGroupAndMemberAndFacility" package-name="org.ofbiz.product.facility" title="Facility Group ,Facility Group Member and Facility">
+         <member-entity entity-alias="FG" entity-name="FacilityGroup"/>
+        <member-entity entity-alias="FGM" entity-name="FacilityGroupMember"/>
+        <member-entity entity-alias="FA" entity-name="Facility"/>
+        <alias-all entity-alias="FGM"/>
+        <alias-all entity-alias="FA"/>
+       <!--  <alias entity-alias="FA" name="facilityName"/>
+	    <alias entity-alias="FA" name="parentFacilityId"/>
+	    <alias entity-alias="FA" name="facilityTypeId"/>
+	    <alias entity-alias="FA" name="categoryTypeEnum"/> -->
+	    <alias entity-alias="FG" name="ownerFacilityId"/> 
+	    <alias entity-alias="FG" name="facilityGroupTypeId"/> 
+	     <view-link entity-alias="FGM" rel-entity-alias="FG">
+            <key-map field-name="facilityGroupId"/>
+        </view-link>
+        <view-link entity-alias="FGM" rel-entity-alias="FA">
+            <key-map field-name="facilityId"/>
+        </view-link>
+    </view-entity>
+	<view-entity entity-name="InvoiceAndFacility"
+          package-name="org.ofbiz.order.order" 
+          title="Invoice and Facility View Entity">
+	    <member-entity entity-alias="INV" entity-name="Invoice"/>
+	    <member-entity entity-alias="FA" entity-name="Facility"/>	    
+		<alias-all entity-alias="INV" />    
+	    <alias entity-alias="FA" name="facilityName"/>
+	    <alias entity-alias="FA" name="parentFacilityId"/>		
+	    <alias entity-alias="FA" name="categoryTypeEnum"/>	    	        
+      	<view-link entity-alias="INV" rel-entity-alias="FA">
+        	<key-map field-name="facilityId"/>
+      	</view-link> 	        
+  </view-entity> 
+  <view-entity entity-name="FacilityFacilityPartyAndPerson"
+          package-name="org.ofbiz.order.order" 
+          title="Facility FacilityParty and Person  View Entity">
+	    <member-entity entity-alias="FP" entity-name="FacilityParty"/>
+	    <member-entity entity-alias="FA" entity-name="Facility"/>	
+	    <member-entity entity-alias="P" entity-name="Person"/>    
+		<alias-all entity-alias="FP" />    
+	    <alias entity-alias="FA" name="facilityName"/>
+	    <alias entity-alias="FA" name="parentFacilityId"/>
+      	<alias entity-alias="P" name="firstName" />
+      	<alias entity-alias="P" name="lastName" />
+      	<view-link entity-alias="FA" rel-entity-alias="FP">
+        	<key-map field-name="facilityId"/>
+      	</view-link>
+      	<view-link entity-alias="FP" rel-entity-alias="P">
+        	<key-map field-name="partyId"/>
+      	</view-link> 	        
+  </view-entity> 
+  
+</entitymodel>

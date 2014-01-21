@@ -1,0 +1,41 @@
+
+
+<entity-engine-xml>
+<PaymentType paymentTypeId="TRANSPORTER_PAYIN" parentTypeId="RECEIPT" hasTable="N" description="Trasnporter- payin" lastUpdatedStamp="2011-01-01 0:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 0:00:00.00" createdTxStamp="2011-01-01 0:00:00.00"/>
+
+<PaymentType paymentTypeId="TRANSPORTER_PAYOUT" parentTypeId="DISBURSEMENT" hasTable="N" description="Trasnporter- payout" lastUpdatedStamp="2011-01-01 0:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 0:00:00.00" createdTxStamp="2011-01-01 0:00:00.00"/>
+
+
+<InvoiceType invoiceTypeId="TRANSPORTER_IN" parentTypeId="SALES_INVOICE" hasTable="N" description="Transporter Receivable" paymentTypeId="TRANSPORTER_PAYIN"  lastUpdatedStamp="2011-01-01 0:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 0:00:00.00" createdTxStamp="2011-01-01 0:00:00.00"/>
+
+<InvoiceType invoiceTypeId="TRANSPORTER_OUT" parentTypeId="PURCHASE_INVOICE" hasTable="N" description="Transporter Adjustment" paymentTypeId="TRANSPORTER_PAYOUT"  lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
+
+<GlAccount parentGlAccountId="123000" glAccountId="123301" accountCode="123301" glAccountClassId="CURRENT_ASSET" glAccountTypeId="BANK_STLMNT_ACCOUNT" glResourceTypeId="MONEY" accountName="ACCOUNTS RECEIVABLE-TRANSPORTERS" description="Accounts Receivable-Transporters"/>
+
+
+<GlAccountOrganization glAccountId="123301" organizationPartyId="Company" roleTypeId="INTERNAL_ORGANIZATIO" fromDate="2011-01-01 00:00:00.00" thruDate="" postedBalance="" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
+
+<InvoiceItemType invoiceItemTypeId="TRANSPORTER_INV_ITEM" parentTypeId="" hasTable="N" description="Accounts Receivable-Transporters" defaultGlAccountId="123301"/>
+
+<InvoiceItemTypeMap invoiceItemMapKey="CURASS_MAP1" invoiceTypeId="TRANSPORTER_IN" invoiceItemTypeId="TRANSPORTER_INV_ITEM" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="12-22/2011 19:55" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
+
+<InvoiceItemTypeMap invoiceItemMapKey="CURASS_MAP101" invoiceTypeId="TRANSPORTER_OUT" invoiceItemTypeId="TRANSPORTER_INV_ITEM" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
+
+
+<GlAccount parentGlAccountId="116000" glAccountId="116004" accountCode="116004" glAccountClassId="CASH_EQUIVALENT" glAccountTypeId="BALANCE_ACCOUNT" glResourceTypeId="MONEY" accountName="TRANSPORTERS-RECEIVABLE" description="Transporters Receivable"/>
+
+<GlAccountOrganization glAccountId="116004" organizationPartyId="Company" roleTypeId="INTERNAL_ORGANIZATIO" fromDate="2011-01-01 00:00:00.00" thruDate="" postedBalance="" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
+
+
+<PaymentMethodType paymentMethodTypeId="TRANSPORTER_PAYIN" description="Transporter Receipt" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
+
+
+
+<PaymentMethodTypeGlAccount paymentMethodTypeId="TRANSPORTER_PAYIN" organizationPartyId="Company" glAccountId="116004" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
+<PaymentGlAccountTypeMap paymentTypeId="TRANSPORTER_PAYIN" organizationPartyId="Company" glAccountTypeId="ACCREC_UNAPPLIED" />
+
+</entity-engine-xml>
+
+
+
+

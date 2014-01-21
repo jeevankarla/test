@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+	<EnumerationType description="Procurement Supply Time" enumTypeId="PROC_SUPPLY_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="AM" enumCode="AM" enumId="AM" sequenceId="01" enumTypeId="PROC_SUPPLY_TYPE"/>
+    <Enumeration description="PM" enumCode="PM" enumId="PM" sequenceId="02" enumTypeId="PROC_SUPPLY_TYPE"/>
+    
+    <EnumerationType description="Procurement OutPut Type" enumTypeId="PROC_OUTPUT_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Local Sales" enumCode="LOCAL_SALES" enumId="LOCAL_SALES" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="TM Preparation" enumCode="TM_PREPARATION" enumId="TM_PREPARATION" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="TM Preparation OB" enumCode="TM_PREPARATION_OB" enumId="TM_PREPARATION_OB" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="Sour" enumCode="SOUR" enumId="SOUR" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="Curdled" enumCode="CURDLED" enumId="CURDLED" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="Other" enumCode="OTHER" enumId="OTHER" enumTypeId="PROC_OUTPUT_TYPE"/>
+   	<Enumeration description="Closing Balance" enumCode="CLOSING_BALANCE" enumId="CLOSING_BALANCE" enumTypeId="PROC_OUTPUT_TYPE"/>
+
+    <RoleType description="Society" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SOCIETY"/>
+    <RoleType description="Agent" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="AGENT"/>    
+
+    <FacilityType facilityTypeId="UNIT" parentTypeId="" hasTable="N" description="Unit"/>   
+    <FacilityType facilityTypeId="SHED" parentTypeId="MAIN_PLANT" hasTable="N" description="shed"/>	
+	<FacilityType description="Center" facilityTypeId="CENTER" hasTable="N" parentTypeId=""/>
+		
+	<EnumerationType description="Centers Facility Category Type" enumTypeId="PROC_CENTER_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
+    <Enumeration description="Agents" enumCode="AGENT" enumId="AGENT" sequenceId="01" enumTypeId="PROC_CENTER_CAT_TYPE"/>
+    <Enumeration description="Society" enumCode="SOCIETY" enumId="SOCIETY" sequenceId="02" enumTypeId="PROC_CENTER_CAT_TYPE"/>
+	 
+	
+	<FacilityType facilityTypeId="MAIN_PLANT" parentTypeId="PLANT" hasTable="N" description="MainPlant"/>
+    <FacilityType facilityTypeId="SHED" parentTypeId="PLANT" hasTable="N" description="shed"/>
+    
+	<FacilityType facilityTypeId="PROC_ROUTE"  hasTable="N" description="Procurement Route"/>
+	<EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Procurement  Margin Period Billing" enumCode="PB_PROC_MRGN" enumId="PB_PROC_MRGN" sequenceId="01" enumTypeId="PBILLING_TYPE"/>
+	<EnumerationType description="Centers Facility Category Type" enumTypeId="PROC_CENTER_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
+    <Enumeration description="Agents" enumCode="AGENT" enumId="AGENT" sequenceId="01" enumTypeId="PROC_CENTER_CAT_TYPE"/>
+    <Enumeration description="Society" enumCode="SOCIETY" enumId="SOCIETY" sequenceId="02" enumTypeId="PROC_CENTER_CAT_TYPE"/>
+	<!-- <Enumeration description="Mcc" enumCode="MCC" enumId="MCC" sequenceId="03" enumTypeId="PROC_CENTER_CAT_TYPE"/> -->
+	
+	
+	<EnumerationType description="Order Prupose Type" enumTypeId="PROC_ORD_PUR_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Milk Procurement" enumCode="MILK_PROCUREMENT" enumId="MILK_PROCUREMENT" sequenceId="01" enumTypeId="PROC_ORD_PUR_TYPE"/>
+	
+	<PeriodType description="Procurement Billing Period" periodTypeId="PROC_BILL_MONTH" periodLength="1" uomId="TF_mon"/>
+	
+    <StatusType statusTypeId="MILK_XFER_STTS" description="MILK TRANSFER"/>
+    <StatusItem statusId ="MXF_INPROCESS" statusTypeId="MILK_XFER_STTS" statusCode = "INPROCESS" description ="IN PROCESS" />
+    <StatusItem statusId ="MXF_RECD" statusTypeId="MILK_XFER_STTS" statusCode = "RECEIVED" description ="RECEIVED" />
+   
+    <ProductCategory longDescription="Milk Procurement Products"
+        productCategoryId="MILK_PROCUREMENT" categoryName="Milk Procurement" productCategoryTypeId="CATALOG_CATEGORY"/>
+     
+     <Product productId="_NA_" description="_NA_"/>
+    
+     
+     <RoleType description="Milk Producer" hasTable="N"  roleTypeId="MILK_PRODUCER"/>
+    <!-- Additions and deductions  -->
+    <OrderAdjustmentType description="Procurement Additions" hasTable="N" orderAdjustmentTypeId="MILKPROC_ADDITIONS"/>   
+ 	<OrderAdjustmentType description="Interest" hasTable="N" orderAdjustmentTypeId="MILKPROC_INTEREST" parentTypeId="MILKPROC_ADDITIONS"/>
+ 	<!--Premium Discount price  -->
+ 	<OrderAdjustmentType description="Premium Discount Amount" hasTable="N" orderAdjustmentTypeId="MILKPROC_PREMAMOUNT" parentTypeId="MILKPROC_ADDITIONS"/>
+ 	<OrderAdjustmentType description="Procurement Deductions" hasTable="N" orderAdjustmentTypeId="MILKPROC_DEDUCTIONS"/>   
+ 	<OrderAdjustmentType description="Feed" hasTable="N" orderAdjustmentTypeId="MILKPROC_FEED" parentTypeId="MILKPROC_DEDUCTIONS"/>
+ 	<OrderAdjustmentType  orderAdjustmentTypeId="MILKPROC_CESSONSALE" parentTypeId="MILKPROC_DEDUCTIONS"  description="CESS ON SALE" hasTable ="N" lastUpdatedStamp="2012-11-16 12:28:15.000" lastUpdatedTxStamp="2012-11-16 12:28:15.000" createdStamp="2012-11-16 12:28:15.000" createdTxStamp="2012-11-16 12:28:15.000"/>
+ 	<InvoiceItemType description="Invoice Adjustment" hasTable="N" invoiceItemTypeId="INVOICE_ADJ" parentTypeId=""/>
+ 	<!-- Procurement price  types -->
+    <Facility facilityId="_NA_"/>
+ 	
+	<EnumerationType description="Procurement Price Type" enumTypeId="PROC_PRICE_TYPE" hasTable="N" parentTypeId=""/>
+  <!--   <Enumeration description="Default" enumCode="PROC_PRICE_DEFAULT" enumId="PROC_PRICE_DEFAULT" sequenceId="01" enumTypeId="PROC_PRICE_TYPE"/> -->
+  	<Enumeration description="Slab1" enumCode="PROC_PRICE_SLAB1" enumId="PROC_PRICE_SLAB1" sequenceId="01" enumTypeId="PROC_PRICE_TYPE"/>
+ 	<Enumeration description="Slab2" enumCode="PROC_PRICE_SLAB2" enumId="PROC_PRICE_SLAB2" sequenceId="02" enumTypeId="PROC_PRICE_TYPE"/>
+ 	<Enumeration description="Slab3" enumCode="PROC_PRICE_SLAB3" enumId="PROC_PRICE_SLAB3" sequenceId="03" enumTypeId="PROC_PRICE_TYPE"/>
+ 	<Enumeration description="Slab4" enumCode="PROC_PRICE_SLAB4" enumId="PROC_PRICE_SLAB4" sequenceId="04" enumTypeId="PROC_PRICE_TYPE"/>
+ 	<Enumeration description="Slab5" enumCode="PROC_PRICE_SLAB5" enumId="PROC_PRICE_SLAB5" sequenceId="05" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Minimum Quality" enumCode="PROC_PRICE_MIN_QLTY" enumId="PROC_PRICE_MIN_QLTY" sequenceId="06" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Maximum Quality" enumCode="PROC_PRICE_MAX_QLTY" enumId="PROC_PRICE_MAX_QLTY" sequenceId="10" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Snf Deduction" enumCode="PROC_PRICE_SNF_DED" enumId="PROC_PRICE_SNF_DED" sequenceId="07" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Snf Premium" enumCode="PROC_PRICE_SNF_PRM" enumId="PROC_PRICE_SNF_PRM" sequenceId="08" enumTypeId="PROC_PRICE_TYPE"/>
+    <Enumeration description="Sour Proce" enumCode="PROC_PRICE_SOUR" enumId="PROC_PRICE_SOUR" sequenceId="09" enumTypeId="PROC_PRICE_TYPE"/>
+    <!-- Facility Rate Types  -->
+    
+    <RateType rateTypeId="PROC_AGENT_MRGN"  description="Agent margin"/>
+	<RateType rateTypeId="PROC_CARTAGE"  description="Cartage"/>
+	<RateType rateTypeId="PROC_OP_COST"  description="OP Cost"/>
+	<RateType rateTypeId="PROC_TIP_AMOUNT"  description="Tip Amount"/>
+	<RateType rateTypeId ="PROC_PENALTY_AMOUNT" description ="Penalty Amount"/>
+	<RateType rateTypeId ="GHEE_YEILD_RATE" description ="Ghee yeild Rate"/>
+	<RateAmount rateTypeId="GHEE_YEILD_RATE" rateAmount="160.0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR"  partyId="_NA_" productId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2013-01-01 0:00:00.000" thruDate="" />
+    <Enumeration description="Milk Producer Channel" enumCode="PRODUCER_CHANNEL" enumId="PRODUC_SALES_CHANNEL" sequenceId="101" enumTypeId="ORDER_SALES_CHANNEL"/>
+    
+    
+    
+	<EnumerationType enumTypeId="FACILITY_SCHEME_TYPE"  description="Facility Scheme Types"/>    
+	<EnumerationType description="Units Schemes Type" enumTypeId="PROC_SCHEME_TYPE" hasTable="N" parentTypeId="FACILITY_SCHEME_TYPE"/>
+	<Enumeration description="SAP" enumCode="SAP" enumId="SAP" sequenceId="01" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="PMP" enumCode="PMP" enumId="PMP" sequenceId="02" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="CMP" enumCode="CMP" enumId="CMP" sequenceId="03" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="IDDP IX" enumCode="IDDP_IX" enumId="IDDP_IX" sequenceId="04" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="FED" enumCode="FED" enumId="FED" sequenceId="05" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="TIFAC" enumCode="TIFAC" enumId="TIFAC" sequenceId="06" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="DRDA" enumCode="DRDA" enumId="DRDA" sequenceId="07" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="ADAP" enumCode="ADAP" enumId="ADAP" sequenceId="08" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="RKVY_07-08" enumCode="RKVY_07-08" enumId="RKVY_07-08" sequenceId="09" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="RKVY_08-09" enumCode="RKVY_08-09" enumId="RKVY_08-09" sequenceId="10" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="RKVY_09-10" enumCode="RKVY_09-10" enumId="RKVY_09-10" sequenceId="11" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="OTHERS" enumCode="OTHERS" enumId="OTHERS" sequenceId="12" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="IDDP_X" enumCode="IDDP X" enumId="IDDP X" sequenceId="13" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="PADA" enumCode="PADA" enumId="PADA" sequenceId="14" enumTypeId="PROC_SCHEME_TYPE"/>
+	<Enumeration description="DF" enumCode="DF" enumId="DF" sequenceId="15" enumTypeId="PROC_SCHEME_TYPE"/>
+	
+	<!-- facility managed by -->
+	<EnumerationType enumTypeId="FACILITY_MNGBY_TYPE"  description="Facility Managed By Types"/>
+	<EnumerationType enumTypeId="PROC_MNGNBY_TYPE"  description="Facility Managed By Types"/>    
+	<EnumerationType description="Units Managed By Type" enumTypeId="PROC_MNGNBY_TYPE" hasTable="N" parentTypeId="FACILITY_MNGBY_TYPE"/>
+	<Enumeration description="APDDCF" enumCode="APDDCF" enumId="APDDCF" sequenceId="01" enumTypeId="PROC_MNGNBY_TYPE"/>
+	<Enumeration description="IKP" enumCode="IKP" enumId="IKP" sequenceId="02" enumTypeId="PROC_MNGNBY_TYPE"/>
+	
+	<EnumerationType description="Units Facility Category Type" enumTypeId="PROC_UNIT_CAT_TYPE" hasTable="N" parentTypeId="FACILITY_CAT_TYPE"/>
+	<Enumeration description="DAIRY" enumCode="DAIRY" enumId="DAIRY" sequenceId="01" enumTypeId="PROC_UNIT_CAT_TYPE"/>
+	<Enumeration description="MCC" enumCode="MCC" enumId="MCC" sequenceId="02" enumTypeId="PROC_UNIT_CAT_TYPE"/>
+	<Enumeration description="BCU" enumCode="BCU" enumId="BCU" sequenceId="03" enumTypeId="PROC_UNIT_CAT_TYPE"/>
+	
+	<Enumeration enumId="MILK_PROCUREMENT" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Invoice and Payment Sms  Configurations"/>
+	<TenantConfiguration propertyName="enableLR" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable Lacto Meter Reading"/>
+	<TenantConfiguration propertyName="enableQuantityInLtrs" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable Input Taking Quantity in Liters"/>   
+    
+    <TenantConfiguration propertyName="enableMultipleProcEntries" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable multiple procurement entries for center"/>   
+    <TenantConfiguration propertyName="enableSQuantityInKgs" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable Input Taking SQuantity in Kgs"/>   
+   	<TenantConfiguration propertyName="enableConvertKgToLtrSetScale" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable setScale while converting Kgs to Litre"/>
+   	<TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="THE SUPRAJA DAIRY PRIVATE LIMITED"/>	
+   	<TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="THE ANDHRA PRADESH DAIRY DEVELOPMENT COOP.FED LTD"/>
+   	<TenantConfiguration propertyName="enableCenterCodeRetain" propertyValue="N" propertyTypeEnumId="MILK_PROCUREMENT" description="Enable retaining of centerCode"/>
+   <!-- Billing Error List Types  -->
+   
+    <EnumerationType description="Procurement Billing Error Validation Type" enumTypeId="PROC_BILL_VAL_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Quantity Outlier" enumCode="QTY_OUTLIER" enumId="QTY_OUTLIER" enumTypeId="PROC_BILL_VAL_TYPE"/>
+   	<Enumeration description="Billing Negative Amount" enumCode="NEGATIVE_AMOUNT" enumId="NEGATIVE_AMOUNT" enumTypeId="PROC_BILL_VAL_TYPE"/>
+   	<Enumeration description="Quantity,Snf.Fat range validation" enumCode="QTYSNFFAT_CHECK" enumId="QTYSNFFAT_CHECK" enumTypeId="PROC_BILL_VAL_TYPE"/>
+   	
+   	<!-- ProcBillingValidationRule -->
+   	<ProcBillingValidationRule shedId="MBNR" productId="101" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="4" maxFat="15" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="MBNR" productId="102" validationTypeId="QTYSNFFAT_CHECK" fromDate="2013-01-01 00:00:00.0" minFat="2.5" maxFat="10" minSnf="7.5" maxSnf="15"/>
+   	<ProcBillingValidationRule shedId="MBNR" productId="_NA_" validationTypeId="QTY_OUTLIER" fromDate="2013-01-01 00:00:00.0" quantity="40"/>
+   	
+   	<!-- configuring DD Account  -->
+   	<!-- here i taken party Id and DD code same -->
+   	<Party partyId = "97" preferredCurrencyUomId ="INR"  statusId="PARTY_ENABLED"  createdDate="2012-01-01 12:14:31.000" />
+	<PartyGroup partyId = "97" groupName="MD,APDDCF LTD,MBNR" />
+	<RoleType description="Deputy Director" hasTable="N" roleTypeId="DD_ROLE"/>
+	<PartyRole partyId="97" roleTypeId="DD_ROLE"/>
+	<FacilityParty facilityId="MBNR" partyId="97" roleTypeId="DD_ROLE" fromDate="2012-01-01 00:00:01" thruDate="" lastUpdatedStamp="2012-01-01 00:00:01" lastUpdatedTxStamp="2012-01-01 00:00:01" createdStamp="2012-01-01 00:00:01" createdTxStamp="2012-01-01 00:00:01"/>
+	<FinAccount finAccountId="97" finAccountTypeId="BANK_ACCOUNT" statusId="FNACT_ACTIVE" finAccountName="CANARA BANK" 
+		finAccountCode="228" finAccountPin="NULL" currencyUomId="INR" organizationPartyId="Company" 
+		ownerPartyId="97" postToGlAccountId="" fromDate="2012-01-01 01:00:00.000" thruDate="" isRefundable="Y" replenishPaymetId="NULL" replenishLevel="0" actualBalance="0" 	
+		availableBalance="0" lastUpdatedStamp="2012-01-01 01:00:00.000" lastUpdatedTxStlmp="2012-01-01 01:00:00.000" createdStamp="2012-01-01 01:00:00.000"
+		createdTxStamp="2012-01-01 01:00:00.000" finAccountBranch="MAHABUBNAGAR" micrNumber="NULL" ifscCode="CNRB0001408" 
+		categoryTypeEnum="NULL" isLmsMrgnAccnt=""/>
+   	<!-- End of DD account Configuration -->	
+   	 	
+</entity-engine-xml>

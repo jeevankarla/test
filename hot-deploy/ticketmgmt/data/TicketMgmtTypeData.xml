@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <CustRequestType custRequestTypeId="CUSTOMER_COMP_TYPE"  description="Nature Of Customer Complaint" hasTable ="N"/>    
+    <CustRequestType description="Leakage" custRequestTypeId="LEAKAGE"  parentTypeId="CUSTOMER_COMP_TYPE"/>
+    <CustRequestType description="Spoilage" custRequestTypeId="SPOILAGE"  parentTypeId="CUSTOMER_COMP_TYPE"/>
+    <CustRequestType description="Quality" custRequestTypeId="QUALITY"  parentTypeId="CUSTOMER_COMP_TYPE"/>
+    <CustRequestType description="Late/WithoutDate" custRequestTypeId="LATE_WITHOUTDATE"  parentTypeId="CUSTOMER_COMP_TYPE"/>
+    <CustRequestType description="Serveice" custRequestTypeId="SERVICE"  parentTypeId="CUSTOMER_COMP_TYPE"/>
+    <CustRequestType description="High Price " custRequestTypeId="HIGH_PRICE" parentTypeId="CUSTOMER_COMP_TYPE"/>
+    <CustRequestType description="AVM" custRequestTypeId="AVM" parentTypeId="CUSTOMER_COMP_TYPE"/>
+    <CustRequestType description="Product" custRequestTypeId="PRODUCT" parentTypeId="CUSTOMER_COMP_TYPE"/>
+    <CustRequestType description="General" custRequestTypeId="GENERAL" parentTypeId="CUSTOMER_COMP_TYPE"/>
+    
+    
+	<EnumerationType description="Channels Used By Customer" enumTypeId="CUST_CHANNEL_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Depots" enumCode="DEPOTS" enumId="DEPOTS" sequenceId="01" enumTypeId="CUST_CHANNEL_TYPE"/>
+    <Enumeration description="Parlours" enumCode="PARLOURS" enumId="PARLOURS" sequenceId="02" enumTypeId="CUST_CHANNEL_TYPE"/>
+    <Enumeration description="AVMs" enumCode="AVMs" enumId="AVMs" sequenceId="03" enumTypeId="CUST_CHANNEL_TYPE"/>
+    <Enumeration description="OtherOutlets" enumCode="OTHEROUTLETS" enumId="OTHEROUTLETS" sequenceId="04" enumTypeId="CUST_CHANNEL_TYPE"/>
+    <Enumeration description="Online" enumCode="ONLINE" enumId="ONLINE" sequenceId="05" enumTypeId="CUST_CHANNEL_TYPE"/>
+
+
+    
+    <StatusType statusTypeId = "CUST_COMP_STATUS" description = "Customer Complaint Status" />
+    <StatusItem statusId = "OPEN" description = "Open" statusCode="Open" statusTypeId = "CUST_COMP_STATUS"/>
+    <StatusItem statusId = "ASSIGNED" description = "Assigned" statusCode="Assigned" statusTypeId = "CUST_COMP_STATUS"/>
+    <StatusItem statusId = "RESOLVED" description = "Resolved" statusCode="Resolved" statusTypeId = "CUST_COMP_STATUS"/>
+    <StatusItem statusId = "CLOSE" description = "closed" statusCode="Closed" statusTypeId = "CUST_COMP_STATUS"/>
+</entity-engine-xml>

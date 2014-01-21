@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Vasista copyrighted. 
+-->
+<project name="datapop component" default="jar" basedir=".">
+    <import file="../../common.xml"/>
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <property name="desc" value="Datapop Component"/>
+    <property name="name" value="vbiz-datapop"/>
+    <property name="ofbiz.home.dir" value="../.."/>
+
+    <path id="local.class.path">
+        <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
+        <fileset dir="lib" includes="*.jar"/>
+    </path>
+	<manifestclasspath property="jar.classpath"
+	                       jarfile="build/lib/${name}.jar">
+	      <classpath refid="local.class.path" />
+	</manifestclasspath>
+    <target name="jar" depends="classes">
+       <main-jar>
+            <main-elements>
+                <manifest>
+                    <attribute name="Manifest-Version" value="1.0"/>
+                    <attribute name="Implementation-Title" value="vbiz data population"/>
+                    <attribute name="Implementation-Vendor" value="Vasista"/>
+                    <attribute name="Main-Class" value="in.vasista.vbiz.datapop.SlurpCSV"/>
+                	<attribute name="Class-Path" value="${jar.classpath}"/>
+                </manifest>
+            </main-elements>
+        </main-jar>
+    </target>
+</project>

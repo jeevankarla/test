@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>	
+    <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
+    <include location="component://order/webapp/ordermgr/WEB-INF/controller.xml"/>    
+    <include location="component://product/webapp/facility/WEB-INF/controller.xml"/>
+    <description>Kkdmpcu Component Site Configuration File</description>
+
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+    <preprocessor>
+    </preprocessor>
+    -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+    <postprocessor>
+        <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
+    </postprocessor>
+    -->
+
+    <!-- Request Mappings -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="KVTruckSheet">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="KVTruckSheet"/>
+    </request-map>
+     <request-map uri="KVGenerateTruckSheet.txt">
+     	<security https="true" auth="true"/>
+        <response name="success" type="view" value="KVTruckSheetReportTXT"/>
+    </request-map>
+     <request-map uri="KVVendorMargins">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="KVVendorMargins"/>
+    </request-map>
+    <request-map uri="KVGenerateMarginReport.txt"><security https="true" auth="true"/>
+        <response name="success" type="view" value="KVGenerateMarginReportTXT"/>
+    </request-map>
+    <request-map uri="LMSReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LMSReports"/>
+    </request-map>
+    <request-map uri="MilkDeliveryScheduleReport.txt">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="MilkDeliveryScheduleReport"/>
+    </request-map>
+     <request-map uri="VehicleShortPaymentReport.txt">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="VehicleShortPaymentReportTXT"/>
+    </request-map>
+    <request-map uri="ValueSheetTotals.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ValueSheetTotalsTXT"/>
+    </request-map>
+    <request-map uri="CratesReport.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CratesReportCSV"/>
+    </request-map>
+	<request-map uri="CrateCanEntries">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="CrateCanEntries"/>
+    </request-map>
+    <request-map uri="CreateOrUpdateCrateCanEntry">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="org.ofbiz.product.product.ProductServices" invoke="createOrUpdateCrateCanEntry"/>        
+        <response name="success" type="view" value="CrateCanEntries"/>
+        <response name="error" type="view" value="CrateCanEntries"/>
+    </request-map>
+    <request-map uri="ValueSheetProductWise.txt">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="ValueSheetProductWiseTXT" />
+	</request-map>
+    <request-map uri="RouteWiseQuotaSummary.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RouteWiseQuotaSummaryTXT"/>
+    </request-map>
+    <request-map uri="agentWiseSales.txt">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="AgentWiseSalesReportPDF"/>    	
+    </request-map>
+    <request-map uri="routeWiseSales.txt">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="RouteWiseSalesReport"/>    	
+    </request-map>
+    <request-map uri="routeWiseMilkSales.txt">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="RouteWiseMilkSalesParticulars"/>    	
+    </request-map>
+    <request-map uri="cashTransaction.txt">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="CashTransactionTXT"/>    	
+    </request-map>
+    <request-map uri="NetSalesSummaryReport.txt">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="NetSalesSummaryReportTXT" />
+	</request-map>
+	<request-map uri="KVGenerateVendorMarginReport">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="KVGenerateVendorMarginReport"/>       
+    </request-map>
+    <!-- View Mappings -->
+    <view-map name="main" type="screen" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#FacilityTree"/>
+    <view-map name="KVTruckSheet" type="screen" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#TruckSheet"/>  
+    <view-map name="KVVendorMargins" type="screen" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#VendorMargins"/>
+    <view-map name="KVGenerateMarginReportTXT" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#GenerateMarginReportTXT" content-type="text/plain"/>
+    <view-map name="LMSReports" type="screen" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#LMSReports"/>
+    <view-map name="ValueSheetProductWiseTXT" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#ValueSheetProductWiseTXT" content-type="text/plain"/>
+    <view-map name="ValueSheetTotalsTXT" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#ValueSheetTotalsTXT" content-type="text/plain"/>
+    <view-map name="CratesReportCSV" type="screencsv" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#CratesReportCSV"  content-type="application/octet-stream"/>
+    <view-map name="CrateCanEntries" type="screen" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#CrateCanEntries"/> 
+    <view-map name="RouteWiseQuotaSummaryTXT" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#RouteWiseQuotaSummaryTXT" content-type="text/plain"/>
+    <view-map name="VehicleShortPaymentReportTXT" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#VehicleShortPaymentReportTXT" content-type="text/plain"/>   
+    <view-map name="KVTruckSheetReportTXT" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#TruckSheetReportPDF" content-type="text/plain"/>
+    <view-map name="AgentWiseSalesReportPDF" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#AgentWiseSalesReportPDF"  content-type="text/plain"/>
+    <view-map name="RouteWiseSalesReport" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#RouteWiseSalesReport"  content-type="text/plain"/>
+    <view-map name="RouteWiseMilkSalesParticulars" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#RouteWiseMilkSalesParticulars"  content-type="text/plain"/>
+    <view-map name="CashTransactionTXT" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#CashTransactionTXT"  content-type="text/plain"/>
+    <view-map name="MilkDeliveryScheduleReport" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#MilkDeliveryScheduleReport" content-type="text/plain"/>
+	<view-map name="KVGenerateVendorMarginReport" type="screen" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#GenerateVendorMarginReport"/>
+	<view-map name="NetSalesSummaryReportTXT" type="screenfop" page="component://kkdmpcu/widget/KkdmpcuScreens.xml#NetSalesSummaryReportTXT" content-type="text/plain"/>
+</site-conf>

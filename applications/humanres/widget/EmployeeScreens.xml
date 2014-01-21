@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="FindEmployee">
+        <section>
+            <actions>
+                <set field="titleProperty" value="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}"/>
+                <set field="headerItem" value="Employees"/>
+                 <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>               
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+                            <widgets>                      
+		                        <section>
+		                            <actions>
+		                                <service service-name="findParty" auto-field-map="true"/>
+		                                <set field="tabButtonItem" value="Employee"/>
+		                            </actions>
+		                            <widgets>
+		                            
+		                            	<section>
+		                               		<condition>
+		                                		<if-service-permission service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+		                                	</condition>
+		                                	<widgets>
+		                                		<container style="button-bar">
+		                                    		<link target="NewEmployee" text="${uiLabelMap.HumanResNewEmployee}" style="buttontext create"/>
+		                                		</container>
+		                                	</widgets>
+		                                </section>
+		                                <section>
+		                                    <widgets>
+		                                        <platform-specific>
+		                                            <html><html-template location="component://humanres/webapp/humanres/humanres/findEmployee.ftl"/></html>
+		                                        </platform-specific>
+		                                    </widgets>
+		                                </section>
+		                            </widgets>
+		                        </section>
+		                    </widgets>		
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>			                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewEmployee">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PartyCreateNewEmployee"/>
+                <set field="headerItem" value="Employees"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="IND"/>
+                 <!-- fields for setDependentDropdownValuesJs.ftl, it's a try on generalization but there are still issues. For instance: what if we have 2 couple of dependent dropdowns in the same form? -->
+                                <set field="dependentForm" value="AddEmployee"/>
+                                <set field="paramKey" value="countryGeoId"/>                                        
+                                <set field="mainId" value="countryGeoId"/>
+                                <set field="dependentId" value="stateProvinceGeoId"/>
+                                <set field="requestName" value="getAssociatedStateList"/>
+                                <set field="responseName" value="stateList"/>
+                                <set field="dependentKeyName" value="geoId"/>
+                                <set field="descName" value="geoName"/>
+                                <set field="selectedDependentOption" value="_none_"/>
+                    
+            </actions>
+            <widgets>
+                	<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    	<decorator-section name="body">
+                    	<platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                               
+                        	<screenlet title="${uiLabelMap.HumanResNewEmployee}">
+                            	<section>
+            						<condition>
+                    					<if-service-permission service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+                    				</condition>                            	
+                                	<widgets>
+                                    	<include-form name="AddEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                	</widgets>
+                            		<fail-widgets>
+                                		<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>
+                            		</fail-widgets>       	
+                            	</section>
+                        	</screenlet>
+                    	</decorator-section>
+                	</decorator-screen>
+            </widgets>
+    	</section>
+    </screen>
+    <screen name="EmployeeProfile">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="tabButtonItem" value="EmployeeProfile"/>
+                <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="layoutSettings.javaScripts[]" value="/images/prototypejs/prototype.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/images/prototypejs/control.progress_bar.js" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/images/prototypejs/progress_bar.css" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
+                 <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>    
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+                            <widgets>                     
+		                        <section>
+		                            <condition>
+		                                <not><if-empty field="party"/></not>
+		                            </condition>
+		                            <widgets>
+		                                <section>
+		                                    <widgets>
+		                                        <container style="profile-left">
+		                                            <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                        </container>
+		                                        <container style="profile-right">
+		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
+		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                        </container>
+		                                    </widgets>
+		                                </section>
+		                            </widgets>
+		                            <fail-widgets>
+		                                <container>
+		                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+		                                </container>
+		                            </fail-widgets>
+		                        </section>
+		                    </widgets>		
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>				                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmployeeSkills">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewPartySkill"/>
+                <set field="tabButtonItem" value="EditEmployeeSkills"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="skillTypeId" from-field="parameters.skillTypeId"/>
+                <set field="partySkillsCtx.partyId" from-field="parameters.partyId"/>
+                <set field="parameters.insideEmployee" value="true"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
+                </service>
+                <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                  
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                 
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+                            <widgets>  
+                    			<section>
+                    	    		<condition>
+                            			<if-compare field="hasEmployeeEditPermission" operator="equals" value="true" type="Boolean"/>
+                            		</condition>  
+                            		<widgets>                          
+		                        		<screenlet id="AddPartySkillPanel" title="${uiLabelMap.HumanResAddPartySkill}" collapsible="true">
+		                            		<include-form name="AddEmployeeSkills" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+		                        		</screenlet>
+                            			<screenlet>                   
+		                        			<include-form name="ListEmployeeSkills" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+										</screenlet>
+									</widgets>
+									<fail-widgets>
+                            			<screenlet>                   
+		                        			<include-form name="ListEmployeeSkillsReadOnly" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+										</screenlet>
+									</fail-widgets>
+								</section>		                        
+		                    </widgets>		
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>			                        
+                     </decorator-section>
+                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmployeeQuals">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEditPartyQual"/>
+                <set field="headerItem" value="Employee"/>
+                <set field="tabButtonItem" value="EditEmployeeQuals"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="partyQualCtx.partyId" from-field="parameters.partyId"/>
+                <set field="parameters.insideEmployee" value="true"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
+                </service>
+                <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                   
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                  
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+                            <widgets>  
+                    			<section>
+                    	    		<condition>
+                            			<if-compare field="hasEmployeeEditPermission" operator="equals" value="true" type="Boolean"/>
+                            		</condition>  
+		                            <widgets>                                                  
+				                        <screenlet id="AddPartyQualPanel" title="${uiLabelMap.HumanResAddPartyQual}" collapsible="true">
+				                            <include-form name="AddEmployeeQualification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+				                        </screenlet>
+				                        <screenlet>
+				                        	<include-form name="ListEmployeeQualification" location="component://humanres/widget/forms/EmployeeForms.xml"/>		                        
+				                        </screenlet>
+		                    		</widgets>		
+		                    		<fail-widgets>
+				                        <screenlet>		                    		
+				                        	<include-form name="ListEmployeeQualificationReadOnly" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+				                       	</screenlet>
+				                   </fail-widgets>
+		            			</section>				                        
+		                    </widgets>		
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>			                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmployeeTrainings">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="EditEmployeeTrainings"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="TrainingStatus" title="${uiLabelMap.HumanResTrainingStatus}" collapsible="true">
+                            <include-form name="ListTrainingStatus" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmployeeEmploymentApps">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleViewEmploymentApp"/>
+                <set field="tabButtonItem" value="EditEmployeeEmploymentApps"/>
+                <set field="referredByPartyId" from-field="parameters.partyId"/>
+                <set field="employmentAppCtx.applicationId" from-field="parameters.applicationId"/>
+                <set field="parameters.insideEmployee" value="true"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                 
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+		                    <widgets>                     
+		                        <include-form name="ListEmploymentApps" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+		                        <screenlet id="AddEmploymentAppPanel" title="${uiLabelMap.CommonAdd} ${uiLabelMap.HumanResEmploymentApp}" collapsible="true">
+		                            <include-form name="AddEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+		                        </screenlet>
+		                    </widgets>		
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>		                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmployeeResumes">
+        <section>
+            <actions>
+                <set field="headerItem" value="PartyResume"></set>
+                <set field="tabButtonItem" value="EditEmployeeResumes"/>
+                <set field="resumeId" from-field="parameters.resumeId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="PartyResume" value-field="partyResume"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListPartyResumes" location="component://humanres/widget/forms/PartyResumeForms.xml"/>
+                        <screenlet id="AddEmploymentAppPanel" title="${uiLabelMap.CommonAdd} ${uiLabelMap.HumanResEditPartyResume}" collapsible="true">
+                            <include-form name="EditPartyResume" location="component://humanres/widget/forms/PartyResumeForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmployeePerformanceNotes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResPerfNote"/>
+                <set field="tabButtonItem" value="EditEmployeePerformanceNotes"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="ListPerformanceNotes" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                        <screenlet id="AddPerformanceNotePanel" title="${uiLabelMap.HumanResAddPerfNote}" collapsible="true">
+                            <include-form name="AddPerformanceNote" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmployeeLeaves">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEditEmplLeave"/>
+                <set field="tabButtonItem" value="EditEmployeeLeaves"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
+                </service>
+                <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                 
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>                      
+            </actions>
+            <widgets>
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<section>
+                    	    <condition>
+                            	<if-compare field="hasEmployeeViewPermission" operator="equals" value="true" type="Boolean"/>
+                            </condition>
+		                    <widgets>   
+                    			<section>
+                    	    		<condition>
+                            			<if-compare field="hasEmployeeEditPermission" operator="equals" value="true" type="Boolean"/>
+                            		</condition>  
+		                            <widgets> 		                                        
+				                        <screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}" collapsible="true">
+				                            <include-form name="AddEmplLeave" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+				                        </screenlet>
+				                        <screenlet>
+				                        	<include-form name="ListEmplLeaves" location="component://humanres/widget/forms/EmployeeForms.xml"/>		                        
+				                        </screenlet>
+		                    		</widgets>		
+		                    		<fail-widgets>
+				                        <screenlet>		                    		
+				                        	<include-form name="ListEmplLeavesReadOnly" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+				                       	</screenlet>
+				                   </fail-widgets>
+		            			</section>			                        
+		                    </widgets>		
+		                    <fail-widgets>
+                                <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		                    </fail-widgets>
+		            	</section>		  		                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CurrentEmploymentData">
+        <section>
+            <actions>
+                <service service-name="getCurrentPartyEmploymentData" auto-field-map="true" result-map="employmentData"/>
+            </actions>
+            <widgets>
+                <screenlet title="${uiLabelMap.HumanResCurrentEmploymentData}">
+                    <include-form name="CurrentEmploymentData" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+</screens>

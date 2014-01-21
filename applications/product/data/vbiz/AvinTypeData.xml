@@ -1,0 +1,54 @@
+
+<entity-engine-xml>
+	<FacilityType facilityTypeId="FACTORY" description="Factory"></FacilityType>
+	
+	<Facility facilityId="AMBATTURDAIRY" facilityName="Ambattur Dairy" facilityTypeId="FACTORY"></Facility>
+	<Facility facilityId="MADHAVARAMDAIRY" facilityName="Madhavaram Dairy" facilityTypeId="FACTORY"></Facility>
+	<Facility facilityId="SHGLURDAIRY" facilityName="Sholinganallur Dairy" facilityTypeId="FACTORY"></Facility>
+	
+	<FacilityGroupType facilityGroupTypeId="DAIRY_LMD_TYPE" description="Dairy Liquid Milk Distribution"/>
+	<FacilityGroup facilityGroupId="AMBATTUR_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Ambattur Dairy" description="Ambattur Dairy" ownerFacilityId="AMBATTURDAIRY"/>	
+	<FacilityGroup facilityGroupId="MADHAVARAM_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Madhavaram Dairy" description="Madhavaram Dairy" ownerFacilityId="MADHAVARAMDAIRY"/>	
+	<FacilityGroup facilityGroupId="SHGLUR_DAIRY_LMD" facilityGroupTypeId="DAIRY_LMD_TYPE" facilityGroupName="Sholinganallur Dairy" description="Sholinganallur Dairy" ownerFacilityId="SHGLURDAIRY"/>	
+		
+		
+	<ProductStore productStoreId="AMBATTURDAIRY" storeName="Ambattur Lmd Store" companyName="AAVIN" title="Ambattur"
+        subtitle="Ambattur" payToPartyId="10500"  prorateShipping="Y" prorateTaxes="Y"
+        inventoryFacilityId="AMBATTURDAIRY" oneInventoryFacility="Y" checkInventory="N" reserveInventory="N" balanceResOnOrderCreation="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        defaultLocaleString="en_US" defaultCurrencyUomId="INR" defaultSalesChannelEnumId="LMS_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
+        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
+        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="N"/>
+
+    <ProductStoreFacility productStoreId="AMBATTURDAIRY" facilityId="AMBATTURDAIRY" fromDate="2011-05-13 12:00:00.0"/>
+
+    <ProdCatalog prodCatalogId="AMBDAIRY_CATALOG" catalogName="Ambathor Catalog" useQuickAdd="N"/>
+    <ProductStoreCatalog productStoreId="AMBATTURDAIRY" prodCatalogId="AMBDAIRY_CATALOG" fromDate="2011-05-13 12:00:00.0" sequenceNum="1"/>
+
+    <ProductCategory longDescription="MILK"
+        productCategoryId="100" categoryName="MILK" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProdCatalogCategory prodCatalogId="AMBDAIRY_CATALOG" productCategoryId="100" fromDate="2011-05-13 12:00:00.0"
+        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/> 
+	
+    <Enumeration description="LMS Channel" enumCode="LMS_CHANNEL" enumId="LMS_SALES_CHANNEL" sequenceId="100" enumTypeId="ORDER_SALES_CHANNEL"/>
+   
+	
+	<Product productId="_NA_"></Product>
+		<!--  Vendor Deductions -->
+    <RateType rateTypeId="VENDOR_DEDUCTION"  description="Vendor price deduction at source"/>  
+    <RateAmount rateTypeId="VENDOR_DEDUCTION" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" productId="_NA_"/>
+	
+	<!--  subscripito product type-->
+	<EnumerationType description="Subscription Product Type" enumTypeId="SUB_PROD_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Cash" enumCode="CASH" enumId="CASH" sequenceId="04" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Card" enumCode="CARD" enumId="CARD" sequenceId="02" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Special Order" enumCode="SPECIAL_ORDER" enumId="SPECIAL_ORDER" sequenceId="03" enumTypeId="SUB_PROD_TYPE"/>
+    <Enumeration description="Credit" enumCode="CREDIT" enumId="CREDIT" sequenceId="01" enumTypeId="SUB_PROD_TYPE"/>
+    
+    <!-- Product Lms category -->
+   <ProductCategory longDescription="Lms Products" productCategoryId="LMS" categoryName="Lms" productCategoryTypeId="CATALOG_CATEGORY"/>
+</entity-engine-xml>

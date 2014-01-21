@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="TicketMgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="Dashboard">
+        <section>
+            <actions>
+                <set field="titleProperty" value="CCS Dashboard"/>
+                <set field="tabButtonItem" value="dashboard"/>
+                <set field="headerItem" value="Dashboard"/>
+				<script location="component://ticketmgmt/webapp/ticketmgmt/WEB-INF/actions/facility/getComplaintTypes.groovy"/>
+                <set field="complaintTypeList" from-field="complaintTypeList" global="true"/>
+                <script location="component://ticketmgmt/webapp/ticketmgmt/WEB-INF/actions/Dashboard.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="TicketMgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                   <decorator-section name="body">
+                   		<platform-specific>
+                        	<html><html-template location="component://ticketmgmt/webapp/ticketmgmt/dashboard/dashboard.ftl"/></html>
+                        </platform-specific>  
+					</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
+    <screen name="FindComplaint">
+        <section>
+            <actions>
+                <set field="titleProperty" value="CCS Complaints"/>
+                <set field="tabButtonItem" value="complaints"/>
+                <set field="headerItem" value="request"/>
+                <set field="entityName" value="CustRequestAndItemAndAttribute"/>
+                <set field="layoutSettings.javaScripts[]" value="/ticketmgmt/images/date.js" global="true"/>
+                <script location="component://ticketmgmt/webapp/ticketmgmt/WEB-INF/actions/facility/getComplaintTypes.groovy"/>
+                <set field="complaintTypeList" from-field="complaintTypeList" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <include-menu location="component://ticketmgmt/widget/TicketMgmtMenus.xml" name="TicketMgmtTabBar"/>
+                                <container style="button-bar">
+                                    <link target="editComplaint" text="Create Complaint" style="buttontext create"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindComplaints" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListComplaints" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="editComplaint">
+        <section>
+            <actions>
+                <set field="headerItem" value="TicketMgmtMenu"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="tabButtonItem" value="complaints"/>
+                <set field="subTabButtonItem" value="editRequest"/>
+                <set field="title" value="C C S"/>
+                <set field="layoutSettings.javaScripts[]" value="/ticketmgmt/images/date.js" global="true"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one value-field="custRequest" entity-name="CustRequest">
+                    <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+                </entity-one>
+                <script location="component://ticketmgmt/webapp/ticketmgmt/WEB-INF/actions/facility/AddCustRequestAttributes.groovy"/>
+                <script location="component://ticketmgmt/webapp/ticketmgmt/WEB-INF/actions/facility/getComplaintTypes.groovy"/>
+                <set field="complaintTypeList" from-field="complaintTypeList" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="TicketMgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="ComplaintTabBar" location="component://ticketmgmt/widget/TicketMgmtMenus.xml"/>
+                        <include-form location="component://ticketmgmt/widget/TicketMgmtForms.xml" name="editComplaint"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ViewRequest">
+        <section>
+            <actions>
+                <set field="MainColumnStyle" value="rightonly"/>
+                <set field="tabButtonItem" value="complaints"/>
+                <set field="subTabButtonItem" value="ViewRequest"/>
+                <set field="titleProperty" value="Complaint Overview"/>
+                <set field="showRequestManagementLinks" value="Y"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <include-menu name="ComplaintTabBar" location="component://ticketmgmt/widget/TicketMgmtMenus.xml"/>
+                        <include-screen name="ViewCustRequest"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ViewCustRequest">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="ViewRequest"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest">
+                    <field-map field-name="custRequestId"/>
+                </entity-one>
+                <get-related-one value-field="custRequest" relation-name="CustRequestType" to-value-field="custRequestType"/>
+                <get-related-one value-field="custRequest" relation-name="StatusItem" to-value-field="statusItem"/>
+                <get-related-one value-field="custRequest" relation-name="CurrencyUom" to-value-field="currency"/>
+                <get-related-one value-field="custRequest" relation-name="ProductStore" to-value-field="store"/>
+                <get-related-one value-field="custRequest" relation-name="FulfillContactMech" to-value-field="fulfillContactMech"/>
+                <entity-and list="requestWorkEfforts" entity-name="CustRequestAndWorkEffort">
+                    <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+                </entity-and>
+                <get-related value-field="custRequest" relation-name="CustRequestParty" list="custRequestParties"/>
+                <set field="orderBy[]" value="sequenceNum"/>
+                <get-related value-field="custRequest" relation-name="CustRequestItem" list="custRequestItems" order-by-list="orderBy"/>
+                <entity-and list="commEvents" entity-name="CommunicationEventAndCustRequest">
+                    <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+                </entity-and>
+                <entity-and entity-name="CustRequestContent" list="custRequestContents" filter-by-date="true">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+                <entity-and entity-name="CustRequestAndContent" list="custRequestAndContents">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+                <entity-and list="notes" entity-name="CustRequestItemNoteView">
+                    <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
+                    <order-by  field-name="custRequestItemSeqId"/>
+                </entity-and>
+                <entity-and list="custRequestItems" entity-name="CustRequestAndItemAndAttribute">
+                    <field-map field-name="custRequestId" from-field="parameters.custRequestId"  />
+                    
+                    <select-field field-name="productId"/>
+                </entity-and>
+                <set field="custRequestItems" from-field="custRequestItems"/>
+                 <set field="productId" from-field="custRequestItems[0].productId"/>
+                 <script location="component://ticketmgmt/webapp/ticketmgmt/WEB-INF/actions/facility/AddCustRequestAttributes.groovy"/>
+            </actions>
+            <widgets>
+                <container style="lefthalf">
+                    <screenlet title="Complaint Number : ${custRequest.custRequestId} ${uiLabelMap.CommonInformation}">
+                        <include-form name="requestInfo" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
+                    </screenlet>
+                    <!-- <screenlet title="${uiLabelMap.OrderRequestRoles}">
+                        <include-form name="ViewRequestRoles" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                    </screenlet> -->
+                </container>
+                <container style="righthalf">
+                    <screenlet title="Complaint Status List" navigation-form-name="ViewRequest">
+                        <include-form name="ViewRequestStatus" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
+                    </screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://order/webapp/ordermgr/request/requestContactMech.ftl"/></html>
+                    </platform-specific>
+                    <screenlet title="${uiLabelMap.CommonContent}" >
+                        <include-form name="ListCustRequestContent" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
+                    </screenlet>
+                </container>
+                <container style="clear"/>
+                <screenlet title="Assigned To">
+                    <include-form name="ListRequestRoles" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                </screenlet>
+                <screenlet title="Complaint Notes">
+                    <include-form name="ListRequestItemNotes" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="RequestRoles">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Roles"/>
+                <set field="tabButtonItem" value="complaints"/>
+                <set field="subTabButtonItem" value="requestroles"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest"/>
+                <entity-and entity-name="CustRequestParty" list="custRequestParties">
+                    <field-map from-field="custRequestId" field-name="custRequestId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="ComplaintTabBar" location="component://ticketmgmt/widget/TicketMgmtMenus.xml"/>
+                        <screenlet id="EditRequestRolePanel" title="Request Roles" collapsible="true">
+                            <include-form name="EditRequestRole" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListRequestRoles" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditCustRequestContent">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditRequestContent"/>
+                <set field="tabButtonItem" value="complaints"/>
+                <set field="subTabButtonItem" value="custRequestContent"/>
+                <set field="headerItem" value="request"/>
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-and entity-name="CustRequestAndContent" list="custRequestAndContents">
+                    <field-map field-name="custRequestId" from-field="custRequestId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-menu name="ComplaintTabBar" location="component://ticketmgmt/widget/TicketMgmtMenus.xml"/>
+                        <screenlet id="AddCustRequestContentsPanel" title="${uiLabelMap.PageTitleAddContent}" collapsible="true">
+                            <include-form name="AddCustRequestContent" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListCustRequestContent" location="component://ticketmgmt/widget/TicketMgmtForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

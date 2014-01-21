@@ -1,0 +1,3541 @@
+<entity-engine-xml>
+	<Subscription facilityId="1014" subscriptionId="tr_100" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_100" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_100" />
+	<Subscription facilityId="1080" subscriptionId="tr_101" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_101" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_101" />
+	<Subscription facilityId="1082" subscriptionId="tr_102" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_102" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_102" />
+	<Subscription facilityId="1085" subscriptionId="tr_103" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_103" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_103" />
+	<Subscription facilityId="1087" subscriptionId="tr_104" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_104" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_104" />
+	<Subscription facilityId="1089" subscriptionId="tr_105" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_105" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_105" />
+	<Subscription facilityId="3708" subscriptionId="tr_106" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_106" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_106" />
+	<Subscription facilityId="4464" subscriptionId="tr_107" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_107" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_107" />
+	<Subscription facilityId="4465" subscriptionId="tr_108" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_108" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_108" />
+	<Subscription facilityId="4587" subscriptionId="tr_109" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_109" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_109" />
+	<Subscription facilityId="4707" subscriptionId="tr_110" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_110" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_110" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_110" />
+	<Subscription facilityId="4935" subscriptionId="tr_111" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_111" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_111" />
+	<Subscription facilityId="4944" subscriptionId="tr_112" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_112" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_112" />
+	<Subscription facilityId="5145" subscriptionId="tr_113" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_113" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_113" />
+	<Subscription facilityId="5294" subscriptionId="tr_114" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_114" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_114" />
+	<Subscription facilityId="5330" subscriptionId="tr_115" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_115" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_115" />
+	<Subscription facilityId="5366" subscriptionId="tr_116" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_116" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_116" />
+	<Subscription facilityId="5411" subscriptionId="tr_117" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_117" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_117" />
+	<Subscription facilityId="5431" subscriptionId="tr_118" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_118" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_118" />
+	<Subscription facilityId="5449" subscriptionId="tr_119" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_119" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_119" />
+	<Subscription facilityId="5454" subscriptionId="tr_120" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_120" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_120" />
+	<Subscription facilityId="5459" subscriptionId="tr_121" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_121" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_121" />
+	<Subscription facilityId="5464" subscriptionId="tr_122" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_122" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_122" />
+	<Subscription facilityId="5517" subscriptionId="tr_123" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_123" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_123" />
+	<Subscription facilityId="5573" subscriptionId="tr_124" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_124" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_124" />
+	<Subscription facilityId="5615" subscriptionId="tr_125" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_125" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_125" />
+	<Subscription facilityId="5631" subscriptionId="tr_126" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_126" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_126" />
+	<Subscription facilityId="5644" subscriptionId="tr_127" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_127" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_127" />
+	<Subscription facilityId="5701" subscriptionId="tr_133" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_133" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_133" />
+	<Subscription facilityId="5745" subscriptionId="tr_134" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_134" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_134" />
+	<Subscription facilityId="5773" subscriptionId="tr_135" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_135" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_135" />
+	<Subscription facilityId="5775" subscriptionId="tr_136" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_136" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_136" />
+	<Subscription facilityId="5850" subscriptionId="tr_137" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_137" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_137" />
+	<Subscription facilityId="5888" subscriptionId="tr_138" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_138" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_138" />
+	<Subscription facilityId="5939" subscriptionId="tr_139" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_139" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_139" />
+	<Subscription facilityId="5951" subscriptionId="tr_140" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_140" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_140" />
+	<Subscription facilityId="6028" subscriptionId="tr_141" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_141" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_141" />
+	<Subscription facilityId="6174" subscriptionId="tr_142" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_142" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_142" />
+	<Subscription facilityId="6178" subscriptionId="tr_143" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_143" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_143" />
+	<Subscription facilityId="6305" subscriptionId="tr_144" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_144" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_144" />
+	<Subscription facilityId="6393" subscriptionId="tr_145" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_145" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_145" />
+	<Subscription facilityId="6424" subscriptionId="tr_146" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_146" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_146" />
+	<Subscription facilityId="6430" subscriptionId="tr_147" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_147" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_147" />
+	<Subscription facilityId="7057" subscriptionId="tr_148" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_148" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_148" />
+	<Subscription facilityId="1055" subscriptionId="tr_149" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_149" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_149" />
+	<Subscription facilityId="1060" subscriptionId="tr_150" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_150" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_150" />
+	<Subscription facilityId="1071" subscriptionId="tr_151" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_151" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_151" />
+	<Subscription facilityId="1079" subscriptionId="tr_152" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_152" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_152" />
+	<Subscription facilityId="3850" subscriptionId="tr_153" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_153" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_153" />
+	<Subscription facilityId="4071" subscriptionId="tr_154" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_154" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_154" />
+	<Subscription facilityId="4078" subscriptionId="tr_155" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_155" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_155" />
+	<Subscription facilityId="4196" subscriptionId="tr_156" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_156" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_156" />
+	<Subscription facilityId="4305" subscriptionId="tr_157" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_157" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_157" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_157" />
+	<Subscription facilityId="4516" subscriptionId="tr_158" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_158" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_158" />
+	<Subscription facilityId="4534" subscriptionId="tr_159" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_159" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_159" />
+	<Subscription facilityId="4596" subscriptionId="tr_160" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_160" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_160" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_160" />
+	<Subscription facilityId="4600" subscriptionId="tr_161" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_161" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_161" />
+	<Subscription facilityId="4649" subscriptionId="tr_162" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_162" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_162" />
+	<Subscription facilityId="4650" subscriptionId="tr_163" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_163" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_163" />
+	<Subscription facilityId="4722" subscriptionId="tr_164" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_164" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_164" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_164" />
+	<Subscription facilityId="4793" subscriptionId="tr_165" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_165" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_165" />
+	<Subscription facilityId="5015" subscriptionId="tr_166" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_166" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_166" />
+	<Subscription facilityId="5328" subscriptionId="tr_167" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_167" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_167" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_167" />
+	<Subscription facilityId="5332" subscriptionId="tr_168" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_168" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_168" />
+	<Subscription facilityId="5395" subscriptionId="tr_169" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_169" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_169" />
+	<Subscription facilityId="5477" subscriptionId="tr_170" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_170" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_170" />
+	<Subscription facilityId="5486" subscriptionId="tr_171" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_171" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_171" />
+	<Subscription facilityId="5521" subscriptionId="tr_172" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_172" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_172" />
+	<Subscription facilityId="5649" subscriptionId="tr_173" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_173" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_173" />
+	<Subscription facilityId="5705" subscriptionId="tr_174" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_174" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_174" />
+	<Subscription facilityId="5786" subscriptionId="tr_175" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_175" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_175" />
+	<Subscription facilityId="5863" subscriptionId="tr_176" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_176" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_176" />
+	<Subscription facilityId="5932" subscriptionId="tr_177" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_177" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_177" />
+	<Subscription facilityId="5952" subscriptionId="tr_178" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_178" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_178" />
+	<Subscription facilityId="5986" subscriptionId="tr_179" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_179" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_179" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_179" />
+	<Subscription facilityId="6001" subscriptionId="tr_180" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_180" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_180" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_180" />
+	<Subscription facilityId="6055" subscriptionId="tr_181" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_181" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_181" />
+	<Subscription facilityId="6151" subscriptionId="tr_182" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_182" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_182" />
+	<Subscription facilityId="6254" subscriptionId="tr_183" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_183" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_183" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_183" />
+	<Subscription facilityId="6259" subscriptionId="tr_184" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_184" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_184" />
+	<Subscription facilityId="6314" subscriptionId="tr_185" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_185" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_185" />
+	<Subscription facilityId="6317" subscriptionId="tr_186" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_186" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_186" />
+	<Subscription facilityId="6256" subscriptionId="tr_187" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_187" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_187" />
+	<Subscription facilityId="6455" subscriptionId="tr_188" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_188" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_188" />
+	<Subscription facilityId="6461" subscriptionId="tr_189" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_189" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_189" />
+	<Subscription facilityId="6449" subscriptionId="tr_190" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_190" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_190" />
+	<Subscription facilityId="6465" subscriptionId="tr_191" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_191" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_191" />
+	<Subscription facilityId="6479" subscriptionId="tr_192" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_192" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_192" />
+	<Subscription facilityId="4013" subscriptionId="tr_193" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_193" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_193" />
+	<Subscription facilityId="1066" subscriptionId="tr_194" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_194" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_194" />
+	<Subscription facilityId="3965" subscriptionId="tr_195" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_195" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_195" />
+	<Subscription facilityId="4135" subscriptionId="tr_196" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_196" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_196" />
+	<Subscription createdStamp="2011-12-15 15:1237.0"
+		facilityId="4225" subscriptionId="tr_197" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_197" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_197" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_197" />
+	<Subscription facilityId="4458" subscriptionId="tr_198" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_198" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_198" />
+	<Subscription facilityId="4520" subscriptionId="tr_199" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_199" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_199" />
+	<Subscription facilityId="4592" subscriptionId="tr_200" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_200" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_200" />
+	<Subscription facilityId="4611" subscriptionId="tr_201" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_201" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_201" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_201" />
+	<Subscription facilityId="4612" subscriptionId="tr_202" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_202" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_202" />
+	<Subscription facilityId="4620" subscriptionId="tr_203" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_203" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_203" />
+	<Subscription facilityId="4685" subscriptionId="tr_204" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_204" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_204" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_204" />
+	<Subscription facilityId="4691" subscriptionId="tr_205" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_205" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_205" />
+	<Subscription facilityId="4698" subscriptionId="tr_206" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_206" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_206" />
+	<Subscription facilityId="4731" subscriptionId="tr_207" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_207" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_207" />
+	<Subscription facilityId="4821" subscriptionId="tr_208" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_208" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_208" />
+	<Subscription facilityId="4836" subscriptionId="tr_209" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_209" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_209" />
+	<Subscription facilityId="4946" subscriptionId="tr_210" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_210" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_210" />
+	<Subscription facilityId="4957" subscriptionId="tr_211" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_211" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_211" />
+	<Subscription facilityId="5007" subscriptionId="tr_212" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_212" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_212" />
+	<Subscription facilityId="5018" subscriptionId="tr_213" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_213" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_213" />
+	<Subscription facilityId="5108" subscriptionId="tr_214" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_214" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_214" />
+	<Subscription facilityId="5196" subscriptionId="tr_215" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_215" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_215" />
+	<Subscription facilityId="5204" subscriptionId="tr_216" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_216" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_216" />
+	<Subscription facilityId="5228" subscriptionId="tr_217" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_217" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_217" />
+	<Subscription facilityId="5236" subscriptionId="tr_218" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_218" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_218" />
+	<Subscription facilityId="5306" subscriptionId="tr_219" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_219" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_219" />
+	<Subscription facilityId="5369" subscriptionId="tr_220" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_220" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_220" />
+	<Subscription facilityId="5375" subscriptionId="tr_221" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_221" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_221" />
+	<Subscription facilityId="5397" subscriptionId="tr_222" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_222" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_222" />
+	<Subscription facilityId="5423" subscriptionId="tr_223" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_223" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_223" />
+	<Subscription facilityId="5432" subscriptionId="tr_224" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_224" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_224" />
+	<Subscription facilityId="5548" subscriptionId="tr_225" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_225" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_225" />
+	<Subscription facilityId="5578" subscriptionId="tr_226" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_226" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_226" />
+	<Subscription facilityId="5601" subscriptionId="tr_227" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_227" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_227" />
+	<Subscription facilityId="5622" subscriptionId="tr_228" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_228" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_228" />
+	<Subscription facilityId="5632" subscriptionId="tr_229" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_229" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_229" />
+	<Subscription facilityId="5648" subscriptionId="tr_230" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_230" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_230" />
+	<Subscription facilityId="5655" subscriptionId="tr_231" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_231" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_231" />
+	<Subscription facilityId="5688" subscriptionId="tr_232" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_232" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_232" />
+	<Subscription facilityId="5703" subscriptionId="tr_233" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_233" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_233" />
+	<Subscription facilityId="5704" subscriptionId="tr_234" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_234" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_234" />
+	<Subscription facilityId="5742" subscriptionId="tr_235" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_235" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_235" />
+	<Subscription facilityId="5793" subscriptionId="tr_236" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_236" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_236" />
+	<Subscription facilityId="5798" subscriptionId="tr_237" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_237" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_237" />
+	<Subscription facilityId="5813" subscriptionId="tr_238" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_238" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_238" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_238" />
+	<Subscription facilityId="5814" subscriptionId="tr_239" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_239" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_239" />
+	<Subscription facilityId="5821" subscriptionId="tr_240" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_240" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_240" />
+	<Subscription facilityId="5822" subscriptionId="tr_241" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_241" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_241" />
+	<Subscription facilityId="5827" subscriptionId="tr_242" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_242" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_242" />
+	<Subscription facilityId="5828" subscriptionId="tr_243" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_243" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_243" />
+	<Subscription facilityId="5829" subscriptionId="tr_244" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_244" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_244" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="91" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_244" />
+	<Subscription facilityId="5834" subscriptionId="tr_245" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_245" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_245" />
+	<Subscription facilityId="5867" subscriptionId="tr_246" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_246" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_246" />
+	<Subscription facilityId="5960" subscriptionId="tr_247" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_247" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_247" />
+	<Subscription facilityId="5988" subscriptionId="tr_248" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_248" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="52" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_248" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_248" />
+	<Subscription facilityId="6015" subscriptionId="tr_249" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_249" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_249" />
+	<Subscription facilityId="6095" subscriptionId="tr_250" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_250" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="72" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_250" />
+	<Subscription facilityId="6101" subscriptionId="tr_251" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="33" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_251" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_251" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="63" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_251" />
+	<Subscription facilityId="6109" subscriptionId="tr_252" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_252" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_252" />
+	<Subscription facilityId="6157" subscriptionId="tr_253" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="32" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_253" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="92" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_253" />
+	<Subscription facilityId="6171" subscriptionId="tr_254" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="61" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_254" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="62" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_254" />
+	<Subscription facilityId="6252" subscriptionId="tr_255" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_255" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_255" />
+	<Subscription facilityId="6260" subscriptionId="tr_256" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_256" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_256" />
+	<Subscription facilityId="6274" subscriptionId="tr_257" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_257" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_257" />
+	<Subscription facilityId="6311" subscriptionId="tr_258" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_258" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_258" />
+	<Subscription facilityId="6313" subscriptionId="tr_259" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_259" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_259" />
+	<Subscription facilityId="6336" subscriptionId="tr_260" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_260" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_260" />
+	<Subscription facilityId="6420" subscriptionId="tr_261" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_261" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_261" />
+	<Subscription facilityId="6422" subscriptionId="tr_262" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_262" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_262" />
+	<Subscription facilityId="6425" subscriptionId="tr_263" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_263" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_263" />
+	<Subscription facilityId="6431" subscriptionId="tr_264" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_264" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_264" />
+	<Subscription facilityId="6432" subscriptionId="tr_265" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_265" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_265" />
+	<Subscription facilityId="6458" subscriptionId="tr_266" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_266" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_266" />
+	<Subscription facilityId="1101" subscriptionId="tr_267" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_267" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_267" />
+	<Subscription facilityId="1102" subscriptionId="tr_268" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_268" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_268" />
+	<Subscription facilityId="1103" subscriptionId="tr_269" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_269" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_269" />
+	<Subscription facilityId="1105" subscriptionId="tr_270" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_270" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_270" />
+	<Subscription facilityId="1121" subscriptionId="tr_271" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_271" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_271" />
+	<Subscription facilityId="1125" subscriptionId="tr_272" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_272" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_272" />
+	<Subscription facilityId="1153" subscriptionId="tr_273" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_273" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_273" />
+	<Subscription facilityId="1170" subscriptionId="tr_274" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_274" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_274" />
+	<Subscription facilityId="3304" subscriptionId="tr_275" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_275" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_275" />
+	<Subscription facilityId="3525" subscriptionId="tr_276" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_276" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_276" />
+	<Subscription facilityId="3737" subscriptionId="tr_277" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_277" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_277" />
+	<Subscription facilityId="3771" subscriptionId="tr_278" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_278" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_278" />
+	<Subscription facilityId="3912" subscriptionId="tr_279" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_279" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_279" />
+	<Subscription facilityId="3913" subscriptionId="tr_280" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_280" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_280" />
+	<Subscription facilityId="4739" subscriptionId="tr_281" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_281" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_281" />
+	<Subscription facilityId="4756" subscriptionId="tr_282" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_282" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_282" />
+	<Subscription facilityId="4806" subscriptionId="tr_283" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_283" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_283" />
+	<Subscription facilityId="5031" subscriptionId="tr_284" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_284" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_284" />
+	<Subscription facilityId="5183" subscriptionId="tr_285" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_285" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_285" />
+	<Subscription facilityId="5251" subscriptionId="tr_286" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_286" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_286" />
+	<Subscription facilityId="5292" subscriptionId="tr_287" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_287" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_287" />
+	<Subscription facilityId="5307" subscriptionId="tr_288" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_288" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_288" />
+	<Subscription facilityId="5412" subscriptionId="tr_289" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_289" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_289" />
+	<Subscription facilityId="5482" subscriptionId="tr_290" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_290" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_290" />
+	<Subscription facilityId="5605" subscriptionId="tr_291" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_291" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_291" />
+	<Subscription facilityId="5610" subscriptionId="tr_292" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_292" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_292" />
+	<Subscription facilityId="5675" subscriptionId="tr_293" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_293" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_293" />
+	<Subscription facilityId="5733" subscriptionId="tr_294" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_294" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_294" />
+	<Subscription facilityId="5843" subscriptionId="tr_295" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_295" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_295" />
+	<Subscription facilityId="5957" subscriptionId="tr_296" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_296" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_296" />
+	<Subscription facilityId="5966" subscriptionId="tr_297" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_297" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_297" />
+	<Subscription facilityId="5991" subscriptionId="tr_298" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_298" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_298" />
+	<Subscription facilityId="6170" subscriptionId="tr_299" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_299" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_299" />
+	<Subscription facilityId="1158" subscriptionId="tr_300" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_300" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_300" />
+	<Subscription facilityId="1159" subscriptionId="tr_301" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_301" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_301" />
+	<Subscription facilityId="1160" subscriptionId="tr_302" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_302" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_302" />
+	<Subscription facilityId="1164" subscriptionId="tr_303" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_303" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_303" />
+	<Subscription facilityId="1165" subscriptionId="tr_304" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_304" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_304" />
+	<Subscription facilityId="1166" subscriptionId="tr_305" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_305" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_305" />
+	<Subscription facilityId="1167" subscriptionId="tr_306" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_306" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_306" />
+	<Subscription facilityId="1171" subscriptionId="tr_307" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_307" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_307" />
+	<Subscription facilityId="1174" subscriptionId="tr_308" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_308" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_308" />
+	<Subscription facilityId="1175" subscriptionId="tr_309" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_309" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_309" />
+	<Subscription facilityId="1176" subscriptionId="tr_310" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_310" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_310" />
+	<Subscription facilityId="3318" subscriptionId="tr_311" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_311" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_311" />
+	<Subscription facilityId="3353" subscriptionId="tr_312" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_312" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_312" />
+	<Subscription facilityId="3437" subscriptionId="tr_313" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_313" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_313" />
+	<Subscription facilityId="4039" subscriptionId="tr_314" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_314" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_314" />
+	<Subscription facilityId="4084" subscriptionId="tr_315" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_315" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_315" />
+	<Subscription facilityId="4092" subscriptionId="tr_316" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_316" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_316" />
+	<Subscription facilityId="4103" subscriptionId="tr_317" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_317" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_317" />
+	<Subscription facilityId="4139" subscriptionId="tr_318" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_318" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_318" />
+	<Subscription facilityId="4427" subscriptionId="tr_319" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_319" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_319" />
+	<Subscription facilityId="4449" subscriptionId="tr_320" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_320" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_320" />
+	<Subscription facilityId="4455" subscriptionId="tr_321" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_321" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_321" />
+	<Subscription facilityId="4518" subscriptionId="tr_322" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_322" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_322" />
+	<Subscription facilityId="4683" subscriptionId="tr_323" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_323" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_323" />
+	<Subscription facilityId="4845" subscriptionId="tr_324" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_324" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_324" />
+	<Subscription facilityId="5109" subscriptionId="tr_325" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_325" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_325" />
+	<Subscription facilityId="5121" subscriptionId="tr_326" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_326" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_326" />
+	<Subscription facilityId="5252" subscriptionId="tr_327" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_327" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_327" />
+	<Subscription facilityId="5334" subscriptionId="tr_328" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_328" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_328" />
+	<Subscription facilityId="5351" subscriptionId="tr_329" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_329" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_329" />
+	<Subscription facilityId="5356" subscriptionId="tr_330" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_330" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_330" />
+	<Subscription facilityId="5427" subscriptionId="tr_331" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_331" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_331" />
+	<Subscription facilityId="5491" subscriptionId="tr_332" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_332" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_332" />
+	<Subscription facilityId="5690" subscriptionId="tr_333" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_333" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_333" />
+	<Subscription facilityId="5763" subscriptionId="tr_334" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_334" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_334" />
+	<Subscription facilityId="5776" subscriptionId="tr_335" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_335" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_335" />
+	<Subscription facilityId="5900" subscriptionId="tr_336" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_336" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_336" />
+	<Subscription facilityId="6025" subscriptionId="tr_337" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_337" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_337" />
+	<Subscription facilityId="6128" subscriptionId="tr_338" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_338" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_338" />
+	<Subscription facilityId="6177" subscriptionId="tr_339" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_339" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_339" />
+	<Subscription facilityId="6181" subscriptionId="tr_340" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_340" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_340" />
+	<Subscription facilityId="6209" subscriptionId="tr_341" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_341" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_341" />
+	<Subscription facilityId="6215" subscriptionId="tr_342" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_342" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_342" />
+	<Subscription facilityId="6255" subscriptionId="tr_343" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_343" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_343" />
+	<Subscription facilityId="6309" subscriptionId="tr_344" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_344" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_344" />
+	<Subscription facilityId="6408" subscriptionId="tr_345" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_345" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_345" />
+	<Subscription facilityId="6416" subscriptionId="tr_346" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_346" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_346" />
+	<Subscription facilityId="1012" subscriptionId="tr_347" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_347" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_347" />
+	<Subscription facilityId="1021" subscriptionId="tr_348" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_348" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_348" />
+	<Subscription facilityId="1043" subscriptionId="tr_349" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_349" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_349" />
+	<Subscription facilityId="1107" subscriptionId="tr_350" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_350" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_350" />
+	<Subscription facilityId="1108" subscriptionId="tr_351" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_351" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_351" />
+	<Subscription facilityId="1111" subscriptionId="tr_352" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_352" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_352" />
+	<Subscription facilityId="1113" subscriptionId="tr_353" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_353" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_353" />
+	<Subscription facilityId="1114" subscriptionId="tr_354" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_354" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_354" />
+	<Subscription facilityId="1116" subscriptionId="tr_355" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_355" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_355" />
+	<Subscription facilityId="1118" subscriptionId="tr_356" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_356" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="13" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_356" />
+	<Subscription facilityId="1126" subscriptionId="tr_357" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_357" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_357" />
+	<Subscription facilityId="1168" subscriptionId="tr_358" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_358" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_358" />
+	<Subscription facilityId="3435" subscriptionId="tr_359" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_359" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_359" />
+	<Subscription facilityId="4119" subscriptionId="tr_360" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_360" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_360" />
+	<Subscription facilityId="4160" subscriptionId="tr_361" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_361" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_361" />
+	<Subscription facilityId="4167" subscriptionId="tr_362" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_362" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_362" />
+	<Subscription facilityId="4222" subscriptionId="tr_363" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_363" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_363" />
+	<Subscription facilityId="4558" subscriptionId="tr_364" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_364" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_364" />
+	<Subscription facilityId="4675" subscriptionId="tr_365" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_365" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_365" />
+	<Subscription facilityId="4696" subscriptionId="tr_366" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_366" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_366" />
+	<Subscription facilityId="4777" subscriptionId="tr_367" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_367" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_367" />
+	<Subscription facilityId="4803" subscriptionId="tr_368" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_368" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_368" />
+	<Subscription facilityId="4809" subscriptionId="tr_369" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_369" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_369" />
+	<Subscription facilityId="4937" subscriptionId="tr_370" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_370" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_370" />
+	<Subscription facilityId="5127" subscriptionId="tr_371" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_371" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_371" />
+	<Subscription facilityId="5194" subscriptionId="tr_372" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_372" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_372" />
+	<Subscription facilityId="5223" subscriptionId="tr_373" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_373" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_373" />
+	<Subscription facilityId="5233" subscriptionId="tr_374" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_374" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_374" />
+	<Subscription facilityId="5281" subscriptionId="tr_375" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_375" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_375" />
+	<Subscription facilityId="5293" subscriptionId="tr_376" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_376" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_376" />
+	<Subscription facilityId="5361" subscriptionId="tr_377" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_377" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_377" />
+	<Subscription facilityId="5362" subscriptionId="tr_378" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_378" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_378" />
+	<Subscription facilityId="5370" subscriptionId="tr_379" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_379" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_379" />
+	<Subscription facilityId="5371" subscriptionId="tr_380" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_380" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_380" />
+	<Subscription facilityId="5524" subscriptionId="tr_381" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_381" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_381" />
+	<Subscription facilityId="5549" subscriptionId="tr_382" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_382" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_382" />
+	<Subscription facilityId="5674" subscriptionId="tr_383" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_383" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_383" />
+	<Subscription facilityId="5732" subscriptionId="tr_384" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_384" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_384" />
+	<Subscription facilityId="5789" subscriptionId="tr_385" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_385" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_385" />
+	<Subscription facilityId="5987" subscriptionId="tr_386" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_386" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_386" />
+	<Subscription facilityId="6019" subscriptionId="tr_387" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_387" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_387" />
+	<Subscription facilityId="6263" subscriptionId="tr_388" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_388" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_388" />
+	<Subscription facilityId="1026" subscriptionId="tr_389" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_389" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_389" />
+	<Subscription facilityId="1052" subscriptionId="tr_390" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_390" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_390" />
+	<Subscription facilityId="3730" subscriptionId="tr_391" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_391" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_391" />
+	<Subscription facilityId="3770" subscriptionId="tr_392" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_392" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_392" />
+	<Subscription facilityId="3782" subscriptionId="tr_393" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_393" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_393" />
+	<Subscription facilityId="3857" subscriptionId="tr_394" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_394" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_394" />
+	<Subscription facilityId="3966" subscriptionId="tr_395" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_395" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_395" />
+	<Subscription facilityId="4261" subscriptionId="tr_396" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_396" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_396" />
+	<Subscription facilityId="4421" subscriptionId="tr_397" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_397" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_397" />
+	<Subscription facilityId="4604" subscriptionId="tr_398" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_398" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_398" />
+	<Subscription facilityId="4614" subscriptionId="tr_399" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_399" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_399" />
+	<Subscription facilityId="4652" subscriptionId="tr_400" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_400" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_400" />
+	<Subscription facilityId="4708" subscriptionId="tr_401" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_401" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_401" />
+	<Subscription facilityId="4725" subscriptionId="tr_402" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_402" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_402" />
+	<Subscription facilityId="4804" subscriptionId="tr_403" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_403" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_403" />
+	<Subscription facilityId="4887" subscriptionId="tr_404" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_404" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_404" />
+	<Subscription facilityId="4892" subscriptionId="tr_405" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_405" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_405" />
+	<Subscription facilityId="4930" subscriptionId="tr_406" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_406" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_406" />
+	<Subscription facilityId="4964" subscriptionId="tr_407" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_407" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_407" />
+	<Subscription facilityId="4978" subscriptionId="tr_408" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_408" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_408" />
+	<Subscription facilityId="5056" subscriptionId="tr_409" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_409" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_409" />
+	<Subscription facilityId="5169" subscriptionId="tr_410" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_410" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_410" />
+	<Subscription facilityId="5181" subscriptionId="tr_411" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_411" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_411" />
+	<Subscription facilityId="5380" subscriptionId="tr_412" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_412" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_412" />
+	<Subscription facilityId="5388" subscriptionId="tr_413" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_413" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_413" />
+	<Subscription facilityId="5409" subscriptionId="tr_414" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_414" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_414" />
+	<Subscription facilityId="5429" subscriptionId="tr_415" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_415" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_415" />
+	<Subscription facilityId="5503" subscriptionId="tr_416" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_416" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_416" />
+	<Subscription facilityId="5534" subscriptionId="tr_417" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_417" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_417" />
+	<Subscription facilityId="5618" subscriptionId="tr_418" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_418" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_418" />
+	<Subscription facilityId="5621" subscriptionId="tr_419" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_419" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_419" />
+	<Subscription facilityId="5634" subscriptionId="tr_420" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_420" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_420" />
+	<Subscription facilityId="5637" subscriptionId="tr_421" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_421" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_421" />
+	<Subscription facilityId="5677" subscriptionId="tr_422" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_422" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_422" />
+	<Subscription facilityId="5678" subscriptionId="tr_423" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_423" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_423" />
+	<Subscription facilityId="5719" subscriptionId="tr_424" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_424" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_424" />
+	<Subscription facilityId="5865" subscriptionId="tr_425" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_425" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_425" />
+	<Subscription facilityId="5899" subscriptionId="tr_426" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_426" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_426" />
+	<Subscription facilityId="5901" subscriptionId="tr_427" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_427" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_427" />
+	<Subscription facilityId="5938" subscriptionId="tr_428" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_428" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_428" />
+	<Subscription facilityId="5946" subscriptionId="tr_429" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_429" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_429" />
+	<Subscription facilityId="5975" subscriptionId="tr_430" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_430" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_430" />
+	<Subscription facilityId="6135" subscriptionId="tr_431" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_431" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_431" />
+	<Subscription facilityId="6184" subscriptionId="tr_432" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_432" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_432" />
+	<Subscription facilityId="6206" subscriptionId="tr_433" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_433" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_433" />
+	<Subscription facilityId="6228" subscriptionId="tr_434" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_434" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_434" />
+	<Subscription facilityId="6235" subscriptionId="tr_435" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_435" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_435" />
+	<Subscription facilityId="6241" subscriptionId="tr_436" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_436" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_436" />
+	<Subscription facilityId="6264" subscriptionId="tr_437" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_437" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_437" />
+	<Subscription facilityId="6277" subscriptionId="tr_438" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_438" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_438" />
+	<Subscription facilityId="6292" subscriptionId="tr_439" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_439" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_439" />
+	<Subscription facilityId="6332" subscriptionId="tr_440" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_440" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_440" />
+	<Subscription facilityId="6344" subscriptionId="tr_441" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_441" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_441" />
+	<Subscription facilityId="6353" subscriptionId="tr_442" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_442" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_442" />
+	<Subscription facilityId="6364" subscriptionId="tr_443" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_443" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_443" />
+	<Subscription facilityId="6445" subscriptionId="tr_444" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_444" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_444" />
+	<Subscription facilityId="6446" subscriptionId="tr_445" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_445" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_445" />
+	<Subscription facilityId="6457" subscriptionId="tr_446" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_446" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_446" />
+	<Subscription facilityId="6466" subscriptionId="tr_447" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_447" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_447" />
+	<Subscription facilityId="1003" subscriptionId="tr_448" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_448" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_448" />
+	<Subscription facilityId="1004" subscriptionId="tr_449" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_449" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_449" />
+	<Subscription facilityId="1006" subscriptionId="tr_450" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_450" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_450" />
+	<Subscription facilityId="1022" subscriptionId="tr_451" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_451" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_451" />
+	<Subscription facilityId="1029" subscriptionId="tr_452" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_452" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_452" />
+	<Subscription facilityId="1047" subscriptionId="tr_453" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_453" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_453" />
+	<Subscription facilityId="1054" subscriptionId="tr_454" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_454" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_454" />
+	<Subscription facilityId="1097" subscriptionId="tr_455" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_455" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_455" />
+	<Subscription facilityId="1180" subscriptionId="tr_456" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_456" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_456" />
+	<Subscription facilityId="1182" subscriptionId="tr_457" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_457" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_457" />
+	<Subscription facilityId="3295" subscriptionId="tr_458" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_458" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_458" />
+	<Subscription facilityId="3355" subscriptionId="tr_459" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_459" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_459" />
+	<Subscription facilityId="3426" subscriptionId="tr_460" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_460" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_460" />
+	<Subscription facilityId="3704" subscriptionId="tr_461" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_461" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_461" />
+	<Subscription facilityId="3779" subscriptionId="tr_462" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_462" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_462" />
+	<Subscription facilityId="3944" subscriptionId="tr_463" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_463" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_463" />
+	<Subscription facilityId="3975" subscriptionId="tr_464" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_464" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_464" />
+	<Subscription facilityId="4024" subscriptionId="tr_465" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_465" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_465" />
+	<Subscription facilityId="4079" subscriptionId="tr_466" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_466" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_466" />
+	<Subscription facilityId="4339" subscriptionId="tr_467" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_467" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_467" />
+	<Subscription facilityId="4546" subscriptionId="tr_468" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_468" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_468" />
+	<Subscription facilityId="4586" subscriptionId="tr_469" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_469" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_469" />
+	<Subscription facilityId="4616" subscriptionId="tr_470" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_470" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_470" />
+	<Subscription facilityId="4630" subscriptionId="tr_471" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_471" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_471" />
+	<Subscription facilityId="4633" subscriptionId="tr_472" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_472" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_472" />
+	<Subscription facilityId="4638" subscriptionId="tr_473" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_473" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_473" />
+	<Subscription facilityId="4882" subscriptionId="tr_474" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_474" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_474" />
+	<Subscription facilityId="4907" subscriptionId="tr_475" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_475" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_475" />
+	<Subscription facilityId="4952" subscriptionId="tr_476" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_476" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_476" />
+	<Subscription facilityId="4960" subscriptionId="tr_477" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_477" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_477" />
+	<Subscription facilityId="4961" subscriptionId="tr_478" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_478" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_478" />
+	<Subscription facilityId="5116" subscriptionId="tr_479" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_479" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_479" />
+	<Subscription facilityId="5135" subscriptionId="tr_480" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_480" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_480" />
+	<Subscription facilityId="5158" subscriptionId="tr_481" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_481" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_481" />
+	<Subscription facilityId="5224" subscriptionId="tr_482" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_482" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_482" />
+	<Subscription facilityId="5276" subscriptionId="tr_483" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_483" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_483" />
+	<Subscription facilityId="5374" subscriptionId="tr_484" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_484" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_484" />
+	<Subscription facilityId="5383" subscriptionId="tr_485" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_485" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_485" />
+	<Subscription facilityId="5418" subscriptionId="tr_486" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_486" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_486" />
+	<Subscription facilityId="5434" subscriptionId="tr_487" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_487" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_487" />
+	<Subscription facilityId="5445" subscriptionId="tr_488" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_488" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_488" />
+	<Subscription facilityId="5453" subscriptionId="tr_489" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_489" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_489" />
+	<Subscription facilityId="5458" subscriptionId="tr_490" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_490" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_490" />
+	<Subscription facilityId="5467" subscriptionId="tr_491" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_491" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_491" />
+	<Subscription facilityId="5509" subscriptionId="tr_492" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_492" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_492" />
+	<Subscription facilityId="5546" subscriptionId="tr_493" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_493" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_493" />
+	<Subscription facilityId="5563" subscriptionId="tr_494" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_494" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_494" />
+	<Subscription facilityId="5751" subscriptionId="tr_495" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_495" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_495" />
+	<Subscription facilityId="5794" subscriptionId="tr_496" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_496" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_496" />
+	<Subscription facilityId="5837" subscriptionId="tr_497" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_497" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_497" />
+	<Subscription facilityId="5920" subscriptionId="tr_498" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_498" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_498" />
+	<Subscription facilityId="5963" subscriptionId="tr_499" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_499" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_499" />
+	<Subscription facilityId="6084" subscriptionId="tr_500" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_500" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_500" />
+	<Subscription facilityId="6190" subscriptionId="tr_501" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_501" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_501" />
+	<Subscription facilityId="6316" subscriptionId="tr_502" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_502" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_502" />
+	<Subscription facilityId="6331" subscriptionId="tr_503" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_503" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_503" />
+	<Subscription facilityId="6447" subscriptionId="tr_504" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_504" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_504" />
+	<Subscription facilityId="3299" subscriptionId="tr_505" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_505" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_505" />
+	<Subscription facilityId="3739" subscriptionId="tr_506" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_506" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_506" />
+	<Subscription facilityId="3790" subscriptionId="tr_507" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_507" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_507" />
+	<Subscription facilityId="3829" subscriptionId="tr_508" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_508" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_508" />
+	<Subscription facilityId="3856" subscriptionId="tr_509" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_509" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_509" />
+	<Subscription facilityId="4053" subscriptionId="tr_510" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_510" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_510" />
+	<Subscription facilityId="4255" subscriptionId="tr_511" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_511" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_511" />
+	<Subscription facilityId="4354" subscriptionId="tr_512" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_512" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_512" />
+	<Subscription facilityId="4387" subscriptionId="tr_513" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_513" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_513" />
+	<Subscription facilityId="4483" subscriptionId="tr_514" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_514" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_514" />
+	<Subscription facilityId="4584" subscriptionId="tr_515" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_515" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_515" />
+	<Subscription facilityId="4606" subscriptionId="tr_516" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_516" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_516" />
+	<Subscription facilityId="4615" subscriptionId="tr_517" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_517" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_517" />
+	<Subscription facilityId="4663" subscriptionId="tr_518" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_518" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_518" />
+	<Subscription facilityId="4791" subscriptionId="tr_519" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_519" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_519" />
+	<Subscription facilityId="4805" subscriptionId="tr_520" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_520" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_520" />
+	<Subscription facilityId="4808" subscriptionId="tr_521" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_521" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_521" />
+	<Subscription facilityId="4810" subscriptionId="tr_522" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_522" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_522" />
+	<Subscription facilityId="4922" subscriptionId="tr_523" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_523" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_523" />
+	<Subscription facilityId="5105" subscriptionId="tr_524" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_524" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_524" />
+	<Subscription facilityId="5110" subscriptionId="tr_525" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_525" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_525" />
+	<Subscription facilityId="5111" subscriptionId="tr_526" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_526" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_526" />
+	<Subscription facilityId="5218" subscriptionId="tr_527" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_527" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_527" />
+	<Subscription facilityId="5248" subscriptionId="tr_528" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_528" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_528" />
+	<Subscription facilityId="5339" subscriptionId="tr_529" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_529" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_529" />
+	<Subscription facilityId="5398" subscriptionId="tr_530" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_530" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_530" />
+	<Subscription facilityId="5414" subscriptionId="tr_531" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_531" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_531" />
+	<Subscription facilityId="5497" subscriptionId="tr_532" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_532" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_532" />
+	<Subscription facilityId="5510" subscriptionId="tr_533" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_533" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_533" />
+	<Subscription facilityId="5547" subscriptionId="tr_534" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_534" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_534" />
+	<Subscription facilityId="5572" subscriptionId="tr_535" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_535" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_535" />
+	<Subscription facilityId="5575" subscriptionId="tr_536" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_536" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_536" />
+	<Subscription facilityId="5576" subscriptionId="tr_537" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_537" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_537" />
+	<Subscription facilityId="5597" subscriptionId="tr_538" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_538" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_538" />
+	<Subscription facilityId="5600" subscriptionId="tr_539" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_539" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_539" />
+	<Subscription facilityId="5665" subscriptionId="tr_540" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_540" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_540" />
+	<Subscription facilityId="5714" subscriptionId="tr_541" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_541" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_541" />
+	<Subscription facilityId="5767" subscriptionId="tr_542" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_542" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_542" />
+	<Subscription facilityId="5777" subscriptionId="tr_543" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_543" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_543" />
+	<Subscription facilityId="5787" subscriptionId="tr_544" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_544" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_544" />
+	<Subscription facilityId="5806" subscriptionId="tr_545" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CREDIT" quantity="100.000000"
+		subscriptionId="tr_545" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_545" />
+	<Subscription facilityId="5880" subscriptionId="tr_546" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_546" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_546" />
+	<Subscription facilityId="5890" subscriptionId="tr_547" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_547" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_547" />
+	<Subscription facilityId="5892" subscriptionId="tr_548" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_548" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_548" />
+	<Subscription facilityId="5897" subscriptionId="tr_549" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_549" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_549" />
+	<Subscription facilityId="5908" subscriptionId="tr_550" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="42" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_550" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_550" />
+	<Subscription facilityId="5924" subscriptionId="tr_551" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_551" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_551" />
+	<Subscription facilityId="5931" subscriptionId="tr_552" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_552" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_552" />
+	<Subscription facilityId="5959" subscriptionId="tr_553" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_553" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_553" />
+	<Subscription facilityId="5974" subscriptionId="tr_554" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_554" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_554" />
+	<Subscription facilityId="6056" subscriptionId="tr_555" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_555" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_555" />
+	<Subscription facilityId="6057" subscriptionId="tr_556" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_556" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_556" />
+	<Subscription facilityId="6214" subscriptionId="tr_557" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_557" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_557" />
+	<Subscription facilityId="6246" subscriptionId="tr_558" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_558" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_558" />
+	<Subscription facilityId="6258" subscriptionId="tr_559" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_559" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_559" />
+	<Subscription facilityId="6299" subscriptionId="tr_560" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_560" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_560" />
+	<Subscription facilityId="6329" subscriptionId="tr_561" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_561" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_561" />
+	<Subscription facilityId="6360" subscriptionId="tr_562" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_562" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_562" />
+	<Subscription facilityId="6423" subscriptionId="tr_563" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_563" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_563" />
+	<Subscription facilityId="6440" subscriptionId="tr_564" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_564" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_564" />
+	<Subscription facilityId="6450" subscriptionId="tr_565" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_565" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_565" />
+	<Subscription facilityId="6460" subscriptionId="tr_566" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_566" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_566" />
+	<Subscription facilityId="6467" subscriptionId="tr_567" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_567" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_567" />
+	<Subscription facilityId="6485" subscriptionId="tr_568" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_568" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_568" />
+	<Subscription facilityId="1009" subscriptionId="tr_569" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_569" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_569" />
+	<Subscription facilityId="1010" subscriptionId="tr_570" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_570" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_570" />
+	<Subscription facilityId="1011" subscriptionId="tr_571" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_571" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_571" />
+	<Subscription facilityId="1013" subscriptionId="tr_572" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_572" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_572" />
+	<Subscription facilityId="1027" subscriptionId="tr_573" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_573" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_573" />
+	<Subscription facilityId="1032" subscriptionId="tr_574" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_574" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_574" />
+	<Subscription facilityId="1033" subscriptionId="tr_575" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_575" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_575" />
+	<Subscription facilityId="1611" subscriptionId="tr_576" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_576" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_576" />
+	<Subscription facilityId="3371" subscriptionId="tr_577" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_577" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_577" />
+	<Subscription facilityId="3768" subscriptionId="tr_578" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_578" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_578" />
+	<Subscription facilityId="3844" subscriptionId="tr_579" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_579" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_579" />
+	<Subscription facilityId="3946" subscriptionId="tr_580" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_580" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_580" />
+	<Subscription facilityId="4140" subscriptionId="tr_581" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_581" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_581" />
+	<Subscription facilityId="4323" subscriptionId="tr_582" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_582" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_582" />
+	<Subscription facilityId="4389" subscriptionId="tr_583" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_583" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_583" />
+	<Subscription facilityId="4568" subscriptionId="tr_584" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_584" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_584" />
+	<Subscription facilityId="4746" subscriptionId="tr_585" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_585" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_585" />
+	<Subscription facilityId="4889" subscriptionId="tr_586" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_586" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_586" />
+	<Subscription facilityId="4920" subscriptionId="tr_587" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="21" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_587" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_587" />
+	<Subscription facilityId="5022" subscriptionId="tr_588" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_588" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_588" />
+	<Subscription facilityId="5132" subscriptionId="tr_589" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_589" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_589" />
+	<Subscription facilityId="5394" subscriptionId="tr_590" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_590" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_590" />
+	<Subscription facilityId="5559" subscriptionId="tr_591" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_591" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_591" />
+	<Subscription facilityId="5624" subscriptionId="tr_592" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_592" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_592" />
+	<Subscription facilityId="5805" subscriptionId="tr_593" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_593" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_593" />
+	<Subscription facilityId="5815" subscriptionId="tr_594" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_594" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_594" />
+	<Subscription facilityId="6005" subscriptionId="tr_595" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_595" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_595" />
+	<Subscription facilityId="6045" subscriptionId="tr_596" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_596" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_596" />
+	<Subscription facilityId="6078" subscriptionId="tr_597" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_597" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_597" />
+	<Subscription facilityId="6081" subscriptionId="tr_598" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="43" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_598" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="44" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_598" />
+	<Subscription facilityId="6117" subscriptionId="tr_599" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_599" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_599" />
+	<Subscription facilityId="6169" subscriptionId="tr_600" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_600" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_600" />
+	<Subscription facilityId="6268" subscriptionId="tr_601" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_601" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_601" />
+	<Subscription facilityId="6318" subscriptionId="tr_602" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="22" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_602" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="23" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_602" />
+	<Subscription facilityId="6471" subscriptionId="tr_603" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="11" productSubscriptionTypeId="CARD" quantity="100.000000"
+		subscriptionId="tr_603" />
+	<SubscriptionProduct fromDate="2011-12-14 15:15:46.0"
+		productId="12" productSubscriptionTypeId="CASH" quantity="100.000000"
+		subscriptionId="tr_603" />
+</entity-engine-xml>

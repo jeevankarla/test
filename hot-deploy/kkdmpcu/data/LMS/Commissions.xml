@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+	<!--Margin Rates  -->
+	<RateType rateTypeId="VENDOR_MRGN"  description="Vendor margin"/>
+    <RateType rateTypeId="VENDOR_CD_ADTL_MRGN" description="Additional margin for card orders"/>
+	 <RateAmount rateTypeId="VENDOR_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="VENDOR_CD_ADTL_MRGN" rateAmount="0" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+	
+    <AcctgFormula acctgFormulaId="LMS_VOL_INCNTV"  description="LMS volume incentive" isSlabBased="Y"/>    
+	<AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="0" slabEnd="50.99" formula="1.40*${QUANTITY}" description="0-50Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="51" slabEnd="100.99" formula="1.50*${QUANTITY}" description="50Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="101" slabEnd="150.99" formula="1.60*${QUANTITY}" description="100Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="151" slabEnd="200.99" formula="1.70*${QUANTITY}" description="150Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="201" slabEnd="99999" formula="1.80*${QUANTITY}" description="200Ltr Incentive"/>
+    
+    <AcctgFormula acctgFormulaId="LMS_VOL_INC_ADL_12"  description="LMS volume incentive for DTM500(productId:12)" isSlabBased="Y"/>    
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INC_ADL_12" slabStart="0" slabEnd="50.99" formula=".20*${QUANTITY}" description="0-50Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INC_ADL_12" slabStart="51" slabEnd="9999" formula=".50*${QUANTITY}" description="50Ltr Incentive"/>
+	<!-- [11, 13, 15, 17, 19, 21] -->
+	<AcctgFormula acctgFormulaId="LMS_VOL_INC_11"  description="LMS volume incentive" isSlabBased="Y"/>    
+	<AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INC_11" slabStart="0" slabEnd="9999" formula="0.00*${QUANTITY}" description="0-9999Ltr Incentive"/>
+	<AcctgFormula acctgFormulaId="LMS_VOL_INC_13"  description="LMS volume incentive" isSlabBased="Y"/>    
+	<AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INC_13" slabStart="0" slabEnd="9999" formula="1.00*${QUANTITY}" description="0-9999Ltr Incentive"/>
+	<AcctgFormula acctgFormulaId="LMS_VOL_INC_15"  description="LMS volume incentive" isSlabBased="Y"/>    
+	<AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INC_15" slabStart="0" slabEnd="9999" formula="1.00*${QUANTITY}" description="0-9999Ltr Incentive"/>  
+	<AcctgFormula acctgFormulaId="LMS_VOL_INC_17"  description="LMS volume incentive" isSlabBased="Y"/>    
+	<AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INC_17" slabStart="0" slabEnd="9999" formula="1.00*${QUANTITY}" description="0-9999Ltr Incentive"/>  
+	<AcctgFormula acctgFormulaId="LMS_VOL_INC_19"  description="LMS volume incentive" isSlabBased="Y"/>    
+	<AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INC_19" slabStart="0" slabEnd="9999" formula="1.00*${QUANTITY}" description="0-9999Ltr Incentive"/>  
+	<AcctgFormula acctgFormulaId="LMS_VOL_INC_21"  description="LMS volume incentive" isSlabBased="Y"/>    
+	<AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INC_21" slabStart="0" slabEnd="9999" formula="1.00*${QUANTITY}" description="0-9999Ltr Incentive"/>
+	
+	<RateType rateTypeId="RT01_MRGN"  description="RT01 margin"/>
+    <RateType rateTypeId="RT02_MRGN"  description="RT02 margin"/>
+    <RateType rateTypeId="RT03_MRGN"  description="RT03 margin"/>
+    <RateType rateTypeId="RT04_MRGN"  description="RT04 margin"/>
+    <RateType rateTypeId="RT05_MRGN"  description="RT05 margin"/>
+    <RateType rateTypeId="RT06_MRGN"  description="RT06 margin"/>
+    <RateType rateTypeId="RT07_MRGN"  description="RT07 margin"/>
+    <RateType rateTypeId="RT08_MRGN"  description="RT08 margin"/>
+    <RateType rateTypeId="RT09_MRGN"  description="RT09 margin"/>
+    <RateType rateTypeId="RT10_MRGN"  description="RT10 margin"/>
+    <RateType rateTypeId="RT11_MRGN"  description="RT11 margin"/>
+    <RateType rateTypeId="RT12_MRGN"  description="RT12 margin"/>
+    <RateType rateTypeId="RT13_MRGN"  description="RT13 margin"/>
+    <RateType rateTypeId="RT14_MRGN"  description="RT14 margin"/>
+    <RateType rateTypeId="RT15_MRGN"  description="RT15 margin"/>
+    <RateType rateTypeId="RT16_MRGN"  description="RT16 margin"/>
+    <RateType rateTypeId="RT17_MRGN"  description="RT17 margin"/>
+    <RateType rateTypeId="RT17-1_MRGN"  description="RT17-1 margin"/>
+    <RateType rateTypeId="RT18_MRGN"  description="RT18 margin"/>
+    <RateType rateTypeId="RT19_MRGN"  description="RT19 margin"/>
+    <RateType rateTypeId="RT20_MRGN"  description="RT20 margin"/>
+    <RateType rateTypeId="RT21_MRGN"  description="RT21 margin"/> 
+    <RateType rateTypeId="RT22_MRGN"  description="RT22 margin"/>
+      
+    <RateAmount rateTypeId="RT01_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT01_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT02_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT02_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT03_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT03_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT04_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT04_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT05_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT06_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT06_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT07_MRGN" rateAmount="1.10" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT07_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT08_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT08_MRGN" rateAmount="0.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT09_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT09_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT10_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="RT11_MRGN" rateAmount="1.20" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-09-30 23:59:59.0" />
+    <RateAmount rateTypeId="RT11_MRGN" rateAmount="1.10" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-10-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT11_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT12_MRGN" rateAmount="1.20" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT12_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT13_MRGN" rateAmount="1.10" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-10-31 23:59:59.0" />
+    <RateAmount rateTypeId="RT13_MRGN" rateAmount="1.15" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-11-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT14_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="RT15_MRGN" rateAmount="0.90" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="RT16_MRGN" rateAmount="0.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="RT17_MRGN" rateAmount="1.20" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="RT17-1_MRGN" rateAmount="1.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="RT18_MRGN" rateAmount="0.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    <RateAmount rateTypeId="RT19_MRGN" rateAmount="0.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT20_MRGN" rateAmount="0.90" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-09-30 23:59:59.0" />
+    <RateAmount rateTypeId="RT20_MRGN" rateAmount="0.00" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-10-01 0:00:00.000" thruDate="" />   
+    
+    <RateAmount rateTypeId="RT21_MRGN" rateAmount="0.60" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="" />
+    
+    <RateAmount rateTypeId="RT22_MRGN" rateAmount="1.20" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="_NA_" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-01-01 0:00:00.000" thruDate="2012-09-30 23:59:59.0"/> 
+    <RateAmount rateTypeId="RT22_MRGN" rateAmount="1000" rateCurrencyUomId="INR" periodTypeId="RATE_HOUR" partyId="10461" workEffortId="_NA_" productId="_NA_" emplPositionTypeId="_NA_" fromDate="2012-10-01 0:00:00.000" thruDate="" /> 
+
+	<Facility facilityId="1713"  excludeIncentive="Y"/>
+	<Facility facilityId="406"  excludeIncentive="Y"/>
+	<Facility facilityId="1715"  excludeIncentive="Y"/>
+	
+</entity-engine-xml>

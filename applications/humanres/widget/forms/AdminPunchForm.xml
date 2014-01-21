@@ -1,0 +1,54 @@
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+<form name="AdminPunch" type="single" target="adminPunch" title="" header-row-style="header-row2" default-table-style="basic-table hover-bar" list-name="data" odd-row-style="alternate-row">
+         <actions>
+            <set field="newPartyId" from-field="parameters.partyId"/>
+            <set field="newInOut" from-field="parameters.InOut"/>
+            <set field="newPunchType" from-field="parameters.PunchType"/>
+            <set field="newpunchdate" from-field="parameters.punchdate"/>
+            <set field="newemplPunchId" from-field="parameters.emplPunchId"/>
+            
+            <script location="component://humanres/webapp/humanres/WEB-INF/actions/calendar/emplPunch.bsh"/>
+         <!-- <set field="punchdate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String" />  -->
+            <set field="punchtime" from-field="parameters.punchtime"/>
+            
+          <set field="nowTime" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;HH:mm:ss&quot;)}" type="String"/> 
+          <set field="dateTime" value="${groovy:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" type="Date"/> 
+          </actions>
+          <auto-fields-service default-field-type="hidden" service-name="adminPunch"/>  
+        <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>	 
+        <field name="partyId"><lookup target-form-name="LookupPartyName" default-value="${partyId}" target-parameter="roleTypeId"/></field>
+        <field name="punchtime" use-when="punchtime==null" title="Punch Time"><text default-value="${nowTime}"/></field>
+        <field name="punchtime" use-when="punchtime!=null" title="Punch Time"><text/></field>
+         <field name="dateTime"><hidden/></field>
+        
+        <field name="punchdate" title="Date"><date-time type="date" default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
+        <field name="emplPunchId"><hidden/></field> 
+        <field name="PunchType"  widget-style="required">
+         <drop-down allow-empty="false" current="selected" no-current-selected-key="Normal">
+  		<option key="Normal" description="Normal"/>
+  		<option key="Break" description="Break"/>
+  		<option key="Lunch" description="Lunch"/>
+	</drop-down>
+        </field>
+        <field name="InOut"  widget-style="required">
+               <drop-down allow-empty="false" current="selected" no-current-selected-key="IN">
+  		<option key="IN" description="IN"/>
+  		<option key="OUT" description="OUT"/>
+          </drop-down>
+        </field>
+      <field name="Note" title="${uiLabelMap.CommonNote}"><hidden/></field>  
+       <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+         <field name="deleteLink"  title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit" >
+            <hyperlink target="deletePunch" description="${uiLabelMap.CommonDelete}">
+           	    <parameter param-name="PunchType" value="${newPunchType}"/>
+                <parameter param-name="partyId"  value="${newPartyId}"/>
+                <parameter param-name="InOut" value="${newInOut}"/>
+                <parameter param-name="punchdate" value="${newpunchdate}"/>
+                <parameter param-name="emplPunchId" value="${newemplPunchId}"/>  
+            </hyperlink>          
+        </field>  
+        
+</form>
+</forms>
+

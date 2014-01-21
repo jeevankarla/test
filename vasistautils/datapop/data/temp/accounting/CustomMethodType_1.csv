@@ -1,0 +1,6 @@
+CustomMethodType_customMethodTypeId,CustomMethodType_description,CustomMethodType_hasTable,CustomMethodType_parentTypeId
+FIN_AUTH,FIN account authorize methods,N,
+FIN_CAPTURE,FIN account capture methods,N,
+FIN_REFUND,FIN account refund methods,N,
+FIN_RELEASE,FIN account release methods,N,
+DEPRECIATION_FORMULA,Formula for calculating depreciation for fixed asset,N,

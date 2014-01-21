@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <AcctgFormula acctgFormulaId="LMS_VOL_INCNTV"  description="LMS volume incentive" isSlabBased="Y"/>
+    
+	<AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="0" slabEnd="50" formula=".00*${QUANTITY}" description="0-50Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="50.01" slabEnd="100" formula=".05*${QUANTITY}" description="50Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="100.01" slabEnd="150" formula=".10*${QUANTITY}" description="100Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="150.01" slabEnd="200" formula=".15*${QUANTITY}" description="150Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="200.01" slabEnd="250" formula=".20*${QUANTITY}" description="200Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="250.01" slabEnd="300" formula=".25*${QUANTITY}" description="250Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="300.01" slabEnd="350" formula=".30*${QUANTITY}" description="300Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="350.01" slabEnd="400" formula=".35*${QUANTITY}" description="350Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="400.01" slabEnd="450" formula=".40*${QUANTITY}" description="400Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="450.01" slabEnd="500" formula=".45*${QUANTITY}" description="450Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="500.01" slabEnd="600" formula=".50*${QUANTITY}" description="500Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="600.01" slabEnd="700" formula=".55*${QUANTITY}" description="600Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="700.01" slabEnd="800" formula=".60*${QUANTITY}" description="700Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="800.01" slabEnd="900" formula=".65*${QUANTITY}" description="800Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="900.01" slabEnd="1000" formula=".70*${QUANTITY}" description="900Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="1000.01" slabEnd="1100" formula=".72*${QUANTITY}" description="1000Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="1100.01" slabEnd="1200" formula=".74*${QUANTITY}" description="1100Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="1200.01" slabEnd="1300" formula=".76*${QUANTITY}" description="1200Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="1300.01" slabEnd="1400" formula=".78*${QUANTITY}" description="1300Ltr Incentive"/>
+    <AcctgFormulaSlabs acctgFormulaId="LMS_VOL_INCNTV" slabStart="1400.01" slabEnd="9999" formula=".80*${QUANTITY}" description="1400Ltr Incentive"/>
+    
+    <Facility facilityId="7058" excludeIncentive="Y"/>
+    <Facility facilityId="9954" excludeIncentive="Y"/>
+    <Facility facilityId="9951" excludeIncentive="Y"/>
+    <Facility facilityId="9950" excludeIncentive="Y"/>
+    <Facility facilityId="9952" excludeIncentive="Y"/>
+    <Facility facilityId="9953" excludeIncentive="Y"/>
+    <Facility facilityId="9957" excludeIncentive="Y"/>
+    <Facility facilityId="9956" excludeIncentive="Y"/>    
+    
+    
+</entity-engine-xml>

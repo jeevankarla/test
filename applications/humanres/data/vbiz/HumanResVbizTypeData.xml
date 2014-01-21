@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <BenefitType benefitTypeId="PAYROL_BEN_DA" description="Dearness Allowance" hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_HRA" description="House Rental Allowance" hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_CONVEY" description="Conveyance" hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_MED_ALLOW" description="Medical Allowance" hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_FDCOUPN" description="Food Coupons" hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_TELALLO" description=" Telephone Allowance " hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_ANNGIFT" description=" Annual Gift " hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_PFEMPLYR" description=" PF-Employer's Share " hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_ESIEMPLYR" description=" ESI-Employer's Share " hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_SPLALLOW" description=" Special Allowance " hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_PERBONUS" description=" Performance Bonus " hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_STBONUS" description=" Statutory Bonus " hasTable="N" parentTypeId=""/>
+    <BenefitType benefitTypeId="PAYROL_BEN_OTHERS" description=" Other Benefits " hasTable="N" parentTypeId=""/>
+
+<EmplLeaveReasonType description="Medical" emplLeaveReasonTypeId="MEDICAL" hasTable="N" parentTypeId=""/>
+    <EmplLeaveReasonType description="Casual" emplLeaveReasonTypeId="CASUAL" hasTable="N" parentTypeId=""/>
+    <EmplLeaveReasonType description="Maternity" emplLeaveReasonTypeId="MATERNITY" hasTable="N" parentTypeId=""/>
+    <EmplLeaveReasonType description="Other" emplLeaveReasonTypeId="OTHER" hasTable="N" parentTypeId=""/>
+	<EmplLeaveType leaveTypeId="Casual Leave" description="Casual Leave"/>
+    <EmplLeaveType leaveTypeId="Sick Leave" description="Sick Leave"/>
+ <EnumerationType description="Employment Status" enumTypeId="EMPLOY_STTS" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Residence Status" enumTypeId="PTY_RESID_STTS" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Global preferences" enumTypeId="GLOBAL_PREFERENCES" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Payroll Deduction Category" enumTypeId="PAYROLL_DD_CAT" hasTable="N" parentTypeId=""/>
+
+  <PartyQualType description="Degree" hasTable="N" parentTypeId="" partyQualTypeId="DEGREE"/>
+    <PartyQualType description="Certification" hasTable="N" parentTypeId="" partyQualTypeId="CERTIFICATION"/>
+    <PartyQualType description="Work Experience" hasTable="N" parentTypeId="" partyQualTypeId="EXPERIENCE"/>
+
+<PayGrade payGradeId="BASIC_PAY" payGradeName="Basic - Pay "/>
+
+
+  <SecurityGroup description="This security group is for those who will approve the internal job posting application." groupId="HUMANRES_APPROVER"/>
+    <SecurityGroup description="This security group is for all the employees who want to apply for internal Job Posting." groupId="HUMANRES_EMPLOYEE"/>
+
+ <StatusType description="Degree status" hasTable="N" parentTypeId="" statusTypeId="HR_DEGREE_STATUS"/>
+    <StatusType description="Job status" hasTable="N" parentTypeId="" statusTypeId="HR_JOB_STATUS"/>
+    <StatusType description="Employee Leave Status" hasTable="N" parentTypeId="" statusTypeId="LEAVE_STATUS"/>
+    <StatusType description="Employee Position Status" hasTable="N" parentTypeId="" statusTypeId="EMPL_POSITION_STATUS"/>
+    
+
+  <TerminationType description="Resignation" hasTable="N" parentTypeId="" terminationTypeId="RESIGN"/>
+    <TerminationType description="Retirement" hasTable="N" parentTypeId="" terminationTypeId="RETIRE"/>
+    <TerminationType description="Termination" hasTable="N" parentTypeId="" terminationTypeId="TERM"/>
+    <TerminationType description="Absconding" hasTable="N" parentTypeId="" terminationTypeId="ABSCOND"/>
+
+ <Enumeration description="Full-time Employed" enumCode="FULLTIME" enumId="EMPS_FULLTIME" enumTypeId="EMPLOY_STTS" sequenceId="1"/>
+    <Enumeration description="Part-time Employed" enumCode="PARTTIME" enumId="EMPS_PARTTIME" enumTypeId="EMPLOY_STTS" sequenceId="2"/>
+    <Enumeration description="Self Employed" enumCode="SELF" enumId="EMPS_SELF" enumTypeId="EMPLOY_STTS" sequenceId="3"/>
+    <Enumeration description="House-Person" enumCode="HOUSE" enumId="EMPS_HOUSE" enumTypeId="EMPLOY_STTS" sequenceId="4"/>
+    <Enumeration description="Retired" enumCode="RETIRED" enumId="EMPS_RETIRED" enumTypeId="EMPLOY_STTS" sequenceId="5"/>
+    <Enumeration description="Student" enumCode="STUDENT" enumId="EMPS_STUDENT" enumTypeId="EMPLOY_STTS" sequenceId="6"/>
+    <Enumeration description="Unemployed" enumCode="UNEMP" enumId="EMPS_UNEMP" enumTypeId="EMPLOY_STTS" sequenceId="7"/>
+    <Enumeration description="Own Home" enumCode="OWN" enumId="PRESS_OWN" enumTypeId="PTY_RESID_STTS" sequenceId="1"/>
+    <Enumeration description="Private Tenant" enumCode="PVT_TENANT" enumId="PRESS_PVT_TENANT" enumTypeId="PTY_RESID_STTS" sequenceId="2"/>
+    <Enumeration description="Public Tenant" enumCode="PUB_TENANT" enumId="PRESS_PUB_TENANT" enumTypeId="PTY_RESID_STTS" sequenceId="3"/>
+    <Enumeration description="With Parents" enumCode="PARENTS" enumId="PRESS_PARENTS" enumTypeId="PTY_RESID_STTS" sequenceId="4"/>
+    <Enumeration description="Organization party" enumCode="" enumId="ORGANIZATION_PARTY" enumTypeId="GLOBAL_PREFERENCES" sequenceId="1"/>
+    <Enumeration description="Visual Theme" enumCode="" enumId="VISUAL_THEME" enumTypeId="GLOBAL_PREFERENCES" sequenceId="2"/>
+    <Enumeration description="Deduction - Social Security" enumCode="PAYROLDDCAT_SS" enumId="PAYROLDDCAT_SS" enumTypeId="PAYROLL_DD_CAT" sequenceId="1"/>
+    <Enumeration description="Deduction - Recovery" enumCode="PAYROLDDCAT_RCVRY" enumId="PAYROLDDCAT_RCVRY" enumTypeId="PAYROLL_DD_CAT" sequenceId="2"/>
+    <Enumeration description="Taxes" enumCode="PAYROLDDCAT_TAX" enumId="PAYROLDDCAT_TAX" enumTypeId="PAYROLL_DD_CAT" sequenceId="3"/>
+
+ <SecurityGroupPermission groupId="HUMANRES_APPROVER" permissionId="HUMANRES_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_APPROVER" permissionId="HUMANRES_CREATE"/>
+    <SecurityGroupPermission groupId="HUMANRES_APPROVER" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_APPROVER" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_APPROVER" permissionId="HUMANRES_UPDATE"/>
+    <SecurityGroupPermission groupId="HUMANRES_APPROVER" permissionId="HUMANRES_APPROVE"/>
+    <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="HUMANRES_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="HUMANRES_CREATE"/>
+    <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="OFBTOOLS_VIEW"/>
+
+
+  <StatusItem description="Completed" sequenceId="1" statusCode="COMPLETE" statusId="HR_DS_COMPLETE" statusTypeId="HR_DEGREE_STATUS"/>
+    <StatusItem description="Incomplete" sequenceId="2" statusCode="INCOMPLETE" statusId="HR_DS_INCOMPLETE" statusTypeId="HR_DEGREE_STATUS"/>
+    <StatusItem description="Deferred" sequenceId="3" statusCode="DEFERRED" statusId="HR_DS_DEFERRED" statusTypeId="HR_DEGREE_STATUS"/>
+    <StatusItem description="Full time" sequenceId="1" statusCode="FULLTIME" statusId="HR_JS_FULLTIME" statusTypeId="HR_JOB_STATUS"/>
+    <StatusItem description="Part time" sequenceId="2" statusCode="PARTTIME" statusId="HR_JS_PARTTIME" statusTypeId="HR_JOB_STATUS"/>
+    <StatusItem description="Contractor" sequenceId="3" statusCode="CONTRACTOR" statusId="HR_JS_CONTRACTOR" statusTypeId="HR_JOB_STATUS"/>
+    <StatusItem description="Approved" sequenceId="1" statusCode="APPROVED" statusId="LEAVE_APPROVED" statusTypeId="LEAVE_STATUS"/>
+    <StatusItem description="Rejected" sequenceId="2" statusCode="RJECTED" statusId="LEAVE_REJECTED" statusTypeId="LEAVE_STATUS"/>
+    <StatusItem description="Active/Open" sequenceId="2" statusCode="ACTIVE" statusId="EMPL_POS_ACTIVE" statusTypeId="EMPL_POSITION_STATUS"/>
+    <StatusItem description="Inactive/Closed" sequenceId="3" statusCode="INACTIVE" statusId="EMPL_POS_INACTIVE" statusTypeId="EMPL_POSITION_STATUS"/>
+   
+
+ <DeductionType deductionTypeId="PAYROL_DD_PRO_TAX" description="Professional Tax" parentTypeId="" deductionCategoryId="PAYROLDDCAT_TAX"/>
+    <DeductionType deductionTypeId="PAYROL_DD_PF" description="Provident Fund" parentTypeId="" deductionCategoryId="PAYROLDDCAT_SS"/>
+    <DeductionType deductionTypeId="PAYROL_DD_ESI" description="Employee State Insurance" parentTypeId="" deductionCategoryId="PAYROLDDCAT_SS"/>
+    <DeductionType deductionTypeId="PAYROL_DD_TDS" description="Tax Deduction at Source" parentTypeId="" deductionCategoryId="PAYROLDDCAT_TAX"/>
+    <DeductionType deductionTypeId="PAYROL_DD_LOANRECOV" description="Loan Recovery" parentTypeId="" deductionCategoryId="PAYROLDDCAT_RCVRY"/>
+	<!--HR Calender -->
+	<WorkEffortType description="Holiday " hasTable="N" workEffortTypeId="HOLIDAY"/>
+	<EnumerationType description="Parent Type for all Work Effort enum types" enumTypeId="WORK_EFFORT" hasTable="N" parentTypeId=""/>
+	<EnumerationType description="Work Effort Scope Classification" enumTypeId="WORK_EFF_SCOPE" hasTable="N" parentTypeId="WORK_EFFORT"/>
+	<Enumeration description="Employee access" enumCode="HR" enumId="WES_HR" sequenceId="03" enumTypeId="WORK_EFF_SCOPE"/>
+	
+	<EnumerationType description="HR Event Calendar Type" enumTypeId="HREVENT_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Meeting" enumCode="MEETING" enumId="MEETING" sequenceId="01" enumTypeId="HREVENT_TYPE"/>
+    <Enumeration description="Holiday" enumCode="HOLIDAY" enumId="HOLIDAY" sequenceId="02" enumTypeId="HREVENT_TYPE"/>
+</entity-engine-xml>

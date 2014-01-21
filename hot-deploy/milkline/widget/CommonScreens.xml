@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <property-map resource="MilkLineUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.MilkLineCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.MilkLineCompanySubtitle" global="true"/>
+
+                <set field="activeApp" value="milkline" global="true"/>
+                <set field="applicationMenuName" value="MainAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://milkline/widget/MilkLineMenus.xml" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.MilkLineApplication}" global="true"/>
+            </actions>
+            <widgets>
+                <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="MilkLineCommonDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="MILKLINE" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                            	<include-menu name="FacilityTabBar" location="component://milkline/widget/MilkLineMenus.xml"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.MilkLineViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MyPortalMilkLineTree">
+        <section>
+            <actions>
+            	<property-map resource="MilkLineUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            	<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="ProductFacilityMain"/>
+                <set field="dashBoardMenuLocation" value="component://milkline/widget/MilkLineMenus.xml" global="true"/>
+         		<set field="menuLocation" value="${groovy:session.setAttribute(&quot;menuLocation&quot;,dashBoardMenuLocation)}"/>
+                <set field="headerItem" value="facility"/>
+                <set field="tabButtonItem" value="main"/>
+                <set field="isTreeRoot" value="Y"/>
+				<script  
+					location="component://product/webapp/facility/WEB-INF/actions/facility/facilityTree.groovy" />
+            </actions>
+            <widgets>         
+                <include-menu name="FacilityTabBar" location="${dashBoardMenuLocation}"/>
+            	<container style="lefthalf"> 
+             		<screenlet title="Location Network">  
+            			 <platform-specific><html><html-template location="component://product/webapp/facility/facility/facilityTree.ftl"></html-template></html></platform-specific>
+					</screenlet>
+				</container>
+            </widgets>
+        </section>
+    </screen>
+</screens>

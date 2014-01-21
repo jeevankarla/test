@@ -1,0 +1,4 @@
+FacilityGroupMember_facilityId,FacilityGroupMember_facilityGroupId,FacilityGroupMember_fromDate,FacilityGroupMember_thruDate,FacilityGroupMember_sequenceNum
+BLK1,DG,2010-11-30 5:15:20.345,,
+BLK2,VD,2010-11-30 5:15:20.345,,
+BLK3,AN,2010-11-30 5:15:20.000,,
