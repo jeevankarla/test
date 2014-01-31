@@ -2106,7 +2106,24 @@ public class ByProductServices {
 		}
         Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
         String orderId = (String) orderCreateResult.get("orderId");
-
+        // handle employee subsidies here 
+        if(productSubscriptionTypeId.equals("EMP_SUBSIDY")){
+        	Map empSubdCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+        	empSubdCtx.put("orderId", orderId);
+   	  	 	  	 
+   	  	 	try{
+   	  	 		Map result = dispatcher.runSync("adjustEmployeeSubsidyForOrder",empSubdCtx);  		  		 
+   	  	 		if (ServiceUtil.isError(result)) {
+   	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
+   	  	 			Debug.logError(errMsg , module);       				
+   	  	 			return result;
+   	  	 		}
+   			 
+   	  	 	}catch (Exception e) {
+   	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);     
+   	  			  return resultMap;			  
+   	  	 	}
+        }
         // approve the order
         if (UtilValidate.isNotEmpty(orderId)) {
             boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);       
@@ -2142,7 +2159,7 @@ public class ByProductServices {
                 Debug.logError(e, module);
             } 
             // handle Replacement here 
-            if(productSubscriptionTypeId.equals("REPLACEMENT_BYPROD")){
+          /*  if(productSubscriptionTypeId.equals("REPLACEMENT_BYPROD")){
             	List<GenericValue> transProductList = FastList.newInstance();
             	
             	for(GenericValue SubscriptionProduct : subscriptionProductsList){
@@ -2168,8 +2185,9 @@ public class ByProductServices {
        	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);     
        	  			  return resultMap;			  
        	  	 	}
-            }
+            }*/
             
+           
             resultMap.put("orderId", orderId);
             //resultMap.put("quantity", quantity);  
             //Debug.logInfo("quantity=" + quantity, module);                    
@@ -8145,4 +8163,41 @@ public class ByProductServices {
         return result;
     }
 	
+	
+	public static Map<String, Object> adjustEmployeeSubsidyForOrder(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+        Locale locale = (Locale) context.get("locale");     
+        Map result = ServiceUtil.returnSuccess();
+        BigDecimal subPercent = new BigDecimal("50");
+        BigDecimal subAmount = BigDecimal.ZERO;
+		try {
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			List<GenericValue> orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+			for(GenericValue orederItem : orderItems){
+				BigDecimal itemSubAmt = orederItem.getBigDecimal("unitPrice").multiply(subPercent.divide(new BigDecimal("100")));
+				subAmount = (subAmount.add(itemSubAmt)).multiply(orederItem.getBigDecimal("quantity"));
+			}
+			// add employee subsidy adjustment "EMPSUBSID_ADJUSTMENT"
+			String orderAdjustmentTypeId = "EMPSUBSID_ADJUSTMENT";
+			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
+	    	 createOrderAdjustmentCtx.put("orderId", orderId);
+	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
+	    	 createOrderAdjustmentCtx.put("amount", subAmount.negate());
+	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
+	     	 if (ServiceUtil.isError(result)) {
+	                Debug.logWarning("There was an error while creating  the adjustment: " + ServiceUtil.getErrorMessage(result), module);
+	         		return ServiceUtil.returnError("There was an error while creating the adjustment: " + ServiceUtil.getErrorMessage(result));          	            
+	         } 
+		
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+        result = ServiceUtil.returnSuccess("Successfully added the adjustment!!");
+        result.put("orderId", orderId);
+        return result;
+    }
 }

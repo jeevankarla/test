@@ -871,7 +871,7 @@ public class ByProductNetworkServices {
 	    		List<GenericValue> subscriptionList = EntityUtil.filterByDate(delegator.findList("Subscription", condition, null, null, null, false) , UtilDateTime.addDaysToTimestamp(dayBegin, -1));
 	    		if(UtilValidate.isEmpty(subscriptionList)){
 	    			Debug.logError("No Active Data For given Booth", module);
-	    			ServiceUtil.returnError("No Active Data For given Booth");
+	    			return ServiceUtil.returnError("No Active Data For given Booth");
 	    				
 	    		}
 	    		if(UtilValidate.isEmpty(routeId)){

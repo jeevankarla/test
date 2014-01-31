@@ -530,6 +530,10 @@
         <attribute name="routeName" mode="OUT" type="String" optional="true"/>
         <attribute name="routeId" mode="OUT" type="String" optional="true"/>
     </service>
+    <service name="adjustEmployeeSubsidyForOrder" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="adjustEmployeeSubsidyForOrder" auth="true">
+        <attribute name="orderId" mode="INOUT" type="String" optional="false"/>
+    </service>
     
     <!-- <service name="getByProductPeriodTotals" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="getByProductPeriodTotals" auth="true">
