@@ -542,4 +542,13 @@
         <attribute name="fromDate" type="java.sql.Timestamp" optional="false" mode="IN"/>
         <attribute name="thruDate" type="java.sql.Timestamp" optional="false" mode="IN"/>
     </service> -->
+     <service name="finalizeOrders" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="finalizeOrders" auth="true">
+        <attribute name="routeId" mode="IN" type="String" optional="false"/>
+        <attribute name="tripId" mode="IN" type="String" optional="true"/>
+        <attribute name="estimatedShipDate" mode="IN" type="String" optional="false"/>
+        <attribute name="shipmentId" mode="IN" type="String" optional="false"/>
+        <attribute name="shipmentTypeId" mode="IN" type="String" optional="false"/>
+    </service>
+    
 </services>
