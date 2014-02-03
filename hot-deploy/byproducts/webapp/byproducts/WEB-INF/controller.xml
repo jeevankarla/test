@@ -799,6 +799,13 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="FinalizeOrders">
+        <security auth="true" https="true"/>   
+        <event type="service" invoke="finalizeOrders"/>
+        <response name="success" type="request" value="TruckSheetMotherDairy"/>
+        <response name="error" type="request" value="TruckSheetMotherDairy"/>
+    </request-map>
+    
     
     <!-- NG request Mapping -->
       <request-map uri="TruckSheetMotherDairy">
