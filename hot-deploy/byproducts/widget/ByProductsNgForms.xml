@@ -2,7 +2,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 	
-	 <form name="ListTruckSheets" list-name="listDeliverySchedule" title="" type="list" paginate-target="TruckSheetMotherDairy"
+	 <form name="ListTruckSheets"   id="ListTruckSheetId" list-name="listDeliverySchedule" title="" type="list" paginate-target="TruckSheetMotherDairy"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
     	<row-actions>
     		<entity-condition entity-name="Shipment" list="shipmentRouteList">
@@ -74,6 +74,12 @@
                   <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
                	  <parameter param-name="estimatedShipDate" from-field="estimatedShipDate"/>
                	  <parameter param-name="reportTypeFlag" value="invoiceSlips"/> 
+            </hyperlink>
+        </field>
+        <field name="FinalizeOrder" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:finalizeFormSubmit(this);" id-name="FinalizeOrder">
+            <hyperlink target="FinalizeOrders"  description="Finalize Orders" > 	
+                  <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
+               	  <parameter param-name="estimatedShipDate" from-field="estimatedShipDate"/>
             </hyperlink>
         </field>
         <!-- <field name="Route Dispatch  Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="deliverySchedule">
