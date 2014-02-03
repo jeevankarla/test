@@ -63,7 +63,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.product.product.ProductWorker;
-import org.ofbiz.network.NetworkServices;
+
 
 import in.vasista.vbiz.byproducts.ByProductServices;
 
@@ -1513,6 +1513,228 @@ public class ByProductNetworkServices {
 			result.put("routeProductList", routeProductList);
 			return result;
 	    }
+	 	
+	 	public static Map<String, Object> finalizeOrders(DispatchContext dctx, Map<String, ? extends Object> context){
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String estimatedShipDateStr = (String)context.get("estimatedShipDate");	
+	        String shipmentId = (String) context.get("shipmentId"); 
+	        String shipmentTypeId = (String) context.get("shipmentTypeId"); 
+	        
+	        String routeId = (String) context.get("routeId");
+	        String tripId = (String) context.get("tripId");
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Timestamp estimatedShipDate =null;	
+	   
+	        estimatedShipDate=Timestamp.valueOf(estimatedShipDateStr);
+	        Map result = ServiceUtil.returnSuccess("Successfully created Invoices  For Selected Shipment!");
+	        Map resultMap = FastMap.newInstance();
+	        List<String> shipmentIds = FastList.newInstance();
+	        List<String> routeIdsList = FastList.newInstance();
+	        List conditionList = FastList.newInstance();
+	    	Map	productTotals =  FastMap.newInstance();
+	    	Map	issuanceProductTotals =  FastMap.newInstance();
+	    	List<String> boothOrderIdsList=FastList.newInstance();
+	    	Map resultCompareMap=FastMap.newInstance();
+	    	 boolean isComparsionFaild=false;
+           try{
+	        if(UtilValidate.isNotEmpty(shipmentId)){
+	        	if(shipmentId.equals("allRoutes")){
+		        	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, estimatedShipDate));
+		        	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(estimatedShipDate)));
+		        	conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, shipmentTypeId));
+		        	EntityCondition shipCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		        	List<GenericValue> shipments = delegator.findList("Shipment", shipCond, null, null, null , false);
+		        	List<String> shipIds = EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
+	        		shipmentIds.addAll(shipIds);
+	        		//routeIdsList.addAll(EntityUtil.getFieldListFromEntityList(shipments, "routeId", false));
+	        	}else{
+	        		 GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId",shipmentId) , false);
+	        		shipmentIds.add((String)shipment.get("shipmentId"));
+	        		//routeIdsList.add(shipment.get("shipmentId"));
+	        	}
+	        	
+	        }
+	    	if(UtilValidate.isNotEmpty(shipmentIds)){
+	    	Timestamp	dayBegin = UtilDateTime.getDayStart(estimatedShipDate);
+	    	Timestamp dayEnd = UtilDateTime.getDayEnd(estimatedShipDate);
+	    	Map inputMap=FastMap.newInstance();
+	    	inputMap.put("shipmentIds",shipmentIds);
+	    	inputMap.put("fromDate",dayBegin);
+	    	inputMap.put("thruDate",dayEnd);
+	    	//if success method will return false otherwise true
+	    	 resultCompareMap =compareOrdersAndItemIssuence(dctx,inputMap);
+	    	 String isFailedStr=(String) resultCompareMap.get("isFailed");
+	    		Debug.log("==isComparsionFaild==:"+isComparsionFaild+"==for ShipmentId===="+shipmentIds+"==resultcomapreMap=="+resultCompareMap);
+	    	if(isFailedStr.equals("Y")){
+	    		 isComparsionFaild=true;
+	    		 Debug.logError("==for ShipmentId===="+shipmentIds+"==resultcomapreMap=="+resultCompareMap, module);
+	    		  return ServiceUtil.returnError("Failed to create invoice..!"+resultCompareMap.get("failedProductItemsMap"));
+	    	}
+	    
+	    	if(!isComparsionFaild){
+	    	   conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+				conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(dayBegin)));
+				conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(dayEnd)));
+				if (UtilValidate.isNotEmpty(shipmentIds)) {
+					conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+				}
+				// conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, shipmentTypeId));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List shipmentOrderItemsList = delegator.findList("OrderHeader", condition, null, null, null, false);
+				Set orderIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(shipmentOrderItemsList, "orderId", true));
+				boothOrderIdsList = new ArrayList(orderIdsSet);
+				
+				for (Object orderId : boothOrderIdsList) {
+		            try{        
+		        		resultMap = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"userLogin", userLogin));
+		        		if (ServiceUtil.isError(resultMap)) {
+		                    Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(resultMap), module);
+		            		return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(resultMap));          	            
+		                } 
+			        	/*Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
+			             invoiceCtx.put("userLogin", userLogin);
+			             invoiceCtx.put("statusId","INVOICE_READY");
+			             try{
+			             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+			             	if (ServiceUtil.isError(invoiceResult)) {
+			             		Debug.logError(invoiceResult.toString(), module);
+			                     return ServiceUtil.returnError(null, null, null, invoiceResult);
+			                 }	             	
+			             }catch(GenericServiceException e){
+			             	 Debug.logError(e, e.toString(), module);
+			                 return ServiceUtil.returnError(e.toString());
+			             }      */  		
+		        		// apply invoice if any adavance payments from this  party
+						  			            
+						Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
+						if (ServiceUtil.isError(resultPaymentApp)) {						  
+			        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
+			               return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
+				        }				           
+				          
+		            }catch (Exception e) {
+		                Debug.logError(e, module);
+		            } 
+		            // handle Replacement here 
+		            /*if(productSubscriptionTypeId.equals("REPLACEMENT_BYPROD")){
+		            	List<GenericValue> transProductList = FastList.newInstance();
+		            	
+		            	for(GenericValue SubscriptionProduct : subscriptionProductsList){
+		            		GenericValue tempSubscriptionProduct = delegator.makeValue("SubscriptionFacilityAndSubscriptionProduct");
+		            		tempSubscriptionProduct.putAll(SubscriptionProduct);
+		            		tempSubscriptionProduct.put("facilityId", SubscriptionProduct.getString("destinationFacilityId"));
+		            		transProductList.add(tempSubscriptionProduct);
+		            	}
+		            	
+		            	Map transferCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+		       	  	 	transferCtx.put("shipmentId", shipmentId);
+		       	  	 	transferCtx.put("estimatedDeliveryDate", estimatedDeliveryDate);
+		       	  	 	transferCtx.put("subscriptionProductsList", transProductList);	  	 
+		       	  	 	try{
+		       	  	 		Map result = dispatcher.runSync("receiveParlorInventory",transferCtx);  		  		 
+		       	  	 		if (ServiceUtil.isError(result)) {
+		       	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
+		       	  	 			Debug.logError(errMsg , module);       				
+		       	  	 			return result;
+		       	  	 		}
+		       			 
+		       	  	 	}catch (Exception e) {
+		       	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);     
+		       	  			  return resultMap;			  
+		       	  	 	}
+		            }*/
+		            
+		            resultMap.put("orderId", orderId);
+		        
+				}//end of OrderIteration
+	    	   }//if close
+	 	      }
+           }catch (Exception e) {
+        	   Debug.logError(e.toString(), module);
+				return ServiceUtil.returnError(e.toString());
+           }
+       	//result.put("routeProductList", routeProductList);
+           
+		return result;
+	 	}
+		public static Map<String, Object>  compareOrdersAndItemIssuence(DispatchContext dctx, Map<String, ? extends Object> context){
+		     Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();
+		        List<String> shipmentIds =(List<String>) context.get("shipmentIds");	
+		        Timestamp fromDate = (Timestamp)context.get("fromDate");
+		        Timestamp  thruDate = (Timestamp)context.get("thruDate");
+		        Map result = ServiceUtil.returnSuccess(); 
+		        Map resultMap = FastMap.newInstance();
+			    List conditionList = FastList.newInstance();
+		    	Map	productTotals =  FastMap.newInstance();
+		    	Map	issuanceProductTotals =  FastMap.newInstance();
+		    	Map	failedProductItemsMap =  FastMap.newInstance();
+		    	boolean isComparisonFailed=  false;
+		    	try{
+	    			 List boothsList =null; //= NetworkServices.getRouteBooths(delegator , (String)shipmentObj.get("routeId"));
+				    Map boothWiseMap = FastMap.newInstance();
+				    Map 	dayTotals = NetworkServices.getPeriodTotals(dctx,UtilMisc.toMap("shipmentIds",shipmentIds, "facilityIds",boothsList,"fromDate",fromDate, "thruDate",thruDate));
+					if(UtilValidate.isNotEmpty(dayTotals)){
+					productTotals = (Map)dayTotals.get("productTotals");		
+	 	            }
+		    	//get Issueance Details
+		    	conditionList.clear();
+		    	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+	        	EntityCondition itemIssueanceCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	        	List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", itemIssueanceCond, null, null, null , false);
+	        	//List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", itemIssueanceCond, null, UtilMisc.toList("productId"), false);
+	        	for(GenericValue itemIssueance : itemIssuanceList){
+	        		BigDecimal quantity = itemIssueance.getBigDecimal("quantity");
+	        		String issueProductId = itemIssueance.getString("productId");
+		        	if(quantity.compareTo(BigDecimal.ZERO)>0){
+		        		BigDecimal tempQuantity = BigDecimal.ZERO;
+		        		if(UtilValidate.isEmpty(issuanceProductTotals.get(issueProductId))){
+		        			//issuanceProductTotals.put(issueProductId,quantity);
+		        			tempQuantity =quantity;
+		        		}else{
+		        			tempQuantity=tempQuantity.add((BigDecimal)issuanceProductTotals.get(issueProductId));
+		        			
+		        		}
+		        		issuanceProductTotals.put(issueProductId,tempQuantity);
+		        	}
+		 	    }//for close
+	        	//comparison of issuance and ProdTotals 
+	        
+	        	Iterator prodIter = productTotals.entrySet().iterator();
+				while (prodIter.hasNext()) {
+					Map.Entry entry =(Map.Entry) prodIter.next();
+					  String productId =(String)entry.getKey();
+					  Map prodTotalMap= (Map)productTotals.get(productId);
+					  BigDecimal prodQty= (BigDecimal)prodTotalMap.get("total");	
+					  GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId",productId) , false);
+					  BigDecimal pktTotal=(new BigDecimal(1)).divide((BigDecimal)product.get("quantityIncluded"));
+					  BigDecimal actQtyTotal= prodQty.multiply(pktTotal);
+					  BigDecimal itemIssuQty= (BigDecimal) issuanceProductTotals.get(productId);
+					 if(UtilValidate.isNotEmpty(itemIssuQty)){
+						 if(actQtyTotal.compareTo(itemIssuQty)!=0){
+							 Map itemInnerMap=FastMap.newInstance();
+							itemInnerMap.put("ordrQty",actQtyTotal);
+							itemInnerMap.put("issuanceQty",itemIssuQty);
+							failedProductItemsMap.put(productId,itemInnerMap);
+							isComparisonFailed=true;
+		 	             }
+				      }
+				}//end of while
+		    	}catch(Exception e) {
+		    		  Debug.logError(e.toString(), module);
+						return ServiceUtil.returnError(e.toString());
+		    		
+		    	}
+		    	resultMap.put("failedProductItemsMap",failedProductItemsMap);
+		    	if(isComparisonFailed){// true for failure
+		    		resultMap.put("isFailed","Y");
+		    	}else{
+		    		resultMap.put("isFailed","N");
+		    	}
+				 return resultMap;
+		}
 }
 	
 	
