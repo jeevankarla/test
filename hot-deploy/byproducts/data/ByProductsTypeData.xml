@@ -115,7 +115,8 @@
     <!--Product Subscription Type For   ByProduct Component -->
     
     <EnumerationType description="Subscription Product Type For ByProduct Component" enumTypeId="SUB_BY_PROD_TYPE" hasTable="N" parentTypeId=""/>
-    <Enumeration description="Cash" enumCode="CASH_BYPROD" enumId="CASH_BYPROD" sequenceId="01" enumTypeId="SUB_BY_PROD_TYPE"/>    
+    <Enumeration description="Cash" enumCode="CASH_BYPROD" enumId="CASH_BYPROD" sequenceId="01" enumTypeId="SUB_BY_PROD_TYPE"/>
+    <Enumeration description="Employee Subsidy" enumCode="EMP_SUBSIDY" enumId="EMP_SUBSIDY" sequenceId="01" enumTypeId="SUB_BY_PROD_TYPE"/>      
     <Enumeration description="Special Order" enumCode="SPECIAL_ORDER_BYPROD" enumId="SPECIAL_ORDER_BYPROD" sequenceId="02" enumTypeId="SUB_BY_PROD_TYPE"/>
     <Enumeration description="Gift" enumCode="GIFT_BYPROD" enumId="GIFT_BYPROD" sequenceId="03" enumTypeId="SUB_BY_PROD_TYPE"/>
     <Enumeration description="Replacement" enumCode="REPLACEMENT_BYPROD" enumId="REPLACEMENT_BYPROD" sequenceId="04" enumTypeId="SUB_BY_PROD_TYPE"/>    
@@ -128,4 +129,19 @@
 	
 	<Uom uomId="VLIQ_N" uomTypeId="WEIGHT_MEASURE" abbreviation="Nos" description="Numbers"/>
 	<Uom uomId="VLIQ_U" uomTypeId="WEIGHT_MEASURE" abbreviation="Units" description="Units"/>
+	
+	<Enumeration description="Employee Subsidy" enumCode="EMP_SUBSIDY" enumId="EMP_SUBSIDY" sequenceId="01" enumTypeId="SUB_BY_PROD_TYPE"/> 
+	<OrderAdjustmentType description="Epmloyee subsidy adjustment" hasTable="N" orderAdjustmentTypeId="EMPSUBSID_ADJUSTMENT"/>
+	<InvoiceItemType description="Employee Subsidy Adjustment" hasTable="N" invoiceItemTypeId="EMPSUBSID_ADJUSTMENT"/>
+	<InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="EMPSUBSID_ADJUSTMENT" invoiceItemTypeId="EMPSUBSID_ADJUSTMENT"/>
+    
+     
+     <OrderAdjustmentType description="Promotions Adjustment" hasTable="N" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT"/>
+	<InvoiceItemType description="Promotions Adjustment" hasTable="N" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
+	<InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
+    
+     <OrderAdjustmentType description="Promotions Adjustment" hasTable="N" orderAdjustmentTypeId="INVOICE_ADJ"/>
+     <InvoiceItemType description="Promotions Adjustment" hasTable="N" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
+     <InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="INVOICE_ADJ" invoiceItemTypeId="PROMOTION_ADJUSTMENT"/>
+   
 </entity-engine-xml>
