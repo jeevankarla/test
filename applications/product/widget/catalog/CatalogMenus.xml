@@ -23,7 +23,7 @@ under the License.
         <menu-item name="categories" title="${uiLabelMap.ProductCategories}"><link target="FindCategory"/></menu-item>
 <!--        <menu-item name="products" title="${uiLabelMap.ProductProducts}"><link target="FindProduct"/></menu-item>-->
 <!--        <menu-item name="featurecats" title="${uiLabelMap.ProductFeatureCats}"><link target="EditFeatureCategories"/></menu-item>-->
-<!--        <menu-item name="promos" title="${uiLabelMap.ProductPromos}"><link target="FindProductPromo"/></menu-item>-->
+       <menu-item name="promos" title="${uiLabelMap.ProductPromos}"><link target="FindProductPromo"/></menu-item>
 <!--        <menu-item name="pricerules" title="${uiLabelMap.ProductPriceRules}"><link target="FindProductPriceRules"/></menu-item>-->
         <menu-item name="store" title="${uiLabelMap.ProductStores}"><link target="FindProductStore"/></menu-item>
 <!--        <menu-item name="thesaurus" title="${uiLabelMap.ProductThesaurus}"><link target="editKeywordThesaurus"/></menu-item>-->

@@ -54,6 +54,7 @@ import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.product.price.PriceServices;
 import org.ofbiz.security.Security;
@@ -2071,6 +2072,7 @@ public class ByProductServices {
             
         }      
         cart.setDefaultCheckoutOptions(dispatcher);
+        ProductPromoWorker.doPromotions(cart, dispatcher);
         CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
         
         
