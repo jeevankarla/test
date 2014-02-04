@@ -56,7 +56,7 @@
             </condition>               
             <link target="DeliverySchedule">               
             </link>
-        </menu-item>
+        </menu-item>      
         <!-- <menu-item name="SupplDeliverySchedule" title="Supplementary Indent">              
             <link target="SupplDeliverySchedule">               
             </link>
@@ -371,7 +371,14 @@
             </condition>         
             <link target="TruckSheetMotherDairy">
             </link>
-        </menu-item>   
+        </menu-item>  
+        <menu-item name="VehicleStatus" title="Vehicle Status">
+        	<condition>
+                 <if-has-permission permission="BYPRODUCTS" action="_TRCKSHEET"/>
+            </condition>               
+            <link target="VehicleStatus">               
+            </link>
+        </menu-item>           
        <!--  <menu-item name="VendorMargins" title="MarginReports">
             <condition>
 					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>

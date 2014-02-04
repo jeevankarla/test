@@ -137,6 +137,29 @@
 			</widgets>
 		</section>
 	</screen>	
+	<screen name="VehicleStatus">
+		<section>
+			<actions>
+               <set field="titleProperty" value="VehicleStatus"/>	            
+               <set field="tabButtonItem" value="VehicleStatus"/>            
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+			</actions>
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Vehicle Status">  
+   									<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/vehicleStatus.ftl"></html-template></html></platform-specific>
+								</screenlet>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>         
+	</screen>	
 	<screen name="ConfigChange">
 		<section>
 			<actions>
