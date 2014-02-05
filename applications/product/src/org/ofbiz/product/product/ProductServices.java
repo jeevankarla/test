@@ -1798,6 +1798,272 @@ public class ProductServices {
 		  return result;  
     }
     
+    public static String processReturnItemsMIS(HttpServletRequest request, HttpServletResponse response) {
+  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
+  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+  	  Locale locale = UtilHttp.getLocale(request);
+  	  String routeId = (String) request.getParameter("routeId");
+  	  String tripId = (String) request.getParameter("tripId");
+  	  String boothId = (String) request.getParameter("boothId");
+  	  String returnHeaderTypeId = (String) request.getParameter("returnHeaderTypeId");
+  	  String returnType = (String) request.getParameter("returnType");
+  	  String receiveInventory = (String) request.getParameter("receiveInventory");
+  	  String effectiveDateStr = (String) request.getParameter("effectiveDate");
+  	  String productId = null;
+  	  String quantityStr = null;
+  	  String sequenceNum = null;	  
+  	  Timestamp effectiveDate=null;
+  	  BigDecimal quantity = BigDecimal.ZERO;
+  	  List conditionList =FastList.newInstance();
+  	  
+  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+  	  HttpSession session = request.getSession();
+  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+  	  GenericValue route = null;
+  	  GenericValue dealer = null;
+  	  List custTimePeriodList = FastList.newInstance();
+  	  String shipmentId = "";
+  	  if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
+  		  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");             
+  		  try {
+  			  effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+  		  } catch (ParseException e) {
+  			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+  		  } catch (NullPointerException e) {
+  			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+  		  }
+  	  }
+  	  if (routeId == "") {
+  		request.setAttribute("_ERROR_MESSAGE_","Route Id is empty");
+  		return "error";
+  	  }
+      
+  	  if(returnType.equals("sales") && UtilValidate.isEmpty(returnType)){
+  		  request.setAttribute("_ERROR_MESSAGE_","Dealer Id is empty");
+  		  return "error";
+  	  }
+      // Get the parameters as a MAP, remove the productId and quantity params.
+  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+  	  if (rowCount < 1) {
+  		  Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
+  		  return "success";
+  	  }
+  	  try{
+  		  route=delegator.findOne("Facility", UtilMisc.toMap("facilityId",routeId), false);
+  		  if(UtilValidate.isEmpty(route)){
+  			  request.setAttribute("_ERROR_MESSAGE_", "Route"+" '"+routeId+"'"+" does not exist");
+  			  return "error";
+  		  }
+  		  dealer = delegator.findOne("Facility", UtilMisc.toMap("facilityId",boothId), false);
+		  if(UtilValidate.isEmpty(route)){
+			  request.setAttribute("_ERROR_MESSAGE_", "Dealer"+" '"+boothId+"'"+" does not exist");
+			  return "error";
+		  }
+  	  }catch (GenericEntityException e) {
+  		  Debug.logError(e, module);
+  		  request.setAttribute("_ERROR_MESSAGE_", "Error while fetching facility details");
+  		  return "error";
+  	  }
+  	  
+  	  try {
+  		  conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
+  		  if(UtilValidate.isNotEmpty(tripId)){
+  			  conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+  		  }
+  		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+  		  conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+  		  conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
+		  EntityCondition shipCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
+		  List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond, UtilMisc.toSet("shipmentId"), null, null, false);
+  		  if(UtilValidate.isEmpty(shipmentList)){
+  			  request.setAttribute("_ERROR_MESSAGE_", "This Route has no shipments for the day");
+  			  return "error";     		
+  		  }
+  		  shipmentId = (String)((GenericValue)EntityUtil.getFirst(shipmentList)).get("shipmentId");
+  	  }catch (GenericEntityException e) {
+  		  Debug.logError(e, module);
+  		  request.setAttribute("_ERROR_MESSAGE_", "Error fetching shipment details");
+  		  return "error";
+  	  }
+  	
+  	  List<Map>productQtyList =FastList.newInstance();
+  	  for (int i = 0; i < rowCount; i++) {
+  		  Map<String  ,Object> productQtyMap = FastMap.newInstance();
+  		  
+  		  List<GenericValue> subscriptionProductsList = FastList.newInstance();
+  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+  		  if (paramMap.containsKey("productId" + thisSuffix)) {
+  			  productId = (String) paramMap.get("productId" + thisSuffix);
+  		  }
+  		  else {
+  			  request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
+  			  return "error";			  
+  		  }
+  		  if (paramMap.containsKey("quantity" + thisSuffix)) {
+  			  quantityStr = (String) paramMap.get("quantity" + thisSuffix);
+  		  }
+  		  else {
+  			  request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
+  			  return "error";			  
+  		  }		  
+  		  if (quantityStr.equals("")) {
+  			  request.setAttribute("_ERROR_MESSAGE_", "Empty product quantity");
+  			  return "error";	
+  		  }
+  		  try {
+  			  quantity = new BigDecimal(quantityStr);
+  		  } catch (Exception e) {
+  			  Debug.logError(e, "Problems parsing quantity string: " + quantityStr, module);
+  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
+  			  return "error";
+  		  } 
+  		  
+  		  productQtyMap.put("productId", productId);
+  		  productQtyMap.put("quantity", quantity);
+  		  productQtyList.add(productQtyMap);
+  	  }//end row count for loop
+  	  
+  	  Map processReturnHelperCtx = UtilMisc.toMap("userLogin",userLogin);
+  	  processReturnHelperCtx.put("shipmentId", shipmentId);
+  	  processReturnHelperCtx.put("routeId", routeId);
+  	  processReturnHelperCtx.put("effectiveDate", effectiveDate);
+  	  processReturnHelperCtx.put("productQtyList", productQtyList);
+  	  processReturnHelperCtx.put("boothId", boothId);
+	  processReturnHelperCtx.put("returnHeaderTypeId", returnHeaderTypeId);
+	  processReturnHelperCtx.put("returnType", returnType);
+	  processReturnHelperCtx.put("receiveInventory", receiveInventory);
+  	  try{
+  		  result = dispatcher.runSync("processReturnItemsHelper",processReturnHelperCtx);
+  		  if (ServiceUtil.isError(result)) {
+  			  String errMsg =  ServiceUtil.getErrorMessage(result);
+  			  Debug.logError(errMsg , module);
+  			  request.setAttribute("_ERROR_MESSAGE_",errMsg);
+  			  return "error";
+  		  }
+  	  }catch (Exception e) {
+  		  	Debug.logError(e, "Problem calling processReturnItemsHelper for " + routeId+" and "+boothId, module);     
+  	  		request.setAttribute("_ERROR_MESSAGE_", "Problem calling processReturnItemsHelper for " + routeId+" and "+boothId);
+  	  		return "error";			  
+  	  }	 
+  	  return "success";     
+    }
+    
+    public static Map<String ,Object>  processReturnItemsHelper(DispatchContext dctx, Map<String, ? extends Object> context){
+		  Delegator delegator = dctx.getDelegator();
+	      LocalDispatcher dispatcher = dctx.getDispatcher();       
+	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+	      Map<String, Object> result = ServiceUtil.returnSuccess();
+	      String shipmentId = (String)context.get("shipmentId");
+	      String routeId = (String)context.get("routeId");
+	      Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");	      
+	      List<Map> productQtyList = (List)context.get("productQtyList");
+	      Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	      String boothId = (String) context.get("boothId");
+	  	  String returnHeaderTypeId = (String) context.get("returnHeaderTypeId");
+	  	  String returnType = (String) context.get("returnType");
+	  	  String receiveInventory = (String) context.get("receiveInventory");
+	  	  GenericValue dealer = null;
+	  	  GenericValue route = null;
+	  	  String ownerPartyId = "";
+	  	  String returnId = "";
+	  	  String toPartyId = "";
+	      try{
+	    	  route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
+    		  if(UtilValidate.isEmpty(route)){
+    			  Debug.logError("Route does not exists with Id: " + routeId, module);		  
+    			  return ServiceUtil.returnError("route does not exists with Id: " + routeId);
+    		  }
+	    	  if(returnType.equals("sales")){
+	    		  dealer = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
+	    		  if(UtilValidate.isEmpty(dealer)){
+	    			  Debug.logError("Dealer does not exists with dealerId: " + boothId, module);		  
+	    			  return ServiceUtil.returnError("Dealer does not exists with dealerId: " + boothId);
+	    		  }
+	    		  ownerPartyId = dealer.getString("ownerPartyId");
+	    	  }
+	    	  else{
+	    		  ownerPartyId = route.getString("ownerPartyId");
+	    	  }
+	    	  List conditionList = FastList.newInstance();
+	    	  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, boothId));
+	    	  conditionList.add(EntityCondition.makeCondition("returnHeaderTypeId", EntityOperator.EQUALS, returnHeaderTypeId));
+	    	  conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, ownerPartyId));
+	    	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("RETURN_CANCELLED")));
+	    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	    	  EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	    	  List<GenericValue> returnHeader = delegator.findList("ReturnHeader", cond, null, null, null, false);
+	    	  boolean createEntry = true;
+	    	  if(UtilValidate.isNotEmpty(returnHeader)){
+	    		  returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)). getString("returnId");
+	    		  createEntry = false;
+	    	  }	
+	    	  else{
+	    		  Map returnHeaderCtx = FastMap.newInstance();
+		    	  returnHeaderCtx.put("originFacilityId", boothId);
+		    	  returnHeaderCtx.put("returnHeaderTypeId", returnHeaderTypeId);
+		    	  returnHeaderCtx.put("fromPartyId", ownerPartyId);
+		    	  returnHeaderCtx.put("originFacilityId", boothId);
+		    	  returnHeaderCtx.put("toPartyId", "Company");
+		    	  returnHeaderCtx.put("entryDate", nowTimestamp);
+		    	  returnHeaderCtx.put("needsInventoryReceive", receiveInventory);
+		    	  returnHeaderCtx.put("statusId", "RETURN_ACCEPTED");
+		    	  returnHeaderCtx.put("shipmentId", shipmentId);
+		    	  returnHeaderCtx.put("userLogin", userLogin);
+		    	  
+		    	  result = dispatcher.runSync("createReturnHeader", returnHeaderCtx);
+		    	  
+		    	  if (ServiceUtil.isError(result)) {
+					  Debug.logError("Error creating ReturnHeader: " + ServiceUtil.getErrorMessage(result), module);
+					  return ServiceUtil.returnError("Error creating ReturnHeader: " + ServiceUtil.getErrorMessage(result));          	            
+		          } 
+		    	  
+		    	  returnId = (String)result.get("returnId");
+	    	  }
+	    	  Map prodQtyMap = FastMap.newInstance();
+	    	  for(int i=0; i< productQtyList.size() ; i++){
+	    		  Map productQtyMap = productQtyList.get(i);
+	    		  String productId = (String)productQtyMap.get("productId");
+	    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
+	    		  prodQtyMap.put(productId, quantity);
+		  	  }
+	    	  
+	    	  if(UtilValidate.isNotEmpty(returnId) && createEntry){
+	    		  for(int i=0; i< productQtyList.size() ; i++){
+		    		  Map productQtyMap = productQtyList.get(i);
+		    		  String productId = (String)productQtyMap.get("productId");
+		    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
+		    		  
+		    		  GenericValue returnItem = delegator.makeValue("ReturnItem");
+		    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
+		    		  returnItem.put("statusId", "RETURN_ACCEPTED");
+		    		  returnItem.put("returnId", returnId);
+		    		  returnItem.put("productId", productId);
+		    		  returnItem.put("returnQuantity", quantity);
+		    		  returnItem.put("returnTypeId", "RTN_REFUND");
+		    		  returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
+		    		  delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
+		    		  delegator.create(returnItem);
+			  	  }  
+	    	  }
+	    	  else{
+	    		  List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), null, null, null , false);
+	    		  for(GenericValue returnItem : returnItems){
+	    			  String tempProdId = returnItem.getString("productId");
+	    			  BigDecimal tempQty = (BigDecimal)prodQtyMap.get(tempProdId);
+	    			  returnItem.set("returnQuantity", tempQty);
+	    			  returnItem.store();
+			  	  }
+	    	  }
+	    	  
+		  }catch (Exception e) {
+			  Debug.logError(e, "Error creating Returns", module);		  
+			  return ServiceUtil.returnError("Error creating Returns");			  
+		  }
+		  return result;  
+    } 
+    
+    
     public static String processChangeIndentMIS(HttpServletRequest request, HttpServletResponse response) {
   	  Delegator delegator = (Delegator) request.getAttribute("delegator");
   	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");

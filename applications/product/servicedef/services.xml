@@ -1766,6 +1766,21 @@ under the License.
         <attribute name="indentChangeFlag" type="String" mode="OUT" optional="true"/>
     </service>
     
+    <service name="processReturnItemsHelper" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="processReturnItemsHelper" auth="true">
+        <description> Creates a ReturnHeader and also creates ReturnItems for ReturnId</description>
+        
+        <attribute name="routeId" type="String" mode="IN" optional="true"/>
+        <attribute name="returnType" type="String" mode="IN" optional="true"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+        <attribute name="returnHeaderTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="receiveInventory" type="String" mode="IN" optional="true"/>
+        <attribute name="returnId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
    	<service name="processDispatchReconcilHelper" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="processDispatchReconcilHelper" auth="true">
         <description>Populate and Update ItemIssuance for Dispatch Reconciliation Entity</description>

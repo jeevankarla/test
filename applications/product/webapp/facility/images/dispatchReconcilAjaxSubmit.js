@@ -1,3 +1,4 @@
+var screenFlag;
 $(document).ready(function() {
 	
 	$( "#effectiveDate" ).datepicker({
@@ -9,20 +10,31 @@ $(document).ready(function() {
 		}
 	});
 	$('#ui-datepicker-div').css('clip', 'auto');
-	
-	
+	screenFlag = $("#screenFlag").val();
 	$("input").keypress(function(e){
-	  
-	  if (e.which == $.ui.keyCode.ENTER) {
-		  if(e.target.name == "routeId" ){
-			  if( typeof $("#routeId").val() != "undefined"   && $("#routeId").val() != ""){ 
-		      		updateGrid();
-		      }					
-	  	  }	 
-      	   e.stopPropagation();
-      	   e.preventDefault();        	
-      }		
-	  		
+		var returnType = $("#returnType").val();
+		if(screenFlag == "returns" && returnType=="sales"){
+			if (e.which == $.ui.keyCode.ENTER) {
+				if(e.target.name == "boothId" ){
+					if( typeof $("#boothId").val() != "undefined"   && $("#boothId").val() != ""){ 
+						updateGrid();
+					}					
+				}
+				e.stopPropagation();
+		      	e.preventDefault(); 
+			}
+		}
+		else{
+			if (e.which == $.ui.keyCode.ENTER) {
+				if(e.target.name == "routeId" ){
+					if( typeof $("#routeId").val() != "undefined"   && $("#routeId").val() != ""){ 
+						updateGrid();
+					}					
+				}
+				e.stopPropagation();
+		      	e.preventDefault(); 
+			}
+		}
 	});
 	
 });
@@ -37,7 +49,13 @@ $(function() {
     	   $('div#changeIndentEntry_spinner').removeClass("errorMessage");
     	   $('div#changeIndentEntry_spinner')
     		  .html('<img src="/images/ajax-loader64.gif">');
-    	   	   var action = "processDispatchReconcilMISAjax"; 
+    	   	   var action;
+    	   	   if(screenFlag == "returns"){
+    	   		   action = "processReturnItemsMISAjax";
+    	   	   }
+    	   	   else{
+    	   		   action = "processDispatchReconcilMISAjax";
+    	   	   }
     	   	   var dataString = prepareAjaxDataString();
                $.ajax({
              type: "POST",
@@ -70,14 +88,28 @@ $(function() {
        
        
        $("#routeId").autocomplete({ source: routesList }).keydown(function(e){
+    	   if(screenFlag != "returns"){
+				if (e.keyCode === 13){
+			      	 $('#routeId').autocomplete('close');
+			      	 if( typeof $("#routeId").val() != "undefined"   && $("#routeId").val() != ""){ 
+			      		updateGrid();
+			      	 }
+					return false;
+				}
+       		}
+		});
+       $("#boothId").autocomplete({ source: boothsList }).keydown(function(e){
 			if (e.keyCode === 13){
-		      	 $('#routeId').autocomplete('close');
-		      	 if( typeof $("#routeId").val() != "undefined"   && $("#routeId").val() != ""){ 
+		      	 $('#boothId').autocomplete('close');
+		      	 if( typeof $("#boothId").val() != "undefined"   && $("#boothId").val() != ""){ 
 		      		updateGrid();
 		      	 }
 				return false;
 			}
 		});
+       $('#boothId').keypress(function (e) {
+			$("#boothId").autocomplete({ source: boothsList});	
+       });
        // booth auto Complete
       
      $('#routeId').keyup(function (e) {
@@ -86,17 +118,19 @@ $(function() {
 	 		jQuery("#routeId").focus(); 
 	      }	
 	 });
-     
+     //if(screenFlag != "returns"){
      // route auto Complete
-     $('#routeId').keypress(function (e) {    	 	
-			$("#routeId").autocomplete({ source: routesList , select: function( event, ui ) {
-				$('span#routeTooltip').html('<label>'+ui.item.name+'</label>');
-			} });	
-	 });
-  // route auto Complete
-     $('#routeId').focus(function (e) {    	 	
-			$("#routeId").autocomplete({ source: routesList });	
-	 }); 
+	     $('#routeId').keypress(function (e) {    	 	
+				$("#routeId").autocomplete({ source: routesList , select: function( event, ui ) {
+					$('span#routeTooltip').html('<label>'+ui.item.name+'</label>');
+				} });	
+		 });
+     
+	  // route auto Complete
+	     $('#routeId').focus(function (e) {    	 	
+				$("#routeId").autocomplete({ source: routesList });	
+		 });
+     //}
 });
 
 
@@ -107,19 +141,25 @@ function prepareAjaxDataString(){
 	 var querystring = "";
 	for(i=0; i< data.length;i++){
 		var changeItem = data[i];
-		var qty = parseFloat(changeItem["cQuantity"]);
+		var qty;
+		if(screenFlag == "returns"){
+			qty = parseFloat(changeItem["returnQuantity"]);
+		}
+		else{
+			 qty = parseFloat(changeItem["cQuantity"]);
+		}
 		if( typeof changeItem["cProductId"] != "undefined"   && changeItem["cProductId"] != "" && !isNaN(qty)){				
 			  querystring += "productId_o_" + rowCount + "=" + changeItem["cProductId"] + "&";
 			  querystring +=  "quantity_o_" + rowCount + "=" + qty + "&";
 			  rowCount++; 
 		}
-		qty = parseFloat(changeItem["dQuantity"]);
+		/*qty = parseFloat(changeItem["dQuantity"]);
 		if( typeof changeItem["dProductId"] != "undefined"   && changeItem["dProductId"] != "" && !isNaN(qty)){				
 		
 			querystring += "productId_o_" + rowCount + "=" + changeItem["dProductId"] + "&";
 			querystring +=  "quantity_o_" + rowCount + "=" + qty + "&";
 			rowCount++; 
-		}		
+		}	*/	
 	}	 
 	
 	var dataString = $(formId).serialize();
@@ -129,7 +169,16 @@ function prepareAjaxDataString(){
 }
 
 
-
+function hideReturnToggle(){
+	var returnType = $("#returnType").val();
+	if(returnType=="crate"){
+		$("#boothId").hide();
+		$("#boothId").val('');
+	}
+	else{
+		$("#boothId").show();
+	}
+}
 
 
 

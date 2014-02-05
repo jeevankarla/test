@@ -2430,6 +2430,8 @@ under the License.
         <field name="fromPartyId" type="id"></field>
         <field name="toPartyId" type="id"></field>
         <field name="paymentMethodId" type="id"></field>
+        <field name="originFacilityId" type="id"></field><!-- Returns for kmf  -->
+        <field name="shipmentId" type="id"></field><!-- Returns for kmf  -->
         <field name="finAccountId" type="id"></field>
         <field name="billingAccountId" type="id"></field>
         <field name="entryDate" type="date-time"></field>
@@ -2448,6 +2450,9 @@ under the License.
         <relation type="one" fk-name="RTN_TO_PARTY" title="To" rel-entity-name="Party">
             <key-map field-name="toPartyId" rel-field-name="partyId"/>
         </relation>
+        <relation type="one" fk-name="RTN_SHPMNT" rel-entity-name="Shipment">
+        	<key-map field-name="shipmentId"/>
+      	</relation>
         <relation type="one" fk-name="RTN_TO_BACT" rel-entity-name="BillingAccount">
             <key-map field-name="billingAccountId"/>
         </relation>
@@ -2456,6 +2461,9 @@ under the License.
         </relation>
         <relation type="one" fk-name="RTN_TO_PAYMETH" rel-entity-name="PaymentMethod">
             <key-map field-name="paymentMethodId"/>
+        </relation>
+        <relation type="one" fk-name="RTN_FACILITY" rel-entity-name="Facility">
+            <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
         </relation>
         <relation type="one" fk-name="RTN_TO_FACILITY" rel-entity-name="Facility">
             <key-map field-name="destinationFacilityId" rel-field-name="facilityId"/>

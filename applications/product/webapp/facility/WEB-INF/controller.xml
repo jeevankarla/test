@@ -470,6 +470,13 @@ under the License.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="processReturnItemsMISAjax">
+        <security https="true" auth="true"/>
+        <event type="java"  path="org.ofbiz.product.product.ProductServices" invoke="processReturnItemsMIS"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="createSpecialOrderSubscription">
         <security https="true" auth="true"/>
         <event type="java"  path="org.ofbiz.product.subscription.SubscriptionServices" invoke="createSpecialOrderSubscription"/>                
