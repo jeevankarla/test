@@ -37,9 +37,8 @@ import org.ofbiz.service.DispatchContext;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
-import org.ofbiz.network.NetworkServices;
 import org.ofbiz.product.price.PriceServices;
-
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 
 import in.vasista.vbiz.byproducts.ByProductServices;
@@ -106,7 +105,6 @@ if(!shipmentId && !shipmentIds){
 
 
 productSubscriptionTypeList = delegator.findList("Enumeration", EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS , "SUB_PROD_TYPE"), ["enumId"] as Set, UtilMisc.toList("sequenceId"), null, false);
-//productList = NetworkServices.getLmsProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 def adjustTotalsMap(currentFacilityMap,totalsMap){
 	if(currentFacilityMap != null){
 		
@@ -308,33 +306,6 @@ def populateBoothOrders(boothId ,boothOrdersMap){
 		BigDecimal obAmount =BigDecimal.ZERO;
 		productMap["paidAmount"] = BigDecimal.ZERO;
 		
-		/*Map<String, Object> BoothPaidPayments = NetworkServices.getBoothPaidPayments( dctx , [facilityId : boothId , paymentDate:(UtilDateTime.toDateString(estimatedDeliveryDate, "yyyy-MM-dd HH:mm:ss"))]);
-		Map boothTotalPayments = FastMap.newInstance();
-		List paymentsList = (List) BoothPaidPayments.get("boothPaymentsList");
-		if (paymentsList.size() != 0) {
-			boothTotalPayments = (Map)paymentsList.get(0);
-			paidAmount = (BigDecimal)boothTotalPayments.get("amount");
-			productMap["paidAmount"] = paidAmount.setScale(2, rounding);
-		}*/
-		
-		/*obAmount =	(NetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: estimatedDeliveryDate, facilityId:boothId])).get("openingBalance");
-		if(obAmount.compareTo(BigDecimal.ZERO) < 0 ){
-						
-			productMap["PREV_DUE"] = obAmount.subtract(boothGrandTotal);
-		}else{
-			productMap["PREV_DUE"] = obAmount;
-		}*/
-		
-		/*boothDuesDetail = NetworkServices.getDaywiseBoothDues(dctx, [userLogin: userLogin, facilityId: boothId]);
-		duesList = boothDuesDetail["boothDuesList"];
-				
-		duesList.each { due ->
-			int days = UtilDateTime.getIntervalInDays(estimatedDeliveryDate, due.supplyDate);
-			if(days == 0){
-				productMap["PREV_DUE"] = (boothDuesDetail["totalAmount"])-(boothGrandTotal);
-			}
-			
-		}*/
 		boothOrdersMap[boothId] = productMap;
 	}
 	
@@ -414,7 +385,7 @@ def populateRouteOrders(routeGroup ,routeOrdersMap){
 }*/
 //routeGroupList =[];
 truckSheetReportList =[];
-routesList = NetworkServices.getRoutes(dctx,context).get("routesList");
+routesList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
 //mainFacilityList = delegator.findByAnd("Facility", [parentFacilityId : null],["sequenceNum","facilityName"]);
 if(UtilValidate.isNotEmpty(parameters.facilityId) && (parameters.facilityId)!="All-Routes"){
 	routesList.clear();

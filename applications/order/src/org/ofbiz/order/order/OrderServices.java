@@ -101,7 +101,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import com.ibm.icu.util.Calendar;
 import org.ofbiz.base.util.Debug;
 import org.apache.commons.lang.StringUtils;
-import org.ofbiz.network.NetworkServices;
+import org.ofbiz.network.DeprecatedNetworkServices;
 /**
  * Order Processing Services
  */
@@ -5871,7 +5871,7 @@ public class OrderServices {
             	 Map<String,  Object> facilityGroupCtx = FastMap.newInstance();
             	 facilityGroupCtx.putAll(context);
             	 facilityGroupCtx.put("fromDate", estimatedDeliveryDate);
-            	List facilityIds = (List)NetworkServices.getFacilityGroupMemberList(dctx, facilityGroupCtx).get("facilityIds");
+            	List facilityIds = (List)DeprecatedNetworkServices.getFacilityGroupMemberList(dctx, facilityGroupCtx).get("facilityIds");
             	 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
             }
             
@@ -5889,7 +5889,7 @@ public class OrderServices {
         Map<String,  Object> stopShipCtx = FastMap.newInstance();
         stopShipCtx.putAll(context);
         stopShipCtx.put("supplyDate", estimatedDeliveryDate);
-        Map  boothPaymentsMap = NetworkServices.getStopShipList(dctx ,stopShipCtx);
+        Map  boothPaymentsMap = DeprecatedNetworkServices.getStopShipList(dctx ,stopShipCtx);
         List stopShipList =(List)boothPaymentsMap.get("boothList");       
        
         HashSet stopShipSet = new HashSet(stopShipList);

@@ -8,7 +8,6 @@ import java.text.*;
 import java.lang.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
-import org.ofbiz.network.NetworkServices;
 import javolution.util.*;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;

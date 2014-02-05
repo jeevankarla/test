@@ -13,7 +13,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityTypeUtil;
-import org.ofbiz.network.NetworkServices;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 facilityId = parameters.facilityId;
 indentQtyCategoryList = delegator.findList("ProductCategory", EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PROD_INDENT_CAT"), UtilMisc.toSet("productCategoryId"), null, null, false);
@@ -25,7 +25,7 @@ indentProdCatList = [];
 dctx = dispatcher.getDispatchContext();
 
 
-result = NetworkServices.getFacilityIndentQtyCategories(delegator, dctx.getDispatcher(),UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
+result = ByProductNetworkServices.getFacilityIndentQtyCategories(delegator, dctx.getDispatcher(),UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
 indentQtyCatMap = result.get("indentQtyCategory");
 productCategories.each{ eachItem ->
 	indentCatMap = [:];

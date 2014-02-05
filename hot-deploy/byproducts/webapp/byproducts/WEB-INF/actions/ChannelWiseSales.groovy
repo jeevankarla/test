@@ -26,7 +26,6 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.network.NetworkServices;
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,7 +44,7 @@ totalQuantity = 0;
 totalRevenue = 0;
 dctx = dispatcher.getDispatchContext();
 
-Map boothsRegionMap = NetworkServices.getAllBoothsRegionsMap(dctx ,context);
+Map boothsRegionMap = ByProductNetworkServices.getAllBoothsRegionsMap(dctx ,context);
 
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
@@ -71,8 +70,7 @@ try {
 	context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
-/*dayTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [fromDate:fromDate, thruDate:dayEnd]);
-Debug.log("dayTotals================="+dayTotals);*/
+
 dailySalesRevenueTrend = context.dailySalesRevenueTrend;
 if(dailySalesRevenueTrend){
 	try {
@@ -114,7 +112,7 @@ if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	}
 	
 	if(facility.facilityTypeId == "ROUTE"){
-		boothsList = (NetworkServices.getRouteBooths(delegator , facility.facilityId));
+		boothsList = (ByProductNetworkServices.getRouteBooths(delegator , facility.facilityId));
 		
 	}else{
 		boothsList.add(facility.facilityId);

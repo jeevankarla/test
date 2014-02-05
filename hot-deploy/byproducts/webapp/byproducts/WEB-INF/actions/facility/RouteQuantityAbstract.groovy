@@ -5,7 +5,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import  org.ofbiz.network.NetworkServices;
 import org.ofbiz.service.LocalDispatcher;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,11 +16,10 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
-import org.ofbiz.network.NetworkServices;
-
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 dctx = dispatcher.getDispatchContext();
-routeIdsList = NetworkServices.getRoutes(dctx,context).get("routesList");
+routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
 
 effectiveDate = null;
 effectiveDateStr = parameters.supplyDate;
@@ -38,20 +36,20 @@ if (UtilValidate.isNotEmpty(effectiveDateStr)) {
 dayBegin = UtilDateTime.getDayStart(effectiveDate);
 context.putAt("dayBegin", dayBegin);
 dayEnd = UtilDateTime.getDayEnd(effectiveDate);
-List shipmentIds  = NetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
-amShipmentIds = NetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"AM");
-pmShipmentIds = NetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"PM");
+List shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+amShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"AM");
+pmShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"PM");
 
 amProductTotals=[:];
 pmProductTotals=[:];
 if(UtilValidate.isNotEmpty(amShipmentIds)){
-	amDayTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+	amDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
 	if(UtilValidate.isNotEmpty(amDayTotals)){
 		amProductTotals=amDayTotals.get("productTotals");
 	}
 }
 if(UtilValidate.isNotEmpty(pmShipmentIds)){
-	pmDayTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+	pmDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
 	if(UtilValidate.isNotEmpty(pmDayTotals)){
 		pmProductTotals=pmDayTotals.get("productTotals");
 	}
@@ -63,7 +61,7 @@ byProdList=[];
 lmsProdSeqList=[];
 byProdSeqList=[];
 if(UtilValidate.isNotEmpty(shipmentIds)){
-	dayTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		prodTotals = dayTotals.get("productTotals");
 		if(UtilValidate.isNotEmpty(prodTotals)){
@@ -113,7 +111,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 	routeIdsList.each{ routeId ->
 		lmsProductList =[];
 		byProdList =[];
-		boothsList = (NetworkServices.getRouteBooths(delegator , routeId));
+		boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
 		conList=[];
 		conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,routeId));
 		cond = EntityCondition.makeCondition(conList,EntityOperator.AND);
@@ -124,13 +122,13 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 			if("AM_RT_GROUP".equals(facilityGroup.facilityGroupId)){
 				if(UtilValidate.isNotEmpty(boothsList)){
 					if(UtilValidate.isNotEmpty(amShipmentIds)){
-						amRouteTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
+						amRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
 						routeAmount=0;
 						routeTotQty=0;
 						if(UtilValidate.isNotEmpty(amRouteTotals)){
 							routeProdTotals = amRouteTotals.get("productTotals");
 							routeAmount= amRouteTotals.get("totalRevenue");
-							routePaidDetails = NetworkServices.getBoothPaidPayments( dctx , [paymentDate: effectiveDateStr , facilityId:routeId]);
+							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: effectiveDateStr , facilityId:routeId]);
 							reciepts = 0;
 							if(UtilValidate.isNotEmpty(routePaidDetails)){
 								reciepts = routePaidDetails.get("invoicesTotalAmount");
@@ -174,14 +172,14 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 			if("PM_RT_GROUP".equals(facilityGroup.facilityGroupId)){
 				if(UtilValidate.isNotEmpty(boothsList)){
 					if(UtilValidate.isNotEmpty(pmShipmentIds)){
-						pmRouteTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
+						pmRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
 						routeAmount=0;
 						routeTotQty=0;
 						if(UtilValidate.isNotEmpty(pmRouteTotals)){
 							routeProdTotals = pmRouteTotals.get("productTotals");
 							routeAmount= pmRouteTotals.get("totalRevenue");
 							routeTotQty= pmRouteTotals.get("totalQuantity");
-							routePaidDetails = NetworkServices.getBoothPaidPayments( dctx , [paymentDate: effectiveDateStr , facilityId:routeId]);
+							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: effectiveDateStr , facilityId:routeId]);
 							reciepts = 0;
 							if(UtilValidate.isNotEmpty(routePaidDetails)){
 								reciepts = routePaidDetails.get("invoicesTotalAmount");

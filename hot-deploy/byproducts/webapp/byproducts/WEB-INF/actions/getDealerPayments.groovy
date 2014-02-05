@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javolution.util.FastList;
-import org.ofbiz.network.NetworkServices;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.base.util.*;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
@@ -80,10 +80,10 @@ if(parameters.paymentIds){
 }
 if(hideSearch == "N"){	
 	if (statusId == "PAID") {
-		boothsPaymentsDetail = NetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
+		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
 	}
 	else {
-		boothsPaymentsDetail = NetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);	
+		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);	
 	}
 	boothPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	
@@ -106,7 +106,7 @@ if(hideSearch == "N"){
 	
 	if (!onlyCurrentDues) {
 		boothPaymentsList.each { booth ->
-			boothDuesDetail = NetworkServices.getDaywiseBoothDues(dctx, [userLogin: userLogin, facilityId:booth.facilityId]);	
+			boothDuesDetail = ByProductNetworkServices.getDaywiseBoothDues(dctx, [userLogin: userLogin, facilityId:booth.facilityId]);	
 			duesList = boothDuesDetail["boothDuesList"];
 			JSONArray boothDuesList= new JSONArray();
 			duesList.each { due ->

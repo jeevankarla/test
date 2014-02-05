@@ -5,7 +5,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import  org.ofbiz.network.NetworkServices;
 import org.ofbiz.service.LocalDispatcher;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +16,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
-import org.ofbiz.network.NetworkServices;
 
 
 dctx = dispatcher.getDispatchContext();
@@ -30,7 +28,7 @@ if(parameters.routeId){
 	facilityId = facility.facilityId;
 	routeIdsList.add(facilityId);
 }else{
-   routeIdsList = NetworkServices.getRoutes(dctx,context).get("routesList");
+   routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
    routeIdsList.add(parameters.routeId);
 }
 
@@ -49,7 +47,7 @@ dayBegin = UtilDateTime.getDayStart(estimatedDeliveryDateTime);
 
 context.putAt("estimatedDeliveryDateTime", estimatedDeliveryDateTime);
 dayEnd = UtilDateTime.getDayEnd(estimatedDeliveryDateTime);
-List shipmentIds  = NetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+List shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 
 products = delegator.findList("Product", null, UtilMisc.toSet("productId","quantityIncluded","sequenceNum"),["sequenceNum"],null, false);
 prodIncMap = [:];
@@ -65,7 +63,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 	routeIdsList.each{ routeId ->
 		allProductList =[];
 		allProdSeqList =[];
-		boothsList = (NetworkServices.getRouteBooths(delegator , routeId));
+		boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
 		if(UtilValidate.isNotEmpty(boothsList)){
 			if(UtilValidate.isNotEmpty(shipmentIds)){
 				dayBegin = UtilDateTime.getDayStart(estimatedDeliveryDateTime);
@@ -75,7 +73,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				
 				boothsList.each{ boothId ->
 					Map prodWiseDetailMap= FastMap.newInstance();
-					dayTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
+					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
 					if(UtilValidate.isNotEmpty(dayTotals)){
 						productTotals = dayTotals.get("productTotals");		
 						if(UtilValidate.isNotEmpty(productTotals)){

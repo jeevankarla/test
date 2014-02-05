@@ -26,7 +26,6 @@
 	import org.ofbiz.entity.condition.*;
 	import org.ofbiz.entity.util.*;
 	import org.ofbiz.base.util.*;
-	import org.ofbiz.network.NetworkServices;
 	import java.util.*;
 	import java.text.ParseException;
 	import java.text.SimpleDateFormat;

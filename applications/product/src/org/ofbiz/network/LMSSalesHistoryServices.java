@@ -35,7 +35,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.network.NetworkServices;
+import org.ofbiz.network.DeprecatedNetworkServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -54,8 +54,8 @@ public class LMSSalesHistoryServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
 		Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 		Timestamp yesterdaysTimestamp = UtilDateTime.addDaysToTimestamp(nowTimestamp, -1);		
-		Map<String, Object> todaysSalesTotals = NetworkServices.getDayTotals(dctx, nowTimestamp, null, true, false, null);
-		Map<String, Object> yesterdaysSalesTotals = NetworkServices.getDayTotals(dctx, yesterdaysTimestamp, null, true, false, null);
+		Map<String, Object> todaysSalesTotals = DeprecatedNetworkServices.getDayTotals(dctx, nowTimestamp, null, true, false, null);
+		Map<String, Object> yesterdaysSalesTotals = DeprecatedNetworkServices.getDayTotals(dctx, yesterdaysTimestamp, null, true, false, null);
 		BigDecimal todaysSales = ((BigDecimal)todaysSalesTotals.get("totalQuantity")).setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
 		BigDecimal yesterdaysSales = ((BigDecimal)yesterdaysSalesTotals.get("totalQuantity")).setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
 		BigDecimal diff = (todaysSales.subtract(yesterdaysSales)).setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
@@ -204,10 +204,10 @@ public class LMSSalesHistoryServices {
 		}
 		
 		try{
-			Map<String, Object> AMSalesTotals = NetworkServices.getDayTotals(dctx, UtilDateTime.toTimestamp(salesDate), "AM", false, false, null);
+			Map<String, Object> AMSalesTotals = DeprecatedNetworkServices.getDayTotals(dctx, UtilDateTime.toTimestamp(salesDate), "AM", false, false, null);
 			populateTotals(dctx, context, salesDateString, AMSalesTotals, "AM" );
 			
-			Map<String, Object> PMSalesTotals = NetworkServices.getDayTotals(dctx, UtilDateTime.toTimestamp(salesDate), "PM", false, false, null);
+			Map<String, Object> PMSalesTotals = DeprecatedNetworkServices.getDayTotals(dctx, UtilDateTime.toTimestamp(salesDate), "PM", false, false, null);
 			//for 'PM' supply type getDayTotals return the previous day PM Totals if  enableSameDayPmEntry set 'TRUE' 
 			populateTotals(dctx, context, tempPMDate, PMSalesTotals, "PM");
 		
@@ -259,7 +259,7 @@ public class LMSSalesHistoryServices {
 		Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 		
 		int totalDays=UtilDateTime.getIntervalInDays(monthBegin,monthEnd);	
-		Map routes = NetworkServices.getRoutes(dctx , UtilMisc.toMap("facilityTypeId", "ROUTE"));		
+		Map routes = DeprecatedNetworkServices.getRoutes(dctx , UtilMisc.toMap("facilityTypeId", "ROUTE"));		
 		List routesList = (List) routes.get("routesList");
 		Map transporterMap =FastMap.newInstance();
 		try {
@@ -285,7 +285,7 @@ public class LMSSalesHistoryServices {
 					List agentIds = new ArrayList(agentIdsSet);
 					
 					if(UtilValidate.isNotEmpty(agentIds)){
-					Map dayTotals = NetworkServices.getDayTotals(dispatcher.getDispatchContext(), supplyDate, null, true, false, UtilMisc.toList(agentIds));
+					Map dayTotals = DeprecatedNetworkServices.getDayTotals(dispatcher.getDispatchContext(), supplyDate, null, true, false, UtilMisc.toList(agentIds));
 					BigDecimal saleAmount = (BigDecimal)dayTotals.get("totalRevenue");
 					routeMarginMap.put("quantity", dayTotals.get("totalQuantity"));
 					routeMarginMap.put("saleAmount", saleAmount);					
@@ -409,7 +409,7 @@ public class LMSSalesHistoryServices {
 		        
 		        // Get Sachets Product Ids
 		        List sachetsProdIds = FastList.newInstance();
-		        List<GenericValue> productList = NetworkServices.getLmsProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
+		        List<GenericValue> productList = DeprecatedNetworkServices.getLmsProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 		        
 		        for (GenericValue prod : productList) {
 		        	String prodId = (String) prod.get("productId");
@@ -469,7 +469,7 @@ public class LMSSalesHistoryServices {
 		        
 		        Map boothPeriodTotals = FastMap.newInstance();
 		        
-		        Map<String, Object> periodDayTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), UtilMisc.<String, Object>toMap("facilityIds", UtilMisc.toList(boothIdsList), "fromDate", fromDateTime, "thruDate", thruDateTime));
+		        Map<String, Object> periodDayTotals = DeprecatedNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), UtilMisc.<String, Object>toMap("facilityIds", UtilMisc.toList(boothIdsList), "fromDate", fromDateTime, "thruDate", thruDateTime));
 		        Map boothProdTotals = (Map)periodDayTotals.get("boothTotals");
 		        
 		        BigDecimal periodTotalQty = BigDecimal.ZERO;
@@ -504,7 +504,7 @@ public class LMSSalesHistoryServices {
 		        
 		        conditionList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, "100"));
 		        //conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, "MARGIN_PRICE"));
-		        conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(NetworkServices.getLmsProducts(dctx, context),"productId" ,false)));
+		        conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(DeprecatedNetworkServices.getLmsProducts(dctx, context),"productId" ,false)));
 		        EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		
 		        List<GenericValue> productPriceList =delegator.findList("ProductAndPriceView", discontinuationDateCondition, null, null, null, false);
@@ -557,7 +557,7 @@ public class LMSSalesHistoryServices {
 		    		}
 		    		
 		    		// getting previous dues if any	
-		    		Map<String, Object> boothPayments = NetworkServices.getBoothPayments(delegator, dctx.getDispatcher(), userLogin,
+		    		Map<String, Object> boothPayments = DeprecatedNetworkServices.getBoothPayments(delegator, dctx.getDispatcher(), userLogin,
 		    				UtilDateTime.toDateString(monthEnd, "yyyy-MM-dd"), null, (String) booth.get("facilityId") ,null ,Boolean.FALSE);
 	    			Map boothTotalDues = FastMap.newInstance();
 	    			List boothPaymentsList = (List) boothPayments.get("boothPaymentsList");
@@ -625,7 +625,7 @@ public class LMSSalesHistoryServices {
 		    	
 		    	for(int i=1 ; i <= (totalDays+1); i++){
 		    		int dayOfMonth = i;
-		    		Map<String, Object> dayTotals = NetworkServices.getDayTotals(dispatcher.getDispatchContext(), supplyDate, "AM" , false, false, EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", false));
+		    		Map<String, Object> dayTotals = DeprecatedNetworkServices.getDayTotals(dispatcher.getDispatchContext(), supplyDate, "AM" , false, false, EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", false));
 		    		Map boothTotals = (Map) dayTotals.get("boothTotals");
 		    		if(boothTotals == null){
 		    			continue;
@@ -1053,7 +1053,7 @@ public class LMSSalesHistoryServices {
 			if(UtilValidate.isNotEmpty(context.get("saleDate"))){
 				nowTimestamp = UtilDateTime.getDayStart(UtilDateTime.getTimestamp(((java.sql.Date) context.get("saleDate")).getTime()));
 			}
-			Map<String, Object> salesTotals = NetworkServices.getDayTotals(dctx, nowTimestamp, null, true, false, null);			
+			Map<String, Object> salesTotals = DeprecatedNetworkServices.getDayTotals(dctx, nowTimestamp, null, true, false, null);			
 			BigDecimal totalQuantity = ((BigDecimal)salesTotals.get("totalQuantity")).setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
 			BigDecimal totalRevenue = ((BigDecimal)salesTotals.get("totalRevenue")).setScale(2, UtilNumber.getBigDecimalRoundingMode("order.rounding"));
 			try {
@@ -1719,7 +1719,7 @@ public class LMSSalesHistoryServices {
 			Map productsMap = FastMap.newInstance();
 			Map boothTotals = FastMap.newInstance();
 			
-			Map<String, Object> zonesMap = NetworkServices.getZones(delegator);
+			Map<String, Object> zonesMap = DeprecatedNetworkServices.getZones(delegator);
         	List<String> zones = (List)zonesMap.get("zonesList");
 			
 			try{
@@ -1727,7 +1727,7 @@ public class LMSSalesHistoryServices {
 					Timestamp saleDate = UtilDateTime.addDaysToTimestamp(fromDate, +i);
 					Date summaryDate = new Date(saleDate.getTime());
 					for(Object shipment : shipmentList){
-						Map<String, Object> salesTotals = NetworkServices.getDayTotals(dctx, saleDate, shipment.toString() , false, false, null);
+						Map<String, Object> salesTotals = DeprecatedNetworkServices.getDayTotals(dctx, saleDate, shipment.toString() , false, false, null);
 						productsMap = (Map)salesTotals.get("productTotals");
 						Iterator mapIterator = productsMap.entrySet().iterator();
 						while (mapIterator.hasNext()) {//product wise
@@ -1766,11 +1766,11 @@ public class LMSSalesHistoryServices {
 						for(String zone : zones){
 	    	        		Map<String, Object> zoneTotMap = new TreeMap<String, Object>();
 	    	        		List<String> zoneRoutes = FastList.newInstance();
-	    	        		zoneRoutes = NetworkServices.getZoneRoutes(delegator,zone);
+	    	        		zoneRoutes = DeprecatedNetworkServices.getZoneRoutes(delegator,zone);
 	    	        		for(String route : zoneRoutes){
 	    	        			Map<String, Object> routesTotMap = new TreeMap<String, Object>();
 	    	        			List<String> routeBooths = FastList.newInstance();
-	    	        			routeBooths = NetworkServices.getRouteBooths(delegator,route,null);
+	    	        			routeBooths = DeprecatedNetworkServices.getRouteBooths(delegator,route,null);
 	    	        			for(String booth : routeBooths){
     								Map boothSalesMap = (Map) boothTotals.get(booth);
 	    	        				if(boothSalesMap != null){
@@ -2002,12 +2002,12 @@ public class LMSSalesHistoryServices {
         	List<GenericValue> productWise = FastList.newInstance();
         	List<GenericValue> boothWise = FastList.newInstance();
         	
-        	Map<String, Object> zonesMap = NetworkServices.getZones(delegator);
+        	Map<String, Object> zonesMap = DeprecatedNetworkServices.getZones(delegator);
         	List<String> zones = (List)zonesMap.get("zonesList");
         	
         	try{
     			productSubscriptionTypeList = delegator.findList("Enumeration", EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS , "SUB_PROD_TYPE"), UtilMisc.toSet("enumId"), UtilMisc.toList("sequenceId"), null, false);
-    			productList  = NetworkServices.getLmsProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
+    			productList  = DeprecatedNetworkServices.getLmsProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
         		lmsSalesSummaryList = delegator.findList("LMSPeriodSalesSummary", condition, null,null, null, false);
         		lmsSalesSummaryDetailList = delegator.findList("LMSPeriodSalesSummaryDetail", condition, null,null, null, false);
         	
@@ -2062,11 +2062,11 @@ public class LMSSalesHistoryServices {
     	        	for(String zone : zones){
     	        		Map<String, Object> zoneTotMap = new TreeMap<String, Object>();
     	        		List<String> zoneRoutes = FastList.newInstance();
-    	        		zoneRoutes = NetworkServices.getZoneRoutes(delegator,zone);
+    	        		zoneRoutes = DeprecatedNetworkServices.getZoneRoutes(delegator,zone);
     	        		for(String route : zoneRoutes){
     	        			Map<String, Object> routesTotMap = new TreeMap<String, Object>();
     	        			List<String> routeBooths = FastList.newInstance();
-    	        			routeBooths = NetworkServices.getRouteBooths(delegator,route,null);
+    	        			routeBooths = DeprecatedNetworkServices.getRouteBooths(delegator,route,null);
     	        			for(String booth : routeBooths){
     	        				boothWise = EntityUtil.filterByAnd(shipmentWise, UtilMisc.toList(EntityCondition.makeCondition("facilityId", booth))); 
     	    		    		Iterator<GenericValue> shipTypeIterForDetail = productSubscriptionTypeList.iterator();

@@ -1784,8 +1784,9 @@ public class ShoppingCartEvents {
                 }
 
                 Map<String, Object> itemAttributes = UtilMisc.<String, Object>toMap("itemDesiredDeliveryDate", itemDesiredDeliveryDateStr);
-
+                Debug.log("add bulk products");
                 if (quantity.compareTo(BigDecimal.ZERO) > 0) {
+                	 Debug.log("before add item");
                     Debug.logInfo("Attempting to add to cart with productId = " + productId + ", categoryId = " + productCategoryId +
                             ", quantity = " + quantity + ", itemType = " + itemType + " and itemDescription = " + itemDescription, module);
                     result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId,
@@ -1793,6 +1794,7 @@ public class ShoppingCartEvents {
                                                   amount, quantity, null, null, null, null, null, null,
                                                   itemGroupNumber, itemAttributes,null);
                     // no values for price and paramMap (a context for adding attributes)
+                    Debug.log("after add item");
                     controlDirective = processResult(result, request);
                     if (controlDirective.equals(ERROR)) {    // if the add to cart failed, then get out of this loop right away
                         return "error";

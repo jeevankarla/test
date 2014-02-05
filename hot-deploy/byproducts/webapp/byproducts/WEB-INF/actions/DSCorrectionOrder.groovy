@@ -8,7 +8,6 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
-import org.ofbiz.network.NetworkServices;
 import javolution.util.FastMap;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;

@@ -12,7 +12,6 @@ import org.ofbiz.base.util.UtilDateTime;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.network.NetworkServices;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -68,16 +67,7 @@ JSONObject productQtyIncJSON = new JSONObject();
 /*JSONObject productCratesJSON = new JSONObject();*/
 context.productList = prodList;
 prodList.each{eachItem ->
-	/*if(prodCatMap.get(eachItem.productId)){
-		if((prodCatMap.get(eachItem.productId)).equals("CRATE_INDENT")){
-			tempQtyInc = qtyIncMap.get(eachItem.productId);
-			packetQty = NetworkServices.convertCratesToPackets(tempQtyInc , 1);
-			productCratesJSON.putAt(eachItem.productId, packetQty);
-		}
-		else{
-			productCratesJSON.putAt(eachItem.productId, 1);
-		}
-	}*/
+	
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
 	newObj.put("label", eachItem.description);

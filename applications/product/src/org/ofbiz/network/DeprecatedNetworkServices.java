@@ -50,10 +50,15 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+/**
+ * 
+ * @deprecated Do not use this class methods!
+ */
 
-public class NetworkServices {
+@Deprecated
+public class DeprecatedNetworkServices {
 
-    public static final String module = NetworkServices.class.getName();
+    public static final String module = DeprecatedNetworkServices.class.getName();
     
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals;
@@ -1535,7 +1540,7 @@ public class NetworkServices {
 		boothPayments = getBoothPayments(delegator, ctx.getDispatcher(), userLogin,
 				UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"), null, facilityId ,null ,Boolean.FALSE);
 	    List boothPaymentsList = (List) boothPayments.get("boothPaymentsList");
-	   Map absenteeOverrideMap = NetworkServices.getAbsenteeOverrideBooths(ctx , UtilMisc.toMap("overrideSupplyDate",supplyDate));
+	   Map absenteeOverrideMap = DeprecatedNetworkServices.getAbsenteeOverrideBooths(ctx , UtilMisc.toMap("overrideSupplyDate",supplyDate));
 	   List absenteeOverrideList = (List)absenteeOverrideMap.get("boothList");
 	   try{
 		   excludeStopShipBooths = EntityUtil.getFieldListFromEntityList(delegator.findList("Facility", EntityCondition.makeCondition("excludeStopShipCheck" ,EntityOperator.EQUALS ,"Y"), null, null, null, true), "facilityId" ,true); 
@@ -3607,7 +3612,7 @@ Debug.logInfo(infoString, module);
         Map<String, Object> result = FastMap.newInstance(); 
         List facilityIds = FastList.newInstance();       
         try {
-        	facilityIds = (List)NetworkServices.getFacilityGroupMemberList(ctx, UtilMisc.toMap("facilityGroupId",facilityGroupId ,"fromDate" , fromDate)).get("facilityIds");;
+        	facilityIds = (List)DeprecatedNetworkServices.getFacilityGroupMemberList(ctx, UtilMisc.toMap("facilityGroupId",facilityGroupId ,"fromDate" , fromDate)).get("facilityIds");;
         	if (UtilValidate.isEmpty(facilityIds)) {
         		result.put("facilityIds", facilityIds);
         		result.put("routeList", FastList.newInstance());
@@ -3646,7 +3651,7 @@ Debug.logInfo(infoString, module);
         	if(UtilValidate.isEmpty(facilityGroup)){
         		return result;
         	}
-        	Map<String, Object> groupDetail = NetworkServices.getFacilityGroupDetail(ctx, UtilMisc.toMap("facilityGroupId", facilityGroup.getString("facilityGroupId"),"fromDate" , fromDate));   	
+        	Map<String, Object> groupDetail = DeprecatedNetworkServices.getFacilityGroupDetail(ctx, UtilMisc.toMap("facilityGroupId", facilityGroup.getString("facilityGroupId"),"fromDate" , fromDate));   	
         	result.putAll(groupDetail);
         }
         catch (GenericEntityException e) {

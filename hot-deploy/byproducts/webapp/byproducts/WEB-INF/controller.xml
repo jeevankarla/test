@@ -60,7 +60,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DispatchReconciliation"/>
     </request-map>
-    
+     <request-map uri="GatePassShipment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GatePassShipment"/>
+    </request-map>
+     <request-map uri="AbsenteeList">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AbsenteeList"/>
+    </request-map>
     <request-map uri="parlourSalesOrders.csv">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="ParlourSalesOrdersCSV"/>    	
@@ -821,6 +828,12 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
+    <request-map uri="getOrderReturnItemsJson">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getOrderReturnItems"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     <request-map uri="getPartyFinAccountInfo">
         <security auth="true" https="true"/>    
         <event type="service" invoke="getPartyFinAccountInfo"/>
@@ -837,7 +850,13 @@
     <!-- NG request Mapping -->
       <request-map uri="TruckSheetMotherDairy">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="TruckSheetMotherDairy"/>
+        <request-map uri="getOrderReturnItemsJson">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getOrderReturnItems"/>
+        <respoame="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <response name="success" type="view" value="TruckSheetMotherDairy"/>
     </request-map>     
     <request-map uri="MilkDeliveryScheduleReport.txt">
     	<security https="true" auth="true"/>
@@ -857,8 +876,7 @@
     </request-map> 
     
      <request-map uri="ChangeIndentInit">
-     	<security https="true" auth="true"/>
-        <response name="success" type="view" value="ChangeIndentInit"/>
+     	<security https="true" auth="true"      <response name="success" type="view" value="ChangeIndentInit"/>
     </request-map> 
     <request-map uri="ChangeIndentRouteInit">
      	<security https="true" auth="true"/>
@@ -958,12 +976,18 @@
 	<view-map name="EditByProduct" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EditByProduct"/>
 	<view-map name="EditByProductPrices" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EditByProductPrices"/>
 	
-	<view-map name="SalesReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#SalesReportCSV" content-type="text/csv" encoding="none"/>
+	<view-map name="SalesReportCSV" type="sc	<view-map name="FindReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindReturns"/>
+	<view-map name="returnHeader" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnHeader"/>
+    <view-map name="ReturnItems" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnItems"/> 
+reencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#SalesReportCSV" content-type="text/csv" encoding="none"/>
 	<view-map name="CustomPartyListPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CustomPartyListPDF" content-type="application/pdf"/>
 	<view-map name="DuesPayment" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#DuesPayment"/>
     <view-map name="FindPayments" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindPayments"/>
     <view-map name="NewIncomingPayment" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#NewIncomingPayment"/>
-    <view-map name="ByProdOrderView" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ByProdOrderHeaderView"/>
+    <view-map name="ByProdOrderView" type="screen" page="component://byproducts/widget/	<view-map name="FindReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindReturns"/>
+	<view-map name="returnHeader" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnHeader"/>
+    <view-map name="ReturnItems" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnItems"/> 
+ByProductsScreens.xml#ByProdOrderHeaderView"/>
     <view-map name="EditByProdFacility" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#EditFacility"/>
     <view-map name="AddItemsFromOrder" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#AddItemsFromOrder"/>
     <view-map name="TransferInventoryItem" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#TransferInventoryItem"/>
@@ -1001,12 +1025,12 @@
     <view-map name="SupplDeliveryScheduleNew" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SupplDeliveryScheduleNew"/>    
     <view-map name="SubscriptionIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SubscriptionIndent"/>
     <view-map name="FacilityFinHistory" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FacilityFinHistory"/>
-    <view-map name="DeliveryScheduleReport" type="screenfop" page="component://byproducts/widget/ByProductsScreens.xml#DeliveryScheduleReport" content-type="text/plain"/>
+    <view-map name="DeliveryScheduleReport" type="screenfop" page="component://byproducts/widget/ByProducsScreens.xml#DeliveryScheduleReport" content-type="text/plain"/>
   	<view-map name="AavinGatePassReport" type="screenfop" page="component://byproducts/widget/ByProductsScreens.xml#AavinGatePassReport" content-type="text/plain"/>
     <view-map name="DueParticularsTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="text/plain"/>
     <view-map name="ParlourCollectionStmtTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ParlourCollectionStmtTXT" content-type="text/plain"/>
     <view-map name="DSCorrectionCheckListTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DSCorrectionCheckListTXT" content-type="text/plain"/>
-    <view-map name="ParlourSalesDaywiseForMonth" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ParlourSalesDaywiseForMonth" content-type="text/plain"/>
+   <view-map name="ParlourSalesDaywiseForMonth" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ParlourSalesDaywiseForMonth" content-type="text/plain"/>
     <view-map name="GiftAbstract" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#GiftAbstract" content-type="text/plain"/>
     <view-map name="GiftSuppliedDetails" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#GiftSuppliedDetails" content-type="text/plain"/>
     <view-map name="MonthlyVATReturn" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyVATReturn" content-type="text/plain"/>
@@ -1075,6 +1099,8 @@
 	<view-map name="DSCorrectionEntryInit" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DSCorrectionEntryInit"/>
 	<view-map name="DSCorrectionEntryNew" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DSCorrectionEntryNew"/>
 	<view-map name="DispatchReconciliation" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DispatchReconciliation"/>
+	<view-map name="GatePassShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#GatePassShipment"/>
+	<view-map name="AbsenteeList" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AbsenteeList"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>

@@ -69,7 +69,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.network.NetworkServices;
+import org.ofbiz.network.DeprecatedNetworkServices;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.image.ScaleImage;
@@ -2474,7 +2474,7 @@ public class ProductServices {
   		List<GenericValue> packetIndentProducts = ProductWorker.getProductsByCategory(delegator ,"PACKET_INDENT" ,UtilDateTime.getDayStart(effectiveDate));
   		List<String> crateIndentProductList = EntityUtil.getFieldListFromEntityList( crateIndentProducts, "productId", true);
   		List<String> packetIndentProductList = EntityUtil.getFieldListFromEntityList(packetIndentProducts, "productId", true);*/
-  		Map prodIndentCat = (Map)NetworkServices.getFacilityIndentQtyCategories(delegator, dctx.getDispatcher(),UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId)).get("indentQtyCategory");
+  		Map prodIndentCat = (Map)DeprecatedNetworkServices.getFacilityIndentQtyCategories(delegator, dctx.getDispatcher(),UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId)).get("indentQtyCategory");
   		List crateIndentProductList = FastList.newInstance();
   		if(UtilValidate.isNotEmpty(prodIndentCat)){
   			String prodId = "";
@@ -2519,13 +2519,13 @@ public class ProductServices {
 				  if(crateIndentProductList.contains(productId)){
 					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
 					  crateQuantity = quantity;
-					  quantity = NetworkServices.convertCratesToPackets(product.getBigDecimal("quantityIncluded"),crateQuantity);
+					  quantity = DeprecatedNetworkServices.convertCratesToPackets(product.getBigDecimal("quantityIncluded"),crateQuantity);
 	    		  
 				  }else{
 					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
 					  //crateQuantity = quantity;
 					  if(UtilValidate.isNotEmpty(product)){
-						  crateQuantity = NetworkServices.convertPacketsToCrates(product.getBigDecimal("quantityIncluded"),quantity);
+						  crateQuantity = DeprecatedNetworkServices.convertPacketsToCrates(product.getBigDecimal("quantityIncluded"),quantity);
 					  }
 	    		  
 				  }
@@ -2805,7 +2805,7 @@ public class ProductServices {
 	    		  Debug.logError("Error in service processChangeIndentHelper", module);
 	    		  return ServiceUtil.returnError("Error in service processChangeIndentHelper");
 	    	  }
-	    	  Map boothDetails = (Map)(NetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "userLogin", userLogin))).get("boothDetails");
+	    	  Map boothDetails = (Map)(DeprecatedNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "userLogin", userLogin))).get("boothDetails");
 	    	  String defaultRouteId = (String)boothDetails.get("routeId");
 	    	  List<GenericValue> productCategoryList = FastList.newInstance();
 	    	  List prodCatCondition = UtilMisc.toList(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, "CONTINUES_INDENT"));

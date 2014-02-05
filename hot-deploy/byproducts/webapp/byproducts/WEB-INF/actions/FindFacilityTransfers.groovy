@@ -35,7 +35,6 @@
  import org.ofbiz.entity.condition.*;
  import org.ofbiz.entity.util.*;
  import org.ofbiz.base.util.*;
- import org.ofbiz.network.NetworkServices;
  import org.ofbiz.service.DispatchContext;
  import org.ofbiz.service.GenericServiceException;
  import org.ofbiz.service.LocalDispatcher;

@@ -25,12 +25,11 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import  org.ofbiz.network.NetworkServices;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.base.util.UtilMisc;
 import java.math.RoundingMode;
-
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 rounding = RoundingMode.HALF_UP;
 
 shipmentId=parameters.shipmentId;
@@ -39,7 +38,7 @@ if(! UtilValidate.isEmpty(shipmentId)){
 shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], false);
 }
 dctx = dispatcher.getDispatchContext();
-productList = NetworkServices.getLmsProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
+productList = ByProductNetworkServices.getAllLmsAndByProdProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 context.productList = productList;
 
 allChanges= false;
@@ -71,7 +70,7 @@ supplyTypeMap["CARD"] = "CD";
 supplyTypeMap["CREDIT"] = "CR";
 
 	
-	List shipmentIds = NetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+	List shipmentIds = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 	
 	exprList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN ,shipmentIds));
 	exprList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS  ,"SALES_ORDER"));
@@ -143,9 +142,9 @@ for (int i=0; i < checkListItemList.size(); i++) {
 		lastChangeSubProdMap["supplyType"] = supplyTypeMap[checkListItemProd.productSubscriptionTypeId];
 		lastChangeSubProdMap["routeId"] = checkListItemProd.parentFacilityId;
 		
-		Map<String, Object> boothPayments = NetworkServices.getBoothPayments(delegator, dctx.getDispatcher(), userLogin,
+		Map<String, Object> boothPayments = ByProductNetworkServices.getBoothPayments(delegator, dctx.getDispatcher(), userLogin,
 			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.FALSE);
-		Map<String, Object> currentBoothPayments = NetworkServices.getBoothReceivablePayments(delegator, dctx.getDispatcher(), userLogin,
+		Map<String, Object> currentBoothPayments = ByProductNetworkServices.getBoothReceivablePayments(delegator, dctx.getDispatcher(), userLogin,
 			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.TRUE, Boolean.FALSE);
 		Map boothTotalDues = FastMap.newInstance();
 		boothTotalDues["totalDue"]=BigDecimal.ZERO;
@@ -268,9 +267,9 @@ for (int i=0; i < checkListItemList.size(); i++) {
 		lastChangeSubProdMap["supplyType"] = supplyTypeMap[checkListItemProd.productSubscriptionTypeId];
 		lastChangeSubProdMap["routeId"] = checkListItemProd.parentFacilityId;
 		
-		Map<String, Object> boothPayments = NetworkServices.getBoothPayments(delegator, dctx.getDispatcher(), userLogin,
+		Map<String, Object> boothPayments = ByProductNetworkServices.getBoothPayments(delegator, dctx.getDispatcher(), userLogin,
 			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.FALSE);
-		Map<String, Object> currentBoothPayments = NetworkServices.getBoothReceivablePayments(delegator, dctx.getDispatcher(), userLogin,
+		Map<String, Object> currentBoothPayments = ByProductNetworkServices.getBoothReceivablePayments(delegator, dctx.getDispatcher(), userLogin,
 			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.TRUE, Boolean.FALSE);
 		Map boothTotalDues = FastMap.newInstance();
 		boothTotalDues["totalDue"]=BigDecimal.ZERO;

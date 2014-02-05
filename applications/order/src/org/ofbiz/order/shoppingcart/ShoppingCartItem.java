@@ -1340,7 +1340,6 @@ public class ShoppingCartItem implements java.io.Serializable {
                     if (UtilValidate.isNotEmpty(surveyResponses)) {
                         priceContext.put("surveyResponseId", surveyResponses.get(0));
                     }
-
                     Map<String, Object> priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
                     if (ServiceUtil.isError(priceResult)) {
                         throw new CartItemModifyException("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));

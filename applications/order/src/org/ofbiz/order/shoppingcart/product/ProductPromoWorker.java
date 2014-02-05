@@ -320,7 +320,6 @@ public class ProductPromoWorker {
             //  or track which cart items are used for which promotions, but it will track ProductPromoUseInfo and
             //  useLimits; we are basicly just trying to run each promo "independently" to see how much each is worth
             runProductPromos(productPromoList, cart, delegator, dispatcher, nowTimestamp, true);
-
             // NOTE: after that first pass we could remove any that have a 0 totalDiscountAmount from the run list, but we won't because by the time they are run the cart may have changed enough to get them to go; also, certain actions like free shipping should always be run even though we won't know what the totalDiscountAmount is at the time the promotion is run
             // each ProductPromoUseInfo on the shopping cart will contain it's total value, so add up all totals for each promoId and put them in a List of Maps
             // create a List of Maps with productPromo and totalDiscountAmount, use the Map sorter to sort them descending by totalDiscountAmount
@@ -1230,7 +1229,7 @@ public class ProductPromoWorker {
         } else if ("PPIP_LPMUP_PER".equals(inputParamEnumId)) {
             // does nothing on order level, only checked on item level, so ignore by always considering passed
             return true;
-        } else {
+        }else {
             Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondInputParameterLhs", UtilMisc.toMap("inputParamEnumId",productPromoCond.getString("inputParamEnumId")), cart.getLocale()), module);
             return false;
         }

@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
-import  org.ofbiz.network.NetworkServices;
 import java.text.SimpleDateFormat;
 uiLabelMap = UtilProperties.getResourceBundleMap("OrderUiLabels", locale);
 

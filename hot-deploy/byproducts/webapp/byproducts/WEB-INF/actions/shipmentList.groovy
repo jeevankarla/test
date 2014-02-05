@@ -12,8 +12,6 @@ import org.ofbiz.entity.condition.*;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.network.NetworkServices;
-import org.ofbiz.network.LmsServices;
 import org.ofbiz.widget.form.ModelFormField.EntityOptions;
 import org.ofbiz.entity.util.EntityFindOptions;
 

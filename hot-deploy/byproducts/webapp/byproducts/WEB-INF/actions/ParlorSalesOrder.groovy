@@ -15,13 +15,13 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
-import org.ofbiz.network.NetworkServices;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.accounting.tax.TaxAuthorityServices;
+import in.vasista.vbiz.facility.util.FacilityUtil;
 
 rounding = RoundingMode.HALF_UP;
 
@@ -57,7 +57,7 @@ if(!facilityList){
 }
 
 result = [:];
-result = NetworkServices.isFacilityAcitve(dctx ,[facilityId: boothId, userLogin: userLogin]);
+result = FacilityUtil.isFacilityAcitve(dctx ,[facilityId: boothId, userLogin: userLogin]);
 if (ServiceUtil.isError(result)) {
 	Debug.logInfo("Parlor ["+boothId+"] is not Active !", "");
 	context.errorMessage = "Parlor ["+boothId+"] is not Active !";

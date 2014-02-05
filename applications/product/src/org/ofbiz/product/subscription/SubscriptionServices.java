@@ -60,7 +60,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.common.uom.UomWorker;
-import  org.ofbiz.network.NetworkServices;
+import  org.ofbiz.network.DeprecatedNetworkServices;
 /**
  * Subscription Services
  */
@@ -448,7 +448,7 @@ public class SubscriptionServices {
         Map<String, Object> result = new HashMap<String, Object>();
         Map boothsPaymentsDetail = FastMap.newInstance();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        boothsPaymentsDetail = NetworkServices.getBoothPayments(delegator ,dispatcher ,userLogin , UtilDateTime.nowDateString("yyyy-MM-dd"),null ,facilityId ,null ,Boolean.FALSE);        
+        boothsPaymentsDetail = DeprecatedNetworkServices.getBoothPayments(delegator ,dispatcher ,userLogin , UtilDateTime.nowDateString("yyyy-MM-dd"),null ,facilityId ,null ,Boolean.FALSE);        
         List boothPaymentsList = (List)boothsPaymentsDetail.get("boothPaymentsList");
         if (UtilValidate.isEmpty(boothPaymentsList)) {
             Debug.logError("No payment dues found for booth; " + facilityId, module);

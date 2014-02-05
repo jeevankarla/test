@@ -5,7 +5,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import  org.ofbiz.network.NetworkServices;
 import org.ofbiz.service.LocalDispatcher;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +16,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
-import org.ofbiz.network.NetworkServices;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 
 dctx = dispatcher.getDispatchContext();
@@ -55,7 +54,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		byProdList =[];
 		lmsProdSeqList=[];
 		byProdSeqList=[];
-		boothsList = (NetworkServices.getRouteBooths(delegator , routeId));
+		boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
 		if(UtilValidate.isNotEmpty(boothsList)){
 			ownerParty = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
 			partyId = ownerParty.ownerPartyId;
@@ -75,7 +74,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				dayEnd = UtilDateTime.getDayEnd(estimatedDeliveryDateTime);
 				Map boothWiseMap =[:];
 				boothsList.each{ boothId ->
-					dayTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
+					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
 					if(UtilValidate.isNotEmpty(dayTotals)){
 						productTotals = dayTotals.get("productTotals");		
 						Map boothWiseProd= FastMap.newInstance();						
@@ -109,7 +108,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					}
 					
 				}
-				routeTotals = NetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
+				routeTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
 				routeAmount=0;
 				
 				productWiseTotalCratesMap =[:];

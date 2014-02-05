@@ -296,6 +296,77 @@
             </widgets>
         </section>
     </screen>
+	<screen name="AbsenteeList">
+		<section>
+			<actions>
+               <set field="titleProperty" value="AbsenteeList"/>	            
+               <set field="tabButtonItem" value="AbsenteeList"/>            
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+              <!--  <entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+               <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/> -->
+			</actions>
+			<widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                   		<section>
+                   			<condition>
+	               				<or>
+	          						<if-has-permission permission="INDENT" action="_ADMIN"/>
+	          						<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+	                   			</or>
+           				 	</condition>
+                      		<widgets>
+                           		<label style="h3">Coming Soon ...!</label>                      
+                           	</widgets>
+                    	</section>  							  	
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="GatePassShipment">
+		<section>
+			<actions>
+               <set field="titleProperty" value="GatePassShipment"/>	            
+               <set field="tabButtonItem" value="GatePassShipment"/>            
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+              <!--  <entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+               <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/> -->
+			</actions>
+			<widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                   		<section>
+                   			<condition>
+	               				<or>
+	          						<if-has-permission permission="INDENT" action="_ADMIN"/>
+	          						<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+	                   			</or>
+           				 	</condition>
+                      		<widgets>
+                           		<label style="h3">Coming Soon ...!</label>                      
+                           	</widgets>
+                    	</section>  							  	
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="DispatchReconciliation">
 		<section>
 			<actions>
@@ -344,7 +415,7 @@
 			    <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />               
                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
-               <script location="component://product/webapp/facility/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/> 
               <!--  <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/>  -->
                <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>
@@ -491,7 +562,7 @@
                     </condition-list>
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
-                <set field="productList" value="${groovy:import org.ofbiz.base.util.*; return org.ofbiz.network.NetworkServices.getLmsProducts(dispatcher.getDispatchContext(),UtilMisc.toMap());}" type="List"/>
+                <set field="productList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getAllLmsAndByProdProducts(dispatcher.getDispatchContext(),UtilMisc.toMap());}" type="List"/>
                 <!-- <script location="component://product/webapp/facility/WEB-INF/actions/facility/recentChangeIndents.groovy"/> -->
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>
                 <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
@@ -501,7 +572,7 @@
                 </entity-condition>
             
                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
-               <script location="component://product/webapp/facility/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> 
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> 
                <set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/>          
                <set field="routeId" from-field="parameters.routeId"/>                       
             </actions>
@@ -739,7 +810,7 @@
                 		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/> -->                 	 
                 	</condition-list>
                 </entity-condition>
-                <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return org.ofbiz.network.NetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/>
+                <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/>
             </actions>
             <widgets>
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">

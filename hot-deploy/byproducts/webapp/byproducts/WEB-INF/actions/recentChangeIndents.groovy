@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
-import  org.ofbiz.network.NetworkServices;
 uiLabelMap = UtilProperties.getResourceBundleMap("OrderUiLabels", locale);
 
 lastChangeSubProdMap=[:];
@@ -71,7 +70,7 @@ if(("newIndent".equals(changeFlag)) ){
 
 if(("supplDeliverySchedule".equals(changeFlag)) ){
 	
-	List shipmentIds = NetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"BYPRODUCTS_SUPPL");
+	List shipmentIds = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"BYPRODUCTS_SUPPL");
 	
 	List exprList = [];
 	

@@ -305,7 +305,7 @@
                     </condition-list>
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
-                <set field="productList" value="${groovy:import org.ofbiz.base.util.*; return org.ofbiz.network.NetworkServices.getLmsProducts(dispatcher.getDispatchContext(),UtilMisc.toMap());}" type="List"/>
+                <set field="productList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getAllLmsAndByProdProducts(dispatcher.getDispatchContext(),UtilMisc.toMap());}" type="List"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/recentChangeIndents.groovy"/>
                 <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
                 	<condition-list>

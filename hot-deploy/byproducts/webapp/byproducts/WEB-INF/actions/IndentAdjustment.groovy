@@ -12,7 +12,6 @@ import org.ofbiz.base.util.UtilDateTime;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
-import  org.ofbiz.network.NetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 

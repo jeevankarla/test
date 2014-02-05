@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class LmsServices {
 
-    public static final String module = NetworkServices.class.getName();
+    public static final String module = DeprecatedNetworkServices.class.getName();
     
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals;
@@ -1217,7 +1217,7 @@ public class LmsServices {
 			// ,supplyDateTime) ; i++){
 			boothPaymentCtx.put("fromDate",UtilDateTime.addDaysToTimestamp(prevBankRemittanceDate, 1));
 			boothPaymentCtx.put("thruDate", supplyDateTime);			
-			Map paidPaymentsMap = NetworkServices.getBoothPaidPayments(dctx,boothPaymentCtx);
+			Map paidPaymentsMap = DeprecatedNetworkServices.getBoothPaidPayments(dctx,boothPaymentCtx);
 			Debug.logImportant("paidPaymentsMap==============="	+paidPaymentsMap, module);
 			cashReceived = cashReceived.add((BigDecimal) paidPaymentsMap.get("invoicesTotalAmount"));
 

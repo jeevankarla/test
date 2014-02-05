@@ -6,7 +6,6 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
-import org.ofbiz.network.NetworkServices;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import javolution.util.FastMap;

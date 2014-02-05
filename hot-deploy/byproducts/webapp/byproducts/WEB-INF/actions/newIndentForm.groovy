@@ -15,7 +15,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.network.NetworkServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
-
+import in.vasista.vbiz.facility.util.FacilityUtil;
 if(parameters.boothId){
 	parameters.boothId = parameters.boothId.toUpperCase();
 }
@@ -104,7 +104,7 @@ if((!("SPECIAL_ORDER_BYPROD".equals(productSubscriptionTypeId))) && (!("GIFT_BYP
 	context.booth = facility;
 	
 }
-result = NetworkServices.isFacilityAcitve(dctx ,[facilityId: boothId, userLogin: userLogin]);
+result = FacilityUtil.isFacilityAcitve(dctx ,[facilityId: boothId, userLogin: userLogin]);
 if (ServiceUtil.isError(result)) {
 	Debug.logInfo(boothId+" Party code is not Active !", "");
 	context.errorMessage = boothId+" Party code is not Active !";

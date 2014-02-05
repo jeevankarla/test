@@ -683,14 +683,14 @@
             	<parameter param-name="ChangeIndentTitle" value="ChangeIndentInit"/>
             </link>
        </menu-item>       
-       <menu-item name="GatePassInit" title="${uiLabelMap.GatePass}">
+      <menu-item name="GatePassShipment" title="${uiLabelMap.GatePass}">
 			<condition>
 				<or>
 					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
 					<if-has-permission permission="GATEPASS"  action="_ADMIN"/>
 				</or>            	
             </condition>         
-       	    <link target="GatePassInit">
+       	    <link target="GatePassShipment">
             </link>
        </menu-item>
      <!--    <menu-item name="Returns" title="${uiLabelMap.Returns}">
@@ -767,8 +767,8 @@
             </condition>       
             <link target="FindProductPayments"/>        
        </menu-item> -->
-        <menu-item name="AbsenteeOverride" title="${uiLabelMap.AbsenteeOverride}">
-            <link target="AbsenteeOverride"/>
+        <menu-item name="AbsenteeList" title="${uiLabelMap.AbsenteeOverride}">
+            <link target="AbsenteeList"/>
         </menu-item> 
       <!--   <menu-item name="FinancialHistory" title="${uiLabelMap.PartyFinancialHistory}">
             <condition>

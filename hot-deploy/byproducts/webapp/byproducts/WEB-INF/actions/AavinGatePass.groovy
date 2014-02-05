@@ -39,7 +39,6 @@
 	import java.math.BigDecimal;
 	import java.math.MathContext;
 	import org.ofbiz.base.util.UtilNumber;
-	import  org.ofbiz.network.NetworkServices;
 	import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	import in.vasista.vbiz.byproducts.ByProductServices;
 	import org.ofbiz.product.price.PriceServices;

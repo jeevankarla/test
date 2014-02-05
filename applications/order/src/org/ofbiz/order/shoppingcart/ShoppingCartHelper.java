@@ -202,7 +202,7 @@ public class ShoppingCartHelper {
             Debug.logInfo("parent productid " + pProductId,module);
             //if (product != null && !"Y".equals(product.getString("isVariant")))
             //    pProductId = null;
-
+            Debug.log("carthelper productid " + productId);
         }
 
         // Get the additional features selected for the product (if any)
@@ -233,12 +233,14 @@ public class ShoppingCartHelper {
         int itemId = -1;
         try {
             if (productId != null) {
-
+            	 Debug.log("add or increase productid item");
                        itemId = cart.addOrIncreaseItem(productId, amount, quantity, reservStart, reservLength,
                                                 reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate, additionalFeaturesMap, attributes,
                                                 catalogId, configWrapper, itemType, itemGroupNumber, pProductId, dispatcher);
 
             } else {
+            	 Debug.log("non productid ");
+            	 Debug.log("non productid "+price);
                 itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, itemGroupNumber, dispatcher);
             }
 
