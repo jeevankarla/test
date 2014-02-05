@@ -50,6 +50,12 @@
         <attribute name="routeId" type="String" mode="IN" optional="false"/>
         <attribute name="newRouteId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="cancelReturn" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelReturn" auth="true">
+        <description>Cancel Return Items</description>
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+    </service>
+        
     <service name="createByProduct" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createByProduct" auth="true">
         <description>Create ByProducts</description>
@@ -503,6 +509,18 @@
         <attribute name="prodIndentQtyCat" mode="OUT" type="Map" optional="true"/>
         <attribute name="tripId" mode="INOUT" type="String" optional="true"/>
         <attribute name="qtyInPieces" mode="OUT" type="Map" optional="true"/>       
+    </service>
+    
+    <service name="getOrderReturnItems" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getOrderReturnItems" auth="true">
+        <attribute name="boothId" mode="IN" type="String" optional="false"/>
+        <attribute name="returnType" mode="IN" type="String" optional="false"/>
+        <attribute name="returnHeaderTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="tripId" mode="IN" type="String" optional="false"/>      
+        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
+        <attribute name="routeId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderReturnList" mode="OUT" type="List" optional="true"/>
+        <attribute name="returnId" mode="OUT" type="String" optional="true"/>
     </service>
     
     <service name="getBoothOrderDetails" engine="java"

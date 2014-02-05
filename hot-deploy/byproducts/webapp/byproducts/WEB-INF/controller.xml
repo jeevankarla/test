@@ -69,6 +69,23 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="ConfigChange"/>    	
     </request-map>
+    <request-map uri="FindReturns">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindReturns"/>    	
+    </request-map>
+    <request-map uri="cancelReturn">
+    	<security https="true" auth="true"/>
+    	<event type="service" path="" invoke="cancelReturn" />    	
+    	<response name="success" type="view" value="FindReturns"/>    	
+    </request-map>
+    <!-- <request-map uri="returnHeader">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="returnHeader"/>    	
+    </request-map> -->
+    <request-map uri="returnHeaderItems">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="ReturnItems"/>    	
+    </request-map>
     
     <request-map uri="makeTransporterPayment">
     	<security https="true" auth="true"/>
@@ -292,6 +309,7 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    
     <request-map uri="processOrderEntryNew">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="createParlorSalesIndent" global-transaction="true"/>
@@ -796,6 +814,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="getOrderReturnItemsJson">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getOrderReturnItems"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     
     <request-map uri="getPartyFinAccountInfo">
         <security auth="true" https="true"/>    
@@ -809,7 +833,6 @@
         <response name="success" type="request" value="TruckSheetMotherDairy"/>
         <response name="error" type="request" value="TruckSheetMotherDairy"/>
     </request-map>
-    
     
     <!-- NG request Mapping -->
       <request-map uri="TruckSheetMotherDairy">
@@ -929,6 +952,9 @@
 	<view-map name="DespatchReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#DespatchReportCSV" content-type="text/csv" encoding="none"/>
 	<view-map name="IndentVsDispatchMonthlyCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentVsDispatchMonthlyCSV" content-type="text/csv" encoding="none"/>
 	<view-map name="FindByProduct" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindByProduct"/>
+	<view-map name="FindReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindReturns"/>
+	<view-map name="returnHeader" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnHeader"/>
+    <view-map name="ReturnItems" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnItems"/> 
 	<view-map name="EditByProduct" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EditByProduct"/>
 	<view-map name="EditByProductPrices" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EditByProductPrices"/>
 	
@@ -971,7 +997,6 @@
     <view-map name="LookupParlour" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupParlour"/>
     <view-map name="StockVariance" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#StockVariance"/>
     <view-map name="DeliverySchedule" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#DeliverySchedule"/>
-
     <view-map name="SupplDeliverySchedule" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SupplDeliverySchedule"/>
     <view-map name="SupplDeliveryScheduleNew" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SupplDeliveryScheduleNew"/>    
     <view-map name="SubscriptionIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SubscriptionIndent"/>

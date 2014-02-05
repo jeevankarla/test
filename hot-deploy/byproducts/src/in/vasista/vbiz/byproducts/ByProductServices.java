@@ -1772,6 +1772,39 @@ public class ByProductServices {
                //::TODO:: set shipment status
            }
            
+           
+           List indentedProduct = EntityUtil.getFieldListFromEntityList(subscriptionProductsList,"productId", true);
+           List prodQtyList = FastList.newInstance();
+           for(int i=0;i< indentedProduct.size();i++){
+        	   String indProd = (String)indentedProduct.get(i);
+        	   BigDecimal prodTotalQty = BigDecimal.ZERO;
+        	   List<GenericValue> prodSubscriptions = EntityUtil.filterByCondition(subscriptionProductsList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, indProd));
+        	   Map prodQty = FastMap.newInstance();
+        	   for(GenericValue prodSubscription: prodSubscriptions){
+        		   BigDecimal qty = prodSubscription.getBigDecimal("quantity");
+        		   prodTotalQty = prodTotalQty.add(qty);
+        	   }
+        	   prodQty.put("productId", indProd);
+        	   prodQty.put("quantity", prodTotalQty);
+        	   prodQtyList.add(prodQty);
+           }
+           Map processDispatchReconcilHelperCtx = UtilMisc.toMap("userLogin",userLogin);
+     	  	processDispatchReconcilHelperCtx.put("shipmentId", shipmentId);
+     	  	processDispatchReconcilHelperCtx.put("routeId", routeId);
+     	  	processDispatchReconcilHelperCtx.put("effectiveDate", estimatedDeliveryDate);
+     	  	processDispatchReconcilHelperCtx.put("productQtyList", prodQtyList);
+     	  	try{
+     		  result = dispatcher.runSync("processDispatchReconcilHelper",processDispatchReconcilHelperCtx);
+     		
+     		  if (ServiceUtil.isError(result)) {
+     			  String errMsg =  ServiceUtil.getErrorMessage(result);
+     			  Debug.logError(errMsg , module);
+     		  }
+     	  }catch (Exception e) {
+     		  	Debug.logError(e, "Problem updating ItemIssuance for Route " + routeId, module);     
+     	  		
+     	  }	
+           
            String tempSubId = "";
            String tempTypeId = "";
            String subId;
@@ -1988,6 +2021,7 @@ public class ByProductServices {
             GenericValue subscriptionProduct = i.next();
             if (subscriptionProduct != null) {
             	try { 
+            		
             		Map<String, Object> priceResult;
                     Map<String, Object> priceContext = FastMap.newInstance();
                     priceContext.put("userLogin", userLogin);   
@@ -2042,6 +2076,10 @@ public class ByProductServices {
 						BigDecimal tempQuantity  = subscriptionProduct.getBigDecimal("quantity").multiply(productDetail.getBigDecimal("quantityIncluded"));
 						quantity = quantity.add(tempQuantity);
 					}*/
+            		
+            		
+            		
+            		
             		
                 } catch (Exception exc) {
                     Debug.logError("Error adding product with id " + subscriptionProduct.getString("productId") + " to the cart: " + exc.getMessage(), module);
@@ -2120,7 +2158,7 @@ public class ByProductServices {
    	  	 			Debug.logError(errMsg , module);       				
    	  	 			return result;
    	  	 		}
-   			 
+
    	  	 	}catch (Exception e) {
    	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);     
    	  			  return resultMap;			  
@@ -2130,7 +2168,7 @@ public class ByProductServices {
         if (UtilValidate.isNotEmpty(orderId)) {
             boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);       
             
-            try{            	
+            /*try{            	
         		resultMap = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"userLogin", userLogin));
         		if (ServiceUtil.isError(resultMap)) {
                     Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(resultMap), module);
@@ -2139,7 +2177,7 @@ public class ByProductServices {
 	        	Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
 	             invoiceCtx.put("userLogin", userLogin);
 	             invoiceCtx.put("statusId","INVOICE_READY");
-	             /*try{
+	             try{
 	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
 	             	if (ServiceUtil.isError(invoiceResult)) {
 	             		Debug.logError(invoiceResult.toString(), module);
@@ -2148,20 +2186,20 @@ public class ByProductServices {
 	             }catch(GenericServiceException e){
 	             	 Debug.logError(e, e.toString(), module);
 	                 return ServiceUtil.returnError(e.toString());
-	             } */       		
+	             }        		
         		// apply invoice if any adavance payments from this  party
 				  			            
-				/*Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
+				Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
 				if (ServiceUtil.isError(resultPaymentApp)) {						  
 	        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
 	               return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
-		        }*/				           
+		        }				           
 		          
             }catch (Exception e) {
                 Debug.logError(e, module);
-            } 
+            } */
             // handle Replacement here 
-          /*  if(productSubscriptionTypeId.equals("REPLACEMENT_BYPROD")){
+            /*if(productSubscriptionTypeId.equals("REPLACEMENT_BYPROD")){
             	List<GenericValue> transProductList = FastList.newInstance();
             	
             	for(GenericValue SubscriptionProduct : subscriptionProductsList){
@@ -2189,7 +2227,6 @@ public class ByProductServices {
        	  	 	}
             }*/
             
-           
             resultMap.put("orderId", orderId);
             //resultMap.put("quantity", quantity);  
             //Debug.logInfo("quantity=" + quantity, module);                    
@@ -2633,13 +2670,32 @@ public class ByProductServices {
         	Debug.logError("Truck sheet cancel not allowed after shipment date", module);
     		return ServiceUtil.returnError("Truck sheet cancel not allowed after Shipment date"); 
         }
-
+        /*
+		 * start removing the itemIssuance
+		 */
+        List shipListId = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(shipmentList)){
+        	shipListId = (List)EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", true);
+        }
+        try{
+        	List<GenericValue> itemIssuance = delegator.findList("ItemIssuance", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipListId), null, null, null, false);
+        	if (UtilValidate.isNotEmpty(itemIssuance)) {
+				delegator.removeAll(itemIssuance); 
+			}
+		} catch (GenericEntityException e) {
+			Debug.logError("Error cancelling item issuance for shipment", module);
+    		return ServiceUtil.returnError("Error cancelling item issuance for shipment");             
+		}
+		/*
+		 * removing the itemIssuance
+		 */        
         for(int i = 0; i < shipmentList.size(); i++){
         	
         	shipment = (GenericValue) shipmentList.get(i);
         	shipmentId = (String) shipment.get("shipmentId");
         	         
         	shipment.set("statusId", "CANCEL_INPROCESS");
+        	
         	try{
         		shipment.store();    		
         	}catch (Exception e) {
@@ -2657,7 +2713,7 @@ public class ByProductServices {
     		Debug.logError("Unable to get records from DataBase"+e, module);
     		return ServiceUtil.returnError(e.getMessage()); 
 		}  
-    	
+        
         return result;
     }  
     public static Map<String, Object> cancelByProdShipmentInternal(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -6721,7 +6777,6 @@ public class ByProductServices {
 					 Map<String, Object> productInputMap = FastMap.newInstance();
 					 List<GenericValue> productList = ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 					 List<String> products = EntityUtil.getFieldListFromEntityList(productList, "productId", true);
-					 Debug.log("productList @@@@@@@@@@@@@@@@@@"+products);
 					 for(String product : products){
 						 productInputMap = UtilMisc.toMap("userLogin", userLogin, "productId", product, "facilityId", facilityId, "minimumStock", BigDecimal.ZERO, "lastInventoryCount", BigDecimal.ZERO);
 						 resultMap = dispatcher.runSync("createProductFacility", productInputMap);
@@ -6763,6 +6818,39 @@ public class ByProductServices {
 		return result;
 	}
 	
+	public static Map<String, Object> cancelReturn(DispatchContext dctx, Map context) {
+		
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String returnId = (String) context.get("returnId");
+		try{
+			GenericValue returnHeader = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
+			returnHeader.set("statusId", "RETURN_CANCELLED");
+			returnHeader.store();
+		}catch(GenericEntityException e){
+			Debug.logError(e, module);
+			return ServiceUtil.returnError("Error fetching return header" + e);
+		}
+		
+		try{
+			Map inputMap = FastMap.newInstance();
+			inputMap.put("userLogin", userLogin);
+			inputMap.put("returnId", returnId);
+			result = dispatcher.runSync("cancelReturnItems", inputMap);
+			if(ServiceUtil.isError(result)){
+				Debug.logError("Error in service cancelReturnItem", module);
+				return ServiceUtil.returnError("Error while cancelling cancelReturnItem");
+			}
+		}catch(GenericServiceException e){
+			Debug.logError(e, module);
+			return ServiceUtil.returnError("Error while calling serivce cancelReturnItem" + e);
+		}
+		
+		result = ServiceUtil.returnSuccess("Successfully cancelled returned items with Id:"+returnId);
+		return result;
+	}
 	public static Map<String, Object> UpdateByProductFacility(DispatchContext dctx, Map context) {
 		
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();

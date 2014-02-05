@@ -190,6 +190,112 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="FindReturns">
+		<section>
+			<actions>
+               <set field="titleProperty" value="FindReturns"/>	            
+               <set field="tabButtonItem" value="Returns"/>
+               <set field="tabButtonItem2" value="findReturn"/>            
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+               <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+			</actions>
+			<widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ReturnSubTabBar"/>
+                   		<screenlet title="${uiLabelMap.PageTitleFindReturn}">
+                            <container>
+                                <link style="buttontext" target="returnHeaderItems" text="${uiLabelMap.OrderCreateNewReturn}"/>
+                            </container>
+                            <include-form name="FindReturns" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                            
+                            
+                        </screenlet>
+                        <screenlet title="List Returns">
+                        	<include-form name="ListReturns" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        </screenlet>
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<!-- <screen name="ReturnHeader">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleReturnHeader"/>
+                <set field="headerItem" value="return"/>
+                <set field="tabButtonItem" value="Returns"/>
+                <set field="tabButtonItem2" value="returnItems"/>
+                <set field="returnId" from-field="parameters.returnId"></set>
+                <set field="layoutSettings.javaScripts[+0]" value="/ordermgr/images/js/return.js" global="true"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/return/ReturnHeader.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ReturnSubTabBar"/>
+                        <section>
+                        	<widgets>
+                            	<include-form name="EditReturn" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    <screen name="ReturnItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleReturnItems"/>
+                <set field="headerItem" value="return"/>
+                <set field="tabButtonItem" value="Returns"/>
+                <set field="tabButtonItem2" value="returnItems"/>
+                <set field="returnId" from-field="parameters.returnId"/>
+                <set field="screenFlag" value="returns"/>
+                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               	<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getReturnItems.groovy"/>
+               <set field="shipDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(shipmentDate, &quot;dd MMMMM, yyyy&quot;);}" />
+               <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                	<field-map field-name="statusId" from-field="returnHeader.statusId"/>
+            	</entity-one>
+            	<entity-condition list="headerType" entity-name="ReturnHeaderType"/>
+            	<entity-one value-field="returnHeaderTypeId" entity-name="ReturnHeaderType" >
+            		<field-map field-name="returnHeaderTypeId" />
+            	</entity-one>               
+               <script location="component://product/webapp/facility/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/> 
+                <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getReturnItems.groovy"/> -->
+                <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ReturnSubTabBar"/>
+                        <section>
+                            <widgets>
+                                <platform-specific>
+                                	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/returnEntryNew.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 	<screen name="DispatchReconciliation">
 		<section>
 			<actions>
@@ -198,6 +304,7 @@
                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+               <set field="screenFlag" value="reconcil"/>
                <entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
                 	<condition-list>
                     	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
