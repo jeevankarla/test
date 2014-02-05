@@ -46,7 +46,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.network.LMSSalesHistoryServices;
-import org.ofbiz.network.NetworkServices;
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
@@ -65,7 +64,6 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.GenericPK;
-import org.ofbiz.network.NetworkServices;
 import org.ofbiz.base.util.UtilMisc;
 
 
@@ -900,7 +898,6 @@ public class ByProductReportServices {
 	        }           
 	        Map<String, Object> boothTotals = FastMap.newInstance();
 	        try {
-	        	// List shipmentIds=   NetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(fromDate, "yyyy-MM-dd HH:mm:ss"),null);
 	        	List shipmentIds = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, thruDate);
 	        	 
 	        	for(String facilityId : facilityIds){
@@ -947,7 +944,7 @@ public class ByProductReportServices {
 		        		Map<String, Object> paidPaymentCtx = UtilMisc.<String, Object>toMap("fromDate", UtilDateTime.getNextDayStart(fromDate));    
 			        	paidPaymentCtx.put("thruDate", UtilDateTime.getNextDayStart(thruDate));
 						paidPaymentCtx.put("facilityId", facilityId);
-						Map boothsPaymentsDetail =  NetworkServices.getBoothPaidPayments( dctx , paidPaymentCtx);
+						Map boothsPaymentsDetail =  ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentCtx);
 			 			if(UtilValidate.isNotEmpty(boothsPaymentsDetail)){
 			 				reciepts = (BigDecimal)boothsPaymentsDetail.get("invoicesUnRoundedTotalAmount");
 			 			}
@@ -956,7 +953,7 @@ public class ByProductReportServices {
 		        		Map<String, Object> paidPaymentCtx = UtilMisc.<String, Object>toMap("fromDate", fromDate);    
 			        	paidPaymentCtx.put("thruDate", thruDate);
 						paidPaymentCtx.put("facilityId", facilityId);
-						Map boothsPaymentsDetail =  NetworkServices.getBoothPaidPayments( dctx , paidPaymentCtx);
+						Map boothsPaymentsDetail =  ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentCtx);
 			 			if(UtilValidate.isNotEmpty(boothsPaymentsDetail)){
 			 				reciepts = (BigDecimal)boothsPaymentsDetail.get("invoicesUnRoundedTotalAmount");
 			 			}
