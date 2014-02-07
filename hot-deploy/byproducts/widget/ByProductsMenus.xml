@@ -896,6 +896,7 @@
             	
             </condition>         
             <link target="ChangeIndentInit">
+            	<parameter param-name="screenFlag" value="indent"/>
             	<parameter param-name="ChangeIndentTitle" value="ChangeIndentInit"/>
             </link>
        </menu-item>
