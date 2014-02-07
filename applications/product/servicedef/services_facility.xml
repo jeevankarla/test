@@ -1111,7 +1111,7 @@ under the License.
         <attribute name="fromDate"  mode="IN" type="Timestamp" optional="true"/>
         <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>                                              
     </service>
-    <service name="isFacilityAcitve" engine="java"  location="org.ofbiz.network.NetworkServices" invoke="isFacilityAcitve">
+    <service name="isFacilityAcitve" engine="java"  location="in.vasista.vbiz.facility.util.FacilityUtil" invoke="isFacilityAcitve">
         <description>check is facility open or closed </description>
         <attribute name="facilityId" mode="IN" type="String" optional="false"/>
         <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>                                            
