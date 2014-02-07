@@ -406,15 +406,15 @@ function updateGrid(){
 				if(screenFlag != 'DSCorrection'){
 					var crateQty = parseFloat(qtyInPieces[prod]);
 					var supType = prodIndentQtyCat[prod];
-					data[args.row]["uomId"] = supType.charAt(0);
-					data[args.row]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
-					roundedAmount = Math.round((qty*price*crateQty) * 100) / 100;
+					//data[args.row]["uomId"] = supType.charAt(0);
+					//data[args.row]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
+					//roundedAmount = Math.round((qty*price*crateQty) * 100) / 100;
 				}
 				else{
 					roundedAmount = Math.round((qty*price) * 100) / 100;
 				}
-				data[args.row]["unitPrice"] = price;
-				data[args.row]["amount"] = (roundedAmount);
+				//data[args.row]["unitPrice"] = price;
+				//data[args.row]["amount"] = (roundedAmount);
 				_grid.updateRow(args.row);
 				var totalAmount = 0;
 				for (i = 0; i < data.length; i++) {
@@ -550,22 +550,22 @@ function updateGrid(){
 			if(isNaN(qty)){
 				qty = 0;
 			}
-			data[i]["unitPrice"] = price;
+			//data[i]["unitPrice"] = price;
 			if(screenFlag != 'DSCorrection'){
-				var crateQty = parseFloat(qtyInPieces[prod]);
-				data[i]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
-				var supType = prodIndentQtyCat[prod];
-				data[i]["uomId"] = supType.charAt(0);
-				data[i]["amount"] = Math.round((qty*price*crateQty) * 100)/100;
+				//var crateQty = parseFloat(qtyInPieces[prod]);
+				//data[i]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
+				//var supType = prodIndentQtyCat[prod];
+				//data[i]["uomId"] = supType.charAt(0);
+				//data[i]["amount"] = Math.round((qty*price*crateQty) * 100)/100;
 			}
 			else{
-				data[i]["amount"] = Math.round((qty*price) * 100)/100;
+				//data[i]["amount"] = Math.round((qty*price) * 100)/100;
 			}
 			_grid.updateRow(i);
 		}
 		var totalAmount = 0;
 		for (i = 0; i < data.length; i++) {
-			totalAmount += data[i]["amount"];
+			//totalAmount += data[i]["amount"];
 		}
 		var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 		if(amt > 0 ){
