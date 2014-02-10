@@ -636,22 +636,22 @@ under the License.
     <menu name="FacilityGroupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="EditFacilityGroup" title="${uiLabelMap.ProductFacilityGroup}">
             <link target="EditFacilityGroup">
-                <parameter param-name="facilityGroupId" from-field="facilityGroupId"/>
+                <parameter param-name="facilityGroupId" from-field="parameters.facilityGroupId"/>
             </link>
         </menu-item>
         <menu-item name="EditFacilityGroupRollup" title="${uiLabelMap.ProductRollups}">
             <link target="EditFacilityGroupRollup">
-                <parameter param-name="facilityGroupId" from-field="facilityGroupId"/>
+                <parameter param-name="facilityGroupId" from-field="parameters.facilityGroupId" />
             </link>
         </menu-item>
         <menu-item name="EditFacilityGroupMembers" title="${uiLabelMap.ProductFacilities}">
             <link target="EditFacilityGroupMembers">
-                <parameter param-name="facilityGroupId" from-field="facilityGroupId"/>
+                <parameter param-name="facilityGroupId" from-field="parameters.facilityGroupId"/>
             </link>
         </menu-item>
         <menu-item name="EditFacilityGroupRoles" title="${uiLabelMap.PartyRoles}">
             <link target="EditFacilityGroupRoles">
-                <parameter param-name="facilityGroupId" from-field="facilityGroupId"/>
+                <parameter param-name="facilityGroupId" from-field="parameters.facilityGroupId"/>
             </link>
         </menu-item>
     </menu>

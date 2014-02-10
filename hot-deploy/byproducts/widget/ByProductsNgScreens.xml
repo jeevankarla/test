@@ -275,7 +275,7 @@
             	<entity-one value-field="returnHeaderTypeId" entity-name="ReturnHeaderType" >
             		<field-map field-name="returnHeaderTypeId" />
             	</entity-one>               
-               <script location="component://product/webapp/facility/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+              <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/> 
                 <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getReturnItems.groovy"/> -->
                 <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/>
