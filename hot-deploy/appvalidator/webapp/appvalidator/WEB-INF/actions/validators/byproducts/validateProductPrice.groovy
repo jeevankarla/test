@@ -13,7 +13,6 @@ import org.ofbiz.base.util.*;
 import javolution.util.FastMap;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductReportServices;
-import org.ofbiz.network.NetworkServices;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -25,7 +24,7 @@ numWarns = 0;
 numErrors = 0;
 
 dctx = dispatcher.getDispatchContext();
-productList = NetworkServices.getAllLmsAndByProdProducts(dctx, UtilMisc.toMap("salesDate", UtilDateTime.nowTimestamp()));
+productList = ByProductServices.getByProductProducts(delegator, UtilDateTime.nowTimestamp());
 productList.each{ eachProd ->
    status = "OK";
    hasError = false;

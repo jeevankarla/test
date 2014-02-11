@@ -13,7 +13,6 @@ import org.ofbiz.base.util.*;
 import javolution.util.FastMap;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductReportServices;
-import org.ofbiz.network.NetworkServices;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
