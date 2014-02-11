@@ -55,6 +55,73 @@
         </widgets>     
 		</section>
     </screen>
+    <screen name="EmployeeSearch">
+        <section>
+            <actions>
+            <set field="tabButtonItem" value="EmployeeSearch"/>
+            <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+            <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set> 
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      	<section>
+                        	<widgets>
+                        	<link target="EmployeeSubsidy" text="Create" style="buttontext"></link>
+                        		<screenlet title="Employee Search">
+                        			<include-form name="EmployeeSearchForm" location="component://byproducts/widget/EmployeeSearchForm.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Employee Search Result">
+                        			<include-form name="EmployeeSearchResultForm" location="component://byproducts/widget/EmployeeSearchForm.xml"/>
+                        		</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="EmployeeSubsidy">
+        <section>
+            <actions>
+            	<set field="tabButtonItem" value="EmployeeSearch"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      	<section>
+                        	<widgets>
+                        		 <screenlet title="Employee Subsidy Form">
+                        			<include-form name="EmployeeSubsidyForm" location="component://byproducts/widget/EmployeeSearchForm.xml"/>
+                        		</screenlet>
+                            	                   
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="CreateEmployee">
+        <section>
+            <actions>
+            <set field="tabButtonItem" value="EmployeeSearch"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      	<section>
+                        	<widgets>
+                        		<screenlet title="EmployeeSearchForm">
+                        			<include-form name="EmployeeSearchForm" location="component://byproducts/widget/EmployeeSearchForm.xml"/>
+                        		</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="TruckSheet">
 		<section>
 			<actions>

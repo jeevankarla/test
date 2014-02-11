@@ -1730,6 +1730,7 @@ under the License.
         location="org.ofbiz.network.LmsServices" invoke="endSubscriptionIndent">
         <description>End Subscription Products</description>
         <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="productSubscriptionTypeId" mode="IN" type="String" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/> 
     </service>
     <service name="cancelVendorMarginReport" engine="java" auth="true" transaction-timeout="300"

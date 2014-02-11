@@ -1335,6 +1335,7 @@ public class LmsServices {
         Map result = ServiceUtil.returnSuccess();       
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String facilityId = (String)context.get("facilityId");
+        String productSubscriptionTypeId = (String)context.get("productSubscriptionTypeId");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         String productId = (String)context.get("productId");
         try{
@@ -1344,6 +1345,9 @@ public class LmsServices {
     		conditionList.add(EntityCondition.makeCondition("subscriptionId",EntityOperator.IN, subscriptionList));
     		if(UtilValidate.isNotEmpty(productId)){
     			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
+    		}
+    		if(UtilValidate.isNotEmpty(productSubscriptionTypeId)){
+    			conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId",EntityOperator.EQUALS, productSubscriptionTypeId));
     		}
     		EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
     		List<GenericValue> subscriptionProduct = delegator.findList("SubscriptionProduct", condition, null, null, null, false);

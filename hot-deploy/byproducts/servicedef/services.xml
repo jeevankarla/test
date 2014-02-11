@@ -508,7 +508,8 @@
         <attribute name="productPrice" mode="OUT" type="Map" optional="true"/>   
         <attribute name="prodIndentQtyCat" mode="OUT" type="Map" optional="true"/>
         <attribute name="tripId" mode="INOUT" type="String" optional="true"/>
-        <attribute name="qtyInPieces" mode="OUT" type="Map" optional="true"/>       
+        <attribute name="qtyInPieces" mode="OUT" type="Map" optional="true"/>  
+        <attribute name="isEnableProductSubscription" mode="IN" type="Boolean" optional="true"/>           
     </service>
     
     <service name="getOrderReturnItems" engine="java"
@@ -560,7 +561,7 @@
         <attribute name="fromDate" type="java.sql.Timestamp" optional="false" mode="IN"/>
         <attribute name="thruDate" type="java.sql.Timestamp" optional="false" mode="IN"/>
     </service> -->
-     <service name="finalizeOrders" engine="java"
+      <service name="finalizeOrders" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="finalizeOrders" auth="true">
         <attribute name="routeId" mode="IN" type="String" optional="false"/>
         <attribute name="tripId" mode="IN" type="String" optional="true"/>
@@ -568,5 +569,14 @@
         <attribute name="shipmentId" mode="IN" type="String" optional="false"/>
         <attribute name="shipmentTypeId" mode="IN" type="String" optional="false"/>
     </service>
-    
+    <service name="createFacilityEmployee" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createFacilityEmployee">
+        <description>Create Employee</description>
+        <attribute name="facilityId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
 </services>

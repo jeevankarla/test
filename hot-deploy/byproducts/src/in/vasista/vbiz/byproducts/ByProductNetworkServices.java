@@ -792,9 +792,15 @@ public class ByProductNetworkServices {
 	        String boothId = (String) context.get("boothId");
 	        String routeId = (String) context.get("routeId");
 	        String tripId = (String) context.get("tripId");
+	        Boolean isEnableProductSubscription=Boolean.FALSE;
 	        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
 	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        if(UtilValidate.isNotEmpty(isEnableProductSubscription)){
+	           isEnableProductSubscription=(Boolean) context.get("isEnableProductSubscription");
+	        }else{
+	        	isEnableProductSubscription=Boolean.FALSE;
+	        }
 	        Map result = ServiceUtil.returnSuccess(); 
 	        Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
 	        List changeIndentProductList = FastList.newInstance();
@@ -827,6 +833,7 @@ public class ByProductNetworkServices {
 	    		partyId = facility.getString("ownerPartyId");
 	    		facilityCategory = facility.getString("categoryTypeEnum");
 	    		//lets override productSubscriptionTypeId based on facility category
+	    		if(!isEnableProductSubscription){
 	    		  if(facility.getString("categoryTypeEnum").equals("SO_INST")){
 	    			  productSubscriptionTypeId = "SPECIAL_ORDER";
 	    		  }else if(facility.getString("categoryTypeEnum").equals("CR_INST")){
@@ -834,6 +841,7 @@ public class ByProductNetworkServices {
 	    		  }else{
 	    			  productSubscriptionTypeId = "CASH";
 	    		  }
+	    		}
 	    		BigDecimal securityDeposit = BigDecimal.ZERO;  
 	    		if(UtilValidate.isNotEmpty(facility.get("securityDeposit"))){
 	    			securityDeposit = facility.getBigDecimal("securityDeposit");

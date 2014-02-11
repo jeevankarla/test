@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+	   
+	<form name="EmployeeSearchForm" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
+    	default-table-style="basic-table hover-bar" separate-columns="true" target="EmployeeSearch">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="roleTypeId"><hidden value="EMPSUBISDY_ROLE"></hidden></field>
+    	<field name="facilityId" title="Retailer Id"><text/></field>    	
+        <field name="partyId" title="Employee Id" ><text/></field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="EmployeeSearchResultForm" type="list" list-name="listIt" odd-row-style="alternate-row" 
+      default-entity-name="FacilityParty" default-table-style="basic-table hover-bar" >
+    	<actions>    	
+    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FacilityParty"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> 
+        </actions>
+    	<field name="facilityId" title="Retailer Id"><display/></field>    	
+        <field name="partyId" title="Employee Id" ><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+    	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+    </form>
+     <form name="EmployeeSubsidyForm" type="single" target="createEmployee">
+    	<field name="facilityId" title="Retailer Id" required-field="true"><text/></field>    	
+        <field name="partyId" title="Employee Id" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="productId" title="product Id" required-field="true"><lookup target-form-name="LookupProduct"/></field>
+          <field name="shipmentTypeId" title="${uiLabelMap.SupplyTime}" required-field="true">
+            <drop-down>
+            	<entity-options description="${description}" entity-name="ShipmentType">
+            		<entity-constraint name="parentTypeId" operator="equals" value="LMS_SHIPMENT"/>
+            	</entity-options>
+            </drop-down>
+        </field>  
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time></date-time></field>
+    	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time></date-time></field>
+    	<field name="submitButton" title="Save" ><submit button-type="button"/></field>    
+    	<field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="EmployeeSearch" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="intra-app">
+                <parameter param-name="facilityId" />
+            </hyperlink>
+        </field>
+    </form>
+</forms>

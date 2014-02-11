@@ -834,7 +834,7 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    <request-map uri="FinalizeOrders">
+   <request-map uri="FinalizeOrders">
         <security auth="true" https="true"/>   
         <event type="service" invoke="finalizeOrders"/>
         <response name="success" type="request" value="TruckSheetMotherDairy"/>
@@ -929,6 +929,25 @@
    	 <request-map uri="routeWiseQtyAbstract.txt">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="RouteQuantityAbstractTXT"/>
+    </request-map> 
+     <request-map uri="EmployeeSearch">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="EmployeeSearch"/>
+    </request-map> 
+     <request-map uri="EmployeeSearchResult">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="EmployeeSearchResult"/>
+    </request-map> 
+    <request-map uri="EmployeeSubsidy">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="EmployeeSubsidy"/>
+    </request-map> 
+    
+     <request-map uri="createEmployee">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createFacilityEmployee"/>
+        <response name="success" type="view" value="EmployeeSearch"/>
+         <response name="error" type="view" value="EmployeeSubsidy"/>
     </request-map> 
     
     <!-- View Mappings -->
@@ -1093,4 +1112,7 @@
 	<view-map name="FieldStaffComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FieldStaffComparison"/>
 	<view-map name="LMSChartsDayCashReceivables" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#LMSChartsDayCashReceivables"/>    
     <view-map name="LMSChartsDayCashReceivablesInternal" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#LMSChartsDayCashReceivablesInternal"/>
+ 	<view-map name="EmployeeSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSearch"/>
+ 	<view-map name="EmployeeSearchResult" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSearchResult"/>
+ 	<view-map name="EmployeeSubsidy" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSubsidy"/>
 </site-conf>
