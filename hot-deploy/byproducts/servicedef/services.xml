@@ -579,4 +579,16 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
+    <service name="getFacilityRateAmount" default-entity-name="FacilityRate" engine="java" auth="true"
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getFacilityRateAmount">
+        <description>Get Rate Amount</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <attribute name="level" type="String" mode="OUT" optional="true"/><!-- the level the amount was retrieved from(specific -> general): facility or 'null' if not found-->
+        <attribute name="rateAmount" type="BigDecimal" mode="OUT" optional="true"/>   
+        <attribute name="uomId" type="String" mode="OUT" optional="true"/>        
+        <attribute name="rateCurrencyUomId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="OUT" optional="true"/>
+          <attribute name="slabAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <override name="rateTypeId" optional="false"/>
+    </service>
 </services>
