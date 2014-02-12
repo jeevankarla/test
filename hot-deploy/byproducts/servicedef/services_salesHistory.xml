@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Sales Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+   <service name="populatePeriodBilling" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.byproducts.SalesHistoryServices" invoke="populatePeriodBilling">
+        <description>populate Period Billing.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" type="String" mode="OUT" optional="false"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    
+</services>
