@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        
+ <form name="ListTransporterReports" list-name="listTransporterReports" title="" type="list" paginate-target="Commissions"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="periodBillingId"><hidden/></field>       
+        <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+        </field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        <field name="TransporterMarginAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Transporter Margin Abstract" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="transporterMarginAbstract"/>                                  
+            </hyperlink>
+        </field>        
+       	<field name="transporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Transporter Margin Report" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="trnsptMarginReport"/>                                  
+            </hyperlink>
+        </field>        
+        <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target="cancelTransporterMarginReport" description="${uiLabelMap.CommonCancel}" target-window="_blank">
+                <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
+            </hyperlink>
+        </field> 
+        <field name="MakeAdjustments" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
+            <hyperlink target="transporterMarginAdjustments" description="Make Transporter Adjustments">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+            </hyperlink>
+        </field>
+        <field name="cancelTransporterMarginAdjustment" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;ADJUSTED&quot;">
+            <hyperlink target="cancelTransporterMarginAdjustment" description="Cancel Adjustments">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+            </hyperlink>
+         </field>   
+    </form>
+    <form name="GenerateTransporterMarginReport" type="single" target="createTransporterMarginReport" header-row-style="header-row" 
+		default-table-style="basic-table" >
+		<field name="billingTypeId"><hidden value="PB_LMS_TRSPT_MRGN"/></field>
+		<field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}" >
+        	<drop-down>																						
+            	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}" filter-by-date="false">
+                	 <entity-constraint name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
+                 	 <entity-constraint name="isClosed" operator="equals" value="N"/>
+                 	 <entity-constraint name="fromDate" operator="less" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp();}"/>
+                 	 <entity-order-by field-name="-thruDate"/>
+           	 	</entity-options>
+			</drop-down>
+		</field>
+		<field name="submitButton" title="${uiLabelMap.Generate}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+    </forms>
