@@ -293,10 +293,7 @@ under the License.
         <security https="true" auth="true"/>        
        <response name="success" type="view" value="GenerateVendorMarginReport"/>       
     </request-map>
-     <request-map uri="GenerateTransporterMarginReport">
-        <security https="true" auth="true"/>        
-       <response name="success" type="view" value="GenerateTransporterMarginReport"/>       
-    </request-map>
+   
     <request-map uri="createLMSShipment">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createLMSShipment"/>
@@ -311,13 +308,7 @@ under the License.
         <response name="failed" type="view" value="GenerateVendorMarginReport"/>
         <response name="error" type="view" value="GenerateVendorMarginReport"/>
     </request-map> 
-    <request-map uri="createTransporterMarginReport">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="populatePeriodBilling"/>
-        <response name="success" type="request" value="GenerateTransporterMarginReport"/>
-        <response name="failed" type="view" value="GenerateTransporterMarginReport"/>
-        <response name="error" type="view" value="GenerateTransporterMarginReport"/>
-    </request-map>
+  
     <request-map uri="cancelLMSShipment">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelLMSShipment"/>
@@ -332,13 +323,7 @@ under the License.
         <response name="failed" type="view" value="VendorMargins"/>
         <response name="error" type="view" value="VendorMargins"/>
     </request-map>  
-    <request-map uri="cancelTransporterMarginReport">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="cancelTransporterMarginReport"/>
-       <response name="success" type="request" value="VendorMargins"/>
-        <response name="failed" type="view" value="VendorMargins"/>
-        <response name="error" type="view" value="VendorMargins"/>
-    </request-map>  
+   
     <request-map uri="CancelMarginAdjustment">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="CancelMarginAdjustment"/>
@@ -2214,7 +2199,7 @@ under the License.
 	<view-map name="VendorMargins" type="screen" page="component://product/widget/facility/FacilityScreens.xml#VendorMargins"/>
 	<view-map name="NewTruckSheet" type="screen" page="component://product/widget/facility/FacilityScreens.xml#NewTruckSheet"/>
 	<view-map name="GenerateVendorMarginReport" type="screen" page="component://product/widget/facility/FacilityScreens.xml#GenerateVendorMarginReport"/>
-	<view-map name="GenerateTransporterMarginReport" type="screen" page="component://product/widget/facility/FacilityScreens.xml#GenerateTransporterMarginReport"/>
+	
 	<view-map name="FindSubscription" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindSubscription"/>
 	<view-map name="EditSubscription" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditSubscription"/>
 	<view-map name="ChangeOrderEntryForm" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ChangeOrderEntryForm"/>
