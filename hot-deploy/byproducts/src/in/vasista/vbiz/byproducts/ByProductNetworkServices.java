@@ -65,6 +65,8 @@ import org.ofbiz.entity.GenericPK;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.product.product.ProductWorker;
 
+
+
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 
@@ -4216,6 +4218,96 @@ public class ByProductNetworkServices {
 	      	return productList;
 	   	}  
 	    
+	    public static Map<String, Object> getFacilityRateAmount(DispatchContext dctx, Map<String, ? extends Object> context){
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String facilityId = (String) context.get("facilityId");
+	        String rateTypeId = (String) context.get("rateTypeId");
+	        Timestamp fromDate = (Timestamp) context.get("fromDate");
+	        GenericValue userLogin =(GenericValue)context.get("userLogin");
+	        
+	        String rateCurrencyUomId = "INR";
+	        if(UtilValidate.isNotEmpty(context.get("rateCurrencyUomId"))){
+	        	rateCurrencyUomId = (String)context.get("rateCurrencyUomId");
+	        }
+	        // if from date is null then lets take now timestamp as default 
+	        if(UtilValidate.isEmpty(fromDate)){
+	        	fromDate = UtilDateTime.nowTimestamp();
+	        }
+	        Map result = ServiceUtil.returnSuccess();
+	        BigDecimal rateAmount = BigDecimal.ZERO;
+	        String uomId = "";
+	        //lets get the active rateAmount
+	        List facilityRates = FastList.newInstance();
+	        List exprList = FastList.newInstance();
+	        //facility level 
+	        exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	        exprList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+	        exprList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+	        
+	        EntityCondition	paramCond = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+	        try{			
+	        	facilityRates = delegator.findList("FacilityRate", paramCond, null , null, null, false);
+				
+			}catch(GenericEntityException e){
+				Debug.logError(e, module);	
+	            return ServiceUtil.returnError(e.toString());			
+			}
+			try{
+				facilityRates = EntityUtil.filterByDate(facilityRates,fromDate);
+				//if no rates at facility level then, lets check for default rate
+				if(UtilValidate.isEmpty(facilityRates)){
+					exprList.clear();
+					//Default level
+					exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, "_NA_"));
+					exprList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+			        exprList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+			        
+			        EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+			        try{			
+			        	facilityRates = delegator.findList("FacilityRate", paramCond, null , null, null, false);
+						
+					}catch(GenericEntityException e){
+						Debug.logError(e, module);	
+			            return ServiceUtil.returnError(e.toString());			
+					}
+				}			
+				
+				GenericValue validFacilityRate= EntityUtil.getFirst(facilityRates);
+				if(UtilValidate.isNotEmpty(validFacilityRate)){
+					if(UtilValidate.isNotEmpty(validFacilityRate.getString("acctgFormulaId"))){
+						String acctgFormulaId =  validFacilityRate.getString("acctgFormulaId");
+						BigDecimal slabAmount = (BigDecimal) context.get("slabAmount");
+						uomId=validFacilityRate.getString("uomId");
+						if(UtilValidate.isEmpty(slabAmount)){						
+							slabAmount = BigDecimal.ZERO;
+							Debug.logWarning("no slab amount found for acctgFormulaId taking zero as default ", module);
+						}
+						Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin, "acctgFormulaId",acctgFormulaId, "variableValues","QUANTITY="+"1", "slabAmount", slabAmount);
+		    			Map<String, Object> incentivesResult = dispatcher.runSync("evaluateAccountFormula", input);
+		        		if (ServiceUtil.isError(incentivesResult)) {
+		        			Debug.logError("unable to evaluate AccountFormula"+acctgFormulaId, module);	
+		                    return ServiceUtil.returnError("unable to evaluate AccountFormula"+acctgFormulaId);	
+		                }
+		        		double formulaValue = (Double) incentivesResult.get("formulaResult");
+		        		rateAmount = new BigDecimal(formulaValue);
+						
+					}else{
+						rateAmount = validFacilityRate.getBigDecimal("rateAmount");
+					}
+					
+				}
+				
+			}catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e, module);	
+	            return ServiceUtil.returnError(e.toString());
+			}       
+			result.put("rateAmount",rateAmount);
+			result.put("uomId",uomId);
+			 
+	        return result;
+	    } 
 	    
 }
 	
