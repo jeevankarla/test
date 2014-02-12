@@ -930,6 +930,7 @@
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="RouteQuantityAbstractTXT"/>
     </request-map> 
+  
      <request-map uri="EmployeeSearch">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="EmployeeSearch"/>
@@ -950,6 +951,30 @@
          <response name="error" type="view" value="EmployeeSubsidy"/>
     </request-map> 
     
+    <!--  margin requests -->
+    <request-map uri="TransporterMargins">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TransporterMargins"/>
+    </request-map>
+    <request-map uri="GenerateTransporterMarginReport">
+        <security https="true" auth="true"/>        
+       <response name="success" type="view" value="GenerateTransporterMarginReport"/>   
+       <response name="failed" type="view" value="GenerateTransporterMarginReport"/>    
+    </request-map>
+    <request-map uri="createTransporterMarginReport">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="populatePeriodBilling"/>
+        <response name="success" type="request" value="TransporterMargins"/>
+        <response name="failed" type="view" value="GenerateTransporterMarginReport"/>
+        <response name="error" type="view" value="GenerateTransporterMarginReport"/>
+    </request-map>
+    <request-map uri="cancelTransporterMarginReport">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelTransporterMarginReport"/>
+       <response name="success" type="request" value="TransporterMargins"/>
+        <response name="failed" type="view" value="TransporterMargins"/>
+        <response name="error" type="view" value="TransporterMargins"/>
+    </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -1112,7 +1137,12 @@
 	<view-map name="FieldStaffComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FieldStaffComparison"/>
 	<view-map name="LMSChartsDayCashReceivables" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#LMSChartsDayCashReceivables"/>    
     <view-map name="LMSChartsDayCashReceivablesInternal" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#LMSChartsDayCashReceivablesInternal"/>
+  
  	<view-map name="EmployeeSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSearch"/>
  	<view-map name="EmployeeSearchResult" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSearchResult"/>
  	<view-map name="EmployeeSubsidy" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSubsidy"/>
+ <!-- Transporter views -->
+   <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
+   <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
+<!-- Transporter views -->
 </site-conf>
