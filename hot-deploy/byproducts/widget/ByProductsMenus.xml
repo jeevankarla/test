@@ -379,12 +379,12 @@
             <link target="VehicleStatus">               
             </link>
         </menu-item>           
-       <!--  <menu-item name="VendorMargins" title="MarginReports">
+        <menu-item name="TransporterMargins" title="MarginReports">
             <condition>
 					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
             </condition>
-			<link target="VendorMargins"></link>
-        </menu-item> -->  
+			<link target="TransporterMargins"></link>
+        </menu-item> 
         <menu-item name="reports" title="${uiLabelMap.CommonReports}">
 			<!-- <condition>
 				<and>
