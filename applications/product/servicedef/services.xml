@@ -1738,11 +1738,7 @@ under the License.
         <description>Cancel Vendor Margin Report.</description>        
         <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
     </service>
-    <service name="cancelTransporterMarginReport" engine="java" auth="true" transaction-timeout="300"
-        location="org.ofbiz.network.LMSSalesHistoryServices" invoke="cancelTransporterMarginReport">
-        <description>Cancel Transporter Margin Report.</description>        
-        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
-    </service>
+   
     <service name="updateFacilityParty" engine="java"
             location="org.ofbiz.network.LmsServices" invoke="updateFacilityParty" auth="true">
         <description>Populate and Update Facility-Party Entity</description>
