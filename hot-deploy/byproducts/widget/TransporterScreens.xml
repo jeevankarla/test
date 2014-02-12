@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+   
+    <screen name="TransporterMargins">
+		<section>
+			<actions>
+				<set field="titleProperty" value="TransporterMargins"/> 
+				<set field="tabButtonItem" value="TransporterMargins" />
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>                
+                <entity-condition list="listVendorReports" entity-name="PeriodBilling">
+                	<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_LMS_VNDR_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+                	</condition-list>
+                	<order-by field-name="-customTimePeriodId"/>
+                	<order-by field-name="-lastModifiedDate"/>
+                </entity-condition>
+                <entity-condition list="listTransporterReports" entity-name="PeriodBilling">
+                	<condition-list combine="and">
+                		<condition-expr field-name="billingTypeId" operator="equals" value="PB_LMS_TRSPT_MRGN"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+                	</condition-list>
+                </entity-condition>  				
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<or>
+									<if-has-permission permission="TRUCKSHEET" action="_ADMIN"/>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+								</or>
+							</condition>
+							<widgets>
+								<container style="button-bar">
+								<!-- 	<link target="GenerateVendorMarginReport" text="Generate Vendor Margin Report" style="buttontext create">
+										<parameter param-name="billingTypeId" value="PB_LMS_VNDR_MRGN"/>
+									</link> -->
+									<link target="GenerateTransporterMarginReport" text="Generate Transporter Margin Report" style="buttontext create">				
+										<parameter param-name="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+									</link>
+								</container>
+							<!-- 	<screenlet title="Vendor Margin Reports">				
+									<include-form name="ListVendorReports" location="component://product/widget/facility/FacilityForms.xml" />
+								</screenlet> -->
+								
+								<screenlet title="Transporter Margin Reports">				
+									<include-form name="ListTransporterReports" location="component://byproducts/widget/TransporterForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>						
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+   <screen name="GenerateTransporterMarginReport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="TransporterMargins"/>
+				<set field="tabButtonItem" value="TransporterMargins" />
+				<set field="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+            </actions>           
+            <widgets>
+				<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<section>
+							<widgets>
+								 <screenlet title="New TransporterMargin Report">
+                    				<include-form location="component://byproducts/widget/TransporterForms.xml" name="GenerateTransporterMarginReport"/>
+                    			</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+ </screens>
