@@ -1146,6 +1146,7 @@ under the License.
 		<field name="supplyTypeEnumId" type="id-ne" />
 		<field name="rateCurrencyUomId" type="id-ne" />			
 		<field name="acctgFormulaId" type="id"></field>
+		<field name="uomId" type="id"></field>
 		<field name="fromDate" type="date-time">
 			<description>Describes when a rate amount will be valid. If null, valid immediately.</description>
 		</field>
