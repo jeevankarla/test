@@ -45,7 +45,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.network.LMSSalesHistoryServices;
+
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
