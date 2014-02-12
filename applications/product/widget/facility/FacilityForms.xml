@@ -1836,45 +1836,7 @@ under the License.
             </hyperlink>
         </field> 
     </form>
-     <form name="ListTransporterReports" list-name="listTransporterReports" title="" type="list" paginate-target="Commissions"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="periodBillingId"><hidden/></field>       
-        <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
-          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
-        </field>
-        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
-        <field name="TransporterMarginAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Transporter Margin Abstract" target-window="_blank">
-              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
-              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
-                  <parameter param-name="reportTypeFlag"  value="transporterMarginAbstract"/>                                  
-            </hyperlink>
-        </field>        
-       	<field name="transporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Transporter Margin Report" target-window="_blank">
-              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
-              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
-                  <parameter param-name="reportTypeFlag"  value="trnsptMarginReport"/>                                  
-            </hyperlink>
-        </field>        
-        <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)" title="${uiLabelMap.CommonCancel}">
-            <hyperlink target="cancelTransporterMarginReport" description="${uiLabelMap.CommonCancel}" target-window="_blank">
-                <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
-            </hyperlink>
-        </field> 
-        <field name="MakeAdjustments" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
-            <hyperlink target="transporterMarginAdjustments" description="Make Transporter Adjustments">
-              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
-              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
-            </hyperlink>
-        </field>
-        <field name="cancelTransporterMarginAdjustment" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;ADJUSTED&quot;">
-            <hyperlink target="cancelTransporterMarginAdjustment" description="Cancel Adjustments">
-              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
-              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
-            </hyperlink>
-         </field>   
-    </form>
+    
     <form name="VendorMarginChequesCSV" type="list" list-name="chequesReportList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
     	<!-- REF	 REF2   ALLOTEE 	DRAFT AMOUNT	BENEFICIARY BANK NAME	BENE ACCOUNT NO	LOCATION NAME	ADDRESS LINE 1	ADDRESS LINE 2	ADDRESS LINE 3	ADDRESS LINE 4	ADDRESS LINE 5	PAYMENT DETAILS LINE 1	PAYMENT DETAILS LINE 2	PAYMENT DETAILS LINE 3	PAYMENT DETAILS LINE 4	PAYMENT DETAILS LINE 5	PAYMENT DETAILS LINE 6	PAYMENT DETAILS LINE 7	BRANCH -->
@@ -1916,23 +1878,7 @@ under the License.
             <submit/>
         </field>
     </form>
-    <form name="GenerateTransporterMarginReport" type="single" target="createTransporterMarginReport" header-row-style="header-row" 
-		default-table-style="basic-table" target-window="_BLANK">
-		<field name="billingTypeId"><hidden value="PB_LMS_TRSPT_MRGN"/></field>
-		<field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}" >
-        	<drop-down>																						
-            	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}" filter-by-date="false">
-                	 <entity-constraint name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
-                 	 <entity-constraint name="isClosed" operator="equals" value="N"/>
-                 	 <entity-constraint name="fromDate" operator="less" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp();}"/>
-                 	 <entity-order-by field-name="-thruDate"/>
-           	 	</entity-options>
-			</drop-down>
-		</field>
-		<field name="submitButton" title="${uiLabelMap.Generate}" widget-style="smallSubmit">
-            <submit/>
-        </field>
-    </form>
+   
     <form name="DistributorReport" type="single" target="DisplayDistributorReport.txt"  target-window="_blank">
 		<field name="submitButton" title="Generate" widget-style="smallSubmit" ><submit button-type="button"/></field>
      </form>
