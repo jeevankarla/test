@@ -2482,7 +2482,7 @@ Debug.logInfo(infoString, module);
 					salesSummary.put("totalQuantity", totalQuantity);
 					salesSummary.put("totalRevenue", totalRevenue);                
 					salesSummary.create();  
-					LMSSalesHistoryServices.LMSSalesHistorySummaryDetail(ctx,  UtilMisc.toMap("salesDate", summaryDate));
+					DeprecatedLMSSalesHistoryServices.LMSSalesHistorySummaryDetail(ctx,  UtilMisc.toMap("salesDate", summaryDate));
 				}
 				else {
 					// check and see if we need to update for whatever reason
@@ -2492,7 +2492,7 @@ Debug.logInfo(infoString, module);
 						salesSummary.put("totalQuantity", totalQuantity);
 						salesSummary.put("totalRevenue", totalRevenue);  
 						salesSummary.store();
-						LMSSalesHistoryServices.LMSSalesHistorySummaryDetail(ctx,  UtilMisc.toMap("salesDate", summaryDate));
+						DeprecatedLMSSalesHistoryServices.LMSSalesHistorySummaryDetail(ctx,  UtilMisc.toMap("salesDate", summaryDate));
 					}
 				}
 			} catch (GenericEntityException e) {
