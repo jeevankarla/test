@@ -3533,7 +3533,7 @@ under the License.
             </widgets>
         </section>
     </screen> 
-    <screen name="VendorMargins">
+     <screen name="VendorMargins">
 		<section>
 			<actions>
 				<set field="titleProperty" value="VendorMargins"/> 
@@ -3609,28 +3609,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="GenerateTransporterMarginReport">
-        <section>
-            <actions>
-                <set field="titleProperty" value="VendorMargins"/>
-				<set field="tabButtonItem" value="VendorMargins" />
-				<set field="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
-            </actions>           
-            <widgets>
-				<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
-                    <decorator-section name="body">
-                    	<section>
-							<widgets>
-								 <screenlet title="New TransporterMargin Report">
-                    				<include-form location="component://product/widget/facility/FacilityForms.xml" name="GenerateTransporterMarginReport"/>
-                    			</screenlet>
-							</widgets>      
-                    	</section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen> 
+   
     <screen name="FindFacilityRates">
 		<section>
 			<actions>
