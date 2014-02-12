@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Transporter Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    
+   <service name="generateTranporterMargin" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="generateTranporterMargin">
+        <description>Generate Transporter Margin.</description>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/> 
+        <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>                     
+    </service>
+    
+    <service name="cancelTransporterMarginReport" engine="java" auth="true" transaction-timeout="300"
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="cancelTransporterMarginReport">
+        <description>Cancel Transporter Margin Report.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    <service name="cancelTransporterMarginInvoice" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="cancelTransporterMarginInvoice">
+        <description>Cancel Transporter Margin Invoice.</description>        
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
+    </service>
+    
+    </services>
