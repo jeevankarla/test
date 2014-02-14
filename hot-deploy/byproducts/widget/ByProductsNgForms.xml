@@ -494,4 +494,19 @@
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
+    <form name="returnCrates" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="createReturnCrate"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<field name="productStoreId"><hidden value="9004"/></field>
+    	<field name="routeId" title="Route"><lookup target-form-name="LookupFacility"/></field>
+    	<field name="tripId" title="Trip">
+    		<drop-down>
+    			<list-options key-name="enumId" list-name="prodSubTrips" description="${description}"/>
+    		</drop-down>
+    	</field>
+    	<field name="shipDate" title="Shipment Date"><date-time/></field>
+    	<field name="quantity" title="Return Quantity"><text/></field>
+    	<field name="productId"><hidden value="CRATE"/></field>     	   	
+       	<field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    
 </forms>

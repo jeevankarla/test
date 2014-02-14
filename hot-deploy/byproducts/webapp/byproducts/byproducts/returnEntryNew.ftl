@@ -9,6 +9,7 @@
     	<div class="screenlet-body">
 			<form name="reconcilEntryInit" id="reconcilEntryInit">  
 				<input type="hidden" name="screenFlag" id="screenFlag" value="${screenFlag}"/>
+				<input type="hidden" name="receiveInventory" id="receiveInventory" value="N"/>
       			<table width="60%" border="0" cellspacing="0" cellpadding="0">     
         			<tr>
           				<td>&nbsp;</td>
@@ -46,25 +47,7 @@
        						        
        					</td>
         			</tr>
-        			<tr><td><br/></td></tr>	
-        			<tr>
-          				<td>&nbsp;</td>
-          				<td align='left' valign='middle' nowrap="nowrap" ><div class='h2'>Return Type:</div></td>
-          				<td>&nbsp;</td>
-       					<td valign='middle'>
-       						<#if returnHeader?has_content>
-       							<div class='tabletext h3'>
-            						<input class="h2" type="text" size="18" maxlength="20" name="returnType" id="returnType" value="${returnType?if_exists}" readonly/>
-            					</div>
-       						<#else>
-	       						<select name="returnType" class='h2' id="returnType" onchange="javascript: hideReturnToggle(this);">
-	       							<option value='sales'>Sale Return</option>
-	       							<option value='crate'>Crate Return</option>   
-								</select>
-							</#if>          
-       					</td>
-        			</tr>
-        			<tr><td><br/></td></tr>
+        			<#-- <tr><td><br/></td></tr>
         			<tr>
           				<td>&nbsp;</td>
           				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Needs Inventory Receive:</div></td>
@@ -81,7 +64,7 @@
 								</select>
 							</#if>          
        					</td>
-        			</tr>
+        			</tr> -->
         			<tr><td><br/></td></tr>
         			<tr>
           				<td>&nbsp;</td>

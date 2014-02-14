@@ -24,4 +24,22 @@
 <Enumeration createdStamp="2013-11-27 17:33:06.0" createdTxStamp="2013-11-27 17:33:06.0" description="Trip 1" enumCode="TRIP1" enumId="TRIP1" enumTypeId="MULTI_TRIP" lastUpdatedStamp="2013-11-27 17:33:06.0" lastUpdatedTxStamp="2013-11-27 17:33:06.0" sequenceId="1"/>
 <Enumeration createdStamp="2013-11-27 17:33:57.0" createdTxStamp="2013-11-27 17:33:57.0" description="Trip 2" enumCode="TRIP2" enumId="TRIP2" enumTypeId="MULTI_TRIP" lastUpdatedStamp="2013-11-27 17:33:57.0" lastUpdatedTxStamp="2013-11-27 17:33:57.0" sequenceId="2"/>
 <Enumeration createdStamp="2013-11-27 17:34:43.0" createdTxStamp="2013-11-27 17:34:43.0" description="Trip 3" enumCode="TRIP3" enumId="TRIP3" enumTypeId="MULTI_TRIP" lastUpdatedStamp="2013-11-27 17:34:43.0" lastUpdatedTxStamp="2013-11-27 17:34:43.0" sequenceId="3"/>
+
+<Product brandName="CRATE" description="CRATE" internalName="CRATE" isVariant="Y" isVirtual="N" primaryProductCategoryId="OTHER" productId="CRATE" productName="CRATE" 
+productTypeId="FINISHED_GOOD" quantityIncluded="1.000000" quantityUomId="VLIQ_K" sequenceNum="1"/>
+
+<Facility defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" facilityId="DSP_SEC1" facilityName="Dispatch section 1" facilityTypeId="BOOTH" openedDate="2014-01-01 11:25:17.0" ownerPartyId="Company"/>
+
+<ProductStore addToCartRemoveIncompat="Y" addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y" autoApproveOrder="Y" autoApproveReviews="N" autoInvoiceDigitalItems="Y" autoOrderCcTryExp="Y" autoOrderCcTryLaterNsf="Y" autoOrderCcTryOtherCards="Y" autoSaveCart="N" balanceResOnOrderCreation="N" checkGcBalance="N" checkInventory="N" companyName="DKMF" 
+ defaultCurrencyUomId="INR" defaultLocaleString="en_US" digitalItemApprovedStatus="ITEM_APPROVED" enableAutoSuggestionList="N" enableDigProdUpload="N" explodeOrderItems="N" headerApprovedStatus="ORDER_APPROVED" headerCancelStatus="ORDER_SENT" headerDeclinedStatus="ORDER_REJECTED" inventoryFacilityId="DSP_SEC1" isDemoStore="Y" isFactoryStore="Y" isImmediatelyFulfilled="N" itemApprovedStatus="ITEM_APPROVED" 
+itemCancelStatus="ITEM_CANCELLED" itemDeclinedStatus="ITEM_REJECTED" lastUpdatedStamp="2014-02-10 11:41:00.0" lastUpdatedTxStamp="2014-02-10 11:41:00.0" manualAuthIsCapture="N" oneInventoryFacility="Y" payToPartyId="Company" prodSearchExcludeVariants="Y" productStoreId="9004" prorateShipping="Y" prorateTaxes="Y" reqReturnInventoryReceive="N" 
+ reqShipAddrForDigItems="Y" requireCustomerRole="N" requireInventory="N" reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" retryFailedAuths="Y" selectPaymentTypePerItem="N" shipIfCaptureFails="Y" showCheckoutGiftOptions="Y" showOutOfStockProducts="Y" showPricesWithVatTax="N" showTaxIsExempt="Y" splitPayPrefPerShpGrp="Y" storeName="DISPATCH 
+SECTION" subtitle="DISPATCH SECTION" title="DISPATCH SECTION" usePrimaryEmailUsername="N" viewCartOnAdd="N"/>
+
+<ProductFacility facilityId="DSP_SEC1" lastInventoryCount="0.000000" minimumStock="0.000000" productId="CRATE"/>
+  
+<!-- <ReturnHeaderType description="Return From Transporter" returnHeaderTypeId="TRANSPORTER_RETURN"/> -->
+
+<PaymentMethodType description="Credit Note" paymentMethodTypeId="CREDITNOTE_PAYIN"/>
+
 </entity-engine-xml>

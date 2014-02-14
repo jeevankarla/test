@@ -102,6 +102,33 @@
             </widgets>
         </section>
     </screen>
+    <screen name="ReturnCrates">
+        <section>
+            <actions>
+            	<set field="tabButtonItem" value="ReturnCrates"/>
+            	<entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>	
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      	<section>
+                        	<widgets>
+                        		 <screenlet title="Return Crates">
+                        			<include-form name="returnCrates" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="CreateEmployee">
         <section>
             <actions>
@@ -1196,6 +1223,38 @@
                     	<screenlet title="${uiLabelMap.PageTitleEditProductCategories}">
                             <include-form name="UpdateProductCategoryMember" location="component://byproducts/widget/ByProductsForms.xml"/>
                         </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ReceiveCrateInventory">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Add Inventory"/>
+                <set field="tabButtonItem" value="ReceiveCrates"/>
+                <set field="headerItem" value="byProductsOrderEntry"/>
+                <script location="component://product/webapp/facility/WEB-INF/actions/inventory/ReceiveInventory.groovy"/>
+                <entity-condition entity-name="ProductStore" list="storesList">
+                	<condition-list combine="and">
+                        <condition-expr field-name="inventoryFacilityId" operator="not-equals" value=""/>
+                        <!-- <condition-expr field-name="productStoreId" operator="equals" value="9003"/> -->
+                    </condition-list>
+                    <select-field field-name="inventoryFacilityId"/>
+                    <order-by field-name="productStoreId"/>
+                </entity-condition>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="title" value="${uiLabelMap.ProductReceiveInventory}"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/ordermgr/images/js/ConvertUom.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+	                    <screenlet title="Receive Inventory">
+	                        <platform-specific>
+	                            <html><html-template location="component://byproducts/webapp/byproducts/byproducts/receiveInventory.ftl"/></html>
+	                        </platform-specific>
+	                    </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

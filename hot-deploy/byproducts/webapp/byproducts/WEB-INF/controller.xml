@@ -39,6 +39,9 @@
     <request-map uri="byProdReceiveInventory"><security https="true" auth="true"/>
     	<response name="success" type="view" value="byProdReceiveInventory"/>
     </request-map>
+    <request-map uri="receiveCrateInventory"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="receiveCrateInventory"/>
+    </request-map>
     <request-map uri="byProdReceiveSingleInventoryProduct">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="adjustInventory"/>
@@ -76,6 +79,16 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="ConfigChange"/>    	
     </request-map>
+    <request-map uri="ReturnCrates">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="ReturnCrates"/>    	
+    </request-map>
+    <request-map uri="createReturnCrate">
+    	<security https="true" auth="true"/> 
+    	<event type="service" invoke="createReturnCrate" path=""/>   	
+    	<response name="success" type="view" value="ReturnCrates"/>    	
+    </request-map>
+    
     <request-map uri="FindReturns">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindReturns"/>    	
@@ -84,6 +97,12 @@
     	<security https="true" auth="true"/>
     	<event type="service" path="" invoke="cancelReturn" />    	
     	<response name="success" type="view" value="FindReturns"/>    	
+    </request-map>
+    <request-map uri="processReturnItemsMISAjax">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices" invoke="processReturnItemsMIS"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
     </request-map>
     <!-- <request-map uri="returnHeader">
     	<security https="true" auth="true"/>    	
@@ -930,7 +949,7 @@
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="RouteQuantityAbstractTXT"/>
     </request-map> 
-  
+  	
      <request-map uri="EmployeeSearch">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="EmployeeSearch"/>
@@ -985,6 +1004,8 @@
     <view-map name="FindInventory" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindInventory"/>
     <view-map name="Receipts" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#Receipts"/>
     <view-map name="byProdReceiveInventory" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ReceiveInventory"/>
+    <view-map name="receiveCrateInventory" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReceiveCrateInventory"/>
+    
     <view-map name="FindIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindIndent"/>
     <view-map name="findIndentEntry" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindIndentEntry"/>
     <view-map name="IndentEntry" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#IndentEntry"/>
@@ -1130,6 +1151,7 @@
 	<view-map name="DispatchReconciliation" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DispatchReconciliation"/>
 	<view-map name="GatePassShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#GatePassShipment"/>
 	<view-map name="AbsenteeList" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AbsenteeList"/>
+	<view-map name="ReturnCrates" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnCrates"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>

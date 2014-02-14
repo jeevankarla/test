@@ -483,6 +483,15 @@
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
+        <menu-item name="ReceiveCrates" title="Receive Crates">
+        	<!-- <condition>
+        		<and>
+        			<not><if-empty field="ctxFacilityId"/></not>
+        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		</and>        		
+        	</condition>       -->  	
+            <link target="receiveCrateInventory" />
+        </menu-item>
        <menu-item name="ViewFacilityInventoryByProduct" title="${uiLabelMap.ProductInventory}">
             <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
@@ -806,6 +815,9 @@
          <menu-item name="EmployeeSearch" title="Employee Subsidy Milk">
             <link target="EmployeeSearch">
             </link>
+        </menu-item>
+        <menu-item name="ReturnCrates" title="Return Crates">
+            <link target="ReturnCrates"/>
         </menu-item>
     </menu>
     <menu name="ReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">

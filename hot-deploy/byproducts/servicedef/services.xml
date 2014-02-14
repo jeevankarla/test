@@ -40,7 +40,17 @@
         <attribute name="rateAmountEntry" type="org.ofbiz.entity.GenericValue" optional="true" mode="OUT"/> 
         <attribute name="thruDate" type="Timestamp" mode="OUT" optional="true"/>
     </service>
-    
+    <service name="createReturnCrate" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createReturnCrate">
+        <description>Get Rate Amount</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="tripId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="returnQuantity" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="receiptId" type="String" mode="OUT" optional="true"/>
+    </service>
     <service name="processChangeIndentRoute" engine="java" 
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processChangeIndentRoute">
         <description>Change Route for Indent Entry</description>
@@ -54,6 +64,46 @@
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelReturn" auth="true">
         <description>Cancel Return Items</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
+    </service>
+    <!-- <service name="calculateByProductsPrice" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="calculateByProductsPrice" auth="true">
+        <description>Calculate Product Price</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="priceDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="productPriceTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityCategory" type="String" mode="IN" optional="true"/>
+        <attribute name="basicPrice" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="price" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="totalPrice" type="String" mode="OUT" optional="true"/>
+        <attribute name="taxList" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="getByprodFactoryStore" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getByprodFactoryStore" auth="true">
+        <description>Get Byproduct factory store</description>
+    </service> -->
+    <service name="calculateCratesForShipment" engine="java" 
+            location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="calculateCratesForShipment" auth="true">
+        <description>Cancel Return Items</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentCrates" type="Map" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="processReturnItemsHelper" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processReturnItemsHelper" auth="true">
+        <description> Creates a ReturnHeader and also creates ReturnItems for ReturnId</description>
+        
+        <attribute name="routeId" type="String" mode="IN" optional="true"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+        <attribute name="returnHeaderTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="receiveInventory" type="String" mode="IN" optional="true"/>
+        <attribute name="returnId" type="String" mode="OUT" optional="true"/>
     </service>
         
     <service name="createByProduct" engine="java"
@@ -514,8 +564,7 @@
     
     <service name="getOrderReturnItems" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getOrderReturnItems" auth="true">
-        <attribute name="boothId" mode="IN" type="String" optional="false"/>
-        <attribute name="returnType" mode="IN" type="String" optional="false"/>
+        <attribute name="boothId" mode="IN" type="String" optional="true"/>
         <attribute name="returnHeaderTypeId" mode="IN" type="String" optional="false"/>
         <attribute name="tripId" mode="IN" type="String" optional="false"/>      
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>

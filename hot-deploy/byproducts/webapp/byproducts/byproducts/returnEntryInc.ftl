@@ -78,7 +78,6 @@ function updateGrid(){
 	var dataJson = {"supplyDate":$('[name=effectiveDate]').val(),
 						"tripId": $('[name=tripId]').val(),
 						"routeId" : $('[name=routeId]').val(),
-						"returnType": $("#returnType").val(),
 						"returnHeaderTypeId": $("#returnHeaderTypeId").val(),
 						"boothId" : $('[name=boothId]').val()							
 					};

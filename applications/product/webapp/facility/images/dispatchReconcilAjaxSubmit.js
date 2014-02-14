@@ -12,8 +12,7 @@ $(document).ready(function() {
 	$('#ui-datepicker-div').css('clip', 'auto');
 	screenFlag = $("#screenFlag").val();
 	$("input").keypress(function(e){
-		var returnType = $("#returnType").val();
-		if(screenFlag == "returns" && returnType=="sales"){
+		if(screenFlag == "returns"){
 			if (e.which == $.ui.keyCode.ENTER) {
 				if(e.target.name == "boothId" ){
 					if( typeof $("#boothId").val() != "undefined"   && $("#boothId").val() != ""){ 
@@ -166,18 +165,6 @@ function prepareAjaxDataString(){
 	querystring +=dataString;
 	return querystring;
 
-}
-
-
-function hideReturnToggle(){
-	var returnType = $("#returnType").val();
-	if(returnType=="crate"){
-		$("#boothId").hide();
-		$("#boothId").val('');
-	}
-	else{
-		$("#boothId").show();
-	}
 }
 
 

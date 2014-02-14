@@ -1335,13 +1335,29 @@ public class LmsServices {
         Map result = ServiceUtil.returnSuccess();       
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String facilityId = (String)context.get("facilityId");
+        String tripId = (String)context.get("tripId");
+        String subscriptionTypeId = (String)context.get("subscriptionTypeId");
+        Timestamp closeDate = (Timestamp)context.get("closeDate");
         String productSubscriptionTypeId = (String)context.get("productSubscriptionTypeId");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         String productId = (String)context.get("productId");
+        if(UtilValidate.isEmpty(closeDate)){
+        	closeDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+        }
         try{
+        	List conditionList = FastList.newInstance();
+        	if(UtilValidate.isNotEmpty(subscriptionTypeId)){
+        		conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
+        	}
+        	if(UtilValidate.isNotEmpty(tripId)){
+        		conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+        	}
+        	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
         	List<GenericValue> subscription = delegator.findList("Subscription", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), UtilMisc.toSet("subscriptionId"), null, null, false);
         	List subscriptionList = EntityUtil.getFieldListFromEntityList(subscription, "subscriptionId", true);
-    		List conditionList = FastList.newInstance();
+        	
+        	conditionList.clear();
     		conditionList.add(EntityCondition.makeCondition("subscriptionId",EntityOperator.IN, subscriptionList));
     		if(UtilValidate.isNotEmpty(productId)){
     			conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId));
@@ -1349,17 +1365,22 @@ public class LmsServices {
     		if(UtilValidate.isNotEmpty(productSubscriptionTypeId)){
     			conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId",EntityOperator.EQUALS, productSubscriptionTypeId));
     		}
-    		EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-    		List<GenericValue> subscriptionProduct = delegator.findList("SubscriptionProduct", condition, null, null, null, false);
-    		List<GenericValue> subscProduct = EntityUtil.filterByDate(subscriptionProduct, UtilDateTime.getDayStart(nowTimestamp));
-    		List<GenericValue> tomorrowIndentProd = EntityUtil.filterByDate(subscriptionProduct, UtilDateTime.addDaysToTimestamp(nowTimestamp, 1));
+    		EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+    		List<GenericValue> subscriptionProduct = delegator.findList("SubscriptionProduct", cond, null, null, null, false);
+    		List<GenericValue> subscProduct = EntityUtil.filterByDate(subscriptionProduct, UtilDateTime.getDayStart(closeDate));
+    		
+    		
     		for(GenericValue subProd : subscProduct){
     			Timestamp fromDate = subProd.getTimestamp("fromDate");
-    			if(fromDate.before(UtilDateTime.getDayStart(nowTimestamp))){
-    				subProd.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(nowTimestamp, -1)));
+    			if(fromDate.compareTo(UtilDateTime.getDayStart(closeDate))<0){
+    				subProd.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(closeDate, -1)));
     				subProd.store();
     			}
     		}
+    		
+    		List<GenericValue> activeSubscriptionProduct = delegator.findList("SubscriptionProduct", cond, null, null, null, false);
+    		
+    		List<GenericValue> tomorrowIndentProd = EntityUtil.filterByDate(activeSubscriptionProduct, UtilDateTime.addDaysToTimestamp(closeDate, 1));
     		for(GenericValue tommorowSubProd : tomorrowIndentProd){
     			delegator.removeValue(tommorowSubProd);
     		}

@@ -34,11 +34,10 @@ import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
 
 returnId = parameters.returnId;
-Debug.log("##################### retunrId ##########"+returnId);
 if(returnId){
 	returnHeader = delegator.findByPrimaryKey("ReturnHeader", [returnId : returnId]);
 	context.returnHeader = returnHeader;
-	
+	retuynHeaderTypeId = returnHeader.returnHeaderTypeId;
 	shipmentId = returnHeader.shipmentId;
 	
 	shipment = delegator.findByPrimaryKey("Shipment", [shipmentId : shipmentId]);
@@ -67,6 +66,4 @@ if(returnId){
 	
 	context.dataJSON = dataJSONList.toString();
 	context.returnType = "sales";
-	
-	
 }
