@@ -8,11 +8,11 @@
 *
 *
 */
-
 import org.ofbiz.base.util.*;
 import javolution.util.FastMap;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductReportServices;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -24,7 +24,7 @@ numWarns = 0;
 numErrors = 0;
 
 dctx = dispatcher.getDispatchContext();
-productList = ByProductServices.getByProductProducts(delegator, UtilDateTime.nowTimestamp());
+productList = ByProductNetworkServices.getByProductProducts(dctx, UtilMisc.toMap());
 productList.each{ eachProd ->
    status = "OK";
    hasError = false;
