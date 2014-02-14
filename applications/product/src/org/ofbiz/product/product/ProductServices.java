@@ -1798,7 +1798,7 @@ public class ProductServices {
 		  return result;  
     }
     
-    public static String processChangeIndentMIS(HttpServletRequ est request, HttpServletResponse response) {
+    public static String processChangeIndentMIS(HttpServletRequest request, HttpServletResponse response) {
   	  Delegator delegator = (Delegator) request.getAttribute("delegator");
   	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
   	  Locale locale = UtilHttp.getLocale(request);
