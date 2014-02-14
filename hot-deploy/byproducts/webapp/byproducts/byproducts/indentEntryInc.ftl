@@ -112,6 +112,7 @@ function updateGrid(){
 							var  tripNo = tripId.charAt(tripId.length-1);
 							var routeCrateTotal = result["routeCrateTotal"];
 							prodIndentQtyCat = result["prodIndentQtyCat"];
+							priceTags = result["productPrice"];
 							qtyInPieces = result["qtyInPieces"];
 							if(routeCapacity != undefined){
 								if(routeCapacity < routeCrateTotal){
@@ -167,7 +168,7 @@ function updateGrid(){
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	//var uomMap = ${StringUtil.wrapString(uomMapJSON)!'{}'};
 	var productQtyInc = ${StringUtil.wrapString(productQtyIncJSON)!'{}'};
-	//var priceTags = ${StringUtil.wrapString(productPriceJSON)!'{}'};
+	var priceTags;
 	//var productCrates = ${StringUtil.wrapString(productCratesJSON)!'{}'};
 		
 	function requiredFieldValidator(value) {
@@ -413,8 +414,8 @@ function updateGrid(){
 				else{
 					roundedAmount = Math.round((qty*price) * 100) / 100;
 				}
-				//data[args.row]["unitPrice"] = price;
-				//data[args.row]["amount"] = (roundedAmount);
+				data[args.row]["unitPrice"] = price;
+				data[args.row]["amount"] = (roundedAmount);
 				_grid.updateRow(args.row);
 				var totalAmount = 0;
 				for (i = 0; i < data.length; i++) {
@@ -550,7 +551,7 @@ function updateGrid(){
 			if(isNaN(qty)){
 				qty = 0;
 			}
-			//data[i]["unitPrice"] = price;
+			data[i]["unitPrice"] = price;
 			if(screenFlag != 'DSCorrection'){
 				//var crateQty = parseFloat(qtyInPieces[prod]);
 				//data[i]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
@@ -559,7 +560,7 @@ function updateGrid(){
 				//data[i]["amount"] = Math.round((qty*price*crateQty) * 100)/100;
 			}
 			else{
-				//data[i]["amount"] = Math.round((qty*price) * 100)/100;
+				data[i]["amount"] = Math.round((qty*price) * 100)/100;
 			}
 			_grid.updateRow(i);
 		}
