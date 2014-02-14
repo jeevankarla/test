@@ -1734,7 +1734,7 @@ under the License.
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="tripId" type="String" mode="IN" optional="true"/>
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="closeDate" type="Timestamp" mode="IN" optional="true"/> 
+        <attribute name="closedDate" type="Timestamp" mode="IN" optional="true"/> 
     </service>
     <service name="cancelVendorMarginReport" engine="java" auth="true" transaction-timeout="300"
         location="org.ofbiz.network.LMSSalesHistoryServices" invoke="cancelVendorMarginReport">
