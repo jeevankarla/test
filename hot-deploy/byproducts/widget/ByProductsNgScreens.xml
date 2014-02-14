@@ -69,10 +69,10 @@
                         	<widgets>
                         	<link target="EmployeeSubsidy" text="Create" style="buttontext"></link>
                         		<screenlet title="Employee Search">
-                        			<include-form name="EmployeeSearchForm" location="component://byproducts/widget/EmployeeSearchForm.xml"/>
+                        			<include-form name="CreateEmployeeSubsidyForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml"/>
                         		</screenlet>
                         		<screenlet title="Employee Search Result">
-                        			<include-form name="EmployeeSearchResultForm" location="component://byproducts/widget/EmployeeSearchForm.xml"/>
+                        			<include-form name="EmployeeSearchResultForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml"/>
                         		</screenlet>
                             </widgets>
                     	</section>
@@ -92,7 +92,7 @@
                       	<section>
                         	<widgets>
                         		 <screenlet title="Employee Subsidy Form">
-                        			<include-form name="EmployeeSubsidyForm" location="component://byproducts/widget/EmployeeSearchForm.xml"/>
+                        			<include-form name="EmployeeSubsidyForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml"/>
                         		</screenlet>
                             	                   
                             </widgets>
@@ -139,8 +139,8 @@
                       <decorator-section name="body">
                       	<section>
                         	<widgets>
-                        		<screenlet title="EmployeeSearchForm">
-                        			<include-form name="EmployeeSearchForm" location="component://byproducts/widget/EmployeeSearchForm.xml"/>
+                        		<screenlet title="EmployeeSubsidyForm">
+                        			<include-form name="EmployeeSubsidyForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml"/>
                         		</screenlet>
                             </widgets>
                     	</section>

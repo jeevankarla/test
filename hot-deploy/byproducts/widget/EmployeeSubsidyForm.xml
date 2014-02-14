@@ -2,7 +2,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 	   
-	<form name="EmployeeSearchForm" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
+	<form name="CreateEmployeeSubsidyForm" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
     	default-table-style="basic-table hover-bar" separate-columns="true" target="EmployeeSearch">
     	<field name="hideSearch"><hidden value="Y" /></field>
 		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -39,6 +39,7 @@
         </field>  
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time></date-time></field>
     	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time></date-time></field>
+    	<field name="tripId"><hidden value="TRIP1"></hidden></field>
     	<field name="submitButton" title="Save" ><submit button-type="button"/></field>    
     	<field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
             <hyperlink target="EmployeeSearch" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="intra-app">

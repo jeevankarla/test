@@ -618,11 +618,12 @@
         <attribute name="shipmentId" mode="IN" type="String" optional="false"/>
         <attribute name="shipmentTypeId" mode="IN" type="String" optional="false"/>
     </service>
-    <service name="createFacilityEmployee" engine="java"
-            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createFacilityEmployee">
+   <service name="createOrUpdateEmployeeSubsidy" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateEmployeeSubsidy">
         <description>Create Employee</description>
         <attribute name="facilityId" type="String" mode="INOUT" optional="false"/>
         <attribute name="partyId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="tripId" type="String" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>

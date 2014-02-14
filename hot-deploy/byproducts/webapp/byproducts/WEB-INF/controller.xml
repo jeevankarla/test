@@ -965,7 +965,7 @@
     
      <request-map uri="createEmployee">
         <security https="true" auth="true"/>
-        <event type="service"  invoke="createFacilityEmployee"/>
+        <event type="service"  invoke="createOrUpdateEmployeeSubsidy"/>
         <response name="success" type="view" value="EmployeeSearch"/>
          <response name="error" type="view" value="EmployeeSubsidy"/>
     </request-map> 

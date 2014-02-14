@@ -2255,10 +2255,6 @@ public class ProductServices {
 					  crateQuantity = quantity;
 					  quantity = DeprecatedNetworkServices.convertCratesToPackets(product.getBigDecimal("quantityIncluded"),crateQuantity);
 	    		  
-				  }else if(productSubscriptionTypeId.equals("EMP_SUBSIDY")&& crateIndentProductList.contains(productId)){
-					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
-					  crateQuantity = quantity;
-					  quantity = DeprecatedNetworkServices.convertCratesToPackets(product.getBigDecimal("quantityIncluded"),crateQuantity);
 				  }else{
 					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
 					  //crateQuantity = quantity;
