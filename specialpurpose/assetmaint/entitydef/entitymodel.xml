@@ -183,4 +183,100 @@
             <key-map field-name="inventoryItemId"/>
         </relation>
     </view-entity>
+     <!-- ========================================================= -->
+	<!-- org.ofbiz.assetmaint.vehicle -->
+	<!-- ========================================================= -->
+    <entity entity-name="Vehicle" package-name="org.ofbiz.assetmaint.vehicle "
+		title="Vehicle Entity">
+		<field name="vehicleId" type="id-ne"></field>
+		<field name="vehicleName" type="name"></field>
+		<field name="dateAcquired" type="date-time"></field>
+		<field name="vehicleCapacity" type="fixed-point"></field>
+		<field name="uomId" type="id"></field>
+		<field name="serialNumber" type="long-varchar"></field>
+		<field name="vehicleNumber" type="long-varchar"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		<field name="createdDate" type="date-time"></field>      
+      	<field name="lastModifiedDate" type="date-time"></field>
+		<prim-key field="vehicleId" />
+		<relation type="one" fk-name="FIXEDAST_ID" rel-entity-name="FixedAsset">
+			<key-map field-name="fixedAssetId" />
+		</relation>
+	</entity>
+	<entity entity-name="VehicleRole" package-name="org.ofbiz.assetmaint.vehicle "
+		title="Vehicle Entity">
+		<field name="vehicleId" type="id-ne"></field>
+		<field name="roleTypeId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="fromDate" type="date-time"></field>
+		<field name="thruDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		<field name="createdDate" type="date-time"></field>      
+      	<field name="lastModifiedDate" type="date-time"></field>
+		<prim-key field="vehicleId" />
+		<prim-key field="roleTypeId" />
+		<prim-key field="partyId" />
+		<prim-key field="fromDate" />
+		<relation type="many" fk-name="VEHR_ID" rel-entity-name="Vehicle">
+			<key-map field-name="vehicleId" />
+		</relation>
+		<relation type="one" fk-name="VEHR_RTID" rel-entity-name="RoleType">
+			<key-map field-name="roleTypeId" />
+		</relation>
+		<relation type="one" fk-name="VEHR_PTID" rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+	</entity>
+   <entity entity-name="VehicleTrip" package-name="org.ofbiz.assetmaint.vehicle "
+		title="Vehicle Entity">
+		<field name="vehicleId" type="id-ne"></field>
+		<field name="sequenceNum" type="id-ne"></field>
+		<field name="originFacilityId" type="id-ne"></field>
+		<field name="shipmentId" type="id-ne"></field>
+		<field name="estimatedStartDate" type="date-time"></field>
+		<field name="estimatedEndDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		<field name="createdDate" type="date-time"></field>      
+      	<field name="lastModifiedDate" type="date-time"></field>
+		<prim-key field="vehicleId" />
+		<prim-key field="sequenceNum" />
+		<relation type="many" fk-name="VEHTR_ID" rel-entity-name="Vehicle">
+			<key-map field-name="vehicleId" />
+		</relation>
+		<relation type="one" fk-name="VEHR_FAID" rel-entity-name="Facility">
+			<key-map field-name="originFacilityId"  rel-field-name="facilityId"/>
+		</relation>
+		<relation type="one" fk-name="VEHR_SHPT" rel-entity-name="Shipment">
+			<key-map field-name="shipmentId" />
+		</relation>
+	</entity>
+	<entity entity-name="VehicleTripStatus" package-name="org.ofbiz.assetmaint.vehicle "
+		title="Vehicle Entity">
+		<field name="vehicleId" type="id-ne"></field>
+		<field name="sequenceNum" type="id-ne"></field>
+		<field name="statusId" type="id-ne"></field>
+		<field name="facilityId" type="id-ne"></field>
+		<field name="estimatedStartDate" type="date-time"></field>
+		<field name="estimatedEndDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		<field name="createdDate" type="date-time"></field>      
+      	<field name="lastModifiedDate" type="date-time"></field>	
+		<prim-key field="vehicleId" />
+		<prim-key field="sequenceNum" />
+		<prim-key field="statusId" />
+		<relation type="one" fk-name="VEHTS_TRID" rel-entity-name="VehicleTrip">
+			<key-map field-name="vehicleId" />
+			<key-map field-name="sequenceNum"/>
+		</relation>
+		<relation type="one" fk-name="VEHR_FAID" rel-entity-name="Facility">
+			<key-map field-name="facilityId"/>
+		</relation>
+		<relation type="one" fk-name="VEHR_SI" rel-entity-name="StatusItem">
+			<key-map field-name="statusId" />
+		</relation>
+	</entity>
 </entitymodel>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods.xsd">
+        
+     <simple-method method-name="createVehicleTrip" short-description="create Vehicle Trip">
+         <now-timestamp field="nowTimestamp"/>
+         <make-value value-field="newEntity" entity-name="VehicleTrip"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!--  <set field="newEntity.vehicleId" from-field="parameters.vehicleId"/>
+         <set field="newEntity.shipmentId" from-field="parameters.shipmentId"/>
+         <set field="newEntity.originFacilityId" from-field="parameters.originFacilityId" /> -->
+         <set field="newEntity.estimatedStartDate" from-field="parameters.estimatedStartDate" default-value="${nowTimestamp}" type="Timestamp"/>
+        <if-not-empty field="parameters.estimatedEndDate">
+             <set field="newEntity.estimatedEndDate" from-field="parameters.estimatedEndDate" type="Timestamp" />
+        </if-not-empty>
+        <if-empty field="parameters.sequenceNum">
+                <make-next-seq-id value-field="newEntity" seq-field-name="sequenceNum" />
+        </if-empty>
+        <set from-field="nowTimestamp" field="newEntity.createdDate"/>
+        <set from-field="nowTimestamp" field="newEntity.lastModifiedDate"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
+        
+        <log level="always"  message="newEntity========================${newEntity}"></log>
+        
+        <create-value value-field="newEntity"></create-value>
+    </simple-method>
+    
+    <simple-method method-name="updateVehicleTrip" short-description="create Vehicle Trip">
+         <now-timestamp field="nowTimestamp"/>
+         <entity-one entity-name="VehicleTrip" value-field="newEntity">
+                <field-map field-name="vehicleId" from-field="parameters.vehicleId"/>
+                <field-map field-name="sequenceNum" from-field="parameters.sequenceNum"/>
+          </entity-one>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+       <if-not-empty field="parameters.estimatedEndDate">
+             <set field="newEntity.estimatedEndDate" from-field="parameters.estimatedEndDate" type="Timestamp"/>
+        </if-not-empty>
+        <store-value value-field="newEntity"/>
+    </simple-method>
+    
+   <simple-method method-name="createVehicleTripStatus" short-description="create Vehicle Trip Status">
+                 <now-timestamp field="nowTimestamp"/>
+         <make-value value-field="newEntity" entity-name="VehicleTripStatus"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+         <set field="newEntity.estimatedStartDate" from-field="parameters.estimatedStartDate" default-value="${nowTimestamp}" type="Timestamp"/>
+        <if-not-empty field="parameters.estimatedEndDate">
+             <set field="newEntity.estimatedEndDate" from-field="parameters.estimatedEndDate"/>
+        </if-not-empty>
+         <set from-field="nowTimestamp" field="newEntity.createdDate" />
+        <set from-field="nowTimestamp" field="newEntity.lastModifiedDate"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateVehicleTripStatus" short-description="Update Vehicle Trip Status">
+         <now-timestamp field="nowTimestamp"/>
+         <entity-one entity-name="VehicleTripStatus" value-field="newEntity">
+                <field-map field-name="vehicleId" from-field="parameters.vehicleId"/>
+                <field-map field-name="sequenceNum" from-field="parameters.sequenceNum"/>
+                <field-map field-name="statusId" from-field="parameters.statusId"/>
+          </entity-one>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-not-empty field="parameters.estimatedEndDate">
+             <set field="newEntity.estimatedEndDate" from-field="parameters.estimatedEndDate"/>
+        </if-not-empty>
+        <set from-field="nowTimestamp" field="newEntity.lastModifiedDate" />
+        <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
+        <store-value value-field="newEntity"/>
+    </simple-method>
+    
+    
+</simple-methods>

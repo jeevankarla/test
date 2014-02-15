@@ -58,4 +58,33 @@ under the License.
         <description>Create WorkEffort and Associate it with Parent (identified by workEffortFromId)</description>
         <implements service="createWorkEffortAndAssoc"/>
     </service>
+    
+    <service name="createVehicleTrip" engine="simple" default-entity-name="VehicleTrip"
+            location="component://assetmaint/script/org/ofbiz/assetmaint/VehicleServices.xml" invoke="createVehicleTrip">
+        <description>Create Vehicle Trip</description>
+        <auto-attributes mode="IN" entity-name="VehicleTrip" optional="true"/>
+        <attribute name="vehicleId" mode="IN" type="String" optional="false"/>		
+    </service>
+    <service name="createVehicleTripStatus" engine="simple" default-entity-name="VehicleTripStatus"
+            location="component://assetmaint/script/org/ofbiz/assetmaint/VehicleServices.xml" invoke="createVehicleTripStatus">
+        <description>Create Vehicle Trip Status</description>
+         <auto-attributes mode="IN" entity-name="VehicleTripStatus" optional="true"/> 
+         <attribute name="vehicleId" mode="IN" type="String" optional="false"/>
+         <attribute name="sequenceNum" mode="IN" type="String" optional="false"/>
+         <attribute name="statusId" mode="IN" type="String" optional="false"/>	
+    </service>
+    <service name="updateVehicleTrip" engine="simple" default-entity-name="VehicleTrip"
+            location="component://assetmaint/script/org/ofbiz/assetmaint/VehicleServices.xml" invoke="updateVehicleTrip">
+        <description>Update Vehicle Trip</description>
+        <auto-attributes mode="IN" entity-name="VehicleTrip" optional="true"/>
+        <attribute name="vehicleId" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="updateVehicleTripStatus" engine="simple" default-entity-name="VehicleTripStatus"
+            location="component://assetmaint/script/org/ofbiz/assetmaint/VehicleServices.xml" invoke="updateVehicleTripStatus">
+        <description>Update Vehicle Trip Status</description>
+        <auto-attributes mode="IN" entity-name="VehicleTripStatus" optional="true"/> 
+        <attribute name="vehicleId" mode="IN" type="String" optional="false"/>
+        <attribute name="sequenceNum" mode="IN" type="String" optional="false"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+    </service>
 </services>

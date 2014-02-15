@@ -5,7 +5,6 @@
 
 <script type="text/javascript">
 
-
     $(document).ready(function(){
             $("#wizard-2").steps({
                 headerTag: "h3",
@@ -30,21 +29,21 @@
 
                 <form id="form-2" action="#">
                     <div id="wizard-2">
-                        <h3>Vehicle Loading</h3>
+                        <h3>Product Returns</h3>
                         <section>
                                 <li>Foo1</li>
                                 <li>Bar1</li>
                                 <li>Foobar1</li>
                         </section>
 
-                        <h3>Vehicle In-transit</h3>
+                        <h3>Crate Returns</h3>
                         <section>
                                 <li>Foo2</li>
                                 <li>Bar2</li>
                                 <li>Foobar2</li>
                         </section>
 
-                        <h3>Vehicle Returned</h3>
+                        <h3>Vehicle staus change</h3>
                         <section>
                             <ul>
                                 <li>Foo3</li>
@@ -53,7 +52,7 @@
                             </ul>
                         </section>
 
-                        <h3>Vehicle Reconciled</h3>
+                        <h3>Finalize</h3>
                         <section>
                                 <li>Foo4</li>
                                 <li>Bar4</li>
