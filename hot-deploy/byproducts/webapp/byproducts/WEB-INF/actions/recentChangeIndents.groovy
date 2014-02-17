@@ -148,16 +148,19 @@ routes.each{eachItem ->
 context.routeJSON = routeJSON;
 //context.productIdLabelJSON = productIdLabelJSON;
 
-prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
+/*prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelsJSON = new JSONObject();
+JSONObject productLabelIdJSON = new JSONObject();
 context.productList = prodList;
 prodList.each{ eachItem ->
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
-	newObj.put("label",eachItem.productId + " [" + eachItem.productName + "]");
+	newObj.put("label", eachItem.description );
 	productItemsJSON.add(newObj);
-	productIdLabelsJSON.put(eachItem.productId, eachItem.productId + " [" + eachItem.productName + "]")
+	productIdLabelsJSON.put(eachItem.productId, eachItem.description)
+	productLabelIdJSON.putAt(eachItem.description, eachItem.productId);
 }
 context.productItemsJSON = productItemsJSON;
 context.productIdLabelJSON = productIdLabelsJSON;
+context.productLabelIdJSON = productLabelIdJSON;*/
