@@ -1275,5 +1275,234 @@
                     	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/invoiceSlips.fo.ftl"/></html></platform-specific>                 
                 </widgets>
             </section>
-   </screen>       
+   </screen>
+   	<screen name="AdhocSale">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Ad Hoc Sales"/>              
+			   <set field="tabButtonItem" value="AdhocSale" />	
+			   <set field="tabButtonItem2" value="AdhocSale"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="orderFacility" from-field="parameters.orderFacility"/> 
+               <set field="orderRoute" from-field="parameters.orderRoute"/> 
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />					  					  
+            </actions>
+            <widgets>
+              <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">   
+                      <include-menu name="AdhocSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                      	<section>
+                      		<widgets>
+           						<include-screen name="AdhocSaleInner"/>
+                      		</widgets>
+                      	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+         <screen name="AdhocSaleInner">
+        <section>
+        	<!-- <condition>                      		
+				<if-has-permission permission="BYPRODUCTS" action="_INDENT"/>	              					
+       		</condition> -->
+            <actions>
+                <set field="titleProperty" value="Indent Entry"/>	
+               <set field="tabButtonItem" value="indentEntryInit"/>
+               <set field="tabButtonItem2" value="IndentEntry"/>
+               <set field="changeFlag" from-field="changeFlag"/> 
+               <set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+               <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+               </entity-one>
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+               <set field="checkListType" value="indentEntry"/>
+               <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+               <set field="routeList" value="${groovy:in.vasista.vbiz.byproducts.ByProductServices.getByproductRoutes(delegator).get(&quot;routesList&quot;);}" type="List"/>  
+               <!-- <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />    -->            
+                <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>  
+                    	<condition-expr field-name="enumId" operator="not-equals" value="CARD"/> 
+                    	 <condition-expr field-name="enumId" operator="not-equals" value="LEAK"/>  
+                    	                  	
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                <entity-condition list="shipmentTypes" entity-name="ShipmentType">
+               		<condition-expr field-name="shipmentTypeId" operator="equals" value="BYPROD_DIRECT_SALE"/>
+               </entity-condition>
+               <!--  <entity-condition entity-name="Facility" list="routeList" use-cache="true">
+                    <condition-list>
+                    	<condition-expr field-name="facilityTypeId" value="BYPROD_ROUTE"/>
+                    </condition-list>
+                </entity-condition> -->
+                <entity-condition entity-name="Product" list="productList" use-cache="true">
+                </entity-condition>                
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+               <set field="routeId" from-field="parameters.routeId"/>            
+            </actions>
+            <widgets>
+               	<section>
+                 	 <widgets>
+          					<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen>     
+       <screen name="AdhocSaleNew">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Ad Hoc Sales"/>              
+			   <set field="tabButtonItem" value="AdhocSale" />	
+			   <set field="tabButtonItem2" value="AdhocSale"/> 
+               <set field="changeFlag" value="AdhocSaleNew"/>  
+               <set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/> 
+               <set field="boothId" from-field="parameters.boothId"/>
+                <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                    <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                <entity-condition list="shipmentTypes" entity-name="ShipmentType">
+               		<condition-expr field-name="parentTypeId" operator="equals" value="BYPROD_SUPPLIMENTARY"/>
+               </entity-condition>
+                <set field="checkListType" value="indentEntry"/>
+                <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+                 <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                  <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+                <!-- <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />  -->              
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocIndentForm.groovy"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>                
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>                
+            </actions>
+            <widgets>
+               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">   
+                      <include-menu name="AdhocSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>                   
+                        <section>
+                    	   <condition>
+                    			<and>                     		
+	              					<if-has-permission permission="BYPRODUCTS" action="_INDENT"/>
+                   					<not><if-empty field="booth"/></not>
+                    			</and>
+                        		
+                    		</condition> 
+                            	<widgets>
+                            	    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>
+                                </widgets>
+                            <fail-widgets>
+                                <include-screen name="DirectInitInner"/>								                           
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+     <screen name="FindAdhocSalesOrder">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find AdHoc Sales"/>              
+			    <set field="tabButtonItem" value="AdhocSale" />	
+			   <set field="tabButtonItem2" value="FindAdhocSalesOrder"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+            </actions>
+            <widgets>
+                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">   
+                      <include-menu name="AdhocSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindAdhocSalesOrder" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                      						<!-- <link target="parlourSalesOrders.csv" text="Export As CSV" style="buttontext create">
+									  	 		<parameter param-name="orderId" from-field="parameters.orderId"/>
+												<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+												<parameter param-name="orderDate" from-field="parameters.orderDate"/>
+												<parameter param-name="orderType" from-field="parameters.orderType"/>
+												<parameter param-name="salesChannelEnumId" from-field="parameters.salesChannelEnumId"/>
+												<parameter param-name="statusId" from-field="parameters.statusId"/>
+												<parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
+												<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
+									  	 	</link> -->
+                          					<include-form name="listAdhocSalesOrders" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen> 
+    <screen name="printAdhocOrderPDF">
+		<section>
+			<actions>
+				 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocOrderFind.groovy" />				
+			</actions>
+			<widgets>	
+				<platform-specific>
+	            	<html><html-template location="component://byproducts/webapp/byproducts/reports/AdhocOrderPrint.fo.ftl"/></html>
+	            </platform-specific>					
+	        </widgets>								
+		</section>
+	</screen>
+	<screen name="AdhocOrderCorrection">
+		<section>
+			<actions>
+			   <set field="titleProperty" value="AdHoc Sale Correction"/>              
+			    <set field="tabButtonItem" value="AdhocSale" />	
+               <set field="changeFlag" value="AdhocOrderCorrection"/>  
+				 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/AdhocOrderFind.groovy" />	
+			</actions>
+			<widgets>	
+			 <decorator-screen name="nelloreDairyCommonDecorator" location="component://nelloredairy/widget/CommonScreens.xml">
+                      <decorator-section name="body">                     
+                        <section>
+                    	   <condition>
+                    			<and>                     		
+	              					<if-has-permission permission="BYPRODUCTS" action="_INDENT"/>
+                   					<not><if-empty field="booth"/></not>
+                    			</and>
+                    		</condition> 
+                            	<widgets>
+                            	    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/DirectOrderCorrection.ftl"/></html></platform-specific>
+                                </widgets>
+                            <fail-widgets>
+                                <include-screen name="AdhocSaleInner"/>								                           
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+	        </widgets>								
+		</section>
+	</screen>
 </screens>
