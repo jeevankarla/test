@@ -130,6 +130,7 @@
         <event type="service" path="" invoke="createByProductFacility"/>
         <response name="success" type="request-redirect" value="EditFacility"/>
         <response name="error" type="view" value="EditFacility"/>
+       
     </request-map>
     <request-map uri="UpdateByProductFacility">
         <security https="true" auth="true"/>
@@ -969,6 +970,48 @@
         <response name="success" type="view" value="EmployeeSearch"/>
          <response name="error" type="view" value="EmployeeSubsidy"/>
     </request-map> 
+    <!-- adhoc/DirectSale requests -->
+     <request-map uri="AdhocSale">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdhocSale"/>   
+       <response name="failed" type="view" value="AdhocSale"/>  
+    </request-map> 
+   <request-map uri="AdhocSaleNew">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdhocSaleNew"/>
+         <response name="failed" type="view" value="AdhocSaleNew"/>
+   </request-map>
+   
+    <request-map uri="processAdhocSale">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="processAdhocSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="AdhocSale">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="orderFacility"/>
+     		<redirect-parameter name="orderRoute"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="AdhocSale"/>
+    </request-map>
+    <request-map uri="FindAdhocSalesOrder">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindAdhocSalesOrder"/>
+         <response name="failed" type="view" value="FindAdhocSalesOrder"/>
+   </request-map>
+  <request-map uri="cancelAdhocSalesOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelAdhocSalesOrder"/>
+      	<response name="success" type="view" value="FindAdhocSalesOrder"/>
+        <response name="error" type="view" value="FindAdhocSalesOrder"/>
+    </request-map>
+    <request-map uri="AdhocOrderCorrection">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdhocOrderCorrection"/>
+    </request-map>
+     <request-map uri="printAdhocOrder">
+     	<security https="true" auth="true"/>
+        <response name="success" type="view" value="printAdhocOrderPDF"/>
+    </request-map>
     
     <!--  margin requests -->
     <request-map uri="TransporterMargins">
@@ -1163,6 +1206,13 @@
  	<view-map name="EmployeeSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSearch"/>
  	<view-map name="EmployeeSearchResult" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSearchResult"/>
  	<view-map name="EmployeeSubsidy" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSubsidy"/>
+ 	
+ 	<view-map name="AdhocSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AdhocSale"/>
+ 	<view-map name="AdhocSaleNew" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AdhocSaleNew"/>
+    <view-map name="FindAdhocSalesOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindAdhocSalesOrder"/>
+    <view-map name="AdhocOrderCorrection" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AdhocOrderCorrection"/>
+    <view-map name="printAdhocOrderPDF" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#printAdhocOrderPDF" content-type="application/pdf"/>
+    
  <!-- Transporter views -->
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
