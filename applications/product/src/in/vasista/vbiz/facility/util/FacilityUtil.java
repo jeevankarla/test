@@ -17,7 +17,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.network.DeprecatedNetworkServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
@@ -46,7 +45,6 @@ import org.ofbiz.service.ServiceUtil;
 	    		Debug.logError(e, module);    			
 				return ServiceUtil.returnError(e.getMessage());    		
 			}
-			
 	    	
 	        return ServiceUtil.returnSuccess();
 	    }
