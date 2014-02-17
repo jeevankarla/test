@@ -427,9 +427,11 @@
     <service name="createByprodSOorGiftBooth" engine="java" auth="true" transaction-timeout="3000"
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createByprodSOorGiftBooth">
         <description>Create Byprod Special Order Booth.</description> 
-        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>         
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/> 
+        <attribute name="partyClassificationGroupId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/>            
         <attribute name="boothId" type="String" mode="IN" optional="false"/>
-        <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="true"/>
         <attribute name="name" mode="IN" type="String" optional="false"/>
         <attribute name="firstName" type="String" mode="IN" optional="true"/>
         <attribute name="lastName" type="String" mode="IN" optional="true"/>
@@ -640,5 +642,14 @@
         <attribute name="fromDate" type="Timestamp" mode="OUT" optional="true"/>
           <attribute name="slabAmount" type="BigDecimal" mode="IN" optional="true"/>
         <override name="rateTypeId" optional="false"/>
+    </service>
+    <service name="cancelAdhocSalesOrder" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelAdhocSalesOrder">
+        <description> Cancel Direct Sales Order</description>        
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="originFacilityId" mode="IN" type="String" optional="true"/>
+         <attribute name="shipmentId" mode="IN" type="String" optional="true"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+        <!-- <attribute name="oldStatusId" mode="OUT" type="String" optional="false"/> -->
     </service>
 </services>
