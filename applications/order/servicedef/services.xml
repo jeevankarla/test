@@ -1187,4 +1187,9 @@ under the License.
         <description>Create Order Payment Application</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="adjustRoundingDiffForOrder" engine="java"
+                location="org.ofbiz.order.order.OrderServices" invoke="adjustRoundingDiffForOrder" auth="true">
+        <attribute name="orderId" mode="INOUT" type="String" optional="false"/>
+    </service>
+    
 </services>

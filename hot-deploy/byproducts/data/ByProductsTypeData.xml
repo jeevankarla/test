@@ -73,6 +73,8 @@
     <OrderAdjustmentType orderAdjustmentTypeId="VAT_TAX" parentTypeId="" hasTable="N" description="Vat_Tax"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
     <OrderAdjustmentType orderAdjustmentTypeId="WARRANTY_ADJUSTMENT" parentTypeId="" hasTable="N" description="Warranty_Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
     
+   
+    
     <SubscriptionType subscriptionTypeId="BYPRODUCTS" hasTable="N" description="BYPRODUCTS"/>
     
     <Enumeration enumId="PARLOR_SALES_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="PARLOR SALES CHANNEL" description="ByProducts Parlor Sales Channel" lastUpdatedStamp="2013-01-10 17:26:47.0" lastUpdatedTxStamp="2013-01-10 17:26:47.0" createdStamp="2013-01-10 17:25:10.0" createdTxStamp="2013-01-10 17:25:10.0"/>
@@ -182,6 +184,10 @@
      <StatusItem description="Cancel Failed" sequenceId="80" statusCode="CANCEL_FAILED" statusId="CANCEL_FAILED" statusTypeId="COM_EVENT_STATUS"/>
      <StatusValidChange condition="" statusId="CANCEL_INPROCESS" statusIdTo="COM_CANCELLED" transitionName=" canceld in process"/>
      <StatusValidChange condition="" statusId="CANCEL_INPROCESS" statusIdTo="CANCEL_FAILED" transitionName="cancel failed"/>
+     
+     <OrderAdjustmentType orderAdjustmentTypeId="ROUNDING_ADJUSTMENT" parentTypeId="" hasTable="N" description="Rounding Adjustment"  lastUpdatedStamp="2011-09-07 11:40:50.50" lastUpdatedTxStamp="2011-09-07 11:40:50.50" createdStamp="2011-09-07 11:40:50.50" createdTxStamp="2011-09-07 11:40:50.50"/>
+    <InvoiceItemType description="Rounding Adjustment" hasTable="N" invoiceItemTypeId="ROUNDING_ADJUSTMENT"/>
+	<InvoiceItemTypeMap invoiceTypeId="SALES_INVOICE" invoiceItemMapKey="ROUNDING_ADJUSTMENT" invoiceItemTypeId="ROUNDING_ADJUSTMENT"/>
     
      
 </entity-engine-xml>

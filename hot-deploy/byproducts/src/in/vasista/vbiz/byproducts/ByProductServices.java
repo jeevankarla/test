@@ -2239,11 +2239,26 @@ public class ByProductServices {
    	  			  return resultMap;			  
    	  	 	}
         }
+        // let's handle order rounding here
+        try{   
+        	    Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+        	    roundAdjCtx.put("orderId", orderId);
+	  	 		Map result = dispatcher.runSync("adjustRoundingDiffForOrder",roundAdjCtx);  		  		 
+	  	 		if (ServiceUtil.isError(result)) {
+	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
+	  	 			Debug.logError(errMsg , module);       				
+	  	 			return result;
+	  	 		}
+
+	  	 	}catch (Exception e) {
+	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);     
+	  			  return resultMap;			  
+	  	 	}
         // approve the order
         if (UtilValidate.isNotEmpty(orderId)) {
             boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);       
             
-            /*try{            	
+           /* try{            	
         		resultMap = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"userLogin", userLogin));
         		if (ServiceUtil.isError(resultMap)) {
                     Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(resultMap), module);

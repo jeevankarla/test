@@ -7111,6 +7111,42 @@ Debug.logError("startDate=" + startDate + "; endDate=" + endDate, module);
 		}		 
 		return str;
 	}
+	
+   public static Map<String, Object> adjustRoundingDiffForOrder(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+        Locale locale = (Locale) context.get("locale");     
+        Map result = ServiceUtil.returnSuccess();
+        BigDecimal roundingAmount = BigDecimal.ZERO;
+		try {
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			OrderReadHelper orh = new OrderReadHelper(delegator, orderId);
+			BigDecimal orderAmount = orh.getOrderGrandTotal();
+			roundingAmount = (orderAmount.setScale(0, orderRounding)).subtract(orderAmount);
+			// add rounding  adjustment "ROUNDING_ADJUSTMENT"
+			String orderAdjustmentTypeId = "ROUNDING_ADJUSTMENT";
+			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
+	    	 createOrderAdjustmentCtx.put("orderId", orderId);
+	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
+	    	 createOrderAdjustmentCtx.put("amount", roundingAmount);
+	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
+	     	 if (ServiceUtil.isError(result)) {
+	                Debug.logWarning("There was an error while creating  the adjustment: " + ServiceUtil.getErrorMessage(result), module);
+	         		return ServiceUtil.returnError("There was an error while creating the adjustment: " + ServiceUtil.getErrorMessage(result));          	            
+	         } 
+		
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+        result = ServiceUtil.returnSuccess("Successfully added the adjustment!!");
+        result.put("orderId", orderId);
+        return result;
+    }
+	
+	
 }
 
 
