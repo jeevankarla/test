@@ -318,6 +318,7 @@
         	</link>
         </menu-item>
     </menu>
+    
      <menu name="FacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FacilityProfile">
 		<actions> 
@@ -613,6 +614,17 @@
                 <parameter param-name="originFacilityId" from-field="facilityId"/>
                 <parameter param-name="lookupFlag" value="Y"/>
             </link>
+        </menu-item>
+        
+       <menu-item name="AdhocSale" title="Adhoc Sale">  
+      <!--   <condition>
+				<or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="GATEPASS"  action="_ADMIN"/>
+				</or>            	
+         </condition>   -->          
+         <link target="AdhocSale">    
+         </link>
         </menu-item>
         <!-- <menu-item name="EditFacilityContent" title="${uiLabelMap.ProductContent}">
 			<condition>				
@@ -975,4 +987,12 @@
             </link>
         </menu-item> -->
     </menu> 
+     <menu name="AdhocSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="AdhocSale" title="Adhoc Sale">
+        	<link target="AdhocSale"/>
+        </menu-item>
+        <menu-item name="FindAdhocSalesOrder" title="Find Adhoc Orders">
+        	<link target="FindAdhocSalesOrder"/>
+        </menu-item>
+      </menu>
 </menus>
