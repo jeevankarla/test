@@ -101,7 +101,6 @@ import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import com.ibm.icu.util.Calendar;
 import org.ofbiz.base.util.Debug;
 import org.apache.commons.lang.StringUtils;
-import org.ofbiz.network.DeprecatedNetworkServices;
 /**
  * Order Processing Services
  */
@@ -5729,7 +5728,7 @@ public class OrderServices {
     }
     
    
-    public static Map<String, Object> createLMSShipment(DispatchContext dctx, Map<String, ? extends Object> context) {
+  /*  public static Map<String, Object> createLMSShipment(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();       
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -5913,7 +5912,7 @@ public class OrderServices {
             		tempSubId = subId;
             		tempTypeId = typeId;        		
             	}
-                /*condition: "!(typeId.startsWith(tempTypeId))" is to generate same order for CASH_FS and CASH*/
+                condition: "!(typeId.startsWith(tempTypeId))" is to generate same order for CASH_FS and CASH
             	if (!tempSubId.equals(subId) ||
             		(!tempTypeId.equals(typeId) && !(typeId.startsWith(tempTypeId)))) {
             			result = createSalesOrderSubscriptionProductType(dctx, context, orderSubProdsList);
@@ -5992,7 +5991,7 @@ public class OrderServices {
         return ServiceUtil.returnSuccess();
     }
     
-/*    public static Map<String, Object> createSalesOrderSubscriptionProduct(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> createSalesOrderSubscriptionProduct(DispatchContext dctx, Map<String, ? extends Object> context) {
          need to clean up this get all  SubscriptionProductTypes from EnumTypeId    	
         createSalesOrderSubscriptionProductType(dctx,context,"CARD");   	
     	createSalesOrderSubscriptionProductType(dctx,context,"CASH");       
@@ -6000,7 +5999,7 @@ public class OrderServices {
     	createSalesOrderSubscriptionProductType(dctx,context,"SPECIAL_ORDER");
     	
         return ServiceUtil.returnSuccess();
-    }*/
+    }
     public static Map<String, Object> createSalesOrderSubscriptionProductType(DispatchContext dctx, Map<String, ? extends Object> context,List<GenericValue> subscriptionProductsList) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
@@ -6304,8 +6303,8 @@ public class OrderServices {
     	
         return result;
     }  
-    
-	public static String createGatePassIndent(HttpServletRequest request,HttpServletResponse response) {
+*/    
+	/*public static String createGatePassIndent(HttpServletRequest request,HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		Locale locale = UtilHttp.getLocale(request);
@@ -6639,10 +6638,10 @@ public class OrderServices {
 			     					TransactionUtil.rollback();
 			     					 return "error";
 			     			}		     	
-			    			/*GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
+			    			GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
 			    			List<GenericValue> prodCatalogCategoryList = delegator.findList("ProdCatalogCategory", EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,product.getString("primaryProductCategoryId")),null, null, null, false);
 			    			List<GenericValue> productStoreCatalogList = delegator.findList("ProductStoreCatalog", EntityCondition.makeCondition("prodCatalogId",EntityOperator.EQUALS,(String) prodCatalogCategoryList.get(0).getString("prodCatalogId")), null, null, null, false);
-			    			productStoreId = (String) productStoreCatalogList.get(0).getString("productStoreId");*/
+			    			productStoreId = (String) productStoreCatalogList.get(0).getString("productStoreId");
 					  } catch (Exception e) {
 						  Debug.logError(e, "Cannot parse date string: " + e.getMessage(), module);
 			            // effectiveDate = UtilDateTime.nowTimestamp();
@@ -6918,54 +6917,54 @@ public class OrderServices {
 		  return "success";     
 	 }
 
-    /**
+    *//**
      * This is a batch service that settles cash orders by creating a payment and 
      * applying it to the card order invoice.  
      * NOTE:: This is a temporary service until payments integration is completed
      * @param ctx the dispatch context
      * @param context 
      * @return result map
-     */    
+     *//*    
     public static Map<String, Object> batchSettleLMSCashOrders(DispatchContext dctx, Map<String, Object> context){
     	context.put("productSubscriptionTypeId", "CASH");
     	context.put("paymentMethodType", "VBIZ_PAYIN");    	
     	return batchSettleLMSOrders(dctx, context);
     }
     
-    /**
+    *//**
      * This is a batch service that settles card orders by creating a payment and 
      * applying it to the card order invoice.  Cards orders are actually advance pay orders 
      * but for efficiency/simplicity we auto create payments after order generation
      * @param ctx the dispatch context
      * @param context 
      * @return result map
-     */    
+     *//*    
     public static Map<String, Object> batchSettleLMSCardOrders(DispatchContext dctx, Map<String, Object> context){
     	context.put("productSubscriptionTypeId", "CARD");
     	return batchSettleLMSOrders(dctx, context);
     }
 
-    /**
+    *//**
      * This is a batch service that settles card orders by creating a payment and 
      * applying it to the card order invoice.  Cards orders are actually advance pay orders 
      * but for efficiency/simplicity we auto create payments after order generation
      * @param ctx the dispatch context
      * @param context 
      * @return result map
-     */    
+     *//*    
     public static Map<String, Object> batchSettleLMSSpecialOrders(DispatchContext dctx, Map<String, Object> context){
     	context.put("productSubscriptionTypeId", "SPECIAL_ORDER");
     	return batchSettleLMSOrders(dctx, context);
     }
     
-    /**
+    *//**
      * This is a batch service that settles orders by creating a payment and 
      * applying it to the order invoice. 
      * Note: Only VENDOR and PTC booths will be handled in this method
      * @param ctx the dispatch context
      * @param context 
      * @return result map
-     */    
+     *//*    
     public static Map<String, Object> batchSettleLMSOrders(DispatchContext dctx, Map<String, Object> context){
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -7100,7 +7099,7 @@ Debug.logError("startDate=" + startDate + "; endDate=" + endDate, module);
 		return ServiceUtil.returnSuccess();
         
     }
-    
+ */   
 	public static String nameTrim(String str,int n){		
 		int strlen=str.length();		
 		if(strlen<n){   

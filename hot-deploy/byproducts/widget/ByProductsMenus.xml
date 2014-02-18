@@ -319,7 +319,8 @@
         </menu-item>
     </menu>
     
-     <menu name="FacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    
+    <menu name="ByProductFacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FacilityProfile">
 		<actions> 
             <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
@@ -806,9 +807,9 @@
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>                
             </link>
         </menu-item> -->
-        <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
+       <!--  <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
             <link target="FindTransporterDue"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="Returns" title="${uiLabelMap.Returns}">
             <link target="FindReturns"/>
         </menu-item>  

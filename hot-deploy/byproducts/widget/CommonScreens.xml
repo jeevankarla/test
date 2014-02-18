@@ -69,7 +69,7 @@
                                 <if-has-permission permission="BYPRODUCTS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                            	<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="FacilityTabBar"/>
+                            	<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ByProductFacilityTabBar"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -81,7 +81,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="MyPortalByProductFacilityTree">
+   <screen name="MyPortalByProductFacilityTreeNg">
         <section>
             <actions>
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
@@ -96,52 +96,7 @@
 				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentAndSaleValue.groovy" /> -->                           
             </actions>
             <widgets>  
-               <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ByProductsTabBar"/>
-               		 <!-- <platform-specific> 
-                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentDateSelection.ftl"/></html>
-                     </platform-specific>                     
-	            	<container style="lefthalf">
-	            	    <screenlet >	            	   
-	            	    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/printProductList.ftl"></html-template></html></platform-specific>	
-	     	        		<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAndSaleValue.ftl"></html-template></html></platform-specific>
-	        	     	</screenlet>
-	            	</container>
-	            	<container style="righthalf">
-	        	     	<screenlet >	
-	     	        		<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentOutLetAndProductLevel.ftl"></html-template></html></platform-specific>
-	        	     	</screenlet>
-	            	</container>
-	            	<container style="clear"/> -->
-	            	<container style="lefthalf">
-	             		<screenlet title="Zone Network">  
-	            			 <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/facilityTree.ftl"></html-template></html></platform-specific>
-						</screenlet>
-					</container>
-					<!-- <container style="righthalf">
-	             		<screenlet title="Route Network">  
-	            			 <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/RouteFacilityTree.ftl"></html-template></html></platform-specific>
-						</screenlet>
-					</container>	 -->              	
-            </widgets>
-         </section>
-    </screen>
-    
-       <screen name="MyPortalByProductFacilityTreeNg">
-        <section>
-            <actions>
-                <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="titleProperty" value="ProductFacilityMain"/>
-         
-                <set field="headerItem" value="facility"/>
-                <set field="tabButtonItem" value="FacilityTreeNetwork"/>
-               <!--  <set field="isTreeRoot" value="Y"/> -->
-               <set field="indentDate" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;MMMMM dd, yyyy&quot;);}"  value="${parameters.indentDate}"/>
-				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facilityTreeNetwork.groovy" />
-				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/RouteTreeNetwork.groovy" />
-				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentAndSaleValue.groovy" /> -->                           
-            </actions>
-            <widgets>  
-               <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="FacilityTabBar"/>
+               <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ByProductFacilityTabBar"/>
                		 <!-- <platform-specific> 
                             	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentDateSelection.ftl"/></html>
                      </platform-specific>                     

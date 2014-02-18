@@ -65,7 +65,7 @@ under the License.
                             <widgets>
                                 <section>
                                     <widgets>
-                                        <include-menu name="FacilityTabBar" location="${dairyLmsMenuLocation}"/>
+                                        <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
                                     </widgets>
                                 </section>
                             </widgets>

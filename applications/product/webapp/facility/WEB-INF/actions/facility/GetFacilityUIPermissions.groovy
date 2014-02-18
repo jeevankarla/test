@@ -55,7 +55,7 @@ if (context.ctxFacilityId != null) {
 	ctxFacility = delegator.findByPrimaryKey("Facility", [facilityId : context.ctxFacilityId]);
 	context.ctxFacility = ctxFacility;
 }
-//now setting the menu location for dashboard
+/*//now setting the menu location for dashboard
 if(!session.getAttribute("dairyLmsMenuLocation")){
 	session.setAttribute("dairyLmsMenuLocation", "component://product/widget/facility/FacilityMenus.xml");
 	dairyLmsMenuLocationConfig = delegator.findOne("TenantConfiguration", [propertyTypeEnumId:"LMS", propertyName:"dairyLmsMenuLocation"], true);
@@ -63,7 +63,7 @@ if(!session.getAttribute("dairyLmsMenuLocation")){
 		session.setAttribute("dairyLmsMenuLocation", dairyLmsMenuLocationConfig.propertyValue);
 	}	
 }
-context.dairyLmsMenuLocation = session.getAttribute("dairyLmsMenuLocation");
+context.dairyLmsMenuLocation = session.getAttribute("dairyLmsMenuLocation");*/
 
 /*
 else {

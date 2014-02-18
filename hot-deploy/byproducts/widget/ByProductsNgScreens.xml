@@ -372,7 +372,7 @@
               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/> 
                 <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getReturnItems.groovy"/> -->
-                <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/byproducts/images/dispatchReconcilAjaxSubmit.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -404,7 +404,7 @@
                     </condition-list>
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
-               <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/> -->
+               <set field="layoutSettings.javaScripts[]" value="/byproducts/images/dispatchReconcilAjaxSubmit.js" global="true"/> -->
 			</actions>
 			<widgets>
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -440,7 +440,7 @@
                     </condition-list>
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
-               <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/> -->
+               <set field="layoutSettings.javaScripts[]" value="/byproducts/images/dispatchReconcilAjaxSubmit.js" global="true"/> -->
 			</actions>
 			<widgets>
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -476,7 +476,7 @@
                     </condition-list>
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
-               <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/>
+               <set field="layoutSettings.javaScripts[]" value="/byproducts/images/dispatchReconcilAjaxSubmit.js" global="true"/>
 			</actions>
 			<widgets>
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -511,7 +511,7 @@
                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/> 
-              <!--  <set field="layoutSettings.javaScripts[]" value="/facility/images/dispatchReconcilAjaxSubmit.js" global="true"/>  -->
+              <!--  <set field="layoutSettings.javaScripts[]" value="/byproducts/images/dispatchReconcilAjaxSubmit.js" global="true"/>  -->
                <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>
                 --><!-- <set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/> -->          
             </actions>
@@ -603,7 +603,7 @@
                 <set field="defaultEffectiveDateTime" value="${supDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-				<set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/>  
+				 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/changeIndentAjaxSubmit.js" global="true"/>  
 				<!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>   -->                            	    
             </actions>
             <widgets>
@@ -667,7 +667,7 @@
             
                <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> 
-               <set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/>          
+               <set field="layoutSettings.javaScripts[]" value="/byproducts/images/changeIndentAjaxSubmit.js" global="true"/>          
                <set field="routeId" from-field="parameters.routeId"/>                       
             </actions>
             <widgets>	            
@@ -1275,8 +1275,8 @@
                     	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/invoiceSlips.fo.ftl"/></html></platform-specific>                 
                 </widgets>
             </section>
-   </screen>
-   	<screen name="AdhocSale">
+   </screen>  
+   <screen name="AdhocSale">
         <section>
             <actions>
                <set field="titleProperty" value="Ad Hoc Sales"/>              
@@ -1505,4 +1505,5 @@
 	        </widgets>								
 		</section>
 	</screen>
+  	       
 </screens>

@@ -652,4 +652,41 @@
         <attribute name="statusId" mode="IN" type="String" optional="false"/>
         <!-- <attribute name="oldStatusId" mode="OUT" type="String" optional="false"/> -->
     </service>
+    <!-- Migrated services -->
+    <service name="processDispatchReconcilHelper" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processDispatchReconcilHelper" auth="true">
+        <description>Populate and Update ItemIssuance for Dispatch Reconciliation Entity</description>
+
+        <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+    </service>
+    
+      <service name="processChangeRouteIndentHelper" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="processChangeRouteIndentHelper" auth="true">
+        <description>Populate and Update Facility-Party Entity</description>
+        <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+    </service>
+      <service name="processChangeIndentHelper" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="processChangeIndentHelper" auth="true">
+        <description>Change indent helper to store subscription</description>
+        
+        <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+        <attribute name="routeChangeFlag" type="String" mode="IN" optional="true"/>
+        <attribute name="subscriptionId" type="String" mode="OUT" optional="true"/>
+        <attribute name="indentChangeFlag" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    
 </services>

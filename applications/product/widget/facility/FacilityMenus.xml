@@ -96,7 +96,7 @@ under the License.
             <link target="FindFacilityGroup">
             </link>
         </menu-item>
-        <menu-item name="TruckSheet" title="${uiLabelMap.ProductFacilityTruckSheet}">
+       <!--  <menu-item name="TruckSheet" title="${uiLabelMap.ProductFacilityTruckSheet}">
 			<condition>
 				<or>
 					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -106,8 +106,8 @@ under the License.
             </condition>         
             <link target="TruckSheet">
             </link>
-        </menu-item>    
-        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+        </menu-item>     -->
+        <!-- <menu-item name="reports" title="${uiLabelMap.CommonReports}">
 			<condition>
 				<or>
 					<if-has-permission permission="REPORTS"  action="_VIEW"/>
@@ -144,7 +144,7 @@ under the License.
             </condition>         
             <link target="LMSChartsDayVolumeTotals">
             </link>
-        </menu-item>                              
+        </menu-item> -->                              
         <menu-item name="EditFacility" title="${uiLabelMap.ProductFacility}">
 			<condition>				
 				<and>
@@ -159,14 +159,14 @@ under the License.
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
         </menu-item>        
-       <menu-item name="FacilityOrders" title="${uiLabelMap.ProductFacilityNewSpecialOrder}">
+       <!-- <menu-item name="FacilityOrders" title="${uiLabelMap.ProductFacilityNewSpecialOrder}">
             <condition>
                 <if-compare field="enablePhase2" operator="equals" value="true"/>
             </condition>         
             <link target="FindFacilitySpecialOrders" >
                 <parameter param-name="displayFacilityTabs" value="Y"/>
 			</link>            
-        </menu-item>      
+        </menu-item>   -->    
         <menu-item name="FindFacilityLocation" title="${uiLabelMap.ProductLocations}">
             <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
@@ -347,7 +347,7 @@ under the License.
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
        </menu-item> -->
-        <menu-item name="QuotaList" title="Quota Listing">
+        <!-- <menu-item name="QuotaList" title="Quota Listing">
 			<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -368,8 +368,8 @@ under the License.
             <link target="BulkCardSale">
              <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
-       </menu-item>         
-       <menu-item name="ChangeIndentInit" title="${uiLabelMap.ChangeIndentMIS}">
+       </menu-item>     -->     
+       <!-- <menu-item name="ChangeIndentInit" title="${uiLabelMap.ChangeIndentMIS}">
 			<condition>
 				<or>
 					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -443,7 +443,7 @@ under the License.
        </menu-item> 
         <menu-item name="AbsenteeOverride" title="${uiLabelMap.AbsenteeOverride}">
             <link target="AbsenteeOverride"/>
-        </menu-item> 
+        </menu-item> --> 
         <!-- <menu-item name="FinancialHistory" title="${uiLabelMap.PartyFinancialHistory}">
             <condition>
             	<and>
@@ -459,18 +459,18 @@ under the License.
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>                
             </link>
         </menu-item> -->
-        <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
+       <!--  <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
             <link target="FindTransporterDue"/>
         </menu-item>
         <menu-item name="FindBankRemittance" title="${uiLabelMap.BankRemittance}">
             <link target="FindBankRemittance"/>
-        </menu-item>
+        </menu-item> -->
       <!--   <menu-item name="FindFacilityRates" title="${uiLabelMap.Rates}">
             <link target="FindFacilityRates"/>
         </menu-item> -->
-        <menu-item name="FacilityRecovery" title="${uiLabelMap.Recovery}">
+       <!--  <menu-item name="FacilityRecovery" title="${uiLabelMap.Recovery}">
             <link target="FacilityRecovery"/>
-        </menu-item>        
+        </menu-item>  -->       
     </menu>
     <menu name="FacilityUpdate">
         <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
@@ -514,28 +514,7 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="FindPaymentsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
-          <menu-item name="FindPayments" title="${uiLabelMap.FindPayments}">
-            <link target="FindBoothPayments"/>
-          </menu-item>
-          <menu-item name="AponlinePaymentEntry" title="${uiLabelMap.AponlinePaymentEntry}">
-            <link target="AponlinePaymentEntry"/>            
-          </menu-item>         
-    </menu>
-     <menu name="AbsenteeOverrideTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
-          <menu-item name="AbsenteeList" title="${uiLabelMap.AbsenteeList}">
-            <link target="AbsenteeOverride">
-            	<parameter param-name="shipListType" value="absenteeList"/>
-            </link>
-          </menu-item>
-          <menu-item name="OverrideList" title="${uiLabelMap.OverrideList}">
-            <link target="AbsenteeOverride">
-            	<parameter param-name="shipListType" value="overrideList"/>
-            </link>            
-          </menu-item>         
-    </menu>
+   
     <menu name="FindLocationsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditFacility" selected-menuitem-context-field-name="subTabButtonItem">
           <menu-item name="createnewlocation" title="${uiLabelMap.CreateNewLocation}">
@@ -656,19 +635,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="FacilitySpecialOrdersTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem1">
-        <menu-item name="Find" title="${uiLabelMap.CommonFind}">
-            <link target="FindFacilitySpecialOrders">
-            	<parameter param-name="facilityId" from-field="facilityId"/>
-            </link>
-        </menu-item>
-        <menu-item name="SpecialOrderDetails" title="${uiLabelMap.AdjustSpecialOrder}">
-            <link target="SpecialOrderDetails">
-            	<parameter param-name="${subscriptionId}"/>
-            </link>
-        </menu-item>        
-    </menu> 
-    
+   
     <menu name="CardSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
 		<menu-item name="CardSale" title="${uiLabelMap.NewMilkCardOrder}">
 			<link target="BulkCardSale"></link>
@@ -716,62 +683,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="LMSChartsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="LMSChartsDayVolumeTotals" title="Day's Volume Totals">
-			<condition>
-				<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>            
-            </condition>         
-            <link target="LMSChartsDayVolumeTotals">
-            </link>
-        </menu-item> 
-        <menu-item name="LMSChartsDayRevenueTotals" title="Day's Revenue Totals">
-			<condition>
-				<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>            
-            </condition>         
-            <link target="LMSChartsDayRevenueTotals">
-            </link>
-        </menu-item> 
-        <menu-item name="LMSChartsDayCashReceivables" title="Day's Cash Receivables">
-			<condition>
-				<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>            
-            </condition>         
-            <link target="LMSChartsDayCashReceivables">
-            </link>
-        </menu-item>         
-        <menu-item name="LMSChartsDailySales" title="Daily Sales Trend">
-			<condition>
-				<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>            
-            </condition>         
-            <link target="LMSChartsDailySales">
-            </link>
-        </menu-item>       
-    </menu>
-   <menu name="TransporterDueTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="TransporterDue" selected-menuitem-context-field-name="subTabButtonItem">
-          <menu-item name="FindTransporterDue" title="${uiLabelMap.FindTransporterDue}">
-            <link target="FindTransporterDue"/>
-          </menu-item>
-          
-          <menu-item name="AdjustTransporterDue" title="${uiLabelMap.AdjustTransporterDue}">
-          	<condition>
-          		<if-compare operator="equals" value="Y" field="enableTrnsporterDuePayment"/>
-          	</condition>
-            <link target="AdjustTransporterDue"/>            
-          </menu-item>         
-    </menu>
-    <menu name="EditFacilitySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        <menu name="EditFacilitySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FacilityOverView" selected-menuitem-context-field-name="subTabButtonItem">
           <actions> 
             <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		

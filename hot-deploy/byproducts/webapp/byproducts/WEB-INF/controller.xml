@@ -240,10 +240,7 @@
     </request-map>
     <request-map uri="indentEntry"><security https="true" auth="true"/><response name="success" type="view" value="IndentEntry"/></request-map>
 	
-	<request-map uri="checkListReport.pdf">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="CheckListReportsPDF"/>
-    </request-map>
+	
     <request-map uri="stockTransferInOut.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="StockTransferInOutPDF"/>
@@ -1037,6 +1034,24 @@
         <response name="failed" type="view" value="TransporterMargins"/>
         <response name="error" type="view" value="TransporterMargins"/>
     </request-map>
+    <!-- migrated requests -->
+    <request-map uri="processDispatchReconcilMISAjax">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices" invoke="processDispatchReconcilMIS"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <request-map uri="processChangeIndentMISAjax">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="processChangeIndentMIS"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="checkListReport.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CheckListReportsPDF"/>
+    </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#main"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -1188,7 +1203,7 @@
 	<view-map name="ChannelWiseSalesChart" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ChannelWiseSalesChart"/>
 	<view-map name="Reports" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#Reports"/>
 	<view-map name="TruckSheetTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetTXT" content-type="text/plain"/>
-	<view-map name="RouteQuantityAbstractTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RouteQuantityAbstractTXT" content-type="text/plain"/>	
+	<!-- <view-map name="RouteQuantityAbstractTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RouteQuantityAbstractTXT" content-type="text/plain"/> -->	
 	<view-map name="DSCorrectionEntryInit" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DSCorrectionEntryInit"/>
 	<view-map name="DSCorrectionEntryNew" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DSCorrectionEntryNew"/>
 	<view-map name="DispatchReconciliation" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DispatchReconciliation"/>
@@ -1217,4 +1232,5 @@
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
 <!-- Transporter views -->
+  
 </site-conf>

@@ -148,17 +148,8 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FacilityChildren"/>
     </request-map>
-    <request-map uri="FacilityNewSpecialOrder">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="routeOrderEntry"/>
-        <response name="init" type="view" value="simpleinit"/>
-        <response name="cart" type="view" value="simplecart"/>
-        <response name="error" type="view" value="simpleinit"/>
-    </request-map>  
-    <request-map uri="FindFacilitySpecialOrders">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindFacilitySpecialOrders"/>
-    </request-map>      
+ 
+      
     <request-map uri="CreateFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFacility"/>
@@ -436,33 +427,10 @@ under the License.
         <response name="success" type="view" value="BulkCardSaleAlt"/>
         <response name="error" type="view" value="BulkCardSaleAlt"/>
     </request-map>
-    <request-map uri="processChangeIndentMIS">
-        <security https="true" auth="true"/>
-        <event type="java"  path="org.ofbiz.product.product.ProductServices" invoke="processChangeIndentMIS"/>                
-        <response name="success" type="view" value="ChangeIndentInit"/>
-        <response name="error" type="view" value="ChangeIndentMIS"/>
-    </request-map>
-    <request-map uri="processChangeIndentMISAjax">
-        <security https="true" auth="true"/>
-        <event type="java"  path="org.ofbiz.product.product.ProductServices" invoke="processChangeIndentMIS"/> 
-        <response name="success" type="request" value="json"/>
-        <response name="error" type="request" value="json"/>
-    </request-map>
-    
-    <request-map uri="processDispatchReconcilMISAjax">
-        <security https="true" auth="true"/>
-        <event type="java"  path="org.ofbiz.product.product.ProductServices" invoke="processDispatchReconcilMIS"/> 
-        <response name="success" type="request" value="json"/>
-        <response name="error" type="request" value="json"/>
-    </request-map>
     
     
-    <request-map uri="createSpecialOrderSubscription">
-        <security https="true" auth="true"/>
-        <event type="java"  path="org.ofbiz.product.subscription.SubscriptionServices" invoke="createSpecialOrderSubscription"/>                
-        <response name="success" type="request" value="SpecialOrderDetails"/>
-        <response name="error" type="view" value="simpleinit"/>
-    </request-map>
+    
+   
     <request-map uri="SpecialOrderDetails">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="SpecialOrderDetails"/>
@@ -2198,8 +2166,7 @@ under the License.
 	<view-map name="FindSubscription" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindSubscription"/>
 	<view-map name="EditSubscription" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditSubscription"/>
 	<view-map name="ChangeOrderEntryForm" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ChangeOrderEntryForm"/>
-	<view-map name="ChangeIndentInit" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ChangeIndentInit"/>
-	<view-map name="ChangeIndentMIS" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ChangeIndentMIS"/>
+	
 	<view-map name="GatePassInit" type="screen" page="component://product/widget/facility/FacilityScreens.xml#GatePassInit"/>
 	<view-map name="GatePass" type="screen" page="component://product/widget/facility/FacilityScreens.xml#GatePass"/>
 	<view-map name="TruckSheetCorrectionInit" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TruckSheetCorrectionInit"/>
@@ -2220,7 +2187,6 @@ under the License.
 	<view-map name="CardSaleReportPDF" type="screenfop" page="component://product/widget/facility/ReportScreens.xml#CardSaleReportPDF" content-type="text/plain" encoding="none"/>
 	<view-map name="BulkCardSale" type="screen" page="component://product/widget/facility/FacilityScreens.xml#BulkCardSale"/>
 	<view-map name="BulkCardSaleAlt" type="screen" page="component://product/widget/facility/FacilityScreens.xml#BulkCardSaleAlt"/>
-    <view-map name="checkListReport" type="screenfop" page="component://product/widget/facility/ReportScreens.xml#CheckListReportsPDF" content-type="text/plain" encoding="none"/>
     <view-map name="PaymentsCheckList" type="screenfop" page="component://product/widget/facility/ReportScreens.xml#PaymentsCheckList" content-type="text/plain" encoding="none"/>
     <view-map name="PartyFinancialHistory" type="screen" page="component://product/widget/facility/FacilityAccountScreens.xml#PartyFinancialHistory"/>
     <view-map name="LookupOrderHeaderAndShipInfo" type="screen" page="component://order/widget/ordermgr/LookupScreens.xml#LookupOrderHeaderAndShipInfo"/>

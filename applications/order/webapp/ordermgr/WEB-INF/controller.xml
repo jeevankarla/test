@@ -1188,19 +1188,7 @@ under the License.
             <redirect-parameter name="reportBy" from="parameters.reportDate"/>
         </response>
     </request-map>
-     <request-map uri="GenerateTruckSheet.pdf"><security https="true" auth="true"/>
-        <response name="success" type="view" value="TruckSheetReportPDF"/>
-    </request-map>
-     <request-map uri="GenarateVendorMarginReport.pdf"><security https="true" auth="true"/>
-        <response name="success" type="view" value="VendorMarginReportTXT"/>
-    </request-map>
-     <request-map uri="GenerateTruckSheet.txt"><security https="true" auth="true"/>
-        <response name="success" type="view" value="TruckSheetReportTXT"/>
-    </request-map>
-	<request-map uri="DisplayDuesReport.pdf">
-		<security https="true" auth="true" />
-		<response name="success" type="view" value="DisplayDuesReportPDF" />
-	</request-map>      
+     
     <request-map uri="SalesReport.pdf"><security https="true" auth="true"/>
         <event type="groovy" path="component://order/webapp/ordermgr/WEB-INF/actions/reports/" invoke="SalesReport.groovy"/>
         <response name="success" type="view" value="SalesOrderReportPDF"/>
@@ -1992,12 +1980,7 @@ under the License.
     <view-map name="SalesByStoreReport" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#SalesByStoreReport" content-type="application/pdf" encoding="none"/>
     <view-map name="OpenOrderItemsReport" type="screen" page="component://order/widget/ordermgr/ReportScreens.xml#OpenOrderItemsReport"/>
     <view-map name="PurchasesByOrganizationReport" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#PurchasesByOrganizationReport" content-type="application/pdf" encoding="none"/>
-	<view-map name="TruckSheetReportPDF" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#TruckSheetReportPDF" content-type="application/pdf"/>
-	<view-map name="TruckSheetReportTXT" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#TruckSheetReportPDF" content-type="text/plain"/>
-	<view-map name="DisplayDuesReportPDF" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#DisplayDuesReportPDF" content-type="text/plain"/>
-	
-	<view-map name="VendorMarginReportTXT" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#VendorMarginReportTXT" content-type="text/plain"/>
-	
+
     <view-map name="SalesOrderReportPDF" type="birt" page="component://order/webapp/ordermgr/reports/SalesReport.rptdesign" content-type="application/pdf"/>
     <view-map name="SalesOrderReportWeekPDF" type="birt" page="component://order/webapp/ordermgr/reports/SalesReportWeek.rptdesign" content-type="application/pdf"/>
     <view-map name="SalesOrderReportMonthPDF" type="birt" page="component://order/webapp/ordermgr/reports/SalesReportMonth.rptdesign" content-type="application/pdf"/>

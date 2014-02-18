@@ -1332,42 +1332,7 @@ under the License.
         </field> 
         <field name="lastModifiedByUserLogin" title="${uiLabelMap.FormFieldTitle_userId}"><display/></field>        
     </form>   
-    <form name="ChangeSubscriptionProductForm" type="multi" use-row-submit="true" list-name="productList" title="" target="processChangeOrder"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate="false"  default-title-style="h2">
-        <field name="productId"  title="${uiLabelMap.ProductProduct}">
-        	<display description="${productId} - ${internalName}"/>
-        </field>
-        <field name="quantity" title="${uiLabelMap.ChangeOrderQuantity}">
-            <text size="5" maxlength="10"/>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" title-style="h2"  widget-area-style="h2" widget-style="smallSubmit" action="javascript:appendParamsToProcessChangeOrder();" event="onclick">
-            <submit button-type="button"/>
-        </field>
-    </form>    
-    <form name="ChangeSubscriptionIndentMIS" type="multi" use-row-submit="true" list-name="productList" title="" target="processChangeIndentMIS"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate="false"  default-title-style="h2">
-        <field name="productId"  title="${uiLabelMap.ProductProduct}">
-        	<display description="${productId} - ${internalName}"/>
-        </field>
-         <field name="quantity" title="${uiLabelMap.OrderQuantity}">
-            <text size="5" maxlength="10"/>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" title-style="h2"  widget-area-style="h2" widget-style="smallSubmit" action="javascript:appendParamsToProcessChangeIndentMIS();" event="onclick">
-            <submit button-type="button"/>
-        </field>
-    </form>   
-    <form name="GatePassForm" type="multi" use-row-submit="true" list-name="productList" title="" target="createGatePassIndent"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate="false"  default-title-style="h2">
-        <field name="productId"  title="${uiLabelMap.ProductProduct}">
-        	<display description="${productId} - ${internalName}"/>
-        </field>
-        <field name="quantity" title="${uiLabelMap.OrderQuantity}">
-            <text size="5" maxlength="10"/>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" title-style="h2"  widget-area-style="h2" widget-style="smallSubmit" action="javascript:appendParamsToCreateGatePassIndent();" event="onclick">
-            <submit button-type="button"/>
-        </field>
-    </form>
+   
     <form name="SpecialOrderSubscriptionProductForm" type="multi" use-row-submit="true" list-name="productList" title="" target="createSpecialOrderSubscription"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate="false"  default-title-style="h2">
         <field name="productId"  title="${uiLabelMap.ProductProduct}">

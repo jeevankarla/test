@@ -92,6 +92,110 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="DespatchReportCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/DespatchReportCSV.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="DespatchReportForms" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="IndentVsDispatchMonthlyCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/IndentVsDispatchMonthly.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="IndentVsDespatchReportForms" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="SalesReportCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/SalesReportCSV.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="SalesReportForms" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="StockTransferInOutPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/TransferInOut.groovy" /> 
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/byproducts/StockTransferStatement.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="ParlourRecieptStmt">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportFlag" value="ParlourReceipts"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/ParlourRecieptAndSalesStmt.groovy" /> 
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/byproducts/ParlourRecieptAndSalesStmt.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="RoutewiseIndentReportTXT">
 		<section>
 			<actions>
@@ -293,6 +397,7 @@
         </section>
     </screen>
     
+    <!--  migrated screen-->
     <screen name="CheckListReportsPDF">
         <section>
             <actions>
@@ -301,12 +406,12 @@
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>         
                 <set field="checkListType" type="String"  value="${parameters.checkListType}"/>     
-                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/checkListReport.groovy"/>  
                 <!-- <script location="component://product/webapp/facility/WEB-INF/actions/facility/checkListReport.groovy"/> -->          
             </actions>            
             <widgets>            	
 				<platform-specific> 
-                     <xsl-fo><html-template location="component://byproducts/webapp/byproducts/byproducts/entryCheckListReport.fo.ftl"/></xsl-fo>
+                     <xsl-fo><html-template location="component://byproducts/webapp/byproducts/byproducts/checkListReport.fo.ftl"/></xsl-fo>
                 </platform-specific>			
             </widgets>
         </section>

@@ -76,7 +76,7 @@ under the License.
 
     <webapp name="catalog" title="Product" server="default-server" location="webapp/catalog"
         base-permission="OFBTOOLS,CATALOG" mount-point="/catalog"/>
-    <webapp name="facility" title="Network" server="default-server" location="webapp/facility"
+    <webapp name="facility" title="Facility" server="default-server" location="webapp/facility"
         base-permission="OFBTOOLS,FACILITYVIEWAPP" mount-point="/facility"/>
 
 </ofbiz-component>

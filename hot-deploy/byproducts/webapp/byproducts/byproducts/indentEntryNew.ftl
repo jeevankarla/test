@@ -14,10 +14,10 @@
         	<#if screenFlag?exists && screenFlag != 'DSCorrection'>
         	<ul>
    				<li>
-   					<a href="<@ofbizUrl>checkListReport?userLoginId=${userLogin.get("userLoginId")}&&checkListType=changeindent&&all=Y</@ofbizUrl>" target="_blank">All Check List</a>
+   					<a href="<@ofbizUrl>checkListReport.txt?userLoginId=${userLogin.get("userLoginId")}&&checkListType=changeindent&&all=Y</@ofbizUrl>" target="_blank">All Check List</a>
             	</li>  
    				<li>
-   					<a href="<@ofbizUrl>checkListReport?userLoginId=${userLogin.get("userLoginId")}&&checkListType=changeindent</@ofbizUrl>" target="_blank">My Check List</a>
+   					<a href="<@ofbizUrl>checkListReport.txt?userLoginId=${userLogin.get("userLoginId")}&&checkListType=changeindent</@ofbizUrl>" target="_blank">My Check List</a>
             	</li>                      
          	</ul>
          	</#if>
