@@ -19,7 +19,7 @@ import org.ofbiz.service.DispatchContext;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
-import org.ofbiz.network.NetworkServices;
+
 import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.byproducts.ByProductReportServices;
@@ -72,9 +72,7 @@ if(dayWiseSale){
 				boothCategory = facilityDetail.get(boothId.toLowerCase());
 			}
 			categoryType = boothCategory.get("categoryTypeEnum");
-			/*if(categoryType == "BYPROD_GIFT" || categoryType == "BYPROD_SO" ||categoryType == "REPLACEMENT_BYPROD" || categoryType == "KFROS"){
-				categoryType = "OTHERS";
-			}*/
+			
 			classification = boothCategory.get("partyClassification");
 			productQuant = daywiseFacilitySaleEntry.getValue(); 
 			Iterator productQuantIter = productQuant.entrySet().iterator();
