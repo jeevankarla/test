@@ -19,7 +19,7 @@
 	import java.math.BigDecimal;
 	import java.math.MathContext;
 	import org.ofbiz.base.util.UtilNumber;
-	import org.ofbiz.network.NetworkServices;
+
 	import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	import in.vasista.vbiz.byproducts.ByProductServices;
 	
@@ -49,14 +49,14 @@
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			thruEffectiveDate = UtilDateTime.toTimestamp(dateFormat.parse(thruEffectiveDateStr));
-		} catch (ParseException e) {
+		}catch (ParseException e) {
 			Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
 		}
 	}
 	intervalDays = (UtilDateTime.getIntervalInDays(effectiveDate, thruEffectiveDate)+1);
 	
 	context.put("effectiveDate", effectiveDate);
-	formattedEffDate = UtilDateTime.toDateString(effectiveDate, "dd MMMMM yyyy");`
+	formattedEffDate = UtilDateTime.toDateString(effectiveDate, "dd MMMMM yyyy");
 	formattedThruEffDate = UtilDateTime.toDateString(thruEffectiveDate, "dd MMMMM yyyy");
 	if(intervalDays > 1){
 		context.reportDate = formattedEffDate+" - "+formattedThruEffDate;
