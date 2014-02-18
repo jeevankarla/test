@@ -26,7 +26,7 @@
 	import org.ofbiz.entity.condition.*;
 	import org.ofbiz.entity.util.*;
 	import org.ofbiz.base.util.*;
-	import org.ofbiz.network.NetworkServices;
+	
 	import java.util.*;
 	import java.text.ParseException;
 	import java.text.SimpleDateFormat;
@@ -88,11 +88,7 @@
 	context.grandTotalsMap = grandTotalsMap;
 	context.facilityCategoryList = facilityCategoryList;
 	unionCategoriesList=[];
-	/*unionCategories = delegator.findList("ProductCategoryAttribute", EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "UNION_TAXABLE"),null, null, null, false);
-	unionCatList = EntityUtil.getFieldListFromEntityList(unionCategories, "productCategoryId", false);
-	
-	unionCategoriesSeqList = delegator.findList("ProductCategory", EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, unionCatList),UtilMisc.toSet("productCategoryId"), ["sequenceNum"], null, false);
-	unionCategoriesList = EntityUtil.getFieldListFromEntityList(unionCategoriesSeqList, "productCategoryId", false);*/
+
 	
 	context.unionCategoriesList = unionCategoriesList;
 
