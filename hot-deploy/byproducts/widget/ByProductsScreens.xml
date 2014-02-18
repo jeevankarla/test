@@ -390,30 +390,7 @@
             </widgets>
         </section>
     </screen>       
-    <screen name="ParlourRecieptAndSalesStmt">
-		<section>
-			<actions>
-				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<set field="reportFlag" value="ParlourSales"/>
-				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/ParlourRecieptAndSalesStmt.groovy" /> 
-			</actions>
-			<widgets>
-				<section>
-					<widgets>
-						<platform-specific>
-							<xsl-fo>
-								<html-template
-									location="component://byproducts/webapp/byproducts/byproducts/ParlourRecieptAndSalesStmt.fo.ftl" />
-							</xsl-fo>
-						</platform-specific>
-					</widgets>
-				</section>
-			</widgets>
-		</section>
-	</screen>
+   
     
 
     <!-- <screen name="IndentEntry">
@@ -1697,44 +1674,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="CD15Dairy">
-	    <section>
-	    	<actions>
-				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>				
-				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/DeliveryScheduleReport.groovy" />	
-			</actions>
-			<widgets>
-				<platform-specific>
-				 	<xsl-fo>
-						<html-template	location="component://byproducts/webapp/byproducts/byproducts/RoutewiseIndentReport.fo.ftl" />
-					</xsl-fo>
-				</platform-specific>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="CD15Union">
-	    <section>
-	    	<actions>
-				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>				
-				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/DeliveryScheduleReport.groovy" />	
-			</actions>
-			<widgets>
-				<platform-specific>
-				 	<xsl-fo>
-						<html-template	location="component://byproducts/webapp/byproducts/byproducts/RoutewiseIndentReport.fo.ftl" />
-					</xsl-fo>
-				</platform-specific>
-			</widgets>
-		</section>
-	</screen>
+	
 	<screen name="ExciseInvoiceReport">
 	    <section>
 	    	<actions>
