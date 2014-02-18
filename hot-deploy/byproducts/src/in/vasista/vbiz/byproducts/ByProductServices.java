@@ -9724,5 +9724,197 @@ public class ByProductServices {
 	        return ServiceUtil.returnSuccess("Order Canceled Successfully for Booth:" +originFacilityId+" !");
 	  
 	    }
-	
+	/*   migrated services from product and order */
+     
+	    public static String processDispatchReconcilMIS(HttpServletRequest request, HttpServletResponse response) {
+	    	  Delegator delegator = (Delegator) request.getAttribute("delegator");
+	    	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	    	  Locale locale = UtilHttp.getLocale(request);
+	    	  String routeId = (String) request.getParameter("routeId");
+	    	  String tripId = (String) request.getParameter("tripId");
+	    	  String effectiveDateStr = (String) request.getParameter("effectiveDate");
+	    	  String productId = null;
+	    	  String quantityStr = null;
+	    	  String sequenceNum = null;	  
+	    	  Timestamp effectiveDate=null;
+	    	  BigDecimal quantity = BigDecimal.ZERO;
+	    	  List conditionList =FastList.newInstance();
+	    	  
+	    	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	  HttpSession session = request.getSession();
+	    	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	    	  GenericValue facility = null;
+	    	  List custTimePeriodList = FastList.newInstance();
+	    	  String shipmentId = "";
+	    	  if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
+	    		  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");             
+	    		  try {
+	    			  effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+	    		  } catch (ParseException e) {
+	    			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+	    		  } catch (NullPointerException e) {
+	    			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+	    		  }
+	    	  }
+	    	  if (routeId == "") {
+	    		request.setAttribute("_ERROR_MESSAGE_","Route Id is empty");
+	    		return "error";
+	    	  }
+	        
+	        // Get the parameters as a MAP, remove the productId and quantity params.
+	    	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	    	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	    	  if (rowCount < 1) {
+	    		  Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
+	    		  return "success";
+	    	  }
+	    	  try{
+	    		  facility=delegator.findOne("Facility", UtilMisc.toMap("facilityId",routeId), false);
+	    		  if(UtilValidate.isEmpty(facility)){
+	    			  request.setAttribute("_ERROR_MESSAGE_", "Route"+" '"+routeId+"'"+" does not exist");
+	    			  return "error";
+	    		  }
+	    	  }catch (GenericEntityException e) {
+	    		  Debug.logError(e, "Route does not exist", module);
+	    		  request.setAttribute("_ERROR_MESSAGE_", "Route"+" '"+routeId+"'"+" does not exist");
+	    		  return "error";
+	    	  }
+	    	  
+	    	  try {
+	    		  conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
+	    		  if(UtilValidate.isNotEmpty(tripId)){
+	    			  conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+	    		  }
+	    		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+	    		  conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+	    		  conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
+	  		  	  EntityCondition shipCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
+	  		  	  List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond, UtilMisc.toSet("shipmentId"), null, null, false);
+	    		  if(UtilValidate.isEmpty(shipmentList)){
+	    			  request.setAttribute("_ERROR_MESSAGE_", "This Route has no shipments for the day");
+	    			  return "error";     		
+	    		  }
+	    		  shipmentId = (String)((GenericValue)EntityUtil.getFirst(shipmentList)).get("shipmentId");
+	    	  }catch (GenericEntityException e) {
+	    		  Debug.logError(e, "Problem getting Booth subscription", module);
+	    		  request.setAttribute("_ERROR_MESSAGE_", "Problem getting Booth subscription");
+	    		  return "error";
+	    	  }
+	    	
+	    	  List<Map>productQtyList =FastList.newInstance();
+	    	  for (int i = 0; i < rowCount; i++) {
+	    		  Map<String  ,Object> productQtyMap = FastMap.newInstance();
+	    		  
+	    		  List<GenericValue> subscriptionProductsList = FastList.newInstance();
+	    		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	    		  if (paramMap.containsKey("productId" + thisSuffix)) {
+	    			  productId = (String) paramMap.get("productId" + thisSuffix);
+	    		  }
+	    		  else {
+	    			  request.setAttribute("_ERROR_MESSAGE_", "Missing product id");
+	    			  return "error";			  
+	    		  }
+	    		  if (paramMap.containsKey("quantity" + thisSuffix)) {
+	    			  quantityStr = (String) paramMap.get("quantity" + thisSuffix);
+	    		  }
+	    		  else {
+	    			  request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
+	    			  return "error";			  
+	    		  }		  
+	    		  if (quantityStr.equals("")) {
+	    			  request.setAttribute("_ERROR_MESSAGE_", "Empty product quantity");
+	    			  return "error";	
+	    		  }
+	    		  try {
+	    			  quantity = new BigDecimal(quantityStr);
+	    		  } catch (Exception e) {
+	    			  Debug.logError(e, "Problems parsing quantity string: " + quantityStr, module);
+	    			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing quantity string: " + quantityStr);
+	    			  return "error";
+	    		  } 
+	    		  
+	    		  productQtyMap.put("productId", productId);
+	    		  productQtyMap.put("quantity", quantity);
+	    		  productQtyList.add(productQtyMap);
+	    	  }//end row count for loop
+	    	  
+	    	  Map processDispatchReconcilHelperCtx = UtilMisc.toMap("userLogin",userLogin);
+	    	  processDispatchReconcilHelperCtx.put("shipmentId", shipmentId);
+	    	  processDispatchReconcilHelperCtx.put("routeId", routeId);
+	    	  processDispatchReconcilHelperCtx.put("effectiveDate", effectiveDate);
+	    	  processDispatchReconcilHelperCtx.put("productQtyList", productQtyList);
+	    	  try{
+	    		  result = dispatcher.runSync("processDispatchReconcilHelper",processDispatchReconcilHelperCtx);
+	    		
+	    		  if (ServiceUtil.isError(result)) {
+	    			  String errMsg =  ServiceUtil.getErrorMessage(result);
+	    			  Debug.logError(errMsg , module);
+	    			  request.setAttribute("_ERROR_MESSAGE_",errMsg);
+	    			  return "error";
+	    		  }
+	    	  }catch (Exception e) {
+	    		  	Debug.logError(e, "Problem updating ItemIssuance for Route " + routeId, module);     
+	    	  		request.setAttribute("_ERROR_MESSAGE_", "Problem updating ItemIssuance for Route " + routeId);
+	    	  		return "error";			  
+	    	  }	 
+	    	  return "success";     
+	    }
+	    public static Map<String ,Object>  processDispatchReconcilHelper(DispatchContext dctx, Map<String, ? extends Object> context){
+			  Delegator delegator = dctx.getDelegator();
+		      LocalDispatcher dispatcher = dctx.getDispatcher();       
+		      GenericValue userLogin = (GenericValue) context.get("userLogin");
+		      Map<String, Object> result = ServiceUtil.returnSuccess();
+		      String shipmentId = (String)context.get("shipmentId");
+		      String routeId = (String)context.get("routeId");
+		      Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");	      
+		      List<Map> productQtyList = (List)context.get("productQtyList");
+		      Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+		      
+		      try{
+		    	  List conditionList = FastList.newInstance();
+		    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+		    	  conditionList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+		    	  conditionList.add(EntityCondition.makeCondition("issuedDateTime", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
+		    	  EntityCondition issueCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    	  List<GenericValue> itemIssuance = delegator.findList("ItemIssuance", issueCond, null, null, null, false);
+		    	  for(int i=0; i< productQtyList.size() ; i++){
+		    		  Map productQtyMap = productQtyList.get(i);
+		    		  String productId = (String)productQtyMap.get("productId");
+		    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
+
+		    		  List<GenericValue> prodItemIssue = (List)EntityUtil.filterByCondition(itemIssuance, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+		    		  GenericValue prodItem = EntityUtil.getFirst(prodItemIssue);
+		    		  if(UtilValidate.isEmpty(prodItem)){
+		    			  GenericValue newEntryIssuance = delegator.makeValue("ItemIssuance");
+		    			  newEntryIssuance.set("shipmentId", shipmentId);
+		    			  newEntryIssuance.set("productId", productId);
+		    			  newEntryIssuance.set("quantity", quantity);
+		    			  newEntryIssuance.set("issuedDateTime", UtilDateTime.getDayStart(effectiveDate));
+		    			  newEntryIssuance.set("issuedByUserLoginId", userLogin.get("userLoginId"));
+		    			  newEntryIssuance.set("modifiedByUserLoginId", userLogin.get("userLoginId"));
+		    			  newEntryIssuance.set("modifiedDateTime", nowTimestamp);
+		    			  delegator.createSetNextSeqId(newEntryIssuance);
+		    		  }
+		    		  else{
+		    			  prodItem.put("quantity", quantity);
+		    			  prodItem.put("modifiedByUserLoginId", userLogin.get("userLoginId"));
+		    			  prodItem.put("modifiedDateTime", nowTimestamp);
+		    			  prodItem.store();
+		    		  }
+			  	  }
+			  }catch (Exception e) {
+				  Debug.logError(e, "Problem updating itemIssuance for Route " + routeId, module);		  
+				  return ServiceUtil.returnError("Problem updating Dispatch Reconciliation for Route " + routeId);			  
+			  }
+			  return result;  
+	    }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 }

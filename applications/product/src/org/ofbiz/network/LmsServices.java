@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class LmsServices {
 
-    public static final String module = DeprecatedNetworkServices.class.getName();
+    public static final String module = LmsServices.class.getName();
     
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals;
@@ -1177,96 +1177,7 @@ public class LmsServices {
 	}
     
     
-    public static Map<String, Object> createBankRemittance(DispatchContext dctx, Map<String, ? extends Object> context){
-        Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        Date supplyDate = ((Date) context.get("supplyDate")); 
-        Timestamp supplyDateTime = UtilDateTime.toTimestamp(supplyDate);
-        Long vocherNumber = (Long) context.get("vocherNumber");
-        BigDecimal amountRemitted = (BigDecimal)context.get("amountRemitted");
-        Locale locale = (Locale) context.get("locale");
-        Map result = ServiceUtil.returnSuccess();       
-        String bankRemittanceId =null;
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        BigDecimal cashReceived = BigDecimal.ZERO;
-        BigDecimal vehicleShortAmount =  BigDecimal.ZERO;
-        GenericValue newEntity = delegator.makeValue("BankRemittance");
-        newEntity.set("supplyDate",supplyDate);
-        newEntity.set("vocherNumber",vocherNumber);
-        newEntity.set("amountRemitted",amountRemitted);
-        newEntity.set("createdDate",UtilDateTime.nowTimestamp());
-        newEntity.set("createdByUserLogin",userLogin.getString("userLoginId"));
-        newEntity.set("lastModifiedDate",UtilDateTime.nowTimestamp());
-        newEntity.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
-        
-        BigDecimal totalRemitedAmount = amountRemitted;
-        try {  
-        	
-			List condList = FastList.newInstance();
-			List<String> orderBy = UtilMisc.toList("-createdDate");
-			condList.add(EntityCondition.makeCondition("supplyDate",EntityOperator.LESS_THAN,supplyDate));
-			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-			List<GenericValue> bankRemittances = delegator.findList("BankRemittance", cond, null, orderBy, null, false);
-			GenericValue prevBankRemittance = EntityUtil.getFirst(bankRemittances);
-			Debug.logImportant("prevBankRemittance============"+prevBankRemittance, module);
-			Map boothPaymentCtx = FastMap.newInstance();
-			boothPaymentCtx.putAll(context);
-			boothPaymentCtx.put("onlyCurrentDues", false);
-			Timestamp prevBankRemittanceDate = UtilDateTime.toTimestamp(prevBankRemittance.getDate("supplyDate"));
-			// for(int i=1 ; i< UtilDateTime.getInterval(prevBankRemittanceDate
-			// ,supplyDateTime) ; i++){
-			boothPaymentCtx.put("fromDate",UtilDateTime.addDaysToTimestamp(prevBankRemittanceDate, 1));
-			boothPaymentCtx.put("thruDate", supplyDateTime);			
-			Map paidPaymentsMap = DeprecatedNetworkServices.getBoothPaidPayments(dctx,boothPaymentCtx);
-			Debug.logImportant("paidPaymentsMap==============="	+paidPaymentsMap, module);
-			cashReceived = cashReceived.add((BigDecimal) paidPaymentsMap.get("invoicesTotalAmount"));
-
-			/*
-			 * boothPaymentCtx.put("fromDate",UtilDateTime.addDaysToTimestamp(
-			 * prevBankRemittanceDate,1));
-			 * boothPaymentCtx.put("thruDate",supplyDateTime);
-			 */
-			// lets get the transporter Dues for the period
-			Map transporterDuesMap = LmsServices.getTransporterDues(dctx,boothPaymentCtx);
-			vehicleShortAmount = (BigDecimal) transporterDuesMap.get("invoicesTotalAmount");
-			
-			// to be remitted amount equals prevBankRemittanceDate closing
-			// Balance + total cash Received - vehicleShortAmount
-			BigDecimal tobeRemittedAmount = (cashReceived.add(prevBankRemittance.getBigDecimal("closingBalance"))).subtract(vehicleShortAmount);
-			newEntity.set("tobeRemitted", tobeRemittedAmount);
-
-			condList.clear();
-			bankRemittances.clear();
-			// lets calculate the to the closing balance
-			// closing balance is cumulative amount off all the days closing
-			// balance
-			newEntity.set("closingBalance", BigDecimal.ZERO);
-
-			condList.add(EntityCondition.makeCondition("supplyDate",EntityOperator.EQUALS, supplyDate));
-			EntityCondition condition = EntityCondition.makeCondition(condList,	EntityOperator.AND);
-			bankRemittances = delegator.findList("BankRemittance", condition, null, null, null, false);
-			// lets add already remitted amount for the given supplyDate
-			for (GenericValue bankRemittance : bankRemittances) {
-				totalRemitedAmount = totalRemitedAmount.add(bankRemittance.getBigDecimal("amountRemitted"));
-			}
-			
-			// closing balance equals todays closing balance + previous day
-			// closing balance
-			Debug.logImportant("tobeRemittedAmount=================="+tobeRemittedAmount, module);
-			Debug.logImportant("totalRemitedAmount=================="+totalRemitedAmount, module);
-			newEntity.set("closingBalance",(tobeRemittedAmount.subtract(totalRemitedAmount)));
-
-			delegator.createSetNextSeqId(newEntity);
-			bankRemittanceId = newEntity.getString("bankRemittanceId");
-		} catch (GenericEntityException e) {
-			Debug.logError(e, module);
-			return ServiceUtil.returnError("Failed to create a new shipment "+ e);
-		}
-
-		result.put("bankRemittanceId", bankRemittanceId);
-		return result;
-    } 
-    public static Map<String, Object> UpdateProductIndentQtyCategory(DispatchContext dctx, Map<String, ? extends Object> context){
+        public static Map<String, Object> UpdateProductIndentQtyCategory(DispatchContext dctx, Map<String, ? extends Object> context){
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String facilityId = (String)context.get("facilityId");
