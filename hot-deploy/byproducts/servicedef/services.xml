@@ -36,16 +36,13 @@
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
     </service>
-    <!-- 
-    <service name="processChangeIndentRoute" engine="java" 
-            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processChangeIndentRoute">
-        <description>Change Route for Indent Entry</description>
-        <attribute name="boothId" type="String" mode="IN" optional="false"/>
-        <attribute name="supplyDate" type="String" mode="IN" optional="false"/>
-        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="routeId" type="String" mode="IN" optional="false"/>
-        <attribute name="newRouteId" type="String" mode="IN" optional="false"/>
-    </service> -->
+   	
+   	<service name="populatePartyAccountingHistory" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="populatePartyAccountingHistory" transaction-timeout="70000">
+        <description> Populate party accounting history</description>        
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+    </service>
+    
     <service name="cancelReturn" engine="java" 
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelReturn" auth="true">
         <description>Cancel Return Items</description>

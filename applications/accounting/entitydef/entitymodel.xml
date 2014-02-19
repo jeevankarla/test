@@ -4868,5 +4868,28 @@
       <relation type="one" fk-name="FC_PID" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>    
-    </entity>	    	
+    </entity>
+    <entity entity-name="PartyAccountingHistory" package-name="org.ofbiz.accounting.invoice"
+		title="Party accounting history">
+		<field name="facilityId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="customTimePeriodId" type="id"></field>
+		<field name="debits" type="currency-amount"></field>
+		<field name="credits" type="currency-amount"></field>
+		<field name="endingBalance" type="currency-amount">
+		    <description> endingBalance = prevEndingBalance+debits-credits</description>
+		</field>
+		<prim-key field="facilityId" />
+		<prim-key field="customTimePeriodId" />
+		<prim-key field="partyId" />
+		<relation type="many" fk-name="PAH_FA" rel-entity-name="Facility">
+			<key-map field-name="facilityId" />
+		</relation>
+		<relation type="one" fk-name="PAH_PA" rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="PHA_CTP" rel-entity-name="CustomTimePeriod">
+			<key-map field-name="customTimePeriodId" />
+		</relation>
+	</entity>	    	
 </entitymodel>

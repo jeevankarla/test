@@ -65,8 +65,6 @@ import org.ofbiz.entity.GenericPK;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.product.product.ProductWorker;
 
-
-
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 
@@ -1216,6 +1214,349 @@ public class ByProductNetworkServices {
 			  return result;  
 	    }
 	 	
+	 	public static Map getOpeningBalanceForBooth(DispatchContext dctx, Map<String, ? extends Object> context){
+	    	//Delegator delegator ,LocalDispatcher dispatcher ,GenericValue userLogin,String paymentDate,String invoiceStatusId ,String facilityId ,String paymentMethodTypeId ,boolean onlyCurrentDues ,boolean isPendingDues){
+			//TO DO:for now getting one shipment id  we need to get pmand am shipment id irrespective of Shipment type Id
+	    	Delegator delegator = dctx.getDelegator();
+		    LocalDispatcher dispatcher = dctx.getDispatcher();
+		    GenericValue userLogin = (GenericValue) context.get("userLogin");
+		    String facilityId = (String) context.get("facilityId");
+		    List<String> facilityIds = (List<String>) context.get("facilityIds");
+		    Timestamp saleDate = (Timestamp) context.get("saleDate");	  
+		    List exprListForParameters = FastList.newInstance();
+			List boothPaymentsList = FastList.newInstance();
+			List boothOrdersList = FastList.newInstance();
+			Set shipmentIds = FastSet.newInstance();		 
+			Map openingBalanceMap = FastMap.newInstance();
+			BigDecimal invoicesTotalAmount = BigDecimal.ZERO;
+			BigDecimal invoicesTotalDueAmount = BigDecimal.ZERO;
+			shipmentIds = new HashSet(getShipmentIds(delegator ,null ,saleDate));
+			Timestamp dayBegin = UtilDateTime.getDayStart(saleDate);		
+			List categoryTypeEnumList = UtilMisc.toList("SO_INST","CR_INST");
+			boolean enableSoCrPmntTrack = Boolean.FALSE;		
+			List prevPmInvIdList = FastList.newInstance();
+			try{
+				 GenericValue tenantConfigEnableSoCrPmntTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableSoCrPmntTrack"), true);
+				 if (UtilValidate.isNotEmpty(tenantConfigEnableSoCrPmntTrack) && (tenantConfigEnableSoCrPmntTrack.getString("propertyValue")).equals("Y")) {
+					 enableSoCrPmntTrack = Boolean.TRUE;
+				 	} 
+			}catch (GenericEntityException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+			 }			
+		    if(enableSoCrPmntTrack){
+				//exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","SPECIAL_ORDER","CREDIT")));
+				exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH") , EntityOperator.OR , EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, categoryTypeEnumList)));
+		    }else{
+		    	exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH") , EntityOperator.OR , EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, categoryTypeEnumList)));
+			}
+		    exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.NOT_EQUAL, "CARD"));
+			
+			if(facilityId != null){			
+				try{
+					GenericValue facilityDetail = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), true);				
+					if(facilityDetail == null || (!facilityDetail.getString("facilityTypeId").equals("BOOTH")) ){
+						Debug.logInfo("facilityId '"+facilityId+ "'is not a Booth or Zone ", "");
+						return ServiceUtil.returnError("facilityId '"+facilityId+ "'is not a Booth or Zone ");
+					}
+					facilityIds =FastList.newInstance();
+					facilityIds.add(facilityId);
+					//exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
+				}catch (GenericEntityException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+				}			
+			}		
+			exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));
+			// lets check the tenant configuration for enableSameDayPmEntry
+			// if not same day entry exclude prev day PM Sales invoices from opening balance
+			Boolean enableSameDayPmEntry = Boolean.FALSE;
+			try{
+				 GenericValue tenantConfigEnableSameDayPmEntry = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableSameDayPmEntry"), false);
+				 if (UtilValidate.isNotEmpty(tenantConfigEnableSameDayPmEntry) && (tenantConfigEnableSameDayPmEntry.getString("propertyValue")).equals("Y")) {
+					 enableSameDayPmEntry = Boolean.TRUE;
+				}
+			 }catch (GenericEntityException e) {
+				// TODO: handle exception
+				 Debug.logError(e, module);
+			}		 
+			//get all invoices for this facility that either haven't been paid  or  have been paid after the opening balance date
+			 if(!enableSameDayPmEntry){			 
+				 Timestamp prevDay = UtilDateTime.addDaysToTimestamp(dayBegin, -1);
+				 List prevshipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(prevDay, "yyyy-MM-dd HH:mm:ss"),"PM");
+				 if(UtilValidate.isNotEmpty(prevshipmentIds)){			 
+				 // get previous PM Invoice ids
+					 List exprListForPrevPMSales = FastList.newInstance();
+						exprListForPrevPMSales.addAll(exprListForParameters);
+						List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
+						exprListForPrevPMSales.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, prevshipmentIds));
+						//exprListForPrevPMSales.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN, dayBegin));
+						exprListForPrevPMSales.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, invoiceStatusList));
+						EntityCondition	cond = EntityCondition.makeCondition(exprListForPrevPMSales, EntityOperator.AND);
+						EntityFindOptions findOptions = new EntityFindOptions();
+						findOptions.setDistinct(true);
+						try{	
+							List<GenericValue> boothPmOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", cond, UtilMisc.toSet("invoiceId") ,null, findOptions, false);
+							prevPmInvIdList = EntityUtil.getFieldListFromEntityList(boothPmOrdersList, "invoiceId", true);
+						}catch(GenericEntityException e){
+							Debug.logError(e, module);	
+							return ServiceUtil.returnError(e.toString());
+						}
+						
+					exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, null) ,EntityOperator.AND ,EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_IN, prevshipmentIds)));	
+				 
+				 }else{
+					 exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, null));
+				 }
+				 
+			 }else{
+				 exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, null));
+			 }
+				
+			List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
+			exprListForParameters.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN, dayBegin));
+			exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, invoiceStatusList));
+			exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("paidDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
+			EntityCondition	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+			EntityFindOptions findOptions = new EntityFindOptions();
+			findOptions.setDistinct(true);
+			try{			
+				boothOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", paramCond, UtilMisc.toSet("invoiceId") ,null, findOptions, false);
+				//get Opening invoices before given sale date and added to boothOrderList
+				List<GenericValue> obInvoiceList = (List)getOpeningBalanceInvoices(dctx,UtilMisc.toMap("facilityIds",facilityIds,"thruDate", UtilDateTime.addDaysToTimestamp(dayBegin, -1),"isForCalOB","Y")).get("invoiceList");
+				boothOrdersList.addAll(obInvoiceList);
+			}catch(GenericEntityException e){
+				Debug.logError(e, module);	
+				return ServiceUtil.returnError(e.toString());
+			}
+			BigDecimal openingBalance = BigDecimal.ZERO;
+			BigDecimal invoicePendingAmount = BigDecimal.ZERO;
+			BigDecimal advancePaymentAmount = BigDecimal.ZERO;
+			if (!UtilValidate.isEmpty(boothOrdersList)) {
+				Set invoiceIdSet = new  HashSet(EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", false));
+				List invoiceIds = new ArrayList(invoiceIdSet);
+				//First compute the total invoice outstanding amount as of opening balance date.
+				for(int i =0 ; i< invoiceIds.size(); i++){
+					String invoiceId = (String)invoiceIds.get(i);
+					List<GenericValue> pendingInvoiceList =  FastList.newInstance();
+					List exprList = FastList.newInstance(); 
+					exprList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));				
+					exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("paidDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
+					exprList.add(EntityCondition.makeCondition("pmPaymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+					EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);				
+					try{			
+						pendingInvoiceList = delegator.findList("InvoiceAndApplAndPayment", cond, null ,null, null, false);		        
+					// no payment applications then add invoice total amount to OB or unapplied amount.										
+						Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", UtilMisc.toMap("userLogin",userLogin,"invoiceId",invoiceId));
+						if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
+				            Debug.logError(getInvoicePaymentInfoListResult.toString(), module);    			
+				            return ServiceUtil.returnError(null, null, null, getInvoicePaymentInfoListResult);
+				        }
+						Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+						BigDecimal outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");	
+						invoicePendingAmount = invoicePendingAmount.add(outstandingAmount);				
+						for( GenericValue pendingInvoice : pendingInvoiceList){							
+							invoicePendingAmount = invoicePendingAmount.add(pendingInvoice.getBigDecimal("amountApplied"));
+						}
+					
+					}catch(Exception e){
+						Debug.logError(e, module);	
+						return ServiceUtil.returnError(e.toString());
+					}
+				}
+			}
+			//Now handle any unapplied payments as of opening balance date
+			// Here first get the payments that were made before opening balance date and have been partially applied.  
+			// Compute the amount that has been applied after opening balance date plus any unapplied amount
+			List exprList = FastList.newInstance();
+			List<GenericValue> pendingPaymentsList = FastList.newInstance();
+			exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
+			if(UtilValidate.isNotEmpty(prevPmInvIdList)){
+				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),EntityOperator.OR,EntityCondition.makeCondition("invoiceId", EntityOperator.IN,prevPmInvIdList)));
+			}else{
+				exprList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+			}
+			
+			//exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("paidDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(saleDate))));
+			exprList.add(EntityCondition.makeCondition("pmPaymentDate", EntityOperator.LESS_THAN, dayBegin));
+			EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);		
+			try{			
+				pendingPaymentsList = delegator.findList("InvoiceAndApplAndPayment", cond, null ,null, null, false);
+			}catch(GenericEntityException e){
+				Debug.logError(e, module);	
+				return ServiceUtil.returnError(e.toString());
+			}		
+			Set paymentSet = new HashSet(EntityUtil.getFieldListFromEntityList(pendingPaymentsList, "paymentId", false));
+			for( GenericValue pendingPayments : pendingPaymentsList){
+				/*count=count+1;
+					Debug.log("i======"+count);
+					Debug.log("pendingPayments======"+pendingPayments);
+					Debug.log("======***********============");
+					Debug.log("dueDate======"+pendingPayments.getTimestamp("dueDate"));
+					Debug.log("pmPaymentDate======"+pendingPayments.getTimestamp("pmPaymentDate"));
+					Debug.log("paidDate======"+pendingPayments.getTimestamp("paidDate"));
+					Debug.log("paymentapplicationId======"+pendingPayments.getString("paymentApplicationId"));*/
+					if(UtilValidate.isEmpty(pendingPayments.getTimestamp("paidDate")) || (UtilDateTime.getDayStart(pendingPayments.getTimestamp("paidDate"))).equals(UtilDateTime.getDayStart(pendingPayments.getTimestamp("invoiceDate")))
+																					  || (pendingPayments.getTimestamp("paidDate")).compareTo(dayBegin) >=0 ){
+						advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amountApplied"));
+					}
+					
+				
+			}
+			
+			List paymentList = new ArrayList(paymentSet);
+			for(int i =0 ; i< paymentList.size(); i++){
+				try{				
+					Map result = dispatcher.runSync("getPaymentNotApplied", UtilMisc.toMap("userLogin",userLogin,"paymentId",(String)paymentList.get(i)));
+					advancePaymentAmount = advancePaymentAmount.add((BigDecimal)result.get("unAppliedAmountTotal"));
+				}catch(GenericServiceException e){
+					Debug.logError(e, module);	
+					return ServiceUtil.returnError(e.toString());
+				}
+				
+			}		
+			//here get the all the zero application paymentId's
+			List<String> zeroAppPaymentIds = EntityUtil.getFieldListFromEntityList(pendingPaymentsList, "paymentId", true);		
+			// Next get payments that were made before opening balance date and have zero applications
+			exprList.clear();
+			exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
+			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentApplicationId", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition(EntityCondition.makeCondition("isFullyApplied", EntityOperator.EQUALS, null),EntityOperator.OR ,EntityCondition.makeCondition("isFullyApplied", EntityOperator.EQUALS, "N"))));
+			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED","PMNT_NOT_PAID")));
+			exprList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN, dayBegin));
+			// exculde all the zero payment application payments
+			if(UtilValidate.isNotEmpty(zeroAppPaymentIds)){
+				
+				exprList.add(EntityCondition.makeCondition("paymentId", EntityOperator.NOT_IN, zeroAppPaymentIds));
+			}
+			
+			
+			EntityCondition	paymentCond = EntityCondition.makeCondition(exprList, EntityOperator.AND);	
+			try{	
+				 EntityFindOptions findOption = new EntityFindOptions();
+		         findOption.setDistinct(true);
+				pendingPaymentsList = delegator.findList("PaymentAndApplicationLftJoin", paymentCond, UtilMisc.toSet("paymentId") ,null, findOption, false);	
+				for( GenericValue pendingPayments : pendingPaymentsList){
+					Map result = dispatcher.runSync("getPaymentNotApplied", UtilMisc.toMap("userLogin",userLogin,"paymentId",pendingPayments.getString("paymentId")));
+					advancePaymentAmount = advancePaymentAmount.add((BigDecimal)result.get("unAppliedAmountTotal"));
+					//advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amount"));
+				}
+			}catch(Exception e){
+				Debug.logError(e, module);	
+				return ServiceUtil.returnError(e.toString());
+			}
+			openingBalance = invoicePendingAmount.subtract(advancePaymentAmount);
+			openingBalanceMap.put("openingBalance", openingBalance);				
+			return openingBalanceMap;
+		}
+	 	
+	 	public static Map populatePartyAccountingHistory(DispatchContext dctx, Map<String, ? extends Object> context){
+	    	Delegator delegator = dctx.getDelegator();
+		    LocalDispatcher dispatcher = dctx.getDispatcher();
+		    GenericValue userLogin = (GenericValue) context.get("userLogin");
+		    String customTimePeriodId = (String) context.get("customTimePeriodId");
+		    Timestamp fromDateTime = null;
+		    Timestamp thruDateTime = null;
+		    List conditionList = FastList.newInstance();
+		    String periodTypeId = "";
+		    Timestamp prevFromDate = null;
+			Timestamp prevThruDate = null;
+			Timestamp checkDate = null;
+			String organizationPartyId = "";
+			String previousCustomTimePeriodId = "";
+			Map result = ServiceUtil.returnSuccess();
+		    try{
+	 	    	GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+	 	    	if(UtilValidate.isNotEmpty(customTimePeriod)){
+	 	    		periodTypeId = customTimePeriod.getString("periodTypeId");
+	 	    		organizationPartyId = customTimePeriod.getString("organizationPartyId");
+	 	    		fromDateTime = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate")));
+	 	 			thruDateTime = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate")));
+	 	    	}
+	 	    	else{
+	 	    		Debug.logError("Custom time period doesnot exists", module);    			
+		 		    return ServiceUtil.returnError("Custom time period doesnot exists");
+	 	    	}
+	 	    	checkDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
+	 	    	result = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", organizationPartyId, "onlyFiscalPeriods", Boolean.FALSE, "periodTypeId", periodTypeId,"userLogin", userLogin));
+	 	    	if(ServiceUtil.isError(result)){
+		 	    	Debug.logError("Error in service findLastClosedDate ", module);    			
+		 		    return ServiceUtil.returnError("Error in service findLastClosedDate");
+		 	    }
+	 	    	previousCustomTimePeriodId = ((GenericValue)result.get("lastClosedTimePeriod")).getString("customTimePeriodId");
+	 	    	if(UtilValidate.isNotEmpty(previousCustomTimePeriodId)){
+	 	    		GenericValue previousCustomPeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", previousCustomTimePeriodId), false);
+	 	    		prevFromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(previousCustomPeriod.getDate("fromDate")));
+	 				prevThruDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(previousCustomPeriod.getDate("thruDate")));
+	 				if(!(checkDate.compareTo(prevThruDate)==0)){
+	 			   		Debug.logError("Previous custom time period is not yet closed ", module);    			
+	 	 		        return ServiceUtil.returnError("Previous custom time period is not yet closed ");
+	 				}
+	 	    	}
+		    	
+	 	    }catch(GenericEntityException e){		   
+		        Debug.logError("Error while fetching custom time period Id"+e.getMessage(),module);
+		        return ServiceUtil.returnError("Error while fetching custom time period Id");
+	    	}catch(GenericServiceException e){
+	    		Debug.logError("Error calling service findLastClosedDate"+e.getMessage(),module);
+	    		return ServiceUtil.returnError("Error in service findLastClosedDate");
+	    	}
+	 	    
+	 	    List<GenericValue> facilityDetails = (List<GenericValue>)getAllBooths(delegator).get("boothsDetailsList");
+	 	    
+	 	    try{
+	 	    	String boothId = "";
+	 	 	    String ownerPartyId = "";
+	 	 	    for(GenericValue facility : facilityDetails){
+	 	 	    	boothId = facility.getString("facilityId");
+	 	 	    	ownerPartyId = facility.getString("ownerPartyId");
+	 	 	    	BigDecimal OB = BigDecimal.ZERO;
+	 	 	    	GenericValue partyHistory = delegator.findOne("PartyAccountingHistory", UtilMisc.toMap("customTimePeriodId", previousCustomTimePeriodId, "partyId", ownerPartyId, "facilityId", boothId), false);
+		 	 	 	if(UtilValidate.isNotEmpty(partyHistory)) {   	
+	 	 	    		OB = partyHistory.getBigDecimal("endingBalance");
+		 	 	 	}
+	 	 	    	else
+	 	 	    	{
+		 	 	    	result = (Map)getOpeningBalanceForBooth(dctx, UtilMisc.toMap("userLogin", userLogin, "saleDate", fromDateTime, "facilityId", boothId));
+		 	 	    	if(ServiceUtil.isError(result)){
+		 	 	    		Debug.logError("Error in service getOpeningBalanceForBooth ", module);    			
+		 	 		        return ServiceUtil.returnError("Error in service getOpeningBalanceForBooth");
+		 	 	    	}
+		 	 	    	OB = (BigDecimal)result.get("openingBalance");
+		 	 	    }
+	 	 	    	List boothIds = FastList.newInstance();
+	 	 	    	boothIds.add(boothId);
+	 	 	    	result = (Map)getPeriodTotals(dctx, UtilMisc.toMap("userLogin", userLogin, "facilityIds", boothIds, "fromDate", fromDateTime, "thruDate", thruDateTime));
+	 	 	    	if(ServiceUtil.isError(result)){
+	 	 	    		Debug.logError("Error in service getPeriodTotals ", module);    			
+	 		            return ServiceUtil.returnError("Error in service getPeriodTotals");
+	 	 	    	}
+	 	 	    	BigDecimal totalSale = (BigDecimal)result.get("totalRevenue");
+	 	 	    	result = (Map)getBoothPaidPayments(dctx, UtilMisc.toMap("fromDate", fromDateTime ,"thruDate", thruDateTime, "facilityId" , boothId));
+	 	 			
+	 	 			if(ServiceUtil.isError(result)){
+	 	 	    		Debug.logError("Error in service getBoothPaidPayments ", module);    			
+	 		            return ServiceUtil.returnError("Error in service getBoothPaidPayments");
+	 	 	    	}
+
+	 	 			BigDecimal paymentTotal = (BigDecimal)result.get("invoicesTotalAmount");
+	 	 			BigDecimal endingBal = totalSale.subtract(paymentTotal);
+	 	 	    	endingBal = endingBal.add(OB);
+	 	 	    	GenericValue acctgHistory = delegator.makeValue("PartyAccountingHistory");
+	 	 	    	acctgHistory.put("customTimePeriodId", customTimePeriodId);
+	 	 	    	acctgHistory.put("partyId", ownerPartyId);
+	 	 	    	acctgHistory.put("facilityId", boothId);
+	 	 	    	acctgHistory.put("debits", totalSale);
+	 	 	    	acctgHistory.put("credits", paymentTotal);
+	 	 	    	acctgHistory.put("endingBalance", endingBal);
+	 	 	    	delegator.createOrStore(acctgHistory);  
+	 	 	    }
+	 	    }catch(Exception e){
+	 	    	Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());	
+	 	    }
+	 	    result = ServiceUtil.returnSuccess("Successfully populated parties accouting history for the period");
+	 	    return result;
+		}
 	 	
 	 	public static Map<String, Object> getBoothOrderDetails(DispatchContext dctx, Map<String, ? extends Object> context){
 	        Delegator delegator = dctx.getDelegator();
