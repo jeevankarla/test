@@ -29,7 +29,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="LookupParlour">
+    <!-- <screen name="LookupParlour">
         <section>
             <condition>
                 <if-service-permission service-name="catalogPermissionCheck" main-action="VIEW"/>
@@ -41,7 +41,7 @@
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                 <set field="entityName" value="Facility"/>
                 <set field="searchFields" value="[facilityId, facilityName, description]"/> 
-                 <!-- <set field="filterByDate" value="Y"/> -->
+                 <set field="filterByDate" value="Y"/>
                
             </actions>
             <widgets>
@@ -55,7 +55,7 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
     
     <screen name="LookupByProductCategory">
         <section>

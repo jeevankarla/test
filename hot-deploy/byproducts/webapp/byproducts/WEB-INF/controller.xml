@@ -33,21 +33,10 @@
     </request-map>
     
     
-    <request-map uri="byProductsOrderEntry"><security https="true" auth="true"/><response name="success" type="view" value="ByProductsOrderEntry"/></request-map>
-    <request-map uri="findInventory"><security https="true" auth="true"/><response name="success" type="view" value="FindInventory"/></request-map>
-    <request-map uri="Receipts"><security https="true" auth="true"/><response name="success" type="view" value="Receipts"/></request-map>
-    <request-map uri="byProdReceiveInventory"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="byProdReceiveInventory"/>
-    </request-map>
     <request-map uri="receiveCrateInventory"><security https="true" auth="true"/>
     	<response name="success" type="view" value="receiveCrateInventory"/>
     </request-map>
-    <request-map uri="byProdReceiveSingleInventoryProduct">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="adjustInventory"/>
-        <response name="success" type="request" value="byProdReceiveInventory"/>
-        <response name="error" type="view" value="byProdReceiveInventory"/>
-    </request-map>
+    
     <request-map uri="sendLVDSms">
         <security https="true" auth="true"/>
         <event type="service" invoke="sendLVDSms"/>        
@@ -80,6 +69,11 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="ReturnCrates"/>    	
     </request-map>
+    <request-map uri="CreditInstitutionBilling">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="CreditInstitutionBilling"/>    	
+    </request-map>
+    
     <request-map uri="createReturnCrate">
     	<security https="true" auth="true"/> 
     	<event type="service" invoke="createReturnCrate" path=""/>   	
@@ -101,10 +95,6 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    <!-- <request-map uri="returnHeader">
-    	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="returnHeader"/>    	
-    </request-map> -->
     <request-map uri="returnHeaderItems">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="ReturnItems"/>    	
@@ -115,42 +105,7 @@
     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="makeTransporterPayment" global-transaction="true"/>    	
     	<response name="success" type="view" value="FindDealerPayments"/>    	
     </request-map>
-        
-    <request-map uri="processParlorSalesOrder">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="processParlorSalesOrder"/>
-        <response name="success" type="request-redirect" value="orderEntryInit"/>
-        <response name="error" type="view" value="orderEntryInit"/>
-    </request-map>
-    <request-map uri="CreateByProductFacility">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createByProductFacility"/>
-        <response name="success" type="request-redirect" value="EditFacility"/>
-        <response name="error" type="view" value="EditFacility"/>
-       
-    </request-map>
-    <request-map uri="UpdateByProductFacility">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="UpdateByProductFacility"/>
-        <response name="success" type="request-redirect" value="EditFacility"/>
-        <response name="error" type="view" value="EditFacility"/>
-    </request-map>
-    <request-map uri="findIndentEntry">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindIndent"/>
-    </request-map>
-    <request-map uri="DuesPayment">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="DuesPayment"/>
-    </request-map>
-    <request-map uri="findRequestEntry">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="FindRequest"/>
-    </request-map>
-    <request-map uri="createIndentOrder">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="createIndentOrder"/>
-    </request-map>
+    
     <request-map uri="dueParticulars.txt">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DueParticularsTXT"/>
@@ -172,10 +127,6 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="ByProductsAnalytics"/>
     </request-map>
-    <request-map uri="EditByProdFacility">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditByProdFacility"/>
-    </request-map>
     <request-map uri="CreateFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFacility"/>
@@ -187,21 +138,7 @@
         <response name="success" type="view" value="IndentEntryInit"/>
     </request-map>
     
-    <request-map uri="voidPayment">
-    	<security https="true" auth="true"/>
-    	<event type="service" path="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="voidPayment"/>
-    	<response name="success" type="view" value="CreateAdvancedPayments"/>
-    </request-map>
-    <request-map uri="indentEntry"><security https="true" auth="true"/><response name="success" type="view" value="IndentEntry"/></request-map>
-	
-	
-    
-	
-	<request-map uri="OrderEntryInit">
-        <security https="true" auth="true"/>               
-        <response name="success" type="view" value="OrderEntryInit"/>
-        <response name="error" type="view" value="OrderEntryInit"/>
-    </request-map>
+
 	<request-map uri="DSCorrectionEntryInit">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="DSCorrectionEntryInit"/>
@@ -211,42 +148,6 @@
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="DSCorrectionEntryNew"/>
         <response name="error" type="view" value="DSCorrectionEntryInit"/>
-    </request-map>
-    
-    <request-map uri="IndentEntryInit">
-        <security https="true" auth="true"/>               
-        <response name="success" type="view" value="IndentEntryInit"/>
-        <response name="error" type="view" value="IndentEntryInit"/>
-    </request-map>
-    
-    <request-map uri="IndentAdjustmentEntryInit">
-        <security https="true" auth="true"/>               
-        <response name="success" type="view" value="IndentAdjustmentEntryInit"/>
-    </request-map>
-    <request-map uri="IndentAdjustEntryNew">
-        <security https="true" auth="true"/>               
-        <response name="success" type="view" value="IndentAdjustEntryNew"/>
-        <response name="error" type="view" value="IndentAdjustmentEntryInit"/>
-    </request-map>
-    
-    <request-map uri="IndentEntryNew">
-        <security https="true" auth="true"/>               
-        <response name="success" type="view" value="IndentEntryNew"/>
-        <response name="error" type="view" value="IndentEntryNew"/>
-    </request-map>    
-    <request-map uri="OrderEntryNew">
-        <security https="true" auth="true"/>               
-        <response name="success" type="view" value="OrderEntryNew"/>
-        <response name="error" type="view" value="OrderEntryInit"/>
-    </request-map>    
-    <request-map uri="processIndentEntryNew">
-        <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="createSubscriptionIndent" global-transaction="true"/>
-        <response name="success" type="request-redirect-noparam" value="IndentEntryInit">
-        	<redirect-parameter name="supplyDate"/>
-        	<redirect-parameter name="routeId"/>
-        </response>
-        <response name="error" type="view" value="IndentEntryNew"/>
     </request-map>
     
     <request-map uri="FindDealerPayments">
@@ -259,25 +160,7 @@
         <event type="service" invoke="processChangeIndentRoute"/>
         <response name="success" type="request-redirect-noparam" value="IndentEntryInit"/>
     </request-map>
-    <request-map uri="processChangePartyCode">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="processChangePartyCode"/>
-        <response name="success" type="request-redirect-noparam" value="DSCorrectionEntryInit"/>
-    </request-map>
-    <request-map uri="processChangeIndentParty">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="processChangeIndentParty"/>
-        <response name="success" type="request-redirect-noparam" value="IndentEntryInit"/>
-    </request-map>
     
-    <request-map uri="processIndentEntryUpdate">
-        <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="subscriptionIndentCorrection" global-transaction="true"/>
-        <response name="success" type="request-redirect-noparam" value="IndentAdjustmentEntryInit">
-        	<redirect-parameter name="supplyDate"/>
-        </response>
-        <response name="error" type="view" value="IndentAdjustmentEntryInit"/>
-    </request-map>
     <request-map uri="processDSCorrectionMISAjax">
         <security https="true" auth="true"/>
         <event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices" invoke="processDSCorrectionMIS"/> 
@@ -285,107 +168,16 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
-    <request-map uri="processOrderEntryNew">
-        <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="createParlorSalesIndent" global-transaction="true"/>
-        <response name="success" type="request-redirect-noparam" value="OrderEntryInit">
-        	<redirect-parameter name="supplyDate"/>
-        </response>
-        <response name="error" type="view" value="OrderEntryNew"/>
-    </request-map>   
     <request-map uri="byProdReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ByProdReports"/>
     </request-map>
     
-    <!-- <request-map uri="processOrderEntryUpdate">
-        <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="updateParlorSalesIndent" global-transaction="true"/>
-        <response name="success" type="view" value="OrderEntryInit"/>
-        <response name="error" type="view" value="OrderEntryNew"/>
-    </request-map> -->
-    <request-map uri="findPayments"><security https="true" auth="true"/><response name="success" type="view" value="FindPayments"/></request-map>
-    <request-map uri="newPayment">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="NewIncomingPayment"/>
-    </request-map>
-    <request-map uri="createPostPayment">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createPostPayment"/>
-        <response name="success" type="request-redirect-noparam" value="FindDuesToPay"/>
-    </request-map>
-    
-    <request-map uri="FindDuesToPay">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindDuesToPay"/>
-    </request-map>
-    
-    <request-map uri="CreateAdvancedPayments">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="CreateAdvancedPayments"/>
-    </request-map>
-    
-    <request-map uri="makeAdvancePayment">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="makeAdvancePayment"/>
-        <response name="success" type="request-redirect-noparam" value="CreateAdvancedPayments"/>
-    </request-map>
-    
-    <request-map uri="LookupByProduct">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="LookupByProduct"/>
-    </request-map>
     <request-map uri="LookupByProductCategory">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="LookupByProductCategory"/>
     </request-map>    
-    <request-map uri="ByProdOrderView">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="ByProdOrderView"/>
-    </request-map>
-    <request-map uri="byProdChangeOrderStatus">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="byProdSetOrderStatus"/>
-        <response name="success" type="view" value="orderlist"/>
-        <response name="error" type="view" value="orderview"/>
-    </request-map>
-    
-   <request-map uri="processIndentEntry">
-    	<security https="true" auth="true"/>
-    	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="processIndentEntry" global-transaction="true"/>
-    	<response name="success" type="request-redirect-noparam" value="findIndentEntry"/>
-    	<response name="error" type="view" value="IndentEntry"/>
-    </request-map>
-   <request-map uri="AddItemsFromOrder">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="AddItemsFromOrder"/>
-    </request-map>
-    <request-map uri="issueOrderItemToShipment">
-        <security https="true" auth="true"/>
-        <event type="service-multi" path="" invoke="issueOrderItemToShipment"/>
-        <response name="success" type="view" value="AddItemsFromOrder"/>
-        <response name="error" type="view" value="AddItemsFromOrder"/>
-    </request-map>
    
-    <request-map uri="createShipment">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createShipment"/>
-        <response name="success" type="request-redirect" value="AddItemsFromOrder">
-            <redirect-parameter name="shipmentId"/>
-        </response>
-    </request-map>
-    <request-map uri="TransferInventoryItem">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="TransferInventoryItem"/>
-    </request-map>
-    <request-map uri="LookupByProduct">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupByProduct"/>
-    </request-map>
-    <request-map uri="FindInventoryDetails">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindInventoryDetails"/>
-    </request-map>
     <request-map uri="ProductWiseSalesVolumeTotals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProductWiseSalesVolumeTotals"/>
@@ -394,124 +186,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DailySalesRevenueTrend"/>
     </request-map>
-    <request-map uri="StockRequest">
-     	<security auth="true" https="true"/>
-     	<response name="success" type="view" value="StockRequest"/>
-    </request-map>
-    <request-map uri="NewRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="NewRequest"/>
-        <response name="error" type="view" value="EditRequest"/>
-    </request-map>
-    <request-map uri="updateIndent"><security https="true" auth="true"/><response name="success" type="view" value="EditIndent"/></request-map>
-    <request-map uri="updateRequest">
-     <security auth="true" https="true"/>
-     <event type="service" invoke="updateCustRequest"/>
-     <response name="success" type="view" value="EditRequest"></response>
-    </request-map>
-    <request-map uri="createRequestOrder">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createCustRequest"/>
-        <response name="success" type="view" value="OverviewIndent"/>
-        <response name="error" type="view" value="EditIndent"/>
-    </request-map>
-    <request-map uri="createRequestTransfer">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createCustRequest"/>
-        <response name="success" type="view" value="ViewRequest"/>
-        <response name="error" type="view" value="EditRequest"/>
-    </request-map>
-    <request-map uri="EditRequestItem"> 
-     	<security https="true" auth="true"/>
-     	<response name="success" type="view" value="EditRequestItem"></response>
-    </request-map>
-    <request-map uri="ViewOrderRequest"> 
-     	<security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="ViewOrderRequest" global-transaction="true"/>
-     	<response name="order" type="view" value="ByProdOrderView"></response>
-     	<response name="indent" type="view" value="OverviewIndent"></response>
-     	<response name="error" type="view" value="findIndentEntry"></response>
-    </request-map>
-    
-    <request-map uri="ShipOrderItemsForIndent"> 
-     	<security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="ShipOrderItemsForIndent" global-transaction="true"/>
-     	<response name="success" type="view" value="FindIndent"></response>
-     	<response name="error" type="view" value="FindIndent"></response>
-    </request-map>
-    <request-map uri="createSubscriptionIndent"> 
-     	<security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="createSubscriptionIndent" global-transaction="true"/>
-     	<response name="success" type="view" value="SubscriptionIndent"></response>
-     	<response name="error" type="view" value="SubscriptionIndent"></response>
-    </request-map>
-    <request-map uri="createParlorSalesIndent"> 
-     	<security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="createParlorSalesIndent" global-transaction="true"/>
-     	<response name="success" type="view" value="ParlorSales"></response>
-     	<response name="error" type="view" value="SubscriptionIndent"></response>
-    </request-map>
-    <request-map uri="ProcessDeliveryScheduleCorrection"> 
-     	<security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="processDeliveryScheduleCorrection" global-transaction="true"/>
-     	<response name="success" type="request-redirect-noparam" value="DSCorrectionEntryInit">
-     		<redirect-parameter name="supplyDate"/>
-     	</response>
-     	<response name="error" type="view" value="DSCorrectionEntryInit"></response>
-    </request-map>
-    
-    <request-map uri="OverviewIndent"><security https="true" auth="true"/><response name="success" type="view" value="OverviewIndent"/></request-map>
-    <request-map uri="ViewRequest"><security https="true" auth="true"/><response name="success" type="view" value="ViewRequest"/></request-map>
-    <request-map uri="ViewRequestItem">
-     	<security auth="true" https="true"/>
-     	<response name="success" type="view" value="ViewRequestItem"></response>
-    </request-map>
-    <request-map uri="FindRequest"><security https="true" auth="true"/><response name="success" type="view" value="FindRequest"/></request-map>
-    <request-map uri="AcceptIndent">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateCustRequest" />
-        <response name="success" type="view" value="ViewRequest"/>
-    </request-map>
-    <request-map uri="StockTransfer">
-        <security https="true" auth="true"/>
-        <event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="processStockTransfer"/>
-        <response name="success" type="view" value="ViewRequest"></response> 
-        <response name="error" type="view" value="ViewRequest"/>
-    </request-map>
-    <request-map uri="IssueCustRequest">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="IssueCustRequest"/>
-    </request-map>
-    <request-map uri="FacilityTreeNetwork">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FacilityTreeNetwork"/>
-    </request-map>
-    <request-map uri="ViewReceivedInventory">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewReceivedInventory"/>
-    </request-map>
-    <request-map uri="ViewIssuedInventory">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ViewIssuedInventory"/>
-    </request-map>
-    <request-map uri="addItemsToCustRequest">
-        <security https="true" auth="true"/>
-        <event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="addItemsToCustRequest" global-transaction="true"/>
-       <response name="success" type="view" value="ViewRequest"/>
-        <response name="error" type="view" value="ViewRequest"/>
-    </request-map>
-    <request-map uri="updaterequestitem">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateCustRequestItem"/>
-        <response name="success" type="view" value="ViewRequest"/>
-        <response name="error" type="view" value="ViewRequest"/>
-    </request-map>
-    <request-map uri="RequestToOrder">
-        <security https="true" auth="true"/>
-        <event type="service"  path=""  invoke="requestToOrder"/>
-       <response name="success" type="view" value="ByProdOrderView"/>
-    	<response name="error" type="view" value="ViewRequest"/>	
-    </request-map>
+   
     <request-map uri="FindByProduct">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindByProduct"/>
@@ -549,26 +224,6 @@
         <response name="success" type="request-redirect" value="EditByProductPrices"><redirect-parameter name="productId"/></response>
         <response name="error" type="view" value="EditByProductPrices"/>
     </request-map>
-    
-    <request-map uri="FindByProdFacility">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindByProdFacility"/>
-    </request-map>
-    <request-map uri="EditByProdFacility">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditByProdFacility"/>
-    </request-map>
-    <request-map uri="ParlorSales">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ParlorSales"/>
-    </request-map>
-    
-    <request-map uri="deleteIndentItem">
-     <security auth="true" https="true"/>
-     <event type="service" invoke="deleteCustRequestItem"/>
-     <response name="success" type="view" value="OverviewIndent"/>
-     <response name="error" type="view" value="OverviewIndent"/>
-    </request-map>
     <request-map uri="createInvoiceAndSettlePayments">
      <security auth="true" https="true"/>
      <event type="service" invoke="createInvoiceAndSettlePayments"/>
@@ -579,45 +234,13 @@
     	<security auth="true" https="true"/>
     	<response name="success" type="view" value="LookupProductByCategory"/>
     </request-map>
-    <request-map uri="LookupParlour">
-    	<security auth="true" https="true"/>
-    	<response name="success" type="view" value="LookupParlour"/>
-    </request-map>
-   	<request-map uri="StockVariance">
-    	<security auth="true" https="true"/>
-    	<response name="success" type="view" value="StockVariance"/>
-    </request-map>
-    <request-map uri="createPhysicalInventoryAndStockVariance">
-    	<security auth="true" https="true"/>
-    	<event type="service" invoke="createPhysicalInventoryAndStockVariance"/>
-    	<response name="success" type="view" value="StockVariance"/>
-    	<response name="error" type="view" value="StockVariance"/>
-    </request-map>
     <request-map uri="ChannelWiseSalesChart">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ChannelWiseSalesChart"/>
     </request-map>
-    <request-map uri="DeliverySchedule">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="DeliverySchedule"/>
-    </request-map>
     <request-map uri="VehicleStatus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="VehicleStatus"/>
-    </request-map>    
-    <request-map uri="SupplDeliverySchedule">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="SupplDeliverySchedule"/>
-    </request-map>
-    <request-map uri="SupplDeliveryScheduleNew">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="SupplDeliveryScheduleNew"/>
-    </request-map>
-    <request-map uri="processSupplDeleverySchdule">
-        <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="processSupplDeleverySchdule" global-transaction="true"/>
-        <response name="success" type="view" value="SupplDeliverySchedule"/>
-        <response name="error" type="view" value="SupplDeliveryScheduleNew"/>
     </request-map>
     <request-map uri="createByProdShipment">
         <security https="true" auth="true"/>
@@ -632,21 +255,6 @@
        <response name="success" type="view-last-noparam" />
         <response name="failed" type="view-last-noparam" />
         <response name="error" type="view-last-noparam"/>
-    </request-map>
-    <request-map uri="subscriptionIndent">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="SubscriptionIndent"/>
-    </request-map>
-    <request-map uri="FacilityFinHistory">
-         <security https="true" auth="true"/>
-         <response name="success" type="view" value="FacilityFinHistory"/>
-         <response name="error" type="view" value="FacilityFinHistory"/>
-    </request-map>
-    <request-map uri="cancelParlorSalesOrder">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="cancelParlorSalesOrder"/>
-      	<response name="success" type="view" value="FindParlorSalesOrder"/>
-        <response name="error" type="view" value="FindParlorSalesOrder"/>
     </request-map>
    
     <request-map uri="routeChequeValue.txt"><security https="true" auth="true"/>
@@ -686,50 +294,7 @@
     <request-map uri="invoiceDeliveryNote"><security https="true" auth="true"/>
         <response name="success" type="view" value="InvoiceDeliveryNote"/>
     </request-map>
-
-    <request-map uri="DeliveryScheduleReport"><security https="true" auth="true"/>
-        <response name="success" type="view" value="DeliveryScheduleReport"/>
-    </request-map>
-    <request-map uri="AavinGatePassReport"><security https="true" auth="true"/>
-        <response name="success" type="view" value="AavinGatePassReport"/>
-    </request-map>
-    <request-map uri="ExciseInvoiceReport"><security https="true" auth="true"/>
-        <response name="success" type="view" value="ExciseInvoiceReport"/>
-    </request-map>
-    <request-map uri="DeliveryScheduleCorrection">
-         <security https="true" auth="true"/>
-         <response name="success" type="view" value="DeliveryScheduleCorrection"/>
-         <response name="error" type="view" value="DeliveryScheduleCorrection"/>
-    </request-map>
-  <!--   <request-map uri="QuotaListing">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="QuotaListing"/>
-    </request-map> -->
-    <request-map uri="StockXfer">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="StockXfer"/>
-    </request-map>
-     <request-map uri="processStockXfer">
-        <security https="true" auth="true"/>
-        <event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="processStockXfer"/>
-        <response name="success" type="view" value="StockXfer"></response> 
-        <response name="error" type="view" value="StockXfer"/>
-    </request-map>
-    <request-map uri="FindParlorSalesOrder">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindParlorSalesOrder"/>
-    </request-map>
-  
-
-
-    <request-map uri="ParlourComparison">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ParlourComparison"/>
-    </request-map> 
-    <request-map uri="ParlourDespatchChart">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ParlourDespatchChart"/>
-    </request-map>      
+   
     
     <!--Ajax Requests  -->
     <request-map uri="getBoothOwnerContactInfo">
@@ -796,14 +361,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ChannelWiseSalesChart"/>
     </request-map>
-     <request-map uri="ChannelWiseSalesChart">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ChannelWiseSalesChart"/>
-    </request-map>
-     <request-map uri="DailySalesRevenueTrend">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="DailySalesRevenueTrend"/>
-    </request-map>
     <request-map uri="ShopeeComparison">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ShopeeComparison"/>
@@ -829,17 +386,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="Reports"/>
     </request-map> 
-   <request-map uri="DSCorrectionEntryInit">
-        <security https="true" auth="true"/>               
-        <response name="success" type="view" value="DSCorrectionEntryInit"/>
-        <response name="error" type="view" value="DSCorrectionEntryInit"/>
-    </request-map>
-    <request-map uri="DSCorrectionEntryNew">
-        <security https="true" auth="true"/>               
-        <response name="success" type="view" value="DSCorrectionEntryNew"/>
-        <response name="error" type="view" value="DSCorrectionEntryInit"/>
-    </request-map>
-     <request-map uri="truckSheetReport.txt">
+    <request-map uri="truckSheetReport.txt">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="TruckSheetTXT"/>
     </request-map>    
@@ -958,25 +505,8 @@
     
     <view-map name="FacilityTreeNetworkNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FacilityTree"/>
     <view-map name="ConfigChange" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ConfigChange"/>
-    
-    <view-map name="ByProductsOrderEntry" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ByProductsOrderEntry"/>
-    <view-map name="FindInventory" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindInventory"/>
-    <view-map name="Receipts" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#Receipts"/>
-    <view-map name="byProdReceiveInventory" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ReceiveInventory"/>
     <view-map name="receiveCrateInventory" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReceiveCrateInventory"/>
-    
-    <view-map name="FindIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindIndent"/>
-    <view-map name="findIndentEntry" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindIndentEntry"/>
-    <view-map name="IndentEntry" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#IndentEntry"/>
-	<view-map name="IndentEntryInit" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#IndentEntryInit"/>
-	<view-map name="IndentEntryNew" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#IndentEntryNew"/>
-	<view-map name="OrderEntryInit" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#OrderEntryInit"/>
-	<view-map name="OrderEntryNew" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#OrderEntryNew"/>
-	<view-map name="DSCorrectionEntryInit" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#DSCorrectionEntryInit"/>
-	<view-map name="DSCorrectionEntryNew" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#DSCorrectionEntryNew"/>
-	<view-map name="IndentAdjustmentEntryInit" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#IndentAdjustmentEntryInit"/>
-	<view-map name="IndentAdjustEntryNew" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#IndentAdjustEntryNew"/>
-	<view-map name="CheckListReportsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CheckListReportsPDF" content-type="application/pdf"/>
+     <view-map name="CheckListReportsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CheckListReportsPDF" content-type="application/pdf"/>
 	<view-map name="RouteChequeValueTxt" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RouteChequeValueTxt" content-type="text/plain"/>
 	<view-map name="IndentVsDispatchReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentVsDispatchReportPDF" content-type="application/pdf"/>
 	
@@ -989,51 +519,16 @@
 	
 	<view-map name="SalesReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#SalesReportCSV" content-type="text/csv" encoding="none"/>
 	
-	<view-map name="DuesPayment" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#DuesPayment"/>
-    <view-map name="FindPayments" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindPayments"/>
-    <view-map name="NewIncomingPayment" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#NewIncomingPayment"/>
-    <view-map name="ByProdOrderView" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ByProdOrderHeaderView"/>
     <view-map name="returnHeader" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnHeader"/>
     <view-map name="ReturnItems" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnItems"/> 
-    <view-map name="EditByProdFacility" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#EditFacility"/>
-    <view-map name="AddItemsFromOrder" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#AddItemsFromOrder"/>
-    <view-map name="TransferInventoryItem" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#TransferInventoryItem"/>
-    <view-map name="LookupByProduct" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#LookupByProduct"/>
     <view-map name="LookupByProductCategory" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupByProductCategory"/>
 	
-    <view-map name="FindInventoryDetails" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindInventoryDetails"/>
-    <view-map name="CreateAdvancedPayments" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#CreateAdvancedPayments"/>
-    <view-map name="FindDuesToPay" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindDuesToPay"/>
     <view-map name="ByProductsAnalytics" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ByProductsAnalytics"/>
     <view-map name="ProductWiseSalesVolumeTotals" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ProductWiseSalesVolumeTotals"/>
     <view-map name="ChannelWiseSalesChart" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ChannelWiseSalesChart"/>
-    <view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#DailySalesRevenueTrend"/>
-    <view-map name="NewRequest" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#NewRequest"/>
-    <view-map name="EditRequest" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#EditRequest"/>
-    <view-map name="RequestItems" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#RequestItems"/>
-    <view-map name="EditRequestItem" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#EditRequestItem"/>
-    <view-map name="ViewRequest" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ViewRequest"/>
-    <view-map name="ViewRequestItem" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ViewRequestItem"/>
-    <view-map name="FindRequest" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindRequest"/>
-    <view-map name="IssueCustRequest" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#IssueCustRequest"/>
-    <view-map name="ViewReceivedInventory" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ViewReceivedInventory"/>
-    <view-map name="ViewIssuedInventory" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ViewIssuedInventory"/>
-    <view-map name="FacilityTreeNetwork" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FacilityTreeNetwork"/>
-    <view-map name="createIndentOrder" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#createIndentOrder"/>
-    <view-map name="OverviewIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#OverviewIndent"/>
     <view-map name="EditIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#EditIndent"/>
-    <view-map name="FindByProdFacility" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindByProdFacility"/>
-    <view-map name="EditByProdFacility" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#EditFacility"/>
     <view-map name="LookupProductByCategory" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupProductByCategory"/>
-    <view-map name="LookupParlour" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupParlour"/>
-    <view-map name="StockVariance" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#StockVariance"/>
-    <view-map name="DeliverySchedule" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#DeliverySchedule"/>
-    <view-map name="SupplDeliverySchedule" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SupplDeliverySchedule"/>
-    <view-map name="SupplDeliveryScheduleNew" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SupplDeliveryScheduleNew"/>    
     <view-map name="SubscriptionIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SubscriptionIndent"/>
-    <view-map name="FacilityFinHistory" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FacilityFinHistory"/>
-    <view-map name="DeliveryScheduleReport" type="screenfop" page="component://byproducts/widget/ByProductsScreens.xml#DeliveryScheduleReport" content-type="text/plain"/>
-  	<view-map name="AavinGatePassReport" type="screenfop" page="component://byproducts/widget/ByProductsScreens.xml#AavinGatePassReport" content-type="text/plain"/>
     <view-map name="DueParticularsTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="text/plain"/>
    
     <view-map name="InvoicePrePrnt" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoicePrePrnt" content-type="text/plain"/>
@@ -1042,22 +537,10 @@
     <view-map name="vatAbstractMonthlyTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#vatAbstractMonthlyTXT" content-type="text/plain"/>
     <view-map name="channelWiseSalesTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#channelWiseSalesTXT" content-type="text/plain"/>
     <view-map name="ChannelWiseDespatchTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ChannelWiseDespatchTXT" content-type="text/plain"/>
-    <view-map name="InvoiceDeliveryNote" type="screenfop" page="component://byproducts/widget/ByProductsScreens.xml#InvoiceDeliveryNote" content-type="text/plain"/>
     <view-map name="SpecialOrderSuppliedDetailsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#SpecialOrderSuppliedDetailsPDF" content-type="application/pdf"/>
     <view-map name="BankRemittanceStatementTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#BankRemittanceStatementTXT" content-type="text/plain"/>
-    <view-map name="ExciseInvoiceReport" type="screenfop" page="component://byproducts/widget/ByProductsScreens.xml#ExciseInvoiceReport" content-type="text/plain"/>
     <view-map name="ByProdReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#ByProdReports"/>
    
- 
-    <view-map name="ParlourComparison" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ParlourComparison"/>
-    <view-map name="ParlourDespatchChart" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ParlourDespatchChart"/>
-   
-    
-    <view-map name="DeliveryScheduleCorrection" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#DeliveryScheduleCorrection"/>
-    <!-- <view-map name="QuotaListing" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindFacilityQuotaListing"/> -->
-    <view-map name="StockXfer" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#StockXfer"/>
-    <view-map name="ParlorSales" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#ParlorSales"/>
-    <view-map name="FindParlorSalesOrder" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#FindParlorSalesOrder"/>
     
     <!-- NG View Mappings -->
   
@@ -1082,6 +565,7 @@
 	<view-map name="GatePassShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#GatePassShipment"/>
 	<view-map name="AbsenteeList" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AbsenteeList"/>
 	<view-map name="ReturnCrates" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnCrates"/>
+	<view-map name="CreditInstitutionBilling" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#CreditInstitutionBilling"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>

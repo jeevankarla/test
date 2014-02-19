@@ -128,7 +128,26 @@
             </widgets>
         </section>
     </screen>
-    
+    <screen name="CreditInstitutionBilling">
+        <section>
+            <actions>
+            	<set field="tabButtonItem" value="CreditInstitutionBilling"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      	<section>
+                        	<widgets>
+                        		 <screenlet title="Credit Institution Billing">
+                        			<include-form name="institutionBilling" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="CreateEmployee">
         <section>
             <actions>

@@ -4,321 +4,6 @@
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
           <menu-item name="mainNg" title="${uiLabelMap.CommonMainNg}"><link target="mainNg"/></menu-item>
     </menu>
-    <menu name="ByProductsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="FacilityTreeNetwork" title="Location Network">
-        	<link target="main"/>
-        </menu-item>
-        <menu-item name="Facility" title="Facility">              
-            <link target="FindByProdFacility">               
-            </link>
-        </menu-item>
-        <menu-item name="analytics" title="Analytics">
-        	<link target="ChannelWiseSalesChart"/>
-        </menu-item>
-        <menu-item name="indentEntryInit" title="Indent">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_INDENT"/>
-            </condition> 
-        	<link target="IndentEntryInit"/>
-        </menu-item>
-        
-        <menu-item name="QuotaList" title="Indent History">
-			<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_VIEW"/>
-            </condition>       
-            <link target="QuotaListing">
-            </link>
-        </menu-item>
-        <menu-item name="parlorSales" title="Parlor Sales">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_PSALES"/>
-            </condition> 
-        	<link target="OrderEntryInit"/>
-        </menu-item>
-        
-        <menu-item name="FindInventory" title="Stock Register">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
-        	</condition>               
-            <link target="FindInventoryDetails">               
-            </link>
-        </menu-item>
-        <menu-item name="FindPayments" title="Payments">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_PAYMENT"/>
-            </condition>               
-            <link target="findPayments">               
-            </link>
-        </menu-item>
-        <menu-item name="DeliverySchedule" title="Delivery Schedule">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_TRCKSHEET"/>
-            </condition>               
-            <link target="DeliverySchedule">               
-            </link>
-        </menu-item>
-        <!-- <menu-item name="SupplDeliverySchedule" title="Supplementary Indent">              
-            <link target="SupplDeliverySchedule">               
-            </link>
-        </menu-item> -->
-        <menu-item name="DSCorrection" title="Delivery Schedule Correction">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_DSCORRECTION"/>
-            </condition>             
-            <link target="DSCorrectionEntryInit">               
-            </link>
-        </menu-item>
-        <menu-item name="ByProdReports" title="Reports">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_REPORTS"/>
-        	</condition>               
-            <link target="byProdReports">               
-            </link>
-        </menu-item>
-        
-    </menu>
-    <menu name="ByProductsIndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="IndentEntry" title="New Indent Entry">
-        	<link target="IndentEntryInit"/>
-        </menu-item>
-        <menu-item name="IndentAdjustment" title="Product Change">
-        	<link target="IndentAdjustmentEntryInit"/>
-        </menu-item>
-    </menu>
-    <menu name="ByProductsParlorTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="newSalesOrder" title="New Sales Order">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_PSALES"/>
-            </condition> 
-        	<link target="OrderEntryInit"/>
-        </menu-item>
-        <menu-item name="findSalesOrder" title="Find Sales Order">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_PSALES"/>
-            </condition> 
-        	<link target="FindParlorSalesOrder"/>
-        </menu-item>
-        
-    </menu>
-    <menu name="ByProductsAnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="byProductChannelSalesChart" title="Sales Mix Trend">
-        	<link target="ChannelWiseSalesChart"/>
-        </menu-item>
-        <menu-item name="salesRevenueTrend" title="Sales Trend">
-        	<link target="DailySalesRevenueTrend"/>
-        </menu-item>
-        <menu-item name="parlourDespatchChart" title="Shopee Trend">
-        	<link target="ParlourComparison"/>
-        </menu-item>        
-    </menu>
-    <menu name="ByProductsAnalyticsParlourTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem3">
-        <menu-item name="byProductParlourDespatchChart" title="Parlour Despatch">
-        	<link target="ParlourDespatchChart"/>
-        </menu-item>
-        <menu-item name="parlourComparison" title="Parlour Comparison">
-        	<link target="ParlourComparison"/>
-        </menu-item>
-    </menu>
-    <menu name="ByProductsOrderTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="OrderOverview" title="Order Overview">
-        	<link target="ByProdOrderView">
-        		<parameter param-name="orderId" from-field="parameters.orderId"/>
-        		<parameter param-name="primaryOrderId" from-field="parameters.primaryOrderId"/>
-        	</link>
-        </menu-item>
-        <menu-item name="OrderShipment" title="Order Shipment">
-        	<condition>
-        			<if-compare operator="not-equals" value="" field="parameters.shipmentId"/>
-        	</condition>
-        	<link target="AddItemsFromOrder">
-        		<parameter param-name="orderId" from-field="parameters.primaryOrderId"/>
-        		<parameter param-name="shipmentId" from-field="parameters.shipmentId"/>
-        	</link>
-        </menu-item>
-    </menu>
-    
-    <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="FindPayments" title="Find Payment">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_PAYMENT"/>
-            </condition> 
-        	<link target="findPayments"/>
-        </menu-item>
-        <!-- <menu-item name="Prepaid" title="Advance Payment">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_PAYMENT"/>
-            </condition>               
-            <link target="CreateAdvancedPayments">               
-            </link>
-        </menu-item> -->
-        <menu-item name="Postpaid" title="Make Payment">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_PAYMENT"/>
-            </condition>               
-            <link target="FindDuesToPay">               
-            </link>
-        </menu-item>
-    </menu>
-    <menu name="InventoryTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <!-- <menu-item name="SearchInventory" title="Find Inventory Totals">
-            <link target="Receipts">
-            </link>
-        </menu-item> -->
-        <menu-item name="FindInventoryDetails" title="Find Inventory Details">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
-        	</condition> 
-            <link target="FindInventoryDetails">
-            </link>
-        </menu-item>
-        <menu-item name="StockMoves" title="Stock Moves">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
-        	</condition> 
-            <link target="ViewReceivedInventory">
-            </link>
-        </menu-item>
-        <menu-item name="StockVariance" title="Stock Variance">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
-        	</condition> 
-            <link target="StockVariance">
-            </link>
-        </menu-item>
-    </menu>       
-    <menu name="StockReqTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="subTabButtonItem1">
-      <menu-item name="FindRequest" title="Find Indent">
-      	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
-        </condition> 
-       	<link target="FindRequest"></link>
-      </menu-item>
-       <!-- <menu-item name="CheckIndentToApprove" title="Check Indents To Approve">
-       <link target="CheckIndentToApprove"/>
-      </menu-item>
-      <menu-item name="RejectedIndentList" title="Rejected Indent List">
-       <link target="RejectedIndentList" />
-      </menu-item> -->
-    </menu>   
-    <menu name="RequestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="subTabButtonItem2">
-        <menu-item name="ViewRequest" title="Indent Overview">
-            <link target="ViewRequest">
-                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
-            </link>
-        </menu-item>
-        <menu-item name="editRequest" title="Edit Indent">
-            <condition>
-                <and>
-                    <if-has-permission permission="ORDERMGR" action="_CRQDETAIL_UPDATE"/>                                                                    
-                   <!--  <not><if-empty field="custRequest"/></not> -->
-                    <if-compare field="custRequest.statusId" operator="not-equals" value="IND_CANCELLED"/>
-                    <if-compare field="custRequest.statusId" operator="not-equals" value="IND_COMPLETED"/>
-                    <if-compare field="custRequest.statusId" operator="not-equals" value="IND_CLOSED"/>
-                </and>
-            </condition>
-            <link target="request">
-                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
-            </link>
-        </menu-item>
-    </menu> 
-    <menu name="IndentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="subTabButtonItem">
-        <menu-item name="overviewIndent" title="Indent Overview">
-            <link target="OverviewIndent">
-                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
-            </link>
-        </menu-item>
-        <menu-item name="editIndent" title="Edit Indent">
-            <link target="updateIndent">
-                <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
-            </link>
-        </menu-item>
-    </menu>
-    <menu name="RequestItemTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="subTabButtonItem3">
-        
-        <menu-item name="ViewRequestItem" title="Indent Item Overview">
-        	<condition disabled-style="disabled">
-                <and>
-                    <if-has-permission permission="ORDERMGR" action="_CRQDETAIL_UPDATE"/>                                                                    
-                    <not><if-empty field="custRequestId"/></not>
-                    <not><if-empty field="custRequestItemSeqId"/></not>
-                    <if-compare field="custRequest.statusId" operator="not-equals" value="IND_CLOSED"/>
-                </and>
-             </condition>
-            <link target="ViewRequestItem">
-                <parameter param-name="custRequestId" from-field="custRequestItem.custRequestId"/>
-                <parameter param-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
-            </link>
-        </menu-item>
-        <menu-item name="editRequestItem" title="Edit Indent Item">
-            <condition disabled-style="disabled">
-                <and>
-                    <if-has-permission permission="ORDERMGR" action="_CRQDETAIL_UPDATE"/>                                                                    
-                    <not><if-empty field="custRequestId"/></not>
-                    <not><if-empty field="custRequestItemSeqId"/></not>
-                    <if-compare field="custRequestItem.statusId" operator="not-equals" value="INDITM_CANCELLED"/>
-                    <if-compare field="custRequestItem.statusId" operator="not-equals" value="INDITM_COMPLETED"/>
-                    <if-compare field="custRequest.statusId" operator="not-equals" value="IND_CLOSED"/>
-                </and>
-            </condition>
-            <link target="EditRequestItem">
-                <parameter param-name="custRequestId" from-field="custRequestItem.custRequestId"/>
-                <parameter param-name="custRequestItemSeqId" from-field="custRequestItem.custRequestItemSeqId"/>
-            </link>
-        </menu-item>
-    </menu>
-    <menu name="FacilitySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="subTabButtonItem4">
-        
-        <menu-item name="FindFacility" title="Find Facility">
-            <link target="FindByProdFacility">
-                <parameter param-name="facilityId"/>
-            </link>
-        </menu-item>
-        <menu-item name="EditFacility" title="Edit Facility">
-        	<condition>
-        	   <or>
-        		 <if-compare field="parameters.facilityId" operator="not-equals" value=""/>
-        		 <if-compare field="parameters.showEditFacility" operator="equals" value="true"/>
-        	   </or>
-        	 </condition>
-            <link target="EditByProdFacility">
-                <parameter param-name="facilityId"/>
-            </link>
-        </menu-item>
-        <menu-item name="FacilityFinHistory" title="Financial History">
-        	<condition>
-        		 <if-compare field="parameters.facilityId" operator="not-equals" value=""/>
-        	</condition>
-        	<actions>
-        		<entity-one value-field="facility" entity-name="Facility">
-                	<field-map field-name="facilityId" from-field="facilityId"/>
-                	<select-field field-name="ownerPartyId"/>
-                </entity-one>
-        	</actions>        	
-            <link target="FacilityFinHistory">
-                <parameter param-name="partyId" from-field="facility.ownerPartyId"/>
-                <parameter param-name="facilityId" from-field="parameters.facilityId"/>
-            </link>
-        </menu-item>
-    </menu>
-    <menu name="InventoryDetailsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="subTabButtonItem5">
-        <menu-item name="EditInventory" title="Receive Inventory ">
-        	<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
-        	</condition> 
-        	<link target="byProdReceiveInventory">
-            </link>
-        </menu-item>
-    </menu>
-    <menu name="StockMovesSubMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="subTabButtonItem6">
-       <menu-item name="StockTransfer" title="Stock Transfer">
-       		<condition>
-                 <if-has-permission permission="BYPRODUCTS" action="_STOREG"/>
-        	</condition> 
-        	<link target="StockXfer">
-        	</link>
-        </menu-item>
-    </menu>
-    
     
     <menu name="ByProductFacilityTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FacilityProfile">
@@ -328,17 +13,7 @@
         <menu-item name="main" title="${uiLabelMap.ProductFacilityLocationNetwork}">
             <link target="mainNg">
             </link>
-        </menu-item><!--        
-        <menu-item name="FacilityChildren" title="${uiLabelMap.ProductFacilityLocationNetwork}">
-            <link target="FacilityChildren">
-            </link>
-        </menu-item>e
-        <menu-item name="ViewContactMechs" title="${uiLabelMap.PartyContactMechs}">
-            <link target="ViewContactMechs">
-                <parameter param-name="facilityId"/>
-            </link>
         </menu-item>
-        -->      
         <menu-item name="facility" title="${uiLabelMap.ProductFindFacilities}">
 			<condition>
 				<or>
@@ -388,36 +63,11 @@
 			<link target="TransporterMargins"></link>
         </menu-item> 
         <menu-item name="reports" title="${uiLabelMap.CommonReports}">
-			<!-- <condition>
-				<and>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            	</and>            
-            </condition>  -->   
             <link target="reports">
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
         </menu-item> 
-       <!--  <menu-item name="reports" title="${uiLabelMap.CommonReports}">
-			<condition>
-				<and>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            	</and>            
-            </condition>         
-            <link target="LMSReports">
-                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
-            </link>
-        </menu-item>  -->  
-      <!--   <menu-item name="LMSCharts" title="Charts">
-			<condition>
-				<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>            
-            </condition>         
-            <link target="LMSChartsDayVolumeTotals">
-            </link>
-        </menu-item>  -->
-        <menu-item name="analytics" title="Analytics">
+		<menu-item name="analytics" title="Analytics">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -458,14 +108,6 @@
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
         </menu-item>        
-       <!-- <menu-item name="FacilityOrders" title="${uiLabelMap.ProductFacilityNewSpecialOrder}">
-            <condition>
-                <if-compare field="enablePhase2" operator="equals" value="true"/>
-            </condition>         
-            <link target="FindFacilitySpecialOrders" >
-                <parameter param-name="displayFacilityTabs" value="Y"/>
-			</link>            
-        </menu-item> -->      
         <menu-item name="FindFacilityLocation" title="${uiLabelMap.ProductLocations}">
             <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
@@ -486,13 +128,7 @@
             </link>
         </menu-item>
         <menu-item name="ReceiveCrates" title="Receive Crates">
-        	<!-- <condition>
-        		<and>
-        			<not><if-empty field="ctxFacilityId"/></not>
-        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-        		</and>        		
-        	</condition>       -->  	
-            <link target="receiveCrateInventory" />
+        	<link target="receiveCrateInventory" />
         </menu-item>
        <menu-item name="ViewFacilityInventoryByProduct" title="${uiLabelMap.ProductInventory}">
             <condition>
@@ -618,58 +254,10 @@
         </menu-item>
         
        <menu-item name="AdhocSale" title="Adhoc Sale">  
-      <!--   <condition>
-				<or>
-					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-					<if-has-permission permission="GATEPASS"  action="_ADMIN"/>
-				</or>            	
-         </condition>   -->          
-         <link target="AdhocSale">    
+      	 <link target="AdhocSale">    
          </link>
         </menu-item>
-        <!-- <menu-item name="EditFacilityContent" title="${uiLabelMap.ProductContent}">
-			<condition>				
-				<and>
-					<not><if-empty field="ctxFacilityId"/></not>
-					<or>
-	            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-	            		<if-has-permission permission="FACILITY"  action="_UPDATE"/> 
-            		</or>             		           		
-           		</and>	          
-            </condition>         
-            <link target="EditFacilityContent">            
-                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
-            </link>
-        </menu-item>
-        <menu-item name="EditFacilityGeoPoint" title="${uiLabelMap.CommonGeoLocation}">  
-			<condition>
-				<and>
-					<not><if-empty field="ctxFacilityId"/></not>
-					<or>
-						<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-						<if-has-permission permission="FACILITY"  action="_GEOPOINT"/>
-					</or>            		
-            	</and>            
-            </condition>                 
-            <link target="EditFacilityGeoPoint">
-                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
-            </link>
-        </menu-item>
-        <menu-item name="FindSubscription" title="${uiLabelMap.ProductSubscriptions}"> 
-            <condition>
-            	<and>
-	            	<if-compare field="ctxFacility.facilityTypeId" operator="equals" value="BOOTH"/>
-	            	<or>
-	            		<if-has-permission permission="SUBSCRIPTION"  action="_ADMIN"/>
-	            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-	            	</or>	            	
-            	</and>
-            </condition>                 
-            <link target="FindSubscription">
-                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
-            </link>
-       </menu-item>
-        -->
+        
         <menu-item name="QuotaList" title="Indent History">
 			<condition>
 				<or>
@@ -681,18 +269,7 @@
             <link target="QuotaListing">
             </link>
         </menu-item>            
-      <!--  <menu-item name="BulkCardSale" title="${uiLabelMap.BulkCardSale}">
-       		<condition>
-       			<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CARDSALE"  action="_ADMIN"/>
-            	</or>
-            </condition>
-            <link target="BulkCardSale">
-             <parameter param-name="facilityId" from-field="ctxFacilityId"/>
-            </link>
-       </menu-item>        -->  
-       <menu-item name="ChangeIndentInit" title="${uiLabelMap.Indent}">
+      	<menu-item name="ChangeIndentInit" title="${uiLabelMap.Indent}">
 			<condition>
 				<or>
 					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -715,26 +292,7 @@
        	    <link target="GatePassShipment">
             </link>
        </menu-item>
-     <!--    <menu-item name="Returns" title="${uiLabelMap.Returns}">
-			<condition>
-				<or>
-					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-					<if-has-permission permission="TRUCKSHEETCORRECTION"  action="_ADMIN"/>
-				</or>            	
-            </condition>         
-       	    <link target="GatePassInit">
-            </link>
-       </menu-item> -->
-       <!-- <menu-item name="DSCorrectionEntryInit" title="${uiLabelMap.TruckSheetCorrection}">
-			<condition>
-				<or>
-					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-					<if-has-permission permission="TRUCKSHEETCORRECTION"  action="_ADMIN"/>
-				</or>            	
-            </condition>         
-       	     <link target="DSCorrectionEntryInit"> 
-            </link>
-       </menu-item> -->
+     
        <menu-item name="DSCorrectionEntryInit" title="${uiLabelMap.TruckSheetCorrection}">
         	<condition>
         	   <or>
@@ -756,16 +314,7 @@
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
        </menu-item>       
-      <!--  <menu-item name="Payments" title="${uiLabelMap.DuesPayment}"> 
-       		<condition>
-                <or>
-					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-					<if-has-permission permission="CASH"  action="_ADMIN"/>
-				</or>
-            </condition>       
-            <link target="FindBoothPayments"/>        
-       </menu-item> -->
-       <menu-item name="PastPayments" title="Payments Entry"> 
+      <menu-item name="PastPayments" title="Payments Entry"> 
        		<condition>
        			<or>
        				<if-has-permission permission="PASTDUE"  action="_PAYMENT"/>       				
@@ -780,51 +329,18 @@
             </condition>         
             <link target="FindDealerPayments"/>        
        </menu-item>
-       <!-- <menu-item name="OtherPayments" title="${uiLabelMap.OtherPayments}"> 
-       		<condition>
-                <or>
-					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-					<if-has-permission permission="CASH"  action="_ADMIN"/>
-				</or>
-            </condition>       
-            <link target="FindProductPayments"/>        
-       </menu-item> -->
+       
         <menu-item name="AbsenteeList" title="${uiLabelMap.AbsenteeOverride}">
             <link target="AbsenteeList"/>
         </menu-item> 
-      <!--   <menu-item name="FinancialHistory" title="${uiLabelMap.PartyFinancialHistory}">
-            <condition>
-            	<and>
-           			<if-compare field="ctxFacility.facilityTypeId" operator="equals" value="BOOTH"/>
-            		<or>
-                		<if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
-						<if-compare-field field="ctxFacility.ownerPartyId" operator="equals" to-field="userLogin.partyId"/>
-					</or>
-				</and>
-            </condition>            
-            <link target="PartyFinancialHistory">
-                <parameter param-name="partyId" from-field="ctxFacility.ownerPartyId"/>
-                <parameter param-name="facilityId" from-field="ctxFacilityId"/>                
-            </link>
-        </menu-item> -->
-       <!--  <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
+     
+        <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
             <link target="FindTransporterDue"/>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="Returns" title="${uiLabelMap.Returns}">
             <link target="FindReturns"/>
         </menu-item>  
-      <!--   <menu-item name="CrateCanEntries" title="${uiLabelMap.CratesCans}">
-            <link target="CrateCanEntries" full-path="true"/>
-        </menu-item> -->
-        <!--  <menu-item name="FindBankRemittance" title="${uiLabelMap.BankRemittance}">
-            <link target="FindBankRemittance"/>
-        </menu-item> -->
-       <!--   <menu-item name="FindFacilityRates" title="Special Discount">
-            <link target="FindFacilityRates"/>
-        </menu-item> -->
-        <!-- <menu-item name="FacilityRecovery" title="${uiLabelMap.Recovery}">
-            <link target="FacilityRecovery"/>
-        </menu-item>   --> 
+      
          <menu-item name="EmployeeSearch" title="Employee Subsidy Milk">
             <link target="EmployeeSearch">
             </link>
@@ -832,19 +348,14 @@
         <menu-item name="ReturnCrates" title="Return Crates">
             <link target="ReturnCrates"/>
         </menu-item>
+        <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
+            <link target="CreditInstitutionBilling"/>
+        </menu-item>
     </menu>
     <menu name="ReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="findReturn" title="Find Return">
             <link target="FindReturns"/>
         </menu-item>
-        <!-- <menu-item name="editReturn" title="Edit Return">
-        	<condition>
-        		<if-compare operator="not-equals" value="" field="parameters.returnId"/>
-        	</condition>
-            <link target="returnHeader">
-            	<parameter param-name="returnId" from-field="parameters.returnId"/>
-            </link>
-        </menu-item> -->
         <menu-item name="returnItems" title="Edit Return">
         	<condition>
         		<if-compare operator="not-equals" value="" field="returnId"/>
@@ -894,16 +405,6 @@
             </condition>  
         	<link target="RouteComparison"/>
         </menu-item>    
-         <!-- <menu-item name="LMSChartsDayCashReceivables" title="Day's Cash Receivables">
-			<condition>
-				<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>            
-            </condition>         
-            <link target="LMSChartsDayCashReceivables">
-            </link>
-        </menu-item> -->
         <menu-item name="FieldStaffComparison" title="Field Staff Comparison">
 			<condition>
 				<or>
@@ -977,16 +478,6 @@
                 <parameter param-name="productId"/>
             </link>
         </menu-item>
-        <!-- <menu-item name="EditProductCategories" title="${uiLabelMap.ProductCategories}">
-        	<condition>
-        	   <or>
-        		 <if-compare field="parameters.productId" operator="not-equals" value=""/>
-        	   </or>
-        	 </condition>
-            <link target="EditByProductCategories">
-                <parameter param-name="productId"/>
-            </link>
-        </menu-item> -->
     </menu> 
      <menu name="AdhocSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="AdhocSale" title="Adhoc Sale">

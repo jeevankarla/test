@@ -470,89 +470,6 @@ public class ByProductNetworkServices {
 		 return result;
 	 }
 	 
-	 
-	 public static Map getByProductParlourDespatch(DispatchContext dctx, Timestamp fromDate, Timestamp thruDate)  {
-		 
-		 Delegator delegator = dctx.getDelegator();
-		 LocalDispatcher dispatcher = dctx.getDispatcher();
-		     
-		 Map result = FastMap.newInstance();
-		 int intervalDays = (UtilDateTime.getIntervalInDays(fromDate, thruDate)+1);
-    	 //List orderedItems = FastList.newInstance();
-    	 
-    	 List shipmentList = ByProductNetworkServices.getByProdShipmentIdsByType(delegator, fromDate, thruDate, "BYPRODUCTS");
-    	 List conditionList = FastList.newInstance(); 
- 		 conditionList.add(EntityCondition.makeCondition("shipmentId",  EntityOperator.IN, shipmentList));
- 		 conditionList.add(EntityCondition.makeCondition("isCancelled",  EntityOperator.EQUALS, null));
- 		 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.NOT_IN, UtilMisc.toList("REPLACEMENT_BYPROD","BYPROD_GIFT"))));
- 		 EntityCondition shipReceiptCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
- 		 List<GenericValue> shipReceiptList = FastList.newInstance();
-    	 try{
-    		 shipReceiptList = delegator.findList("ShipmentReceiptAndItem", shipReceiptCond, UtilMisc.toSet("facilityId", "productId", "datetimeReceived", "quantityAccepted"), UtilMisc.toList("productId"), null, false);
-    	 }catch(GenericEntityException e){
-    		 Debug.logError(e, e.toString(), module);
-             return ServiceUtil.returnError(e.toString());
-    	 }
-    	 Map totalProductQuant = FastMap.newInstance();
-    	 List daywiseDespatch = FastList.newInstance();
-    	 Map dayDespatch = FastMap.newInstance();
-    	 for(int k =0;k<intervalDays;k++){
-    		
-    		List condList = FastList.newInstance(); 
- 			Timestamp supplyDate = UtilDateTime.addDaysToTimestamp(fromDate, k);
- 			Timestamp dayStart = UtilDateTime.getDayStart(supplyDate);
- 			Timestamp dayEnd = UtilDateTime.getDayEnd(supplyDate); 
- 			List<GenericValue> daywiseParlourOrders = EntityUtil.filterByCondition(shipReceiptList, EntityCondition.makeCondition(EntityCondition.makeCondition("datetimeReceived", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart),EntityOperator.AND,
- 	    			 EntityCondition.makeCondition("datetimeReceived", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
- 			List dayPartyList = FastList.newInstance();
- 			List tempDayPartyList = FastList.newInstance();
- 			tempDayPartyList = EntityUtil.getFieldListFromEntityList(daywiseParlourOrders, "facilityId", true);
- 			for(int j=0;j<tempDayPartyList.size();j++){
- 				String booth = (String)tempDayPartyList.get(j);
- 				booth = booth.toUpperCase();
- 				if(!dayPartyList.contains(booth)){
- 					dayPartyList.add(booth);
- 				}
- 			}
- 			Map partySale = FastMap.newInstance();
- 			String boothId = "";
- 			if(UtilValidate.isNotEmpty(dayPartyList)){
- 				for(int i=0;i<dayPartyList.size();i++){
- 		 			Map productQuant = FastMap.newInstance();
- 					boothId = (String)dayPartyList.get(i);
- 					List daywiseBoothwiseSale = EntityUtil.filterByCondition(daywiseParlourOrders, EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("facilityId"), EntityOperator.EQUALS, EntityFunction.UPPER(((String)boothId).toUpperCase())));
- 					for(int j=0 ; j<daywiseBoothwiseSale.size();j++){
- 						GenericValue eachOrderItem = (GenericValue)daywiseBoothwiseSale.get(j);
- 						String productId = eachOrderItem.getString("productId");
- 						BigDecimal quantity = eachOrderItem.getBigDecimal("quantityAccepted");
- 						if(productQuant.containsKey(productId)){
- 							BigDecimal tempQty = (BigDecimal)productQuant.get(productId);
- 							BigDecimal totalQty = tempQty.add(quantity);
- 							productQuant.put(productId, totalQty);
- 						}else{
- 							productQuant.put(productId,quantity);
- 						}
- 						if(totalProductQuant.containsKey(productId)){
- 							BigDecimal tempTotQty = (BigDecimal)totalProductQuant.get(productId);
- 							BigDecimal totalQuant = tempTotQty.add(quantity);
- 							totalProductQuant.put(productId, totalQuant);
- 						}
- 						else{
- 							totalProductQuant.put(productId, quantity);
- 						}
- 					}
- 					partySale.put(boothId, productQuant);
- 				}
- 				
- 			}
- 			dayDespatch.put(dayStart, partySale);
- 			daywiseDespatch.add(dayDespatch);
- 		 }
-    	 result.put("totalDespatch", totalProductQuant);
-    	 result.put("datewiseDespatch", daywiseDespatch);
-		 return result;
-	 }
-	 
 	 public static Map getByProductSubscriptionId(Delegator delegator, String facilityId)  {
 		 
 		 Map result = FastMap.newInstance();
@@ -1736,35 +1653,6 @@ public class ByProductNetworkServices {
 		            }catch (Exception e) {
 		                Debug.logError(e, module);
 		            } 
-		            // handle Replacement here 
-		            /*if(productSubscriptionTypeId.equals("REPLACEMENT_BYPROD")){
-		            	List<GenericValue> transProductList = FastList.newInstance();
-		            	
-		            	for(GenericValue SubscriptionProduct : subscriptionProductsList){
-		            		GenericValue tempSubscriptionProduct = delegator.makeValue("SubscriptionFacilityAndSubscriptionProduct");
-		            		tempSubscriptionProduct.putAll(SubscriptionProduct);
-		            		tempSubscriptionProduct.put("facilityId", SubscriptionProduct.getString("destinationFacilityId"));
-		            		transProductList.add(tempSubscriptionProduct);
-		            	}
-		            	
-		            	Map transferCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-		       	  	 	transferCtx.put("shipmentId", shipmentId);
-		       	  	 	transferCtx.put("estimatedDeliveryDate", estimatedDeliveryDate);
-		       	  	 	transferCtx.put("subscriptionProductsList", transProductList);	  	 
-		       	  	 	try{
-		       	  	 		Map result = dispatcher.runSync("receiveParlorInventory",transferCtx);  		  		 
-		       	  	 		if (ServiceUtil.isError(result)) {
-		       	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
-		       	  	 			Debug.logError(errMsg , module);       				
-		       	  	 			return result;
-		       	  	 		}
-		       			 
-		       	  	 	}catch (Exception e) {
-		       	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);     
-		       	  			  return resultMap;			  
-		       	  	 	}
-		            }*/
-		            
 		            resultMap.put("orderId", orderId);
 		        
 				}//end of OrderIteration
@@ -3343,7 +3231,6 @@ public class ByProductNetworkServices {
 	        			dayShipmentMap.put((String)dayShipments.get(j), UtilDateTime.toDateString(saleDate ,"yyyy-MM-dd"));
 	        		}
 	        	}
-	        	
 	//Debug.logInfo("salesDate=" + salesDate + "shipmentIds=" + shipmentIds, module);
 	            List conditionList= FastList.newInstance(); 
 	        	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
@@ -3361,7 +3248,6 @@ public class ByProductNetworkServices {
 	        	if(!UtilValidate.isEmpty(shipmentIds)){        		
 	        		orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
 	        	}
-	    		
 
 	    	} catch (GenericEntityException e) {
 	            Debug.logError(e, module);
@@ -3415,7 +3301,6 @@ public class ByProductNetworkServices {
 	    		totalSnf = totalSnf.add(snf);     		
 	    			
 				Map zone = (Map)boothZoneMap.get(orderItem.getString("originFacilityId"));
-				
 				// Handle booth totals    			
 				String boothId = orderItem.getString("originFacilityId");
 				if (boothTotals.get(boothId) == null) {
@@ -3487,7 +3372,6 @@ public class ByProductNetworkServices {
 					// next handle product totals
 					Map boothProductTotals = (Map)boothMap.get("productTotals");
 					Map productMap = (Map)boothProductTotals.get(productId);
-					
 					if(UtilValidate.isEmpty(productMap)){
 						
 						Map<String, Object> productItemMap = FastMap.newInstance();
@@ -3518,7 +3402,6 @@ public class ByProductNetworkServices {
 	    					
 	    					BigDecimal runningTotalproductSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("total");
 	        				runningTotalproductSubscriptionType = runningTotalproductSubscriptionType.add(quantity);
-	        				
 	        				BigDecimal runningTotalRevenueproductSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("totalRevenue");
 	        				runningTotalRevenueproductSubscriptionType = runningTotalRevenueproductSubscriptionType.add(revenue);
 	        				
@@ -3542,7 +3425,7 @@ public class ByProductNetworkServices {
 				}
 				
 				//handle dayWise Totals			 			
-				 String currentSaleDate = dayShipmentMap.get(orderItem.getString("shipmentId"));
+				String currentSaleDate = dayShipmentMap.get(orderItem.getString("shipmentId"));
 				if (dayWiseTotals.get(currentSaleDate) == null) {
 					Map<String, Object> newMap = FastMap.newInstance();
 
@@ -3551,7 +3434,7 @@ public class ByProductNetworkServices {
 					newMap.put("excludeIncentive", orderItem.getString("excludeIncentive"));
 					newMap.put("categoryTypeEnum", orderItem.getString("categoryTypeEnum"));
 			        Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
-					Map<String, Object> iteratorMap = FastMap.newInstance();
+			        Map<String, Object> iteratorMap = FastMap.newInstance();
 			    	while(typeIter.hasNext()) {
 			    		// initialize type maps
 			            GenericValue type = typeIter.next();    				
@@ -3562,7 +3445,6 @@ public class ByProductNetworkServices {
 	    				iteratorMap.put(type.getString("enumId"), supplyTypeDetailsMap);
 	    				newMap.put("supplyTypeTotals", iteratorMap);
 					}
-			    	
 			    	Map supplyTypeMap =  (Map)newMap.get("supplyTypeTotals");
 			    	Map supplyTypeDetailsMap = (Map)supplyTypeMap.get(prodSubscriptionTypeId);
 					supplyTypeDetailsMap.put("name", prodSubscriptionTypeId);
@@ -3574,7 +3456,6 @@ public class ByProductNetworkServices {
 					Map<String, Object> productItemMap = FastMap.newInstance();
 					Map<String, Object> productSupplyTypeMap = FastMap.newInstance();
 					Map<String, Object> productSupplyTypeDetailsMap = FastMap.newInstance();
-
 					productItemMap.put("name", productName);
 					productSupplyTypeDetailsMap.put("name", orderItem.getString("productSubscriptionTypeId"));
 					productSupplyTypeDetailsMap.put("total", quantity);
@@ -3608,7 +3489,6 @@ public class ByProductNetworkServices {
 					typeMap.put("name", prodSubscriptionTypeId);
 					typeMap.put("total", typeRunningTotal);
 					typeMap.put("totalRevenue", typeRunningTotalRevenue);
-					
 					// next handle product totals
 					Map dayWiseProductTotals = (Map)dayWiseMap.get("productTotals");
 					Map productMap = (Map)dayWiseProductTotals.get(productId);
@@ -3635,7 +3515,6 @@ public class ByProductNetworkServices {
 	    				BigDecimal productRunningTotalRevenue = (BigDecimal)productMap.get("totalRevenue");
 	    				productRunningTotalRevenue = productRunningTotalRevenue.add(revenue);
 	    				productMap.put("totalRevenue", productRunningTotalRevenue);
-	    				
 	    				
 	    				Map supplyTypeMap = (Map) productMap.get("supplyTypeTotals");
 	    				if(supplyTypeMap.get(orderItem.getString("productSubscriptionTypeId") )!= null){
@@ -3665,7 +3544,6 @@ public class ByProductNetworkServices {
 	    				}
 	    			}
 				}	
-				
 				/*// Handle zone totals
 				String zoneName = (String)zone.get("name");
 				String zoneId = (String)zone.get("zoneId");
@@ -3900,7 +3778,6 @@ public class ByProductNetworkServices {
 	        	tempVal = tempVal.setScale(decimals, rounding); 
 	        	supplyTypeValue.put("totalRevenue", tempVal);	    	        	
 	        }	        
-
 			
 			Map<String, Object> result = FastMap.newInstance();        
 	        result.put("totalQuantity", totalQuantity);

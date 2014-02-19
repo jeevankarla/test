@@ -509,7 +509,14 @@
     	<field name="productId"><hidden value="CRATE"/></field>     	   	
        	<field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>       
     </form>
-    <form name="FindAdhocSalesOrder" title="" type="single" target="FindAdhocSalesOrder" header-row-style="header-row" default-table-style="basic-table">
+    <form name="institutionBilling" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="CreateInstitutionBilling"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<field name="facilityId" title="Retailer"><lookup target-form-name="LookupFacility"/></field>
+    	<field name="customTimePeriodId" title="Billing Period"><text/></field>
+    	<field name="periodTypeId" title="Period Type"><text/></field>
+       	<field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+	<form name="FindAdhocSalesOrder" title="" type="single" target="FindAdhocSalesOrder" header-row-style="header-row" default-table-style="basic-table">
         <field name="orderId"><text-find/></field>
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderType"><hidden value="SALES_ORDER"/></field>
@@ -526,7 +533,7 @@
         	<!-- <drop-down>
         		<entity-options description="${statusCode}" entity-name="StatusItem" key-field-name="statusId" >
         			<entity-constraint name="statusTypeId" operator="equals" value="ORDER_STATUS"/>
-s        		</entity-options>
+        		</entity-options>
         	</drop-down> -->
         </field>
         <field name="originFacilityId" title="Booth Code"><text-find/></field>

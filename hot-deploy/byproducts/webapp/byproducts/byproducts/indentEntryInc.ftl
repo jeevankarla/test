@@ -544,6 +544,7 @@ function updateGrid(){
 		for(var i=0;i<data.length;i++){
 			var prod = data[i]["cProductId"];
 			var qty = parseFloat(data[i]["cQuantity"]);
+			alert(prod+"#"+qty+"#"+priceTags);
 			var price = parseFloat(priceTags[prod]);
 			if(isNaN(price)){
 				price = 0;

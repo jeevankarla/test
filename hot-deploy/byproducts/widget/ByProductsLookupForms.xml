@@ -45,24 +45,24 @@
         </field>
     </form>
     
-    <form name="LookupParlour" target="LookupParlour" title="" type="single"
+    <!-- <form name="LookupParlour" target="LookupParlour" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="facilityId" title="facilityId"><text-find/></field>
         <field name="facilityTypeId" title="facilityTypeId"><text-find/></field>
         <field name="facilityName" title="facilityName"><text-find/></field>
         <field name="ownerPartyId" title="ownerPartyId"><text-find/></field>
          <field name="categoryTypeEnum" ><hidden value="PARLOUR"/></field>
-        <!-- <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
+        <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="ProductType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field> -->
+        </field>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    <form name="listLookupParlour" list-name="listIt" title="" type="list"
+    </form> -->
+    <!-- <form name="listLookupParlour" list-name="listIt" title="" type="list"
         paginate-target="LookupParlour" odd-row-style="alternate-row" default-table-style="basic-table" view-size="20">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -75,16 +75,16 @@
         <field name="facilityId" title="facilityId" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${facilityId}" target="javascript:set_value('${facilityId}')"/>
         </field>
-        <!-- <field name="facilityId" title="facilityId"><display/></field> -->
+        <field name="facilityId" title="facilityId"><display/></field>
         <field name="facilityTypeId" title="facilityTypeId"><display/></field>
         <field name="facilityName" title="facilityName"><display/></field>
-        <!-- <field name="ownerPartyId" title="ownerPartyId"><display-entity entity-name="ProductType"/></field> -->
-        <!-- <field name="searchVariants" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasVariants">
+        <field name="ownerPartyId" title="ownerPartyId"><display-entity entity-name="ProductType"/></field>
+        <field name="searchVariants" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasVariants">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
-        </field> -->
-    </form>
+        </field>
+    </form> -->
 
     <form name="lookupByProductCategory" target="LookupByProductCategory" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
