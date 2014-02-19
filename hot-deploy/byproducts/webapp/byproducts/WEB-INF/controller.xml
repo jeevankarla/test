@@ -500,7 +500,7 @@
         <response name="success" type="view" value="CheckListReportsPDF"/>
     </request-map>
     <!-- View Mappings -->
-    <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#main"/>
+    <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     
     <view-map name="FacilityTreeNetworkNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FacilityTree"/>
