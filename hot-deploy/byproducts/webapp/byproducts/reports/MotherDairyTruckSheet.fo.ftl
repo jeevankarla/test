@@ -65,7 +65,7 @@ under the License.
 						</fo:table-row>
 						<fo:table-row>
 							<fo:table-cell>
-								<fo:block font-size="7pt" keep-together="always" white-space-collapse="false">Dealer Name</fo:block>
+								<fo:block font-size="7pt" keep-together="always" white-space-collapse="false">Code-Dealer Name</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="7pt" keep-together="always" white-space-collapse="false">---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -218,7 +218,7 @@ under the License.
 					<fo:table-body>
 						<fo:table-row>
 							<#assign facility = delegator.findOne("Facility", {"facilityId" : boothDetails.getKey()}, true)>
-							<fo:table-cell><fo:block font-size="7pt" keep-together="always">${facility.facilityName?if_exists}</fo:block></fo:table-cell>
+							<fo:table-cell><fo:block font-size="5pt" keep-together="always">${boothDetails.getKey()}- ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.facilityName?if_exists)),10)}</fo:block></fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="7pt">
 									<fo:table>
