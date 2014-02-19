@@ -154,7 +154,7 @@ under the License.
 													<#assign prodCount = 0>
 													<#list byProdList as product>
 														<#assign counter = counter+1>
-														<#if (counter >= byProdCounter && prodCount < 19) >
+														<#if (counter > byProdCounter && prodCount < 19) >
 															<#assign byProdCounter = byProdCounter+1>
 															<#assign prodCount = prodCount + 1>
 															<fo:table-cell>
@@ -171,7 +171,7 @@ under the License.
 													<#assign prodCount = 0>
 													<#list byProdList as product>
 														<#assign counter = counter+1>
-														<#if (counter >= byProdCounter && prodCount < 19) >
+														<#if (counter > byProdCounter && prodCount < 19) >
 															<#assign byProdCounter = byProdCounter+1>
 															<#assign prodCount = prodCount + 1>
 															<fo:table-cell>
@@ -308,7 +308,7 @@ under the License.
 													<#assign prodCount = 0>
 													<#list byProdList as product>
 														<#assign counter = counter+1>
-														<#if (counter >= byProdCounter && prodCount < 19) >
+														<#if (counter > byProdCounter && prodCount < 19) >
 															<#assign byProdCounter = byProdCounter+1>
 															<#assign prodCount = prodCount + 1>
 															<#assign byProdQty=0>
@@ -335,7 +335,7 @@ under the License.
 													<#assign prodCount = 0>
 													<#list byProdList as product>
 														<#assign counter = counter+1>
-														<#if (counter >= byProdCounter && prodCount < 19) >
+														<#if (counter > byProdCounter && prodCount < 19) >
 															<#assign byProdCounter = byProdCounter+1>
 															<#assign prodCount = prodCount + 1>
 															<#assign byProdQty=0>
@@ -475,7 +475,7 @@ under the License.
 												<#assign prodCount = 0>
 												<#list byProdList as byProd>
 													<#assign counter = counter+1>
-													<#if (counter >= byProdCounter && prodCount < 19) >
+													<#if (counter > byProdCounter && prodCount < 19) >
 														<#assign byProdCounter = byProdCounter+1>
 														<#assign prodCount = prodCount + 1>
 														<#assign byProdQty=0>
@@ -502,7 +502,7 @@ under the License.
 												<#assign prodCount = 0>
 												<#list byProdList as byProd>
 													<#assign counter = counter+1>
-													<#if (counter >= byProdCounter && prodCount < 19) >
+													<#if (counter > byProdCounter && prodCount < 19) >
 														<#assign byProdCounter = byProdCounter+1>
 														<#assign prodCount = prodCount + 1>
 														<#assign byProdQty=0>
@@ -630,7 +630,7 @@ under the License.
 											<#assign prodCount = 0>
 											<#list byProdList as byProd>
 												<#assign counter = counter+1>
-												<#if (counter >= byProdCounter && prodCount < 19) >
+												<#if (counter > byProdCounter && prodCount < 19) >
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<#assign qty=0>
@@ -657,7 +657,7 @@ under the License.
 											<#assign prodCount = 0>
 											<#list byProdList as byProd>
 												<#assign counter = counter+1>
-												<#if (counter >= byProdCounter && prodCount < 19)>
+												<#if (counter > byProdCounter && prodCount < 19)>
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<#assign qty=0>
@@ -786,7 +786,7 @@ under the License.
 											<#assign prodCount = 0>
 											<#list byProdList as byProd>
 												<#assign counter = counter+1>
-												<#if (counter >= byProdCounter && prodCount < 19) >
+												<#if (counter > byProdCounter && prodCount < 19) >
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<#assign qty=0>
@@ -814,7 +814,7 @@ under the License.
 											<#assign prodCount = 0>
 											<#list byProdList as byProd>
 												<#assign counter = counter+1>
-												<#if (counter >= byProdCounter && prodCount < 19) >
+												<#if (counter > byProdCounter && prodCount < 19) >
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<fo:table-cell>		
