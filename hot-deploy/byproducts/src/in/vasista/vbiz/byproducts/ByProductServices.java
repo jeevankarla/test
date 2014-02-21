@@ -718,7 +718,7 @@ public class ByProductServices {
             		ShoppingCartItem item = null;
             		if(tempCartItems.size() >0){
             			 item = tempCartItems.get(0);
-                         item.setQuantity(item.getQuantity().add(new BigDecimal(subscriptionProduct.getString("quantity"))), dispatcher, cart);
+            			 item.setQuantity((item.getQuantity()).add(new BigDecimal(subscriptionProduct.getString("quantity"))), dispatcher, cart, true, false ,false);
                          item.setBasePrice((BigDecimal)priceResult.get("basicPrice"));
                          
                        
