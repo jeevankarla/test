@@ -838,15 +838,14 @@ public class ByProductServices {
         // approve the order
         if (UtilValidate.isNotEmpty(orderId)) {
             boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-            /*if(createInvoice){
+            /*if(createInvoice){*/
             	try{
-            		Debug.log("orderId #####################"+orderId);
             		resultMap = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"userLogin", userLogin));
             		if (ServiceUtil.isError(resultMap)) {
                         Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(resultMap), module);
                 		return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(resultMap));          	            
                     } 
-    	        	Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
+    	        	/*Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
     	             invoiceCtx.put("userLogin", userLogin);
     	             invoiceCtx.put("statusId","INVOICE_READY");
     	             try{
@@ -858,19 +857,19 @@ public class ByProductServices {
     	             }catch(GenericServiceException e){
     	             	 Debug.logError(e, e.toString(), module);
     	                 return ServiceUtil.returnError(e.toString());
-    	             }        		
+    	             }       */ 		
             		// apply invoice if any adavance payments from this  party
     				  			            
-    				Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
+    				/*Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
     				if (ServiceUtil.isError(resultPaymentApp)) {						  
     	        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
     	               return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
-    		        }				           
+    		        }	*/			           
     		          
                 }catch (Exception e) {
                     Debug.logError(e, module);
                 }
-            }*/
+           /* }*/
             
             resultMap.put("orderId", orderId);
         }        
@@ -2763,38 +2762,181 @@ public class ByProductServices {
 		    		  Debug.logError("Institution is not configured to any billing period ", module);
                       return ServiceUtil.returnError("Institution is not configured to any billing period  ");
 		    	  }
-		    	  facCustomTimePeriod = EntityUtil.filterByCondition(facCutomTimePeriod, EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
 		    	  
-		    	  if(UtilValidate.isEmpty(facCustomTimePeriod)){
-		    		  Debug.logError("Billing period is closed", module);
-                      return ServiceUtil.returnError("Billing period is closed ");
+		    	  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+		    	  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+		    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    	  List<GenericValue> periodBilling = delegator.findList("PeriodBilling", condition, null, null, null, false);
+		    	  if(UtilValidate.isNotEmpty(periodBilling)){
+		    		  Debug.logError("Billing has been generated for the period to the dealer :"+facilityId, module);
+                      return ServiceUtil.returnError("Billing has been generated for the period to the dealer :"+facilityId);
 		    	  }
-		    	  Timestamp fromDate = UtilDateTime.toTimestamp(timePeriod.getDate("fromDate"));
-		    	  Timestamp thruDate = UtilDateTime.toTimestamp(timePeriod.getDate("thruDate"));
-		    	  Timestamp endThruDate = UtilDateTime.getDayEnd(thruDate)
+		    	  
+		    	  Timestamp fromDate = UtilDateTime.toTimestamp(facCustomTimePeriod.getDate("fromDate"));
+		    	  Timestamp thruDate = UtilDateTime.toTimestamp(facCustomTimePeriod.getDate("thruDate"));
+		    	  Timestamp endThruDate = UtilDateTime.getDayEnd(thruDate);
 		    	  
 		    	  List shipmentIds = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, endThruDate);
 		    	  
-		    	  conditionList.add(EntityCondition.makeComdition("originFacilityId", EntityOperator.EQUALS, facilityId));
-		    	  conditionList.add(EntityCondition.makeComdition("shipmentId", EntityOperator.IN, shipmentIds));
-		    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    	  conditionList.clear();
+		    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+		    	  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
+		    	  conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.IN, UtilMisc.toList("ORDER_CANCELLED", "ORDER_REJECTED")));
+		    	  EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		    	  
-		    	  List<GenericValue> orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null. null, null, false);
+		    	  List<GenericValue> orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null, null, null, false);
+		    	  
 		    	  List orderIds = EntityUtil.getFieldListFromEntityList(orderItems, "orderId", true);
 		    	  
-		    	  //List<GenericValue> orderItem 
+		    	  List productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 		    	  
+		    	  GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
+		    	  String partyId = facility.getString("ownerPartyId");
+		    	  //List<GenericValue> orderItem
 		    	  
+		    	  String productId ="";
+		    	  List<Map> productItemsList = FastList.newInstance();
+		    	  for(int i=0;i<productIds.size();i++){
+		    		  List<GenericValue> orderedProducts = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, (String)productIds.get(i)));
+		    		  BigDecimal totalProductPrice = BigDecimal.ZERO;
+		    		  BigDecimal qty = BigDecimal.ZERO;
+		    		  Map prodQty = FastMap.newInstance();
+		    		  for(GenericValue orderedProduct : orderedProducts){
+			    		  productId = orderedProduct.getString("productId");
+			    		  BigDecimal tempQty = orderedProduct.getBigDecimal("quantity");
+			    		  BigDecimal unitPrice = orderedProduct.getBigDecimal("unitPrice");
+			    		  BigDecimal itemPrice = tempQty.multiply(unitPrice);
+			    		  totalProductPrice = totalProductPrice.add(itemPrice);
+			    		  qty = qty.add(tempQty);
+			    	  }
+		    		  prodQty.put("productId", (String)productIds.get(i));
+		    		  prodQty.put("quantity", qty);
+		    		  prodQty.put("amount", totalProductPrice);
+		    		  productItemsList.add(prodQty);
+		    	  }
 		    	  
+		    	  Debug.log("productItemsList ##################################"+productItemsList);
+		    	  
+		    	  List<GenericValue> orderAdj = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds), null, null, null, false);
+		    	  List orderAdjustmentTypeIds = EntityUtil.getFieldListFromEntityList(orderAdj, "orderAdjustmentTypeIds", true);
+		    	  List<Map> taxAdjList = FastList.newInstance();
+		    	  for(int i=0;i<orderAdjustmentTypeIds.size();i++){
+		    		  Map prodTaxQty = FastMap.newInstance();
+		    		  List<GenericValue> orderAdjTypeItems = EntityUtil.filterByCondition(orderAdj, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, orderAdjustmentTypeIds.get(i)));
+		    		  BigDecimal amount = BigDecimal.ZERO;
+		    		  String adjType = (String)orderAdjustmentTypeIds.get(i);
+		    		  for(GenericValue orderAdjTypeItem : orderAdjTypeItems){
+		    			  amount = amount.add(orderAdjTypeItem.getBigDecimal("amount"));
+		    		  }
+		    		  prodTaxQty.put("orderAdjustmentTypeId", adjType);
+		    		  prodTaxQty.put("amount", amount);
+		    		  taxAdjList.add(prodTaxQty);
+		    	  }
+		    	  
+		    	  Map createInvoiceCtx = FastMap.newInstance();
+		    	  createInvoiceCtx.put("userLogin", userLogin);
+		    	  createInvoiceCtx.put("productItemsList", productItemsList);
+		    	  createInvoiceCtx.put("taxAdjList", taxAdjList);
+		    	  createInvoiceCtx.put("invoiceTypeId", "SALES_INVOICE");
+		    	  createInvoiceCtx.put("facilityId", facilityId);
+		    	  createInvoiceCtx.put("partyIdFrom", "Company");
+		    	  createInvoiceCtx.put("partyId", partyId);
+		    	  createInvoiceCtx.put("dueDate", thruDate);
+		    	  createInvoiceCtx.put("statusId", "INVOICE_IN_PROCESS");
+		    	  Debug.log("create invoice context map #########################"+createInvoiceCtx);
+		    	  result = dispatcher.runSync("createInvoiceForItems", createInvoiceCtx);
+		    	  
+		    	  if(ServiceUtil.isError(result)){
+		    		  Debug.logError("Error in creating invoice for dealer:"+facilityId, module);
+                      return ServiceUtil.returnError("Error in creating invoice for dealer:"+facilityId);
+		    	  }
+		    	  
+		    	  String invoiceId = (String)result.get("invoiceId");
+		    	  Debug.log("created invoiceId ###################"+invoiceId);
 			  }catch (Exception e) {
 				  Debug.logError(e, "Error creating Returns", module);		  
 				  return ServiceUtil.returnError("Error creating Returns");			  
 			  }
 			  return result;  
-	}    */
+	    }    
+	    
+	    public static Map<String ,Object> createInvoiceForItems(DispatchContext dctx, Map<String, ? extends Object> context){
+			  Delegator delegator = dctx.getDelegator();
+		      LocalDispatcher dispatcher = dctx.getDispatcher();       
+		      GenericValue userLogin = (GenericValue) context.get("userLogin");
+		      Map<String, Object> result = ServiceUtil.returnSuccess();
+		      String partyId = (String)context.get("partyId");
+		      String facilityId = (String)context.get("facilityId");
+		      String partyIdFrom = (String)context.get("partyIdFrom");
+		      String invoiceTypeId = (String)context.get("invoiceTypeId");
+		      List<Map> productItems = (List) context.get("productItemsList");
+		      List<Map> taxAdjList = (List) context.get("taxAdjList");
+		      String statusId = (String) context.get("statusId");
+		      Timestamp dueDate = (Timestamp) context.get("dueDate");
+		      Timestamp now = UtilDateTime.nowTimestamp();
+		      
+		      List conditionList = FastList.newInstance();
+		      try{
+		    	  	if(UtilValidate.isEmpty(dueDate)){
+		    	  		dueDate = UtilDateTime.getDayStart(now);
+		    	  	}
+		    	  	Map<String, Object> createInvoiceMap = FastMap.newInstance();
+		            createInvoiceMap.put("partyId", partyId);
+		            createInvoiceMap.put("partyIdFrom", partyIdFrom);
+		            createInvoiceMap.put("invoiceDate", now);
+	                createInvoiceMap.put("dueDate", dueDate);
+		            createInvoiceMap.put("invoiceTypeId", invoiceTypeId);
+		            createInvoiceMap.put("statusId", "INVOICE_IN_PROCESS");
+		            createInvoiceMap.put("userLogin", userLogin);
+		            Map<String, Object> createInvoiceResult = null;
+		            String invoiceId ="";
+		            try {
+		                createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceMap);
+		                if(ServiceUtil.isError(createInvoiceResult)){
+		                	Debug.logError("Error in creating invoice for dealer:"+facilityId, module);
+		                    return ServiceUtil.returnError("Error in creating invoice for dealer:"+facilityId);
+		                }
+		                invoiceId = (String)createInvoiceResult.get("invoiceId");
+		            } catch (GenericServiceException e) {
+		                return ServiceUtil.returnError("Error creating invoice");
+		            }
+
+		            Map<String, Object> resMap = FastMap.newInstance();
+		            for (Map entries : productItems) {
+		            	String productId = (String)entries.get("productId");
+		            	BigDecimal qty = (BigDecimal)entries.get("quantity");
+		            	BigDecimal amount = (BigDecimal)entries.get("amount");
+		            	
+		            	resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "productId", productId, "invoiceItemTypeId", "INV_FPROD_ITEM",
+		                            "quantity",qty, "amount", amount, "userLogin", userLogin));
+		                 
+		                if (ServiceUtil.isError(resMap)) {
+		                    return ServiceUtil.returnError("Error creating invoice item for product "+productId);
+		                }
+		            }
+		            
+		            for (Map entry : taxAdjList) {
+		            	String invoiceItemTypeId = (String)entry.get("orderAdjustmentTypeId");
+		            	BigDecimal qty = BigDecimal.ONE;
+		            	BigDecimal amount = (BigDecimal)entry.get("amount");
+
+		                resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "productId", "", "invoiceItemTypeId", invoiceItemTypeId,
+		                            "quantity",qty, "amount", amount, "userLogin", userLogin));
+		                
+		                if (ServiceUtil.isError(resMap)) {
+		                    return ServiceUtil.returnError("Error creating invoice item for Tax "+invoiceItemTypeId);
+		                }
+		            }
+		            
+			  }catch (Exception e) {
+				  Debug.logError(e, "Error creating Returns", module);		  
+				  return ServiceUtil.returnError("Error creating Returns");			  
+			  }
+			  return result;  
+	    }*/
 	    
 	public static Map<String, Object> updateCrateQtyConfig(DispatchContext dctx, Map<String, ? extends Object> context){
-        Delegator delegator = dctx.getDelegator();
+	    Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Double liters = (Double) context.get("liters");
         Locale locale = (Locale) context.get("locale");     
