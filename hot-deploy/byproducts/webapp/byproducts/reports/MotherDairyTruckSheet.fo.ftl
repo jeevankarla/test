@@ -255,7 +255,7 @@ under the License.
 														<#assign lmsProdCounter = lmsProdCounter+1>
 														<#assign qty=0>
 														<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-															<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
+															<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
 														</#if>
 														<#if qty !=0>
 															<fo:table-cell>		
@@ -286,7 +286,7 @@ under the License.
 														<#assign byProdCounter = byProdCounter+1>
 														<#assign byProdQty=0>
 														<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-															<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
+															<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
 														</#if>
 														<#if byProdQty !=0>
 															<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>

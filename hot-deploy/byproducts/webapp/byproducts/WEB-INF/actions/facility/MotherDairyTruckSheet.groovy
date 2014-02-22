@@ -18,7 +18,6 @@ import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
-
 dctx = dispatcher.getDispatchContext();
 routeIdsList =[];
 shipmentIds = [];
@@ -45,7 +44,6 @@ if(parameters.shipmentId){
 	}
 	
 }
-
 routeWiseMap =[:];
 routeWiseTotalCrates = [:];
 if(UtilValidate.isNotEmpty(routeIdsList)){
@@ -54,7 +52,11 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		byProdList =[];
 		lmsProdSeqList=[];
 		byProdSeqList=[];
-		boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
+		
+		orderHeader = delegator.findList("OrderHeader", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds), UtilMisc.toSet("originFacilityId"), null, null, false);
+		boothsList = EntityUtil.getFieldListFromEntityList(orderHeader, "originFacilityId", true);
+		//prepare boothsLsit
+		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
 		if(UtilValidate.isNotEmpty(boothsList)){
 			ownerParty = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
 			partyId = ownerParty.ownerPartyId;
@@ -91,7 +93,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								prodCatIds= EntityUtil.getFieldListFromEntityList(prodCategoryList, "productCategoryId", true);
 								prodCatIds.each{ prodCategory->
 									if("LMS".equals(prodCategory)){
-										qty=productTotals.get(entry.getKey()).get("total");										
+										qty=productTotals.get(entry.getKey()).get("packetQuantity");										
 										totalQuantity=totalQuantity+qty;
 									}									
 								}
@@ -180,3 +182,4 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 }
 context.put("routeWiseMap",routeWiseMap);
 context.putAt("routeWiseTotalCrates", routeWiseTotalCrates);
+Debug.log("routeWiseMap ########################"+routeWiseMap);
