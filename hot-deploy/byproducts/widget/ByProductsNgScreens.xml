@@ -49,7 +49,7 @@
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-   				<platform-specific><html><html-template location="component://product/webapp/facility/facility/facilityTree.ftl"></html-template></html></platform-specific>
+   				<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/facilityTree.ftl"></html-template></html></platform-specific>
             </fail-widgets>
         </section>         
         </widgets>     
@@ -1019,7 +1019,7 @@
 									   <section>
 									        <widgets> 		
 										        <screenlet title="Find Dues Payments">
-												        	<platform-specific><html><html-template location="component://product/webapp/facility/facility/PaymentCheckList.ftl"/></html></platform-specific>
+												        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
 												        	<include-form name="FindDealerPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
 												        </screenlet>
 												<screenlet title="Total ${uiLabelMap.PaymentSearchResults} :(${invoicesTotalDueAmount})">				
@@ -1031,7 +1031,7 @@
 														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
 														<parameter param-name="statusId" from-field="parameters.statusId"/>	
 									  	        	</link>	
-												    <platform-specific><html><html-template location="component://product/webapp/facility/facility/DuesHistory.ftl"/></html></platform-specific>							  	        		
+												    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>							  	        		
 									  	        	<!-- <include-form name="ListDealerPayments" location="component://motherdairy/widget/MotherDairyForms.xml" /> -->
 									  	        	<platform-specific>
                             							<html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListPayments.ftl"/></html>
@@ -1053,7 +1053,7 @@
 											</condition>
 											<widgets>															  	
 										        <screenlet title="Dues Payments">
-												        	<platform-specific><html><html-template location="component://product/webapp/facility/facility/PaymentCheckList.ftl"/></html></platform-specific>
+												        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
 												        	<include-form name="FindPastBoothPayments" location="component://product/widget/facility/FacilityForms.xml" />
 												        </screenlet>
 												<screenlet title="Vendor ${uiLabelMap.PaymentSearchResults} :(${invoicesTotalAmount})">
@@ -1247,38 +1247,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="ReceiveCrateInventory">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Add Inventory"/>
-                <set field="tabButtonItem" value="ReceiveCrates"/>
-                <set field="headerItem" value="byProductsOrderEntry"/>
-                <script location="component://product/webapp/facility/WEB-INF/actions/inventory/ReceiveInventory.groovy"/>
-                <entity-condition entity-name="ProductStore" list="storesList">
-                	<condition-list combine="and">
-                        <condition-expr field-name="inventoryFacilityId" operator="not-equals" value=""/>
-                        <!-- <condition-expr field-name="productStoreId" operator="equals" value="9003"/> -->
-                    </condition-list>
-                    <select-field field-name="inventoryFacilityId"/>
-                    <order-by field-name="productStoreId"/>
-                </entity-condition>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
-                <set field="title" value="${uiLabelMap.ProductReceiveInventory}"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/ordermgr/images/js/ConvertUom.js" global="true"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-	                    <screenlet title="Receive Inventory">
-	                        <platform-specific>
-	                            <html><html-template location="component://byproducts/webapp/byproducts/byproducts/receiveInventory.ftl"/></html>
-	                        </platform-specific>
-	                    </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen> 
+    
 	<screen name="InvoiceTXT">
             <section>
                 <actions>
@@ -1524,5 +1493,211 @@
 	        </widgets>								
 		</section>
 	</screen>
-  	       
+	<screen name="FindBoothPayments">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="Payments" />
+				<set field="subTabButtonItem" value="FindPayments" />
+				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;dd MMMMM, yyyy&quot;);}" /> 				
+				<script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getBoothPayments.groovy" />
+				<entity-condition entity-name="FacilityParty" list="facilityParty" filter-by-date="true">
+	    			<condition-list>
+	    				<condition-expr field-name="partyId" value="${userLogin.partyId}"/>
+	    				<condition-expr field-name="roleTypeId" value="FACILITY_CASHIER"/>
+	    			</condition-list>
+    			</entity-condition>
+    			<service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+                <set field="hasPaymentCancelPermission" from-field="permResult.hasPermission"/>	
+    			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>										
+    			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>				
+			</actions>
+			<widgets>
+				<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<or>
+									<not><if-empty field="facilityParty"/></not>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>
+									<if-has-permission permission="CASH" action="_ADMIN"/>	
+								</or>		
+							</condition>
+							<widgets>
+								<section>
+									<condition>
+										<and>
+											<or>
+												<if-has-permission permission="CASH" action="_ADMIN"/>
+												<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+											</or>
+											<or>
+												<if-empty field="statusId"/>
+												<if-compare operator="equals" value="NOT_PAID" field="statusId"/>
+											</or>
+										</and>
+									</condition>
+									<widgets>
+									   <section>
+									        <widgets> 		
+										        <screenlet title="Dues Payments">
+										        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
+										        	<include-form name="FindBoothPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+									  	        <screenlet title="Vendor ${uiLabelMap.PaymentSearchResults} :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">				
+									  	        	<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>	
+									  	        	</link>
+									  	        	<platform-specific>
+                                            			<html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchBoothDues.ftl"/></html>
+                                        			</platform-specific>
+										        </screenlet>
+										     </widgets> 
+										 </section>
+									</widgets>
+									<fail-widgets>
+										<section>
+											<condition>
+												<and>
+													<or>
+														<if-has-permission permission="CASH" action="_ADMIN"/>
+														<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+													</or>
+													<if-compare operator="equals" value="PAID" field="statusId"/>
+												</and>
+											</condition>
+											<widgets>
+										        <screenlet title="Dues Payments">
+										        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
+										        	<include-form name="FindBoothPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+									  	        <screenlet title="Vendor ${uiLabelMap.PaymentSearchResults} :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
+									  	       		<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>												
+									  	        	</link>	
+									  	        	<platform-specific>
+	                                     					<html><html-template location="component://byproducts/webapp/byproducts/reports/printBoothPayments.ftl"/></html>
+	                                				</platform-specific>
+										        </screenlet>								    
+											</widgets>
+										</section>
+									</fail-widgets>
+								</section>			
+							</widgets>
+						</section>									
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+  	 <screen name="FindPastBoothPayments">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="PastPayments" />
+				<set field="subTabButtonItem" value="FindPayments" />
+				<set field="enablePastPaymentService" value="${groovy:session.getAttribute(&quot;enablePastPaymentService&quot;)}"/>
+				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;dd MMMMM, yyyy&quot;);}" /> 				
+				<script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getBoothPayments.groovy" />
+				<set field="hasPastPaymentAdmin" value="${groovy:security.hasEntityPermission(&quot;PASTDUE&quot;, &quot;_ADMIN&quot;, session) || ((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}"/>				
+			</actions>
+			<widgets>
+				<section>					
+					<condition>
+						<or>
+							<if-has-permission permission="PASTDUE"  action="_PAYMENT"/>
+							<if-compare field="enablePastPaymentService" operator="equals" value="true"/>
+						</or>
+					</condition>
+					<widgets>
+						<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+							<decorator-section name="body">
+								<section>
+									<condition>
+										<and>
+											<or>
+												<if-has-permission permission="CASH" action="_ADMIN"/>
+												<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+											</or>
+											<or>
+												<if-empty field="statusId"/>
+												<if-compare operator="equals" value="NOT_PAID" field="statusId"/>
+											</or>																
+										</and>
+									</condition>
+									<widgets>							  
+									   <section>
+									        <widgets> 		
+										        <screenlet title="Dues Payments">
+												        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
+												        	<include-form name="FindPastBoothPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
+												        </screenlet>
+												<screenlet title="Vendor ${uiLabelMap.PaymentSearchResults} :(${invoicesTotalDueAmount})">				
+									  	        	<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="onlyCurrentDues" value="false"/>
+														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>	
+									  	        	</link>	
+												    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>							  	        		
+									  	        	<include-form name="ListPastBoothPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+										    </widgets> 
+										   </section>
+									</widgets>
+									<fail-widgets>
+										<section>
+											<condition>
+												<and>
+													<or>
+														<if-has-permission permission="CASH" action="_ADMIN"/>
+														<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+													</or>
+													<if-compare operator="equals" value="PAID" field="statusId"/>
+												</and>
+											</condition>
+											<widgets>															  	
+										        <screenlet title="Dues Payments">
+												        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
+												        	<include-form name="FindPastBoothPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
+												        </screenlet>
+												<screenlet title="Vendor ${uiLabelMap.PaymentSearchResults} :(${invoicesTotalAmount})">
+									  	       		<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>												
+									  	        	</link>	
+									  	        	<include-form name="ListPaidBoothPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>								    
+											</widgets>
+										</section>
+									</fail-widgets>
+								</section>						
+							</decorator-section>	
+						</decorator-screen>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>       
 </screens>

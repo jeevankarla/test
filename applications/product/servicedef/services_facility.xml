@@ -981,19 +981,7 @@ under the License.
         <description> update Subscription Product</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>       
     </service>   
-    <service name="createPaymentForBooth" engine="java"
-                location="org.ofbiz.network.NetworkServices" invoke="createPaymentForBooth">
-        <description> create Cash Payment For Booth</description>        
-        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
-        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
-        <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="false"/>             
-        <attribute name="amount" mode="IN" type="String" optional="false"/>        
-        <attribute name="paymentLocationId" mode="IN" type="String" optional="true"/>
-        <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/>
-        <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
-        <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
-         <attribute name="enablePaymentSms" mode="OUT" type="Boolean" optional="true"/>
-    </service>
+   
     <service name="vendorMarginAdjustments" engine="java"
                 location="org.ofbiz.network.LMSSalesHistoryServices" invoke="vendorMarginAdjustments" auth="true" transaction-timeout="3000">
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
@@ -1079,12 +1067,7 @@ under the License.
         <attribute name="boothIds" type="List" mode="IN" optional="false"/>        
         <attribute name="boothRunningTotal" type="BigDecimal" mode="OUT" optional="false"/>       
     </service>
-     <service name="massMakeBoothPayments" engine="java"  auth="true" export="true"
-        location="org.ofbiz.network.NetworkServices" invoke="massMakeBoothPayments">
-        <description>Service to get the list of routes</description>
-        <attribute name="boothIds" type="List" mode="IN" optional="false"/>
-        <attribute type="List" mode="OUT" name="paymentIds" optional="true"/>
-    </service> 
+    
 	<service name="populateLMSSalesHistorySummary" engine="java"
         location="org.ofbiz.network.LMSSalesHistoryServices" invoke="populateLMSSalesHistorySummary">
         <description>populate sales summary </description>

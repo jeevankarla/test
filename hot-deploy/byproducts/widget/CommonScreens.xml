@@ -92,8 +92,7 @@
                <!--  <set field="isTreeRoot" value="Y"/> -->
                <set field="indentDate" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;MMMMM dd, yyyy&quot;);}"  value="${parameters.indentDate}"/>
 				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facilityTreeNetwork.groovy" />
-				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/RouteTreeNetwork.groovy" />
-				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentAndSaleValue.groovy" /> -->                           
+				                          
             </actions>
             <widgets>  
                <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ByProductFacilityTabBar"/>

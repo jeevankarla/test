@@ -451,12 +451,7 @@ under the License.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-     <request-map uri="massMakeBoothPayments">
-     	<security https="true" auth="true"/>     	
-        <event type="service" invoke="massMakeBoothPayments"/>
-        <response name="success" type="request" value="PrintBoothPayments"/>
-        <response name="error" type="request" value="FindBoothPayments"/>
-    </request-map>
+    
      <request-map uri="cancelBoothPayment">
      	 <security https="true" auth="true"/>     	
         <event type="service" invoke="voidPayment"/>
@@ -476,18 +471,6 @@ under the License.
      <request-map uri="PrintBoothPayments">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="PrintBoothPayments"/>    	
-    </request-map>
-    <request-map uri="FindBoothPayments">
-    	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="FindBoothPayments"/>    	
-    </request-map>
-     <request-map uri="AponlinePaymentEntry">
-    	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="AponlinePaymentEntry"/>    	
-    </request-map>
-    <request-map uri="FindPastBoothPayments">
-    	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="FindPastBoothPayments"/>    	
     </request-map>
     <request-map uri="FindProductPayments">
     	<security https="true" auth="true"/>    	
@@ -2172,11 +2155,11 @@ under the License.
 	<view-map name="TruckSheetCorrectionInit" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TruckSheetCorrectionInit"/>
 	<view-map name="TruckSheetCorrection" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TruckSheetCorrection"/>
 	<view-map name="FindFacilitySpecialOrders" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilitySpecialOrders"/>
-	<view-map name="FindBoothPayments" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindBoothPayments"/>
+	
 	<view-map name="PrintBoothPayments" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PrintBoothPayments"/>
 	<view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://product/widget/facility/FacilityScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
 	<view-map name="AponlinePaymentEntry" type="screen" page="component://product/widget/facility/FacilityScreens.xml#AponlinePaymentEntry"/>
-	<view-map name="FindPastBoothPayments" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindPastBoothPayments"/>
+	
 	<view-map name="EsevaAponlinePaymentReportCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#EsevaAponlinePaymentReportCSV"  content-type="text/csv"/>
 	<view-map name="BoothPaymentsCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#BoothPaymentsCSV"  content-type="text/csv"/>
     <view-map name="BoothMasterCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#BoothMasterCSV" content-type="text/csv"/>

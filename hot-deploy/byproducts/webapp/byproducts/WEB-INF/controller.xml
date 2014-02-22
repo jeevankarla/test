@@ -33,10 +33,6 @@
     </request-map>
     
     
-    <request-map uri="receiveCrateInventory"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="receiveCrateInventory"/>
-    </request-map>
-    
     <request-map uri="sendLVDSms">
         <security https="true" auth="true"/>
         <event type="service" invoke="sendLVDSms"/>        
@@ -499,13 +495,27 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CheckListReportsPDF"/>
     </request-map>
+    
+    <request-map uri="FindBoothPayments">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindBoothPayments"/>    	
+    </request-map>
+    <request-map uri="FindPastBoothPayments">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindPastBoothPayments"/>    	
+    </request-map>
+     <request-map uri="massMakeBoothPayments">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="massMakeBoothPayments"/>
+        <response name="success" type="request" value="PrintBoothPayments"/>
+        <response name="error" type="request" value="FindBoothPayments"/>
+    </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     
     <view-map name="FacilityTreeNetworkNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FacilityTree"/>
     <view-map name="ConfigChange" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ConfigChange"/>
-    <view-map name="receiveCrateInventory" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReceiveCrateInventory"/>
      <view-map name="CheckListReportsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CheckListReportsPDF" content-type="application/pdf"/>
 	<view-map name="RouteChequeValueTxt" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RouteChequeValueTxt" content-type="text/plain"/>
 	<view-map name="IndentVsDispatchReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentVsDispatchReportPDF" content-type="application/pdf"/>
@@ -587,5 +597,6 @@
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
 <!-- Transporter views -->
-  
+ <view-map name="FindPastBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPastBoothPayments"/>
+ <view-map name="FindBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindBoothPayments"/>
 </site-conf>

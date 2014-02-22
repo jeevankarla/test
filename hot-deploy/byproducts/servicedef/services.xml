@@ -402,5 +402,24 @@
         <attribute name="indentChangeFlag" type="String" mode="OUT" optional="true"/>
     </service>
     
+     <service name="createPaymentForBooth" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createPaymentForBooth">
+        <description> create Cash Payment For Booth</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
+        <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="false"/>             
+        <attribute name="amount" mode="IN" type="String" optional="false"/>        
+        <attribute name="paymentLocationId" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/>
+        <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
+        <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
+         <attribute name="enablePaymentSms" mode="OUT" type="Boolean" optional="true"/>
+    </service>
+     <service name="massMakeBoothPayments" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="massMakeBoothPayments">
+        <description>Service to get the list of routes</description>
+        <attribute name="boothIds" type="List" mode="IN" optional="false"/>
+        <attribute type="List" mode="OUT" name="paymentIds" optional="true"/>
+    </service> 
     
 </services>

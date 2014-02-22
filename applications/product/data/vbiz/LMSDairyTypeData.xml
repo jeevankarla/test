@@ -71,8 +71,9 @@
     <Enumeration description="LMS Vendor Margin Period Billing" enumCode="PB_LMS_VNDR_MRGN" enumId="PB_LMS_VNDR_MRGN" sequenceId="01" enumTypeId="PBILLING_TYPE"/>
     <Enumeration description="LMS Transporter Margin Period Billing" enumCode="PB_LMS_TRSPT_MRGN" enumId="PB_LMS_TRSPT_MRGN" sequenceId="02" enumTypeId="PBILLING_TYPE"/>
    
-	<RoleType description="Booth Owner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="BOOTH_OWNER"/>
+	
 	<RoleType description="Facility Role" roleTypeId="FACILITY_ROLE"/>
+	<RoleType description="Booth Owner" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="BOOTH_OWNER"/>
 	<RoleType description="Facility Cashier" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="FACILITY_CASHIER"/>
 	<RoleType description="Route Cashier" hasTable="N" parentTypeId="FACILITY_ROLE" roleTypeId="ROUTE_CASHIER"/>
 	<ProductPriceType description="Card Price" productPriceTypeId="CARD_PRICE"/>

@@ -127,9 +127,6 @@
                 <parameter param-name="facilityId"/>
             </link>
         </menu-item>
-        <menu-item name="ReceiveCrates" title="Receive Crates">
-        	<link target="receiveCrateInventory" />
-        </menu-item>
        <menu-item name="ViewFacilityInventoryByProduct" title="${uiLabelMap.ProductInventory}">
             <condition>
                 <if-compare field="enableInventory" operator="equals" value="true"/>
@@ -314,22 +311,6 @@
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
        </menu-item>       
-      <menu-item name="PastPayments" title="Payments Entry"> 
-       		<condition>
-       			<or>
-       				<if-has-permission permission="PASTDUE"  action="_PAYMENT"/>       				
-	       			<and>
-	       				<if-compare field="enablePastPaymentService" operator="equals" value="true"/>
-		                <or>
-							<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-							<if-has-permission permission="CASH"  action="_ADMIN"/>
-						</or>
-					</and>
-				</or>	
-            </condition>         
-            <link target="FindDealerPayments"/>        
-       </menu-item>
-       
         <menu-item name="AbsenteeList" title="${uiLabelMap.AbsenteeOverride}">
             <link target="AbsenteeList"/>
         </menu-item> 
@@ -351,6 +332,30 @@
         <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
             <link target="CreditInstitutionBilling"/>
         </menu-item>
+        <menu-item name="Payments" title="${uiLabelMap.DuesPayment}"> 
+       		<condition>
+                <or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="CASH"  action="_ADMIN"/>
+				</or>
+            </condition>       
+            <link target="FindBoothPayments"/>        
+       </menu-item>
+       <menu-item name="PastPayments" title="Past Payments"> 
+       		<condition>
+       			<or>
+       				<if-has-permission permission="PASTDUE"  action="_PAYMENT"/>       				
+	       			<and>
+	       				<if-compare field="enablePastPaymentService" operator="equals" value="true"/>
+		                <or>
+							<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+							<if-has-permission permission="CASH"  action="_ADMIN"/>
+						</or>
+					</and>
+				</or>	
+            </condition>         
+            <link target="FindPastBoothPayments"/>        
+       </menu-item>
     </menu>
     <menu name="ReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="findReturn" title="Find Return">

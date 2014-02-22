@@ -63,6 +63,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.product.product.ProductEvents;
 import org.ofbiz.product.product.ProductWorker;
 
 import in.vasista.vbiz.byproducts.ByProductServices;
@@ -3856,7 +3857,6 @@ public class ByProductNetworkServices {
 					BigDecimal typeRunningPacketTotal = (BigDecimal) typeMap.get("packetQuantity");
 					typeRunningPacketTotal = typeRunningPacketTotal.add(packetQuantity);
 					
-					
 					typeMap.put("name", prodSubscriptionTypeId);
 					typeMap.put("total", typeRunningTotal);
 					typeMap.put("totalRevenue", typeRunningTotalRevenue);
@@ -4196,6 +4196,7 @@ public class ByProductNetworkServices {
 	        result.put("supplyTypeTotals", supplyTypeTotals);                
 	        return result;
 	    } 
+
 	    public static Map<String, Object> getFacilityGroupMemberList(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
 			String facilityGroupId = (String) context.get("facilityGroupId");
@@ -4648,6 +4649,257 @@ public class ByProductNetworkServices {
 			 
 	        return result;
 	    } 
+	  // Payment services
+	    public static Map<String, Object> createPaymentForBooth(DispatchContext dctx, Map<String, ? extends Object> context){
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String facilityId = (String) context.get("facilityId");
+	        String supplyDate = (String) context.get("supplyDate");        
+	        BigDecimal paymentAmount = ProductEvents.parseBigDecimalForEntity((String) context.get("amount"));
+	        Locale locale = (Locale) context.get("locale");     
+	        String paymentMethodType = (String) context.get("paymentMethodTypeId");
+	        String paymentLocationId = (String) context.get("paymentLocationId");                
+	        String paymentRefNum = (String) context.get("paymentRefNum");
+	        boolean useFifo = Boolean.FALSE;       
+	        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
+	        	useFifo = (Boolean)context.get("useFifo");
+	        }
+	        String paymentType = "SALES_PAYIN";
+	        String partyIdTo ="Company";
+	        String paymentId = "";
+	        boolean roundingAdjustmentFlag =Boolean.TRUE;
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        List exprListForParameters = FastList.newInstance();
+	        List boothOrdersList = FastList.newInstance();
+	        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				paymentTimestamp = UtilDateTime.toTimestamp(dateFormat.parse(supplyDate));
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + supplyDate, module);
+	            return ServiceUtil.returnError(e.toString());		   
+			}	
+			// Do check for only past dues payments
+			if(useFifo){
+				try{
+					List exprListForParameters1 = FastList.newInstance();
+		    		exprListForParameters1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,userLogin.getString("partyId")));
+		    		exprListForParameters1.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "FACILITY_CASHIER"));
+		    		EntityCondition	paramCond = EntityCondition.makeCondition(exprListForParameters1, EntityOperator.AND);    		
+		    		List<GenericValue>  faclityPartyList = delegator.findList("FacilityParty", paramCond, null, null, null, false);
+		    		faclityPartyList = EntityUtil.filterByDate(faclityPartyList);
+		    		if(UtilValidate.isEmpty(faclityPartyList)){
+		    			Debug.logError("you Don't have permission to create payment, Facility Cashier role missing", module);
+		            	return ServiceUtil.returnError("you Don't have permission to create payment, Facility Cashier role missing");	    			
+		    		}
+		    		paymentLocationId = (EntityUtil.getFirst(faclityPartyList)).getString("facilityId");
+				}catch (Exception e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+		        	return ServiceUtil.returnError(e.toString());
+				}
+			}
+			//lets exclude future day shipment  orders
+			//this is to exclude the pm sales invoices on that same day
+	       List feaShipmentIds = getShipmentIds(delegator , UtilDateTime.toDateString(UtilDateTime.addDaysToTimestamp(paymentTimestamp, 1), "yyyy-MM-dd HH:mm:ss"),null);
+	       if(UtilValidate.isNotEmpty(feaShipmentIds) && !useFifo){
+	    	   exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_IN, feaShipmentIds));
+	       }
+	       
+	       
+	       exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));	
+			
+			exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF")));
+			
+			//checking tenant config to find invoices only for cash or all
+			 boolean enableSoCrPmntTrack = Boolean.FALSE;
+			 try{
+				 GenericValue tenantConfigEnableSoCrPmntTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableSoCrPmntTrack"), true);
+				 if (UtilValidate.isNotEmpty(tenantConfigEnableSoCrPmntTrack) && (tenantConfigEnableSoCrPmntTrack.getString("propertyValue")).equals("Y")) {
+					 enableSoCrPmntTrack = Boolean.TRUE;
+				 	} 
+			 }catch (GenericEntityException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+				}		
+			 List categoryTypeEnumList = UtilMisc.toList("SO_INST","CR_INST");
+			    if(enableSoCrPmntTrack){
+					//exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","SPECIAL_ORDER","CREDIT")));
+					exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH") , EntityOperator.OR , EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, categoryTypeEnumList)));
+			    }else{
+					exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH"));
+				}
+					
+			/*exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));*/
+
+			EntityCondition	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+
+			EntityFindOptions findOptions = new EntityFindOptions();
+			findOptions.setDistinct(true);
+			List<String> orderBy = UtilMisc.toList("-estimatedDeliveryDate");
+			try{
+				// Here we are trying change the invoice order to apply (LIFO OR FIFO)
+				if(useFifo){
+					orderBy = UtilMisc.toList("estimatedDeliveryDate");
+				}
+				boothOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", paramCond, null , orderBy, findOptions, false);
+				
+			}catch(GenericEntityException e){
+				Debug.logError(e, module);	
+	            return ServiceUtil.returnError(e.toString());			
+			}
+	        
+	        try {
+	        	GenericValue facility =delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId),false);
+	        	String partyIdFrom = (String)facility.getString("ownerPartyId");
+	        	
+	        	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
+	        	// lets get the opening balance invoices if any
+	        	List<GenericValue> obInvoiceList = (List)getOpeningBalanceInvoices(dctx,UtilMisc.toMap("facilityId", facilityId)).get("invoiceList");
+	        	boothOrdersList.addAll(obInvoiceList);
+	        	if(UtilValidate.isEmpty(boothOrdersList)){
+					Debug.logError("paramCond==================== "+paramCond, module);
+					Debug.logError("No dues found for the Booth "+facilityId, module);
+					return ServiceUtil.returnError("No dues found for the Booth"+facilityId);
+				}
+	        	// Here we are trying change the invoice order to apply (LIFO OR FIFO)
+	        	boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId","originFacilityId","-estimatedDeliveryDate"));
+				if(useFifo){
+					boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId","originFacilityId","estimatedDeliveryDate"));
+				}        	
+	        	List invoiceIds =  EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", true);        	
+	        	
+	        	Map<String, Object> totalAmount =FastMap.newInstance();
+				Map boothResult = getBoothDues(dctx,UtilMisc.<String, Object>toMap("boothId", 
+						facility.getString("facilityId"), "userLogin", userLogin)); 
+				if (!ServiceUtil.isError(boothResult)) {
+					Map boothTotalDues = (Map)boothResult.get("boothTotalDues");
+					BigDecimal amount = new BigDecimal(boothTotalDues.get("amount").toString());
+					BigDecimal totalDueAmount = new BigDecimal(boothTotalDues.get("totalDueAmount").toString());        			
+					if(roundingAdjustmentFlag){
+						if((amount.subtract(paymentAmount)).compareTo(BigDecimal.ONE) < 0 && (amount.subtract(paymentAmount)).compareTo(BigDecimal.ZERO) > 0){
+							paymentAmount = amount;
+						}
+						if((totalDueAmount.subtract(paymentAmount)).compareTo(BigDecimal.ONE) < 0 && (totalDueAmount.subtract(paymentAmount)).compareTo(BigDecimal.ZERO) > 0){
+							paymentAmount = totalDueAmount;
+						}    										
+					}	
+					
+				}			
+	            paymentCtx.put("paymentMethodTypeId", paymentMethodType);
+	            paymentCtx.put("organizationPartyId", partyIdTo);
+	            paymentCtx.put("partyId", partyIdFrom);
+	            paymentCtx.put("facilityId", facilityId);
+	            if (!UtilValidate.isEmpty(paymentLocationId) ) {
+	                paymentCtx.put("paymentLocationId", paymentLocationId);                        	
+	            }            
+	            if (!UtilValidate.isEmpty(paymentRefNum) ) {
+	                paymentCtx.put("paymentRefNum", paymentRefNum);                        	
+	            }
+	            paymentCtx.put("statusId", "PMNT_RECEIVED");            
+	            paymentCtx.put("amount", paymentAmount);
+	            paymentCtx.put("userLogin", userLogin); 
+	            paymentCtx.put("invoices", invoiceIds);
+	    		
+	            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+	            if (ServiceUtil.isError(paymentResult)) {
+	            	Debug.logError(paymentResult.toString(), module);
+	                return ServiceUtil.returnError(null, null, null, paymentResult);
+	            }
+	            paymentId = (String)paymentResult.get("paymentId");
+	            }catch (Exception e) {
+	            Debug.logError(e, e.toString(), module);
+	            return ServiceUtil.returnError(e.toString());
+	        }       
+			 Map result = ServiceUtil.returnSuccess("Payment successfully done.");
+			 boolean enablePaymentSms = Boolean.FALSE;
+			 try{
+				 GenericValue tenantConfigEnablePaymentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enablePaymentSms"), true);
+				 if (UtilValidate.isNotEmpty(tenantConfigEnablePaymentSms) && (tenantConfigEnablePaymentSms.getString("propertyValue")).equals("Y")) {
+					 enablePaymentSms = Boolean.TRUE;
+					}
+			 }catch (GenericEntityException e) {
+				// TODO: handle exception
+				 Debug.logError(e, module);             
+			}
+			 result.put("enablePaymentSms",enablePaymentSms);
+			 result.put("paymentId",paymentId);
+	        return result;
+	    }  
+	    
+	    /**
+	     * Make booth payments
+	     * @param ctx the dispatch context
+	     * @param context 
+	     */
+	    public static Map<String, Object> massMakeBoothPayments(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+	    	LocalDispatcher dispatcher = ctx.getDispatcher();
+			List boothIds = (List) context.get("boothIds");     	
+			GenericValue userLogin =(GenericValue)context.get("userLogin");
+			String paymentLocationId = "";
+			List paymentIds = FastList.newInstance();
+			if (UtilValidate.isEmpty(boothIds)) {
+	            Debug.logError("No payment amounts found; ", module);
+	            return ServiceUtil.returnError("No payment amounts found; ");			
+			}
+			
+			for(int i=0 ; i< boothIds.size() ; i++){
+				String boothId = (String)boothIds.get(i);
+				Map boothResult = getBoothDues(ctx,UtilMisc.<String, Object>toMap("boothId", 
+						boothIds.get(i), "userLogin", userLogin));
+				if (ServiceUtil.isError(boothResult)) {
+					Debug.logError("No payment amounts found; "+boothResult, module);
+	            	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(boothResult));
+	            }
+				try{
+					List exprListForParameters = FastList.newInstance();
+		    		exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,userLogin.getString("partyId")));
+		    		exprListForParameters.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "FACILITY_CASHIER"));
+		    		EntityCondition	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);    		
+		    		List<GenericValue>  faclityPartyList = delegator.findList("FacilityParty", paramCond, null, null, null, false);	    		
+		    		if(UtilValidate.isEmpty(faclityPartyList)){
+		    			Debug.logError("you Don't have permission to create payment, Facility Cashier role missing", module);
+		            	return ServiceUtil.returnError("you Don't have permission to create payment, Facility Cashier role missing");	    			
+		    		}
+		    		faclityPartyList = EntityUtil.filterByDate(faclityPartyList);
+		    		paymentLocationId = (EntityUtil.getFirst(faclityPartyList)).getString("facilityId");
+				}catch (Exception e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+	            	return ServiceUtil.returnError(e.toString());
+				}
+	    		Map boothDues = (Map)boothResult.get("boothDues");
+	    		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentMethodTypeId", "CASH_"+paymentLocationId+"_PAYIN");    		
+	    		paymentCtx.put("userLogin", userLogin);
+	    		paymentCtx.put("facilityId", boothId);
+	    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
+	            paymentCtx.put("paymentLocationId", paymentLocationId);                                   	    		            
+	    		paymentCtx.put("amount", ((Double)boothDues.get("amount")).toString());
+	    		try{
+					Map<String, Object> paymentResult =  dispatcher.runSync("createPaymentForBooth",paymentCtx);
+					if (ServiceUtil.isError(paymentResult)) {
+		    			Debug.logError("Payment failed for:"+ paymentResult + "]", module);    			
+		    			return paymentResult;
+		    		}
+					paymentIds.add(paymentResult.get("paymentId"));    		
+				}catch (GenericServiceException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);    			
+					return ServiceUtil.returnError(e.getMessage());
+				} 		
+	    		
+			}		 
+	    	
+			 Map result = ServiceUtil.returnSuccess("Payment successfully done.");
+			result.put("paymentIds",paymentIds);
+	        return result;
+	    }
+	    
+
+	    
+	    
+	    
 }
 	
 	
