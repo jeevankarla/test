@@ -295,7 +295,7 @@ under the License.
 															<#--<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>-->
 															<#assign qtyInc = productQuantityIncluded.get(product)?if_exists>
 															<fo:table-cell>		
-																<fo:block text-align="center"><#if qtyInc !=0 >${(byProdQty/byProduct.quantityIncluded)?if_exists}<#else>${(byProdQty)?if_exists}</#if></fo:block>																									
+																<fo:block text-align="center"><#if qtyInc !=0 >${(byProdQty/qtyInc)?if_exists}<#else>${(byProdQty)?if_exists}</#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
