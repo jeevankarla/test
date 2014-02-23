@@ -414,8 +414,11 @@ function updateGrid(){
 				else{
 					roundedAmount = Math.round(qty*price);
 				}
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
 				data[args.row]["unitPrice"] = price;
-				data[args.row]["amount"] = (roundedAmount);
+				data[args.row]["amount"] = roundedAmount;
 				_grid.updateRow(args.row);
 				var totalAmount = 0;
 				for (i = 0; i < data.length; i++) {
@@ -552,6 +555,10 @@ function updateGrid(){
 				qty = 0;
 			}
 			data[i]["unitPrice"] = price;
+			var amount = Math.round(qty*price);
+			if(isNaN(amount)){
+				amount = 0;
+			}
 			if(screenFlag != 'DSCorrection'){
 				//var crateQty = parseFloat(qtyInPieces[prod]);
 				//data[i]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
@@ -560,7 +567,7 @@ function updateGrid(){
 				//data[i]["amount"] = Math.round((qty*price) * 100)/100;
 			}
 			else{
-				data[i]["amount"] = Math.round(qty*price);
+				data[i]["amount"] = amount;
 			}
 			_grid.updateRow(i);
 		}
