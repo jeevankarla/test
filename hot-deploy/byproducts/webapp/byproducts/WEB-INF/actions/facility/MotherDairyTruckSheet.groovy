@@ -93,7 +93,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								prodCatIds= EntityUtil.getFieldListFromEntityList(prodCategoryList, "productCategoryId", true);
 								prodCatIds.each{ prodCategory->
 									if("LMS".equals(prodCategory)){
-										qty=productTotals.get(entry.getKey()).get("packetQuantity");										
+										qty=productTotals.get(entry.getKey()).get("total");										
 										totalQuantity=totalQuantity+qty;
 									}									
 								}
