@@ -39,8 +39,9 @@ under the License.
 	<#assign routeTotalCrates = routeWiseTotalCrates.get(routesMap.getKey())>
 	<fo:page-sequence master-reference="main" force-page-count="no-force">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="7pt">
-			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015   D.K.Co-op Milk Producer's Union Ltd., Kulshekar, Mangalore-5</fo:block>
-			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">                           Route Schedule for Sale of Milk &amp; Products</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">                           GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
 			<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : routesMap.getKey()}, true)>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">Route :   ${facilityDetails.facilityName?if_exists}                                                                                                 Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")}                                                    <#if parameters.shipmentTypeId="AM_SHIPMENT">MORNING<#elseif  parameters.shipmentTypeId="PM_SHIPMENT">EVENING</#if>VST_ASCII-027VST_ASCII-070</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=============================================================================================================================================================================================================================</fo:block>
