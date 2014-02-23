@@ -255,11 +255,12 @@ under the License.
 														<#assign lmsProdCounter = lmsProdCounter+1>
 														<#assign qty=0>
 														<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-															<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
+															<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
 														</#if>
 														<#if qty !=0>
+															<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>
 															<fo:table-cell>		
-																<fo:block text-align="center">${qty?if_exists?string("#0.0")}</fo:block>																									
+																<fo:block text-align="center">${qty/byProduct.quantityIncluded?if_exists?string("#0.0")}</fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -286,7 +287,7 @@ under the License.
 														<#assign byProdCounter = byProdCounter+1>
 														<#assign byProdQty=0>
 														<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-															<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
+															<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
 														</#if>
 														<#if byProdQty !=0>
 															<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>
@@ -425,8 +426,9 @@ under the License.
 														<#assign qty= routeTotals.get(product).get("total")>
 													</#if>
 													<#if qty !=0>
+														<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>
 														<fo:table-cell>		
-															<fo:block text-align="center">${qty?if_exists?string("#0.0")}</fo:block>																									
+															<fo:block text-align="center">${qty/product.quantityIncluded?if_exists?string("#0.0")}</fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
