@@ -258,9 +258,9 @@ under the License.
 															<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
 														</#if>
 														<#if qty !=0>
-															<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>
+															<#assign product = (delegator.findOne("Product", {"productId" : product}, false))!>
 															<fo:table-cell>		
-																<fo:block text-align="center">${qty/byProduct.quantityIncluded?if_exists?string("#0.0")}</fo:block>																									
+																<fo:block text-align="center"><#if product.quantityIncluded?has_content && product.quantityIncluded !=0>${(qty/product.quantityIncluded)?if_exists?string("#0.0")}<#else>${qty?if_exists}</#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -292,7 +292,7 @@ under the License.
 														<#if byProdQty !=0>
 															<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>
 															<fo:table-cell>		
-																<fo:block text-align="center"><#if byProduct.quantityIncluded !=0>${byProdQty/byProduct.quantityIncluded?if_exists}</#if></fo:block>																									
+																<fo:block text-align="center"><#if byProduct.quantityIncluded?has_content && byProduct.quantityIncluded !=0 >${(byProdQty/byProduct.quantityIncluded)?if_exists}<#else>${(byProdQty)?if_exists}</#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -319,7 +319,7 @@ under the License.
 															<#if byProdQty !=0>
 																<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>
 																<fo:table-cell>		
-																	<fo:block text-align="center"><#if byProduct.quantityIncluded !=0>${byProdQty/byProduct.quantityIncluded?if_exists}</#if></fo:block>																									
+																	<fo:block text-align="center"><#if byProduct.quantityIncluded?has_content && byProduct.quantityIncluded !=0>${(byProdQty/byProduct.quantityIncluded)?if_exists}<#else>${byProdQty?if_exists}</#if></fo:block>																									
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
@@ -346,7 +346,7 @@ under the License.
 															<#if byProdQty !=0>
 																<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>
 																<fo:table-cell>		
-																	<fo:block text-align="center"><#if byProduct.quantityIncluded !=0>${byProdQty/byProduct.quantityIncluded?if_exists}</#if></fo:block>																									
+																	<fo:block text-align="center"><#if byProduct.quantityIncluded?has_content && byProduct.quantityIncluded !=0 >${(byProdQty/byProduct.quantityIncluded)?if_exists}<#else>${byProdQty?if_exists}</#if></fo:block>																									
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
@@ -428,7 +428,7 @@ under the License.
 													<#if qty !=0>
 														<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>
 														<fo:table-cell>		
-															<fo:block text-align="center">${qty/product.quantityIncluded?if_exists?string("#0.0")}</fo:block>																									
+															<fo:block text-align="center"><#if product.quantityIncluded?has_content && product.quantityIncluded !=0>${(qty/product.quantityIncluded)?if_exists?string("#0.0")}<#else>${qty?if_exists}</#if></fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
@@ -460,7 +460,7 @@ under the License.
 													<#if byProdQty !=0>
 														<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>
 														<fo:table-cell>		
-															<fo:block text-align="center"><#if product.quantityIncluded !=0>${(byProdQty/product.quantityIncluded)?if_exists?string("#0.0")}</#if></fo:block>																									
+															<fo:block text-align="center"><#if product.quantityIncluded?has_content && product.quantityIncluded !=0>${(byProdQty/product.quantityIncluded)?if_exists?string("#0.0")}<#else>${byProdQty?if_exists}</#if></fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
@@ -615,6 +615,8 @@ under the License.
 														<#assign qty = crateDetail.get('prodCrates')>
 													</#if>
 													<#if qty !=0>
+														<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>
+															
 														<fo:table-cell>		
 															<fo:block text-align="center">${qty?if_exists}</fo:block>																									
 														</fo:table-cell>
