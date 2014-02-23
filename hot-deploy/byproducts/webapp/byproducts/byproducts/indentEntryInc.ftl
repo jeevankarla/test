@@ -409,10 +409,10 @@ function updateGrid(){
 					var supType = prodIndentQtyCat[prod];
 					//data[args.row]["uomId"] = supType.charAt(0);
 					//data[args.row]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
-					//roundedAmount = Math.round((qty*price*crateQty) * 100) / 100;
+					roundedAmount = Math.round(qty*price);
 				}
 				else{
-					roundedAmount = Math.round((qty*price) * 100) / 100;
+					roundedAmount = Math.round(qty*price);
 				}
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = (roundedAmount);
@@ -558,16 +558,16 @@ function updateGrid(){
 				//data[i]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
 				//var supType = prodIndentQtyCat[prod];
 				//data[i]["uomId"] = supType.charAt(0);
-				//data[i]["amount"] = Math.round((qty*price*crateQty) * 100)/100;
+				//data[i]["amount"] = Math.round((qty*price) * 100)/100;
 			}
 			else{
-				data[i]["amount"] = Math.round((qty*price) * 100)/100;
+				data[i]["amount"] = Math.round(qty*price);
 			}
 			_grid.updateRow(i);
 		}
 		var totalAmount = 0;
 		for (i = 0; i < data.length; i++) {
-			//totalAmount += data[i]["amount"];
+			totalAmount += data[i]["amount"];
 		}
 		var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 		if(amt > 0 ){
