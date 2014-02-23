@@ -495,7 +495,7 @@ under the License.
 															<#--<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>-->
 															<#assign qtyInc = productQuantityIncluded.get(byProd)?if_exists>
 															<fo:table-cell>		
-																<fo:block text-align="center"><#if qtyInc !=0>${(byProdQty/qtyInc)?if_exists?string("#0.0")}</#if></fo:block>																									
+																<fo:block text-align="center"><#if qtyInc !=0>${(byProdQty/qtyInc)?if_exists?string("#0.0")}<#else>${byProdQty?if_exists}</#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -523,7 +523,7 @@ under the License.
 															<#--<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>-->
 															<#assign qtyInc = productQuantityIncluded.get(byProd)?if_exists>
 															<fo:table-cell>		
-																<fo:block text-align="center"><#if qtyInc !=0>${(byProdQty/qtyInc)?if_exists?string("#0.0")}</#if></fo:block>																									
+																<fo:block text-align="center"><#if qtyInc !=0>${(byProdQty/qtyInc)?if_exists?string("#0.0")}<#else><${byProdQty?if_exists}></#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
