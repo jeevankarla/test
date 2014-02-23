@@ -44,6 +44,21 @@ if(parameters.shipmentId){
 	}
 	
 }
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.EQUALS, "N"));
+conditionList.add(EntityCondition.makeCondition("isVariant", EntityOperator.EQUALS, "Y"));
+condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+products = delegator.findList("Product", condition, null, null, null, false);
+productQuantityIncluded = [:];
+products.each{ eachProd ->
+	quantityInc = 1;
+	if(eachProd.quantityIncluded){
+		quantityInc = eachProd.quantityIncluded;
+	}
+	productQuantityIncluded.put(eachProd.productId, quantityInc);
+	
+}
+context.productQuantityIncluded = productQuantityIncluded;
 routeWiseMap =[:];
 routeWiseTotalCrates = [:];
 if(UtilValidate.isNotEmpty(routeIdsList)){
@@ -182,4 +197,3 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 }
 context.put("routeWiseMap",routeWiseMap);
 context.putAt("routeWiseTotalCrates", routeWiseTotalCrates);
-Debug.log("routeWiseMap ########################"+routeWiseMap);
