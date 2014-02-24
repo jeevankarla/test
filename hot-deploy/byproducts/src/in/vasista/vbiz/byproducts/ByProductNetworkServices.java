@@ -3080,14 +3080,14 @@ public class ByProductNetworkServices {
 			EntityFindOptions findOptions = new EntityFindOptions();
 			findOptions.setDistinct(true);
 			try{			
-				boothOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", paramCond, null , UtilMisc.toList("parentFacilityId","originFacilityId","-estimatedDeliveryDate"), findOptions, false);
+				boothOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", paramCond, null , UtilMisc.toList("originFacilityId","-estimatedDeliveryDate"), findOptions, false);
 			}catch(GenericEntityException e){
 				Debug.logError(e, module);	
 				return ServiceUtil.returnError(e.toString());
 			}
 			List<GenericValue> obInvoiceList = (List)getOpeningBalanceInvoices(dctx,UtilMisc.toMap("facilityId",facilityId,"fromDate", fromDate ,"thruDate" , thruDate)).get("invoiceList");
 			boothOrdersList.addAll(obInvoiceList);
-			boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId","originFacilityId","-estimatedDeliveryDate"));
+			boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("originFacilityId","-estimatedDeliveryDate"));
 			Map<String, Object> totalAmount =FastMap.newInstance();
 			if (!UtilValidate.isEmpty(boothOrdersList)) {
 				List invoiceIds = EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", false);
@@ -4878,8 +4878,11 @@ public class ByProductNetworkServices {
 	            	return ServiceUtil.returnError(e.toString());
 				}
 	    		Map boothDues = (Map)boothResult.get("boothDues");
-	    		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentMethodTypeId", "CASH_"+paymentLocationId+"_PAYIN");    		
-	    		paymentCtx.put("userLogin", userLogin);
+	    		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+	    		paymentCtx.put("paymentMethodTypeId", "CASH_PAYIN");
+	    		if(UtilValidate.isNotEmpty(context.get("paymentMethodTypeId"))){
+	    			paymentCtx.put("paymentMethodTypeId", context.get("paymentMethodTypeId"));
+	    		}
 	    		paymentCtx.put("facilityId", boothId);
 	    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
 	            paymentCtx.put("paymentLocationId", paymentLocationId);                                   	    		            
