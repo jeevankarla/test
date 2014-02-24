@@ -43,7 +43,32 @@ under the License.
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">                           GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
 			<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : routesMap.getKey()}, true)>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">Route :   ${facilityDetails.facilityName?if_exists}                                                                                                 Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")}                                                    <#if parameters.shipmentTypeId="AM_SHIPMENT">MORNING<#elseif  parameters.shipmentTypeId="PM_SHIPMENT">EVENING</#if>VST_ASCII-027VST_ASCII-070</fo:block>
+			 <fo:block>
+			            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
+			             <fo:table-column column-width="300pt"/>
+			              <fo:table-column column-width="300pt"/>
+			               <fo:table-column column-width="300pt"/>
+			               <fo:table-body>
+			                 <fo:table-row>
+				                   <fo:table-cell>
+				                         <fo:block  text-indent="15pt" >ROUTE NUMBER:${facilityDetails.get("facilityId")}</fo:block>
+				                         <fo:block  text-indent="15pt">VEH NUMBER:${routesMap.getValue().get("vehicleId")?if_exists}</fo:block>
+				                         <fo:block  text-indent="15pt">CONTRACTOR:${facilityDetails.get("ownerPartyId")}</fo:block>
+				                     </fo:table-cell>
+				                      <fo:table-cell>
+				                         <fo:block>SHIFT/TRIP:<#if parameters.shipmentTypeId="AM_SHIPMENT">MORNING<#elseif  parameters.shipmentTypeId="PM_SHIPMENT">EVENING</#if></fo:block>
+				                          <fo:block>DESPATCH DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(estimatedDeliveryDate, "dd/MM/yyyy")}</fo:block>
+				                          <fo:block>DESPATCH TIME:</fo:block>
+				                  </fo:table-cell>
+				                    <fo:table-cell>
+				                         <fo:block>G.P.NUMBER:</fo:block>
+				                         <fo:block>G.P.DATE:${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd/MM/yyyy")}</fo:block>
+				                          <fo:block>G.P.TIME:${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()}</fo:block>
+				                   </fo:table-cell>
+			                     </fo:table-row>
+			                     </fo:table-body>
+			                    </fo:table>
+			              </fo:block>         
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=============================================================================================================================================================================================================================</fo:block>
 				<#assign contractorName= (routesMap.getValue().get("contractorName"))>	
 			<#assign lmsProdList = (routesMap.getValue().get("lmsProdList"))>
@@ -54,16 +79,17 @@ under the License.
 					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="760pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="20pt"/>
+					<fo:table-column column-width="60pt"/>
 					<fo:table-body>
+					<#-- 
 						<fo:table-row>
-							<fo:table-cell/>
+							<fo:table-cell><fo:block></fo:block></fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="7pt" text-align="center" keep-together="always" white-space-collapse="false">N A N D I N I    M I L K   AND   M I L K   P R O D U C T S</fo:block>
 							</fo:table-cell>
-							<fo:table-cell/>
-							<fo:table-cell/>
-						</fo:table-row>
+							<fo:table-cell><fo:block></fo:block></fo:table-cell>
+							<fo:table-cell><fo:block></fo:block></fo:table-cell>
+						</fo:table-row> -->
 						<fo:table-row>
 							<fo:table-cell>
 								<fo:block font-size="7pt" keep-together="always" white-space-collapse="false">Code-Dealer Name</fo:block>
@@ -75,11 +101,11 @@ under the License.
 								<fo:block font-size="7pt" text-align="left">NET Receivable</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="7pt" text-align="left">Remark</fo:block>
+								<fo:block font-size="7pt" text-align="left">PaymentType</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
-							<fo:table-cell/>
+							<fo:table-cell><fo:block></fo:block></fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="7pt">
 									<fo:table>
@@ -192,8 +218,8 @@ under the License.
 								</fo:table>
 							</fo:block>
 							</fo:table-cell>
-							<fo:table-cell/>
-							<fo:table-cell/>
+							<fo:table-cell><fo:block></fo:block></fo:table-cell>
+							<fo:table-cell><fo:block></fo:block></fo:table-cell>
 						</fo:table-row>						
 					</fo:table-body>
 				</fo:table>
@@ -215,7 +241,7 @@ under the License.
 					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="760pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="20pt"/>
+					<fo:table-column column-width="60pt"/>
 					<fo:table-body>
 						<fo:table-row>
 							<#assign facility = delegator.findOne("Facility", {"facilityId" : boothDetails.getKey()}, true)>
@@ -266,7 +292,7 @@ under the License.
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 															</fo:table-cell>
 														</#if>
 													</#if>
@@ -299,7 +325,7 @@ under the License.
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 															</fo:table-cell>
 														</#if>
 													</#if>
@@ -327,7 +353,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>
@@ -355,7 +381,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>
@@ -367,9 +393,11 @@ under the License.
 							</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="7pt" text-align="left">${boothDetails.getValue().get("amount")?if_exists?string("#0.00")}</fo:block>
+								<fo:block font-size="6pt" text-align="left">${boothDetails.getValue().get("amount")?if_exists?string("#0.00")}</fo:block>
 							</fo:table-cell>
-							<fo:table-cell/>
+							<fo:table-cell>
+								<fo:block font-size="5pt" text-align="left"><fo:block font-size="7pt" text-align="left">${boothDetails.getValue().get("paymentMode")?if_exists}</fo:block></fo:block>
+							</fo:table-cell>
 						</fo:table-row>	
 					</fo:table-body>
 				</fo:table>
@@ -438,7 +466,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -471,7 +499,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>	
 												</#if>
@@ -499,7 +527,7 @@ under the License.
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 															</fo:table-cell>
 														</#if>	
 													</#if>
@@ -527,7 +555,7 @@ under the License.
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 															</fo:table-cell>
 														</#if>
 													</#if>
@@ -541,7 +569,7 @@ under the License.
 						<fo:table-cell>
 							<fo:block font-size="7pt" text-align="left">${(routesMap.getValue().get("routeAmount"))?if_exists?string("#0.00")}</fo:block>
 						</fo:table-cell>
-						<fo:table-cell/>
+						<fo:table-cell><fo:block></fo:block></fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
@@ -596,7 +624,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -631,7 +659,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -657,7 +685,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -684,7 +712,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -699,7 +727,7 @@ under the License.
 						<fo:table-cell>
 							<fo:block font-size="7pt" text-align="right"></fo:block>
 						</fo:table-cell>
-						<fo:table-cell/>
+						<fo:table-cell><fo:block></fo:block></fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
@@ -754,7 +782,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -786,7 +814,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -813,7 +841,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -831,7 +859,7 @@ under the License.
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<fo:table-cell>		
-														<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+														<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 													</fo:table-cell>
 												</#if>
 											</#list>
@@ -845,7 +873,7 @@ under the License.
 						<fo:table-cell>
 							<fo:block font-size="7pt" text-align="right"></fo:block>
 						</fo:table-cell>
-						<fo:table-cell/>
+						<fo:table-cell><fo:block></fo:block></fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
