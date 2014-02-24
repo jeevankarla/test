@@ -465,10 +465,7 @@ under the License.
         <response name="error" type="request" value="FindPastBoothPayments"/>
     </request-map>
     
-     <request-map uri="PrintBoothPayments">
-    	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="PrintBoothPayments"/>    	
-    </request-map>
+    
     <request-map uri="FindProductPayments">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindProductPayments"/>    	
@@ -2150,7 +2147,7 @@ under the License.
 	<view-map name="TruckSheetCorrection" type="screen" page="component://product/widget/facility/FacilityScreens.xml#TruckSheetCorrection"/>
 	<view-map name="FindFacilitySpecialOrders" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilitySpecialOrders"/>
 	
-	<view-map name="PrintBoothPayments" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PrintBoothPayments"/>
+	
 	<view-map name="AponlinePaymentEntry" type="screen" page="component://product/widget/facility/FacilityScreens.xml#AponlinePaymentEntry"/>
 	
 	<view-map name="EsevaAponlinePaymentReportCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#EsevaAponlinePaymentReportCSV"  content-type="text/csv"/>

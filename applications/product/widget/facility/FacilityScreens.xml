@@ -2752,50 +2752,6 @@ under the License.
 		</section>
 	</screen>
 	
-	<screen name="PrintBoothPayments">
-		<section>
-			<actions>
-				<set field="titleProperty" value="pageTitleFindPayments" />
-				<set field="tabButtonItem" value="Payments" />
-				<set field="subTabButtonItem" value="FindPayments"/>
-				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
-				<set field="hideSearch" value="N" type="String"/>
-				<set field="statusId" value="PAID" type="String"/>							    
-				<service service-name="acctgInvoicePermissionCheck" result-map="permResult">
-                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
-                </service>
-                <set field="hasPaymentCancelPermission" from-field="permResult.hasPermission"/>							    
-				<script
-					location="component://product/webapp/facility/WEB-INF/actions/facility/getBoothPayments.groovy" />				
-				
-			</actions>
-			<widgets>
-				<decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
-					<decorator-section name="body">
-						<section>
-							<condition>
-								<or>									
-									<if-has-permission permission="FACILITY" action="_ADMIN"/>
-									<if-has-permission permission="CASH" action="_ADMIN"/>	
-								</or>		
-							</condition>
-							<widgets>
-								 <screenlet title="Find Payments">
-						        	
-						        	<include-form name="FindBoothPayments" location="component://product/widget/facility/FacilityForms.xml" />
-						        </screenlet> 
-					  	        <screenlet>
-					  	        	<platform-specific>
-	                                     <html><html-template location="component://product/webapp/facility/facility/printBoothPayments.ftl"/></html>
-	                                </platform-specific>
-						        </screenlet>
-							</widgets>
-						</section>									
-					</decorator-section>	
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
 	
 	<screen name="AponlinePaymentEntry">
 		<section>
