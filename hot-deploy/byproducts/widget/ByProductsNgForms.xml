@@ -661,7 +661,7 @@
         <field name="routeId" title="${uiLabelMap.Route}" sort-field="true"><display description="${routeId}"/></field>
         <field name="grandTotal" parameter-name="dueAmount" title="${uiLabelMap.ToDayDueAmount}"><display type="currency" currency="${currencyUomId}" description="${grandTotal}"/></field>
         <field name="totalDueAmount" title="${uiLabelMap.TotalDueAmount}"><display type="currency" currency="${currencyUomId}" description="${totalDue}"/></field> 
-        <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="View Details"  target="javascript:showPaymentHistory(${facilityId});"></hyperlink></field>
+        <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="View Details"  target="javascript:showPaymentHistory('${facilityId}');"></hyperlink></field>
         <field name="paymentMethodTypeId" required-field="true">
     		<drop-down allow-empty="true" no-current-selected-key="${defaultPaymentMethodId}">
          		<entity-options description="${description}" entity-name="PaymentMethodType">
