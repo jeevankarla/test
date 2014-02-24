@@ -106,8 +106,34 @@ public class ByProductNetworkServices {
 		} 
     	return productList;
 	}
-	 
-	 
+	 /*
+	  * Helper that returns the   all products which are configured as prodcuts not yet closed
+	  * 
+	  * 
+	  */
+	 public static List<GenericValue> getAllProducts(DispatchContext dctx, Map<String, ? extends  Object> context){
+    	 Timestamp salesDate = UtilDateTime.nowTimestamp();    	
+         Delegator delegator = dctx.getDelegator();
+         LocalDispatcher dispatcher = dctx.getDispatcher();
+         if(!UtilValidate.isEmpty(context.get("salesDate"))){
+        	salesDate =  (Timestamp) context.get("salesDate");  
+         }
+        Timestamp dayBegin =UtilDateTime.getDayStart(salesDate);
+    	List<GenericValue> productList =FastList.newInstance();
+    	List condList =FastList.newInstance();
+    	condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
+    	condList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
+    	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+    			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, dayBegin)));
+    	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    	try{
+    		productList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+    	}catch (GenericEntityException e) {
+			// TODO: handle exception
+    		Debug.logError(e, module);
+		} 
+    	return productList;
+	}
 	 /*
 	  * Helper that returns the product -> productCategory (GenericValue of type ProductAndCategoryMember) map.  Since products can have multiple
 	  * categorization schemes, the categoryType id is expected to be passed in (BYPROD_MFG_LOC,
@@ -4906,7 +4932,69 @@ public class ByProductNetworkServices {
 			result.put("paymentIds",paymentIds);
 	        return result;
 	    }
-	    
+	    public static Map<String, Object> getPartyProfileDafult(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+			String boothId = (String) context.get("boothId");
+			Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+			if(UtilValidate.isEmpty(supplyDate)){
+				supplyDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+			}
+	        Map<String, Object> result = FastMap.newInstance(); 
+	        GenericValue boothFacility;
+	        GenericValue partyProfileDafault=null;
+	        try {
+	        	boothFacility = delegator.findOne("Facility",true, UtilMisc.toMap("facilityId", boothId));
+	        	if (boothFacility == null) {
+	                Debug.logError("Invalid boothId " + boothId, module);
+	                return ServiceUtil.returnError("Invalid boothId " + boothId);         		
+	        	}
+	        	List condList = FastList.newInstance();
+	        	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,boothFacility.getString("ownerPartyId")));
+	        	EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
+	        	List<GenericValue> partyProfileDefaultList = delegator.findList("PartyProfileDefault", cond, null, null, null, true);
+	        	partyProfileDefaultList = EntityUtil.filterByDate(partyProfileDefaultList, supplyDate);
+    			 if(UtilValidate.isNotEmpty(partyProfileDefaultList)){
+    				  partyProfileDafault = EntityUtil.getFirst(partyProfileDefaultList);
+    			 }
+    			 result.put("partyProfileDafault",partyProfileDafault);
+	        }catch(GenericEntityException e){
+				Debug.logError(e, module);	
+	            return ServiceUtil.returnError(e.toString());			
+			}
+	        return result;
+	    }
+	    public static Map<String, Object> getVehicleRole(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+			String facilityId = (String) context.get("facilityId");
+			Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+			if(UtilValidate.isEmpty(supplyDate)){
+				supplyDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+			}
+	        Map<String, Object> result = FastMap.newInstance(); 
+	        GenericValue routeFacility;
+	        GenericValue vehicleRole=null;
+	        try {
+	        	routeFacility = delegator.findOne("Facility",true, UtilMisc.toMap("facilityId", facilityId));
+	        	if (routeFacility == null) {
+	                Debug.logError("Invalid routeId " + facilityId, module);
+	                return ServiceUtil.returnError("Invalid routeId " + facilityId);         		
+	        	}
+	        	List condList = FastList.newInstance();
+	        	condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"ROUTE_VEHICLE"));
+	        	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS ,routeFacility.getString("facilityId")));
+	        	EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
+	        	List<GenericValue> vehicleRoleList = delegator.findList("VehicleRole", cond, null, null, null, true);
+	        	vehicleRoleList = EntityUtil.filterByDate(vehicleRoleList, supplyDate);
+    			 if(UtilValidate.isNotEmpty(vehicleRoleList)){
+    				  vehicleRole = EntityUtil.getFirst(vehicleRoleList);
+    			 }
+    			 result.put("vehicleRole",vehicleRole);
+	        }catch(GenericEntityException e){
+				Debug.logError(e, module);	
+	            return ServiceUtil.returnError(e.toString());			
+			}
+	        return result;
+	    }
 
 	    
 	    
