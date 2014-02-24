@@ -26,7 +26,7 @@
                 <set field="defaultOrganizationPartyCurrencyUomId" from-field="orgParty.baseCurrencyUomId" default-value="${defaultCurrencyUomId}" global="true"/>
             </actions>
             <widgets>
-                <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
+                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>
@@ -92,8 +92,7 @@
                <!--  <set field="isTreeRoot" value="Y"/> -->
                <set field="indentDate" default-value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;MMMMM dd, yyyy&quot;);}"  value="${parameters.indentDate}"/>
 				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facilityTreeNetwork.groovy" />
-				                          
-            </actions>
+		   </actions>
             <widgets>  
                <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ByProductFacilityTabBar"/>
                		 <!-- <platform-specific> 
