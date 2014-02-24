@@ -3,7 +3,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javolution.util.FastList;
-import org.ofbiz.network.NetworkServices;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;

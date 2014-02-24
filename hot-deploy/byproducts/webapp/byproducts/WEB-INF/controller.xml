@@ -290,7 +290,11 @@
     <request-map uri="invoiceDeliveryNote"><security https="true" auth="true"/>
         <response name="success" type="view" value="InvoiceDeliveryNote"/>
     </request-map>
-   
+    
+    <request-map uri="massPrintReceipt">
+     	<security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintPaymentRecieptPDF"/>
+    </request-map>
     
     <!--Ajax Requests  -->
     <request-map uri="getBoothOwnerContactInfo">
@@ -452,7 +456,10 @@
      	<security https="true" auth="true"/>
         <response name="success" type="view" value="printAdhocOrderPDF"/>
     </request-map>
-    
+    <request-map uri="PaymentsCheckList">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="PaymentsCheckList"/>        
+    </request-map>
     <!--  margin requests -->
     <request-map uri="TransporterMargins">
         <security https="true" auth="true"/>
@@ -540,7 +547,8 @@
     <view-map name="LookupProductByCategory" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupProductByCategory"/>
     <view-map name="SubscriptionIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SubscriptionIndent"/>
     <view-map name="DueParticularsTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="text/plain"/>
-   
+    <view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
+    <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="text/plain" encoding="none"/>
     <view-map name="InvoicePrePrnt" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoicePrePrnt" content-type="text/plain"/>
     <view-map name="DeliveryNoteCumGatePassReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DeliveryNoteCumGatePassReportTXT" content-type="text/plain"/>
     <view-map name="RoutewiseIndentReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RoutewiseIndentReportTXT" content-type="text/plain"/>

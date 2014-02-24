@@ -2796,22 +2796,7 @@ under the License.
 			</widgets>
 		</section>
 	</screen>
-	<screen name="PrintPaymentRecieptPDF">
-		<section>
-			<actions>
-				<set field="titleProperty" value="pageTitleFindPayments" />
-				<set field="tabButtonItem" value="Payments" />
-				<set field="subTabButtonItem" value="FindPayments"/>
-				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
-				<script	location="component://product/webapp/facility/WEB-INF/actions/facility/printBoothPayment.groovy" />				
-			</actions>
-			<widgets>	
-				<platform-specific>
-	            	<html><html-template location="component://product/webapp/facility/facility/PaymentReciept.fo.ftl"/></html>
-	            </platform-specific>					
-	        </widgets>								
-		</section>
-	</screen>
+	
 	<screen name="AponlinePaymentEntry">
 		<section>
 			<actions>

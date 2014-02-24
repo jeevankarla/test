@@ -249,23 +249,7 @@
                 <parameter param-name="lookupFlag" value="Y"/>
             </link>
         </menu-item>
-        
-       <menu-item name="AdhocSale" title="Adhoc Sale">  
-      	 <link target="AdhocSale">    
-         </link>
-        </menu-item>
-        
-        <menu-item name="QuotaList" title="Indent History">
-			<condition>
-				<or>
-            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-					<if-has-permission permission="INDENT"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
-            	</or>            
-            </condition>          
-            <link target="QuotaListing">
-            </link>
-        </menu-item>            
+         
       	<menu-item name="ChangeIndentInit" title="${uiLabelMap.Indent}">
 			<condition>
 				<or>
@@ -278,7 +262,18 @@
             	<parameter param-name="screenFlag" value="indent"/>
             	<parameter param-name="ChangeIndentTitle" value="ChangeIndentInit"/>
             </link>
-       </menu-item>       
+       </menu-item>  
+        <menu-item name="QuotaList" title="Indent History">
+			<condition>
+				<or>
+            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="INDENT"  action="_ADMIN"/>
+            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
+            	</or>            
+            </condition>          
+            <link target="QuotaListing">
+            </link>
+        </menu-item>          
       <menu-item name="GatePassShipment" title="${uiLabelMap.GatePass}">
 			<condition>
 				<or>
@@ -289,7 +284,10 @@
        	    <link target="GatePassShipment">
             </link>
        </menu-item>
-     
+      <menu-item name="AdhocSale" title="Adhoc Sale">  
+      	 <link target="AdhocSale">    
+         </link>
+        </menu-item>
        <menu-item name="DSCorrectionEntryInit" title="${uiLabelMap.TruckSheetCorrection}">
         	<condition>
         	   <or>
@@ -315,9 +313,9 @@
             <link target="AbsenteeList"/>
         </menu-item> 
      
-        <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
+      <!--   <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
             <link target="FindTransporterDue"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="Returns" title="${uiLabelMap.Returns}">
             <link target="FindReturns"/>
         </menu-item>  

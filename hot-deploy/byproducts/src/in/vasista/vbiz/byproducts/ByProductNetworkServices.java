@@ -2962,6 +2962,10 @@ public class ByProductNetworkServices {
 			}
 				try{
 					Map facilityOwner = FastMap.newInstance();
+					if(UtilValidate.isEmpty(facilityId)){
+						return ServiceUtil.returnSuccess();
+						
+					}
 					GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
 					if(facility.getString("facilityTypeId").equals("ROUTE")){
 						facilityIds = getRouteBooths(delegator,facilityId);
@@ -3127,7 +3131,9 @@ public class ByProductNetworkServices {
 						tempPayment.put("facilityId", tempFacilityId);
 						tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
 						tempPayment.put("supplyDate",  boothPayment.getTimestamp("estimatedDeliveryDate"));
-						tempPayment.put("paymentMethodType", paymentMethod.get(tempFacilityId));
+						if(UtilValidate.isNotEmpty(paymentMethod)){
+							tempPayment.put("paymentMethodType", paymentMethod.get(tempFacilityId));
+						}
 						tempPayment.put("grandTotal", BigDecimal.ZERO);
 						tempPayment.put("totalDue", BigDecimal.ZERO);				
 					}					
@@ -3138,7 +3144,9 @@ public class ByProductNetworkServices {
 						tempPayment =FastMap.newInstance();
 						tempPayment.put("facilityId", boothPayment.getString("originFacilityId"));
 						tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
-						tempPayment.put("paymentMethodType", paymentMethod.get(tempFacilityId));
+						if(UtilValidate.isNotEmpty(paymentMethod)){
+							tempPayment.put("paymentMethodType", paymentMethod.get(tempFacilityId));
+						}
 						tempPayment.put("grandTotal", BigDecimal.ZERO);
 						tempPayment.put("totalDue", BigDecimal.ZERO);					
 						if(currentDayShipments.contains(boothPayment.getString("shipmentId")) || ( (thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && invoiceTypeId.equals(obInvoiceType))){

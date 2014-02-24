@@ -416,4 +416,36 @@
             </widgets>
         </section>
     </screen>
+    <screen name="PrintPaymentRecieptPDF">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="Payments" />
+				<set field="subTabButtonItem" value="FindPayments"/>
+				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/printBoothPayment.groovy" />				
+			</actions>
+			<widgets>	
+				<platform-specific>
+	            	<html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentReciept.fo.ftl"/></html>
+	            </platform-specific>					
+	        </widgets>								
+		</section>
+	</screen>
+	<screen name="PaymentsCheckList">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>              
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/paymentsCheckListReport.groovy"/>            
+            </actions>            
+            <widgets>            	
+				<platform-specific> 
+                     <xsl-fo><html-template location="component://byproducts/webapp/byproducts/reports/PaymentsCheckList.fo.ftl"/></xsl-fo>
+                </platform-specific>				
+            </widgets>
+        </section>
+    </screen>
 </screens>        

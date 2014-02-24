@@ -4,7 +4,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import  org.ofbiz.network.NetworkServices;
 import org.ofbiz.base.util.UtilNumber;
 
 int decimals;

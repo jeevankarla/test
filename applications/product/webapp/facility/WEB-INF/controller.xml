@@ -464,10 +464,7 @@ under the License.
         <response name="success" type="request" value="FindPastBoothPayments"/>
         <response name="error" type="request" value="FindPastBoothPayments"/>
     </request-map>
-     <request-map uri="massPrintReceipt">
-     	<security https="true" auth="true"/>
-        <response name="success" type="view" value="PrintPaymentRecieptPDF"/>
-    </request-map>
+    
      <request-map uri="PrintBoothPayments">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="PrintBoothPayments"/>    	
@@ -584,10 +581,7 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="CardSaleReportPDF"/>        
     </request-map>
-    <request-map uri="PaymentsCheckList">
-        <security https="true" auth="true"/>                        
-        <response name="success" type="view" value="PaymentsCheckList"/>        
-    </request-map>
+   
     <request-map uri="PartyFinancialHistory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyFinancialHistory"/>
@@ -2157,7 +2151,6 @@ under the License.
 	<view-map name="FindFacilitySpecialOrders" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilitySpecialOrders"/>
 	
 	<view-map name="PrintBoothPayments" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PrintBoothPayments"/>
-	<view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://product/widget/facility/FacilityScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
 	<view-map name="AponlinePaymentEntry" type="screen" page="component://product/widget/facility/FacilityScreens.xml#AponlinePaymentEntry"/>
 	
 	<view-map name="EsevaAponlinePaymentReportCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#EsevaAponlinePaymentReportCSV"  content-type="text/csv"/>

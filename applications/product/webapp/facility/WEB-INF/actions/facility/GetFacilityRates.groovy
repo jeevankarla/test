@@ -13,9 +13,8 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityTypeUtil;
-import org.ofbiz.network.NetworkServices;
 
-if(UtilValidate.isNotEmpty(parameters.facilityId)){
+/*if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	productList = NetworkServices.getDateWiseBoothDiscounts(dispatcher.getDispatchContext(), UtilMisc.toMap("facilityId", parameters.facilityId, "fromDate", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()),"thruDate", UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp()))).get("productRatesList");
-}	
-context.productList = productList;
+}*/	
+//context.productList = productList;

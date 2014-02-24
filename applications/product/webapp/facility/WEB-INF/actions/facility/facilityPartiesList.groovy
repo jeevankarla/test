@@ -19,7 +19,6 @@ import org.ofbiz.service.DispatchContext;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
-import org.ofbiz.network.NetworkServices;
 
 List facilityList1 = [];
 List facilityList2 = [];
