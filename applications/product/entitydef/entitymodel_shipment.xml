@@ -564,6 +564,7 @@ under the License.
       <field name="partyIdTo" type="id"></field>
       <field name="partyIdFrom" type="id"></field>
       <field name="tripNum" type="id"></field><!--KMF multiple trips  -->
+      <field name="vehicleId" type="id"></field><!--KMF route vehicle assocaiation  -->
       <field name="routeId" type="id"></field>
       <field name="additionalShippingCharge" type="currency-amount"></field>
       <field name="addtlShippingChargeDesc" type="long-varchar"></field>
@@ -598,6 +599,9 @@ under the License.
       </relation>
       <relation type="one" fk-name="SHPMNT_ROUTE" title="Route" rel-entity-name="Facility">
         <key-map field-name="routeId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMNT_ROUTE_VEHICLE" title="Route Vehicle" rel-entity-name="Vehicle">
+        <key-map field-name="vehicleId" rel-field-name="vehicleId"/>
       </relation>
       <relation type="one-nofk" title="Dest" rel-entity-name="ContactMech">
         <key-map field-name="destinationContactMechId" rel-field-name="contactMechId"/>
