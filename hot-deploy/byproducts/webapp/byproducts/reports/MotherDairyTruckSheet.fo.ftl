@@ -43,6 +43,7 @@ under the License.
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">                           GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
 			<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : routesMap.getKey()}, true)>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=============================================================================================================================================================================================================================</fo:block>
 			 <fo:block>
 			            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
 			             <fo:table-column column-width="300pt"/>
@@ -51,7 +52,7 @@ under the License.
 			               <fo:table-body>
 			                 <fo:table-row>
 				                   <fo:table-cell>
-				                         <fo:block  text-indent="15pt" >ROUTE NUMBER:${facilityDetails.get("facilityId")}</fo:block>
+				                         <fo:block  text-indent="15pt">ROUTE NUMBER:${facilityDetails.get("facilityId")}</fo:block>
 				                         <fo:block  text-indent="15pt">VEH NUMBER:${routesMap.getValue().get("vehicleId")?if_exists}</fo:block>
 				                         <fo:block  text-indent="15pt">CONTRACTOR:${facilityDetails.get("ownerPartyId")}</fo:block>
 				                     </fo:table-cell>
@@ -70,7 +71,7 @@ under the License.
 			                    </fo:table>
 			              </fo:block>         
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=============================================================================================================================================================================================================================</fo:block>
-				<#assign contractorName= (routesMap.getValue().get("contractorName"))>	
+			<#assign contractorName= (routesMap.getValue().get("contractorName"))>	
 			<#assign lmsProdList = (routesMap.getValue().get("lmsProdList"))>
 			<#assign byProdList = (routesMap.getValue().get("byProdList"))>
 			<#assign totalCrate = 0>
@@ -886,259 +887,45 @@ under the License.
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			<fo:block> 
 				<fo:table>
-					<fo:table-column column-width="600pt"/>
+					<fo:table-column column-width="400pt"/>
+					<fo:table-column column-width="200pt"/>
 					<fo:table-column column-width="200pt"/>						
 					<fo:table-body>
-						<fo:table-row>
-							<fo:table-cell>
-								<fo:block font-size="7pt" text-align="left">Milk in Litres and Products in Packs</fo:block>
-							</fo:table-cell>
+					<#--
+			           <fo:table-row>
 							<fo:table-cell>
 								<fo:block font-size="7pt" text-align="left">Total Crates -> ${totalCrate?if_exists}</fo:block>
 							</fo:table-cell>
-						</fo:table-row>
+							<fo:table-cell>
+								<fo:block font-size="7pt" text-align="left">Total Cans -> </fo:block>
+							</fo:table-cell>
+						</fo:table-row> -->
 						<fo:table-row>
 							<fo:table-cell>
-								<fo:block font-size="7pt" text-align="left"></fo:block>
+								<fo:block font-size="7pt" text-align="left">&#160;</fo:block>
+								<fo:block font-size="7pt" text-align="left">&#160;</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="7pt" text-align="left"></fo:block>
-							</fo:table-cell>
-						</fo:table-row>
-					</fo:table-body>
-				</fo:table>
-			</fo:block>
-			<fo:block font-size="7pt">
-				<fo:table>
-					<fo:table-column column-width="250pt"/>
-					<fo:table-column column-width="250pt"/>
-					<fo:table-column column-width="250pt"/>
-					<fo:table-column column-width="250pt"/>						
-					<fo:table-body>
-						<fo:table-row>
-							<fo:table-cell><fo:block></fo:block></fo:table-cell>
-							<fo:table-cell><fo:block></fo:block></fo:table-cell>
-							<fo:table-cell><fo:block></fo:block></fo:table-cell>
-							<fo:table-cell><fo:block></fo:block></fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-							<fo:table-cell><fo:block>INCHARGE (MKTG)</fo:block></fo:table-cell>
-							<fo:table-cell><fo:block>DESPATCHER (FGS)</fo:block></fo:table-cell>
-							<fo:table-cell><fo:block>SHIFT OFFICER (PLANT)</fo:block></fo:table-cell>
-							<fo:table-cell><fo:block>SIGNATURE OF CONTRACTOR</fo:block></fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-							<fo:table-cell><fo:block></fo:block></fo:table-cell>
-							<fo:table-cell><fo:block></fo:block></fo:table-cell>
-							<fo:table-cell><fo:block></fo:block></fo:table-cell>
-							<fo:table-cell><fo:block>NAME: ${contractorName?if_exists}</fo:block></fo:table-cell>
-						</fo:table-row>
-					</fo:table-body>
-				</fo:table>
-			</fo:block>
-			<fo:block font-size="7pt">
-				<fo:table>
-					<fo:table-column column-width="320pt"/>
-					<fo:table-column column-width="320pt"/>
-					<fo:table-column column-width="320pt"/>
-					<fo:table-body>
-						<fo:table-row>
-							<fo:table-cell><fo:block text-align="center" keep-together="always" white-space-collapse="false">S E C U R I T Y   C H E C K</fo:block></fo:table-cell>
-							<fo:table-cell><fo:block text-align="center" keep-together="always" white-space-collapse="false">COUNTER CHECK OF RETURNS AT FGS</fo:block></fo:table-cell>
-							<fo:table-cell><fo:block text-align="center" keep-together="always" white-space-collapse="false">R E M A R K S</fo:block></fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-							<fo:table-cell><fo:block text-align="center" keep-together="always" white-space-collapse="false">______________________________</fo:block></fo:table-cell>
-							<fo:table-cell><fo:block text-align="center" keep-together="always" white-space-collapse="false">_______________________________</fo:block></fo:table-cell>
-							<fo:table-cell><fo:block text-align="center" keep-together="always" white-space-collapse="false">_______________</fo:block></fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-							<fo:table-cell>
-								<fo:block>
-									<fo:table>
-										<fo:table-column column-width="160pt"/>
-										<fo:table-column column-width="160pt"/>
-										<fo:table-body>
-											<fo:table-row>
-												<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------</fo:block></fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>
-												<fo:table-cell><fo:block text-align="center" keep-together="always" white-space-collapse="false">OUT</fo:block></fo:table-cell>
-												<fo:table-cell><fo:block text-align="center" keep-together="always" white-space-collapse="false">IN</fo:block></fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block>
-														<fo:table>
-															<fo:table-column column-width="160pt"/>
-															<fo:table-body>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">------------------------</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">SL NO             TIME   </fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">------------------------</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">Milk ->............ Ltrs</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">Crates ->.......... Ltrs</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">Cans-40L........... No.s</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">Cans-20L........... No.s</fo:block></fo:table-cell>
-																</fo:table-row>
-															</fo:table-body>
-														</fo:table>	
-													</fo:block>
-												</fo:table-cell>
-												<fo:table-cell>
-													<fo:block>
-														<fo:table>
-															<fo:table-column column-width="160pt"/>
-															<fo:table-body>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">------------------------</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">SL NO             TIME   </fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">------------------------</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">Milk ->............ Ltrs</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">Crates ->.......... Ltrs</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">Cans-40L........... No.s</fo:block></fo:table-cell>
-																</fo:table-row>
-																<fo:table-row>
-																	<fo:table-cell><fo:block keep-together="always" white-space-collapse="false">Cans-20L........... No.s</fo:block></fo:table-cell>
-																</fo:table-row>
-															</fo:table-body>
-														</fo:table>
-													</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-										</fo:table-body>
-									</fo:table>
-								</fo:block>
+								<fo:block font-size="6pt" text-align="left">&#160;</fo:block>
+								<fo:block font-size="7pt" text-align="left">&#160;</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block>
-									<fo:table>
-										<fo:table-column column-width="160pt"/>
-										<fo:table-body>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">A. TONED MILK --> .................... Ltrs</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">B. HCM MILK --> ...................... Ltrs</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">C. STD MILK --> ...................... Ltrs</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">D. F C MILK --> ...................... Ltrs</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">-------------------------------------------------------</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">E. CRATES --> ........................ NO.S</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">F. CANS - 40L --> .................... NO.S</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">G. CANS - 20L --> .................... NO.S</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-										</fo:table-body>
-									</fo:table>
-								</fo:block>
+								<fo:block font-size="6pt" text-align="left">&#160;</fo:block>
+								<fo:block font-size="7pt" text-align="left">&#160;</fo:block>
+							</fo:table-cell>
+						</fo:table-row>
+						
+						<fo:table-row>
+							<fo:table-cell>
+								<fo:block font-size="7pt" text-align="left">CreatedBy:${userLogin.userLoginId}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block>
-									<fo:table>
-										<fo:table-column column-width="160pt"/>
-										<fo:table-body>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">Vehicle No:</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false"></fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">Despatch Time: </fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false"></fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">No. of Crates: </fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false"></fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false">No. of Cans:</fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-											<fo:table-row>	
-												<fo:table-cell>
-													<fo:block keep-together="always" white-space-collapse="false"></fo:block>
-												</fo:table-cell>
-											</fo:table-row>
-										</fo:table-body>
-									</fo:table>
-								</fo:block>
+								<fo:block font-size="6pt" text-align="left">DESPATCHED BY</fo:block>
+								<fo:block font-size="6pt" text-align="left">NAME&amp;SIGNATURE</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block font-size="6pt" text-align="left">CHECKED BY SECURITY</fo:block>
+								<fo:block font-size="6pt" text-align="left">NAME&amp;SIGNATURE</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 					</fo:table-body>
