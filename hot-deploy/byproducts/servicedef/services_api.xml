@@ -31,6 +31,13 @@
         <attribute type="Map" mode="OUT" name="indentResults" optional="true"/>
     </service>  
     
+    <service name="getFacilityIndent" engine="java"
+                location="in.vasista.vbiz.byproducts.POSApiServices" invoke="getFacilityIndent" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="supplyDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="indentResults" mode="OUT" type="Map" optional="true"/>
+    </service>    
+    
     <service name="getProductPrices" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.byproducts.POSApiServices" invoke="getProductPrices">
         <description>Service to get products price list</description>

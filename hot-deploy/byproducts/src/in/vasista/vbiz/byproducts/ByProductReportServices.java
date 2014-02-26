@@ -1085,6 +1085,7 @@ public class ByProductReportServices {
 						priceCatMap.put("bedCessPercent", bedPercentage);
 						priceCatMap.put("bedsecPercent", bedsecPercent);
 						priceCatMap.put("name", products.get(j).get("brandName"));
+						priceCatMap.put("description", products.get(j).get("description"));						
 						productsPrice.put(eachProd, priceCatMap);
 	        		}
 	        	}

@@ -322,6 +322,37 @@ Debug.logInfo(infoString, module);
 		 
     	return result;
     }
-    
+
+    public static Map<String, Object> getFacilityIndent(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	String facilityId = (String) context.get("facilityId");
+		if (UtilValidate.isEmpty(facilityId)) {
+			Debug.logError("Empty facility Id", module);
+			return ServiceUtil.returnError("Empty facility Id");	   
+		}	    	
+    	Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+		Map indentMap = FastMap.newInstance();  
+		Map<String, Object> inputParamMap = FastMap.newInstance();
+		inputParamMap.put("userLogin", userLogin);  
+		inputParamMap.put("boothId", facilityId);  
+		inputParamMap.put("supplyDate", supplyDate); 
+		inputParamMap.put("subscriptionTypeId", "AM"); 	
+		inputParamMap.put("productSubscriptionTypeId", "CASH"); 				
+    	Map indentResultsAM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);
+		if(!ServiceUtil.isError(indentResultsAM)){
+			indentMap.put("AM", (List)indentResultsAM.get("changeIndentProductList"));
+		}  
+		inputParamMap.put("subscriptionTypeId", "PM"); 			
+    	Map indentResultsPM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);
+		if(!ServiceUtil.isError(indentResultsPM)){
+			indentMap.put("PM", (List)indentResultsAM.get("changeIndentProductList"));
+		}  
+		
+		Map result = FastMap.newInstance();  		
+		result.put("indentResults", indentMap);
+	    Debug.logInfo("indentResults:" + indentMap, module);		 
+    	return result;
+    }
     
 }
