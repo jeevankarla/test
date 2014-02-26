@@ -89,6 +89,9 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				context.putAt("dayBegin", dayBegin);
 				dayEnd = UtilDateTime.getDayEnd(estimatedDeliveryDateTime);
 				Map boothWiseMap =[:];
+				
+				partyProfileFacilityMap=ByProductNetworkServices.getPartyProfileDafult(dispatcher.getDispatchContext(),[boothIds:boothsList,supplyDate:estimatedDeliveryDateTime]).get("partyProfileFacilityMap");
+				
 				boothsList.each{ boothId ->
 					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
 					if(UtilValidate.isNotEmpty(dayTotals)){
@@ -115,9 +118,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							boothWiseProd.put("excess", noPacketsexc);
 							
 							String paymentMethodType="";
-							partyProfileDafault=ByProductNetworkServices.getPartyProfileDafult(dispatcher.getDispatchContext(),[boothId:boothId,supplyDate:estimatedDeliveryDateTime]).get("partyProfileDafault");
-							if(UtilValidate.isNotEmpty(partyProfileDafault)){
-							paymentMethodType=partyProfileDafault.getString("defaultPayMeth");
+							if(UtilValidate.isNotEmpty(partyProfileFacilityMap)){
+							paymentMethodType=partyProfileFacilityMap.get(boothId);
 							}
 							boothWiseProd.put("paymentMode",paymentMethodType)
 							boothWiseMap.put(boothId, boothWiseProd);							
