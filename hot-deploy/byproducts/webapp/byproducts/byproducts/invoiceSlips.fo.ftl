@@ -65,9 +65,9 @@ under the License.
                             			<fo:table-body>
 			                            	<fo:table-row>
 			                              		<fo:table-cell>
-			                              			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;              D.K. Co.op Milk Producer's Union Ltd.</fo:block>
-											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                      Mangalore-5.</fo:block>
-											        <fo:block>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
+			                                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+											        <fo:block font-family="Courier,monospace" >----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 											        <#if reportTitle?has_content>
 											        <#assign reportVal = reportTitle.get(invoice.invoiceId)>
 											        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; <#if reportVal?exists && reportVal == "TAX">&#160;       TAX INVOICE<#else>&#160;       BILL OF SALE</#if></fo:block>
@@ -115,29 +115,69 @@ under the License.
 						            </fo:table>
 						          </fo:block>
        						 </#if>
-       					<fo:block text-align="left">============================================================================================================================================================================</fo:block>	 
-			            <fo:block font-family="Courier,monospace" font-size="4pt" white-space-collapse="false" keep-together="always">Product&amp;   							 Vat.       Qty. 		 Rate/    			Net 	 	Vat  	  	Total</fo:block>
-			            <fo:block font-family="Courier,monospace" font-size="4pt" white-space-collapse="false" keep-together="always">Unit            	 %age   	            Unit        Amt.   Amt.      Amt.</fo:block>
-			            <fo:block text-align="left">============================================================================================================================================================================</fo:block>	 
-			            <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-			            <fo:block font-family="Courier,monospace">                           
-			              <#if invoiceDetail.invoiceItems?has_content>
-			                <#assign invoiceItems = invoiceDetail.invoiceItems?if_exists />
-			                <fo:table width="100%" table-layout="fixed">
-			                  <fo:table-column column-width="55pt"/>
+       					
+			            <fo:block  font-size="6pt"  font-family="Courier,monospace">  
+			              <fo:table width="100%" table-layout="fixed">
+			                  <fo:table-column column-width="58pt"/>
 			                  <fo:table-column column-width="40pt"/>
 			                  <fo:table-column column-width="40pt"/>
 			                  <fo:table-column column-width="46pt"/>
 			                  <fo:table-column column-width="46pt"/> 
-			                  <fo:table-column column-width="38pt"/> 
-			                  <fo:table-column column-width="43pt"/> 
-			                  <fo:table-column column-width="43pt"/> 
-			                  <fo:table-body font-size="7pt">
+			                  <fo:table-column column-width="40pt"/> 
+			                  <fo:table-column column-width="50pt"/> 
+			                  <fo:table-column column-width="50pt"/> 
+			                  <fo:table-body font-size="7pt"> 
+			                  <fo:table-row>
+			                      <fo:table-cell>
+			                        <fo:block  font-family="Courier,monospace" text-align="left">================================================================================</fo:block>	
+			                      </fo:table-cell>
+			                    </fo:table-row>
+			                  <fo:table-row>
+			                        <fo:table-cell>
+			                          <fo:block text-align="left" text-indent="4pt" keep-together="always"> Product&amp;</fo:block>
+			                           <fo:block text-align="left" text-indent="4pt" keep-together="always"> Unit</fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" >Vat.</fo:block>
+			                          <fo:block text-align="right" >%age.</fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" text-indent="4pt" keep-together="always">Qty.</fo:block>
+			                           <fo:block text-align="right" text-indent="4pt" keep-together="always">Unit</fo:block>
+			                        </fo:table-cell>
+			                        <fo:table-cell>
+			                           <fo:block text-align="right" text-indent="4pt" keep-together="always">Rate/</fo:block>
+			                           <fo:block text-align="right" text-indent="4pt" keep-together="always">Amt.</fo:block>
+			                        </fo:table-cell>
+			                       
+			                        <fo:table-cell>
+			                           <fo:block text-align="right" text-indent="4pt" keep-together="always">Net</fo:block>
+			                           <fo:block text-align="right" text-indent="4pt" keep-together="always">Amt.</fo:block>
+			                        </fo:table-cell>
+			                         
+			                        <fo:table-cell>
+			                          <fo:block text-align="right" text-indent="4pt" keep-together="always">Vat</fo:block>
+			                           <fo:block text-align="right" text-indent="4pt" keep-together="always">Amt.</fo:block>
+			                        </fo:table-cell>
+			                       
+			                        <fo:table-cell>
+			                           <fo:block text-align="right" text-indent="4pt" keep-together="always">Total</fo:block>
+			                           <fo:block text-align="right" text-indent="4pt" keep-together="always">Amt.</fo:block>
+			                        </fo:table-cell>
+			                      </fo:table-row>  
+			                      <fo:table-row>
+			                      <fo:table-cell>
+			                        <fo:block  font-family="Courier,monospace" text-align="left">================================================================================</fo:block>	
+			                      </fo:table-cell>
+			                    </fo:table-row>                      
+			              <#if invoiceDetail.invoiceItems?has_content>
+			                <#assign invoiceItems = invoiceDetail.invoiceItems?if_exists />
+			              
 			                    <#assign currentShipmentId = "">
 			                    <#assign newShipmentId = "">
-			                    <#assign vatTotal = 0>
-						           <#assign grandTotal = 0>
-						           <#assign netTotal = 0>
+			                    <#assign vatTotal = (Static["java.math.BigDecimal"].ZERO)>
+						           <#assign grandTotal = (Static["java.math.BigDecimal"].ZERO)>
+						           <#assign netTotal = (Static["java.math.BigDecimal"].ZERO)>
 			                    <#-- if the item has a description, then use its description.  Otherwise, use the description of the invoiceItemType -->
 			                    <#list invoiceItems as invoiceItem>
 			                    
@@ -183,15 +223,18 @@ under the License.
 			                          <fo:block></fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
-			                       <#assign product = invoiceItem.getRelatedOne("Product")/>
-			                 		<#if product.get("productName",locale)?has_content>
-			                    		<#assign productName=product.get("productName",locale)/>
+			                       <#assign product = invoiceItem.getRelatedOne("Product")?if_exists/>
+			                 		<#if  product?exists>
+			                    		<#assign productName=product.productName?if_exists >
+			                    	<#else>
+			                    		<#assign productName=invoiceItem.invoiceItemTypeId?if_exists >
 			                   		</#if>
-			                   		<#assign vatAmount = 0>
-			                        <#assign vatPercent = 0>
+			                        <#assign vatAmount = (Static["java.math.BigDecimal"].ZERO)>
+			                        <#assign vatPercent = (Static["java.math.BigDecimal"].ZERO)>
+			                  
 			                        <#if invoiceVatMap?has_content>
 			                        <#assign vatList = invoiceVatMap.get(invoiceItem.invoiceId)>
-			                        <#if vatList?has_content>
+			                         <#if vatList?has_content && invoiceItem.productId?exists >
 			                        <#list vatList as vat>
 			                        <#if vat.productId == invoiceItem.productId>
 			                        <#assign vatAmount = vat.vatAmount?if_exists>
@@ -199,10 +242,10 @@ under the License.
 			                        </#if>
 			                        </#list>
 			                         </#if>
-			                        </#if>
+			                        </#if> 
 			                      <fo:table-row>
 			                        <fo:table-cell>
-			                          <fo:block text-align="left" text-indent="4pt" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(product.description)),8)}</fo:block>
+			                          <fo:block text-align="left" text-indent="4pt" keep-together="always"> <#if  product?has_content> ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(product.description?if_exists)),8)} <#else> ${invoiceItem.invoiceItemTypeId?if_exists} </#if>></fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" >${vatPercent?if_exists}</fo:block>
@@ -217,14 +260,16 @@ under the License.
 			                        <fo:table-cell>
 			                          <fo:block keep-together="always" text-align="right"> ${netAmount?if_exists?string("#0.00")} </fo:block>
 			                        </fo:table-cell>
-			                         <#assign netTotal = (netAmount.add(netTotal))>
+			                         <#assign netTotal = (netTotal.add(netAmount))>
 			                        <fo:table-cell>
-			                          <fo:block text-align="right" >${vatAmount?if_exists}</fo:block>
+			                          <fo:block text-align="right" >${vatAmount?string("#0.00")?if_exists}</fo:block>
 			                        </fo:table-cell>
-			                        <#assign vatTotal = (vatAmount.add(vatTotal))>
-			                        <#assign totalAmount = ((Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) + vatAmount)?if_exists >
+			                        <#assign vatTotal = (vatTotal.add(vatAmount))>
+			                         <#assign totalAmount = (Static["java.math.BigDecimal"].ZERO)>
+			                         
+			                        <#assign totalAmount = (netAmount + vatAmount)?if_exists >
 			                        <fo:table-cell>
-			                          <fo:block text-align="right" >${totalAmount?if_exists} </fo:block>
+			                          <fo:block text-align="right" >${totalAmount?string("#0.00")?if_exists} </fo:block>
 			                        </fo:table-cell>
 			                      </fo:table-row>
 			                      </#if>
@@ -232,7 +277,7 @@ under the License.
 			                    <#-- the grand total -->
 			                    <fo:table-row>
 			                      <fo:table-cell>
-			                        <fo:block text-align="left">===========================================================================</fo:block>	
+			                        <fo:block  font-family="Courier,monospace" text-align="left">================================================================================</fo:block>	
 			                      </fo:table-cell>
 			                    </fo:table-row>
 			                     <fo:table-row>
@@ -260,11 +305,17 @@ under the License.
 			                        </fo:block>
 			                        </fo:table-cell>
 			                    </fo:table-row>
+			                    
+			                     <fo:table-row>
+			                      <fo:table-cell>
+			                        <fo:block  font-family="Courier,monospace" text-align="left">================================================================================</fo:block>	
+			                      </fo:table-cell>
+			                    </fo:table-row>	
+			                    
 			                    <fo:table-row>
-			                      <fo:table-cell text-align="right" number-columns-spanned="5">
-			                       <fo:block text-align="left">==========================================================================</fo:block>	
+			                      <fo:table-cell   number-columns-spanned="5">
 			                       <#if grandTotal?has_content>
-				                      <fo:block keep-together="always" text-align="right" font-size="7pt">&#160;     ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(grandTotal?string("#0.00")), "%dollars-and-hundredths", locale).toUpperCase()}</fo:block>
+				                      <fo:block keep-together="always" text-align="left" font-size="7pt">&#160;${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(grandTotal?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()}</fo:block>
 			                      </#if>
 			                      </fo:table-cell>
 			                    </fo:table-row>
@@ -274,11 +325,15 @@ under the License.
 			                      <fo:block font-size="4pt" text-align="right" keep-together="always">AUTHORISED SIGNATORY</fo:block>
 			                      </fo:table-cell>
 			                    </fo:table-row>
+			          	         <fo:table-row>
+			                      <fo:table-cell>
+			                        <fo:block  font-family="Courier,monospace" text-align="left">================================================================================</fo:block>	
+			                      </fo:table-cell>
+			                    </fo:table-row>	
+			         	        </#if>
 			                  </fo:table-body>
 			                </fo:table>
-			              </#if>
-			            </fo:block>          
-			          	<fo:block text-align="left">============================================================================================================================================================================</fo:block>	
+			            </fo:block>    
 			         	<fo:block linefeed-treatment="preserve">-------------------cut here-------------------</fo:block>
        				<#if temp ==2>
        					<fo:block page-break-after="always"></fo:block>
