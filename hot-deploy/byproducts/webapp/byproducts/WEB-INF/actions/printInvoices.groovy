@@ -44,8 +44,14 @@ invoiceIds.each { invoiceId ->
 		reportFlag = "";
 	  invoiceItemList.each { invoiceItem ->
 		  Map invoiceItemMap = FastMap.newInstance();
-		  vatAmount = invoiceItem.vatAmount;
-		  vatPercent = invoiceItem.vatPercent;
+		  vatAmount = BigDecimal.ZERO;vatPercent = BigDecimal.ZERO;
+		  
+		  if(UtilValidate.isNotEmpty(invoiceItem.vatAmount)){
+			  vatAmount = invoiceItem.vatAmount;
+		  }
+		  if(UtilValidate.isNotEmpty(invoiceItem.vatAmount)){
+			  vatPercent = invoiceItem.vatPercent;
+		  }
 		  productId = invoiceItem.productId;
 		  if(vatAmount){
 			  reportFlag = "TAX";
