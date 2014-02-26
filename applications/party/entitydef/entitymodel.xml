@@ -2377,6 +2377,23 @@ under the License.
         <key-map field-name="productStoreId"/>
       </relation>
     </entity>
+   
+     <view-entity entity-name="PartyProfileDefaultAndFacility"
+            package-name="org.ofbiz.party.party"
+            title="PartyProfileDefaultAndFacility (PartyProfileDefault,Facility) View Entity">
+      <member-entity entity-alias="PPD" entity-name="PartyProfileDefault"/>
+      <member-entity entity-alias="FAC" entity-name="Facility"/>
+      <alias-all entity-alias="PPD"/>
+      <alias entity-alias="FAC" name="facilityId" />
+     
+      <view-link entity-alias="FAC" rel-entity-alias="PPD" rel-optional="true">
+        <key-map field-name="ownerPartyId"  rel-field-name="partyId" />
+      </view-link>
+      <relation  type="one-nofk" rel-entity-name="Facility">
+        <key-map field-name="ownerPartyId"  rel-field-name="partyId"/>
+      </relation>
+    </view-entity>
+    
     <entity entity-name="PartyRelationship"
             package-name="org.ofbiz.party.party"
             title="Party Relationship Entity">
