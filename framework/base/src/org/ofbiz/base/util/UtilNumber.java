@@ -156,7 +156,7 @@ public class UtilNumber {
         +"%rupees-and-paise:\n"//This used for Rupees-paise define By our Vasista Programmers
         + "    x.0: << [and >%%paise>];\n"
         + "    0.x: >%%paise>;\n"
-        + "    0: zero rupees ; one rupee; =%%main= ruppes;\n"
+        + "    0: zero rupees ; one rupee; =%%main= rupees;\n"
         + "%%paise:\n"
         + "    100: <%%main< paise[s];\n";
 
