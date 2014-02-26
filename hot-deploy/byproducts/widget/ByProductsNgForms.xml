@@ -439,6 +439,19 @@
             </hyperlink>
         </field> -->
     </form>
+    
+    <form name="instituionBillingPeriod" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="createInstitutionBillingPeriod"
+    	default-table-style="basic-table hover-bar" separate-columns="true">
+    	<field name="facilityId" title="Institution"><lookup target-form-name="LookupFacility"></lookup></field>
+        <field name="periodTypeId" title="Period Type" >
+        	<drop-down>
+        		<list-options key-name="periodTypeId" list-name="periodTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="fromdate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
+	    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" position="3"><submit/></field>       
+    </form>
     <form name="configCrates" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="updateCrateQtyConfig"
     	default-table-style="basic-table hover-bar" separate-columns="true">
     	<field name="uomId"><hidden value="VLIQ_CRT"/></field>

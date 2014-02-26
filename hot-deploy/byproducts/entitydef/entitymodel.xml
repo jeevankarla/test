@@ -8,5 +8,27 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
-
+	
+	<entity entity-name="FacilityCustomBilling"
+            package-name="org.ofbiz.common.period"
+            title="Custom Time Period Entity">
+      <field name="periodTypeId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="fromDate" type="date-time" />
+	  <field name="thruDate" type="date-time" />
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>  
+      <prim-key field="periodTypeId"/>
+      <prim-key field="facilityId"/>
+	  <prim-key field="fromDate" />
+      <relation type="one" fk-name="FCTP_PT_PTID"  rel-entity-name="PeriodType">
+        <key-map field-name="periodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FCTP_FA_FACILITYID" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    
 </entitymodel>

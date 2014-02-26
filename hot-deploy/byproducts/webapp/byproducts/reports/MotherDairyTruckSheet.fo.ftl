@@ -147,8 +147,7 @@ under the License.
 													<#if (counter<20)>
 														<#assign lmsProdCounter = lmsProdCounter+1>
 														<fo:table-cell>	
-															<#assign productDetails = delegator.findOne("Product", {"productId" : product}, true)>											
-															<fo:block>${productDetails.get("brandName")?if_exists}</fo:block>																									
+															<fo:block>${productNames.get(product)?if_exists}</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#list>
@@ -169,8 +168,7 @@ under the License.
 													<#if (counter < 20) >
 														<#assign byProdCounter = byProdCounter+1>
 														<fo:table-cell>
-															<#assign productDetails = delegator.findOne("Product", {"productId" : product}, true)>											
-															<fo:block>${productDetails.get("brandName")?if_exists}</fo:block>
+															<fo:block>${productNames.get(product)?if_exists}</fo:block>
 														</fo:table-cell>
 													</#if>
 												</#list>
@@ -186,8 +184,7 @@ under the License.
 															<#assign byProdCounter = byProdCounter+1>
 															<#assign prodCount = prodCount + 1>
 															<fo:table-cell>
-																<#assign productDetails = delegator.findOne("Product", {"productId" : product}, true)>											
-																<fo:block>${productDetails.get("brandName")?if_exists}</fo:block>
+																<fo:block>${productNames.get(product)?if_exists}</fo:block>
 															</fo:table-cell>
 														</#if>
 													</#list>
@@ -203,8 +200,7 @@ under the License.
 															<#assign byProdCounter = byProdCounter+1>
 															<#assign prodCount = prodCount + 1>
 															<fo:table-cell>
-																<#assign productDetails = delegator.findOne("Product", {"productId" : product}, true)>											
-																<fo:block>${productDetails.get("brandName")?if_exists}</fo:block>
+																<fo:block>${productNames.get(product)?if_exists}</fo:block>
 															</fo:table-cell>
 														</#if>
 													</#list>
@@ -283,13 +279,11 @@ under the License.
 														<#assign lmsProdCounter = lmsProdCounter+1>
 														<#assign qty=0>
 														<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-															<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
+															<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
 														</#if>
 														<#if qty !=0>
-															<#--<#assign product = (delegator.findOne("Product", {"productId" : product}, false))!>-->
-															<#assign qtyInc = productQuantityIncluded.get(product)?if_exists>
 															<fo:table-cell>		
-																<fo:block text-align="center"><#if qtyInc !=0>${(qty/qtyInc)?if_exists?string("#0.0")}<#else>${qty?if_exists}</#if></fo:block>																									
+																<fo:block text-align="center">${qty?if_exists}</fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -316,13 +310,11 @@ under the License.
 														<#assign byProdCounter = byProdCounter+1>
 														<#assign byProdQty=0>
 														<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-															<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
+															<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
 														</#if>
 														<#if byProdQty !=0>
-															<#--<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>-->
-															<#assign qtyInc = productQuantityIncluded.get(product)?if_exists>
 															<fo:table-cell>		
-																<fo:block text-align="center"><#if qtyInc !=0 >${(byProdQty/qtyInc)?if_exists}<#else>${(byProdQty)?if_exists}</#if></fo:block>																									
+																<fo:block text-align="center">${(byProdQty)?if_exists}</fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -344,13 +336,11 @@ under the License.
 															<#assign prodCount = prodCount + 1>
 															<#assign byProdQty=0>
 															<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-																<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
+																<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
 															</#if>
 															<#if byProdQty !=0>
-																<#--<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>-->
-																<#assign qtyInc = productQuantityIncluded.get(product)?if_exists>
 																<fo:table-cell>		
-																	<fo:block text-align="center"><#if qtyInc !=0>${(byProdQty/qtyInc)?if_exists}<#else>${byProdQty?if_exists}</#if></fo:block>																									
+																	<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
@@ -372,13 +362,11 @@ under the License.
 															<#assign prodCount = prodCount + 1>
 															<#assign byProdQty=0>
 															<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-																<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("total")>
+																<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
 															</#if>
 															<#if byProdQty !=0>
-																<#--<#assign byProduct = (delegator.findOne("Product", {"productId" : product}, false))!>-->
-																<#assign qtyInc = productQuantityIncluded.get(product)?if_exists>
 																<fo:table-cell>		
-																	<fo:block text-align="center"><#if qtyInc !=0 >${(byProdQty/qtyInc)?if_exists}<#else>${byProdQty?if_exists}</#if></fo:block>																									
+																	<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
@@ -457,13 +445,11 @@ under the License.
 													<#assign lmsProdCounter = lmsProdCounter+1>
 													<#assign qty=0>
 													<#if routeTotals.get(product)?has_content>
-														<#assign qty= routeTotals.get(product).get("total")>
+														<#assign qty= routeTotals.get(product).get("packetQuantity")>
 													</#if>
 													<#if qty !=0>
-														<#--<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>-->
-														<#assign qtyInc = productQuantityIncluded.get(product)?if_exists>
 														<fo:table-cell>		
-															<fo:block text-align="center"><#if qtyInc !=0>${(qty/qtyInc)?if_exists?string("#0.0")}<#else>${qty?if_exists}</#if></fo:block>																									
+															<fo:block text-align="center">${qty?if_exists}</fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
@@ -490,13 +476,11 @@ under the License.
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign byProdQty=0>
 													<#if routeTotals.get(byProd)?has_content>
-														<#assign byProdQty= routeTotals.get(byProd).get("total")>
+														<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
 													</#if>
 													<#if byProdQty !=0>
-														<#--<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>-->
-														<#assign qtyInc = productQuantityIncluded.get(byProd)?if_exists>
 														<fo:table-cell>		
-															<fo:block text-align="center"><#if qtyInc !=0>${(byProdQty/qtyInc)?if_exists?string("#0.0")}<#else>${byProdQty?if_exists}</#if></fo:block>																									
+															<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
@@ -518,13 +502,11 @@ under the License.
 														<#assign prodCount = prodCount + 1>
 														<#assign byProdQty=0>
 														<#if routeTotals.get(byProd)?has_content>
-															<#assign byProdQty= routeTotals.get(byProd).get("total")>
+															<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
 														</#if>
 														<#if byProdQty !=0>
-															<#--<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>-->
-															<#assign qtyInc = productQuantityIncluded.get(byProd)?if_exists>
 															<fo:table-cell>		
-																<fo:block text-align="center"><#if qtyInc !=0>${(byProdQty/qtyInc)?if_exists?string("#0.0")}<#else>${byProdQty?if_exists}</#if></fo:block>																									
+																<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -546,13 +528,11 @@ under the License.
 														<#assign prodCount = prodCount + 1>
 														<#assign byProdQty=0>
 														<#if routeTotals.get(byProd)?has_content>
-															<#assign byProdQty= routeTotals.get(byProd).get("total")>
+															<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
 														</#if>
 														<#if byProdQty !=0>
-															<#--<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>-->
-															<#assign qtyInc = productQuantityIncluded.get(byProd)?if_exists>
 															<fo:table-cell>		
-																<fo:block text-align="center"><#if qtyInc !=0>${(byProdQty/qtyInc)?if_exists?string("#0.0")}<#else><${byProdQty?if_exists}></#if></fo:block>																									
+																<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		

@@ -81,6 +81,33 @@
             </widgets>
         </section>
     </screen>
+    <screen name="InstitutionBillingConfig">
+        <section>
+            <actions>
+            <set field="tabButtonItem" value="InstitutionBillingConfig"/>
+            <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+            <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set> 
+            <entity-condition list="periodTypes" entity-name="PeriodType">
+            	<condition-expr field-name="periodTypeId" operator="equals" value="INST%"/>
+            </entity-condition>
+            <set field="periodTypes" from-field="periodTypes"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      	<section>
+                        	<widgets>
+                        		<screenlet title="Create Institution Billing Period ${periodTypes}">
+                        			<include-form name="instituionBillingPeriod" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
      <screen name="EmployeeSubsidy">
         <section>
             <actions>
@@ -132,6 +159,7 @@
         <section>
             <actions>
             	<set field="tabButtonItem" value="CreditInstitutionBilling"/>
+            	<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/institutionBillingDetails.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -140,6 +168,9 @@
                         	<widgets>
                         		 <screenlet title="Credit Institution Billing">
                         			<include-form name="institutionBilling" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Testing Tabs">
+                        			<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/testingTabs.ftl"/></html></platform-specific>							  	        					
                         		</screenlet>
                             </widgets>
                     	</section>

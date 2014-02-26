@@ -32,19 +32,15 @@ if(parameters.estimatedShipDate){
 	}
 }
 context.put("estimatedDeliveryDate", estimatedDeliveryDateTime);
-productQuantityIncluded = [:];
+productNames = [:];
 
 allProductsList = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",estimatedDeliveryDateTime));
 
 allProductsList.each{ eachProd ->
-	quantityInc = 1;
-	if(eachProd.quantityIncluded){
-		quantityInc = eachProd.quantityIncluded;
-	}
-	productQuantityIncluded.put(eachProd.productId, quantityInc);
-	
+	productNames.put(eachProd.productId, eachProd.brandName);
 }
-context.productQuantityIncluded = productQuantityIncluded;
+context.productNames = productNames;
+
 lmsProductsList=ProductWorker.getProductsByCategory(delegator ,"LMS" ,null);
 byProductsList=  EntityUtil.filterByCondition(allProductsList, EntityCondition.makeCondition("productId",EntityOperator.NOT_IN , lmsProductsList.productId));
 
@@ -64,9 +60,14 @@ if(parameters.shipmentId){
 	}
 	
 }
-conditionList = [];
 
+result = (Map)ByProductNetworkServices.getProductCratesAndCans(dctx, UtilMisc.toMap("userLogin",userLogin, "saleDate", estimatedDeliveryDateTime));
+piecesPerCrate = (Map)result.get("piecesPerCrate");
+piecesPerCan = (Map)result.get("piecesPerCan");
+piecesPerCrate = [:];
+piecesPerCan = [:];
 routeWiseMap =[:];
+conditionList = [];
 routeWiseTotalCrates = [:];
 if(UtilValidate.isNotEmpty(routeIdsList)){
 	routeIdsList.each{ routeId ->
@@ -74,8 +75,13 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		 Set byProdList =new HashSet();
 		lmsProdSeqList=[];
 		byProdSeqList=[];
-		
-		orderHeader = delegator.findList("OrderHeader", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds), UtilMisc.toSet("originFacilityId"), null, null, false);
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.EQUALS, estimatedDeliveryDateTime));
+		conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		shipment = delegator.findList("Shipment", condition, null, null, null, false);
+		shipId = (EntityUtil.getFirst(shipment)).get("shipmentId");
+		orderHeader = delegator.findList("OrderHeader", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipId), UtilMisc.toSet("originFacilityId"), null, null, false);
 		boothsList = EntityUtil.getFieldListFromEntityList(orderHeader, "originFacilityId", true);
 		//prepare boothsLsit
 		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
@@ -101,16 +107,25 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							//Calulating Crates
 							totalQuantity =0;
 							Iterator prodIter = productTotals.entrySet().iterator();
+							cratesTotalSub = 0;
+							noPacketsexc = 0;
 							while (prodIter.hasNext()) {
 								Map.Entry entry = prodIter.next();
 								itrProductId=entry.getKey();
 								if(lmsProductsIdsList.contains(itrProductId)){
-									qty=productTotals.get(entry.getKey()).get("total");
+									qty=productTotals.get(entry.getKey()).get("packetQuantity");
 									totalQuantity=totalQuantity+qty;
+									tempCrates = (qty/12).intValue();
+									tempExcess=(qty.intValue()%(12));
+									if(piecesPerCrate && piecesPerCrate.get(itrProductId)){
+										tempCrates = (qty/(piecesPerCrate.get(itrProductId))).intValue();
+										tempExcess=(qty.intValue()%(piecesPerCrate.get(itrProductId)));
+									}
+									cratesTotalSub = cratesTotalSub+tempCrates;
+									noPacketsexc = noPacketsexc+tempExcess;
 								}
 							}
-							cratesTotalSub =(totalQuantity/(12));
-							noPacketsexc = (totalQuantity.intValue()%12);
+							
 							amount=dayTotals.get("totalRevenue");
 							boothWiseProd.put("prodDetails", productTotals);
 							boothWiseProd.put("amount", amount);
@@ -136,6 +151,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				if(UtilValidate.isNotEmpty(routeTotals)){
 					routeProdTotals = routeTotals.get("productTotals");
 					routeAmount= routeTotals.get("totalRevenue");
+					rtCrates = 0;
+					rtExcessPkts = 0;
 					if(UtilValidate.isNotEmpty(routeProdTotals)){
 						Iterator mapIter = routeProdTotals.entrySet().iterator();	
 						while (mapIter.hasNext()) {
@@ -156,16 +173,30 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							prodCategoryIds.each{ prodCategory->
 								if("LMS".equals(prodCategory)){
 									lmsProductList.add(entry.getKey());
-									rtQty =entry.getValue().get("total");
+									rtQty =entry.getValue().get("packetQuantity");
 									routeTotQty=routeTotQty+rtQty;
+									tempRtCrates = (rtQty/12).intValue();
+									tempRtExcess=(rtQty.intValue()%(12));
+									if(piecesPerCrate && piecesPerCrate.get(entry.getKey())){
+										tempRtCrates = (rtQty/(piecesPerCrate.get(entry.getKey()))).intValue();
+										tempRtExcess=(rtQty.intValue()%(piecesPerCrate.get(entry.getKey())));
+									}
+									rtCrates = rtCrates+tempRtCrates;
+									rtExcessPkts = rtExcessPkts+tempRtExcess;
 								}
 								if("BYPROD".equals(prodCategory)){
 									byProdList.add(entry.getKey());
 								}
 								if("CRATE_INDENT".equals(prodCategory)){
-									qtyValue=entry.getValue().get("total");
+									qtyValue=entry.getValue().get("packetQuantity");
+									
 									prodCrates =(qtyValue/(12)).intValue();
-									packetsExces = (qtyValue.intValue()%12);
+									packetsExces = (qtyValue.intValue()%(12));
+									if(piecesPerCrate && piecesPerCrate.get(entry.getKey())){
+										prodCrates =(qtyValue/(piecesPerCrate.get(entry.getKey()))).intValue();
+										packetsExces = (qtyValue.intValue()%(piecesPerCrate.get(entry.getKey())));
+									}
+									
 									cratesDetailMap.put("prodCrates", prodCrates);
 									cratesDetailMap.put("packetsExces", packetsExces);
 								}
@@ -174,27 +205,22 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 						}						
 					}			
 					
-					lmsProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, lmsProductList) , null, ["sequenceNum"], null, false);
+					/*lmsProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, lmsProductList) , null, ["sequenceNum"], null, false);
 					lmsProdIdsList= EntityUtil.getFieldListFromEntityList(lmsProdSeqList, "productId", true);
 					byProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, byProdList) , null, ["sequenceNum"], null, false);
 					byProdIdsList= EntityUtil.getFieldListFromEntityList(byProdSeqList, "productId", true);
+					*/
 					 //getting vehicle role for vehcileId
 					String vehicleId="";
 					vehicleRole=ByProductNetworkServices.getVehicleRole(dispatcher.getDispatchContext(),[facilityId:routeId,supplyDate:estimatedDeliveryDateTime]).get("vehicleRole");
 					
 					if(UtilValidate.isNotEmpty(vehicleRole)){
-					vehicleId=vehicleRole.getString("vehicleId");
+						vehicleId=vehicleRole.getString("vehicleId");
 					}
-					//route wise crates
-					Debug.log("==lmsProdIdsList="+lmsProdIdsList);
-					Debug.log("==byProdIdsList="+byProdIdsList);
-					
-					rtCrates = (routeTotQty/(12)).intValue();
-					rtExcessPkts=(routeTotQty.intValue()%12);
 					Map boothDetailsMap=FastMap.newInstance();
 					boothDetailsMap.put("boothWiseMap", boothWiseMap);
-					boothDetailsMap.put("lmsProdList", lmsProdIdsList);
-					boothDetailsMap.put("byProdList", byProdIdsList);
+					boothDetailsMap.put("lmsProdList", lmsProductList);
+					boothDetailsMap.put("byProdList", byProdList);
 					boothDetailsMap.put("routeWiseTotals", routeProdTotals);
 					boothDetailsMap.put("routeWiseCrates", productWiseTotalCratesMap);
 					boothDetailsMap.put("routeAmount", routeAmount);

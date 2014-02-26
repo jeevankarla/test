@@ -61,6 +61,11 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="ConfigChange"/>    	
     </request-map>
+    <request-map uri="InstitutionBillingConfig">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="InstitutionBillingConfig"/>    	
+    </request-map>
+    
     <request-map uri="ReturnCrates">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="ReturnCrates"/>    	
@@ -589,6 +594,7 @@
 	<view-map name="AbsenteeList" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AbsenteeList"/>
 	<view-map name="ReturnCrates" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnCrates"/>
 	<view-map name="CreditInstitutionBilling" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#CreditInstitutionBilling"/>
+	<view-map name="InstitutionBillingConfig" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InstitutionBillingConfig"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>

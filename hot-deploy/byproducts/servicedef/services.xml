@@ -30,6 +30,21 @@
         <attribute name="receiptId" type="String" mode="OUT" optional="true"/>
     </service>
     
+    <service name="createInvoiceForItems" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForItems">
+        <description>Create Invoice for the list of products and quantities</description>
+        <attribute name="invocieTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyIdFrom" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="productItemsList" type="List" mode="IN" optional="false"/>
+        <attribute name="taxAdjList" type="List" mode="IN" optional="true"/>
+        <attribute name="dueDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    
     <service name="processInstitutionBilling" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processInstitutionBilling">
         <description>Get Rate Amount</description>
@@ -73,6 +88,7 @@
         <description>Cancel Return Items</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentCrates" type="Map" mode="OUT" optional="true"/>
+        <attribute name="shipmentCans" type="Map" mode="OUT" optional="true"/>
     </service>
     
     <service name="processReturnItemsHelper" engine="java"

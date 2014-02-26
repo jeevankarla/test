@@ -555,29 +555,37 @@ public class ByProductServices {
 	                return result;
       		  	}
       		  	BigDecimal crateQty = (BigDecimal)((Map)result.get("shipmentCrates")).get("totalCrates");
+      		  	BigDecimal canQty = (BigDecimal)((Map)result.get("shipmentCans")).get("totalCans");
       		  	
+      		  	List prodQty = FastList.newInstance();
       		  	if(crateQty.compareTo(BigDecimal.ZERO)>0){
     	  		  	Map tempMap = FastMap.newInstance();
     	  		  	tempMap.put("productId", "CRATE");
     	  		  	tempMap.put("quantity", crateQty);
-    	  		  	List prodQty = FastList.newInstance();
     	  		  	prodQty.add(tempMap);
+      		  	}
+      		  	if(canQty.compareTo(BigDecimal.ZERO)>0){
+	  	  		  	Map tempMap = FastMap.newInstance();
+	  	  		  	tempMap.put("productId", "CAN");
+	  	  		  	tempMap.put("quantity", canQty);
+	  	  		  	prodQty.add(tempMap);
+	    		}
+      		  	if(UtilValidate.isNotEmpty(prodQty)){
+	      		  	Map processItemIssuenceCtx = UtilMisc.toMap("userLogin",userLogin);
+		  		  	processItemIssuenceCtx.put("shipmentId", shipmentId);
+		  		  	processItemIssuenceCtx.put("routeId", routeId);
+		  		  	processItemIssuenceCtx.put("effectiveDate", estimatedDeliveryDate);
+		  		  	processItemIssuenceCtx.put("productQtyList", prodQty);
+		
+		  		  	result = dispatcher.runSync("processDispatchReconcilHelper",processItemIssuenceCtx);
+			 		
+		  		  	if (ServiceUtil.isError(result)) {
+		  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
+		  		  		Debug.logError(errMsg , module);
+		  		  	}
+      		  	}
     	  		  	
-    	  		  	Map processItemIssuenceCtx = UtilMisc.toMap("userLogin",userLogin);
-    	  		  	processItemIssuenceCtx.put("shipmentId", shipmentId);
-    	  		  	processItemIssuenceCtx.put("routeId", routeId);
-    	  		  	processItemIssuenceCtx.put("effectiveDate", estimatedDeliveryDate);
-    	  		  	processItemIssuenceCtx.put("productQtyList", prodQty);
-    	
-    	  		  	result = dispatcher.runSync("processDispatchReconcilHelper",processItemIssuenceCtx);
-    		 		
-    	  		  	if (ServiceUtil.isError(result)) {
-    	  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
-    	  		  		Debug.logError(errMsg , module);
-	    	  		  	shipment.set("statusId", "GENERATION_FAIL");
-	         		  	shipment.store();
-	                    return result;
-    	  		  	}
+    	  		  	
     	  		  	/*List invExpr = FastList.newInstance();
     	  		  	List<GenericValue> productStoreFacility = delegator.findList("ProductStoreFacility", EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, "9004"), null, null, null, false);
     	  		  	productStoreFacility = EntityUtil.filterByDate(productStoreFacility, estimatedDeliveryDate);
@@ -617,8 +625,6 @@ public class ByProductServices {
     	  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
     	  		  		Debug.logError(errMsg , module);
     	  		  	}*/
-    	  		  
-      		  	}
             }catch(Exception e){
          	   	Debug.logError(e, "Failed to calculate Crates For Shipment" + shipmentId, module);
          		shipment.set("statusId", "GENERATION_FAIL");
@@ -2839,7 +2845,7 @@ public class ByProductServices {
 			  return result;  
 	    }
 	
-	    /*public static Map<String ,Object> processInstitutionBilling(DispatchContext dctx, Map<String, ? extends Object> context){
+	    public static Map<String ,Object> processInstitutionBilling(DispatchContext dctx, Map<String, ? extends Object> context){
 			  Delegator delegator = dctx.getDelegator();
 		      LocalDispatcher dispatcher = dctx.getDispatcher();       
 		      GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -2857,6 +2863,7 @@ public class ByProductServices {
 		    	  
 		    	  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 		    	  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+		    	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CANCELLED"));
 		    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		    	  List<GenericValue> periodBilling = delegator.findList("PeriodBilling", condition, null, null, null, false);
 		    	  if(UtilValidate.isNotEmpty(periodBilling)){
@@ -2946,8 +2953,21 @@ public class ByProductServices {
 		    	  String invoiceId = (String)result.get("invoiceId");
 		    	  Debug.log("created invoiceId ###################"+invoiceId);
 			  }catch (Exception e) {
-				  Debug.logError(e, "Error creating Returns", module);		  
-				  return ServiceUtil.returnError("Error creating Returns");			  
+				  Debug.logError(e, "Error creating Invoice for credit institution", module);		  
+				  return ServiceUtil.returnError("Error creating Invoice for credit institution");			  
+			  }
+			   
+			  try{
+					GenericValue newEntity = delegator.makeValue("PeriodBilling");
+					newEntity.set("billingTypeId", "CR_INST_BILLING");
+					newEntity.set("customTimePeriodId", customTimePeriodId);
+					newEntity.set("statusId", "GENERATED");
+					newEntity.set("facilityId", facilityId);
+					newEntity.create();
+					
+			  }catch(GenericEntityException e){
+				  Debug.logError(e, "Error creating period billing", module);		  
+				  return ServiceUtil.returnError("Error creating period billing");	
 			  }
 			  return result;  
 	    }    
@@ -3025,7 +3045,7 @@ public class ByProductServices {
 				  return ServiceUtil.returnError("Error creating Returns");			  
 			  }
 			  return result;  
-	    }*/
+	    }
 	    
 	public static Map<String, Object> updateCrateQtyConfig(DispatchContext dctx, Map<String, ? extends Object> context){
 	    Delegator delegator = dctx.getDelegator();

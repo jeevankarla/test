@@ -3653,7 +3653,7 @@ public class ByProductNetworkServices {
 	            BigDecimal price  = orderItem.getBigDecimal("unitListPrice"); 
 	            BigDecimal revenue = price.multiply(quantity);
 	            totalRevenue = totalRevenue.add(revenue);
-	            packetQuantity = packetQuantity.add(orderItem.getBigDecimal("quantity"));
+	            totalPacket = totalPacket.add(packetQuantity);
 	            quantity = quantity.multiply(orderItem.getBigDecimal("quantityIncluded"));
 	    		totalQuantity = totalQuantity.add(quantity);   
 	    		BigDecimal fat = ZERO;
@@ -4528,7 +4528,8 @@ public class ByProductNetworkServices {
 	      		Debug.logError(e, module);
 	   		} 
 	      	return productList;
-	   	}  
+	   	}
+	    
 	    public static Map calculateCratesForShipment(DispatchContext dctx, Map<String, ? extends Object> context){
 	    	//Delegator delegator ,LocalDispatcher dispatcher ,GenericValue userLogin,String paymentDate,String invoiceStatusId ,String facilityId ,String paymentMethodTypeId ,boolean onlyCurrentDues ,boolean isPendingDues){
 			//TO DO:for now getting one shipment id  we need to get pmand am shipment id irrespective of Shipment type Id
@@ -4550,16 +4551,12 @@ public class ByProductNetworkServices {
 		    	Debug.logError("Error fetching shipment details", module);
 	    		return ServiceUtil.returnError("Error fetching shipment details"); 
 		    }
+		    Map resultCrates = (Map)getProductCratesAndCans(dctx, UtilMisc.toMap("userLogin",userLogin, "saleDate", shipDate));
 		    
-		    List<GenericValue> crateIndentProductList = ProductWorker.getProductsByCategory(delegator ,"CRATE_INDENT" ,UtilDateTime.getDayStart(shipDate));
-		    List crateProductIds = EntityUtil.getFieldListFromEntityList(crateIndentProductList, "productId", true);
-		    /*Map prodQtyIncMap = FastMap.newInstance();
-		    for(GenericValue crateIndentProduct : crateIndentProductList){
-		    	prodQtyIncMap.put(crateIndentProduct.getString("productId"), crateIndentProduct.getBigDecimal("quantityIncluded"));
-		    }*/
+		    Map piecesPerCrate = (Map)resultCrates.get("piecesPerCrate");
+		    Map piecesPerCan = (Map)resultCrates.get("piecesPerCan");
 		    
 		    List facilityList = FastList.newInstance();
-		    exprList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, crateProductIds));		
 			exprList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 			EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);				
 			
@@ -4568,27 +4565,76 @@ public class ByProductNetworkServices {
 				facilityList = EntityUtil.getFieldListFromEntityList(shippedOrderItems, "originFacilityId", true);
 				String facilityId = "";
 				BigDecimal totalCrateQty = BigDecimal.ZERO;
+				BigDecimal totalCanQty = BigDecimal.ZERO;
 				Map partyCratesMap = FastMap.newInstance();
+				Map partyCansMap = FastMap.newInstance();
+				Map productQtyInc = FastMap.newInstance();
 				for(int i=0;i<facilityList.size();i++){
 					facilityId = (String)facilityList.get(i);
 					List<GenericValue> facilityOrderItems = EntityUtil.filterByCondition(shippedOrderItems, EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
 					int partyCrates = 0;
 					BigDecimal totalQty = BigDecimal.ZERO;
+					Map prodQtyMap = FastMap.newInstance();
+					String productId = "";
 					for(GenericValue orderItem : facilityOrderItems){
 						BigDecimal qtyInc = orderItem.getBigDecimal("quantityIncluded");
+						productId = orderItem.getString("productId");
 						BigDecimal qty = orderItem.getBigDecimal("quantity");
-						totalQty = totalQty.add((qty.multiply(qtyInc)));
+						productQtyInc.put(productId, qtyInc);
+						if(prodQtyMap.containsKey(productId)){
+							BigDecimal tempQty = (BigDecimal)prodQtyMap.get(productId);
+							tempQty = tempQty.add(qty);
+							prodQtyMap.put(productId, tempQty);
+						}
+						else{
+							prodQtyMap.put(productId, qty);
+						}
 					}
-					partyCrates = (totalQty.divide(BigDecimal.valueOf(12.0))).intValue();
-					partyCratesMap.put(facilityId, partyCrates);
-					totalCrateQty = totalCrateQty.add(totalQty);
+					int partyTotalCrate = 0;
+					int partyTotalCan = 0;
+					Iterator prodQtyIter = prodQtyMap.entrySet().iterator();
+					BigDecimal totalCalCrates = BigDecimal.ZERO;
+					BigDecimal totalCalCans = BigDecimal.ZERO;
+					while (prodQtyIter.hasNext()) {
+						Map.Entry prodQtyEntry = (Entry) prodQtyIter.next();
+			        	productId = (String)prodQtyEntry.getKey();
+			        	BigDecimal qty = (BigDecimal)prodQtyEntry.getValue();
+			        	BigDecimal prodCrates = BigDecimal.ZERO;
+			        	BigDecimal prodCans = BigDecimal.ZERO;
+			        	//calculate crates
+			        	if(UtilValidate.isNotEmpty(piecesPerCrate) && piecesPerCrate.containsKey(productId)){
+			        		prodCrates = (qty.divide((BigDecimal)piecesPerCrate.get(productId),2,BigDecimal.ROUND_HALF_UP));
+			        	}
+			        	BigDecimal tempTotalCrates = ((new BigDecimal(partyTotalCrate)).add(prodCrates));
+			        	partyTotalCrate = ((new BigDecimal(partyTotalCrate)).add(prodCrates)).intValue();
+			        	totalCalCrates = totalCalCrates.add(tempTotalCrates);
+			        	
+			        	//calculate cans
+			        	if(UtilValidate.isNotEmpty(piecesPerCan) && piecesPerCan.containsKey(productId)){
+			        		prodCans = (qty.divide((BigDecimal)piecesPerCan.get(productId),2,BigDecimal.ROUND_HALF_UP));
+			        	}
+			        	BigDecimal tempTotalCans = ((new BigDecimal(partyTotalCan)).add(prodCans));
+			        	partyTotalCan = ((new BigDecimal(partyTotalCrate)).add(prodCrates)).intValue();
+			        	totalCalCans = totalCalCans.add(tempTotalCans);
+			        	
+					}
+					partyCratesMap.put(facilityId, partyTotalCrate);
+					totalCrateQty = totalCrateQty.add(totalCalCrates);
+					
+					partyCansMap.put(facilityId, partyTotalCan);
+					totalCanQty = totalCanQty.add(totalCalCans);
 				}
-				BigDecimal totCrate = (totalCrateQty.divide(BigDecimal.valueOf(12))).setScale(0, BigDecimal.ROUND_CEILING);
+				BigDecimal totCrate = (totalCrateQty).setScale(0, BigDecimal.ROUND_CEILING);
+				BigDecimal totCan = (totalCanQty).setScale(0, BigDecimal.ROUND_CEILING);
+				partyCansMap.put("totalCans", totCan);
+				result.put("shipmentCans", partyCansMap);
+				
 				partyCratesMap.put("totalCrates", totCrate);
 				result.put("shipmentCrates", partyCratesMap);
+				Debug.log("result ###################################"+result);
 			}catch (Exception e) {
-				Debug.logError("Error fetching shipped order Items", module);
-	    		return ServiceUtil.returnError("Error fetching shipped order Items"); 
+				Debug.logError("Error calculating crates for the shipment", module);
+	    		return ServiceUtil.returnError("Error calculating crates for the shipment"); 
 			}
 			return result;
 	    }
@@ -4991,6 +5037,45 @@ public class ByProductNetworkServices {
 				Debug.logError(e, module);	
 	            return ServiceUtil.returnError(e.toString());			
 			}
+	        return result;
+	    }
+	    public static Map<String, Object> getProductCratesAndCans(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+	    	LocalDispatcher dispatcher = ctx.getDispatcher();
+			GenericValue userLogin =(GenericValue)context.get("userLogin");
+			Timestamp saleDate = (Timestamp) context.get("saleDate");
+			Map result = ServiceUtil.returnSuccess();
+			if(UtilValidate.isEmpty(saleDate)){
+				saleDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+			}
+			List conditionList = FastList.newInstance();
+			Map cratesMap = FastMap.newInstance();
+			Map cansMap = FastMap.newInstance();
+			try{
+				
+				List attrNameList = UtilMisc.toList("CRATE", "CAN");
+				List<GenericValue> productCratesCans = delegator.findList("ProductAttribute", EntityCondition.makeCondition("attrName", EntityOperator.IN, attrNameList), null, null, null, false);
+				
+				String attrName = "";
+				for(GenericValue productAttr : productCratesCans){
+					attrName = productAttr.getString("attrName");
+					BigDecimal attrValue = new BigDecimal(productAttr.getString("attrValue"));
+					
+					if(attrName.equals("CRATE")){
+						cratesMap.put(productAttr.getString("productId"), attrValue);
+					}
+					else{
+						cansMap.put(productAttr.getString("productId"), attrValue);
+					}
+				}
+				
+			}catch(Exception e){
+				Debug.logError(e, module);
+	    		return ServiceUtil.returnError(e.toString());
+			}
+			result.put("piecesPerCrate",cratesMap);
+			result.put("piecesPerCan",cansMap);
+			Debug.log("result #############################"+result);
 	        return result;
 	    }
 

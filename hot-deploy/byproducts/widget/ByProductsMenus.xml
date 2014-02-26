@@ -330,7 +330,11 @@
         <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
             <link target="CreditInstitutionBilling"/>
         </menu-item>
-        <menu-item name="Payments" title="${uiLabelMap.DuesPayment}"> 
+        
+        <menu-item name="InstitutionBillingConfig" title="Cr. Inst. Billing Config">
+            <link target="InstitutionBillingConfig"/>
+        </menu-item>
+    	<menu-item name="Payments" title="${uiLabelMap.DuesPayment}"> 
        		<condition>
                 <or>
 					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
