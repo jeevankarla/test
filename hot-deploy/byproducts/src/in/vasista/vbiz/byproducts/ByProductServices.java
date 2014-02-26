@@ -378,6 +378,13 @@ public class ByProductServices {
            	subscriptionProductsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, orderBy, null, false);
            }catch (GenericEntityException e) {
                Debug.logError(e, "Problem getting Subscription Products", module);
+               shipment.set("statusId", "GENERATION_FAIL");
+    		  	try{
+    		  		shipment.store();
+    		  	}catch (Exception ex) {
+					// TODO: handle exception
+				}
+               return ServiceUtil.returnError(e.toString());
                //::TODO:: set shipment status
            }
            
@@ -408,11 +415,20 @@ public class ByProductServices {
      		  if (ServiceUtil.isError(result)) {
      			  String errMsg =  ServiceUtil.getErrorMessage(result);
      			  Debug.logError(errMsg , module);
+     			 shipment.store();
+     			 shipment.set("statusId", "GENERATION_FAIL");
+                 return result;
      		  }
      		  
      	  }catch (Exception e) {
-     		  	Debug.logError(e, "Problem updating ItemIssuance for Route " + routeId, module);     
-     	  		
+     		  	Debug.logError(e, "Problem updating ItemIssuance for Route " + routeId, module); 
+     		  	shipment.set("statusId", "GENERATION_FAIL");
+     		  	try{
+     		  		shipment.store();
+     		  	}catch (Exception ex) {
+					// TODO: handle exception
+				}
+                return ServiceUtil.returnError(e.toString());
      	  }	
            
            String tempSubId = "";
@@ -534,6 +550,9 @@ public class ByProductServices {
       		  	if (ServiceUtil.isError(result)) {
       		  		String errMsg =  ServiceUtil.getErrorMessage(result);
       		  		Debug.logError(errMsg , module);
+	      		  	shipment.set("statusId", "GENERATION_FAIL");
+	     		  	shipment.store();
+	                return result;
       		  	}
       		  	BigDecimal crateQty = (BigDecimal)((Map)result.get("shipmentCrates")).get("totalCrates");
       		  	
@@ -555,8 +574,10 @@ public class ByProductServices {
     	  		  	if (ServiceUtil.isError(result)) {
     	  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
     	  		  		Debug.logError(errMsg , module);
+	    	  		  	shipment.set("statusId", "GENERATION_FAIL");
+	         		  	shipment.store();
+	                    return result;
     	  		  	}
-    	  		  
     	  		  	/*List invExpr = FastList.newInstance();
     	  		  	List<GenericValue> productStoreFacility = delegator.findList("ProductStoreFacility", EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, "9004"), null, null, null, false);
     	  		  	productStoreFacility = EntityUtil.filterByDate(productStoreFacility, estimatedDeliveryDate);
@@ -600,6 +621,12 @@ public class ByProductServices {
       		  	}
             }catch(Exception e){
          	   	Debug.logError(e, "Failed to calculate Crates For Shipment" + shipmentId, module);
+         		shipment.set("statusId", "GENERATION_FAIL");
+     		  	try{
+     		  		shipment.store();
+     		  	}catch (Exception ex) {
+					// TODO: handle exception
+				}
            		return ServiceUtil.returnError("Failed to calculate Crates For Shipment" + shipmentId + ": " + e);
             }
         }
@@ -657,8 +684,11 @@ public class ByProductServices {
 		EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		
 		List<GenericValue> partyClassificationList = null;
+		GenericValue shipment = null;
 		try{
 			partyClassificationList = delegator.findList("PartyClassification", condition, null, null, null, false);
+			shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+			
 		}catch(GenericEntityException e){
 			Debug.logError("No partyRole found for given partyId:"+ partyId, module);
 			return ServiceUtil.returnError("No partyRole found for given partyId");
@@ -690,6 +720,12 @@ public class ByProductServices {
             cart.setUserLogin(userLogin, dispatcher);
         } catch (Exception exc) {
             Debug.logError("Error setting userLogin in the cart: " + exc.getMessage(), module);
+            try{
+            	 shipment.set("statusId", "GENERATION_FAIL");
+      		  	shipment.store();
+            }catch (Exception e) {
+				// TODO: handle exception
+			}
     		return ServiceUtil.returnError("Error setting userLogin in the cart: " + exc.getMessage());          	            
         }      
         Iterator<GenericValue> i = subscriptionProductsList.iterator();
@@ -758,7 +794,13 @@ public class ByProductServices {
             		
                 } catch (Exception exc) {
                     Debug.logError("Error adding product with id " + subscriptionProduct.getString("productId") + " to the cart: " + exc.getMessage(), module);
-            		return ServiceUtil.returnError("Error adding product with id " + subscriptionProduct.getString("productId") + " to the cart: " + exc.getMessage());          	            
+                    try{
+                   	 shipment.set("statusId", "GENERATION_FAIL");
+             		  	shipment.store();
+                   }catch (Exception e) {
+       				// TODO: handle exception
+       			  }
+                    return ServiceUtil.returnError("Error adding product with id " + subscriptionProduct.getString("productId") + " to the cart: " + exc.getMessage());          	            
                 }
                
             }  
@@ -775,6 +817,12 @@ public class ByProductServices {
         	applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
 		} catch (GenericEntityException e) {
 			Debug.logError(e, "Failed to retrive InventoryItem ", module);
+			try{
+           	 shipment.set("statusId", "GENERATION_FAIL");
+     		  	shipment.store();
+           }catch (Exception ex) {
+				// TODO: handle exception
+			}
     		return ServiceUtil.returnError("Failed to retrive InventoryItem " + e);
 		}
 		List applicableTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
@@ -790,6 +838,12 @@ public class ByProductServices {
         	prodPriceType = delegator.findList("ProductPriceAndType", condition1, null, null, null, false);
 		} catch (GenericEntityException e) {
 			Debug.logError(e, "Failed to retrive InventoryItem ", module);
+			try{
+           	 shipment.set("statusId", "GENERATION_FAIL");
+     		  	shipment.store();
+           }catch (Exception ex) {
+				// TODO: handle exception
+			}
     		return ServiceUtil.returnError("Failed to retrive InventoryItem " + e);
 		}
        
@@ -798,6 +852,12 @@ public class ByProductServices {
 		} catch (GeneralException e) {
 			// TODO Auto-generated catch block
 			Debug.logError(e, "Failed to add tax amount ", module);
+			try{
+           	 shipment.set("statusId", "GENERATION_FAIL");
+     		  	shipment.store();
+           }catch (Exception ex) {
+				// TODO: handle exception
+			}
     		return ServiceUtil.returnError("Failed to add tax amount  " + e);
 		}
         Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
@@ -811,12 +871,24 @@ public class ByProductServices {
    	  	 		Map result = dispatcher.runSync("adjustEmployeeSubsidyForOrder",empSubdCtx);  		  		 
    	  	 		if (ServiceUtil.isError(result)) {
    	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
-   	  	 			Debug.logError(errMsg , module);       				
+   	  	 			Debug.logError(errMsg , module);
+   	  	 		try{
+               	 shipment.set("statusId", "GENERATION_FAIL");
+         		  	shipment.store();
+                }catch (Exception e) {
+   				// TODO: handle exception
+   			    }
    	  	 			return result;
    	  	 		}
 
    	  	 	}catch (Exception e) {
-   	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);     
+   	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);
+   	  			try{
+               	 shipment.set("statusId", "GENERATION_FAIL");
+         		  	shipment.store();
+               }catch (Exception ex) {
+   				// TODO: handle exception
+   			}
    	  			  return resultMap;			  
    	  	 	}
         }
@@ -827,12 +899,24 @@ public class ByProductServices {
 	  	 		Map result = dispatcher.runSync("adjustRoundingDiffForOrder",roundAdjCtx);  		  		 
 	  	 		if (ServiceUtil.isError(result)) {
 	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
-	  	 			Debug.logError(errMsg , module);       				
+	  	 			Debug.logError(errMsg , module);
+	  	 			try{
+	  	            	 shipment.set("statusId", "GENERATION_FAIL");
+	  	      		  	shipment.store();
+	  	            }catch (Exception e) {
+	  					// TODO: handle exception
+	  				}
 	  	 			return result;
 	  	 		}
 
 	  	 	}catch (Exception e) {
-	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);     
+	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);
+	  			 try{
+	            	 shipment.set("statusId", "GENERATION_FAIL");
+	      		  	shipment.store();
+	              }catch (Exception ex) {
+					// TODO: handle exception
+				  }
 	  			  return resultMap;			  
 	  	 	}
         // approve the order
@@ -868,6 +952,14 @@ public class ByProductServices {
     		          
                 }catch (Exception e) {
                     Debug.logError(e, module);
+                    try{
+                   	    shipment.set("statusId", "GENERATION_FAIL");
+             		  	shipment.store();
+                   }catch (Exception ex) {
+       				// TODO: handle exception
+       			}
+                 return ServiceUtil.returnError(e.toString()); 
+                   
                 }
            /* }*/
             
