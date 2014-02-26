@@ -4934,29 +4934,27 @@ public class ByProductNetworkServices {
 	    }
 	    public static Map<String, Object> getPartyProfileDafult(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
-			String boothId = (String) context.get("boothId");
+			List boothIds = (List) context.get("boothIds");
 			Timestamp supplyDate = (Timestamp) context.get("supplyDate");
 			if(UtilValidate.isEmpty(supplyDate)){
 				supplyDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 			}
 	        Map<String, Object> result = FastMap.newInstance(); 
 	        GenericValue boothFacility;
-	        GenericValue partyProfileDafault=null;
+	        Map  partyProfileFacilityMap=FastMap.newInstance(); 
 	        try {
-	        	boothFacility = delegator.findOne("Facility",true, UtilMisc.toMap("facilityId", boothId));
-	        	if (boothFacility == null) {
-	                Debug.logError("Invalid boothId " + boothId, module);
-	                return ServiceUtil.returnError("Invalid boothId " + boothId);         		
-	        	}
-	        	List condList = FastList.newInstance();
-	        	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,boothFacility.getString("ownerPartyId")));
-	        	EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
-	        	List<GenericValue> partyProfileDefaultList = delegator.findList("PartyProfileDefault", cond, null, null, null, true);
+	        	List facCondList = FastList.newInstance();
+	        	facCondList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,boothIds));
+	        	EntityCondition facCond = EntityCondition.makeCondition(facCondList ,EntityOperator.AND);
+	        	List<GenericValue> facilityList = delegator.findList("Facility", facCond, null, null, null, true);
+	        	List partyIdsList = EntityUtil.getFieldListFromEntityList(facilityList, "ownerPartyId", true);
+	        	
+	        	List<GenericValue> partyProfileDefaultList = delegator.findList("PartyProfileDefaultAndFacility", EntityCondition.makeCondition("partyId", EntityOperator.IN ,partyIdsList), null, null, null, true);
 	        	partyProfileDefaultList = EntityUtil.filterByDate(partyProfileDefaultList, supplyDate);
-    			 if(UtilValidate.isNotEmpty(partyProfileDefaultList)){
-    				  partyProfileDafault = EntityUtil.getFirst(partyProfileDefaultList);
-    			 }
-    			 result.put("partyProfileDafault",partyProfileDafault);
+	        	for(GenericValue partyProfileDafault:partyProfileDefaultList){
+	        		partyProfileFacilityMap.put(partyProfileDafault.getString("facilityId"), partyProfileDafault.getString("defaultPayMeth"));
+	        	}
+    			 result.put("partyProfileFacilityMap",partyProfileFacilityMap);
 	        }catch(GenericEntityException e){
 				Debug.logError(e, module);	
 	            return ServiceUtil.returnError(e.toString());			
