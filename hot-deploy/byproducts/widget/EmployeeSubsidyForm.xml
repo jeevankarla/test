@@ -28,7 +28,7 @@
     </form>
      <form name="EmployeeSubsidyForm" type="single" target="createEmployee">
     	<field name="facilityId" title="Retailer Id" required-field="true"><text/></field>    	
-        <field name="partyId" title="Employee Id" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Employee Id" required-field="true"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="productId" title="product Id" required-field="true"><lookup target-form-name="LookupProduct"/></field>
           <field name="shipmentTypeId" title="${uiLabelMap.SupplyTime}" required-field="true">
             <drop-down>
