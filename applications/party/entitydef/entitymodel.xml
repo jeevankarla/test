@@ -2378,19 +2378,29 @@ under the License.
       </relation>
     </entity>
    
-     <view-entity entity-name="PartyProfileDefaultAndFacility"
+     <view-entity entity-name="PartyProfileDefaultAndFacilityAndMethodType"
             package-name="org.ofbiz.party.party"
-            title="PartyProfileDefaultAndFacility (PartyProfileDefault,Facility) View Entity">
+            title="PartyProfileDefaultAndFacility (PartyProfileDefault,Facility,PaymentMethodType) View Entity">
       <member-entity entity-alias="PPD" entity-name="PartyProfileDefault"/>
       <member-entity entity-alias="FAC" entity-name="Facility"/>
+       <member-entity entity-alias="PMT" entity-name="PaymentMethodType"/>
+      
       <alias-all entity-alias="PPD"/>
       <alias entity-alias="FAC" name="facilityId" />
+      <alias entity-alias="PMT" name="description" />
+      
      
       <view-link entity-alias="FAC" rel-entity-alias="PPD" rel-optional="true">
         <key-map field-name="ownerPartyId"  rel-field-name="partyId" />
       </view-link>
+      <view-link entity-alias="PPD" rel-entity-alias="PMT" rel-optional="true">
+        <key-map field-name="defaultPayMeth"  rel-field-name="paymentMethodTypeId" />
+      </view-link>
       <relation  type="one-nofk" rel-entity-name="Facility">
         <key-map field-name="ownerPartyId"  rel-field-name="partyId"/>
+      </relation>
+       <relation  type="one-nofk" rel-entity-name="PaymentMethodType">
+        <key-map field-name="defaultPayMeth"  rel-field-name="paymentMethodTypeId"/>
       </relation>
     </view-entity>
     
