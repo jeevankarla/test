@@ -115,22 +115,10 @@ under the License.
         <response name="error" type="view" value="BulkCardSale"/>
     </request-map>
     
-    <request-map uri="FacilitySearchResults">
-        <security https="true" auth="false"/>
-        <response name="success" type="view" value="FacilitySearchResults"/>
-    </request-map>
-     <request-map uri="FacilityProfile">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FacilityProfile"/>
-    </request-map>
-    <request-map uri="FacilityOverView">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FacilityProfile"/>
-    </request-map>
-    <request-map uri="EditFacility">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditFacility"/>
-    </request-map>
+  
+    
+    
+   
     <request-map uri="createNewFacility"><security https="true" auth="true"/><response name="success" type="view" value="createNewFacility"/></request-map>
     <request-map uri="CreateBooth">
         <security https="true" auth="true"/>
@@ -144,18 +132,9 @@ under the License.
         <response name="success" type="view" value="EditFacility"/>
         <response name="error" type="view" value="EditFacility"/>
     </request-map>
-    <request-map uri="FacilityChildren">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FacilityChildren"/>
-    </request-map>
- 
+   
       
-    <request-map uri="CreateFacility">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createFacility"/>
-        <response name="success" type="view" value="EditFacility"/>
-        <response name="error" type="view" value="EditFacility"/>
-    </request-map>
+  
     <request-map uri="UpdateFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFacility"/>
@@ -2005,14 +1984,7 @@ under the License.
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilityTree"/>
-
-    <view-map name="FindFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
-    <view-map name="FacilitySearchResults" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilitySearchResults"/>
-    <view-map name="FacilityProfile" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilityProfile"/>
-    <view-map name="EditFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacility"/>
-    <view-map name="FacilityChildren" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilityChildren"/>
-    <view-map name="EditFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacility"/>
-    <view-map name="createNewFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#createNewFacility"/>
+    
     
     <view-map name="FindFacilityTransfers" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityTransfers"/>
     <view-map name="FindFacilityLocation" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityLocation"/>
