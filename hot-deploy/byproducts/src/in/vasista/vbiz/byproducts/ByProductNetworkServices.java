@@ -2360,6 +2360,55 @@ public class ByProductNetworkServices {
 		        result.put("boothIdsList", boothIds);
 		        return result;
 			}
+			public static Map getBoothsRouteMap(Delegator delegator, Map<String, ? extends Object>context){
+				List<String> boothIds = FastList.newInstance(); 
+		    	List<GenericValue> booths = FastList.newInstance();
+		    	Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
+		    	String boothCategory = (String)context.get("boothCategory");
+		    	String facilityId = (String)context.get("facilityId");
+		    	Map boothRouteIdsMap =FastMap.newInstance(); 
+		    	
+		    	if(UtilValidate.isEmpty(effectiveDate)){
+		    		effectiveDate = UtilDateTime.nowTimestamp();
+		    	}
+		    	 String facilityTypeId="";
+		    	
+		    	try {
+		    		List condList = FastList.newInstance();
+		    		//get type of Facility
+		    		GenericValue facilityDetail = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), true);	
+			    	if(UtilValidate.isNotEmpty(facilityDetail)){
+			    	facilityTypeId= facilityDetail.getString("facilityTypeId");
+			    	}
+			    	
+		    		if(UtilValidate.isNotEmpty(boothCategory)){
+		    			condList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS ,boothCategory));
+		    		}
+		        	condList.add(EntityCondition.makeCondition("facilityGroupTypeId", EntityOperator.EQUALS ,"RT_BOOTH_GROUP"));
+		        	if((UtilValidate.isNotEmpty(facilityTypeId))&& facilityTypeId.equals("BOOTH")){
+		        		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS ,facilityId));
+		        	}
+		        	if((UtilValidate.isNotEmpty(facilityTypeId))&& facilityTypeId.equals("ROUTE")){
+		        		condList.add(EntityCondition.makeCondition("ownerFacilityId", EntityOperator.EQUALS ,facilityId));
+		        	}
+		        	
+		        	EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
+		        	booths = delegator.findList("FacilityGroupAndMemberAndFacility", cond, null, null, null, true);
+		        	 booths = EntityUtil.filterByDate(booths, effectiveDate); 
+		        	 for(GenericValue facilityBooth: booths){
+		        	 boothRouteIdsMap.put(facilityBooth.getString("facilityId"),facilityBooth.getString("ownerFacilityId"));
+		        	 }
+		        	 boothIds = EntityUtil.getFieldListFromEntityList(booths, "facilityId", true);
+		       
+		    	} catch (GenericEntityException e) {
+		            Debug.logError(e, module);
+		        }
+		    	Map<String, Object> result = ServiceUtil.returnSuccess(); 
+		    	result.put("boothsList", booths);
+		        result.put("boothIdsList", boothIds);
+		        result.put("boothRouteIdsMap", boothRouteIdsMap);
+		        return result;
+			}
 		// This will return the mapping of zone to booths (for all zones) 
 			// e.g. {"TR": {"name": "Tarnaka", "boothIds":["100","101"]},...}	
 		public static Map<String, Object> getAllZonesBoothsMap(Delegator delegator){
@@ -2693,6 +2742,8 @@ public class ByProductNetworkServices {
 	        String paymentDate = (String) context.get("paymentDate");
 	        Timestamp fromDate = UtilDateTime.nowTimestamp();
 	        Timestamp thruDate = UtilDateTime.nowTimestamp();
+	        List facilityIdsList=FastList.newInstance();
+	        Map boothRouteIdsMap = FastMap.newInstance();
 	        
 	        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
 	        List paymentIds = (List) context.get("paymentIds");
@@ -2704,6 +2755,12 @@ public class ByProductNetworkServices {
 	        	boothsPaymentsDetail = getCurrentDuesBoothPaidPayments( dctx , context);
 	        	return boothsPaymentsDetail;
 	        }
+	        Map boothRouteResultMap =getBoothsRouteMap(delegator,UtilMisc.toMap("facilityId",facilityId,"effectiveDate",fromDate));
+			facilityIdsList=(List)boothRouteResultMap.get("boothIdsList");
+			//get All booths RouteIds
+			if(UtilValidate.isNotEmpty(boothRouteResultMap)){
+				boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
+			}
 			Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
 			if(paymentDate != null) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -2736,9 +2793,9 @@ public class ByProductNetworkServices {
 						return ServiceUtil.returnError("facilityId '"+facilityId+ "'is not a Booth or Zone ");
 					}
 					if(facilityDetail.getString("facilityTypeId").equals("ZONE")){					
-						exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, getZoneBooths(delegator,facilityId)));
+						exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIdsList));
 					}else if (facilityDetail.getString("facilityTypeId").equals("ROUTE")){
-						exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, getRouteBooths(delegator,facilityId)));
+						exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIdsList));
 					}else{
 						exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 					}
@@ -2771,6 +2828,9 @@ public class ByProductNetworkServices {
 						tempFacilityId = boothPayment.getString("facilityId");
 						tempPayment.put("facilityId", boothPayment.getString("facilityId"));
 						tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
+						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))) {
+							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
+						}
 						tempPayment.put("paymentDate",  boothPayment.getTimestamp("paymentDate"));
 						tempPayment.put("paymentId",  boothPayment.getString("paymentId"));
 						tempPayment.put("paymentMethodTypeId", boothPayment.getString("paymentMethodTypeId"));				
@@ -2784,6 +2844,9 @@ public class ByProductNetworkServices {
 						tempPayment =FastMap.newInstance();
 						tempPayment.put("facilityId", boothPayment.getString("facilityId"));
 						tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
+						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))) {
+							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
+						}
 						tempPayment.put("paymentDate",  boothPayment.getTimestamp("paymentDate"));
 						tempPayment.put("paymentId",  boothPayment.getString("paymentId"));
 						tempPayment.put("paymentMethodTypeId", boothPayment.getString("paymentMethodTypeId"));				
@@ -2989,21 +3052,23 @@ public class ByProductNetworkServices {
 				try{
 					Map facilityOwner = FastMap.newInstance();
 					if(UtilValidate.isEmpty(facilityId)){
-						return ServiceUtil.returnSuccess();
-						
-					}
-					GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
-					if(facility.getString("facilityTypeId").equals("ROUTE")){
-						facilityIds = getRouteBooths(delegator,facilityId);
-					}
-					else{
-						 facilityIds.add(facilityId);
+						//return ServiceUtil.returnSuccess();
+					 facilityIds = (List)getAllBooths(delegator).get("boothsList");
+					}else{
+					    GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
+						if(facility.getString("facilityTypeId").equals("ROUTE")){
+							facilityIds = getRouteBooths(delegator,facilityId);
+						}else{
+							 facilityIds.add(facilityId);
+						}
 					}
 					List<GenericValue> facilityOwnerParty = delegator.findList("Facility",EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds) , null, UtilMisc.toList("facilityId"), null, false);
 					List ownerPartyIds = EntityUtil.getFieldListFromEntityList(facilityOwnerParty, "ownerPartyId", false);
 					for(GenericValue eachBooth : facilityOwnerParty){
 						facilityOwner.put(eachBooth.getString("ownerPartyId"), eachBooth.getString("facilityId"));
 					}
+					//PartyProfileDefaultAndFacilityAndMethodType
+					
 					List paymentTypeConditionList = UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.IN, ownerPartyIds));
 					paymentTypeConditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
 					paymentTypeConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(fromDate))));
@@ -3013,12 +3078,15 @@ public class ByProductNetworkServices {
 					for(GenericValue eachBoothMeth : paymentTypeList){
 						String owner = eachBoothMeth.getString("partyId");
 						facilityPaymentMethod.put(facilityOwner.get(owner), eachBoothMeth.getString("defaultPayMeth"));
+						//facilityPaymentDescrption.put(facilityOwner.get(owner), eachBoothMeth.getString("defaultPayMeth"));
 					}
 					result.put("partyPaymentMethod", facilityPaymentMethod);
 		        }catch (GenericEntityException e) {
 		            	Debug.logError(e, module);
 		         }
 	    	return result;
+	    	
+	    	
 		}
 	    public static Map getBoothReceivablePaymentsForPeriod(DispatchContext dctx, Map<String, ? extends Object> context){
 	    	//Delegator delegator ,LocalDispatcher dispatcher ,GenericValue userLogin,String paymentDate,String invoiceStatusId ,String facilityId ,String paymentMethodTypeId ,boolean onlyCurrentDues ,boolean isPendingDues){
@@ -3038,6 +3106,9 @@ public class ByProductNetworkServices {
 		    List exprListForParameters = FastList.newInstance();
 			List boothPaymentsList = FastList.newInstance();
 			List boothOrdersList = FastList.newInstance();
+			List facilityIdsList = FastList.newInstance();
+			Map boothRouteResultMap = FastMap.newInstance();
+			Map boothRouteIdsMap = FastMap.newInstance();
 			Set shipmentIds = FastSet.newInstance();		 
 			Map boothsPaymentsDetail = FastMap.newInstance();
 			BigDecimal invoicesTotalAmount = BigDecimal.ZERO;
@@ -3045,7 +3116,16 @@ public class ByProductNetworkServices {
 			if(thruDate != null){				
 				shipmentIds = new HashSet(getShipmentIds(delegator ,fromDate,thruDate));			
 			}
-			Map paymentMethod = (Map)getPaymentMethodTypeForBooth(dctx, UtilMisc.toMap("facilityId", facilityId, "userLogin", userLogin)).get("partyPaymentMethod");
+			boothRouteResultMap =getBoothsRouteMap(delegator,UtilMisc.toMap("facilityId",facilityId,"effectiveDate",fromDate));
+			facilityIdsList=(List)boothRouteResultMap.get("boothIdsList");
+			
+			if(UtilValidate.isNotEmpty(boothRouteResultMap)){
+				boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
+			}
+			
+			 Map partyPaymentMethodDesc=(Map)getPartyProfileDafult(dispatcher.getDispatchContext(),UtilMisc.toMap("boothIds", UtilMisc.toList(facilityIdsList),"supplyDate",fromDate)).get("partyPaymentMethodDesc");
+			 
+			//Map paymentMethod = (Map)getPaymentMethodTypeForBooth(dctx, UtilMisc.toMap("facilityId", facilityId, "userLogin", userLogin,"fromDate",fromDate)).get("partyPaymentMethod");
 			Set currentDayShipments = new HashSet(getShipmentIds(delegator ,UtilDateTime.toDateString(thruDate, "yyyy-MM-dd HH:mm:ss"),null));
 			boolean enableSoCrPmntTrack = Boolean.FALSE;
 			
@@ -3072,10 +3152,11 @@ public class ByProductNetworkServices {
 						Debug.logInfo("facilityId '"+facilityId+ "'is not a Booth or Zone ", "");
 						return ServiceUtil.returnError("facilityId '"+facilityId+ "'is not a Booth or Zone ");
 					}
-					if(facilityDetail.getString("facilityTypeId").equals("ZONE")){					
-						exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, getZoneBooths(delegator,facilityId)));
+					
+					if(facilityDetail.getString("facilityTypeId").equals("ZONE")){
+						exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN,facilityIdsList ));
 					}else if (facilityDetail.getString("facilityTypeId").equals("ROUTE")){
-						exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, getRouteBooths(delegator,facilityId)));
+						 exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIdsList));
 					}else{
 						exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
 					}
@@ -3085,6 +3166,7 @@ public class ByProductNetworkServices {
 					Debug.logError(e, module);
 				}			
 			}
+			
 			if(invoiceStatusId != null){			
 				exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.EQUALS, invoiceStatusId));
 			}else{
@@ -3115,6 +3197,7 @@ public class ByProductNetworkServices {
 			boothOrdersList.addAll(obInvoiceList);
 			boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("originFacilityId","-estimatedDeliveryDate"));
 			Map<String, Object> totalAmount =FastMap.newInstance();
+			
 			if (!UtilValidate.isEmpty(boothOrdersList)) {
 				List invoiceIds = EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", false);
 				
@@ -3156,9 +3239,12 @@ public class ByProductNetworkServices {
 						tempPayment =FastMap.newInstance();
 						tempPayment.put("facilityId", tempFacilityId);
 						tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
+						if(UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))){
+							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
+						}
 						tempPayment.put("supplyDate",  boothPayment.getTimestamp("estimatedDeliveryDate"));
-						if(UtilValidate.isNotEmpty(paymentMethod)){
-							tempPayment.put("paymentMethodType", paymentMethod.get(tempFacilityId));
+						if(UtilValidate.isNotEmpty(partyPaymentMethodDesc.get(tempFacilityId))){
+							tempPayment.put("paymentMethodType", partyPaymentMethodDesc.get(tempFacilityId));
 						}
 						tempPayment.put("grandTotal", BigDecimal.ZERO);
 						tempPayment.put("totalDue", BigDecimal.ZERO);				
@@ -3170,8 +3256,11 @@ public class ByProductNetworkServices {
 						tempPayment =FastMap.newInstance();
 						tempPayment.put("facilityId", boothPayment.getString("originFacilityId"));
 						tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
-						if(UtilValidate.isNotEmpty(paymentMethod)){
-							tempPayment.put("paymentMethodType", paymentMethod.get(tempFacilityId));
+						if(UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))){
+							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
+						}
+						if(UtilValidate.isNotEmpty(partyPaymentMethodDesc.get(tempFacilityId))){
+							tempPayment.put("paymentMethodType", partyPaymentMethodDesc.get(tempFacilityId));
 						}
 						tempPayment.put("grandTotal", BigDecimal.ZERO);
 						tempPayment.put("totalDue", BigDecimal.ZERO);					
@@ -4759,6 +4848,13 @@ public class ByProductNetworkServices {
 				Debug.logError(e, "Cannot parse date string: " + supplyDate, module);
 	            return ServiceUtil.returnError(e.toString());		   
 			}	
+			//getting default payment methodtype if empty
+			if(UtilValidate.isEmpty(paymentMethodType)){
+				 Map partyProfileFacilityMap=(Map)getPartyProfileDafult(dispatcher.getDispatchContext(),UtilMisc.toMap("boothIds", UtilMisc.toList(facilityId),"supplyDate",paymentTimestamp)).get("partyProfileFacilityMap");
+				if(UtilValidate.isNotEmpty(partyProfileFacilityMap.get(facilityId))){
+				 paymentMethodType=(String)partyProfileFacilityMap.get(facilityId);
+				}
+			}
 			// Do check for only past dues payments
 			if(useFifo){
 				try{
@@ -4904,6 +5000,8 @@ public class ByProductNetworkServices {
 			}
 			 result.put("enablePaymentSms",enablePaymentSms);
 			 result.put("paymentId",paymentId);
+			 result.put("paymentMethodTypeId",paymentMethodType);
+			 
 	        return result;
 	    }  
 	    
@@ -4923,6 +5021,9 @@ public class ByProductNetworkServices {
 	            Debug.logError("No payment amounts found; ", module);
 	            return ServiceUtil.returnError("No payment amounts found; ");			
 			}
+			String paymentMethodType="";
+			Map partyProfileFacilityMap=(Map)getPartyProfileDafult(dispatcher.getDispatchContext(),UtilMisc.toMap("boothIds",boothIds,"supplyDate",UtilDateTime.nowTimestamp())).get("partyProfileFacilityMap");
+			
 			
 			for(int i=0 ; i< boothIds.size() ; i++){
 				String boothId = (String)boothIds.get(i);
@@ -4952,9 +5053,12 @@ public class ByProductNetworkServices {
 	    		Map boothDues = (Map)boothResult.get("boothDues");
 	    		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("userLogin", userLogin);
 	    		paymentCtx.put("paymentMethodTypeId", "CASH_PAYIN");
-	    		if(UtilValidate.isNotEmpty(context.get("paymentMethodTypeId"))){
-	    			paymentCtx.put("paymentMethodTypeId", context.get("paymentMethodTypeId"));
-	    		}
+	    		
+	    		if(UtilValidate.isNotEmpty(partyProfileFacilityMap.get(boothId))){
+	   			 paymentMethodType=(String)partyProfileFacilityMap.get(boothId);
+	   			paymentCtx.put("paymentMethodTypeId", paymentMethodType);
+	   			}
+	    		
 	    		paymentCtx.put("facilityId", boothId);
 	    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
 	            paymentCtx.put("paymentLocationId", paymentLocationId);                                   	    		            
@@ -4988,19 +5092,25 @@ public class ByProductNetworkServices {
 	        Map<String, Object> result = FastMap.newInstance(); 
 	        GenericValue boothFacility;
 	        Map  partyProfileFacilityMap=FastMap.newInstance(); 
+	        Map  partyPaymentMethodDesc=FastMap.newInstance(); 
 	        try {
-	        	List facCondList = FastList.newInstance();
-	        	facCondList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,boothIds));
-	        	EntityCondition facCond = EntityCondition.makeCondition(facCondList ,EntityOperator.AND);
-	        	List<GenericValue> facilityList = delegator.findList("Facility", facCond, null, null, null, true);
+	        	List partyCondList = FastList.newInstance();
+	        	partyCondList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,boothIds));
+	        	partyCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(supplyDate)));
+	        	partyCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(supplyDate))));
+				
+	        	EntityCondition partyCondition = EntityCondition.makeCondition(partyCondList ,EntityOperator.AND);
+	        	/*List<GenericValue> facilityList = delegator.findList("Facility", facCond, null, null, null, true);
 	        	List partyIdsList = EntityUtil.getFieldListFromEntityList(facilityList, "ownerPartyId", true);
-	        	
-	        	List<GenericValue> partyProfileDefaultList = delegator.findList("PartyProfileDefaultAndFacility", EntityCondition.makeCondition("partyId", EntityOperator.IN ,partyIdsList), null, null, null, true);
+	        	*/
+	        	List<GenericValue> partyProfileDefaultList = delegator.findList("PartyProfileDefaultAndFacilityAndMethodType",partyCondition, null, null, null, true);
 	        	partyProfileDefaultList = EntityUtil.filterByDate(partyProfileDefaultList, supplyDate);
 	        	for(GenericValue partyProfileDafault:partyProfileDefaultList){
 	        		partyProfileFacilityMap.put(partyProfileDafault.getString("facilityId"), partyProfileDafault.getString("defaultPayMeth"));
+	        		partyPaymentMethodDesc.put(partyProfileDafault.getString("facilityId"), partyProfileDafault.getString("description"));
 	        	}
     			 result.put("partyProfileFacilityMap",partyProfileFacilityMap);
+    			 result.put("partyPaymentMethodDesc",partyPaymentMethodDesc);
 	        }catch(GenericEntityException e){
 				Debug.logError(e, module);	
 	            return ServiceUtil.returnError(e.toString());			
@@ -5049,7 +5159,7 @@ public class ByProductNetworkServices {
 				saleDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 			}
 			List conditionList = FastList.newInstance();
-			Map cratesMap = FastMap.newInstance();
+			Map<String, Object> cratesMap = FastMap.newInstance();
 			Map cansMap = FastMap.newInstance();
 			try{
 				
@@ -5075,12 +5185,77 @@ public class ByProductNetworkServices {
 			}
 			result.put("piecesPerCrate",cratesMap);
 			result.put("piecesPerCan",cansMap);
-			Debug.log("result #############################"+result);
+			//Debug.log("result #############################"+result);
 	        return result;
 	    }
-
 	    
-	    
+	    public static Map<String, Object> getRouteVehicleForShipment(DispatchContext dctx, Map<String, ? extends Object> context){
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String supplyDateStr = (String) context.get("supplyDate"); 
+	        String routeId = (String) context.get("routeId");
+	        String tripId = (String) context.get("tripId");
+	        String returnHeaderTypeId = (String) context.get("returnHeaderTypeId");
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Map result = ServiceUtil.returnSuccess(); 
+	        List conditionList = FastList.newInstance();
+	        Timestamp supplyDate = null;
+	    	try{
+	    		if (UtilValidate.isNotEmpty(supplyDateStr)) { 
+	    			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+	    			try {
+	    				supplyDate = new java.sql.Timestamp(sdf.parse(supplyDateStr).getTime());
+	    			} catch (ParseException e) {
+	    				Debug.logError("Cannot parse date string: "+supplyDateStr, module);
+		    			return ServiceUtil.returnError("Cannot parse date string"); 
+	    			} catch (NullPointerException e) {
+	    				Debug.logError("Cannot parse date string: "+supplyDateStr, module);
+		    			return ServiceUtil.returnError("Cannot parse date string"); 
+	    			}
+	    		}
+	    		if(UtilValidate.isEmpty(returnHeaderTypeId)){
+	    			Debug.logError("Return type is empty", module);
+	    			return ServiceUtil.returnError("Return type is empty");
+	    		}
+	    		if(UtilValidate.isEmpty(supplyDate)){
+	    			Debug.logError("supply date is empty", module);
+	    			return ServiceUtil.returnError("supply date is empty");
+	    		}
+	    		Timestamp dayStart =UtilDateTime.getDayStart(supplyDate);
+	    		Timestamp dayEnd =UtilDateTime.getDayEnd(supplyDate);
+	    		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+    			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+    			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
+    			conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
+    			conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+    			EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    			List<GenericValue> shipment = delegator.findList("Shipment", cond, null, null, null, false);
+    			String shipmentId = "";
+    			String vehicleId = "";
+    			if(UtilValidate.isNotEmpty(shipment)){
+    				shipmentId = ((GenericValue)EntityUtil.getFirst(shipment)).getString("shipmentId");
+    				vehicleId=((GenericValue)EntityUtil.getFirst(shipment)).getString("vehcileId");
+    			}
+    			conditionList.clear();
+    			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+    			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("RETURN_CANCELLED")));
+    			EntityCondition expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    			List<GenericValue> returnHeader = delegator.findList("ReturnHeader", expr, null, null, null, false);
+    			if(UtilValidate.isNotEmpty(returnHeader)){
+    				String returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("returnId");
+    				Debug.logError("One return allowed for one shipment, Cancel return :"+returnId+" and re-enter the return" , module);
+	    			return ServiceUtil.returnError("One return allowed for one shipment, Cancel return :"+returnId+" and re-enter the return");
+    			}
+				result.put("vehcileId", vehicleId);
+				result.put("routeId", routeId);
+	    	}catch (Exception e) {
+				// TODO: handle exception
+				Debug.logError(e.toString(), module);
+				return ServiceUtil.returnError(e.toString());
+			}
+			return result;
+	    }
+	 	
 	    
 }
 	
