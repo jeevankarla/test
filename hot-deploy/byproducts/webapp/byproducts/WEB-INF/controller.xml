@@ -538,6 +538,35 @@
     	<response name="success" type="view" value="FindBoothPayments"/>
     	<response name="error" type="view" value="FindBoothPayments"/>       	
     </request-map>
+    <request-map uri="FindFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFacility"/>
+    </request-map>
+    <request-map uri="FacilityProfile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FacilityProfile"/>
+    </request-map>
+    <request-map uri="FacilityOverView">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FacilityProfile"/>
+    </request-map>
+     <request-map uri="EditFacility">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFacility"/>
+    </request-map>
+    <request-map uri="FacilityChildren">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FacilityChildren"/>
+    </request-map>
+    <request-map uri="CreateFacility">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFacility"/>
+        <response name="success" type="view" value="EditFacility"/>
+        <response name="error" type="view" value="EditFacility"/>
+    </request-map>
+  <request-map uri="createNewFacility"><security https="true" auth="true"/>
+      <response name="success" type="view" value="createNewFacility"/>
+  </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -618,6 +647,13 @@
  	<view-map name="EmployeeSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSearch"/>
  	<view-map name="EmployeeSearchResult" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSearchResult"/>
  	<view-map name="EmployeeSubsidy" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EmployeeSubsidy"/>
+ 	
+ 	<view-map name="FindFacility" type="screen" page="component://byproducts/widget/ByProductsFacilityScreens.xml#FindFacility"/>
+ 	<view-map name="FacilityProfile" type="screen" page="component://byproducts/widget/ByProductsFacilityScreens.xml#FacilityProfile"/>
+ 	<view-map name="FacilitySearchResults" type="screen" page="component://byproducts/widget/ByProductsFacilityScreens.xml#FacilitySearchResults"/>
+    <view-map name="EditFacility" type="screen" page="component://byproducts/widget/ByProductsFacilityScreens.xml#EditFacility"/>
+    <view-map name="FacilityChildren" type="screen" page="component://byproducts/widget/ByProductsFacilityScreens.xml#FacilityChildren"/>
+    <view-map name="createNewFacility" type="screen" page="component://byproducts/widget/ByProductsFacilityScreens.xml#createNewFacility"/>
  	
  	<view-map name="AdhocSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AdhocSale"/>
  	<view-map name="AdhocSaleNew" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AdhocSaleNew"/>
