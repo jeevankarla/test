@@ -498,12 +498,7 @@ under the License.
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="StopShipListCSV"/>    	
     </request-map>
-    <request-map uri="createPaymentForBooth">
-    	<security https="true" auth="true"/>
-    	<event type="service" invoke="createPaymentForBooth"/>   	
-    	<response name="success" type="view" value="FindBoothPayments"/>
-    	<response name="error" type="view" value="FindBoothPayments"/>       	
-    </request-map>
+
     <request-map uri="vendorMarginAdjustments">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="vendorMarginAdjustments"/>   	
