@@ -314,6 +314,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="getRouteVehicleForShipment">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getRouteVehicleForShipment"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
      
     <request-map uri="getPartyFinAccountInfo">
         <security auth="true" https="true"/>    
@@ -514,7 +520,7 @@
     </request-map>
     <request-map uri="FindPastBoothPayments">
     	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="FindPastBoothPayments"/>    	
+    	<response name="success" type="view"  value="FindPastBoothPayments"/>    	
     </request-map>
      <request-map uri="massMakeBoothPayments">
      	<security https="true" auth="true"/>     	
@@ -525,6 +531,12 @@
      <request-map uri="PrintBoothPayments">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="PrintBoothPayments"/>    	
+    </request-map>
+    <request-map uri="createPaymentForBooth">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createPaymentForBooth"/>   	
+    	<response name="success" type="view" value="FindBoothPayments"/>
+    	<response name="error" type="view" value="FindBoothPayments"/>       	
     </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
