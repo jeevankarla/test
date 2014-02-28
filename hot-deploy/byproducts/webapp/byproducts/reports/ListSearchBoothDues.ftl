@@ -106,6 +106,7 @@ under the License.
         <tr class="header-row-2">
           <td>${uiLabelMap.OrderFacilityBooth}</td>
           <td>${uiLabelMap.Route}</td>
+            <td>PaymentMethodType</td>
           <td>${uiLabelMap.DueAmount}</td>
           <td>${uiLabelMap.makePayment}</td> 
           <td align="right">${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllFacilities" name="checkAllFacilities" onchange="javascript:toggleFacilityId(this);"/></td>
@@ -118,6 +119,9 @@ under the License.
               <td>${(payment.facilityId)?if_exists}</td>
               <td>               
                 ${(payment.routeId)?if_exists}
+              </td>
+              <td>               
+                ${(payment.paymentMethodType)?if_exists}
               </td>
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><input id="submitButton" type="button"  onclick="javascript:setCreatePaymentParameters(this);" value="Make Payment"/></td>
