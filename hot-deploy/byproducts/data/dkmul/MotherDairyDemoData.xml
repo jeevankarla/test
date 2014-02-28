@@ -49,5 +49,8 @@ SECTION" subtitle="DISPATCH SECTION" title="DISPATCH SECTION" usePrimaryEmailUse
 <Enumeration enumId="RM_DIRECT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="RM_DIRECT_CHANNEL" description="Retail Marketing Direct Sales Channel" />
     
 
-
+<PeriodType description="Institutions Billing Period" periodTypeId="INST_BILL_PERIOD"/>
+    <!-- <CustomTimePeriod customTimePeriodId="JAN-1-31" periodTypeId="INST_BILL_PERIOD" periodNum="1" periodName="January(1-31)" fromDate="2014-01-01" thruDate="2014-01-31"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="FEB-1-28" periodTypeId="INST_BILL_PERIOD" periodNum="2" periodName="February(1-28)" fromDate="2013-02-01" thruDate="2013-02-28" isClosed="N"    organizationPartyId="Company"/>
+ -->
 </entity-engine-xml>
