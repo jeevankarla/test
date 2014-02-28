@@ -7,6 +7,9 @@
     <property key="ByProductsCompanyName">
         <value xml:lang="en">vbiz: ByProducts</value>
     </property>
+     <property key="BoothRoute">
+        <value xml:lang="en">Booth /Route Id</value>        
+    </property>  
     <property key="ByProductsCompanySubtitle">
         <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
         <value xml:lang="it">Un modulo della famiglia di software open source Open For Business</value>
