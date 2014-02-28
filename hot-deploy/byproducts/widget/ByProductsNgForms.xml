@@ -614,7 +614,7 @@
     	<field name="onlyCurrentDues"><hidden value="true"/></field>   	   	
     	<field name="paymentDate" title="${uiLabelMap.SupplyDate}"><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}"/></field>
     	<field name="displayDate" title="${uiLabelMap.SupplyDate}" widget-style="h3"><display default-value="${defaultEffectiveDate}"/></field>       
-        <field name="facilityId" title="${uiLabelMap.BoothRouteZone}"><lookup target-form-name="LookupFacility"/></field>
+        <field name="facilityId" title="${uiLabelMap.BoothRoute}"><lookup target-form-name="LookupFacility"/></field>
          <field name="paymentMethodTypeId">
          	<drop-down allow-empty="true">
          		<entity-options description="${description}" entity-name="PaymentMethodType">
