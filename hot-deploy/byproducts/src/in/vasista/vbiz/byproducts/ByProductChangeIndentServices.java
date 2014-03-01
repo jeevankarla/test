@@ -379,7 +379,7 @@ public class ByProductChangeIndentServices {
   					  createNewSubscriptionProduct.put("crateQuantity", crateQuantity);
   					  createNewSubscriptionProduct.put("fromDate", UtilDateTime.getDayStart(effectiveDate));
   					  createNewSubscriptionProduct.put("thruDate", null);				  
-  					  if((productSubscriptionTypeId.equals("SPECIAL_ORDER")) || (productSubscriptionTypeId.equals("CASH_FS") || dayIndentProductList.contains(productId))){
+  					  if(((productSubscriptionTypeId.equals("SPECIAL_ORDER")) || (productSubscriptionTypeId.equals("CASH_FS") || dayIndentProductList.contains(productId)))&&!productSubscriptionTypeId.equals("EMP_SUBSIDY")){
   						  createNewSubscriptionProduct.put("thruDate",  UtilDateTime.getDayEnd(effectiveDate)); 
   					  }
   					  if(productSubscriptionTypeId.equals("CARD")){ 
