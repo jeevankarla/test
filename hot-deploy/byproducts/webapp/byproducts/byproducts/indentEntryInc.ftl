@@ -100,7 +100,10 @@ function updateGrid(){
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 						$('div#changeIndentEntry_spinner').html('');
 						msg = result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"];
-						$('div#errorMsg').html('<label>'+msg +'</label>');
+						  $('div#errorMsg').html('<span style="color:red; font-size:10pt; font-stlye:bold">"'+msg+'"</span>');
+                	   $('div#errorMsg').delay(7000).fadeOut('slow');
+                	    $('#myGrid1').hide();
+						//$('div#errorMsg').html('<label>'+msg +'</label>');
 						
 					}else{
 					    $('div#changeIndentEntry_spinner').html('');
@@ -130,7 +133,7 @@ function updateGrid(){
 						
 						updateGrid1(changeIndentProductList);
 						if(screenFlag != "DSCorrection"){
-							updateGrid2(categoryTot);
+							updateGrid2(categoryTot);	
 						}
 						$('span#boothTooltip').html('<label>'+boothName +'</label>');
 						$('span#boothDepositTip').html('<label> Security Deposit:: Rs. '+securityDeposit +'</label>');
@@ -272,8 +275,6 @@ function updateGrid(){
 		if(ajaxJson != ''){
 			data = ajaxJson;
 		}
-		
-
 		var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:160, minWidth:160, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
 			{id:"cQuantity", name:"Quantity", field:"cQuantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
@@ -298,8 +299,8 @@ function updateGrid(){
 
 		_grid = new Slick.Grid("#myGrid1", data, columns, options);
         _grid.setSelectionModel(new Slick.CellSelectionModel());
-
-		var columnpicker = new Slick.Controls.ColumnPicker(columns, _grid, options);
+        
+         var columnpicker = new Slick.Controls.ColumnPicker(columns, _grid, options);
 		
 		if (data.length > 0) {			
 			$(_grid.getCellNode(0, 1)).click();
@@ -307,7 +308,7 @@ function updateGrid(){
 			$(_grid.getCellNode(0,0)).click();
 		}
 		_grid.onKeyDown.subscribe(function(e) {
-			var cell = _grid.getCellFromEvent(e);			
+			var cell = _grid.getCellFromEvent(e);		
 			if(e.which == $.ui.keyCode.UP && cell.row == 0){
 				_grid.getEditController().commitCurrentEdit();	
 				$(_grid.getCellNode(cell.row+1, 0)).click();
@@ -425,7 +426,7 @@ function updateGrid(){
 					totalAmount += data[i]["amount"];
 				}
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-				
+			
 				if(amt > 0 ){
 					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
 				}
@@ -440,7 +441,7 @@ function updateGrid(){
 		_grid.onActiveCellChanged.subscribe(function(e,args) {
         	if (args.cell == 1 && data[args.row] != null) {
 				var prod = data[args.row]["cProductId"];
-				if(prod != null && screenFlag != 'DSCorrection'){
+				if(prod != null && screenFlag != 'DSCorrection' ){
 					var supType = prodIndentQtyCat[prod];
 					if(supType !=null){
 						data[args.row]["uomId"] = supType.charAt(0);
@@ -543,6 +544,8 @@ function updateGrid(){
 	});	
 	
 	});		
+	
+		
 	function updateProductInfo() {
 		for(var i=0;i<data.length;i++){
 			var prod = data[i]["cProductId"];
@@ -566,9 +569,9 @@ function updateGrid(){
 				//data[i]["uomId"] = supType.charAt(0);
 				//data[i]["amount"] = Math.round((qty*price) * 100)/100;
 			}
-			else{
-				data[i]["amount"] = amount;
-			}
+			//else{
+				data[i]["amount"] = amount; //onload update amount
+			//}
 			_grid.updateRow(i);
 		}
 		var totalAmount = 0;
@@ -584,6 +587,7 @@ function updateGrid(){
 		}
 		jQuery("#totalAmount").html(dispText);
 	}
+	
 	 function updateGrid1(ajaxJson) {
              data = ajaxJson;
              _grid.setData(data);
@@ -604,6 +608,7 @@ function updateGrid(){
 			updateProductInfo();
     }
     
+    
     function updateGrid2(ajaxJson) {
              data1 = ajaxJson;
              absGrid.setData(data1);
@@ -611,7 +616,7 @@ function updateGrid(){
              absGrid.render();
            
     }
-		
+     
 	var boothsList =  ${StringUtil.wrapString(boothsJSON)}
 	var routesList =  ${StringUtil.wrapString(routesJSON)}
 	<#if (showBoothAutoSuggest?has_content) && (showBoothAutoSuggest != 'N') && screenFlag?exists && screenFlag == 'indent'>
