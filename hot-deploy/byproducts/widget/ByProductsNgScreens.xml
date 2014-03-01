@@ -595,7 +595,7 @@
 				<property-map resource="KkdmpcuUiLabels" map-name="uiLabelMap" global="true"/>
 				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<set field="logoImageUrl" value="/images/apddcf_logo.gif"/>
-				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/MotherDairyTruckSheet.groovy" />
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/TruckSheetReport.groovy" />
 			</actions>
 			<widgets>
 				<section>
