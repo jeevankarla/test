@@ -385,11 +385,13 @@ def populateRouteOrders(routeGroup ,routeOrdersMap){
 }*/
 //routeGroupList =[];
 truckSheetReportList =[];
-routesList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
+routesList =[];
 //mainFacilityList = delegator.findByAnd("Facility", [parentFacilityId : null],["sequenceNum","facilityName"]);
-if(UtilValidate.isNotEmpty(parameters.facilityId) && (parameters.facilityId)!="All-Routes"){
-	routesList.clear();
-	routesList.add(parameters.facilityId);
+if(UtilValidate.isNotEmpty(parameters.facilityId) && (parameters.facilityId)!="allRoutes"){
+	shipment =delegator.findOne("Shipment", [shipmentId: parameters.facilityId], false);
+	routesList.add(shipment.routeId);
+}else{
+    routesList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
 }
 SortedMap totalMainFacilityMap = new TreeMap();
 routeOrdersMap = [:];
