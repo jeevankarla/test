@@ -523,7 +523,7 @@ public class ByProductChangeIndentServices {
   							  createNewSubscProduct.put("thruDate", null);  
   						  }
   						  				  
-  						  if((productSubscriptionTypeId.equals("SPECIAL_ORDER")) || (productSubscriptionTypeId.equals("CASH_FS") || dayIndentProductList.contains(productId))){
+  						  if(((productSubscriptionTypeId.equals("SPECIAL_ORDER")) || (productSubscriptionTypeId.equals("CASH_FS") || dayIndentProductList.contains(productId)))&&!productSubscriptionTypeId.equals("EMP_SUBSIDY")){
   							  createNewSubscProduct.put("thruDate",  UtilDateTime.getDayEnd(effectiveDate)); 
   						  }
   						  if(productSubscriptionTypeId.equals("CARD")){ 
