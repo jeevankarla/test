@@ -102,7 +102,7 @@ function updateGrid(){
 						msg = result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"];
 						  $('div#errorMsg').html('<span style="color:red; font-size:10pt; font-stlye:bold">"'+msg+'"</span>');
                 	   $('div#errorMsg').delay(7000).fadeOut('slow');
-                	    $('#myGrid1').hide();
+                	    //$('#myGrid1').hide();
 						//$('div#errorMsg').html('<label>'+msg +'</label>');
 						
 					}else{
