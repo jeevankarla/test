@@ -8,6 +8,7 @@
 	<include location="component://product/webapp/facility/WEB-INF/controller.xml"/>
    <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
 	<include location="component://order/webapp/ordermgr/WEB-INF/controller.xml"/> 
+	<include location="component://humanres/webapp/humanres/WEB-INF/controller.xml"/>
     <description>ByProducts Component Site Configuration File</description>
 
     <!-- Events to run on every request before security (chains exempt) -->
@@ -453,6 +454,11 @@
         <response name="success" type="view" value="FindAdhocSalesOrder"/>
          <response name="failed" type="view" value="FindAdhocSalesOrder"/>
    </request-map>
+   <request-map uri="createInstBillingConfig">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createInstBillingConfig"/>
+         <response name="failed" type="view" value="createInstBillingConfig"/>
+   </request-map>
   <request-map uri="cancelAdhocSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelAdhocSalesOrder"/>
@@ -532,7 +538,7 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="PrintBoothPayments"/>    	
     </request-map>
-    <request-map uri="createPaymentForBooth">
+        <request-map uri="createPaymentForBooth">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createPaymentForBooth"/>   	
     	<response name="success" type="view" value="FindBoothPayments"/>
@@ -567,6 +573,25 @@
   <request-map uri="createNewFacility"><security https="true" auth="true"/>
       <response name="success" type="view" value="createNewFacility"/>
   </request-map>
+    <request-map uri="facilityCustomTimePeriod">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="facilityCustomTimePeriod"/>
+    </request-map> 
+    <request-map uri="createInstConfig">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createInstConfig"/>
+       <response name="success" type="view" value="InstBillingPeriodSearch"/>
+        <response name="failed" type="view" value="createInstBillingConfig"/>
+        <response name="error" type="view" value="createInstBillingConfig"/>
+    </request-map>
+    <request-map uri="CreateInstitutionBillingConfig">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="CreateInstitutionBillingConfig"/>
+    </request-map>
+     <request-map uri="InstBillingPeriodSearch">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="InstBillingPeriodSearch"/>
+    </request-map> 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -635,7 +660,8 @@
 	<view-map name="AbsenteeList" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AbsenteeList"/>
 	<view-map name="ReturnCrates" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnCrates"/>
 	<view-map name="CreditInstitutionBilling" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#CreditInstitutionBilling"/>
-	<view-map name="InstitutionBillingConfig" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InstitutionBillingConfig"/>
+	<view-map name="InstBillingPeriodSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InstBillingPeriodSearch"/>
+	<view-map name="createInstBillingConfig" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createInstBillingConfig"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>
@@ -666,4 +692,5 @@
 <!-- Transporter views -->
  <view-map name="FindPastBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPastBoothPayments"/>
  <view-map name="FindBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindBoothPayments"/>
+ <view-map name="facilityCustomTimePeriod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#facilityCustomTimePeriod"/>
 </site-conf>

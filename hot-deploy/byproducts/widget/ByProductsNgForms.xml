@@ -440,7 +440,7 @@
         </field> -->
     </form>
     
-    <form name="instituionBillingPeriod" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="createInstitutionBillingPeriod"
+    <form name="instituionBillingPeriod" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="createInstConfig"
     	default-table-style="basic-table hover-bar" separate-columns="true">
     	<field name="facilityId" title="Institution"><lookup target-form-name="LookupFacility"></lookup></field>
         <field name="periodTypeId" title="Period Type" >
@@ -448,9 +448,9 @@
         		<list-options key-name="periodTypeId" list-name="periodTypes" description="${description}"/>
         	</drop-down>
         </field>
-        <field name="fromdate"><date-time/></field>
+        <field name="fromDate"><date-time/></field>
         <field name="thruDate"><date-time/></field>
-	    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" position="3"><submit/></field>       
+	    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit/></field>       
     </form>
     <form name="configCrates" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="updateCrateQtyConfig"
     	default-table-style="basic-table hover-bar" separate-columns="true">
@@ -701,5 +701,67 @@
                 <parameter param-name="paymentId" from-field="paymentId"/>
             </hyperlink>
         </field>
+    </form>
+    <form name="ListFacilityTimePeriod"   id="ListTruckSheetId" list-name="listDeliverySchedule" title="" type="list" paginate-target="TruckSheetMotherDairy"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    	<row-actions>
+    		<entity-condition entity-name="Shipment" list="shipmentRouteList">
+    			<condition-list combine="and">
+                		<condition-expr field-name="estimatedShipDate" value="${estimatedShipDate}"/>
+                		<condition-expr field-name="statusId" operator="equals" value="GENERATED"/>
+                		<condition-expr field-name="shipmentTypeId" operator="equals" value="${shipmentTypeId}"/>
+                </condition-list>
+                <order-by field-name="routeId"/>
+    		</entity-condition>
+    		<set field="scheduleDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /> 
+    	</row-actions>
+    	<field name="date" title="Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>    
+        <field name="facilityId" title="Facility Id"><display-entity entity-name="facilityId"/></field>
+        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
+         <field name="time period" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name = "truckSheet">
+            <hyperlink target="truckSheetReport.txt" description="Truck Sheet Report" target-window="_blank" >
+              	 <parameter param-name="facilityId" from-field="facilityId"/> 
+               	 <parameter param-name="date" from-field="date"/>
+            </hyperlink>
+        </field>
+        <field name="report" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="routeAbstract">
+            <hyperlink target="report.txt" description="report" target-window="_blank" >
+                <parameter param-name="facilityId" from-field="facilityId"/> 
+               	  <parameter param-name="date" from-field="date"/>
+               	  <parameter param-name="reportTypeFlag" value="abstract"/>                                                   
+            </hyperlink>
+        </field>
+        <field name="cancelShipment" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target-type="plain" target="javascript:showCancelTruckSheetGenerate('${estimatedShipDate}','${scheduleDate}' ,'${shipmentTypeId}');" description="${uiLabelMap.CommonCancel}">
+            </hyperlink>
+            </field>
+    </form>
+    <form name="CreateInstBillingPeriodSearchForm" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
+    	default-table-style="basic-table hover-bar" separate-columns="true" target="InstBillingPeriodSearch">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="facilityId" title="Institution"><lookup target-form-name="LookupFacility"></lookup></field>    	
+       <field name="periodTypeId" title="Period Type" >
+        	<drop-down>
+        		<list-options key-name="periodTypeId" list-name="periodTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="InstBillingPeriodSearchResultForm" type="list" list-name="listIt" odd-row-style="alternate-row" 
+      default-entity-name="FacilityCustomBilling" default-table-style="basic-table hover-bar" >
+    	<actions>    	
+    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FacilityCustomBilling"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> 
+        </actions>
+    	<field name="facilityId" title="Institution"><display/></field>    	
+        <field name="periodTypeId" title="Period Type" ><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+    	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
     </form>
 </forms>

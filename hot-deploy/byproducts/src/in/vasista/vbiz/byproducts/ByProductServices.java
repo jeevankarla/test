@@ -183,12 +183,17 @@ public class ByProductServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();       
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> vehicleTripResult = new HashMap<String, Object>();
+        Map<String, Object> vehicleTripStatusResult = new HashMap<String, Object>();
+        Map<String, Object> vehicleTripEntity = FastMap.newInstance(); 
+        Map<String, Object> vehicleTripStatusEntity = FastMap.newInstance(); 
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
         String estimatedDeliveryDateString = (String) context.get("estimatedDeliveryDate");
         String routeId = (String) context.get("routeId");
         String tripId = (String) context.get("tripId");
         List routesList = FastList.newInstance();
         Timestamp estimatedDeliveryDate = null;
+        String vehicleId="";
         String shipmentTypeId = (String) context.get("shipmentTypeId");
         String subscriptionTypeId = "AM";
         if(shipmentTypeId.equals("PM_SHIPMENT")){
@@ -197,6 +202,7 @@ public class ByProductServices {
         String facilityGroupId = (String) context.get("facilityGroupId");
         String shipmentId = null;
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+        String  seqId="";
 		try {
 			estimatedDeliveryDate = new java.sql.Timestamp(sdf.parse(estimatedDeliveryDateString).getTime());
 		} catch (ParseException e) {
@@ -301,6 +307,55 @@ public class ByProductServices {
 	        }  	   
 	              	       	
 	        shipmentIdsList.add(shipmentId);
+	        Map vehicleCtx = UtilMisc.toMap("facilityId",routesList.get(i));
+	        vehicleCtx.put("supplyDate", estimatedDeliveryDate);
+	        Map vehicleRoleResult =  (Map) ByProductNetworkServices.getVehicleRole(dctx,vehicleCtx);
+	        
+	        if(UtilValidate.isNotEmpty(vehicleRoleResult.get("vehicleRole"))){
+	        	GenericValue vehicleRole= (GenericValue) vehicleRoleResult.get("vehicleRole");
+				vehicleId=vehicleRole.getString("vehicleId");
+			}
+	        if(UtilValidate.isNotEmpty(vehicleId)){
+	        	vehicleTripEntity.put("vehicleId", vehicleId);
+	        	vehicleTripStatusEntity.put("vehicleId", vehicleId);
+	        }
+	        
+	        vehicleTripEntity.put("originFacilityId", routesList.get(i));
+	        vehicleTripEntity.put("userLogin", userLogin);
+	        vehicleTripEntity.put("shipmentId", shipmentId);
+	        vehicleTripEntity.put("createdDate", nowTimeStamp);
+	        vehicleTripEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
+	        vehicleTripEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	        try {
+	        	vehicleTripResult=dispatcher.runSync("createVehicleTrip", vehicleTripEntity);
+	            seqId =(String) vehicleTripResult.get("sequenceNum");
+	            if (ServiceUtil.isError(vehicleTripResult)) {
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripResult);
+	  		  		Debug.logError(errMsg , module);
+	  		  	}
+	          
+	        } catch (GenericServiceException e) {
+	            Debug.logError(e, "Error calling runSubscriptionAutoCreateOrders service", module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        } 
+	        
+	        vehicleTripStatusEntity.put("facilityId",routesList.get(i));
+	        vehicleTripStatusEntity.put("sequenceNum", seqId);
+	        vehicleTripStatusEntity.put("userLogin", userLogin);
+	        vehicleTripStatusEntity.put("statusId", "VEHICLE_RETURNED");
+	        vehicleTripStatusEntity.put("createdDate", nowTimeStamp);
+	        vehicleTripStatusEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
+	        vehicleTripStatusEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	        try {
+	        	vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusEntity);
+	            if (ServiceUtil.isError(vehicleTripStatusResult)) {
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
+	  		  		Debug.logError(errMsg , module);
+	  		  	}
+	        } catch (GenericServiceException e) {
+	            Debug.logError(e, "Error calling runSubscriptionAutoCreateOrders service", module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        }
 		}
 		 try {
 	        	Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("shipmentIds", shipmentIdsList, 
@@ -992,7 +1047,7 @@ public class ByProductServices {
        // Date shipDate = nowDate;
         String routeId = (String)context.get("routeId");
         String tripId = (String)context.get("tripId");
-        
+        String vehicleId ="";
         List routesList = FastList.newInstance();
         if((UtilValidate.isNotEmpty(routeId)) && (routeId.equalsIgnoreCase("AllRoutes")) ){
         	routesList = (List) getByproductRoutes(delegator).get("routeIdsList");
@@ -1101,6 +1156,22 @@ public class ByProductServices {
         	
         	shipment = (GenericValue) shipmentList.get(i);
         	shipmentId = (String) shipment.get("shipmentId");
+        	vehicleId = (String) shipment.get("vehicleId");
+        	 try {
+             	List VehicleTripStatus = FastList.newInstance();
+     			 if (UtilValidate.isNotEmpty(vehicleId) ) {
+     				 VehicleTripStatus.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS, vehicleId));
+     				 VehicleTripStatus.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "VEHICLE_RETURNED"));
+     				 EntityCondition cond = EntityCondition.makeCondition(VehicleTripStatus, EntityOperator.AND);
+     				 List<GenericValue> vehicleStatus = delegator.findList("VehicleTripStatus", cond, null, null, null, true);
+     				 if(UtilValidate.isNotEmpty(vehicleStatus)){        	
+     			        	Debug.logError("Truck sheet cannot be cancel once Vehicle returns back", module);
+     			    		return ServiceUtil.returnError("Truck sheet cannot be cancel once Vehicle returns back"); 
+     			     }	
+     			 }
+     		} catch (GenericEntityException e) {
+     			 Debug.logError(e, module);      
+     		}
         	//shipment.set("statusId", "CANCEL_INPROCESS");
         	invExpr.clear();
         	invExpr.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, invItemId));
@@ -4105,5 +4176,69 @@ public class ByProductServices {
 				  return ServiceUtil.returnError("Problem updating Dispatch Reconciliation for Route " + routeId);			  
 			  }
 			  return result;  
+	    }
+	    public static Map<String, Object> createOrUpdateInstBillingPeriod(DispatchContext ctx,Map<String, Object> context) {
+	        Map<String, Object> finalResult = FastMap.newInstance();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Delegator delegator = ctx.getDelegator();
+	        LocalDispatcher dispatcher = ctx.getDispatcher();
+	        Locale locale = (Locale) context.get("locale");
+	        String facilityId = (String) context.get("facilityId");
+	        String periodTypeId = (String) context.get("periodTypeId");
+	        Timestamp fromDate = (Timestamp) context.get("fromDate");
+	        Timestamp thruDate = (Timestamp) context.get("thruDate");
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        List<GenericValue> FacilityCustBillingList = null;
+	        if(fromDate==null){
+	        	fromDate= UtilDateTime.nowTimestamp();
+	        }
+	        if(UtilValidate.isNotEmpty(thruDate)){
+	        	thruDate=UtilDateTime.getDayEnd(thruDate);
+	        }
+	        fromDate=UtilDateTime.getDayStart(fromDate);
+	        
+	        if(fromDate.before(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()))){
+	        	Debug.logError("From date  shoud be greater than current date : "+fromDate+ "\t",module);
+				return ServiceUtil.returnError("From date  shoud be greater than current date  : "+fromDate);
+	        }
+	        List conditionList = UtilMisc.toList(
+	                EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	                conditionList.add( EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
+	                EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  
+	                
+				try {
+					FacilityCustBillingList = delegator.findList("FacilityCustomBilling", condition, null, null, null, false);
+				}catch (GenericEntityException e) {
+					Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+				} 
+                List<GenericValue> facilityCustBill= EntityUtil.filterByDate(FacilityCustBillingList,fromDate);
+ 	            if(UtilValidate.isNotEmpty(facilityCustBill)){
+ 			       try {
+ 			    	    conditionList.clear();
+ 	 			       	GenericValue facilityList = facilityCustBill.get(0);
+ 	 			        facilityList.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+						facilityList.store();
+					}catch (GenericEntityException e) {
+						Debug.logError("Error in Facility Custom Billing : "+facilityId+ "\t"+e.toString(),module);
+						return ServiceUtil.returnError(e.getMessage());
+					}
+ 	            }
+     		   	GenericValue newEntity = delegator.makeValue("FacilityCustomBilling");
+     	        newEntity.set("facilityId", facilityId);
+     	        newEntity.set("periodTypeId", periodTypeId);
+     	        newEntity.set("fromDate", fromDate);
+     	        newEntity.set("thruDate", thruDate);
+     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+   	            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+   	            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+   	            newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+ 		        try {
+ 					delegator.create(newEntity);
+ 				}catch (GenericEntityException e) {
+ 					Debug.logError("Error in creating Facility Custom Billing: "+facilityId+ "\t"+e.toString(),module);
+ 					return ServiceUtil.returnError(e.getMessage());
+ 				}
+			return result;
 	    }
 }

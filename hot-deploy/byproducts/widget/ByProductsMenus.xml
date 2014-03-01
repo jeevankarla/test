@@ -331,8 +331,8 @@
             <link target="CreditInstitutionBilling"/>
         </menu-item>
         
-        <menu-item name="InstitutionBillingConfig" title="Cr. Inst. Billing Config">
-            <link target="InstitutionBillingConfig"/>
+        <menu-item name="InstBillingPeriodSearch" title="Cr. Inst. Billing Config">
+            <link target="InstBillingPeriodSearch"/>
         </menu-item>
     	<menu-item name="Payments" title="${uiLabelMap.DuesPayment}"> 
        		<condition>
@@ -358,6 +358,10 @@
             </condition>         
             <link target="FindPastBoothPayments"/>        
        </menu-item>
+       <menu-item name="facilityCustomTimePeriod" title="Facility Custom Time Period">
+            <link target="facilityCustomTimePeriod">
+            </link>
+        </menu-item>
     </menu>
     <menu name="ReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="findReturn" title="Find Return">

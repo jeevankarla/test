@@ -26,8 +26,8 @@
          <make-value value-field="newEntity" entity-name="VehicleTrip"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
          <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!--  <set field="newEntity.vehicleId" from-field="parameters.vehicleId"/>
-         <set field="newEntity.shipmentId" from-field="parameters.shipmentId"/>
+         <set field="newEntity.vehicleId" from-field="parameters.vehicleId"/>
+         <!-- <set field="newEntity.shipmentId" from-field="parameters.shipmentId"/>
          <set field="newEntity.originFacilityId" from-field="parameters.originFacilityId" /> -->
          <set field="newEntity.estimatedStartDate" from-field="parameters.estimatedStartDate" default-value="${nowTimestamp}" type="Timestamp"/>
         <if-not-empty field="parameters.estimatedEndDate">
@@ -44,6 +44,8 @@
         <log level="always"  message="newEntity========================${newEntity}"></log>
         
         <create-value value-field="newEntity"></create-value>
+        <field-to-result field="newEntity.vehicleId" result-name="vehicleId"/>
+        <field-to-result field="newEntity.sequenceNum" result-name="sequenceNum"/>
     </simple-method>
     
     <simple-method method-name="updateVehicleTrip" short-description="create Vehicle Trip">

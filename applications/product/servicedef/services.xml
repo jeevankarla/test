@@ -1695,7 +1695,14 @@ under the License.
         </auto-attributes>
         <attribute name="facilityId" mode="INOUT" type="String"></attribute>
     </service>
-    
+    <service name="updateEsevaAponlineCollection" engine="java"  auth="true"
+        location="org.ofbiz.network.NetworkServices" invoke="updateEsevaAponlineCollection">
+        <description>Service to update eseva and aponline collection for the given sales date</description>
+        <auto-attributes mode="IN" entity-name="LMSEsevaAponlineCollection"></auto-attributes>
+        <attribute name="salesDate" type="Timestamp" mode="IN" optional="false"/>             
+        <attribute name="esevaCollection" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="aponlineCollection" type="BigDecimal" mode="IN" optional="true"/>
+    </service>  
     <!-- LMS SERVICES -->  
     <service name="generateVendorMargin" engine="java" auth="true" transaction-timeout="3000"
         location="org.ofbiz.network.LMSSalesHistoryServices" invoke="generateVendorMargin">
@@ -1744,7 +1751,42 @@ under the License.
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="parentFacilityId" type="String" mode="IN" optional="false"/>
     </service>
- 
+   <service name="processChangeIndentHelper" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="processChangeIndentHelper" auth="true">
+        <description>Change indent helper to store subscription</description>
+        
+        <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+        <attribute name="routeChangeFlag" type="String" mode="IN" optional="true"/>
+        <attribute name="subscriptionId" type="String" mode="OUT" optional="true"/>
+        <attribute name="indentChangeFlag" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+   	<service name="processDispatchReconcilHelper" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="processDispatchReconcilHelper" auth="true">
+        <description>Populate and Update ItemIssuance for Dispatch Reconciliation Entity</description>
+
+        <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="processChangeRouteIndentHelper" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="processChangeRouteIndentHelper" auth="true">
+        <description>Populate and Update Facility-Party Entity</description>
+        <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+    </service>
+    
     <service name="UpdateProductIndentQtyCategory" engine="java"
             location="org.ofbiz.network.LmsServices" invoke="UpdateProductIndentQtyCategory" auth="true">
         <description>Create and Update Facility-Product-Category Entity</description>

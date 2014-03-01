@@ -63,7 +63,8 @@ under the License.
             location="component://assetmaint/script/org/ofbiz/assetmaint/VehicleServices.xml" invoke="createVehicleTrip">
         <description>Create Vehicle Trip</description>
         <auto-attributes mode="IN" entity-name="VehicleTrip" optional="true"/>
-        <attribute name="vehicleId" mode="IN" type="String" optional="false"/>		
+        <attribute name="vehicleId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="sequenceNum" mode="OUT" type="String" optional="true"/>		
     </service>
     <service name="createVehicleTripStatus" engine="simple" default-entity-name="VehicleTripStatus"
             location="component://assetmaint/script/org/ofbiz/assetmaint/VehicleServices.xml" invoke="createVehicleTripStatus">

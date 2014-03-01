@@ -449,5 +449,12 @@
         <attribute name="boothIds" type="List" mode="IN" optional="false"/>
         <attribute type="List" mode="OUT" name="paymentIds" optional="true"/>
     </service> 
-    
+    <service name="createInstConfig" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateInstBillingPeriod">
+        <description>create Institution Billing Period</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
 </services>
