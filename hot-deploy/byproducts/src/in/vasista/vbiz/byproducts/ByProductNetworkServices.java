@@ -862,7 +862,7 @@ public class ByProductNetworkServices {
 	    		List<String> orderBy = UtilMisc.toList("-sequenceNum");
 	    		productList = delegator.findList("Product",EntityCondition.makeCondition("productId" , EntityOperator.IN, productList), null, orderBy, null, true);
 	    		String qtyCategory = "";
-	    		Debug.log("prodIndentQtyCat===="+prodIndentQtyCat);
+	    		//Debug.log("prodIndentQtyCat===="+prodIndentQtyCat);
 	    		for(GenericValue product : subProdList){
 	    			result.put("tempRouteId", product.getString("sequenceNum"));
 	    			String productId = product.getString("productId");
@@ -925,7 +925,7 @@ public class ByProductNetworkServices {
 	        	
 	        		tempChangeProdMap.put("id",productId);
 	            	tempChangeProdMap.put("cProductId", productId);
-	            	tempChangeProdMap.put("cProductName", product.getString("description"));
+	            	tempChangeProdMap.put("cProductName", product.getString("brandName"));
 	            	tempChangeProdMap.put("cQuantity","");
 	            	String qtyIndentCat = (String)prodIndentQtyCat.get(productId);
 	            	tempChangeProdMap.put("indentProdCat","C");
