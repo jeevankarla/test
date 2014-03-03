@@ -33,8 +33,8 @@ under the License.
 <#if routeWiseMap?has_content> 		
 	<fo:page-sequence master-reference="main" force-page-count="no-force" font-size="8pt">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" >
-			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015          D.K.Co-op Milk Producer's Union Ltd. Mangalore-5</fo:block>
-			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">                                         MILK &amp; MILK PRODUCTS SALES ABSTRACT</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
+			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")}&lt;ROUTE-WISE&gt;</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">======================================================================================================================================================================================================================</fo:block>
 			<fo:block>
@@ -62,6 +62,7 @@ under the License.
 											<fo:table-column column-width="60pt"/>
 											<#list byProdList as byProd>
 												<fo:table-column column-width="60pt"/>
+												<fo:table-column column-width="60pt"/>
 											</#list>
 											<fo:table-column column-width="30pt"/>
 											<fo:table-body>												
@@ -87,6 +88,7 @@ under the License.
 													</#list>	
 													<fo:table-cell/>
 												</fo:table-row>	
+												
 												<fo:table-row>						
 													<#assign j=0>
 													<#list byProdList as byProd>
@@ -100,6 +102,7 @@ under the License.
 													</#list>	
 													<fo:table-cell/>
 												</fo:table-row>	
+												
 												<fo:table-row>						
 													<#assign k=0>
 													<#list byProdList as byProd>
@@ -165,13 +168,12 @@ under the License.
 					<fo:table-column column-width="40pt"/>
 					<fo:table-body>
 						<fo:table-row>
-							
 							<fo:table-cell>
 							   <#if routesMap.getKey() !="amGrandTotals">
 							   		<#assign routeDetails = delegator.findOne("Facility", {"facilityId" : routesMap.getKey()}, true)>
 									<fo:block keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(routeDetails.facilityName)),15)}</fo:block>
 								<#else>
-									<fo:block keep-together="always">VST_ASCII-027VST_ASCII-069AM Total</fo:block>
+									<fo:block keep-together="always">AM Total </fo:block>
 								</#if>	
 							</fo:table-cell>
 							<fo:table-cell></fo:table-cell>							
@@ -183,6 +185,7 @@ under the License.
 											</#list>	
 											<fo:table-column column-width="60pt"/>
 											<#list byProdList as byProd>
+												<fo:table-column column-width="60pt"/>
 												<fo:table-column column-width="60pt"/>
 											</#list>
 											<fo:table-column column-width="60pt"/>
@@ -205,7 +208,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>													
 														</#list>	
@@ -227,7 +230,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -249,7 +252,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -272,7 +275,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -295,7 +298,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -318,7 +321,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -413,7 +416,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>													
 														</#list>	
@@ -435,7 +438,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -457,7 +460,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -480,7 +483,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -503,7 +506,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
@@ -526,7 +529,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefee-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>												
