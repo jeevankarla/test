@@ -734,7 +734,7 @@ public class ByProductNetworkServices {
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
 	        Timestamp supplyDate = (Timestamp) context.get("supplyDate"); 
 	        String boothId = (String) context.get("boothId");
-	        String routeId = (String) context.get("routeId");
+	        String rtId = (String) context.get("routeId");
 	        String tripId = (String) context.get("tripId");
 	        Boolean isEnableProductSubscription = Boolean.FALSE;
 	        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
@@ -745,6 +745,7 @@ public class ByProductNetworkServices {
 	        }
 	        Map result = ServiceUtil.returnSuccess(); 
 	        Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
+	        Timestamp dayEnd = UtilDateTime.getDayEnd(supplyDate);
 	        List changeIndentProductList = FastList.newInstance();
 	        Map<String ,BigDecimal> changeQuantityMap =FastMap.newInstance();
 	        Map<String ,BigDecimal> prevQuantityMap =FastMap.newInstance();
@@ -760,6 +761,8 @@ public class ByProductNetworkServices {
 	        String productStoreId = (String)(ByProductServices.getByprodFactoryStore(delegator)).get("factoryStoreId");
 	        String partyId = "";
 	        String facilityCategory = "";
+	        String tempRouteId = "";
+	        String routeId = "";
 	    	try{
 	    		GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId",boothId), true);
 	    		if(UtilValidate.isEmpty(facility)){
@@ -774,10 +777,17 @@ public class ByProductNetworkServices {
 	    		partyId = facility.getString("ownerPartyId");
 	    		facilityCategory = facility.getString("categoryTypeEnum");
 	    		//lets override productSubscriptionTypeId based on facility category
+	    		
+	    		if(UtilValidate.isEmpty(rtId)){
+	    			Map boothDetails = (Map)(getBoothRoute(dctx, context)).get("boothDetails");
+	    			routeId = (String)boothDetails.get("routeId");
+	    			Debug.log("permanentRouteId #################################"+routeId);
+	    		}
+    			
 	    		if(!isEnableProductSubscription){
 	    			if(UtilValidate.isEmpty(facility.getString("categoryTypeEnum"))){
 	    				productSubscriptionTypeId = "CASH";
-	    			}
+	    			} 
 	    			else{
 	    				if(facility.getString("categoryTypeEnum").equals("SO_INST")){
 	  	    			  productSubscriptionTypeId = "SPECIAL_ORDER";
@@ -844,15 +854,46 @@ public class ByProductNetworkServices {
 	            }
 	    		// lets get any changes already made
 	    		*/
+	    		
+	    		
 	    		conditionList.clear();
 	    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 	    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
-	    		conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
+	    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
+	    		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd));
+	    		EntityCondition rtCond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	    		Debug.log("cond11 ##################################"+rtCond);
+	    		List<GenericValue> rtSubProdList =delegator.findList("SubscriptionProduct", rtCond, null,null, null, false);
+	    		if(UtilValidate.isNotEmpty(rtSubProdList)){
+	    			tempRouteId = (EntityUtil.getFirst(rtSubProdList)).getString("sequenceNum");
+	    			Debug.log("routeId ######################## temp eEEEEE"+tempRouteId);
+	    		}
+	    		if(UtilValidate.isNotEmpty(tempRouteId)){
+	    			result.put("routeId", tempRouteId);
+		    		result.put("tempRouteId",tempRouteId);
+	    		}
+	    		else{
+	    			result.put("routeId", routeId);
+		    		result.put("tempRouteId",routeId);
+	    		}
+	    		
+	    		conditionList.clear();
+	    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+	    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+	    		if(UtilValidate.isNotEmpty(tempRouteId)){
+	    			Debug.log("temp ###############"+tempRouteId);
+	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, tempRouteId));
+	    		}
+	    		else{
+	    			Debug.log("route ###############"+routeId);
+	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
+	    		}
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		/*conditionList.add(EntityCondition.makeCondition("lastModifiedDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.nowTimestamp())));
 	    		conditionList.add(EntityCondition.makeCondition("lastModifiedDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp())));*/
 	    		EntityCondition cond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	    		List<GenericValue>   subProdList =delegator.findList("SubscriptionProduct", cond, null,null, null, false);
+	    		Debug.log("cond ##################################"+cond);
+	    		List<GenericValue> subProdList =delegator.findList("SubscriptionProduct", cond, null,null, null, false);
 	    		subProdList = EntityUtil.filterByDate(subProdList , dayBegin);
 	    		/*Debug.log("subProdList=========="+subProdList);
 	    		Debug.log("subscriptionId=========="+subscriptionId);*/
@@ -969,7 +1010,13 @@ public class ByProductNetworkServices {
 	    	// lets populate route totals
 	    	try{
 	    		conditionList.clear();
-	    		conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
+	    		if(UtilValidate.isNotEmpty(tempRouteId)){
+	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, tempRouteId));
+	    		}
+	    		else{
+	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
+	    		}
+	    		
 	    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		if(UtilValidate.isNotEmpty(tripId)){
@@ -978,15 +1025,18 @@ public class ByProductNetworkServices {
 	    		EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	    		  
 	    		List<GenericValue> subProdList =delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condExpr, null,null, null, false);
+	    		
 	    		subProdList = EntityUtil.filterByDate(subProdList , dayBegin);
 	    		/* Hard coded the categories ... get the few categories by type for indent totals*/
 	    		
 	    		result.put("routeCapacity", 0);
-	    		if(UtilValidate.isNotEmpty(routeId)){
-	    			GenericValue route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
-	    			result.put("routeName", route.getString("facilityName"));
-	    			result.put("routeCapacity", route.getBigDecimal("facilitySize"));
+	    		String rt = routeId;
+	    		if(UtilValidate.isNotEmpty(tempRouteId)){
+	    			rt = tempRouteId;
 	    		}
+	    		GenericValue route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", rt), false);
+    			result.put("routeName", route.getString("facilityName"));
+    			result.put("routeCapacity", route.getBigDecimal("facilitySize"));
 	    		List condProdCatList = UtilMisc.toList("MILK","CURD", "FMILK_CATEGORY");
 	    		
 	    		conditionList.clear();
