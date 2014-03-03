@@ -192,8 +192,8 @@
     </#if>
 </div>
 </div>
-<div class="righthalf">
-<div class="screenlet">
+<div class="righthalf" >
+<div class="screenlet"  id="GridDiv">
     <div class="screenlet-body">
     <div>
  		<div class="grid-header" style="width:100%">
@@ -211,14 +211,14 @@
 		<div id="myGrid1" style="width:85%;height:500px;"></div>
 			</br>
 		</div>	
-    	<div align="center">
+    	<div  id="GridSaveId" align="center">
     		<input type="button" style="padding:.3em" name="changeSave" id="changeSave" value="Save" />
     		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     		<input type="button" style="padding:.3em" id="changeCancel" value="Cancel"/>   	
     	</div>    
 	</div>
 </div>     
-</div>
+</div><!--  div full close -->
  	
 
 </div>
