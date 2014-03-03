@@ -1,5 +1,7 @@
 $(document).ready(function() {
-	
+	//callig to grid Hide
+	gridHideCall();
+	  
 	$( "#effectiveDate" ).datepicker({
 		dateFormat:'d MM, yy',
 		changeMonth: true,
@@ -78,7 +80,7 @@ $(function() {
             	 	alert(result["_ERROR_MESSAGE_"]);
             	 }
              });   
-              
+               gridHideCall();
                return false;
        });
        
