@@ -688,7 +688,7 @@
                		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
                		<select-field field-name="propertyValue"/>
                </entity-one>
-               <set field="screenFlag" value="tempRoute" />
+               <!-- <set field="screenFlag" value="tempRoute" /> -->
                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
                <!-- <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			     -->

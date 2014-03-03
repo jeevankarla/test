@@ -135,13 +135,11 @@
       	    				</#if>
       	    				
           				</td>
-          				<#if screenFlag?exists && screenFlag == 'tempRoute'>
          				<td>
          					<div id="tempRouteDiv" style="display:none">	
 				        	 	<a class="button" href="javascript:showRouteToChange();">Route Change </a>
 				        	</div>
 				        </td>
-				        </#if>
 			        </tr>
 			        <input type="hidden" name="routeChangeFlag" id="routeChangeFlag"/>           
 			        <tr><td><br/></td></tr>
