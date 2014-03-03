@@ -72,10 +72,10 @@ prodList.each{eachItem ->
 	
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
-	newObj.put("label", eachItem.brandName);
+	newObj.put("label", eachItem.brandName+" [ "+eachItem.description+"]");
 	productItemsJSON.add(newObj);
 	productIdLabelJSON.put(eachItem.productId,  eachItem.description);
-	productLabelIdJSON.putAt(eachItem.brandName, eachItem.productId);
+	productLabelIdJSON.putAt(eachItem.brandName+" [ "+eachItem.description+"]", eachItem.productId);
 	productQtyIncJSON.putAt(eachItem.productId, eachItem.quantityIncluded);
 }
 context.productItemsJSON = productItemsJSON;
