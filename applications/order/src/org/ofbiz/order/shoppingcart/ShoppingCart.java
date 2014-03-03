@@ -146,6 +146,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     protected String facilityId = null;
     protected String productSubscriptionTypeId = null;
     protected String shipmentId = null;
+    protected String isEnableAcctg = null;
     protected String purposeTypeId = null;
     protected String webSiteId = null;
     protected String terminalId = null;
@@ -365,6 +366,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public void setShipmentId(String shipmentId) {
         this.shipmentId = shipmentId;
     }    
+    public String getIsEnableAcctg() {
+        return this.isEnableAcctg;
+    }
+    public void setIsEnableAcctg(String isEnableAcctg) {
+        this.isEnableAcctg = isEnableAcctg;
+    } 
     public String getPurposeTypeId() {
         return this.purposeTypeId;
     }
@@ -4146,6 +4153,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         result.put("originFacilityId", this.getFacilityId());
         result.put("productSubscriptionTypeId", this.getProductSubscriptionTypeId());
         result.put("shipmentId", this.getShipmentId());
+        result.put("isEnableAcctg", this.getIsEnableAcctg());
         result.put("purposeTypeId", this.getPurposeTypeId());
         result.put("terminalId", this.getTerminalId());
         result.put("workEffortId", this.getWorkEffortId());
@@ -4210,6 +4218,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         result.put("originFacilityId", this.getFacilityId());
         result.put("productSubscriptionTypeId", this.getProductSubscriptionTypeId());
         result.put("shipmentId", this.getShipmentId());
+        result.put("isEnableAcctg", this.getIsEnableAcctg());
         result.put("purposeTypeId", this.getPurposeTypeId());
         result.put("terminalId", this.getTerminalId());
         result.put("workEffortId", this.getWorkEffortId());
@@ -4534,6 +4543,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         private String productSubscriptionTypeId = null;
         private String purposeTypeId = null;
         private String shipmentId = null;
+        private String isEnableAcctg = null;
         public String giftMessage = null;
         public String shippingInstructions = null;
         public String maySplit = "N";
@@ -4593,7 +4603,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public void setShipmentId(String shipmentId) {
             this.shipmentId = shipmentId;
         }
-
+        public String getIsEnableAcctg() {
+            return this.isEnableAcctg;
+        }
+        public void setIsEnableAcctg(String isEnableAcctg) {
+            this.isEnableAcctg = isEnableAcctg;
+        } 
         public String getVendorPartyId() { return vendorPartyId;}
         public void setVendorPartyId(String vendorPartyId) {
             this.vendorPartyId = vendorPartyId;

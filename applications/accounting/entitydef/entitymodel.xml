@@ -1308,7 +1308,8 @@
 		<field name="statusId" type="id"></field>
 		<field name="billingAccountId" type="id"></field>
 		<field name="contactMechId" type="id"></field>
-		<field name="facilityId" type="id"></field>		
+		<field name="facilityId" type="id"></field>	
+		<field name="isEnableAcctg" type="indicator"></field>	
 		<field name="shipmentId" type="id"></field>	
 		<field name="invoiceDate" type="date-time"></field>
 		<field name="dueDate" type="date-time"></field>
@@ -3114,6 +3115,7 @@
 		<field name="partyIdTo" type="id-ne"></field>
 		<field name="roleTypeIdTo" type="id-ne"></field>
 		<field name="statusId" type="id"></field>
+		<field name="isEnableAcctg" type="indicator"></field>	
 		<field name="facilityId" type="id-ne"></field>
 		<field name="instrumentDate" type="date-time"></field>	
 		<field name="effectiveDate" type="date-time"></field>

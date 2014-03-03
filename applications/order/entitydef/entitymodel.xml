@@ -382,7 +382,8 @@ under the License.
       <field name="syncStatusId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="originFacilityId" type="id"></field>
-      <field name="shipmentId" type="id"></field>      
+      <field name="shipmentId" type="id"></field>
+      <field name="isEnableAcctg" type="indicator"></field>     
       <field name="webSiteId" type="id"></field>
       <field name="productStoreId" type="id"></field>
       <field name="terminalId" type="id-long"></field>

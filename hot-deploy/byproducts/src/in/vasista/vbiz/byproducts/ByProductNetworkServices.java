@@ -4972,7 +4972,8 @@ public class ByProductNetworkServices {
 	            if (!UtilValidate.isEmpty(paymentRefNum) ) {
 	                paymentCtx.put("paymentRefNum", paymentRefNum);                        	
 	            }
-	            paymentCtx.put("statusId", "PMNT_RECEIVED");            
+	            paymentCtx.put("statusId", "PMNT_RECEIVED");
+	            paymentCtx.put("isEnableAcctg", "N");
 	            paymentCtx.put("amount", paymentAmount);
 	            paymentCtx.put("userLogin", userLogin); 
 	            paymentCtx.put("invoices", invoiceIds);

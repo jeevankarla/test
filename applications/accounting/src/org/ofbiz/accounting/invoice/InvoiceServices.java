@@ -879,6 +879,7 @@ public class InvoiceServices {
                 createInvoiceContext.put("description", orderHeader.getString("productSubscriptionTypeId"));
                 createInvoiceContext.put("invoiceDate", invoiceDate);
                 createInvoiceContext.put("dueDate", dueDate);
+                createInvoiceContext.put("isEnableAcctg", orderHeader.getString("isEnableAcctg"));
                 createInvoiceContext.put("invoiceTypeId", invoiceType);
                 // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
                 createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
@@ -3961,6 +3962,7 @@ public class InvoiceServices {
             paymentCtx.put("paymentMethodTypeId", paymentMethodType);
             paymentCtx.put("partyIdTo", organizationPartyId);
             paymentCtx.put("partyIdFrom", partyId);
+            paymentCtx.put("isEnableAcctg", context.get("isEnableAcctg"));
             if (!UtilValidate.isEmpty(paymentLocationId) ) {
                 paymentCtx.put("paymentLocation", paymentLocationId);                        	
             }            

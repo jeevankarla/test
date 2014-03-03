@@ -150,6 +150,7 @@ under the License.
         <attribute name="statusId" type="String" mode="OUT" optional="false"/>
         <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
+        <attribute name="isEnableAcctg" type="String" mode="IN" optional="true"/>
         <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
     </service>
 

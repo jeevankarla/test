@@ -99,8 +99,10 @@ under the License.
      -->
      
     <!--to diable accounting load this secas -->   
-    <service-resource type="eca" loader="main" location="servicedef/noaccounting/secas_ledger.xml"/>
+   <!--  <service-resource type="eca" loader="main" location="servicedef/noaccounting/secas_ledger.xml"/> -->
     
+     <!--to optional accounting load this secas -->   
+    <service-resource type="eca" loader="main" location="servicedef/noaccounting/secas_ledger_opt.xml"/>
     
 
     <test-suite loader="main" location="testdef/accountingtests.xml"/>

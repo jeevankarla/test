@@ -838,6 +838,12 @@ under the License.
         <description>Calculate Basic Salary Payrol Invoice Item amount</description> 
         <attribute name="partyId" mode="IN" type="String"/>                    
         <attribute name="amount" type="Double" mode="OUT" optional="false"/>        
-    </service>      
-        
+    </service>
+    <service name="checkEnableAccounting" engine="java" auth="true" invoke="checkEnableAccounting" 
+        location="org.ofbiz.accounting.util.UtilAccounting" validate="false">
+        <description>Check enable accounting flag in invoice or payment</description> 
+        <attribute name="invoiceId" mode="IN" type="String" optional="true"/>                    
+        <attribute name="paymentId" mode="IN" type="String" optional="true"/> 
+        <attribute name="conditionReply" mode="OUT" type="Boolean" optional="false"/>
+    </service>       
 </services>

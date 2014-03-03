@@ -503,6 +503,7 @@ public class OrderServices {
                 "statusId", initialStatus, "billingAccountId", billingAccountId);
         orderHeaderMap.put("orderName", context.get("orderName"));
         orderHeaderMap.put("estimatedDeliveryDate", context.get("estimatedDeliveryDate"));
+        orderHeaderMap.put("isEnableAcctg", context.get("isEnableAcctg"));
         
         if (isImmediatelyFulfilled) {
             // also flag this order as needing inventory issuance so that when it is set to complete it will be issued immediately (needsInventoryIssuance = Y)

@@ -229,7 +229,8 @@ under the License.
         <attribute name="paymentLocationId" type="String" mode="IN" optional="true"/>     
         <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>   
         <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
-        <attribute name="issuingAuthorityBranch" type="String" mode="IN" optional="true"/>   
+        <attribute name="issuingAuthorityBranch" type="String" mode="IN" optional="true"/>
+        <attribute name="isEnableAcctg" type="String" mode="IN" optional="true"/>  
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>      
     </service>
     <service name="settleInvoiceAndPayments" engine="java"

@@ -28,6 +28,7 @@ import javolution.util.FastMap;
 import javolution.util.FastList;
 
 import org.ofbiz.accounting.tax.TaxAuthorityServices;
+import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.DateTimeConverters;
 import org.ofbiz.base.util.Debug;
@@ -766,9 +767,9 @@ public class ByProductServices {
 		
         ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, currencyUomId);
         cart.setOrderType("SALES_ORDER");
+        cart.setIsEnableAcctg("N");
         cart.setChannelType(salesChannel);
         cart.setProductStoreId(productStoreId);
-
         cart.setBillToCustomerPartyId(partyId);
         cart.setPlacingCustomerPartyId(partyId);
         cart.setShipToCustomerPartyId(partyId);
