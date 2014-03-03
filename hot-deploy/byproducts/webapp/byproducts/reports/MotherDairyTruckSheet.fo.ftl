@@ -243,7 +243,12 @@ under the License.
 					<fo:table-body>
 						<fo:table-row>
 							<#assign facility = delegator.findOne("Facility", {"facilityId" : boothDetails.getKey()}, true)>
-							<fo:table-cell><fo:block font-size="5pt" keep-together="always">${boothDetails.getKey()}- ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.facilityName?if_exists)),10)}</fo:block></fo:table-cell>
+							<#assign partyTelephoneResult = dispatcher.runSync("getPartyTelephone", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", facility.ownerPartyId, "userLogin", userLogin))/>
+							<fo:table-cell><fo:block font-size="5pt" keep-together="always">${boothDetails.getKey()}- ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.facilityName?if_exists)),10)}</fo:block>
+							<#if (partyTelephoneResult.contactNumber?has_content)>
+							<fo:block font-size="5pt" text-align="center" keep-together="always">&#160;(${partyTelephoneResult.contactNumber?if_exists})</fo:block>
+							</#if>
+							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="7pt">
 									<fo:table>
