@@ -781,7 +781,6 @@ public class ByProductNetworkServices {
 	    		if(UtilValidate.isEmpty(rtId)){
 	    			Map boothDetails = (Map)(getBoothRoute(dctx, context)).get("boothDetails");
 	    			routeId = (String)boothDetails.get("routeId");
-	    			Debug.log("permanentRouteId #################################"+routeId);
 	    		}
     			
 	    		if(!isEnableProductSubscription){
@@ -862,11 +861,9 @@ public class ByProductNetworkServices {
 	    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 	    		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd));
 	    		EntityCondition rtCond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	    		Debug.log("cond11 ##################################"+rtCond);
 	    		List<GenericValue> rtSubProdList =delegator.findList("SubscriptionProduct", rtCond, null,null, null, false);
 	    		if(UtilValidate.isNotEmpty(rtSubProdList)){
 	    			tempRouteId = (EntityUtil.getFirst(rtSubProdList)).getString("sequenceNum");
-	    			Debug.log("routeId ######################## temp eEEEEE"+tempRouteId);
 	    		}
 	    		if(UtilValidate.isNotEmpty(tempRouteId)){
 	    			result.put("routeId", tempRouteId);
@@ -881,18 +878,15 @@ public class ByProductNetworkServices {
 	    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 	    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
 	    		if(UtilValidate.isNotEmpty(tempRouteId)){
-	    			Debug.log("temp ###############"+tempRouteId);
 	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, tempRouteId));
 	    		}
 	    		else{
-	    			Debug.log("route ###############"+routeId);
 	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		}
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		/*conditionList.add(EntityCondition.makeCondition("lastModifiedDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.nowTimestamp())));
 	    		conditionList.add(EntityCondition.makeCondition("lastModifiedDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp())));*/
 	    		EntityCondition cond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	    		Debug.log("cond ##################################"+cond);
 	    		List<GenericValue> subProdList =delegator.findList("SubscriptionProduct", cond, null,null, null, false);
 	    		subProdList = EntityUtil.filterByDate(subProdList , dayBegin);
 	    		/*Debug.log("subProdList=========="+subProdList);
