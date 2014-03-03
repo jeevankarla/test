@@ -128,7 +128,7 @@ if(hideSearch == "N") {
 		prodQuantityInitMap[prod] = 0;
 	}
 	productList = prodList;
-	productList = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, prodList), UtilMisc.toSet("productId", "description"), ["productId"], null, false);
+	productList = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, prodList), UtilMisc.toSet("productId", "description","brandName"), ["productId"], null, false);
 	context.productList = productList;
 	
 	totalsMap =[:];
