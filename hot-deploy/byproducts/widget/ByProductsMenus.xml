@@ -441,7 +441,7 @@
             	<parameter param-name="ChangeIndentTitle" value="ChangeIndentInit"/>
             </link>
        </menu-item>
-        <menu-item name="changeRouteIndent" title="Change Route">
+        <!-- <menu-item name="changeRouteIndent" title="Change Route">
         	<condition>
         	   <or>
 					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -452,7 +452,7 @@
             	<parameter param-name="screenFlag" value="tempRoute"/>
             	<parameter param-name="ChangeIndentTitle" value="changeRouteIndent"/>
             </link>
-        </menu-item>
+        </menu-item> -->
     </menu>
     <menu name="ProductSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="productTabButtonItem">
         <menu-item name="FindProduct" title="Find Product">
