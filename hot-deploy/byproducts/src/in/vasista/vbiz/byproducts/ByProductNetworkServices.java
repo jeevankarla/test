@@ -960,7 +960,7 @@ public class ByProductNetworkServices {
 	        	
 	        		tempChangeProdMap.put("id",productId);
 	            	tempChangeProdMap.put("cProductId", productId);
-	            	tempChangeProdMap.put("cProductName", product.getString("brandName"));
+	            	tempChangeProdMap.put("cProductName", product.getString("brandName")+" [ "+product.getString("description")+"]");
 	            	tempChangeProdMap.put("cQuantity","");
 	            	String qtyIndentCat = (String)prodIndentQtyCat.get(productId);
 	            	tempChangeProdMap.put("indentProdCat","C");
