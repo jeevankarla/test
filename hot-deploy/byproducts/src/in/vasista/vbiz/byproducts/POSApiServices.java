@@ -354,5 +354,61 @@ Debug.logInfo(infoString, module);
 	    Debug.logInfo("indentResults:" + indentMap, module);		 
     	return result;
     }
+
+    public static Map<String, Object> getFacilityAccountSummary(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	String facilityId = (String) context.get("facilityId");
+		if (UtilValidate.isEmpty(facilityId)) {
+			Debug.logError("Empty facility Id", module);
+			return ServiceUtil.returnError("Empty facility Id");	   
+		}	    	
+    	Timestamp fromDate = (Timestamp) context.get("fromDate");
+    	Timestamp thruDate = (Timestamp) context.get("thruDate");
+		BigDecimal obAmount = BigDecimal.ZERO;    	
+		BigDecimal receipts = BigDecimal.ZERO;
+		BigDecimal saleAmt = BigDecimal.ZERO;	
+		BigDecimal closingAmt = BigDecimal.ZERO;		
+		
+		Map<String, Object> facilityLedgerMap = FastMap.newInstance();  		
+    	
+		// get the OB
+		Map<String, Object> obParamMap = FastMap.newInstance();
+		obParamMap.put("userLogin", userLogin);  
+		obParamMap.put("facilityId", facilityId);  
+		obParamMap.put("saleDate", fromDate);     
+		obAmount =	(BigDecimal)ByProductNetworkServices.getOpeningBalanceForBooth( dctx , obParamMap).get("openingBalance");
+		facilityLedgerMap.put("openingAmt", obAmount.setScale(2,BigDecimal.ROUND_HALF_UP));
+
+		// get receipts
+		Map<String, Object> receiptsParamMap = FastMap.newInstance();
+		receiptsParamMap.put("facilityId", facilityId);  
+		receiptsParamMap.put("fromDate", fromDate);  
+		receiptsParamMap.put("thruDate", thruDate);   
+		
+		Map boothsPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , receiptsParamMap);
+		if(UtilValidate.isNotEmpty(boothsPaidDetail)){
+			receipts = (BigDecimal)boothsPaidDetail.get("invoicesTotalAmount");
+		}
+		facilityLedgerMap.put("receipts", receipts.setScale(2,BigDecimal.ROUND_HALF_UP));
+
+		// get saleamount
+		Map<String, Object> salesParamMap = FastMap.newInstance();
+		salesParamMap.put("facilityIds", UtilMisc.toList(facilityId));  
+		salesParamMap.put("fromDate", fromDate);  
+		salesParamMap.put("thruDate", thruDate); 
+		Map dayTotals = ByProductNetworkServices.getPeriodTotals(dctx, salesParamMap);
+		saleAmt= (BigDecimal)dayTotals.get("totalRevenue");
+		facilityLedgerMap.put("salesAmt", saleAmt.setScale(2,BigDecimal.ROUND_HALF_UP));
+		
+		// compute closing balance
+		closingAmt = ((BigDecimal)facilityLedgerMap.get("openingAmt")).add((BigDecimal)facilityLedgerMap.get("salesAmt")).subtract((BigDecimal)facilityLedgerMap.get("receipts")).setScale(2,BigDecimal.ROUND_HALF_UP);	
+		facilityLedgerMap.put("closingAmt", closingAmt);
+		
+		Map result = FastMap.newInstance();  		
+		result.put("accountSummary", facilityLedgerMap);
+	    Debug.logInfo("accountSummary:" + facilityLedgerMap, module);		 
+    	return result;
+    }
     
 }
