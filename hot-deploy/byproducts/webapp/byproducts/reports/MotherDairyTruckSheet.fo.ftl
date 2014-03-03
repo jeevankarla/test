@@ -148,7 +148,7 @@ under the License.
 													<#if (counter<20)>
 														<#assign lmsProdCounter = lmsProdCounter+1>
 														<fo:table-cell>	
-															<fo:block>${productNames.get(product)?if_exists}</fo:block>																									
+															<fo:block>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#list>
@@ -169,7 +169,7 @@ under the License.
 													<#if (counter < 20) >
 														<#assign byProdCounter = byProdCounter+1>
 														<fo:table-cell>
-															<fo:block>${productNames.get(product)?if_exists}</fo:block>
+															<fo:block>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>
 														</fo:table-cell>
 													</#if>
 												</#list>
@@ -185,7 +185,7 @@ under the License.
 															<#assign byProdCounter = byProdCounter+1>
 															<#assign prodCount = prodCount + 1>
 															<fo:table-cell>
-																<fo:block>${productNames.get(product)?if_exists}</fo:block>
+																<fo:block>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>
 															</fo:table-cell>
 														</#if>
 													</#list>
@@ -201,7 +201,7 @@ under the License.
 															<#assign byProdCounter = byProdCounter+1>
 															<#assign prodCount = prodCount + 1>
 															<fo:table-cell>
-																<fo:block>${productNames.get(product)?if_exists}</fo:block>
+																<fo:block>${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>
 															</fo:table-cell>
 														</#if>
 													</#list>
