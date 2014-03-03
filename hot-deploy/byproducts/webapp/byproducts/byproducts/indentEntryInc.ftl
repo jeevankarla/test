@@ -102,9 +102,8 @@ function updateGrid(){
 						msg = result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"];
 						  $('div#errorMsg').html('<span style="color:red; font-size:10pt; font-stlye:bold">"'+msg+'"</span>');
                 	   $('div#errorMsg').delay(7000).fadeOut('slow');
-                	    //$('#myGrid1').hide();
 						//$('div#errorMsg').html('<label>'+msg +'</label>');
-						
+						gridHideCall();
 					}else{
 					    $('div#changeIndentEntry_spinner').html('');
 						var changeIndentProductList = result["changeIndentProductList"];
@@ -130,7 +129,8 @@ function updateGrid(){
 						var securityDeposit = result["securityDeposit"];
 						var routeCapacity = result["routeCapacity"];
 						
-						
+						//to show Grid on success
+						gridShowCall();
 						updateGrid1(changeIndentProductList);
 						if(screenFlag != "DSCorrection"){
 							updateGrid2(categoryTot);	
@@ -386,6 +386,7 @@ function updateGrid(){
         _grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
       		var productLabel = item['cProductName']; 
+      		productLabelIdMap[productLabel]
       		item['cProductId'] = productLabelIdMap[productLabel];     		 		
       		_grid.invalidateRow(data.length);
       		data.push(item);
@@ -615,6 +616,14 @@ function updateGrid(){
              absGrid.invalidate();
              absGrid.render();
            
+    }
+    function gridHideCall() {
+              $('#myGrid1').hide();
+           $('#GridSaveId').hide();
+    }
+     function gridShowCall() {
+            $('#myGrid1').show();
+           $('#GridSaveId').show();
     }
      
 	var boothsList =  ${StringUtil.wrapString(boothsJSON)}
