@@ -97,7 +97,8 @@ if(tempRoute){
 		boothsList.each{booth ->
 			JSONObject newBoothObj = new JSONObject();
 			newBoothObj.put("value",booth.facilityId);
-			newBoothObj.put("label",booth.facilityName+" ["+route.facilityName+"]");
+			//newBoothObj.put("label",booth.facilityName+" ["+route.facilityName+"]");
+			newBoothObj.put("label",booth.facilityName+" ["+booth.facilityId+"]");
 			boothItemsJSON.add(newBoothObj);
 			if(!boothsSet.contains(booth.facilityId)){
 				boothsJSON.add(newBoothObj);
