@@ -112,10 +112,17 @@ $(function() {
  	 		 
  	      }	
  	 });
+     $('#routeId').blur(function (e) {    	 	
+			//$("#routeId").autocomplete({ source: routesList , onblur: function( event, ui ) {
+		var rt = $("#routeId").val();		
+    	 $('span#routeTooltip').html('<label>'+rt+'</label>');
+    	 
+			//} });	
+	 });
      // route auto Complete
      $('#routeId').keypress(function (e) {    	 	
 			$("#routeId").autocomplete({ source: routesList , select: function( event, ui ) {
-				$('span#routeTooltip').html('<label>'+ui.item.name+'</label>');
+				$('span#routeTooltip').html('<label>'+ui.item.label+'</label>');
 			} });	
 	 });
   // route auto Complete
