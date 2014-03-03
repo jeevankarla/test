@@ -310,6 +310,7 @@ public class ByProductServices {
 	        shipmentIdsList.add(shipmentId);
 	        Map vehicleCtx = UtilMisc.toMap("facilityId",routesList.get(i));
 	        vehicleCtx.put("supplyDate", estimatedDeliveryDate);
+	        /*
 	        Map vehicleRoleResult =  (Map) ByProductNetworkServices.getVehicleRole(dctx,vehicleCtx);
 	        
 	        if(UtilValidate.isNotEmpty(vehicleRoleResult.get("vehicleRole"))){
@@ -356,7 +357,7 @@ public class ByProductServices {
 	        } catch (GenericServiceException e) {
 	            Debug.logError(e, "Error calling runSubscriptionAutoCreateOrders service", module);
 	            return ServiceUtil.returnError(e.getMessage());
-	        }
+	        }*/
 		}
 		 try {
 	        	Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("shipmentIds", shipmentIdsList, 
