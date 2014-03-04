@@ -62,11 +62,11 @@
             </condition>
 			<link target="TransporterMargins"></link>
         </menu-item> 
-        <menu-item name="reports" title="${uiLabelMap.CommonReports}">
+      <!--   <menu-item name="reports" title="${uiLabelMap.CommonReports}">
             <link target="reports">
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
-        </menu-item> 
+        </menu-item> --> 
 		<menu-item name="analytics" title="Analytics">
         	<condition>
 				<or>
