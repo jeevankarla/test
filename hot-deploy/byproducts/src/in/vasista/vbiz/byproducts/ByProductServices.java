@@ -919,7 +919,7 @@ public class ByProductServices {
            	 shipment.set("statusId", "GENERATION_FAIL");
      		  	shipment.store();
            }catch (Exception ex) {
-				// TODO: handle exception
+        	   return ServiceUtil.returnError("Failed to add tax amount  " + e);
 			}
     		return ServiceUtil.returnError("Failed to add tax amount  " + e);
 		}
@@ -939,18 +939,20 @@ public class ByProductServices {
                	 shipment.set("statusId", "GENERATION_FAIL");
          		  	shipment.store();
                 }catch (Exception e) {
-   				// TODO: handle exception
+                	Debug.logError(e , module);
+	                return ServiceUtil.returnError(e+" Error While Creating Employee Subsidy Milk  !");
    			    }
    	  	 			return result;
    	  	 		}
 
    	  	 	}catch (Exception e) {
-   	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);
+   	  			  Debug.logError(e, "Error While Creating Employee Subsidy Milk ", module);
    	  			try{
                	 shipment.set("statusId", "GENERATION_FAIL");
          		  	shipment.store();
                }catch (Exception ex) {
-   				// TODO: handle exception
+            		Debug.logError(ex , module);
+	                return ServiceUtil.returnError(ex+" Error while Creating Order !");
    			}
    	  			  return resultMap;			  
    	  	 	}
@@ -963,24 +965,23 @@ public class ByProductServices {
 	  	 		if (ServiceUtil.isError(result)) {
 	  	 			String errMsg =  ServiceUtil.getErrorMessage(result);
 	  	 			Debug.logError(errMsg , module);
-	  	 			try{
-	  	            	 shipment.set("statusId", "GENERATION_FAIL");
-	  	      		  	shipment.store();
-	  	            }catch (Exception e) {
-	  					// TODO: handle exception
-	  				}
-	  	 			return result;
+	  	 			shipment.set("statusId", "GENERATION_FAIL");
+  	      		  	shipment.store();
+  	      		  	return ServiceUtil.returnError(errMsg+"==Error While  Rounding Order !");
+	  	 			
 	  	 		}
 
 	  	 	}catch (Exception e) {
-	  			  Debug.logError(e, "Problem while doing Stock Transfer for Relacement", module);
+	  			  Debug.logError(e, "Error while Creating Order", module);
 	  			 try{
 	            	 shipment.set("statusId", "GENERATION_FAIL");
 	      		  	shipment.store();
 	              }catch (Exception ex) {
-					// TODO: handle exception
+	            	  Debug.logError(ex, module);        
+	                   return ServiceUtil.returnError(ex.toString());
 				  }
-	  			  return resultMap;			  
+	              return ServiceUtil.returnError(e+"==Error While  Rounding Order !");
+	  			  //return resultMap;			  
 	  	 	}
         // approve the order
         if (UtilValidate.isNotEmpty(orderId)) {
@@ -1019,7 +1020,8 @@ public class ByProductServices {
                    	    shipment.set("statusId", "GENERATION_FAIL");
              		  	shipment.store();
                    }catch (Exception ex) {
-       				// TODO: handle exception
+                	   Debug.logError(e, module);        
+                       return ServiceUtil.returnError(e.toString());
        			}
                  return ServiceUtil.returnError(e.toString()); 
                    
@@ -3835,6 +3837,7 @@ public class ByProductServices {
 	 	  
 	 	 if( UtilValidate.isEmpty(subscriptionProductsList)){
 	 		  Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
+	 		 request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
 	 		  return "success";
 	 	 }
 	 	 List<String> orderBy = UtilMisc.toList("subscriptionId", "productSubscriptionTypeId","-productId"); 
@@ -3864,14 +3867,17 @@ public class ByProductServices {
 						processChangeIndentHelperCtx.put("subscriptionProductsList", orderSubProdsList);
 						processChangeIndentHelperCtx.put("shipmentId" , shipmentId);
 						result = createSalesOrderSubscriptionProductType(dctx, processChangeIndentHelperCtx);
+						if (ServiceUtil.isError(result)) {
+	            			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+	            			  request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For :" + boothId);
+	            			return "error";
+	            			//break;
+	            		}
 						orderId = (String) result.get("orderId");
 			  			 invoiceId = (String) result.get("invoiceId");
 			  			 partyIdFrom = (String) result.get("partyId");
 			  			invoices.add(invoiceId);
-						if (ServiceUtil.isError(result)) {
-	            			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
-	            			break;
-	            		}
+						
 	        		// quantity = (BigDecimal)result.get("quantity");                		
 	        		orderSubProdsList.clear();
 	        		tempSubId = subId;
@@ -3884,14 +3890,16 @@ public class ByProductServices {
 				processChangeIndentHelperCtx.put("subscriptionProductsList", orderSubProdsList);
 				processChangeIndentHelperCtx.put("shipmentId" , shipmentId);
 				result = createSalesOrderSubscriptionProductType(dctx, processChangeIndentHelperCtx); 
+				if (ServiceUtil.isError(result)) {
+	    			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+	    		    request.setAttribute("_ERROR_MESSAGE_", "Problem creating Indent For AdhocSale :" + boothId);
+	    		    return "error";
+				} 
 				orderId = (String) result.get("orderId");
 	 			 invoiceId = (String) result.get("invoiceId");
 	 			 partyIdFrom = (String) result.get("partyId");
 	 			invoices.add(invoiceId);
-				if (ServiceUtil.isError(result)) {
-	    			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
-	    		    request.setAttribute("_ERROR_MESSAGE_", "Problem creating entry in Supplementary Indent  For :" + boothId);
-	    		}  
+				 
 	    }
 	 	 
 	 	 /*if(amount.compareTo(BigDecimal.ZERO)>0 && UtilValidate.isNotEmpty(amount)){
