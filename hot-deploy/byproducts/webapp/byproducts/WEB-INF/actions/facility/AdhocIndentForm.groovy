@@ -30,6 +30,9 @@ effectiveDate = parameters.effectiveDate;
 priceTypeId=parameters.priceTypeId;
 subscriptionProdList = [];
 displayGrid = true;
+effDateDayBegin="";
+effDateDayEnd="";
+
 SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
 if(UtilValidate.isNotEmpty(effectiveDate)){
 try {
@@ -137,7 +140,8 @@ lastSubProdList = [];
 todaySubProdList = [];
 finalProdList = [];
 
-
+partyId="";
+facilityParty=null;
 if(boothId){
 	partyAddress = null
 	facilityParty = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId),false);
@@ -177,19 +181,37 @@ context.lastIndentDate = lastIndentDate;
 prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
+JSONObject productLabelIdJSON=new JSONObject();
 context.productList = prodList;
 prodList.each{eachItem ->
 	JSONObject newObj = new JSONObject();
 	newObj.put("value",eachItem.productId);
-	newObj.put("label",eachItem.productId + "[" + eachItem.productName + "]");
+	newObj.put("label",eachItem.brandName +" [ " +eachItem.description+"]");
 	productItemsJSON.add(newObj);
-	productIdLabelJSON.put(eachItem.productId, eachItem.productId + "[" + eachItem.productName + "]");
+	productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]");
+	productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]", eachItem.productId);
 }
 
 productPrices = [];
+Map prodPriceMap =[:];
 if(boothId){
 	productStoreId = ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-	inMap = [:];
+	
+	
+	Map inputProductRate = FastMap.newInstance();
+	inputProductRate.put("productStoreId", productStoreId);
+	inputProductRate.put("fromDate",effDateDayBegin);
+	inputProductRate.put("facilityId",boothId);
+	inputProductRate.put("partyId",partyId);
+	inputProductRate.put("facilityCategory",facilityParty.categoryTypeEnum);
+	inputProductRate.put("userLogin",userLogin);
+	Map priceResultMap =ByProductNetworkServices.getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
+	prodPriceMap = (Map)priceResultMap.get("priceMap");
+	//result.put("productPrice", prodPriceMap);
+	
+	
+	
+	/*inMap = [:];
 	inMap.productStoreId = productStoreId;
 	result = ByProductServices.getProdStoreProducts(dctx, inMap)
 	productsList = result.productIdsList;
@@ -221,15 +243,17 @@ if(boothId){
 				productPrices.add(prodPrice);
 			}
 		}
-	}
+	}*/
 }
 JSONObject productCostJSON = new JSONObject();
-productPrices.each{eachProdPrice ->
+productCostJSON=prodPriceMap;
+/*prodPriceMap.each{eachProdPrice ->
 	productCostJSON.put(eachProdPrice.productId,eachProdPrice.unitCost);
-}
+}*/
 context.productItemsJSON = productItemsJSON;
 context.productIdLabelJSON = productIdLabelJSON;
 context.productCostJSON = productCostJSON;
+context.productLabelIdJSON = productLabelIdJSON;
 if(displayGrid){
 	context.partyCode = facility;
 }
