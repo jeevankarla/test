@@ -109,8 +109,9 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								}
 							    prodWiseDetailMap.put(product, temp);
 							}
+							boothWiseMap.put(boothId, prodWiseDetailMap);//if product Totals notEmpty then only add
 						}
-						boothWiseMap.put(boothId, prodWiseDetailMap);
+						
 					}
 				}
 						allProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, allProductList) , null, ["sequenceNum"], null, false);
