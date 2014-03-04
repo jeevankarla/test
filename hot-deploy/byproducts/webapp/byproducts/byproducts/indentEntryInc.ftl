@@ -276,7 +276,7 @@ function updateGrid(){
 			data = ajaxJson;
 		}
 		var columns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:160, minWidth:160, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
 			{id:"cQuantity", name:"Quantity", field:"cQuantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			<#if screenFlag?exists && screenFlag != 'DSCorrection'>
 				{id:"supply", name:"C/P/B ", field:"uomId", width:35, minWidth:35, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
