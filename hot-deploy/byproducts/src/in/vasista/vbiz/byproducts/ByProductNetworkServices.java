@@ -732,9 +732,9 @@ public class ByProductNetworkServices {
 	 	public static Map<String, Object> getBoothChandentIndent(DispatchContext dctx, Map<String, ? extends Object> context){
 	        Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
-	        Timestamp supplyDate = (Timestamp) context.get("supplyDate"); 
+	        String supplyDateStr = (String) context.get("supplyDate"); 
 	        String boothId = (String) context.get("boothId");
-	        String rtId = (String) context.get("routeId");
+	        String routeId = (String) context.get("routeId");
 	        String tripId = (String) context.get("tripId");
 	        Boolean isEnableProductSubscription = Boolean.FALSE;
 	        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
@@ -744,8 +744,6 @@ public class ByProductNetworkServices {
 	           isEnableProductSubscription=(Boolean) context.get("isEnableProductSubscription");
 	        }
 	        Map result = ServiceUtil.returnSuccess(); 
-	        Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
-	        Timestamp dayEnd = UtilDateTime.getDayEnd(supplyDate);
 	        List changeIndentProductList = FastList.newInstance();
 	        Map<String ,BigDecimal> changeQuantityMap =FastMap.newInstance();
 	        Map<String ,BigDecimal> prevQuantityMap =FastMap.newInstance();
@@ -761,9 +759,25 @@ public class ByProductNetworkServices {
 	        String productStoreId = (String)(ByProductServices.getByprodFactoryStore(delegator)).get("factoryStoreId");
 	        String partyId = "";
 	        String facilityCategory = "";
-	        String tempRouteId = "";
-	        String routeId = "";
-	    	try{
+	        Timestamp supplyDate = null;
+	        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+	        if(UtilValidate.isNotEmpty(supplyDateStr)){
+		  		  try {
+		  			supplyDate = new java.sql.Timestamp(sdf.parse(supplyDateStr).getTime());
+		  		  } catch (ParseException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + supplyDateStr, module);
+		  		  } catch (NullPointerException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + supplyDateStr, module);
+		  		  }
+			  }
+		  	  else{
+		  		supplyDate = UtilDateTime.nowTimestamp();
+		  	  }
+	          Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
+  		      Timestamp dayEnd = UtilDateTime.getDayStart(supplyDate);
+  		
+  		      try{
+	    		
 	    		GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId",boothId), true);
 	    		if(UtilValidate.isEmpty(facility)){
 	    			Debug.logError("Invalid  Booth Id", module);
@@ -778,11 +792,13 @@ public class ByProductNetworkServices {
 	    		facilityCategory = facility.getString("categoryTypeEnum");
 	    		//lets override productSubscriptionTypeId based on facility category
 	    		
-	    		if(UtilValidate.isEmpty(rtId)){
-	    			Map boothDetails = (Map)(getBoothRoute(dctx, context)).get("boothDetails");
+	    		if(UtilValidate.isEmpty(routeId)){
+	    			Map boothCtxMap = FastMap.newInstance();
+	    			boothCtxMap.putAll(context);
+	    			boothCtxMap.put("supplyDate", supplyDate);
+	    			Map boothDetails = (Map)(getBoothRoute(dctx, boothCtxMap)).get("boothDetails");
 	    			routeId = (String)boothDetails.get("routeId");
 	    		}
-    			
 	    		if(!isEnableProductSubscription){
 	    			if(UtilValidate.isEmpty(facility.getString("categoryTypeEnum"))){
 	    				productSubscriptionTypeId = "CASH";
@@ -834,10 +850,10 @@ public class ByProductNetworkServices {
 	    			return ServiceUtil.returnError("No Active Data For given Booth");
 	    				
 	    		}
-	    		if(UtilValidate.isEmpty(routeId)){
+	    		/*if(UtilValidate.isEmpty(routeId)){
 	    			Map boothDetails = (Map)(getBoothRoute(dctx, context)).get("boothDetails");
 	    			routeId = (String)boothDetails.get("routeId");
-	    		}   
+	    		}   */
 	    		result.put("routeId", routeId);
 	    		result.put("tempRouteId",routeId);
 	    		String subscriptionId = (EntityUtil.getFirst(subscriptionList)).getString("subscriptionId");
@@ -854,7 +870,7 @@ public class ByProductNetworkServices {
 	    		// lets get any changes already made
 	    		*/
 	    		
-	    		if(UtilValidate.isEmpty(rtId)){
+	    		/*if(UtilValidate.isEmpty(rtId)){
 	    			conditionList.clear();
 		    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 		    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
@@ -873,18 +889,13 @@ public class ByProductNetworkServices {
 		    			result.put("routeId", routeId);
 			    		result.put("tempRouteId",routeId);
 		    		}
-	    		}
+	    		}*/
 	    		
 	    		
 	    		conditionList.clear();
 	    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 	    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
-	    		if(UtilValidate.isNotEmpty(tempRouteId)){
-	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, tempRouteId));
-	    		}
-	    		else{
-	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
-	    		}
+    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		/*conditionList.add(EntityCondition.makeCondition("lastModifiedDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.nowTimestamp())));
 	    		conditionList.add(EntityCondition.makeCondition("lastModifiedDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp())));*/
@@ -1006,13 +1017,7 @@ public class ByProductNetworkServices {
 	    	// lets populate route totals
 	    	try{
 	    		conditionList.clear();
-	    		if(UtilValidate.isNotEmpty(tempRouteId)){
-	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, tempRouteId));
-	    		}
-	    		else{
-	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
-	    		}
-	    		
+    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		if(UtilValidate.isNotEmpty(tripId)){
@@ -1025,12 +1030,9 @@ public class ByProductNetworkServices {
 	    		subProdList = EntityUtil.filterByDate(subProdList , dayBegin);
 	    		/* Hard coded the categories ... get the few categories by type for indent totals*/
 	    		
-	    		result.put("routeCapacity", 0);
-	    		String rt = routeId;
-	    		if(UtilValidate.isNotEmpty(tempRouteId)){
-	    			rt = tempRouteId;
-	    		}
-	    		GenericValue route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", rt), false);
+	    		result.put("routeCapacity", BigDecimal.ZERO);
+	    		
+	    		GenericValue route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
     			result.put("routeName", route.getString("facilityName"));
     			result.put("routeCapacity", route.getBigDecimal("facilitySize"));
 	    		List condProdCatList = UtilMisc.toList("MILK","CURD", "FMILK_CATEGORY");

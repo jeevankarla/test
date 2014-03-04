@@ -276,7 +276,7 @@
         <attribute name="boothId" mode="IN" type="String" optional="false"/>
         <attribute name="productSubscriptionTypeId" mode="IN" type="String" optional="false"/>
         <attribute name="subscriptionTypeId" mode="IN" type="String" optional="false"/>      
-        <attribute name="supplyDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
+        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
         <attribute name="changeIndentProductList" mode="OUT" type="List" optional="true"/>
         <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
         <attribute name="tempRouteId" mode="OUT" type="String" optional="true"/>

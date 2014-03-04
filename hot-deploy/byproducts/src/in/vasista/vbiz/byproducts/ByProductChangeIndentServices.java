@@ -100,7 +100,7 @@ public class ByProductChangeIndentServices {
     	  GenericValue facility = null;
     	  List custTimePeriodList = FastList.newInstance();  	 
     	  if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
-    		  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");             
+    		  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
     		  try {
     			  effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
     		  } catch (ParseException e) {
@@ -115,7 +115,6 @@ public class ByProductChangeIndentServices {
     			request.setAttribute("_ERROR_MESSAGE_","Booth Id is empty");
     			return "error";
     		}
-        
         // Get the parameters as a MAP, remove the productId and quantity params.
     	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
     	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
@@ -134,7 +133,7 @@ public class ByProductChangeIndentServices {
     			  productSubscriptionTypeId = "SPECIAL_ORDER";
     		  }else if(facility.getString("categoryTypeEnum").equals("CR_INST")){
     			 productSubscriptionTypeId = "CREDIT";
-   		  }
+    		  }
     	  }catch (GenericEntityException e) {
     		  Debug.logError(e, "Booth does not exist", module);
     		  request.setAttribute("_ERROR_MESSAGE_", "Booth"+" '"+boothId+"'"+" does not exist");
@@ -143,16 +142,16 @@ public class ByProductChangeIndentServices {
     	  try {
     		  List conditionList =FastList.newInstance();
     		  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
-  		  if(subscriptionTypeId.equals("AM")){
-            	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId) ,EntityOperator.OR ,EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, null)));
-            	
-            }else{
-            	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
-            }
-  		  if(UtilValidate.isNotEmpty(tripId)){
-  			  conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
-  		  }
-  		  EntityCondition subCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
+	  		  if(subscriptionTypeId.equals("AM")){
+	            	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId) ,EntityOperator.OR ,EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, null)));
+	            	
+	          }else{
+	            	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
+	          }
+	  		  if(UtilValidate.isNotEmpty(tripId)){
+	  			  conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+	  		  }
+	  		  EntityCondition subCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
     		  subscriptionList=delegator.findList("SubscriptionAndFacility", subCond, null, null, null, false);
     		  subscriptionList = EntityUtil.filterByDate(subscriptionList ,effectiveDate);
     		  if(UtilValidate.isEmpty(subscriptionList)){
@@ -302,14 +301,14 @@ public class ByProductChangeIndentServices {
     			Iterator mapIterator = prodIndentCat.entrySet().iterator();
   			while (mapIterator.hasNext()) {
   				Map.Entry entry = (Entry) mapIterator.next();
-    				prodId = (String)entry.getKey();
+    			prodId = (String)entry.getKey();
   	        	categoryType = (String)entry.getValue();
   	        	if(categoryType.equals("CRATE_INDENT")){
   	        		crateIndentProductList.add(prodId);
   	        	}
       		}
-    		}
-    		List<GenericValue> subscriptionProdList =FastList.newInstance();
+    	}
+    	List<GenericValue> subscriptionProdList =FastList.newInstance();
   		List conditionList = UtilMisc.toList(
   				  EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
   		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
@@ -336,6 +335,7 @@ public class ByProductChangeIndentServices {
   				  String sequenceNum = (String)productQtyMap.get("sequenceNum");
   				  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
   				  BigDecimal crateQuantity = BigDecimal.ZERO;
+  				  
   				  if(crateIndentProductList.contains(productId)){
   					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
   					  crateQuantity = quantity;

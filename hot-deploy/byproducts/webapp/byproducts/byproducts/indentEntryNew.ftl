@@ -26,7 +26,6 @@
     
     	<div class="screenlet-body">
 			<form name="changeindentinit" id="changeindentinit">  
-      			<#-- <input type="hidden" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDateTime!''}"/>-->
    	  			<input type="hidden" name="tempRouteId" id="tempRouteId"/>
    	  			<input type="hidden" name="tempTripId" id="tempTripId"/>
       			<table width="60%" border="0" cellspacing="0" cellpadding="0">     
@@ -34,18 +33,16 @@
           				<td>&nbsp;</td>
           				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.SupplyDate}:</div></td>
           				<td>&nbsp;</td>
-       					<#if screenFlag?exists && screenFlag != 'DSCorrection'>
+       					<#--<#if screenFlag?exists && screenFlag != 'DSCorrection'>
        						<input type="hidden" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDateTime!''}"/>
        						<td valign='middle'>
        							<div class='tabletext h2'>${defaultEffectiveDate}</div>
        						</td>
-	       				<#else>
+	       				<#else>-->
 	       					<td>
-            					<div class='tabletext h3'>
-            						<input class="h2" type="text" size="18" maxlength="20" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>
-            					</div>
+            					<input class="h2" type="text" size="18" maxlength="20" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate?if_exists}"/>
           					</td>        
-            			</#if>
+            			<#--</#if>-->
           			</tr>
           			<tr><td><br/></td></tr>
           			<tr>
