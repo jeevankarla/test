@@ -2,9 +2,9 @@
 <#assign changeRowTitle = "Changes">                
 
 <#include "indentEntryInc.ftl"/>
-<#if screenFlag?exists && screenFlag == 'tempRoute'>
+
 	<#include "TempRouteChangeToolTip.ftl"/>
-</#if>
+
 <div class="full">
   <div class="lefthalf">
 	<div class="screenlet">
