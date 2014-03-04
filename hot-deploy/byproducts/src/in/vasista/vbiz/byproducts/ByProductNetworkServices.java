@@ -854,25 +854,27 @@ public class ByProductNetworkServices {
 	    		// lets get any changes already made
 	    		*/
 	    		
+	    		if(UtilValidate.isEmpty(rtId)){
+	    			conditionList.clear();
+		    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+		    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+		    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
+		    		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd));
+		    		EntityCondition rtCond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    		List<GenericValue> rtSubProdList =delegator.findList("SubscriptionProduct", rtCond, null,null, null, false);
+		    		if(UtilValidate.isNotEmpty(rtSubProdList)){
+		    			tempRouteId = (EntityUtil.getFirst(rtSubProdList)).getString("sequenceNum");
+		    		}
+		    		if(UtilValidate.isNotEmpty(tempRouteId)){
+		    			result.put("routeId", tempRouteId);
+			    		result.put("tempRouteId",tempRouteId);
+		    		}
+		    		else{
+		    			result.put("routeId", routeId);
+			    		result.put("tempRouteId",routeId);
+		    		}
+	    		}
 	    		
-	    		conditionList.clear();
-	    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
-	    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
-	    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
-	    		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd));
-	    		EntityCondition rtCond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	    		List<GenericValue> rtSubProdList =delegator.findList("SubscriptionProduct", rtCond, null,null, null, false);
-	    		if(UtilValidate.isNotEmpty(rtSubProdList)){
-	    			tempRouteId = (EntityUtil.getFirst(rtSubProdList)).getString("sequenceNum");
-	    		}
-	    		if(UtilValidate.isNotEmpty(tempRouteId)){
-	    			result.put("routeId", tempRouteId);
-		    		result.put("tempRouteId",tempRouteId);
-	    		}
-	    		else{
-	    			result.put("routeId", routeId);
-		    		result.put("tempRouteId",routeId);
-	    		}
 	    		
 	    		conditionList.clear();
 	    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
