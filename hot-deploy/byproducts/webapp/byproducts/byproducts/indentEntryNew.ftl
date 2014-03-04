@@ -206,7 +206,7 @@
 				<span id="totalAmount">&nbsp;&nbsp;
 			</label>
 		</div>
-		<div id="myGrid1" style="width:85%;height:500px;"></div>
+		<div id="myGrid1" style="width:100%;height:500px;"></div>
 			</br>
 		</div>	
     	<div  id="GridSaveId" align="center">
