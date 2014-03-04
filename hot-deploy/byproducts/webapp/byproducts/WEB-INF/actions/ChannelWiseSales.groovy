@@ -150,7 +150,7 @@ if(tempBoothList){
 }
 facilityPriceMap = [:];
 classificationMap = [:];
-if(distinctFacility){
+/*if(distinctFacility){
 	distinctFacility.each{eachFacility ->
 		classifyGroupId = "";
 		facilityParty = delegator.findOne("Facility", UtilMisc.toMap("facilityId", eachFacility), false);
@@ -173,7 +173,7 @@ if(distinctFacility){
 		}
 		
 	}
-}
+}*/
 
 SortedMap DataMap = new TreeMap();
 productMap = [:];
@@ -193,16 +193,11 @@ if(productQuantInc){
 if(dailySalesRevenueTrend){	
 	if(orderItemList){
 		orderItemList.each{eachItem ->
-			pricesMap = [:];					
 			estimatedDeliveryDate = eachItem.getAt("estimatedDeliveryDate");
 			booth = (eachItem.getAt("originFacilityId")).toUpperCase();
-			pricesMap = facilityPriceMap.get(booth);
-			productId = eachItem.getAt("productId");
-			prodPriceMap = pricesMap.get(productId);
-			unitPrice = prodPriceMap.getAt("totalAmount");
+			
 			// for now lets take unit price without vat
-			//unitPrice = eachItem.getAt("unitPrice");
-
+			unitPrice = eachItem.getAt("unitListPrice");
 			quantity = eachItem.getAt("quantity");
 			/*unitPrice = pricesMap.getAt(productId);*/
 			totalAmount = quantity * unitPrice;
@@ -233,8 +228,12 @@ if(dailySalesRevenueTrend){
 	productCatMap = ByProductNetworkServices.getProductCategoryMap(delegator, "CONTINUES_INDENT");
 	productCatMap.putAll(ByProductNetworkServices.getProductCategoryMap(delegator, "DAILY_INDENT"));
 	if(orderItemList){
-		orderItemList.each{eachItem ->			
-			boothRegionMap = boothsRegionMap.get((eachItem.getAt("originFacilityId")));
+		orderItemList.each{ eachItem ->	
+			boothRegionMap =[:];
+			if(UtilValidate.isNotEmpty(boothsRegionMap)){
+				boothRegionMap = boothsRegionMap.get((eachItem.getAt("originFacilityId")));
+			}
+			
 			regionId = null;
 			if(boothRegionMap){
 				regionId = boothRegionMap.getAt("regionId");
@@ -243,16 +242,9 @@ if(dailySalesRevenueTrend){
 			productId = eachItem.getAt("productId").toUpperCase();
 			if(eachItem.getAt("categoryTypeEnum") != null){
 				categoryTypeEnum = eachItem.getAt("categoryTypeEnum");
-				pricesMap = [:];
 				booth = (eachItem.getAt("originFacilityId")).toUpperCase();
-				
-				pricesMap = facilityPriceMap.get(booth);
-				
-				prodPriceMap = pricesMap.get(productId);
-				productId = eachItem.getAt("productId");
-				unitPrice = prodPriceMap.getAt("totalAmount");
 				// for now lets take unit price without vat
-				//unitPrice = eachItem.getAt("unitPrice");
+				unitPrice = eachItem.getAt("unitListPrice");
 				quantity = eachItem.getAt("quantity");
 				totalAmount = quantity * unitPrice;
 				tempQuant = productQuantIncluded.get(productId).multiply(quantity)

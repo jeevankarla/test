@@ -26,7 +26,6 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.network.NetworkServices;
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -84,9 +83,9 @@ else {
 	productList = ByProductNetworkServices.getByProductProducts(dctx, context);
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(productList, "productId", true)));
 }
-conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, "SHOPPEE"));
+conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, "SHP_RTLR"));
 conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED")));
-/*conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));*/
+conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
 SortedMap parlourMap = new TreeMap();
