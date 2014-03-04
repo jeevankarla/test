@@ -37,6 +37,7 @@
 	var dataView;
 	var dataView2;
 	
+	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
@@ -121,7 +122,7 @@
     function productFormatter(row, cell, value, columnDef, dataContext) {   
         return productIdLabelMap[value];
     }
-    
+   /* 
     function productValidator(value) {
 
       var currProdCnt = 1;
@@ -146,7 +147,36 @@
       }
       return {valid: true, msg: null};
     }    
-
+*/
+   function productValidator(value,item) {
+      var currProdCnt = 1;
+	  for (var rowCount=0; rowCount < data.length; ++rowCount)
+	  { 
+	  	 
+		if (data[rowCount]['productId'] != null && data[rowCount]['productId'] != undefined && value == data[rowCount]['productId']) {
+			++currProdCnt;
+		}
+	  }
+	  
+	  var invalidProdCheck = 0;
+	  for (var rowCount=0; rowCount < availableTags.length; ++rowCount)
+	  {  
+		if (value == availableTags[rowCount]["label"]) {
+			invalidProdCheck = 1;
+		}
+	  }
+      if (currProdCnt > 1) {
+        return {valid: false, msg: "Duplicate Product " + value};      				
+      }
+      if(invalidProdCheck == 0){
+      	return {valid: false, msg: "Invalid Product " + value};
+      }
+      
+      if (item != null && item != undefined ) {
+      	item['productId'] = productLabelIdMap[value];
+	  }      
+      return {valid: true, msg: null};
+    }
 	var mainGrid;		
 	function setupGrid1() {
 
@@ -195,9 +225,12 @@
             	return false;
             }
         });
-        
-       grid.onAddNewRow.subscribe(function (e, args) {
-      		var item = args.item;     		
+       
+    	  grid.onAddNewRow.subscribe(function (e, args) {
+      		var item = args.item;   
+      		var productLabel = item['productId']; 
+      		productLabelIdMap[productLabel]
+      		item['productId'] = productLabelIdMap[productLabel];     		 		
       		grid.invalidateRow(data.length);
       		data.push(item);
       		grid.updateRowCount();
