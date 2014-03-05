@@ -8,7 +8,8 @@
 	var routeData = ${StringUtil.wrapString(facilityItemsJSON)}
 	var routeValuesList ;
 	var routeList ='';
-
+	
+	
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -80,19 +81,28 @@
 	}
 	
 	function setRoutesList(selection){
+		 	 setRoutesListByValue(selection.value);
+	}
+	function setRoutesListByValue(selectionValue){
 		 var optionList = '';
 		 optionList += "<option value = " + "AllRoutes" + " >" +"AllRoutes"+ "</option>";
-	 	 routeValuesList = routeData[selection.value];
-	 	 for(var i=0 ; i<routeValuesList.length ; i++){
+	 	 routeValuesList = routeData[selectionValue];
+	 	 if(routeValuesList != undefined && routeValuesList != ""){
+	 	 	for(var i=0 ; i<routeValuesList.length ; i++){
 				var innerList=routeValuesList[i];	              			             
                 optionList += "<option value = " + innerList['facilityId'] + " >" + innerList['facilityId'] + "</option>";          			
       		}
-      	 routeList = optionList;
-      	 jQuery("[name='"+"routeId"+"']").html(routeList); 	 
+      	 	routeList = optionList;
+      	 	jQuery("[name='"+"routeId"+"']").html(routeList);
+	 	 }
+	 	  	 
 	}
+	
+	
 	
 	function showTruckSheetGenerateForm() {	
 		var message = "";
+		shipmentTypeId ="";
 		message += "<form action='createByProdShipment' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
 		
 			//message += "<br/><br/>";
@@ -112,7 +122,8 @@
 	var estimatedDate;	
 	var dateFormatted;
 	var shipmentTypeId;
-	function showCancelTruckSheetGenerate(estDate, scheduleDate ,shipmentTypeIdVal) {	
+	function showCancelTruckSheetGenerate(estDate, scheduleDate ,shipmentTypeIdVal) {
+		
 		var message = "";
 		estimatedDate = estDate;
 		dateFormatted = scheduleDate;
@@ -130,10 +141,15 @@
 		var title = "<h2><center>Cancel Delivery Schedule</center></h2>";
 		Alert(message, title);
 		
+		
 	};
 	function populateDate(){
 		jQuery("#estimatedDeliveryDate").val(estimatedDate);
 		jQuery("#estimatedDateFormatted").val(dateFormatted);
 		jQuery("#shipmentTypeId").val(shipmentTypeId);
+		
+		var shipType = jQuery("#shipmentTypeId").val();
+		setRoutesListByValue(shipmentTypeId);
+		
 	};
 </script>
