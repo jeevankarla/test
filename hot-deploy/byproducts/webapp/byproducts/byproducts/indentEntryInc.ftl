@@ -123,6 +123,7 @@ function updateGrid(){
 							}
 						}
 						priceTags = result["productPrice"];
+						prodIndentQtyCat = result["prodIndentQtyCat"];
 						var boothName = result["boothName"];
 						var routeId = result["routeId"];
 						var routeName = result["routeName"];
@@ -172,6 +173,7 @@ function updateGrid(){
 	//var uomMap = ${StringUtil.wrapString(uomMapJSON)!'{}'};
 	var productQtyInc = ${StringUtil.wrapString(productQtyIncJSON)!'{}'};
 	var priceTags;
+	var prodIndentQtyCat;
 	//var productCrates = ${StringUtil.wrapString(productCratesJSON)!'{}'};
 		
 	function requiredFieldValidator(value) {
@@ -229,7 +231,7 @@ function updateGrid(){
 		var floorValue = Math.floor(qty);
 		if(qty != null){
 			
-			if ((data[row]['uomId']) == "C") {
+			if ((data[row]['uomId']) == "CR") {
 				var quarterVal = floorValue*4;
 			   	var nearestVal = quarterVal/4;	
 			   	data[row]['cQuantity'] = nearestVal;
@@ -255,7 +257,7 @@ function updateGrid(){
 		var floorValue = Math.floor(quarterVal);
 		var remainder = quarterVal - floorValue;
 		var remainderVal =  Math.floor(value) - value;
-		if (indentCat == "C") {
+		if (indentCat == "CR") {
 				if(remainder !=0 ){
 					 	return {valid: false, msg: "packets should not be in decimals " + value};
 				}
@@ -395,15 +397,27 @@ function updateGrid(){
     	});
     	      
         _grid.onCellChange.subscribe(function(e,args) {
+        	
         	if (args.cell == 0 || args.cell == 1) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["cQuantity"]);
 				var price = parseFloat(priceTags[prod]);
+				var indentCat = prodIndentQtyCat[prod];
 				if(isNaN(price)){
 					price = 0;
 				}
 				if(isNaN(qty)){
 					qty = 0;
+				}
+				
+				if(indentCat == "CRATE"){
+					data[args.row]["uomId"] = "CR";
+				}
+				else if(indentCat == "CAN"){
+					data[args.row]["uomId"] = "CN";
+				}
+				else{
+					data[args.row]["uomId"] = "P";
 				}
 				var roundedAmount;
 				if(screenFlag != 'DSCorrection'){
@@ -552,12 +566,23 @@ function updateGrid(){
 			var prod = data[i]["cProductId"];
 			var qty = parseFloat(data[i]["cQuantity"]);
 			var price = parseFloat(priceTags[prod]);
+			var indentCat = prodIndentQtyCat[prod];
 			if(isNaN(price)){
 				price = 0;
 			}
 			if(isNaN(qty)){
 				qty = 0;
 			}
+			if(indentCat == "CRATE"){
+				data[i]["uomId"] = "CR";
+			}
+			else if(indentCat == "CAN"){
+				data[i]["uomId"] = "CN";
+			}
+			else{
+				data[i]["uomId"] = "P";
+			}
+			
 			data[i]["unitPrice"] = price;
 			var amount = Math.round(qty*price);
 			if(isNaN(amount)){

@@ -294,7 +294,7 @@ public class ByProductChangeIndentServices {
     		List<String> crateIndentProductList = EntityUtil.getFieldListFromEntityList( crateIndentProducts, "productId", true);
     		List<String> packetIndentProductList = EntityUtil.getFieldListFromEntityList(packetIndentProducts, "productId", true);*/
     		Map prodIndentCat = (Map)ByProductNetworkServices.getFacilityIndentQtyCategories(delegator, dctx.getDispatcher(),UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId)).get("indentQtyCategory");
-    		List crateIndentProductList = FastList.newInstance();
+    		List crateCanIndentProductList = FastList.newInstance();
     		if(UtilValidate.isNotEmpty(prodIndentCat)){
     			String prodId = "";
     			String categoryType = "";
@@ -303,8 +303,8 @@ public class ByProductChangeIndentServices {
   				Map.Entry entry = (Entry) mapIterator.next();
     			prodId = (String)entry.getKey();
   	        	categoryType = (String)entry.getValue();
-  	        	if(categoryType.equals("CRATE_INDENT")){
-  	        		crateIndentProductList.add(prodId);
+  	        	if(categoryType.equals("CRATE") || categoryType.equals("CAN")){
+  	        		crateCanIndentProductList.add(prodId);
   	        	}
       		}
     	}
@@ -335,17 +335,16 @@ public class ByProductChangeIndentServices {
   				  String sequenceNum = (String)productQtyMap.get("sequenceNum");
   				  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
   				  BigDecimal crateQuantity = BigDecimal.ZERO;
-  				  
-  				  if(crateIndentProductList.contains(productId)){
+  				  if(crateCanIndentProductList.contains(productId)){
   					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
   					  crateQuantity = quantity;
-  					  quantity = ByProductNetworkServices.convertCratesToPackets(product.getBigDecimal("quantityIncluded"),crateQuantity);
+  					  quantity = ByProductNetworkServices.convertCratesToPackets(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "crateQuantity",crateQuantity));
   	    		  
   				  }else{
   					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
   					  //crateQuantity = quantity;
   					  if(UtilValidate.isNotEmpty(product)){
-  						  crateQuantity = ByProductNetworkServices.convertPacketsToCrates(product.getBigDecimal("quantityIncluded"),quantity);
+  						  crateQuantity = ByProductNetworkServices.convertPacketsToCrates(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "packetQuantity",quantity));
   					  }
   	    		  
   				  }

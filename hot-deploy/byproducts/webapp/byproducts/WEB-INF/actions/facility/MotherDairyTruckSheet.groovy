@@ -47,6 +47,12 @@ byProductsList=  EntityUtil.filterByCondition(allProductsList, EntityCondition.m
 lmsProductsIdsList=EntityUtil.getFieldListFromEntityList(lmsProductsList, "productId", false);
 byProductsIdsList=EntityUtil.getFieldListFromEntityList(byProductsList, "productId", false);
 
+crateProductsList=ProductWorker.getProductsByCategory(delegator ,"CRATE" ,null);
+canProductsList=ProductWorker.getProductsByCategory(delegator ,"CAN" ,null);
+
+crateProductsIdsList=EntityUtil.getFieldListFromEntityList(crateProductsList, "productId", false);
+canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "productId", false);
+
 if(parameters.shipmentId){
 	if(parameters.shipmentId == "allRoutes"){
 		shipments = delegator.findByAnd("Shipment", [estimatedShipDate : estimatedDeliveryDateTime , shipmentTypeId : parameters.shipmentTypeId ],["routeId"]);
@@ -109,6 +115,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							Iterator prodIter = productTotals.entrySet().iterator();
 							cratesTotalSub = 0;
 							noPacketsexc = 0;
+							canTotalSub = 0;
 							crateDivisior=12;
 							while (prodIter.hasNext()) {
 								Map.Entry entry = prodIter.next();
@@ -117,15 +124,29 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 									//crateDivisior=piecesPerCrate.getAt(itrProductId);
 									qty=productTotals.get(entry.getKey()).get("packetQuantity");
 									totalQuantity=totalQuantity+qty;
-									tempCrates = (qty/12).intValue();
-									tempExcess=(qty.intValue()%(12));
-									if(piecesPerCrate && piecesPerCrate.get(itrProductId)){
-										 int crateDivisior=(piecesPerCrate.get(itrProductId)).intValue();
-										tempCrates = (qty/(crateDivisior)).intValue();
-										tempExcess=((qty.intValue())%(crateDivisior.intValue()));
+									if(crateProductsIdsList.contains(itrProductId)){
+										if(piecesPerCrate && piecesPerCrate.get(itrProductId)){
+											int crateDivisior=(piecesPerCrate.get(itrProductId)).intValue();
+										   tempCrates = (qty/(crateDivisior)).intValue();
+										   tempExcess=((qty.intValue())%(crateDivisior.intValue()));
+										   cratesTotalSub = cratesTotalSub+tempCrates;
+										   noPacketsexc = noPacketsexc+tempExcess;
+									   }
+										
 									}
-									cratesTotalSub = cratesTotalSub+tempCrates;
-									noPacketsexc = noPacketsexc+tempExcess;
+									if(canProductsIdsList.contains(itrProductId)){
+										if(piecesPerCan && piecesPerCan.get(itrProductId)){
+											int canDivisior=(piecesPerCan.get(itrProductId)).intValue();
+										   tempCan = (qty/(canDivisior)).intValue();
+										   tempCanExcess=((qty.intValue())%(canDivisior.intValue()));
+										   canTotalSub = canTotalSub+tempCan;
+									   }
+										
+									}
+									//tempCrates = (qty/12).intValue();
+									//tempExcess=(qty.intValue()%(12));
+									
+									
 								//}
 							}
 							
@@ -134,7 +155,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							boothWiseProd.put("amount", amount);
 							boothWiseProd.put("crates", cratesTotalSub.intValue());
 							boothWiseProd.put("excess", noPacketsexc);
-							
+							boothWiseProd.put("cans", canTotalSub.intValue());
 							String paymentMethodType="";
 							if(UtilValidate.isNotEmpty(partyProfileFacilityMap)){
 							paymentMethodType=partyProfileFacilityMap.get(boothId);
@@ -156,6 +177,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					routeAmount= routeTotals.get("totalRevenue");
 					rtCrates = 0;
 					rtExcessPkts = 0;
+					rtCans = 0;
 					if(UtilValidate.isNotEmpty(routeProdTotals)){
 						Iterator mapIter = routeProdTotals.entrySet().iterator();	
 						while (mapIter.hasNext()) {
@@ -171,7 +193,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							cratesDetailMap =[:];
 							cratesDetailMap["prodCrates"]=0;
 							cratesDetailMap["packetsExces"]=0;
-
+							
 							if(lmsProductsIdsList.contains(productId)){
 								lmsProductList.add(productId);
 							}else{
@@ -179,14 +201,32 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							}
 							rtQty =entry.getValue().get("packetQuantity");
 							routeTotQty=routeTotQty+rtQty;
-							tempRtCrates = (rtQty/12).intValue();
+							if(crateProductsIdsList.contains(productId)){
+								if(piecesPerCrate && piecesPerCrate.get(productId)){
+									int crateDivisior=(piecesPerCrate.get(productId)).intValue();
+								   tempRtCrates = (rtQty/(crateDivisior)).intValue();
+								   tempRtExcess=((rtQty.intValue())%(crateDivisior.intValue()));
+								   rtCrates = rtCrates+tempRtCrates;
+								   rtExcessPkts = rtExcessPkts+tempRtExcess;
+							   }
+								
+							}
+							if(canProductsIdsList.contains(productId)){
+								if(piecesPerCan && piecesPerCan.get(productId)){
+									int canDivisior=(piecesPerCan.get(productId)).intValue();
+								   tempRtCan = (rtQty/(canDivisior)).intValue();
+								   rtCans = rtCans+tempRtCan;
+							   }
+								
+							}
+							/*tempRtCrates = (rtQty/12).intValue();
 							tempRtExcess=(rtQty.intValue()%(12));
 							if(piecesPerCrate && piecesPerCrate.get(productId)){
 								tempRtCrates = (rtQty/(piecesPerCrate.get(productId))).intValue();
 								tempRtExcess=(rtQty.intValue()%(piecesPerCrate.get(productId).intValue()));
-							}
-							rtCrates = rtCrates+tempRtCrates;
-							rtExcessPkts = rtExcessPkts+tempRtExcess;
+							}*/
+							//rtCrates = rtCrates+tempRtCrates;
+							
 						}
 								/*if("CRATE_INDENT".equals(prodCategory)){
 									qtyValue=entry.getValue().get("packetQuantity");
@@ -227,6 +267,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					boothDetailsMap.put("vehicleId", vehicleId);
 					boothDetailsMap.put("rtCrates", rtCrates);
 					boothDetailsMap.put("rtExcessPkts", rtExcessPkts);
+					boothDetailsMap.put("rtCans", rtCans);
 					if(UtilValidate.isNotEmpty(boothWiseMap)){
 						routeWiseMap.put(routeId, boothDetailsMap);
 					}

@@ -307,7 +307,7 @@ under the License.
 												<#if (counter < 20) >
 													<#assign counter = counter+1>
 													<fo:table-cell>
-														<fo:block font-size="7pt"></fo:block>
+														<fo:block font-size="7pt"><#if (boothDetails.getValue().get("cans"))?has_content>${boothDetails.getValue().get("cans")?if_exists}</#if></fo:block>
 													</fo:table-cell>
 												</#if>
 												<#list byProdList as product>
@@ -473,7 +473,7 @@ under the License.
 											<#if (counter < 20) >
 												<#assign counter = counter+1>
 												<fo:table-cell>
-													<fo:block font-size="7pt"></fo:block>
+													<fo:block font-size="7pt">${(routesMap.getValue().get("rtCans"))?if_exists}</fo:block>
 												</fo:table-cell>
 											</#if>
 											<#list byProdList as byProd>
