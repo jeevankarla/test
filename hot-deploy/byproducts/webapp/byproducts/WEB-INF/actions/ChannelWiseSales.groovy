@@ -296,7 +296,7 @@ if(dailySalesRevenueTrend){
 			
 		}
 	}
-	categoryTypeEnumList = delegator.findByAnd("Enumeration",["enumTypeId" :"BYPROD_FA_CAT"]);
+	categoryTypeEnumList = delegator.findByAnd("Enumeration",["enumTypeId" :"BOOTH_CAT_TYPE"]);
 	categoryTypeEnumMap=[:];
 	for(GenericValue categoryTypeEnum:categoryTypeEnumList){
 		categoryTypeEnumMap[categoryTypeEnum.enumId] = categoryTypeEnum.description;
