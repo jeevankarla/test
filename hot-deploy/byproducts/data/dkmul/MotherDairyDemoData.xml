@@ -45,9 +45,6 @@ SECTION" subtitle="DISPATCH SECTION" title="DISPATCH SECTION" usePrimaryEmailUse
 <Enumeration enumId="MILK_PROCUREMENT" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Invoice and Payment Sms  Configurations"/>
 <TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="MOTHER DAIRY., BENGALURU"/>
 
-<ShipmentType description="RM Adhoc Shipment" hasTable="N" parentTypeId="" shipmentTypeId="RM_DIRECT_SHIPMENT"/>
-<Enumeration enumId="RM_DIRECT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="RM_DIRECT_CHANNEL" description="Retail Marketing Direct Sales Channel" />
-    
 
 <PeriodType description="Institutions Billing Period" periodTypeId="INST_BILL_PERIOD"/>
     <!-- <CustomTimePeriod customTimePeriodId="JAN-1-31" periodTypeId="INST_BILL_PERIOD" periodNum="1" periodName="January(1-31)" fromDate="2014-01-01" thruDate="2014-01-31"  organizationPartyId="Company"/>
