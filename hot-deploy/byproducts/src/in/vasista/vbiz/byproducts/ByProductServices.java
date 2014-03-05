@@ -310,54 +310,54 @@ public class ByProductServices {
 	        shipmentIdsList.add(shipmentId);
 	        Map vehicleCtx = UtilMisc.toMap("facilityId",routesList.get(i));
 	        vehicleCtx.put("supplyDate", estimatedDeliveryDate);
-	        /*
+	      
 	        Map vehicleRoleResult =  (Map) ByProductNetworkServices.getVehicleRole(dctx,vehicleCtx);
-	        
 	        if(UtilValidate.isNotEmpty(vehicleRoleResult.get("vehicleRole"))){
-	        	GenericValue vehicleRole= (GenericValue) vehicleRoleResult.get("vehicleRole");
-				vehicleId=vehicleRole.getString("vehicleId");
-			}
-	        if(UtilValidate.isNotEmpty(vehicleId)){
-	        	vehicleTripEntity.put("vehicleId", vehicleId);
-	        	vehicleTripStatusEntity.put("vehicleId", vehicleId);
-	        }
-	        
-	        vehicleTripEntity.put("originFacilityId", routesList.get(i));
-	        vehicleTripEntity.put("userLogin", userLogin);
-	        vehicleTripEntity.put("shipmentId", shipmentId);
-	        vehicleTripEntity.put("createdDate", nowTimeStamp);
-	        vehicleTripEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
-	        vehicleTripEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	        try {
-	        	vehicleTripResult=dispatcher.runSync("createVehicleTrip", vehicleTripEntity);
-	            seqId =(String) vehicleTripResult.get("sequenceNum");
-	            if (ServiceUtil.isError(vehicleTripResult)) {
-	  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripResult);
-	  		  		Debug.logError(errMsg , module);
-	  		  	}
-	          
-	        } catch (GenericServiceException e) {
-	            Debug.logError(e, "Error calling runSubscriptionAutoCreateOrders service", module);
-	            return ServiceUtil.returnError(e.getMessage());
-	        } 
-	        
-	        vehicleTripStatusEntity.put("facilityId",routesList.get(i));
-	        vehicleTripStatusEntity.put("sequenceNum", seqId);
-	        vehicleTripStatusEntity.put("userLogin", userLogin);
-	        vehicleTripStatusEntity.put("statusId", "VEHICLE_RETURNED");
-	        vehicleTripStatusEntity.put("createdDate", nowTimeStamp);
-	        vehicleTripStatusEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
-	        vehicleTripStatusEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	        try {
-	        	vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusEntity);
-	            if (ServiceUtil.isError(vehicleTripStatusResult)) {
-	  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
-	  		  		Debug.logError(errMsg , module);
-	  		  	}
-	        } catch (GenericServiceException e) {
-	            Debug.logError(e, "Error calling runSubscriptionAutoCreateOrders service", module);
-	            return ServiceUtil.returnError(e.getMessage());
-	        }*/
+	        	 GenericValue vehicleRole= (GenericValue) vehicleRoleResult.get("vehicleRole");
+				 vehicleId=vehicleRole.getString("vehicleId");
+		        if(UtilValidate.isNotEmpty(vehicleId)){
+		        	vehicleTripEntity.put("vehicleId", vehicleId);
+		        	vehicleTripStatusEntity.put("vehicleId", vehicleId);
+		        }
+		        vehicleTripEntity.put("originFacilityId", routesList.get(i));
+		        vehicleTripEntity.put("userLogin", userLogin);
+		        vehicleTripEntity.put("shipmentId", shipmentId);
+		        vehicleTripEntity.put("createdDate", nowTimeStamp);
+		        vehicleTripEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
+		        vehicleTripEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		        try {
+		        	vehicleTripResult=dispatcher.runSync("createVehicleTrip", vehicleTripEntity);
+		            seqId =(String) vehicleTripResult.get("sequenceNum");
+		            if (ServiceUtil.isError(vehicleTripResult)){
+		  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripResult);
+		  		  		Debug.logError(errMsg , module);
+		  		  	    return ServiceUtil.returnError("createVehicleTrip service" + vehicleId);    
+		  		  	}
+		          
+		        } catch (GenericServiceException e) {
+		            Debug.logError(e, "Error calling createVehicleTrip service", module);
+		            return ServiceUtil.returnError(e.getMessage());
+		        } 
+		        
+		        vehicleTripStatusEntity.put("facilityId",routesList.get(i));
+		        vehicleTripStatusEntity.put("sequenceNum", seqId);
+		        vehicleTripStatusEntity.put("userLogin", userLogin);
+		        vehicleTripStatusEntity.put("statusId", "VEHICLE_RETURNED");
+		        vehicleTripStatusEntity.put("createdDate", nowTimeStamp);
+		        vehicleTripStatusEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
+		        vehicleTripStatusEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		        try {
+		        	vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusEntity);
+		            if (ServiceUtil.isError(vehicleTripStatusResult)) {
+		  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
+		  		  		Debug.logError(errMsg , module);
+		  		  	    return ServiceUtil.returnError("createVehicleTripStatus service" + vehicleId);   
+		  		  	}
+		        }catch (GenericServiceException e) {
+		            Debug.logError(e, "Error calling createVehicleTripStatus service", module);
+		            return ServiceUtil.returnError(e.getMessage());
+		        }
+		      }
 		}
 		 try {
 	        	Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("shipmentIds", shipmentIdsList, 

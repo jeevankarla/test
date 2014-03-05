@@ -24,7 +24,7 @@ under the License.
 
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-            margin-top="0.5in" margin-bottom="1in" margin-left=".3in" margin-right="1in">
+            margin-top="0.5in" margin-bottom=".5in" margin-left=".3in" margin-right=".5in">
         <fo:region-body margin-top="1in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -36,7 +36,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 <#assign facilityNumberInPage = 0>
 <#if truckSheetReportList?has_content>	
 <fo:page-sequence master-reference="main" force-page-count="no-force">					
-			<fo:static-content flow-name="xsl-region-before"> <#assign lineNumber = 5> 
+			<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace"> <#assign lineNumber = 5> 
 				<#assign facilityNumberInPage = 0>
 				<#if shipmentTypeId=="AM_SHIPMENT_SUPPL" || shipmentTypeId=="AM_SHIPMENT">          		
               		<fo:block text-align="left" white-space-collapse="false">&#160;                           SACHET SCHEDULE FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(estimatedDeliveryDate, "dd-MMMM-yyyy")}- MORNING SHIFT </fo:block>  
@@ -44,11 +44,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
               		<fo:block text-align="left" white-space-collapse="false">&#160;                           SACHET SCHEDULE FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(estimatedDeliveryDate, "dd-MMMM-yyyy")}- EVENING SHIFT </fo:block>
               	</#if> 
               	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            	<fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">ROUTE   PRODUCT      PRODUCT   SUBS.MILK   QTY/     TOTAL    TOTAL       </fo:block>
-                <fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">CODE     CODE         NAME                 CRATES    CRATES   CANS      </fo:block>
+            	<fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">ROUTE  PRODUCT  PRODUCT                            SUBS.MILK  QTY/    TOTAL   TOTAL </fo:block>
+                <fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">CODE   CODE     NAME                                          CRATES  CRATES  CANS  </fo:block>
             	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			    </fo:static-content>
-			<fo:flow flow-name="xsl-region-body" font-family="Helvetica">	
+			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">	
 
 				<#list truckSheetReportList as truckSheetReport>
            			<#assign facilityGrandTotal = (Static["java.math.BigDecimal"].ZERO)>
@@ -70,11 +70,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
            			 <#if (facilityTypeId == "ROUTE" )>
            			 	<#assign lineNumber = lineNumber + productEntries.size()+3>
            			 	<#assign facilityNumberInPage = (facilityNumberInPage+1)>               			 	      		
-            			<fo:table width="100%" table-layout="fixed" space-after="0.0in">
-            				<fo:table-column column-width="100%"/>
-            				<fo:table-body>
-			                <fo:table-row column-width="100%">
-			                <fo:table-cell column-width="100%">
+            		
             				 <fo:table  table-layout="fixed">                
 				                <fo:table-column column-width="40pt"/>
 				                <fo:table-column column-width="50pt"/>
@@ -92,21 +88,25 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 	                      							<#if productEntry.getKey() != "facilityId" && productEntry.getKey() != "facilityType" && productEntry.getKey() != "PREV_DUE" && productEntry.getKey() != "paidAmount">
 	                      								<#assign product = delegator.findOne("Product", {"productId" : productEntry.getKey()}, true)> 	                              
 			                              		           <fo:table >
-					             						 		<fo:table-column column-width="50pt"/>
-					             						  		<fo:table-column column-width="60pt"/>
-					             						   	    <fo:table-column column-width="120pt"/>
-					             						    	<fo:table-column column-width="140pt"/>
+					             						 		<fo:table-column column-width="33pt"/>
+					             						  		<fo:table-column column-width="55pt"/>
+					             						  		<fo:table-column column-width="72pt"/>
+					             						   	    <fo:table-column column-width="195pt"/>
+					             						   	    <fo:table-column column-width="65pt"/>
+					             						    	
 					             						        <fo:table-body> 
 				              							          <fo:table-row >  
 				              							             <fo:table-cell>
 	                            			                            <fo:block text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.get("facilityId"))),5)}</fo:block>
 	                            		                             </fo:table-cell>                  
 							                            		     <fo:table-cell>
-							                                			<fo:block  text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("productId")))),7)}</fo:block>
+							                                			<fo:block  text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("brandName")))),7)}</fo:block>
 							                            			 </fo:table-cell>
 							                            	         <fo:table-cell>
-							                                	        <fo:block  text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("brandName")))),8)}</fo:block>
+							                                	        <fo:block  text-align="left" keep-together="always">${product.get("productName")}</fo:block>
 							                            	          </fo:table-cell>	
+							                            	          
+							                            	           
 										                            	<#assign typeEntries = (productEntry.getValue()).entrySet()>
 										                      			<#assign crates = 0>
 										                      			<#assign qty = 0>
@@ -120,7 +120,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 										                      				</#if> 
 												                        </#list>
 	 								                                  <fo:table-cell>
-							                                	        <fo:block  text-align="left" keep-together="always">${qty}/${crates}</fo:block>
+							                                	        <fo:block  text-align="right">${qty}/${crates}</fo:block>
 							                            	         </fo:table-cell>
 							                         	         </fo:table-row>
 							                                   </fo:table-body>
@@ -128,7 +128,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 	                       				 			</#if>
 	                      				 		</#list>
 	                      				 		<fo:table >
-	                                              <fo:table-column column-width="295pt"/>
+	                                              <fo:table-column column-width="380pt"/>
 	                                                <fo:table-body> 
 												       <fo:table-row >  
 												            <fo:table-cell>
@@ -136,27 +136,24 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 														    </fo:table-cell>
 													   </fo:table-row>
 												    </fo:table-body>
-										        </fo:table>
-	              				 		       <fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>             
+										        </fo:table>	              				 		                    
                                        </fo:block>
-        		                   </fo:table-cell>	                           
+                                        </fo:table-cell>	                           
    			                   </fo:table-row>
  				            </#if>
 	                     </fo:table-body>
                       </fo:table>
-                   </fo:table-cell>
-                 </fo:table-row>
-               </fo:table-body>
-             </fo:table>
+                 <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block> 
           </#if>	
        </fo:block>
+       
    </#list> 
   </fo:flow>						        	
 </fo:page-sequence>
  <#else>
 	<fo:page-sequence master-reference="main">
-    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-       		 <fo:block font-size="14pt">
+    	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+       		 <fo:block font-size="9pt">
             	${uiLabelMap.OrderNoOrderFound}.
        		 </fo:block>
     	</fo:flow>
