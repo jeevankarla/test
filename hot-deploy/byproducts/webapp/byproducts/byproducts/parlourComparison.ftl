@@ -75,7 +75,7 @@ $(document).ready(function(){
 	<style type="text/css">
 		div.graph
 		{
-			width: 3000px;
+			width: 1500px;
 			height: 500px;
 		}
 	</style>
@@ -84,7 +84,7 @@ $(document).ready(function(){
 <div class="screenlet">
     <div class="screenlet-title-bar">
   
-      	<h3>Comparison Data of Shopees [${froDate?date} - ${toDate?date}]</h3>
+      	<h3><#if reportTarget=="RouteComparison" > Comparison Data of Routes Trading  <#elseif reportTarget=="ShopeeComparison" > Comparison Data of Shopees <#else> Comparison </#if>   [${froDate?date} - ${toDate?date}]</h3>
 
     </div>
     <div class="screenlet-body">
