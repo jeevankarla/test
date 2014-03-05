@@ -52,7 +52,7 @@
 	        <#list channelReportList as channelReport>				
 				{id:"${channelReport.name}" , name:"${channelReport.name}", revenue:"${channelReport.revenue?string("##0.00")}"},
 			</#list>
-			{id:"Total" , name:"Total", revenue:"${totalRevenue}" }			
+			{id:"Total" , name:"Total", revenue:"${totalRevenue?string("##0.00")}" }			
 		</#if>		
 		];
 		var dataView;
@@ -105,7 +105,7 @@
 	        <#list productReportList as prodReport>	
 	        	{id:"${prodReport.name}" , name:"${prodReport.name}", quantity:"${prodReport.quantity}" , revenue:"${prodReport.revenue?string("##0.00")}"} ,
 			</#list>
-			{id:"Total" , name:"Total", quantity:"" ,revenue:"${totalRevenue}"}
+			{id:"Total" , name:"Total", quantity:"" ,revenue:"${totalRevenue?string("##0.00")}"}
 		</#if>		
 		];
 		var dataView;
@@ -160,7 +160,7 @@
 	        <#list productCatReportList as productCatReport>	
 	        	{id:"${productCatReport.name}" , name:"${productCatReport.name}", quantity:"${productCatReport.quantity}" , revenue:"${productCatReport.revenue?string("##0.00")}"} ,
 			</#list>
-			{id:"Total" , name:"Total", quantity:"" ,revenue:"${totalRevenue}"}
+			{id:"Total" , name:"Total", quantity:"" ,revenue:"${totalRevenue?string("##0.00")}"}
 		</#if>		
 		];
 		var dataView;
@@ -216,7 +216,7 @@
 	        <#list regionReportList as regionReport>	
 	        	{id:"${regionReport.name}" , name:"${regionReport.name}", revenue:"${regionReport.revenue?string("##0.00")}"} ,
 			</#list>
-			{id:"Total" , name:"Total" ,revenue:"${totalRevenue}"}
+			{id:"Total" , name:"Total" ,revenue:"${totalRevenue?string("##0.00")}"}
 		</#if>		
 		];
 		var dataView;
