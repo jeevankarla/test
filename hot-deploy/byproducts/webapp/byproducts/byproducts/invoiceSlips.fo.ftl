@@ -116,9 +116,9 @@ under the License.
 						          </fo:block>
        						 </#if>
        					
-			            <fo:block  font-size="6pt"  font-family="Courier,monospace">  
+			            <fo:block  font-size="7pt"  font-family="Courier,monospace">  
 			              <fo:table width="100%" table-layout="fixed">
-			                  <fo:table-column column-width="58pt"/>
+			                  <fo:table-column column-width="65pt"/>
 			                  <fo:table-column column-width="40pt"/>
 			                  <fo:table-column column-width="40pt"/>
 			                  <fo:table-column column-width="46pt"/>
@@ -134,7 +134,7 @@ under the License.
 			                    </fo:table-row>
 			                  <fo:table-row>
 			                        <fo:table-cell>
-			                          <fo:block text-align="left" text-indent="4pt" keep-together="always"> Product&amp;</fo:block>
+			                          <fo:block text-align="left" text-indent="4pt" keep-together="always"> ProductName&amp;</fo:block>
 			                           <fo:block text-align="left" text-indent="4pt" keep-together="always"> Unit</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
@@ -225,7 +225,7 @@ under the License.
 			                      </fo:table-row>
 			                       <#assign product = invoiceItem.getRelatedOne("Product")?if_exists/>
 			                 		<#if  product?exists>
-			                    		<#assign productName=product.productName?if_exists >
+			                    		<#assign productName=product.brandName?if_exists >
 			                    	<#else>
 			                    		<#assign productName=invoiceItem.invoiceItemTypeId?if_exists >
 			                   		</#if>
@@ -245,7 +245,7 @@ under the License.
 			                        </#if> 
 			                      <fo:table-row>
 			                        <fo:table-cell>
-			                          <fo:block text-align="left" text-indent="4pt" keep-together="always"> <#if  product?has_content> ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(product.description?if_exists)),8)} <#else> ${invoiceItem.invoiceItemTypeId?if_exists} </#if>></fo:block>
+			                          <fo:block text-align="left" text-indent="4pt" keep-together="always"> <#if  product?has_content> ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(product.brandName?if_exists)),10)} <#else> ${invoiceItem.invoiceItemTypeId?if_exists} </#if></fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" >${vatPercent?if_exists}</fo:block>
