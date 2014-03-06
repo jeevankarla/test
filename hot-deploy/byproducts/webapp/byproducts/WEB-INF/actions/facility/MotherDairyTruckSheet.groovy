@@ -121,12 +121,19 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							noPacketsexc = 0;
 							canTotalSub = 0;
 							crateDivisior=12;
+							packetTotal=0;
+							subsidyTotal=0;
 							while (prodIter.hasNext()) {
 								Map.Entry entry = prodIter.next();
 								 String itrProductId=entry.getKey();
 								//if(lmsProductsIdsList.contains(itrProductId)){
 									//crateDivisior=piecesPerCrate.getAt(itrProductId);
 									qty=productTotals.get(entry.getKey()).get("packetQuantity");
+									supplyTypeTotals=productTotals.get(entry.getKey()).get("supplyTypeTotals");
+									if(supplyTypeTotals && supplyTypeTotals.get("EMP_SUBSIDY")){	
+																	packetTotal=supplyTypeTotals.get("EMP_SUBSIDY").get("packetQuantity");
+									subsidyTotal=subsidyTotal+packetTotal;
+									}
 									totalQuantity=totalQuantity+qty;
 									if(crateProductsIdsList.contains(itrProductId)){
 										if(piecesPerCrate && piecesPerCrate.get(itrProductId)){
@@ -160,6 +167,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							boothWiseProd.put("crates", cratesTotalSub.intValue());
 							boothWiseProd.put("excess", noPacketsexc);
 							boothWiseProd.put("cans", canTotalSub.intValue());
+							boothWiseProd.put("subsidy", subsidyTotal.intValue());
 							String paymentMethodType="";
 							if(UtilValidate.isNotEmpty(partyProfileFacilityMap)){
 							paymentMethodType=partyProfileFacilityMap.get(boothId);
