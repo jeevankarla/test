@@ -457,4 +457,10 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
+    <service name="getBoothDuesRunningTotal" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getBoothDuesRunningTotal" auth="true">
+        <description>calculate running total for selected Booths</description>
+        <attribute name="boothIds" type="List" mode="IN" optional="false"/>        
+        <attribute name="boothRunningTotal" type="BigDecimal" mode="OUT" optional="false"/>       
+    </service>
 </services>
