@@ -25,7 +25,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.5in" margin-bottom="1in" margin-left=".3in" margin-right="1in">
-        <fo:region-body margin-top="1in"/>
+        <fo:region-body margin-top="1.4in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -44,8 +44,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "dgatepass.txt")}
 <fo:page-sequence master-reference="main" force-page-count="no-force">					
 			<fo:static-content flow-name="xsl-region-before"> <#assign lineNumber = 5> 
 				<#assign facilityNumberInPage = 0>
-              	<fo:block white-space-collapse="false" font-size="4pt"  font-family="Courier,monospace"  text-align="left">&#160;       D.K. Co.op Milk Producer's Union Ltd.</fo:block>  
-              	<fo:block white-space-collapse="false" font-size="4pt"  font-family="Courier,monospace"  text-align="left">&#160;               MANIPAL - 576 119.</fo:block>
+                <fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
+			    <fo:block text-align="left" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
               	<fo:block white-space-collapse="false" font-size="4pt"  font-family="Courier,monospace"  text-align="left">&#160;        	  Finished Goods Division</fo:block>  
               	<fo:block white-space-collapse="false" font-size="4pt"  font-family="Courier,monospace"  text-align="left">&#160;         Delivery Note-Cum-Gate Pass</fo:block>
               	<fo:block>-------------------------------------------------------------------------</fo:block>
@@ -56,6 +56,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "dgatepass.txt")}
 			    <fo:table>
 					<fo:table-column column-width="35pt"/>
 					<fo:table-column column-width="35pt"/>	
+					<fo:table-column column-width="35pt"/>
 					<fo:table-column column-width="35pt"/>
 					<fo:table-column column-width="35pt"/>
 					<fo:table-column column-width="35pt"/>
@@ -75,7 +76,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "dgatepass.txt")}
 								<fo:block text-align="center" font-size="4pt"  font-family="Courier,monospace">PACKED PACKS</fo:block>																									
 							</fo:table-cell>
 							<fo:table-cell>		
-								<fo:block text-align="center" font-size="4pt"  font-family="Courier,monospace">NET - QTY</fo:block>																									
+								<fo:block text-align="center" font-size="4pt"  font-family="Courier,monospace">NET-QTY</fo:block>																									
 							</fo:table-cell>
 						</fo:table-row>
 					</fo:table-body>
@@ -91,11 +92,39 @@ ${setRequestAttribute("OUTPUT_FILENAME", "dgatepass.txt")}
 					<fo:table-column column-width="35pt"/>
 					<fo:table-column column-width="35pt"/>
 					<fo:table-column column-width="35pt"/>
+					<fo:table-column column-width="35pt"/>
 					<fo:table-body>
-						<#assign boothList = boothDetails.getValue()>
-						<#assign boothIter = boothList.entrySet()>
+						<#assign boothMap = boothDetails.getValue()>
+						
 						<#list allProdList as product>
+						<#assign  prodDetail=boothMap.get(product)?if_exists>
+						<#if prodDetail?has_content>
+						<fo:table-row>
+						<#assign productDetails = delegator.findOne("Product", {"productId" : product}, true)>
+								<fo:table-cell>		
+									<fo:block text-align="left"  font-size="4pt"  font-family="Courier,monospace">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((productDetails.get("brandName")))),8)?if_exists}</fo:block>																									
+								</fo:table-cell>
+								<fo:table-cell>		
+									<fo:block text-align="center" font-size="4pt"  font-family="Courier,monospace"><#if prodDetail.get("Crates")?exists && prodDetail.get("Crates") == 0><#else>${(prodDetail.get("Crates"))?if_exists}</#if></fo:block>																									
+								</fo:table-cell>
+								<fo:table-cell>		
+									<fo:block text-align="center" font-size="4pt"  font-family="Courier,monospace"><#if prodDetail.get("excessCrates")?exists && prodDetail.get("excessCrates") == 0><#else>${(prodDetail.get("excessCrates"))?if_exists}</#if></fo:block>																								
+								</fo:table-cell>
+								<fo:table-cell>		
+									<fo:block text-align="center" font-size="4pt"  font-family="Courier,monospace"><#if prodDetail.get("Packs")?exists && prodDetail.get("packets") == 0><#else>${(prodDetail.get("packets"))?if_exists}</#if></fo:block>
+								</fo:table-cell>
+								<fo:table-cell>		
+									<fo:block text-align="center" font-size="4pt"  font-family="Courier,monospace"><#if prodDetail.get("qtyValue")?exists && prodDetail.get("qtyValue") == 0><#else>${(prodDetail.get("qtyValue"))?if_exists}</#if></fo:block>																									
+								</fo:table-cell>
+							</fo:table-row>
+							</#if>
+						</#list>
+						
+							<#--
+							<#assign boothList = boothDetails.getValue()>
+							<#assign boothIter = boothList.entrySet()>
 						<#list boothIter as booth>
+						<#list allProdList as product>
 						<#if product == booth.getKey()>	
 							<fo:table-row>
 								<#assign productDetails = delegator.findOne("Product", {"productId" : booth.getKey()}, true)>
@@ -117,7 +146,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "dgatepass.txt")}
 							</fo:table-row>
 							</#if>
 							</#list>
-						</#list>
+						</#list> -->
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
