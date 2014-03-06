@@ -3378,11 +3378,12 @@ public class ByProductServices {
 					Debug.logError("Error in create Employee : "+partyId+ "\t"+e.toString(),module);
 					return ServiceUtil.returnError(e.getMessage());
 				}
+			String fromDateStr = UtilDateTime.toDateString(fromDate, "dd MMMMM, yyyy");
 			Map indentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
 			indentHelperCtx.put("subscriptionTypeId", subscriptionTypeId);
 			indentHelperCtx.put("productId", productId);
 			indentHelperCtx.put("productSubscriptionTypeId","EMP_SUBSIDY");
-			indentHelperCtx.put("supplyDate",  fromDate);
+			indentHelperCtx.put("supplyDate",  fromDateStr);
 			indentHelperCtx.put("isEnableProductSubscriptionType",  Boolean.TRUE);
 			  	/**if facility party not equals to old facility party  getting the quantity and subtracting the quantity and
 			   creating a new record  with new quantity  in subscription product and doing the end subscription for the old facility party  **/
