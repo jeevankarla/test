@@ -415,6 +415,7 @@ under the License.
 				<fo:table-column column-width="80pt"/>
 				<fo:table-column column-width="760pt"/>
 				<fo:table-column column-width="80pt"/>
+				<fo:table-column column-width="50pt"/>
 				<fo:table-column column-width="20pt"/>
 				<fo:table-body>
 					<fo:table-row>
@@ -563,6 +564,7 @@ under the License.
 								</fo:table>
 							</fo:block>
 						</fo:table-cell>
+						<fo:table-cell><fo:block></fo:block></fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="7pt" text-align="left">${(routesMap.getValue().get("routeAmount"))?if_exists?string("#0.00")}</fo:block>
 						</fo:table-cell>
@@ -866,6 +868,9 @@ under the License.
 									</fo:table-body>
 								</fo:table>
 							</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block font-size="7pt" text-align="right"></fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="7pt" text-align="right"></fo:block>
