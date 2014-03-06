@@ -150,8 +150,8 @@ function updateGrid(){
 						
 					}								 
 				},
-				error: function(){
-					alert("record not found");
+				error: function (xhr, textStatus, thrownError){
+					alert("record not found :: Error code:-  "+xhr.status);
 				}							
 			});
 	
