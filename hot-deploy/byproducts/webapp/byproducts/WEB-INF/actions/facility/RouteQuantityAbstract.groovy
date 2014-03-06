@@ -17,6 +17,7 @@ import java.util.List;
 import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import org.ofbiz.product.product.ProductWorker;
 
 dctx = dispatcher.getDispatchContext();
 routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
@@ -34,6 +35,27 @@ if (UtilValidate.isNotEmpty(effectiveDateStr)) {
 	}
 }
 dayBegin = UtilDateTime.getDayStart(effectiveDate);
+
+productNames = [:];
+allProductsList = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",effectiveDate));
+
+allProductsList.each{ eachProd ->
+	productNames.put(eachProd.productId, eachProd.brandName);
+}
+context.productNames = productNames;
+
+lmsProductList=[];
+byProdList=[];
+lmsProdSeqList=[];
+byProdSeqList=[];
+
+lmsProductsList=ProductWorker.getProductsByCategory(delegator ,"LMS" ,null);
+byProductsList=  EntityUtil.filterByCondition(allProductsList, EntityCondition.makeCondition("productId",EntityOperator.NOT_IN , lmsProductsList.productId));
+
+lmsProductsIdsList=EntityUtil.getFieldListFromEntityList(lmsProductsList, "productId", false);
+byProductsIdsList=EntityUtil.getFieldListFromEntityList(byProductsList, "productId", false);
+
+
 context.putAt("dayBegin", dayBegin);
 dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 List shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
@@ -56,10 +78,7 @@ if(UtilValidate.isNotEmpty(pmShipmentIds)){
 }
 
 totLmsQty=0;
-lmsProductList=[];
-byProdList=[];
-lmsProdSeqList=[];
-byProdSeqList=[];
+
 if(UtilValidate.isNotEmpty(shipmentIds)){
 	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
@@ -69,7 +88,16 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 			Iterator mapIter = prodTotals.entrySet().iterator();		
 			while (mapIter.hasNext()) {
 				Map.Entry entry = mapIter.next();
-				conditionList=[];
+				 productId=entry.getKey();
+				if(lmsProductsIdsList.contains(productId)){
+					lmsProductList.add(productId);
+					rtQty =entry.getValue().get("total");
+					totLmsQty=totLmsQty+rtQty;
+				}else{
+				byProdList.add(entry.getKey());
+				}
+				
+				/*conditionList=[];
 				conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,entry.getKey()));
 				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				productCategoryList = delegator.findList("ProductCategoryAndMember",condition,null,null,null,false);
@@ -83,7 +111,8 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 					if("BYPROD".equals(prodCategory)){
 						byProdList.add(entry.getKey());
 					}					
-				}
+				}*/
+				
 			}
 		}
 	}
@@ -94,8 +123,9 @@ lmsProdIdsList= EntityUtil.getFieldListFromEntityList(lmsProdSeqList, "productId
 byProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, byProdList) , null, ["sequenceNum"], null, false);
 byProdIdsList= EntityUtil.getFieldListFromEntityList(byProdSeqList, "productId", true);
 
-context.putAt("lmsProductList", lmsProdIdsList);
-context.putAt("byProdList", byProdIdsList);
+context.put("lmsProductList", lmsProdIdsList);
+context.put("byProdList", byProdIdsList);
+
 routeWiseMap =[:];
 
 amRouteWiseMap=[:];
@@ -109,8 +139,8 @@ pmTotalQty=0;
 pmTotalReceipts=0;
 if(UtilValidate.isNotEmpty(routeIdsList)){
 	routeIdsList.each{ routeId ->
-		lmsProductList =[];
-		byProdList =[];
+		/*lmsProductList =[];
+		byProdList =[];*/
 		boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
 		conList=[];
 		conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,routeId));
