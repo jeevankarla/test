@@ -332,11 +332,15 @@ Debug.logInfo(infoString, module);
 			return ServiceUtil.returnError("Empty facility Id");	   
 		}	    	
     	Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+    	String supplyDateStr= "";
+    	if(UtilValidate.isNotEmpty(supplyDate)){
+    		supplyDateStr = UtilDateTime.toDateString(supplyDate, "dd MMMMM, yyyy");
+    	}
 		Map indentMap = FastMap.newInstance();  
 		Map<String, Object> inputParamMap = FastMap.newInstance();
 		inputParamMap.put("userLogin", userLogin);  
 		inputParamMap.put("boothId", facilityId);  
-		inputParamMap.put("supplyDate", supplyDate); 
+		inputParamMap.put("supplyDate", supplyDateStr); 
 		inputParamMap.put("subscriptionTypeId", "AM"); 	
 		inputParamMap.put("productSubscriptionTypeId", "CASH"); 				
     	Map indentResultsAM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);

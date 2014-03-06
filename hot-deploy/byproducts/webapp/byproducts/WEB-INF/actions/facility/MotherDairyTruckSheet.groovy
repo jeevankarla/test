@@ -52,7 +52,7 @@ canProductsList=ProductWorker.getProductsByCategory(delegator ,"CAN" ,null);
 
 crateProductsIdsList=EntityUtil.getFieldListFromEntityList(crateProductsList, "productId", false);
 canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "productId", false);
-
+shipments = [];
 if(parameters.shipmentId){
 	if(parameters.shipmentId == "allRoutes"){
 		shipments = delegator.findByAnd("Shipment", [estimatedShipDate : estimatedDeliveryDateTime , shipmentTypeId : parameters.shipmentTypeId ],["routeId"]);
@@ -63,6 +63,7 @@ if(parameters.shipmentId){
 		shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], false);
 		shipmentIds.add(shipmentId);
 		routeIdsList.add(shipment.routeId);
+		shipments.add(shipment);
 	}
 	
 }
@@ -82,13 +83,16 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		lmsProdSeqList=[];
 		byProdSeqList=[];
 		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.EQUALS, estimatedDeliveryDateTime));
+		currentRouteShipment = EntityUtil.filterByCondition(shipments, EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
+		/*conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.EQUALS, estimatedDeliveryDateTime));
 		conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
 		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		shipment = delegator.findList("Shipment", condition, null, null, null, false);
-		shipId = (EntityUtil.getFirst(shipment)).get("shipmentId");
+		shipment = delegator.findList("Shipment", condition, null, null, null, false);*/
+		shipId = (EntityUtil.getFirst(currentRouteShipment)).get("shipmentId");
 		orderHeader = delegator.findList("OrderHeader", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipId), UtilMisc.toSet("originFacilityId"), null, null, false);
 		boothsList = EntityUtil.getFieldListFromEntityList(orderHeader, "originFacilityId", true);
+		tempShipList = [];
+		tempShipList.add(shipId);
 		//prepare boothsLsit
 		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
 		if(UtilValidate.isNotEmpty(boothsList)){
@@ -105,7 +109,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				partyProfileFacilityMap=ByProductNetworkServices.getPartyProfileDafult(dispatcher.getDispatchContext(),[boothIds:boothsList,supplyDate:estimatedDeliveryDateTime]).get("partyProfileFacilityMap");
 				
 				boothsList.each{ boothId ->
-					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
+					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:tempShipList, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
 					if(UtilValidate.isNotEmpty(dayTotals)){
 						productTotals = dayTotals.get("productTotals");		
 						Map boothWiseProd= FastMap.newInstance();						
@@ -167,7 +171,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					}
 					
 				}
-				routeTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
+				routeTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:tempShipList, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
 				routeAmount=0;
 				
 				productWiseTotalCratesMap =[:];
