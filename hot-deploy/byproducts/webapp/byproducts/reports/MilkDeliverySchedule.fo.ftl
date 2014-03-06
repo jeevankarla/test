@@ -23,8 +23,8 @@ under the License.
 	${setRequestAttribute("OUTPUT_FILENAME", "mlksch.txt")}  
     <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">.                                           D.K.Co-op Milk Producer's Union Ltd.</fo:block>
-				<fo:block text-align="left" keep-together="always" white-space-collapse="false">.                                           Milk Delivery Schedule : Mangalore-5.</fo:block>
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">.                                           VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
+				<fo:block text-align="left" keep-together="always" white-space-collapse="false">.                                          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065.</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block text-align="left" keep-together="always" white-space-collapse="false">Route No:${routeId}      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(estimatedShipDate, "dd/MM/yyyy")}    Truck Supervisor Code:      Truck Supervisor Name :</fo:block> 		
             	<fo:block>----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
