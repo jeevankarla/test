@@ -43,7 +43,7 @@ under the License.
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">                           GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
 			<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : routesMap.getKey()}, true)>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=============================================================================================================================================================================================================================</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">===============================================================================================================================================================================================================================================</fo:block>
 			 <fo:block>
 			            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
 			             <fo:table-column column-width="300pt"/>
@@ -71,7 +71,7 @@ under the License.
 			                     </fo:table-body>
 			                    </fo:table>
 			              </fo:block>         
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=============================================================================================================================================================================================================================</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">===============================================================================================================================================================================================================================================</fo:block>
 			<#assign contractorName= (routesMap.getValue().get("contractorName"))>	
 			<#assign lmsProdList = (routesMap.getValue().get("lmsProdList"))>
 			<#assign byProdList = (routesMap.getValue().get("byProdList"))>
@@ -227,7 +227,7 @@ under the License.
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 		</fo:static-content>
 		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace" font-size="7pt">
 		
@@ -407,7 +407,7 @@ under the License.
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 		</#list>
 		<#assign routeTotals = (routesMap.getValue().get("routeWiseTotals"))>
 		<fo:block>
@@ -572,7 +572,7 @@ under the License.
 					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+							<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -730,7 +730,7 @@ under the License.
 					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+							<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -885,7 +885,7 @@ under the License.
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			<fo:block> 
 				<fo:table>
 					<fo:table-column column-width="400pt"/>
