@@ -158,8 +158,9 @@
      <!-- <PeriodType   description="Transporter Commsion Period"   periodLength="1" periodTypeId="LMS_TRANSCOMM_PERIOD" uomId="TF_mon"/> 
      <CustomTimePeriod customTimePeriodId="DEC-1-30-2013" periodTypeId="LMS_TRANSCOMM_PERIOD" periodNum="12" periodName="DEC(1-31)" fromDate="2013-12-01" thruDate="2013-12-31" isClosed="N"  organizationPartyId="Company"/>  -->
      
-     <CustomTimePeriod  customTimePeriodId="JAN-1-31" fromDate="2014-01-01" isClosed="N"  organizationPartyId="Company" periodName="January(1-31)" periodNum="1" periodTypeId="MARGIN_MONTH" thruDate="2014-01-31"/> 
-     <CustomTimePeriod  customTimePeriodId="FEB-1-28" fromDate="2014-02-01" isClosed="N"  organizationPartyId="Company" periodName="FEB(1-28)" periodNum="2" periodTypeId="MARGIN_MONTH" thruDate="2014-02-28"/> 
+     <CustomTimePeriod  customTimePeriodId="JAN-1-31" fromDate="2014-01-01" isClosed="N"  organizationPartyId="Company" periodName="January(1-31)2014" periodNum="1" periodTypeId="MARGIN_MONTH" thruDate="2014-01-31"/> 
+     <CustomTimePeriod  customTimePeriodId="FEB-1-28" fromDate="2014-02-01" isClosed="N"  organizationPartyId="Company" periodName="FEB(1-28)2014" periodNum="2" periodTypeId="MARGIN_MONTH" thruDate="2014-02-28"/>
+     <CustomTimePeriod  customTimePeriodId="MAR-1-31" fromDate="2014-03-01" isClosed="N"  organizationPartyId="Company" periodName="MAR(1-31)2014" periodNum="3" periodTypeId="MARGIN_MONTH" thruDate="2014-03-31"/> 
      
      <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Adjustment Vehicle Short Payment screen"/>
     
