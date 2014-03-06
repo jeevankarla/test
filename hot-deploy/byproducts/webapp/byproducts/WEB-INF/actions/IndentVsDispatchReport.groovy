@@ -107,7 +107,7 @@
 		productId = productList.get(i);
 		List prodIndentList = EntityUtil.filterByAnd(indentList, UtilMisc.toMap("productId", productId));
 		List prodOrderItemsList = EntityUtil.filterByAnd(boothOrderItemsList, UtilMisc.toMap("productId", productId));
-		List prodReceiptList = EntityUtil.filterByAnd(shipmentReceiptList, UtilMisc.toMap("productId", productId));
+		//List prodReceiptList = EntityUtil.filterByAnd(shipmentReceiptList, UtilMisc.toMap("productId", productId));
 		
 		for(j = 0; j < prodIndentList.size(); j++){
 			if(UtilValidate.isNotEmpty((prodIndentList.get(j)).get("preRevisedQuantity"))){
@@ -120,9 +120,9 @@
 		for(k = 0; k < prodOrderItemsList.size(); k++){
 			totalDispatchQty = totalDispatchQty.add((prodOrderItemsList.get(k)).get("quantity"));
 		}
-		for(m = 0; m < prodReceiptList.size(); m++){
+		/*for(m = 0; m < prodReceiptList.size(); m++){
 			totalReceiptQty = totalReceiptQty.add((prodReceiptList.get(m)).get("quantityAccepted"));
-		}
+		}*/
 		
 		
 		indentAndDispatchMap = [:];
