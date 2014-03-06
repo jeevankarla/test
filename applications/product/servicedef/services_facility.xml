@@ -1061,12 +1061,7 @@ under the License.
         <description>Send a change indent sms</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>                                              
     </service>
-     <service name="getBoothDuesRunningTotal" engine="java"
-            location="org.ofbiz.network.NetworkServices" invoke="getBoothDuesRunningTotal" auth="true">
-        <description>calculate running total for selected Booths</description>
-        <attribute name="boothIds" type="List" mode="IN" optional="false"/>        
-        <attribute name="boothRunningTotal" type="BigDecimal" mode="OUT" optional="false"/>       
-    </service>
+    
     
 	<service name="populateLMSSalesHistorySummary" engine="java"
         location="org.ofbiz.network.LMSSalesHistoryServices" invoke="populateLMSSalesHistorySummary">
