@@ -59,7 +59,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "IndentVsDispatch.txt")}
 	                        	<#assign lineNo = lineNo + 1>
 		                        <#assign product = delegator.findOne("Product", {"productId" : productDetail.getKey()}, true)>
 		                        <#--assign productUom = delegator.findOne("Uom", {"uomId" : product.quantityUomId}, true)>-->
-		                        <#assign productFacility = delegator.findOne("ProductFacility", {"productId" : productDetail.getKey(),"facilityId" : "MOTHER DAIRY"}, true)>
+		                        <#assign productFacility = delegator.findOne("ProductFacility", {"productId" : productDetail.getKey(),"facilityId" : "STORE"}, true)>
 								<fo:table-row>
                     				<fo:table-cell>
 	                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">&#160;    ${productDetail.getKey()}</fo:block>  
@@ -80,6 +80,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "IndentVsDispatch.txt")}
 	                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${dispatchQty}</fo:block>  
 	                        		</fo:table-cell>
 	                        		<#assign diffQty = dispatchQty-indentQty>
+	                        		<#if indentQty==0>
+	                        		<#assign indentQty=diffQty>
+	                        		</#if>
 	                        		<#assign percentDiff = Static["java.lang.Integer"].valueOf((diffQty/indentQty)*100)>
 	                        		<fo:table-cell>
 	                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${diffQty?if_exists}</fo:block>  
