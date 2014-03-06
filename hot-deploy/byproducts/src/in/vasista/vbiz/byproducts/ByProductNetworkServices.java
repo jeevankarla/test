@@ -4909,6 +4909,11 @@ public class ByProductNetworkServices {
 				 paymentMethodType=(String)partyProfileFacilityMap.get(facilityId);
 				}
 			}
+			if(UtilValidate.isEmpty(paymentMethodType)){
+				Debug.logError("paymentMethod Configuration not Done=========== ", module);
+				Debug.logError("paymentMethod Configuration not Done======For=====  "+facilityId, module);
+				return ServiceUtil.returnError("paymentMethod Configuration not Done======For====="+facilityId);
+			}
 			// Do check for only past dues payments
 			if(useFifo){
 				try{
@@ -5107,7 +5112,7 @@ public class ByProductNetworkServices {
 				}
 	    		Map boothDues = (Map)boothResult.get("boothDues");
 	    		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("userLogin", userLogin);
-	    		paymentCtx.put("paymentMethodTypeId", "CASH_PAYIN");
+	    		//paymentCtx.put("paymentMethodTypeId", "CASH_PAYIN");
 	    		
 	    		if(UtilValidate.isNotEmpty(partyProfileFacilityMap.get(boothId))){
 	   			 paymentMethodType=(String)partyProfileFacilityMap.get(boothId);
