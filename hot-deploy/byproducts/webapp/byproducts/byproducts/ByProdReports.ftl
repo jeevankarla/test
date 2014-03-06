@@ -80,17 +80,18 @@
     	
     	<div class="screenlet">
     		<div class="screenlet-title-bar">
-      			<h3>ChannelWise Reports</h3>
+      			<h3>Other Reports</h3>
     		</div>
     		<div class="screenlet-body">
     			<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+    			  <#-- 
       				<tr>
       					<form id="channelWiseSales" name="channelWiseSales" method="post" action="<@ofbizUrl>channelWiseSales.txt</@ofbizUrl>" target="_blank" >	
       						<td>ChannelWise Sales</td>
       						<td >Time Period
       							<select name="customTimePeriodId" class='h4'>
                 					<#list timePeriodList as timePeriod>    
-                  	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.customTimePeriodId}</option>
+                  	    				<option value='${timePeriod.customTimePeriodId}'> ${(timePeriod.get("fromDate",locale))?if_exists} - ${(timePeriod.get("thruDate",locale))?if_exists}</option>
                 					</#list>            
 								</select>
 								<input type="hidden" name="reportTypeFlag" value="sales">
@@ -104,13 +105,28 @@
       						<td >Time Period
       							<select name="customTimePeriodId" class='h4'>
                 					<#list timePeriodList as timePeriod>    
-                  	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.customTimePeriodId}</option>
+                  	    				<option value='${timePeriod.customTimePeriodId}'> ${(timePeriod.get("fromDate",locale))?if_exists} - ${(timePeriod.get("thruDate",locale))?if_exists}</option>
                 					</#list>            
 								</select>
 								<input type="submit" value="Download" class="buttontext"/>
           					</td>       			
       					</form>
-      				</tr>
+      				</tr> -->
+      				<tr class="alternate-row">
+			      	   <form id="paymentOBandCB" name="paymentOBandCB" method="post" action="<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>" target="_blank">        
+			             <td>Partywise Ledger Abstract</td>
+			             <td width="80%" colspan='2'>
+			             From<@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="10" maxlength="22" id="EfffromDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+			             Thru<@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="10" maxlength="22" id="EffthruDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>                               
+			             </br>PTY Code <input type="text" name="partyCode" id="ptyCode" size="10" maxlength="22">
+			             <input type="submit" value="TXT" onClick="javascript:appendParams('paymentOBandCB', '<@ofbizUrl>PartywiseBalanceAbstract.txt</@ofbizUrl>');" class="buttontext"/>
+						 &nbsp;
+						 <input type="submit" value="PDF" onClick="javascript:appendParams('paymentOBandCB', '<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>');" class="buttontext"/>
+			             &nbsp;
+			             </td>
+			           </form>
+			        </tr>
+			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	
 		      			<td>Party Ledger</td>
@@ -125,7 +141,7 @@
 							 To<@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="" className="" alert="" title="Format: dd/MM/yyyy" size="7" maxlength="20" id="dueAbsthruDate" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
 							<input type="submit" value="Download" class="buttontext"/>				
 						</td>
-					</tr>	
+					</tr>	-->
       			
       			</table>
     		</div>
@@ -155,7 +171,7 @@
       			</table>
       		</div>
       	</div>
-      	-->
+      	
       	<div class="screenlet">
     		<div class="screenlet-title-bar">
       			<h3>Tax Reports</h3>
@@ -168,7 +184,7 @@
       						<td >Time Period
       							<select name="customTimePeriodId" class='h4'>
                 					<#list timePeriodList as timePeriod>    
-                  	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.customTimePeriodId}</option>
+                  	    				<option value='${timePeriod.customTimePeriodId}'> ${(timePeriod.get("fromDate",locale))?if_exists} - ${(timePeriod.get("thruDate",locale))?if_exists}</option>
                 					</#list>            
 								</select>
 								<input type="submit" value="Download" class="buttontext"/>
@@ -177,7 +193,7 @@
       				</tr>
       			</table>
       		</div>
-      	</div>
+      	</div>-->
       	<div class="screenlet">
     		<div class="screenlet-title-bar">
       			<h3>Misc Reports</h3>
@@ -190,7 +206,7 @@
       						<td >Time Period
       							<select name="customTimePeriodId" class='h4'>
                 					<#list timePeriodList as timePeriod>    
-                  	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.customTimePeriodId}</option>
+                  	    				<option value='${timePeriod.customTimePeriodId}'> ${(timePeriod.get("fromDate",locale))?if_exists} - ${(timePeriod.get("thruDate",locale))?if_exists}</option>
                 					</#list>            
 								</select>
 								<input type="submit" value="Download" class="buttontext"/>
