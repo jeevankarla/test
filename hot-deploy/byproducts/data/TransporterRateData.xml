@@ -10,6 +10,8 @@
 <FacilityRate facilityId="RTE_05" rateTypeId="TRANSPORTER_MRGN" productId="_NA_" uomId="LEN_km" supplyTypeEnumId="_NA_" rateCurrencyUomId="INR" fromDate="2013-01-01 00:00:00.00" thruDate="2014-01-31 23:59:59.00" rateAmount="0.68"/>
 <FacilityRate facilityId="RTE_05" rateTypeId="TRANSPORTER_MRGN" productId="_NA_" uomId="LEN_km" supplyTypeEnumId="_NA_" rateCurrencyUomId="INR" fromDate="2014-01-31 00:00:00.00" thruDate="" rateAmount="1.00"/>
 
+<Vehicle vehicleId="SAMPL01"  uomId="LEN_km"   vehicleCapacity="1.00"/>
+
 
 
  
