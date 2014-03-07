@@ -481,7 +481,7 @@
         	</drop-down>
         </field> --> 
            
-        <field name="facilityId" title="Dealer"><lookup target-form-name="LookupFacility"></lookup></field>
+        <field name="facilityId" title="Retailer"><lookup target-form-name="LookupFacility"></lookup></field>
         <field name="productId" title="Product"> <lookup target-form-name="LookupProduct"></lookup></field>    
         <field name="routeId" title="Route"><lookup target-form-name="LookupFacility"/></field>
         <field name="tripId" title="Trip" widget-style="h3">

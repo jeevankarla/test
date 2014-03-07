@@ -3397,6 +3397,7 @@ public class ByProductServices {
 		   	         List changeIndentProductList=(List)result.get("changeIndentProductList");
 		   	         List<Map> prodQtyList = FastList.newInstance();
 		   	         BigDecimal prvQty = BigDecimal.ZERO;
+		   	         BigDecimal tempPrvQty = BigDecimal.ZERO;
 			   	        if(UtilValidate.isNotEmpty(changeIndentProductList)){
 				   	         for(int j=0;j<changeIndentProductList.size();j++){
 				   	        	 Map prodQty = FastMap.newInstance();
@@ -3415,7 +3416,7 @@ public class ByProductServices {
 			   		         input.put("facilityId", tempFacId);
 			   		         input.put("productSubscriptionTypeId", "EMP_SUBSIDY");
 			   		         input.put("productId", productId);
-			   		         input.put("closedDate", fromDate);
+			   		         input.put("closeDate", fromDate);
 			   		         try {
 			   		         	resultMap = dispatcher.runSync("endSubscriptionIndent", input);
 			   		         } catch (GenericServiceException e) {
@@ -3425,46 +3426,49 @@ public class ByProductServices {
 				   		         Map tempMap = FastMap.newInstance();
 				   		         tempMap.put("productId", productId);
 				   		         tempMap.put("sequenceNum", routeId);
-				   		         tempMap.put("quantity", prvQty.subtract(BigDecimal.ONE));
+				   		         tempPrvQty=prvQty.subtract(BigDecimal.ONE);
+				   		         tempMap.put("quantity", tempPrvQty);
 				   		         prodQtyList.add(tempMap);
-				   		         Debug.log("temp facId endsubscriptionIndent"+prvQty);
+				   		        
 				   		         
 		   		         }
-			   	     List condList = FastList.newInstance();
-			   	     condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
-			   	     condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, tempFacId));
-			   	     condList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
-			   	     EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-			   	     List<GenericValue> subscription = delegator.findList("Subscription", cond, UtilMisc.toSet("subscriptionId"), null, null ,false);
-			   	     subscription = EntityUtil.filterByDate(subscription,fromDate);
-			   	     if(UtilValidate.isNotEmpty(subscription)){
-			   	    	 subscriptionId = (EntityUtil.getFirst(subscription)).getString("subscriptionId");
-			   	  	  }else{
-			   	      	Debug.logError("Error in getting subscriptionId : "+tempFacId+ "\t",module);
-						return ServiceUtil.returnError("Error in getting subscriptionId  : "+tempFacId);
-			 
-			   	     }
-			   	     Debug.log("temp facId end subscriptionId"+subscriptionId);
-	   		         
-	   	             Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
-				  	 processChangeIndentHelperCtx.put("subscriptionId", subscriptionId);
-				  	 processChangeIndentHelperCtx.put("boothId", tempFacId);
-				  	 processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
-				  	 processChangeIndentHelperCtx.put("effectiveDate", fromDate);
-				  	 processChangeIndentHelperCtx.put("productQtyList", prodQtyList);
-				  	 processChangeIndentHelperCtx.put("productSubscriptionTypeId",  "EMP_SUBSIDY");
+				   	  if (tempPrvQty.intValue()!=0) { 
+				   	     List condList = FastList.newInstance();
+				   	     condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
+				   	     condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, tempFacId));
+				   	     condList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+				   	     EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+				   	     List<GenericValue> subscription = delegator.findList("Subscription", cond, UtilMisc.toSet("subscriptionId"), null, null ,false);
+				   	     subscription = EntityUtil.filterByDate(subscription,fromDate);
+				   	     if(UtilValidate.isNotEmpty(subscription)){
+				   	    	 subscriptionId = (EntityUtil.getFirst(subscription)).getString("subscriptionId");
+				   	  	  }else{
+				   	      	Debug.logError("Error in getting subscriptionId : "+tempFacId+ "\t",module);
+							return ServiceUtil.returnError("Error in getting subscriptionId  : "+tempFacId);
+				 
+				   	     }
+				   	     Debug.log("temp facId end subscriptionId"+subscriptionId);
+		   		         
+		   	             Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
+					  	 processChangeIndentHelperCtx.put("subscriptionId", subscriptionId);
+					  	 processChangeIndentHelperCtx.put("boothId", tempFacId);
+					  	 processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
+					  	 processChangeIndentHelperCtx.put("effectiveDate", fromDate);
+					  	 processChangeIndentHelperCtx.put("productQtyList", prodQtyList);
+					  	 processChangeIndentHelperCtx.put("productSubscriptionTypeId",  "EMP_SUBSIDY");
 					  	 try{
-					  		 result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
-							 if (ServiceUtil.isError(result)) {
-								String errMsg =  ServiceUtil.getErrorMessage(result);
-								Debug.logError(errMsg , module);
-								return ServiceUtil.returnError("Error in processChangeIndentHelper"); 
-							 }
-					  	 }catch (Exception e) {
-					  			  Debug.logError(e, "Problem updating subscription for booth " + tempFacId, module);     
-					  	 }
-						  	 
-			  	 }//ending old facility block
+						  		 result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
+								 if (ServiceUtil.isError(result)) {
+									String errMsg =  ServiceUtil.getErrorMessage(result);
+									Debug.logError(errMsg , module);
+									return ServiceUtil.returnError("Error in processChangeIndentHelper"); 
+								 }
+						  	 }catch (Exception e) {
+						  			  Debug.logError(e, "Problem updating subscription for booth " + tempFacId, module);     
+						  	 }
+							  	 
+				  	 }//ending old facility block
+			    }
 			/**if facility party equals new facility id or if no record found for old facility  getting the quantity for facilitry id and incrementing with one and
 			creating a new record  with new quantity  in subscription product and end subscription for the old record with same facility **/
 				
@@ -3490,14 +3494,13 @@ public class ByProductServices {
 	 		         input.put("facilityId", facilityId);
 	 		         input.put("productSubscriptionTypeId", "EMP_SUBSIDY");
 	 		         input.put("productId", productId);
-	 		         input.put("closedDate", fromDate);
-		 		         try {
-		 		         	resultMap = dispatcher.runSync("endSubscriptionIndent", input);
-		 		         } catch (GenericServiceException e) {
-		 		             Debug.logError(e, module);
-		 		             return ServiceUtil.returnError(e.getMessage());
-		 		         }
-					  	 
+	 		         input.put("closeDate", fromDate);
+	 		         try {
+	 		         	resultMap = dispatcher.runSync("endSubscriptionIndent", input);
+	 		         } catch (GenericServiceException e) {
+	 		             Debug.logError(e, module);
+	 		             return ServiceUtil.returnError(e.getMessage());
+	 		         }
 	 		     }
         	 Map prodQty = FastMap.newInstance();
         	 prodQtyList = FastList.newInstance();

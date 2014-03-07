@@ -148,7 +148,7 @@
 			        </#if>          
 			        <tr>
 			          <td>&nbsp;</td>
-			          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.Dealer}:</div></td>
+			          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.Retailer}:</div></td>
 			          <td>&nbsp;</td>
 			       		<#if booth?exists && booth?has_content>  
 				  	  		  <input type="hidden" name="boothId" id="boothId" value="${booth.facilityId}"/>  

@@ -25285,7 +25285,7 @@
         <value xml:lang="en">Override List</value>        
     </property>
     <property key="BoothRouteZone">
-        <value xml:lang="en">Booth /Route / Zone Id</value>        
+        <value xml:lang="en">Retailer /Route / Zone Id</value>        
     </property>    
      <property key="TransporterDue">
         <value xml:lang="en">Vehicle Short Payment</value>        

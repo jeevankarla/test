@@ -53,7 +53,7 @@ under the License.
                     <fo:table-column column-width="45pt"/>
                     <fo:table-column column-width="45pt"/>                   
                 <#if checkListType != "cardsale">
-                   <#list productList as product>            
+                   <#list finalProductList as product>            
 		             <fo:table-column column-width="45pt"/>      
 		           </#list>
 		         <#else>
@@ -73,9 +73,10 @@ under the License.
 		                        <fo:table-cell padding="3pt" border-width="1pt" border-style="dotted"><fo:block text-align="center">Route</fo:block></fo:table-cell>
 		                        <fo:table-cell padding="3pt" border-width="1pt" border-style="dotted"><fo:block text-align="center">Booth</fo:block></fo:table-cell>
 		                     <#if checkListType != "cardsale">
-			                    <#list productList as product>            
+			                    <#list finalProductList as product>  
+			                    <#assign productDetails = delegator.findOne("Product", {"productId" : product}, true)>
 			                     <fo:table-cell border-width="1pt" border-style="dotted" width ="40pt">
-			                       	<fo:block text-align="right"  padding="3pt" font-size="10pt" wrap-option="nowrap"  white-space-collapse="false">${product.brandName}</fo:block>
+			                       	<fo:block text-align="right"  padding="3pt" font-size="10pt" wrap-option="nowrap"  white-space-collapse="false">${productDetails.brandName}</fo:block>
 			                       	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			                     </fo:table-cell>
 			                    </#list>
@@ -95,27 +96,27 @@ under the License.
 	                            	<fo:block text-align="center" text-indent="0.05in" padding="1pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((checkListReport.lastModifiedBy))),10)}</fo:block>                               
 	                            </fo:table-cell>	
 	                        	<fo:table-cell border-width="1pt" border-style="dotted">	
-	                            	<fo:block text-align="right" text-indent="0.05in" padding="1pt">${checkListReport.lastModifiedDate}</fo:block>                               
+	                            	<fo:block text-align="right" text-indent="0.05in" padding="1pt">${checkListReport.lastModifiedDate?if_exists}</fo:block>                               
 	                            </fo:table-cell>	
 	                          <#if checkListType == "gatepass" || checkListType == "trucksheetcorrection">	                                                    
 	                        	<fo:table-cell border-width="1pt" border-style="dotted">	
-	                            	<fo:block text-align="center" text-indent="0.05in" padding="1pt">${checkListReport.shipmentTypeId}</fo:block>                               
+	                            	<fo:block text-align="center" text-indent="0.05in" padding="1pt">${checkListReport.shipmentTypeId?if_exists}</fo:block>                               
 	                            </fo:table-cell>
 	                          </#if>
 	                          <#if checkListType != "cardsale">	
 	                        	<fo:table-cell border-width="1pt" border-style="dotted">	
-	                            	<fo:block text-align="right" text-indent="0.05in" padding="1pt">${checkListReport.supplyType}</fo:block>                               
+	                            	<fo:block text-align="right" text-indent="0.05in" padding="1pt">${checkListReport.supplyType?if_exists}</fo:block>                               
 	                            </fo:table-cell>
 	                          </#if> 
 	                            <fo:table-cell border-width="1pt" border-style="dotted">
 	                            	<fo:block text-align="right" padding="1pt">${checkListReport.routeId?if_exists}</fo:block>	                               
 	                            </fo:table-cell>	                            
 	                            <fo:table-cell border-width="1pt" border-style="dotted">
-	                            	<fo:block text-align="right" padding="1pt">${checkListReport.boothId}</fo:block>	                               
+	                            	<fo:block text-align="right" padding="1pt">${checkListReport.boothId?if_exists}</fo:block>	                               
 	                            </fo:table-cell>	  
 	                           <#if checkListType != "cardsale">
-		                         <#list productList as product>
-		                           <#assign productQty = checkListReport[product.productId]>            
+		                         <#list finalProductList as product>
+		                           <#assign productQty = checkListReport[product]>            
 			                       		<fo:table-cell border-width="1pt" border-style="dotted"><fo:block text-align="right" padding="1pt" linefeed-treatment="preserve">${productQty}</fo:block></fo:table-cell>
 			                       </#list>
 			                   <#else>
@@ -133,9 +134,9 @@ under the License.
 	                            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>                              
 	                            </fo:table-cell>
 	                             <#if checkListType != "cardsale">
-		                            <#list productList as product>
-		                            	<#assign productQty = checkListReport[product.productId]>            
-			                       		<fo:table-cell border-width="1pt" border-style="dotted"><fo:block text-align="center" padding="1pt"></fo:block></fo:table-cell>
+		                            <#list finalProductList as product>
+		                            	<#assign productQty = checkListReport[product]>            
+			                       		<fo:table-cell border-width="1pt" border-style="dotted"><fo:block text-align="center" padding="1pt"></fo:block>${productQty}</fo:table-cell>
 			                       	</#list>
 			                       	<#else>
 			                       		<#list  milkCardTypeList as milkCardType>

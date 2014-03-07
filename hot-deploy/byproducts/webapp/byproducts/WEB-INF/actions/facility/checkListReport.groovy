@@ -39,6 +39,7 @@ List exprList = [];
 List checkListReportList = [];
 lastChangeSubProdMap = [:];
 List milkCardTypeList =[];
+List finalProductList =[];
 dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, locale);
 dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp(), timeZone, locale);
 supplyTypeMap =[:];
@@ -217,7 +218,12 @@ if(("changeindent".equals(checkListType))){
 			lastChangeSubProdMap["routeId"] = checkListItemProd.parentFacilityId;
 		}
 			
-		lastChangeSubProdMap[checkListItemProd.productId] = (checkListItemProd.quantity).intValue();
+		     lastChangeSubProdMap[checkListItemProd.productId] = (checkListItemProd.quantity).intValue();
+			 if((checkListItemProd.quantity).intValue()>0){
+			 finalProductList.addAll(checkListItemProd.productId);
+			 context.finalProductList = finalProductList.unique();
+			}
+		
 		
 	}
 }

@@ -1248,12 +1248,12 @@ public class LmsServices {
         String facilityId = (String)context.get("facilityId");
         String tripId = (String)context.get("tripId");
         String subscriptionTypeId = (String)context.get("subscriptionTypeId");
-        Timestamp closedDate = (Timestamp)context.get("closeDate");
+        Timestamp closeDate = (Timestamp)context.get("closeDate");
         String productSubscriptionTypeId = (String)context.get("productSubscriptionTypeId");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         String productId = (String)context.get("productId");
-        if(UtilValidate.isEmpty(closedDate)){
-        	closedDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+        if(UtilValidate.isEmpty(closeDate)){
+        	closeDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
         }
         try{
         	List conditionList = FastList.newInstance();
@@ -1278,20 +1278,20 @@ public class LmsServices {
     		}
     		EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
     		List<GenericValue> subscriptionProduct = delegator.findList("SubscriptionProduct", cond, null, null, null, false);
-    		List<GenericValue> subscProduct = EntityUtil.filterByDate(subscriptionProduct, UtilDateTime.getDayStart(closedDate));
+    		List<GenericValue> subscProduct = EntityUtil.filterByDate(subscriptionProduct, UtilDateTime.getDayStart(closeDate));
     		
     		
     		for(GenericValue subProd : subscProduct){
     			Timestamp fromDate = subProd.getTimestamp("fromDate");
-    			if(fromDate.compareTo(UtilDateTime.getDayStart(closedDate))<0){
-    				subProd.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(closedDate, -1)));
+    			if(fromDate.compareTo(UtilDateTime.getDayStart(closeDate))<=0){
+    				subProd.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(closeDate, -1)));
     				subProd.store();
     			}
     		}
     		
     		List<GenericValue> activeSubscriptionProduct = delegator.findList("SubscriptionProduct", cond, null, null, null, false);
     		
-    		List<GenericValue> tomorrowIndentProd = EntityUtil.filterByDate(activeSubscriptionProduct, UtilDateTime.addDaysToTimestamp(closedDate, 1));
+    		List<GenericValue> tomorrowIndentProd = EntityUtil.filterByDate(activeSubscriptionProduct, UtilDateTime.addDaysToTimestamp(closeDate, 1));
     		for(GenericValue tommorowSubProd : tomorrowIndentProd){
     			delegator.removeValue(tommorowSubProd);
     		}
