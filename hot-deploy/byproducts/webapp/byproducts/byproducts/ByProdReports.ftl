@@ -59,7 +59,19 @@
       	<tr><#if security.hasEntityPermission("SENDLVDSMS", "_VIEW", session)>
       			<td> Last Vehicle Despatch(LVD) Sms</td>
       			<td> <a href="<@ofbizUrl>sendLVDSms</@ofbizUrl>" class="buttontext">Send</a></td></#if>
-      	</tr>  
+      	</tr> 
+      	 <tr>
+        	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallanPDF</@ofbizUrl>">	
+      			<td width="34%">Dealer BankChallan Report </td>
+      			<td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="bankChallanSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>
+      			<td width="33%">Route 
+				<select name="routeId" class='h4'>
+					<#list routesList as route>    
+  	    				<option value='${route}'>${route}</option>
+					</#list>  
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+        </tr> 
       </table>
 	 </div>
     </div>
