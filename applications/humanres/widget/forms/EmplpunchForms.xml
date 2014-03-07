@@ -33,5 +33,53 @@
         <field name="Note" title="${uiLabelMap.CommonNote}"><text/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit" ><submit button-type="button"/></field>
 </form>
+
+    <form name="emplDailyPunchReport" type="list" list-name="punchDataList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="date" title="Date" title-area-style="tableheadwide"><display/></field>
+        <field name="partyId" title="Employee Id" title-area-style="tableheadwide"><display/></field>
+        <field name="Employee" title="Name" title-area-style="tableheadwide"><display/></field>
+        <field name="inTime" title="In Time" title-area-style="tableheadwide"><display/></field>
+        <field name="outTime" title="Out Time" title-area-style="tableheadwide"><display/></field>
+        <field name="totalTime" title="Day Total" title-area-style="tableheadwide"><display/></field>
+    </form>
+    
+    <form name="emplMonthlyPunchReport" type="list" list-name="punchDataList" 
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="partyId" title="Employee Id" title-area-style="tableheadwide"><display/></field>
+        <field name="Employee" title="Name" title-area-style="tableheadwide"><display/></field>
+		<field name="d1" title="${columnTitleMap.d1Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d2" title="${columnTitleMap.d2Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d3" title="${columnTitleMap.d3Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d4" title="${columnTitleMap.d4Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d5" title="${columnTitleMap.d5Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d6" title="${columnTitleMap.d6Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d7" title="${columnTitleMap.d7Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d8" title="${columnTitleMap.d8Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d9" title="${columnTitleMap.d9Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d10" title="${columnTitleMap.d10Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d11" title="${columnTitleMap.d11Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d12" title="${columnTitleMap.d12Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d13" title="${columnTitleMap.d13Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d14" title="${columnTitleMap.d14Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d15" title="${columnTitleMap.d15Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d16" title="${columnTitleMap.d16Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d17" title="${columnTitleMap.d17Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d18" title="${columnTitleMap.d18Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d19" title="${columnTitleMap.d19Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d20" title="${columnTitleMap.d20Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d21" title="${columnTitleMap.d21Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d22" title="${columnTitleMap.d22Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d23" title="${columnTitleMap.d23Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d24" title="${columnTitleMap.d24Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d25" title="${columnTitleMap.d25Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d26" title="${columnTitleMap.d26Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d27" title="${columnTitleMap.d27Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d28" title="${columnTitleMap.d28Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d29" title="${columnTitleMap.d29Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d30" title="${columnTitleMap.d30Title}" title-area-style="tableheadwide"><display/></field>
+		<field name="d31" title="${columnTitleMap.d31Title}" title-area-style="tableheadwide"><display/></field>
+    </form>
 </forms>
+
 

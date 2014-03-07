@@ -29,82 +29,46 @@
 			<display description="${description}" />
 		</field>
 	</form>
-	<form name="PartyProfile" type="list" list-name="revenueAccountBalanceList"
-		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-		<actions>
-			<entity-condition entity-name="EmployeePositionDetails"
-				filter-by-date="false" list="revenueAccountBalanceList">
-				<select-field field-name="partyId" />
-				<select-field field-name="emplPositionId" />
-				<select-field field-name="emplPositionTypeId" />
-				<select-field field-name="statusId" />
-				<select-field field-name="emplPositionIdReportingTo" />
-				<select-field field-name="emplPositionIdManagedBy" />
-				<select-field field-name="responsibilityTypeId" />
-				<select-field field-name="fromDate" />
-				<select-field field-name="thruDate" />
-			</entity-condition>
-		</actions>
-		<field name="partyId" title-area-style="tableheadwide">
-			<display description="${partyId}" />
+	<form name="FindEmployeeProfile" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeProfileReport">
+       	<field name="partyId" title="Organization Party Id" parameter-name="partyIdFrom">
+			<drop-down allow-empty="false">
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
 		</field>
-		<field name="EmployeePositionId" title-area-style="tableheadwide">
-			<display description="${EmployeePositionId}" />
-		</field>
-		<field name="employeePositionTypeId" title-area-style="tableheadwide">
-			<display description="${employeePositionTypeId}" />
-		</field>
-		<field name="statusId" title-area-style="tableheadwide">
-			<display description="${statusId}" />
-		</field>
-		<field name="emplPositionIdReportingTo" title-area-style="tableheadwide">
-			<display description="${emplPositionIdReportingTo}" />
-		</field>
-		<field name="emplPositionIdManagedBy" title-area-style="tableheadwide">
-			<display description="${emplPositionIdManagedBy}" />
-		</field>
-		<field name="responsidilityTypeId" title-area-style="tableheadwide">
-			<display description="${responsidilityTypeId}" />
-		</field>
-		<field name="fromDate" title-area-style="tableheadwide">
-			<display description="${fromDate}" />
-		</field>
-		<field name="thruDate" title-area-style="tableheadwide">
-			<display description="${thruDate}" />
-		</field>
-	</form>
-	<form name="EmployeeProfileReport" type="list"
+       	<field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field> 		      
+       <field name="view" title="${uiLabelMap.CommonView}"><submit/></field>
+    </form>
+	<form name="ListEmployeeProfile" type="list"
 		list-name="employeeProfileList" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
 		<actions>
-			<entity-condition entity-name="EmployeePositionDetails"
-				filter-by-date="false" list="employeeProfileList">
-				<select-field field-name="emplPositionId" />
-				<select-field field-name="emplPositionTypeId" />
-				<select-field field-name="statusId" />
-				<select-field field-name="emplPositionIdReportingTo" />
-				<select-field field-name="emplPositionIdManagedBy" />
-				<select-field field-name="responsibilityTypeId" />
-			</entity-condition>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>	
 		</actions>
-		<field name="EmployeePositionId" title-area-style="tableheadwide">
-			<display description="${EmployeePositionId}" />
+		<field name="employeeId" title-area-style="tableheadwide">
+			<display description="${partyIdTo}" />
 		</field>
-		<field name="employeePositionTypeId" title-area-style="tableheadwide">
-			<display description="${employeePositionTypeId}" />
+		<field name="name" title-area-style="tableheadwide">
+			<display description="${firstName} ${middleName} ${lastName}" />
 		</field>
 		<field name="statusId" title-area-style="tableheadwide">
 			<display description="${statusId}" />
-		</field>
-		<field name="emplPositionIdReportingTo" title-area-style="tableheadwide">
-			<display description="${emplPositionIdReportingTo}" />
-		</field>
-		<field name="emplPositionIdManagedBy" title-area-style="tableheadwide">
-			<display description="${emplPositionIdManagedBy}" />
-		</field>
-		<field name="responsidilityTypeId" title-area-style="tableheadwide">
-			<display description="${responsidilityTypeId}" />
-		</field>
+		</field>	
+		<field name="birthDate" title-area-style="tableheadwide"><display description="${birthDate}"/></field>
+		<field name="maritalStatus" title-area-style="tableheadwide"><display description="${maritalStatus}"/></field>
+		<field name="mothersMaidenName" title-area-style="tableheadwide"><display description="${mothersMaidenName}"/></field>
+		<field name="socialSecurityNumber" title-area-style="tableheadwide"><display description="${socialSecurityNumber}"/></field>
+		<field name="passportNumber" title-area-style="tableheadwide"><display description="${passportNumber}"/></field>
+		<field name="passportExpireDate" title-area-style="tableheadwide"><display description="${passportExpireDate}"/></field>
+		<field name="totalYearsWorkExperience" title-area-style="tableheadwide"><display description="${totalYearsWorkExperience}"/></field>		
+		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
+		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>
+		<field name="postalAddress" title-area-style="tableheadwide"><display description="${postalAddress}"/></field>
 	</form>
 	<form name="ListDeductionTypes" type="list" list-name="deductionTypeList"
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">		
@@ -168,67 +132,17 @@
 		<actions>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employee.groovy"/>					
 		</actions>		
-		<field name="partyId" title-area-style="tableheadwide" >
+		<field name="partyId" title="Employee Id" title-area-style="tableheadwide" >
 			<display description="${partyIdTo}" />
 		</field>
 		<field name="name" title-area-style="tableheadwide">
 			<display description="${firstName} ${middleName} ${lastName}" />
 		</field>		
 		<field name="employementFrom" title-area-style="tableheadwide"><display description="${fromDate}"/></field>
-		<field name="employeePosition" title-area-style="tableheadwide"><display description="${employeePosition}"/></field>
+		<field name="employeePosition" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${description}" key-field-name="emplPositionTypeId"></display-entity></field>
 		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
-		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>
-		<field name="postalAddress" title-area-style="tableheadwide"><display description="${postalAddress}"/></field>
-	</form>
-
-
-	<form name="EmployeeContactDetails" type="list" list-name="employeeContactList" odd-row-style="alternate-row"
-		default-table-style="basic-table hover-bar">
-		<actions>		
-			<entity-condition entity-name="EmployeeContactDetails">
-				<select-field field-name="partyId" />
-				<select-field field-name="roleTypeId" />
-				<select-field field-name="firstName" />
-				<select-field field-name="middleName" />
-				<select-field field-name="lastName" />
-				<select-field field-name="toName" />
-				<select-field field-name="address1" />
-				<select-field field-name="city" />
-				<select-field field-name="postalCode" />
-				<select-field field-name="countryCode" />
-				<select-field field-name="areaCode" />
-				<select-field field-name="contactNumber" />
-				<order-by field-name="partyId" />
-			</entity-condition>
-		</actions>
-		<field name="partyId" title-area-style="tableheadwide">
-			<display description="${partyId}" />
-		</field>
-		<field name="firstName" title-area-style="tableheadwide">
-			<display description="${firstName}" />
-		</field>
-		<field name="middleName" title-area-style="tableheadwide">
-			<display description="${middleName}" />
-		</field>
-		<field name="lastName" title-area-style="tableheadwide">
-			<display description="${lastName}" />
-		</field>
-		<field name="toName" title-area-style="tableheadwide">
-			<display description="${toName}" />
-		</field>
-		<field name="address1" title-area-style="tableheadwide">
-			<display description="${address1},${city}" />
-		</field>
-		<field name="postalCode" title-area-style="tableheadwide">
-			<display description="${postalCode}" />
-		</field>
-		<field name="areaCode" title-area-style="tableheadwide">
-			<display description="${areaCode}" />
-		</field>
-		<field name="contactNumber" title-area-style="tableheadwide">
-			<display description="${contactNumber}" />
-		</field>	
-	</form>
+		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>		
+	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">
 			<lookup target-form-name="LookupEmployeeName"/>
@@ -251,31 +165,15 @@
     <form name="EmployeePositionTypes" type="list" list-name="revenueAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>           
-              <entity-condition entity-name="EmplPositionType" filter-by-date="false" list="revenueAccountBalanceList">
-                
+              <entity-condition entity-name="EmplPositionType" filter-by-date="false" list="revenueAccountBalanceList">                
                 <select-field field-name="emplPositionTypeId"/>
-                <select-field field-name="description"/>
-                
+                <select-field field-name="description"/>                
                 <order-by field-name="emplPositionTypeId"/>
             </entity-condition>
         </actions>
        <field name="emplPositionTypeId" title-area-style="tableheadwide"><display description="${emplPositionTypeId}"/></field>
        <field name="description" title-area-style="tableheadwide"><display description="${description}"/></field>
-         </form>
- 	
- 	<form name="OrganizationSelection5" type="single" target="EmployeeGroups" header-row-style="header-row" default-table-style="basic-table">
-        <field name="partyId">
-			<drop-down allow-empty="false">
-				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
-					<entity-constraint name="roleTypeId" operator="equals"
-						value="INTERNAL_ORGANIZATIO" />
-					<entity-order-by field-name="partyId" />
-				</entity-options>
-			</drop-down>
-		</field>
-        <field name="showSearchResults"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
+    </form> 	
     <form name="findPayHeadTypes" type="single" target="PayHeadTypes" header-row-style="header-row" default-table-style="basic-table">
       <field name="partyId">
 			<drop-down allow-empty="false">
@@ -288,35 +186,8 @@
 		</field>
         <field name="showSearchResults"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
- 	<form name="EmployeeGroupsList" type="list" list-name="employeeGroupList" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-condition entity-name="PartyRelationship" list="employeeGroupList" use-cache="false">
-                <condition-list combine="or">
-                <condition-list combine="and">
-                    <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.partyId"/>
-                    <condition-expr field-name="partyRelationshipTypeId" operator="equals" value="EMPLOYMENT"/>
-                    
-                    </condition-list>
-                    <condition-list combine="and">
-                     <condition-expr field-name="partyIdTo" operator="equals" from-field="parameters.partyId"/>                   
-                    <condition-expr field-name="partyRelationshipTypeId" operator="equals" value="EMPLOYMENT"/>
-                       </condition-list>
-                       
-                      </condition-list>
-                      
-                <select-field field-name="partyIdFrom"/>
-                <select-field field-name="partyIdTo"/>
-                <select-field field-name="roleTypeIdFrom"/>
-                <select-field field-name="roleTypeIdTo"/>
-                <order-by field-name="roleTypeIdTo"/>
-               </entity-condition>
-        </actions>
-       
-        <field name="partyIdTo" ><display/></field>
-        <field name="roleTypeIdTo" ><display/></field>
-         </form>
-   <form name="paySlipEmployeeWise" id="paySlipEmployeeWise" type="single" target="PrintPaySlipsPdf.pdf" header-row-style="header-row" default-table-style="basic-table">        
+    </form> 	
+   <form name="paySlipEmployeeWise" target-window="_BLANK" id="paySlipEmployeeWise" type="single" target="PrintPaySlipsPdf.pdf" header-row-style="header-row" default-table-style="basic-table">        
         <field name="partyId">
 			<drop-down allow-empty="false">
 				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
@@ -337,7 +208,160 @@
         </field>
         <field name="invoiceIds"><hidden></hidden></field>
         <field name="showSearchResults"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="getPdf" widget-style="smallSubmit"><submit button-type="button" /></field>
+    </form>
+	<form name="EmployeeBankDetails" id="EmployeeBankDetails" type="single" target="EmployeeBankDetailsPdf.pdf" header-row-style="header-row"
+		default-table-style="basic-table" list-name="employeeBankList">
+		<field name="partyId">
+			<drop-down allow-empty="false">
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="customTimePeriodId" required-field="true">
+			<drop-down>
+				<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}"
+					filter-by-date="false">
+					<entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH" />
+					<entity-order-by field-name="-thruDate" />
+					<entity-order-by field-name="periodNum" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="invoiceIds">
+			<hidden></hidden>
+		</field>
+		<field name="showSearchResults">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="getPdf" widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+	 <form name="PFtransfer" id="PFReport" type="single" target="PFtransfer" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
         <field name="getPdf" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="PFclaiming" id="PFReport" type="single" target="PFclaiming" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    <form name="PFnomination" id="PFReport" type="single" target="PFnomination" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    
+	<form name="PFqualified" id="PFReport" type="single" target="PFqualified" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    
+    <form name="PFleaving" type="single" target="PFleaving" header-row-style="header-row" default-table-style="basic-table">        
+		<field name="partyIdFrom"><hidden value="Company"></hidden></field>
+		<field name="customTimePeriodId" required-field="true">
+			<drop-down>
+				<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}"
+					filter-by-date="false">
+					<entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH" />
+					<entity-order-by field-name="-thruDate" />
+					<entity-order-by field-name="periodNum" />
+				</entity-options>
+			</drop-down>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ESIfamilydeclaration" type="single" target="ESIfamilydeclaration" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ESIchangefamilydeclaration" type="single" target="ESIchangefamilydeclaration" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ESIdeclaration" type="single" target="ESIdeclaration" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ESIannualinformation" type="single" target="ESIannualinformation" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    
+     <form name="TDSemployee" type="single" target="TDSemployee" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    <form name="TDSchallan" type="single" target="TDSchallan" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    <form name="TDSform16a" type="single" target="TDSform16a" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+        <field name="getPdf" widget-style="smallSubmit" ><submit button-type="button"/></field>
+    </form>
+    <form name="AttendanceDailyReport" type="single" target="emplDailyPunchReport.csv" header-row-style="header-row" default-table-style="basic-table">
+      <field name="partyId" title="Organisation">
+			<drop-down allow-empty="false">
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="punchDate" title="Date" required-field="false" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
+		<field name="view" title="Download Csv" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+       
+    <form name="AttendanceMonthlyReport" type="single" target="EmplMonthlyPunchReport.csv" header-row-style="header-row" default-table-style="basic-table">
+        <field name="partyId" title="Organisation">
+			<drop-down allow-empty="false">
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="customTimePeriodId" title="Time Period" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Download Csv" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
         

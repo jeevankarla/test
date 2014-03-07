@@ -1,4 +1,6 @@
-
+<#if parameters.ajaxLookup?default("N") == "Y">
+	${StringUtil.wrapString(treeNodesListJSON)}
+<#else>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/ui/development-bundle/external/jquery.cookie.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jsTree/jquery.jstree.js</@ofbizContentUrl>"></script>
 
@@ -10,8 +12,20 @@ function createTree() {
         jQuery("#tree").jstree({
         "plugins" : [ "themes", "json_data", "cookies", "types"],
         "json_data" : {
-                "data" : ${StringUtil.wrapString(treeNodesListJSON)}
-        },
+            "data" : ${StringUtil.wrapString(treeNodesListJSON)},
+			"ajax" : {
+					"url" : "orgSubTree",
+					"data": function (n) { 
+						return {
+							"ajaxLookup":"Y",
+							"partyId":$(n).attr("id")
+						}
+					},
+					"success": function (new_data) {
+                    	return jQuery.parseJSON(new_data.treeNodeJSON);
+                	}
+			}
+		},
 		"themes" : {
 				"theme" : "classic",
         },    
@@ -52,3 +66,4 @@ createTree();
 </script>
 <div id="tree"></div>
 
+</#if>

@@ -90,7 +90,7 @@ under the License.
                                 <set field="dependentKeyName" value="geoId"/>
                                 <set field="descName" value="geoName"/>
                                 <set field="selectedDependentOption" value="_none_"/>
-                    
+            
             </actions>
             <widgets>
                 	<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -115,10 +115,33 @@ under the License.
             </widgets>
     	</section>
     </screen>
+        
+    <screen name="EditEmployee">
+        <section>
+            <actions>
+               	<set field="titleProperty" value="PageTitleEditEmployeeInformation"/>
+                <set field="tabButtonItem" value="viewprofile"/>               
+                <set field="labelTitleProperty" value="PageTitleEditEmployeeInformation"/>               
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="EmployeeProfile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="PartyPersonAndEmployeeDetail" value-field="personInfo"/>
+            </actions>
+            <widgets>
+                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleEditEmployeeInformation}">
+                            <include-form name="EditEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="EmployeeProfile">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="titleProperty" value="PageTitleViewEmployeeProfile"/>
                 <set field="tabButtonItem" value="EmployeeProfile"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="partyId" from-field="parameters.partyId"/>
@@ -149,7 +172,7 @@ under the License.
 		                                <section>
 		                                    <widgets>
 		                                        <container style="profile-left">
-		                                            <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <include-screen name="EmployeeInformation" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                        </container>
@@ -157,6 +180,7 @@ under the License.
 		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <include-screen name="Dependent" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                            <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                        </container>
@@ -179,6 +203,90 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    
+	<screen name="PreviousEmployementProfile">
+		<section>
+			<actions>
+				<set field="titleProperty" value="PageTitlePreviousEmploymentProfile"/>
+				<set field="tabButtonItem" value="PageTitlePreviousEmploymentProfile" ></set>
+				<set field="labelTitleProperty" value="PageTitlePreviousEmploymentProfile"/> 
+				<entity-one entity-name="EmployeeDetail" value-field="EmployeeDetail" use-cache="true" />
+			</actions>
+			<widgets>
+				 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+						<screenlet title="${uiLabelMap.PageTitlePreviousEmploymentProfile}" id="EmployeeInformationPanel">
+							<include-form name="PreviousEmploymentDetails" location="component://humanres/widget/forms/EmployeeForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="Dependent">
+		<section>
+			<actions>
+				<entity-one entity-name="Person" value-field="Person"></entity-one>
+				<entity-and list="dependents" entity-name="PartyRelationshipAndDetail" filter-by-date="true">
+					<field-map field-name="partyIdFrom" from-field="parameters.partyId" />
+					<field-map field-name="roleTypeIdFrom" value="EMPLOYEE" />
+					<field-map field-name="roleTypeIdTo" value="FAMILY_MEMBER" />
+					<order-by field-name="partyIdTo" />
+				</entity-and>
+			</actions>
+			<widgets>
+					 <section>
+							<widgets>
+								<screenlet id="DependendPanel" title="${uiLabelMap.DependentInformation}" collapsible="true">
+		                            <include-form name="AddDependent" location="component://humanres/widget/forms/EmployeeForms.xml" />		                        
+                            	<screenlet>                   
+		                        	<include-form name="ListDependentContacts" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+								</screenlet>
+						  </widgets>
+					</section>
+			</widgets>
+		</section>
+	</screen>
+    
+    <screen name="EmployeeInformation">
+        <section>
+            <actions>
+                <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+                <entity-one entity-name="PartyPersonAndEmployeeDetail" value-field="lookupPersonPartyAndEmployeeDetail">
+					<field-map field-name="partyId" from-field="parameters.partyId" />
+				</entity-one>
+            </actions>
+            <widgets>
+    	    <section>
+                    <condition>
+                        <not><if-empty field="lookupPersonPartyAndEmployeeDetail"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                         	<condition>
+                               <if-service-permission service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.EmployeeInformation}" navigation-menu-name="EmployeeUpdate" id="EmployeeInformationPanel">
+                                    <include-menu name="EmployeeUpdate" location="component://humanres/widget/HumanresMenus.xml"/>
+                                    <include-form name="ViewEmployeeProfile" location="component://humanres/widget/forms/EmployeeForms.xml"/>                                    
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.EmployeeInformation}" id="EmployeeInformationPanel">
+                                    <include-form name="ViewEmployeeProfile" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+   
     <screen name="EditEmployeeSkills">
         <section>
             <actions>

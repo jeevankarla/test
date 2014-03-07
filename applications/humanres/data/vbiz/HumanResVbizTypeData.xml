@@ -19,8 +19,9 @@
     <EmplLeaveReasonType description="Casual" emplLeaveReasonTypeId="CASUAL" hasTable="N" parentTypeId=""/>
     <EmplLeaveReasonType description="Maternity" emplLeaveReasonTypeId="MATERNITY" hasTable="N" parentTypeId=""/>
     <EmplLeaveReasonType description="Other" emplLeaveReasonTypeId="OTHER" hasTable="N" parentTypeId=""/>
-	<EmplLeaveType leaveTypeId="Casual Leave" description="Casual Leave"/>
-    <EmplLeaveType leaveTypeId="Sick Leave" description="Sick Leave"/>
+	<EmplLeaveType leaveTypeId="CASUAL_LEAVE" description="Casual Leave"/>
+    <EmplLeaveType leaveTypeId="SICK_LEAVE" description="Sick Leave"/>
+    <EmplLeaveType leaveTypeId="COMP_OFF" description="Compensation Off"/>
  <EnumerationType description="Employment Status" enumTypeId="EMPLOY_STTS" hasTable="N" parentTypeId=""/>
     <EnumerationType description="Residence Status" enumTypeId="PTY_RESID_STTS" hasTable="N" parentTypeId=""/>
     <EnumerationType description="Global preferences" enumTypeId="GLOBAL_PREFERENCES" hasTable="N" parentTypeId=""/>
@@ -102,4 +103,23 @@
 	<EnumerationType description="HR Event Calendar Type" enumTypeId="HREVENT_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Meeting" enumCode="MEETING" enumId="MEETING" sequenceId="01" enumTypeId="HREVENT_TYPE"/>
     <Enumeration description="Holiday" enumCode="HOLIDAY" enumId="HOLIDAY" sequenceId="02" enumTypeId="HREVENT_TYPE"/>
+    
+    <EnumerationType description="Blood Group" enumTypeId="BLOOD_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="A-positive" enumCode="A+ve" enumId="A+" sequenceId="01" enumTypeId="BLOOD_TYPE"/>
+    <Enumeration description="A-negative" enumCode="A-ve" enumId="A-" sequenceId="02" enumTypeId="BLOOD_TYPE"/>
+    <Enumeration description="B-positive" enumCode="B+ve" enumId="B+" sequenceId="03" enumTypeId="BLOOD_TYPE"/>
+    <Enumeration description="B-negative" enumCode="B-ve" enumId="B-" sequenceId="04" enumTypeId="BLOOD_TYPE"/>
+    <Enumeration description="O-positive" enumCode="O+ve" enumId="O+" sequenceId="05" enumTypeId="BLOOD_TYPE"/>
+    <Enumeration description="O-negative" enumCode="O-ve" enumId="O-" sequenceId="06" enumTypeId="BLOOD_TYPE"/>
+    <Enumeration description="AB-positive" enumCode="AB+ve" enumId="AB+" sequenceId="07" enumTypeId="BLOOD_TYPE"/>
+    <Enumeration description="AB-negative" enumCode="AB-ve" enumId="AB-" sequenceId="08" enumTypeId="BLOOD_TYPE"/>
+    
+    <EnumerationType description="Recruitment Consultancy" enumTypeId="RECR_CONSLTNCY_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Consultancy" enumCode="Consultancy" enumId="CONSULTANCY" sequenceId="01" enumTypeId="RECR_CONSLTNCY_TYPE"/>  
+    <EnumerationType description="Recruitment Direct" enumTypeId="RECR_DIRECT_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Press Advertisements" enumCode="Press Advertisements" enumId="PRESS" sequenceId="01" enumTypeId="RECR_DIRECT_TYPE"/>
+    <Enumeration description="Educational Institutes" enumCode="Educational Institutes" enumId="INSTITUTES" sequenceId="02" enumTypeId="RECR_DIRECT_TYPE"/>
+    <Enumeration description="Factory gate" enumCode="Factory gate" enumId="GATE" sequenceId="03" enumTypeId="RECR_DIRECT_TYPE"/>
+    
+       
 </entity-engine-xml>

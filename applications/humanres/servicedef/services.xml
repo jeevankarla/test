@@ -588,11 +588,64 @@ under the License.emplpunch
         <auto-attributes entity-name="TelecomNumber" mode="IN" optional="true">
             <exclude field-name="contactMechId"/>
         </auto-attributes>
+        <auto-attributes entity-name="EmployeeDetail" mode="IN" optional="true">
+			<exclude field-name="partyId" />
+		</auto-attributes>
+		<attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="String" mode="IN" optional="true"/>
         <attribute name="postalAddContactMechPurpTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="OUT"/>
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="true" />
+		<attribute name="residentialNumber" mode="IN" type="String" optional="true"></attribute>	
     </service>
+    
+    <service name="createPartyRelationshipDependent" engine="simple"
+        location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyRelationshipDependent" >
+        <description>create a Dependent/Employee relationship and add the related roles</description>
+        <attribute name="dependentFirstName" type="String" mode="IN" />
+        <attribute name="dependentLastName" type="String" mode="IN" />
+        <attribute name="dependentBirthDate" type="Date" mode="IN"/>
+        <attribute name="empPartyId" mode="IN" type="String"></attribute>
+        <attribute name="partyRelationshipTypeId" mode="IN" type="String"></attribute>      
+        <attribute name="partyId" mode="OUT" type="String" optional="true"></attribute>
+	</service>
+    
+     <service name="updateEmployee"  engine="simple"
+		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+		invoke="updateEmployee">
+        <description>Update a Employee</description>
+       <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>  
+        <auto-attributes entity-name="Person" mode="IN" optional="true">
+			<exclude field-name="partyId" />
+		</auto-attributes>
+		<auto-attributes entity-name="EmployeeDetail" mode="IN" optional="true">
+			<exclude field-name="partyId" />
+		</auto-attributes>
+		<attribute name="partyId" mode="IN" type="String"></attribute>
+    </service>
+
+	<service name="updatePreviousEmployment" engine="simple"
+		default-entity-name="EmployeeDetail"
+		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+		invoke="updatePreviousEmployment" auth="true">
+		<description>Update Previous Employment Details</description>
+		<permission-service service-name="humanResManagerPermission"
+			main-action="EMPLOYEE_EDIT" />
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />		
+	</service>
+	
+	<service name="createPreviousEmployment" engine="simple"
+		default-entity-name="EmployeeDetail"
+		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+		invoke="createPreviousEmployment" auth="true">
+		<description>Create Previous Employment Details</description>
+		<permission-service service-name="humanResManagerPermission"
+			main-action="EMPLOYEE_EDIT" />
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />		
+	</service>
 
     <service name="createResponsibilityType" default-entity-name="ResponsibilityType" engine="simple"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createResponsibilityType" auth="true">
@@ -1014,6 +1067,23 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="GLOBALHR_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+     <service name="emplDailyPunchReport" engine="java"
+             location="org.ofbiz.humanres.inout.PunchService" invoke="emplDailyPunchReport" auth="true">
+        <description>Employee Daily Punch Report</description>
+        <attribute name="partyId"  mode="IN" type="String" optional="false"/>
+        <attribute name="punchDate"  mode="IN" type="java.sql.Date" optional="true"/>
+        <attribute name="punchDataList" mode="OUT" type="List"/>
+     </service>
+     <service name="emplMonthlyPunchReport" engine="java"
+             location="org.ofbiz.humanres.inout.PunchService" invoke="emplMonthlyPunchReport" auth="true">
+        <description>Employee Monthly Punch Report</description>
+        <attribute name="partyId"  mode="IN" type="String" optional="false"/>
+        <attribute name="customTimePeriodId"  mode="IN" type="String" optional="false"/>
+        <attribute name="punchDataList" mode="OUT" type="List"/>
+        <attribute name="columnTitleMap" mode="OUT" type="Map"/>
+    </service>  
+    
 
    <!-- this is for notification rules -->
      <service name="createNotificationRule" default-entity-name="NotificationRule" engine="simple"

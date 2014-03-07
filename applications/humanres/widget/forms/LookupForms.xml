@@ -207,7 +207,8 @@ under the License.
         <field name="payGradeId" title="payGradeId"><display></display></field>
         <field name="salaryStepSeqId" title="${uiLabelMap.HumanResLookupSalaryStepSeqId}" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${salaryStepSeqId}" target="javascript:set_value('${salaryStepSeqId}')"/>
-        </field>        
+        </field>
+         <field name="amount" title="Amount"><display></display></field>        
         <field name="description"><display/></field>
     </form>
     <form name="LookupPayGrade" type="single" target="LookupPayGrade"

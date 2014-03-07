@@ -29,14 +29,10 @@
                     	    <condition>
                             	<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
                             </condition>
-                            <widgets>	
-                            <link text="${uiLabelMap.LeaveTypeExportAsCsv}" style="button"
-										target="LeaveTypeListCsv.csv">
-									</link>
-									<link text="${uiLabelMap.LeaveTypeExportAsPdf}" style="button"
-										target="LeaveTypeListPdf.pdf">
-									</link>													
-								<screenlet title="${uiLabelMap.HumanResEmployeeLeaveTypes}">							
+                            <widgets>                         												
+								<screenlet title="${uiLabelMap.HumanResEmployeeLeaveTypes}">
+								  <link text="${uiLabelMap.LeaveTypeExportAsCsv}" style="button" target="LeaveTypeListCsv.csv"/>									
+								  <link text="${uiLabelMap.LeaveTypeExportAsPdf}" style="button" target="LeaveTypeListPdf.pdf"/>														
 								<include-form name="LeaveTypes"
 										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 								</screenlet>
@@ -86,6 +82,325 @@
 		</section>
 	</screen>
 
+	<screen name="PFtransfer">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+        		<set field="PFImageUrl" value="/images/PF.gif"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+			    <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/Employer.groovy"/>
+    		</actions>    		   			  
+         		<widgets>
+                      <platform-specific>
+                             <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/PFtransfer.fo.ftl"/></xsl-fo>
+                      </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+     <screen name="PFclaiming">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         	<widgets>
+                   <platform-specific>
+                          <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/PFclaiming.fo.ftl"/></xsl-fo>
+                   </platform-specific>
+            </widgets>
+         </section>
+    </screen>
+    
+    <screen name="PFnomination">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         		<widgets>
+                      <platform-specific>
+                           <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/PFnomination.fo.ftl"/></xsl-fo>
+                      </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="PFleaving">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="PFImageUrl" value="/images/PF.gif"/>
+			  <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/PFmonth.groovy"/>
+			  <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/Employer.groovy"/>
+    		</actions>    		   			  
+         		<widgets>
+                     <platform-specific>
+                          <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/PFleaving.fo.ftl"/></xsl-fo>
+                     </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+	<screen name="PFqualified">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+        		<set field="PFImageUrl" value="/images/PF.gif"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         		<widgets>
+                      <platform-specific>
+                           <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/PFqualified.fo.ftl"/></xsl-fo>
+                      </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="ESIfamilydeclaration">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         		<widgets>
+                      <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/ESIfamilydeclaration.fo.ftl"/></xsl-fo>
+                      </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="ESIchangefamilydeclaration">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+        		<set field="logoImageUrl" value="/images/ESI.gif"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         		<widgets>
+                       <platform-specific>
+                              <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/ESIchangefamilydeclaration.fo.ftl"/></xsl-fo>
+                       </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="ESIdeclaration">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         		<widgets>
+                      <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/ESIdeclaration.fo.ftl"/></xsl-fo>
+                     </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="ESIannualinformation">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+        		<set field="logoImageUrl" value="/images/ESI.gif"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         		<widgets>
+                     <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/ESIannualinformation.fo.ftl"/></xsl-fo>
+                    </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="TDSemployee">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+        		<set field="logoImageUrl" value="/images/ESI.gif"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         		<widgets>
+                     <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/TDSemployee.fo.ftl"/></xsl-fo>
+                    </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="TDSform16a">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+        		<set field="logoImageUrl" value="/images/ESI.gif"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+    		</actions>    		   			  
+         		<widgets>
+                     <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/TDSform16a.fo.ftl"/></xsl-fo>
+                    </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="TDSchallan">
+        <section>
+            <actions>
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+        		<set field="partyId" from-field="parameters.employeeId"/>
+        		<set field="logoImageUrl" value="/images/ESI.gif"/>
+                <entity-one value-field="empList" entity-name="PartyPersonAndEmployeeDetail"/>
+			  <!-- <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/PFreport.groovy"/>	 -->
+    		</actions>    		   			  
+         		<widgets>
+                     <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/TDSchallan.fo.ftl"/></xsl-fo>
+                    </platform-specific>
+                 </widgets>
+         </section>
+    </screen>
+    
+    <screen name="TDSReport">
+   		 <section>
+			<actions>
+				<set field="tabButtonItem" value="TDSReport"/>				
+            </actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="TDS-(Form 16)">									
+							<include-form name="TDSemployee"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>	
+						<screenlet title="TDS-(Form 16a)">									
+							<include-form name="TDSform16a"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>	
+						<screenlet title="TDS-TaxChallan">									
+							<include-form name="TDSchallan"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>						
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+    </screen>
+    
+	<screen name="ESIReport">
+    	<section>
+			<actions>
+				<set field="tabButtonItem" value="ESIReport"/>				
+            </actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="ESI-Declaration(Form 1)">									
+							<include-form name="ESIdeclaration"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+						<screenlet title="ESI-FamilyDeclaration(Form 1A)">									
+							<include-form name="ESIfamilydeclaration"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+						<screenlet title="ESI-ChangeFamilyDeclaration(Form 1B)">									
+							<include-form name="ESIchangefamilydeclaration"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+						<screenlet title="ESI-AnnualInformation(Form-01A)">									
+							<include-form name="ESIannualinformation"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+    </screen>
+    
+    <screen name="PFReport">
+    	<section>
+			<actions>
+				<set field="tabButtonItem" value="PFReport"/>				
+            </actions>
+			<widgets>
+				<decorator-screen name="CommonHumanresReportsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="PF-Transfer(Form 13)">									
+							<include-form name="PFtransfer"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+						<screenlet title="PF-Claiming(Form 19)">									
+							<include-form name="PFclaiming"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+						<screenlet title="PF-Nomination(Form 2)">									
+							<include-form name="PFnomination"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+						<screenlet title="PF-Qualified(Form 5)">									
+							<include-form name="PFqualified"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+						<screenlet title="PF-Leaving(Form 10)">									
+							<include-form name="PFleaving"
+								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+    </screen>
+
 	<screen name="LeaveTypeListCsv">
 		<section>
 			<actions>
@@ -108,37 +423,6 @@
                     	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
 		            </fail-widgets>
 		    	</section>						
-			</widgets>
-		</section>
-	</screen>
-	
-	<screen name="EmployeeType">
-		<section>
-			<actions>
-            
-			</actions>
-			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-					</decorator-section>
-
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="EmployeeGroups">
-		<section>
-			<actions>
-
-			</actions>
-			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-					</decorator-section>
-
-				</decorator-screen>
 			</widgets>
 		</section>
 	</screen>
@@ -173,18 +457,16 @@
 												<if-compare field="parameters.showSearchResults"
 													operator="equals" value="Y" />
 											</condition>
-											<widgets>
-												<link text="${uiLabelMap.EmployeesExportAsCsv}" style="button"
+											<widgets>												
+												<screenlet title="${uiLabelMap.EmployeeList}">
+													<link text="${uiLabelMap.EmployeesExportAsCsv}" style="button"
 													target="EmployeesListCsv.csv">
-													<parameter param-name="partyId" from-field="parameters.partyId"/>
-													<parameter param-name="viewIndex" from-field="viewIndex"/>
-            										<parameter param-name="viewSize" from-field="viewSize"/>           
+													<parameter param-name="partyId" from-field="parameters.partyId"/>													      
 												</link>
 												<link text="${uiLabelMap.EmployeesExportAsPdf}" style="button"
 													target="EmployeesListPdf.pdf" target-window="_BLANK">
 													<parameter param-name="partyId" from-field="parameters.partyId"/>
-												</link>
-												<screenlet title="${uiLabelMap.EmployeeList}">		
+												</link>		
 													<include-form name="Employees"
 														location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 												</screenlet>
@@ -205,36 +487,29 @@
 	<screen name="EmployeesListPdf">
 		<section>
 			<actions>
-                <service service-name="humanResManagerPermission" result-map="permResult">
+				<service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
                 <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>  
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employee.groovy"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="SimpleDecorator"
-					location="component://common/widget/CommonScreens.xml">
-					<decorator-section name="body">
-            			<section>
-                			<condition>
-                    			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-                    		</condition>
-                    		<widgets>				
-								<container>
-									<label style="h1" text="${uiLabelMap.EmployeeList}" />		
-									<include-form name="Employees"
-										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-								</container>
-							</widgets>
-		            		<fail-widgets>
-                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
-		            		</fail-widgets>
-		    			</section>									
-					</decorator-section>
-				</decorator-screen>
+          		<section>
+          			 <condition>
+                    		<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
+                     </condition>
+	                 <widgets>
+	                      <platform-specific>
+	                          <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/employeesDetail.fo.ftl"/></xsl-fo>
+	                      </platform-specific>
+	                 </widgets>
+	                 <fail-widgets>
+                    		<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    
+		             </fail-widgets>
+    			</section>									
 			</widgets>
 		</section>
 	</screen>
-
 	<screen name="EmployeesListCsv">
 		<section>
 			<actions>
@@ -262,6 +537,36 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	 <screen name="AttendanceReport">
+        <section>
+            <actions>
+            	<set field="tabButtonItem" value="AttendanceReport"/>
+            	      <service service-name="humanResManagerPermission" result-map="permResult">
+                           <field-map field-name="mainAction" value="REPORTS_VIEW"/>
+                      </service>
+                      <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                     <set field="date" from-field="parameters.date"/>
+                      <set field="partyId" from-field="parameters.partyId"/> 
+            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+    		</actions>    		   			  
+         		<widgets>
+         			<decorator-screen name="CommonHumanresReportsDecorator" location="${parameters.mainDecoratorLocation}">
+					 <decorator-section name="body">
+         			     <screenlet title="${uiLabelMap.AttendanceDailyReport}">
+                 			<include-form name="AttendanceDailyReport" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+                 		 </screenlet>
+                 	     <screenlet title="${uiLabelMap.AttendanceMonthlyReport}">
+                 			<include-form name="AttendanceMonthlyReport" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+                 		 </screenlet>
+                 	 </decorator-section>  
+                 	</decorator-screen>   
+                 </widgets>
+         </section>
+    </screen>
+	
 	<screen name="PayHeadTypes">
 		<section>
 			<actions>
@@ -284,21 +589,27 @@
                  			<widgets>
                  				<screenlet title="${uiLabelMap.PayHeadTypes}">
                  				 	<include-form name="findPayHeadTypes" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
-                 				 </screenlet>							
-								<screenlet title="${uiLabelMap.ListPayHeadTypes}">
-									<link text="${uiLabelMap.PayHeadTypesExportAsCsv}" style="button"
-										target="PayHeadTypesCsv.csv?partyId=${partyId}">
-									</link>
-									<link text="${uiLabelMap.PayHeadTypesExportAsPdf}" style="button"
-										target="PayHeadTypesPdf.pdf?partyId=${partyId}">
-									</link>		
-									<include-form name="ListPayGrades"
-										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-									<include-form name="ListDeductionTypes"
-										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-									<include-form name="ListBenefits"
-										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />				
-								</screenlet>
+                 				 </screenlet>						
+									<section>
+										<condition>
+                 							<not><if-empty field="partyId"/></not>
+                 						</condition>
+                 						<widgets>
+                 							<screenlet title="${uiLabelMap.ListPayHeadTypes}">
+		                 						<link text="${uiLabelMap.PayHeadTypesExportAsCsv}" style="button" target="PayHeadTypesCsv.csv?partyId=${partyId}"/>
+												<link text="${uiLabelMap.PayHeadTypesExportAsPdf}" style="button"
+														target="PayHeadTypesPdf.pdf?partyId=${partyId}">
+													</link>		
+												<include-form name="ListPayGrades"
+													location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+												<include-form name="ListDeductionTypes"
+													location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+												<include-form name="ListBenefits"
+													location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+											</screenlet>
+                 						</widgets>
+									</section>													
+								
 							</widgets>
 							<fail-widgets>
                     			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
@@ -375,44 +686,17 @@
 				</section>                
             </widgets>
         </section>
-    </screen>   
-
-	<screen name="EmployeeProfileCsv">
-		<section>
-			<actions>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>			
-			</actions>
-			<widgets>
-        		<section>
-            		<condition>
-                		<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-                	</condition>
-                	<widgets>				
-						<include-form name="PayGrades"
-							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-						<include-form name="PayHeadTypes"
-							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-						<include-form name="Benefits"
-							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-					</widgets>
-					<fail-widgets>
-                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-					</fail-widgets>
-				</section>							
-			</widgets>
-		</section>
-	</screen>
+    </screen>    
 	<screen name="EmployeeProfileReport">
 		<section>
 			<actions>
-			<set field="tabButtonItem" value="EmployeeProfile"/>
+			<set field="tabButtonItem" value="EmployeeProfileReport"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>				
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                <set field="employeeId" from-field="parameters.employeeId"/>
+                <set field="partyId" from-field="parameters.partyIdFrom"/>				
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonHumanresReportsDecorator"
@@ -422,16 +706,22 @@
             				<condition>
                 				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
                 			</condition>
-                			<widgets>					
+                			<widgets>
+                				<screenlet title="${uiLabelMap.EmployeeProfile}">									
+									<include-form name="FindEmployeeProfile" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+								</screenlet>					
 								<screenlet title="${uiLabelMap.EmployeeProfile}">
 									<link text="${uiLabelMap.EmployeeProfileExportAsCsv}" style="button"
-										target="EmployeeProfileCsv.csv">
+										target="EmployeeProfileCsv.csv" >
+										<parameter param-name="employeeId" from-field="employeeId"/>
+										<parameter param-name="partyIdFrom" from-field="partyId"/>
 									</link>
 									<link text="${uiLabelMap.EmployeeProfileExportAsPdf}" style="button"
-										target="EmployeeProfilePdf.pdf">
+										target="EmployeeProfilePdf.pdf" target-window="_BLANK">
+										<parameter param-name="employeeId" from-field="employeeId"/>
+										<parameter param-name="partyIdFrom" from-field="partyId"/>
 									</link>
-
-									<include-form name="EmployeeProfileReport"
+									<include-form name="ListEmployeeProfile"
 									location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 								</screenlet>					
 							</widgets>
@@ -450,7 +740,10 @@
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>	
+                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                <set field="employeeId" from-field="parameters.employeeId"/>
+                <set field="partyId" from-field="parameters.partyIdFrom"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>			
 			</actions>
 			<widgets>
 				<decorator-screen name="SimpleDecorator"
@@ -462,9 +755,9 @@
                 			</condition>
                 			<widgets>						
 								<container>
-
-									<include-form name="EmployeeProfile"
-									location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+									<platform-specific>
+		                       		 	<html><html-template location="component://humanres/webapp/humanres/humanres/employeePersonalProfile.ftl"/></html>
+		                     		</platform-specific>
 								</container>
 							</widgets>
 							<fail-widgets>
@@ -476,23 +769,24 @@
 			</widgets>
 		</section>
 	</screen>
-
-	<screen name="EmployeeProfileCsv">
+	 <screen name="EmployeeProfileCsv">
 		<section>
 			<actions>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
                 <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
+                <set field="employeeId" from-field="parameters.employeeId"/>
+                <set field="partyId" from-field="parameters.partyIdFrom"/>				
 			</actions>
 			<widgets>
         		<section>
             		<condition>
                 		<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
                 	</condition>
-                	<widgets>	
-						<include-form name="EmployeeProfile"
-							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+                	<widgets>				
+						<include-form name="ListEmployeeProfile"
+									location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
 					</widgets>
 					<fail-widgets>
                     	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
@@ -500,217 +794,7 @@
 				</section>							
 			</widgets>
 		</section>
-	</screen>
-
-	<screen name="PartyProfile">
-		<section>
-			<actions>
-			<set field="tabButtonItem" value="PartyProfile"/>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
-			</actions>
-			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-        				<section>
-            				<condition>
-                				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-                			</condition>
-                			<widgets>					
-								<screenlet title="${uiLabelMap.PartyProfile}">
-									<link text="${uiLabelMap.PartyProfileExportAsCsv}" style="button"
-										target="PartyProfileCsv.csv">
-									</link>
-									<link text="${uiLabelMap.PartyProfileExportAsPdf}" style="button"
-										target="PartyProfilePdf.pdf">
-									</link>
-
-									<include-form name="PartyProfile"
-										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-								</screenlet>
-							</widgets>
-							<fail-widgets>
-                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-							</fail-widgets>
-						</section>												
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="PartyProfilePdf">
-		<section>
-			<actions>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
-			</actions>
-			<widgets>
-				<decorator-screen name="SimpleDecorator"
-					location="component://common/widget/CommonScreens.xml">
-					<decorator-section name="body">
-        				<section>
-            				<condition>
-                				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-                			</condition>
-                			<widgets>					
-								<container>
-
-									<include-form name="PartyProfile"
-										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-								</container>
-							</widgets>
-							<fail-widgets>
-                    			<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-							</fail-widgets>
-						</section>								
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-
-	<screen name="PartyProfileCsv">
-		<section>
-			<actions>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
-			</actions>
-			<widgets>
-      			<section>
-          			<condition>
-              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-              		</condition>
-              		<widgets>	
-						<include-form name="PartyProfile"
-						location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-					</widgets>
-					<fail-widgets>
-                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-					</fail-widgets>
-				</section>	
-			</widgets>
-		</section>
-	</screen>
-	<screen name="PaySheet">
-		<section>
-			<actions>
-			
-			</actions>
-			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-					</decorator-section>
-
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="EmployeeContactDetails">
-		<section>
-			<actions>
-			<set field="tabButtonItem" value="EmployeeContactDetails"/>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
-			</actions>
-			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
-		      			<section>
-		          			<condition>
-		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-		              		</condition>
-		              		<widgets>						
-								<screenlet title="${uiLabelMap.EmployeeContactDetails}">
-									<link text="${uiLabelMap.EmployeeContactDetailsExportAsCsv}"
-										style="button" target="EmployeeContactDetailsCsv.csv">
-									</link>
-									<link text="${uiLabelMap.EmployeeContactDetailsExportAsPdf}"
-										style="button" target="EmployeeContactDetailsPdf.pdf">
-									</link>
-									<label style="h3" text="${uiLabelMap.EmployeeContactDetails}" />
-									<include-form name="EmployeeContactDetails"
-										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-								</screenlet>
-							</widgets>
-							<fail-widgets>
-		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-							</fail-widgets>
-						</section>							
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-	<screen name="EmployeeContactDetailsPdf">
-		<section>
-			<actions>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
-			</actions>
-			<widgets>
-				<decorator-screen name="SimpleDecorator"
-					location="component://common/widget/CommonScreens.xml">
-					<decorator-section name="body">
-		      			<section>
-		          			<condition>
-		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-		              		</condition>
-		              		<widgets>						
-								<container>
-									<label style="h1" text="${uiLabelMap.EmployeeContactDetails}" />
-		
-									<include-form name="EmployeeContactDetails"
-										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-								</container>
-							</widgets>
-							<fail-widgets>
-		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-							</fail-widgets>
-						</section>							
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>
-
-	<screen name="EmployeeContactDetailsCsv">
-		<section>
-			<actions>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>
-			</actions>
-			<widgets>
-      			<section>
-          			<condition>
-              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-              		</condition>
-              		<widgets>				
-						<label style="h3" text="${uiLabelMap.EmployeeContactDetails}" />
-						<include-form name="EmployeeContactDetails"
-							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
-					</widgets>
-					<fail-widgets>
-                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-					</fail-widgets>
-				</section>						
-			</widgets>
-		</section>
-	</screen>
+	</screen>	
 	<screen name="PaySlipEmployeeWise">
 		<section>
 			<actions>
@@ -732,32 +816,33 @@
 	<screen name="PrintPaySlipsPdf">
         <section>
             <actions>
+            	 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-    			<entity-condition entity-name="InvoiceAndAttribute" list="timePeriodInvoices">
+                <set field="footerImageUrl" value="/images/ProcessedbyVasista.gif"/>
+        		<set field="parameters.partyIdFrom" from-field="parameters.partyId"/>
+        		<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>
+        		<entity-condition entity-name="InvoiceAndAttribute" list="timePeriodInvoices">
             		<condition-list combine="and">
-                		<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>
+                		<condition-expr field-name="partyIdFrom" operator="in" from-field="orgParties"/>
                 		<condition-expr field-name="invoiceAttrName" operator="equals" value="TIME_PERIOD_ID"/>
                 		<condition-expr field-name="invoiceAttrValue" operator="equals" from-field="parameters.customTimePeriodId"/>
             		</condition-list>
             		<select-field field-name="invoiceId"/>
         		</entity-condition>
-    			<script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/MapToList.groovy"/>
+        		<script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/MapToList.groovy"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/PrintInvoices.groovy"/>       
     		</actions>    		   			  
             <widgets>           	
-		      			<section>
-            	
+		      	<section>            	
             		<condition>
     				 	<not><if-empty field="timePeriodInvoices"/></not>
-    				</condition>
-    				<actions>
-    				</actions>
+    				</condition>    				
     				<widgets>
     					<platform-specific>
                     		<xsl-fo>
-                    			<html-template location="component://accounting/webapp/accounting/invoice/PrintInvoices.fo.ftl"/>
+                    			<html-template location="component://accounting/webapp/accounting/invoice/ADPInvoiceTemplate.fo.ftl"/>
                     		</xsl-fo>
                 		</platform-specific>
     				</widgets>
@@ -783,10 +868,56 @@
             </widgets>
         </section>
     </screen>
+	<screen name="EmployeeBankDetails">
+	<section>
+		<actions>
+			<set field="tabButtonItem" value="EmployeeBankDetails" />
+		</actions>
+		<widgets>
+			<decorator-screen name="CommonHumanresReportsDecorator"
+				location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="body">
+					<screenlet title="${uiLabelMap. HumanResEmployeeBankDetails}">
+						<include-form name="EmployeeBankDetails" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					</screenlet>
+				</decorator-section>
+			</decorator-screen>
+		</widgets>
+	</section>
+</screen>
+	<screen name="EmployeeBankDetailsPdf">
+	<section>
+		<actions>
+			<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+			<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+			<property-map resource="PartyUiLabels" map-name="uiLabelMap"  global="true" />
+			<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+			<set field="footerImageUrl" value="/images/ProcessedbyVasista.gif"/>
+			<entity-condition list="nameList" entity-name="PartyRoleAndPartyDetail">
+				<condition-expr field-name="partyId" operator="equals" value="${parameters.partyId}"/>
+			</entity-condition>
+			<set field="groupName" value="${nameList[0].groupName}"/>
+			<set field="partyId" value="${nameList[0].partyId}"/>
+			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" />
+		</actions>
+		<widgets>
+			<section>                                                      
+				<widgets>
+					<platform-specific>
+						<xsl-fo>
+							<html-template location="component://humanres/webapp/humanres/humanres/employeeBankDetails.fo.ftl" />
+						</xsl-fo>
+					</platform-specific>
+				</widgets>
+			</section>
+		</widgets>
+	</section>
+</screen>
 	<screen name="EmployeeWiseSalaryDetails">
 		<section>
 			<actions>
-			<set field="tabButtonItem" value="EmployeeWiseSalaryDetails"/>
+				 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="tabButtonItem" value="EmployeeWiseSalaryDetails"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
@@ -806,12 +937,14 @@
 		              		<screenlet title="${uiLabelMap.EmployeeWiseSalaryDetails}">
 								<include-form name="employeeLookup"
 										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />									
-							</screenlet>	
-		              		<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsCsv}" style="button" target="EmployeeWiseSalaryDetailsCsv.csv?employeeId=${employeeId}"/>
-							<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsPdf}" style="button" target="EmployeeWiseSalaryDetailsPdf.pdf?employeeId=${employeeId}"/>
-							<platform-specific>
-		                        <html><html-template location="component://humanres/webapp/humanres/humanres/employeeSalaryDetails.ftl"/></html>
-		                     </platform-specific>
+							</screenlet>
+							<screenlet title="${uiLabelMap.EmployeeWiseSalaryDetails}">	
+		              			<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsCsv}" style="button" target="EmployeeWiseSalaryDetailsCsv.csv?employeeId=${employeeId}"/>
+								<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsPdf}" style="button" target="EmployeeWiseSalaryDetailsPdf.pdf?employeeId=${employeeId}"/>
+								<platform-specific>
+		                       		 <html><html-template location="component://humanres/webapp/humanres/humanres/employeeSalaryDetails.ftl"/></html>
+		                     	</platform-specific>
+		                     </screenlet>
 							</widgets>
 							<fail-widgets>
 		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
@@ -825,6 +958,10 @@
 	<screen name="EmployeeWiseSalaryDetailsPdf">
 		<section>
 			<actions>
+				 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
@@ -842,11 +979,10 @@
 		              		</condition>
 		              		<widgets>					
 								<container>
-									<label style="h1" text="${uiLabelMap.EmployeeWiseSalaryDetails}" />
-		
+									<label style="h1" text="${uiLabelMap.EmployeeWiseSalaryDetails}" />		
 									<platform-specific>
-		                        <html><html-template location="component://humanres/webapp/humanres/humanres/employeeSalaryDetailsReport.ftl"/></html>
-		                     </platform-specific>
+		                       		 	<html><html-template location="component://humanres/webapp/humanres/humanres/employeeSalaryDetailsReport.ftl"/></html>
+		                     		</platform-specific>
 								</container>
 							</widgets>
 							<fail-widgets>
@@ -858,7 +994,6 @@
 			</widgets>
 		</section>
 	</screen>
-
 	<screen name="EmployeeWiseSalaryDetailsCsv">
 		<section>
 			<actions>
@@ -887,125 +1022,62 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="LeaveTypeListPdf.pdf">
-		<section>
-			<actions>
+	
 
-			</actions>
-			<widgets>
-
-			</widgets>
-		</section>
-	</screen>
-	<screen name="EmployeeGroups">
+    
+    <screen name="EmployeePunchReport">
         <section>
             <actions>
-                <set field="labelTitleProperty" value="HumanresEmployeeGroups"/>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>                
+               <set field="titleProperty" value="Employee's Punch Report"/>
+                <set field="headerItem" value="Attendance"/>
+                <set field="tabButtonItem" value="Employee's Punch Report"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePunchReport.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanresReportsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-		      			<section>
-		          			<condition>
-		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-		              		</condition>
-		              		<widgets>	                    
-		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-		                            <decorator-section name="search-options">
-		                                <include-form name="OrganizationSelection" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
-		                            </decorator-section>
-		                            <decorator-section name="search-results">
-		                                <section>
-		                                    <condition>
-		                                        <if-compare field="parameters.showSearchResults" operator="equals" value="Y"/>
-		                                    </condition>
-		                                    <widgets>
-		                                        <link text="${uiLabelMap.ExportAsPdf}" style="button" target="EmployeeGroupsListPdf.pdf">
-		                                            <parameter param-name="partyId" from-field="parameters.partyId"/>
-		                                           </link>
-		                                        <link text="${uiLabelMap.ExportAsCsv}" style="button" target="EmployeeGroupsListCsv.csv">
-		                                            <parameter param-name="partyId" from-field="parameters.partyId"/>
-		                                            </link>
-		                                        <screenlet title="${uiLabelMap.AccountingInventoryValuationList}">
-		                                            <include-form name="EmployeeGroupsList" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
-		                                        </screenlet>
-		                                    </widgets>
-		                                </section>
-		                            </decorator-section>
-		                        </decorator-screen>
-							</widgets>
-							<fail-widgets>
-		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-							</fail-widgets>
-						</section>	                        
+                        <screenlet title="Employee's Punch Report">
+                            <platform-specific>
+                                <html><html-template location="component://humanres/webapp/humanres/humanres/EmployeePunchReport.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
+                <!-- <include-form name="EmployeePunchReport" location="component://humanres/widget/forms/EmplpunchForms.xml"/> -->
             </widgets>
         </section>
     </screen>
-    <screen name="EmployeeGroupsListPdf">
+	
+	
+	<screen name="emplDailyPunchReport">
         <section>
             <actions>
-                  <set field="viewSize" value="99999"/>
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>                   
+               <set field="titleProperty" value="PageTitleCalendarWeek"/>
+                <set field="headerItem" value="Attendance"/>
+                <set field="tabButtonItem" value="week"/>
+                <set field="punchDataList" from-field="parameters.punchDataList"/>
             </actions>
             <widgets>
-                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-		      			<section>
-		          			<condition>
-		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-		              		</condition>
-		              		<widgets>                    
-		                        <container>
-		                            <label style="h1" text="${uiLabelMap.EmployeeGroups}"/>
-		                            <include-form name="EmployeeGroupsList" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
-		                        </container>
-							</widgets>
-							<fail-widgets>
-		                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-							</fail-widgets>
-						</section>	                             
-                    </decorator-section>
-                </decorator-screen>
+                  <include-form name="emplDailyPunchReport" location="component://humanres/widget/forms/EmplpunchForms.xml"/>
             </widgets>
         </section>
     </screen>
-    <screen name="EmployeeGroupsListCsv">
+    
+    <screen name="emplMonthlyPunchReport">
         <section>
             <actions>
-             	<set field="viewSize" value="99999"/>
-                <set field="roleTypeId" from-field="parameters.partyId"/> 
-                <service service-name="humanResManagerPermission" result-map="permResult">
-                    <field-map field-name="mainAction" value="REPORTS_VIEW"/>
-                </service>
-                <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>                    
+               <set field="titleProperty" value="PageTitleCalendarWeek"/>
+                <set field="headerItem" value="Attendance"/>
+                <set field="tabButtonItem" value="Monthly Report"/>
+                <set field="punchDataList" from-field="parameters.punchDataList"/>
+                <set field="columnTitleMap" from-field="parameters.columnTitleMap"/>                
             </actions>
             <widgets>
-      			<section>
-          			<condition>
-              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
-              		</condition>
-              		<widgets>	            
-                		<container>
-                    		<include-form name="EmployeeGroupsList" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
-                		</container>
-					</widgets>
-					<fail-widgets>
-                    	<label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    					
-					</fail-widgets>
-				</section>	                
+                <include-form name="emplMonthlyPunchReport" location="component://humanres/widget/forms/EmplpunchForms.xml"/>
             </widgets>
         </section>
-    </screen>   
-
+    </screen>
 </screens>
+
     
     

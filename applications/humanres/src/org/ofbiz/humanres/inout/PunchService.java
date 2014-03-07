@@ -19,23 +19,33 @@
 
 package org.ofbiz.humanres.inout;
 
-import javolution.util.FastMap;
-import java.util.regex.*;
-import org.ofbiz.base.util.Debug;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.*;
+import java.util.TimeZone;
+import java.util.regex.Pattern;
+
 import javolution.util.FastList;
-import java.sql.Time;
+import javolution.util.FastMap;
+
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -458,5 +468,314 @@ public class PunchService {
 
 	}
 
-}// end of PunchService Class
+	
+public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 
+		Map emplDailyPunchMap = FastMap.newInstance();
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+
+		String partyId = (String) context.get("partyId");
+		java.sql.Date seleDate = (java.sql.Date) context.get("punchDate");
+		java.sql.Date selectedDate;
+		
+		try{
+			selectedDate = seleDate;
+		} catch (Exception e) {
+			   Debug.logError(e, e.getMessage());
+			   return ServiceUtil.returnError("Invalid Date Field.. Please provide valid input" + e);
+		  }
+		
+		ArrayList employeeList = new ArrayList();
+		emplDailyPunchMap.put("orgId", partyId);
+		populateChildren(dctx, emplDailyPunchMap, employeeList);
+		
+		List<GenericValue> empPartyIds = EntityUtil
+		.getFieldListFromEntityList(employeeList, "partyIdTo", true);
+		
+		try {
+
+			List conditionList1 = UtilMisc.toList(EntityCondition
+					.makeCondition("punchdate", EntityOperator.EQUALS,
+							selectedDate));
+			conditionList1.add(EntityCondition.makeCondition("partyId",
+					EntityOperator.IN, empPartyIds));
+			conditionList1.add(EntityCondition.makeCondition("InOut", "IN"));
+			EntityCondition condition1 = EntityCondition.makeCondition(
+					conditionList1, EntityOperator.AND);
+			List<GenericValue> finalPunchIN = delegator.findList("EmplPunch",
+					condition1, null, null, null, false);
+			
+
+			List conditionList2 = UtilMisc.toList(EntityCondition
+					.makeCondition("punchdate", EntityOperator.EQUALS,
+							selectedDate));
+			conditionList2.add(EntityCondition.makeCondition("partyId",
+					EntityOperator.IN, empPartyIds));
+			conditionList2.add(EntityCondition.makeCondition("InOut", "OUT"));
+			EntityCondition condition2 = EntityCondition.makeCondition(
+					conditionList2, EntityOperator.AND);
+			List<GenericValue> finalPunchOUT = delegator.findList("EmplPunch",
+					condition2, null, null, null, false);
+			
+
+			ArrayList punchDataList = new ArrayList();
+			for (GenericValue emplPunchIn : finalPunchIN) {
+				Map emplPunchMap = FastMap.newInstance();
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+				String stDate = sdf.format(emplPunchIn.get("punchdate"));
+				emplPunchMap.put("date", stDate.toString());
+				emplPunchMap.put("partyId", emplPunchIn.get("partyId"));
+				String EmployeeId = ((emplPunchIn.get("partyId")).toString());
+				String EmployeeName = PartyHelper.getPartyName(delegator,
+						EmployeeId, false);
+
+				emplPunchMap.put("Employee", EmployeeName);
+				emplPunchMap.put("inTime", emplPunchIn.get("punchtime"));
+				for (GenericValue emplPunchOut : finalPunchOUT) {
+					if (emplPunchIn.get("partyId").equals(
+							emplPunchOut.get("partyId"))) {
+						SimpleDateFormat format = new SimpleDateFormat(
+								"HH:mm:ss");
+						Date inTime = format.parse((emplPunchIn
+								.get("punchtime")).toString());
+						Date outTime = format.parse(emplPunchOut.get(
+								"punchtime").toString());
+						long timeDiff = outTime.getTime() - inTime.getTime();
+						Long diffHours = new Long(timeDiff / (60 * 60 * 1000));
+						long modOfDiffHours = timeDiff % (60 * 60 * 1000);
+						Long diffMinutes = new Long(modOfDiffHours
+								/ (60 * 1000));
+						String totalTime = diffHours.toString() + ":"
+								+ diffMinutes.toString() + " Hrs";
+						emplPunchMap.put("outTime",
+								emplPunchOut.get("punchtime"));
+						emplPunchMap.put("totalTime", totalTime.toString());
+					}
+				}
+				punchDataList.add(emplPunchMap);
+			}
+			result.put("punchDataList", punchDataList);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, e.getMessage());
+			return ServiceUtil
+					.returnError("Error while finding Punch Time" + e);
+		} catch (Exception e) {
+			Debug.logError(e, e.getMessage());
+			return ServiceUtil
+					.returnError("Error while finding Punch Time" + e);
+		}
+		return result;
+	}
+
+	public static ArrayList populateChildren(DispatchContext dctx, Map context,
+			ArrayList employeeList) {
+
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map punchMap = FastMap.newInstance();
+		String orgId = (String) context.get("orgId");
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		if(UtilValidate.isEmpty(thruDate)){
+			thruDate = UtilDateTime.nowTimestamp();
+		}
+		try {
+			List<String> orderBy = UtilMisc.toList("groupName");
+			List<GenericValue> internalOrgs = delegator.findByAnd(
+					"PartyRelationshipAndDetail", UtilMisc.toMap("partyIdFrom",
+							orgId, "partyRelationshipTypeId", "GROUP_ROLLUP"),
+					orderBy);
+			for (GenericValue internalOrg : internalOrgs) {
+				punchMap.put("orgId", internalOrg.get("partyId"));
+				populateChildren(dctx, punchMap, employeeList);
+			}
+
+			List<String> order = UtilMisc.toList("firstName");
+			List<GenericValue> employments = delegator.findByAnd(
+					"EmploymentAndPerson", UtilMisc.toMap("partyIdFrom", orgId,
+							"roleTypeIdTo", "EMPLOYEE"), order);
+			employments = EntityUtil.filterByDate(employments, thruDate);
+			for (GenericValue employee : employments) {
+				employeeList.add(employee);
+			}
+		} catch (GenericEntityException e) {
+			Debug.logError(e, e.getMessage());
+		}
+		return employeeList;
+	}
+
+	public static Map emplMonthlyPunchReport(DispatchContext dctx, Map context) {
+
+		Map emplDailyPunchMap = FastMap.newInstance();
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+
+		Map columnTitleMap = FastMap.newInstance();
+		TimeZone timeZone = TimeZone.getDefault();
+		Locale locale = Locale.getDefault();
+
+		String partyId = (String) context.get("partyId");
+		String customTimePeriodId = (String) context.get("customTimePeriodId");
+		java.sql.Timestamp fromDate = null;
+		java.sql.Timestamp thruDate = null;
+		
+		GenericValue customTimePeriod;
+		try {
+			customTimePeriod = delegator.findOne("CustomTimePeriod",
+					UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+		} catch (GenericEntityException e1) {
+			Debug.logError(e1, e1.getMessage());
+			return ServiceUtil
+			.returnError("Error in customTimePeriod" + e1);
+		}
+		if(customTimePeriod == null) {
+			GenericEntityException e1 = null;
+			Debug.logError(e1, e1.getMessage());
+			return ServiceUtil
+			.returnError("NULL in customTimePeriod" + e1);
+		}
+		fromDate = new java.sql.Timestamp(
+				((Date) customTimePeriod.get("fromDate")).getTime());
+		thruDate = new java.sql.Timestamp(
+				((Date) customTimePeriod.get("thruDate")).getTime());
+		
+		int totalDays = UtilDateTime.getIntervalInDays(
+				UtilDateTime.toTimestamp(fromDate),
+				UtilDateTime.toTimestamp(thruDate)) + 1;
+		
+		ArrayList<GenericValue> employeeList = new ArrayList();
+		emplDailyPunchMap.put("orgId", partyId);
+		emplDailyPunchMap.put("fromDate", fromDate);
+		emplDailyPunchMap.put("thruDate", thruDate);
+		populateChildren(dctx, emplDailyPunchMap, employeeList);
+		
+		/*------------------------------------------------ColumnTitleMap(Titles)---------------------------------------------*/
+		Timestamp startingDate = fromDate;
+		for (int k = 1; k <= totalDays; k++) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+			String stDate = sdf.format(startingDate);
+			int dateHeading = UtilDateTime.getDayOfMonth(startingDate,
+					timeZone, locale);
+			String heading = "d" + new Integer(k).toString();
+			columnTitleMap.put(heading + "Title", stDate.toString());
+			startingDate = UtilDateTime.addDaysToTimestamp(startingDate, 1);
+		}
+		/*-------------------------------------------------------------------------------------------------------------------*/
+		try {
+			ArrayList punchDataList = new ArrayList();
+			for (int i = 0; i < employeeList.size(); i++) {
+				String empId = employeeList.get(i).getString("partyIdTo");
+
+				java.sql.Date startDate = new java.sql.Date(fromDate.getTime());
+				java.sql.Date endDate = new java.sql.Date(thruDate.getTime());
+
+				List<GenericValue> finalPunchIN = new ArrayList();
+				List conditionList1 = UtilMisc
+						.toList(EntityCondition.makeCondition("partyId",
+								EntityOperator.EQUALS, empId));
+				conditionList1.add(EntityCondition.makeCondition("punchdate",
+						EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
+				conditionList1.add(EntityCondition.makeCondition("punchdate",
+						EntityOperator.LESS_THAN_EQUAL_TO, endDate));
+				conditionList1
+						.add(EntityCondition.makeCondition("InOut", "IN"));
+				EntityCondition condition1 = EntityCondition.makeCondition(
+						conditionList1, EntityOperator.AND);
+				finalPunchIN = delegator.findList("EmplPunch", condition1,
+						null, null, null, false);
+				
+
+				List<GenericValue> finalPunchOUT = new ArrayList();
+				List conditionList2 = UtilMisc
+						.toList(EntityCondition.makeCondition("partyId",
+								EntityOperator.EQUALS, empId));
+				conditionList2.add(EntityCondition.makeCondition("punchdate",
+						EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
+				conditionList2.add(EntityCondition.makeCondition("punchdate",
+						EntityOperator.LESS_THAN_EQUAL_TO, endDate));
+				conditionList2.add(EntityCondition
+						.makeCondition("InOut", "OUT"));
+				EntityCondition condition2 = EntityCondition.makeCondition(
+						conditionList2, EntityOperator.AND);
+				finalPunchOUT = delegator.findList("EmplPunch", condition2,
+						null, null, null, false);
+				
+
+				Map emplPunchMap = FastMap.newInstance();
+				Map tempMap = FastMap.newInstance();
+				emplPunchMap.put("partyId", empId);
+				String EmployeeName = PartyHelper.getPartyName(delegator,
+						empId, false);
+				emplPunchMap.put("Employee", EmployeeName);
+
+				Timestamp startDateTimestamp = fromDate;
+				for (int j = 1; j <= totalDays; j++) {
+					int dateHeading = UtilDateTime.getDayOfMonth(
+							startDateTimestamp, timeZone, locale);
+					String heading = "temp"
+							+ new Integer(dateHeading).toString();
+					emplPunchMap.put(heading, "0");
+					startDateTimestamp = UtilDateTime.addDaysToTimestamp(
+							startDateTimestamp, 1);
+				}
+				
+				for (GenericValue emplPunchIn : finalPunchIN) {
+					for (GenericValue emplPunchOut : finalPunchOUT) {
+						if (emplPunchIn.get("punchdate").equals(
+								emplPunchOut.get("punchdate"))) {
+							SimpleDateFormat format = new SimpleDateFormat(
+									"HH:mm:ss");
+							Date inTime = format.parse((emplPunchIn
+									.get("punchtime")).toString());
+							Date outTime = format.parse(emplPunchOut.get(
+									"punchtime").toString());
+							long timeDiff = outTime.getTime()
+									- inTime.getTime();
+							Long diffHours = new Long(timeDiff
+									/ (60 * 60 * 1000));
+							long modOfDiffHours = timeDiff % (60 * 60 * 1000);
+							Long diffMinutes = new Long(modOfDiffHours
+									/ (60 * 1000));
+							String totalTime = diffHours.toString() + ":"
+									+ diffMinutes.toString() + " Hrs";
+							java.sql.Timestamp eachPunchDay = new java.sql.Timestamp(
+									emplPunchIn.getDate("punchdate").getTime());
+							int dateHeading = UtilDateTime.getDayOfMonth(
+									eachPunchDay, timeZone, locale);
+							String heading = "temp"
+									+ new Integer(dateHeading).toString();
+							emplPunchMap.put(heading, totalTime.toString());
+							break;
+						}
+					}
+				}
+				Timestamp tempStartDate = fromDate;
+				for (int a = 1; a <= totalDays; a++) {
+					int dateHeading = UtilDateTime.getDayOfMonth(tempStartDate,
+							timeZone, locale);
+					emplPunchMap.put("d" + new Integer(a).toString(),
+							emplPunchMap.get("temp"
+									+ new Integer(dateHeading).toString()));
+					tempStartDate = UtilDateTime.addDaysToTimestamp(tempStartDate, 1);
+				}
+				punchDataList.add(emplPunchMap);
+			}
+			result.put("columnTitleMap", columnTitleMap);
+			result.put("punchDataList", punchDataList);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, e.getMessage());
+			return ServiceUtil
+					.returnError("Error while finding Punch Date" + e);
+		} catch (Exception e) {
+			Debug.logError(e, e.getMessage());
+			return ServiceUtil
+					.returnError("Error while finding Punch Time" + e);
+		}
+		return result;
+	}
+
+
+}

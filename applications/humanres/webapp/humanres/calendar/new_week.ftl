@@ -80,7 +80,10 @@ function dateValidation(){
 
  </head>
  
-<body onLoad="window.refresh()">  
+<body onLoad="window.refresh()">
+<#if (security.hasEntityPermission("HUMANRES", "_ADMIN", session))>
+    <a href="<@ofbizUrl>WeeklyInOut.csv</@ofbizUrl>">Daily Report</a> 
+</#if>
 <div class="bothclear">
 	<div class="screenlet">
   		<div class="screenlet-title-bar">
@@ -94,6 +97,7 @@ function dateValidation(){
   </div>
   </div>
 </div>
+
 <form name="selectdate" onSubmit="inputDateConversion()"><b>DATE</b>
 
 <input type="hidden" name="start" id="sdate"/><input type="hidden" name="partyId" id="partyId" value="${partyId}"/>
@@ -842,7 +846,7 @@ onClick="alert('You cant modify the record.\n\nPlease contact Admin');"
       <#assign tempminni=Records.punchtime?substring(2,4)>
       <#assign tempsecni=Records.punchtime?substring(5,7)>
        </#if>
-         <#if ampm="PM" && (temphrni !="12" || temphrni =="12")>
+         <#if ampm="PM" && (temphrni !="12")>
      <#--  <input name="k" type="text" value="${temphrni}"/>  -->
              <#assign hrni=hrni+temphrni?number+12>
          <#else>

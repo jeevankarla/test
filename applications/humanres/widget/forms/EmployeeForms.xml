@@ -22,25 +22,14 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="AddEmployee" type="single" target="createEmployee"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="salutation" title="${uiLabelMap.CommonTitle}"><text size="10" maxlength="30"/></field>
-        <field name="firstName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="middleName" title="${uiLabelMap.PartyMiddleInitial}"><text size="4" maxlength="4"/></field>
-        <field name="lastName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.OrderOrderEntryInternalOrganization}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="PartyRoleNameDetail" key-field-name="partyId" description="${groupName}">
-                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
-                </entity-options>
-                <option key="null" description="${uiLabelMap.HumanResEmplPartyIdFromNotSpecified}"/>
-            </drop-down>
-        </field>
-        <field name="fromDate" title="${uiLabelMap.WorkEffortEstimatedStartDate}"><date-time/></field>
-        <field name="permanentAddress" title="${uiLabelMap.OrderAddress}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
+        <field name="firstName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+       	<field name="middleName" title="${uiLabelMap.PartyMiddleName}"><text></text></field>
+        <field name="lastName"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>        
         <field name="postalAddContactMechPurpTypeId"><hidden value="PRIMARY_LOCATION"/></field>
-        <field name="address1" title="${uiLabelMap.CommonAddress1}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>        
+		<field name="address1" title="${uiLabelMap.CommonAddress1}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="address2" title="${uiLabelMap.CommonAddress2}"><text size="30" maxlength="60"/></field>
-        <field name="city" title="${uiLabelMap.CommonCity}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
-        <field name="stateProvinceGeoId" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="stateProvinceGeoId" title="${uiLabelMap.CommonState}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <!-- <drop-down allow-empty="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} - ${geoId}">
                     <entity-constraint name="geoTypeId" operator="in" value="STATE,PROVINCE"/>
@@ -50,8 +39,8 @@
             <drop-down allow-empty="false">
             </drop-down>
         </field>
-        <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="10" maxlength="30"/></field>
-        <field name="countryGeoId" title="${uiLabelMap.CommonCountry}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="postalCode" title="${uiLabelMap.CommonZipPostalCode}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="10" maxlength="30"/></field>
+        <field name="countryGeoId" title="${uiLabelMap.CommonCountry}" >
             <drop-down allow-empty="false" no-current-selected-key="${defaultCountryGeoId}">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} - ${geoId}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>
@@ -59,15 +48,324 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="phoneTitle" title="${uiLabelMap.PartyPrimaryPhone}" title-area-style="group-label"><display/></field>
-        <field name="countryCode" title="${uiLabelMap.PartyCountryCode}"><text size="4" maxlength="10"/></field>
-        <field name="areaCode" title="${uiLabelMap.PartyAreaCode}"><text size="4" maxlength="10"/></field>
-        <field name="contactNumber" title="${uiLabelMap.PartyPhoneNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="15" maxlength="15"/></field>
-        <field name="extension" title="${uiLabelMap.PartyContactExt}"><text size="6" maxlength="10"/></field>
-        <field name="emailAddressTitle" title="${uiLabelMap.PartyEmailAddress}" title-area-style="group-label"><display/></field>
-        <field name="emailAddress" title="${uiLabelMap.CommonEmail}"><text size="50" maxlength="60"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="salutation" title="${uiLabelMap.CommonTitle}">
+			<drop-down allow-empty="false" no-current-selected-key="Mr">
+				<option key="Mr"></option>
+				<option key="Miss"></option>
+				<option key="Mrs" />
+				<option key="Ms" />
+			</drop-down>
+	  	</field>
+		<field name="birthDate" title="${uiLabelMap.DateOfBirth}"><date-time></date-time></field>
+		<field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
+			<drop-down allow-empty="true">
+			<entity-options entity-name="Enumeration"
+				key-field-name="enumId" description="${enumCode}">
+				<entity-constraint name="enumTypeId" value="BLOOD_TYPE" />
+				<entity-order-by field-name="sequenceId" />
+			</entity-options>
+			</drop-down>
+		</field>
+		<field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><text></text></field>
+		<field name="fromDate" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time /></field>
+		<field name="partyIdFrom" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+		<drop-down allow-empty="false">
+			<entity-options entity-name="PartyRole" description="${partyId}" key-field-name="partyId">
+				<entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO" />
+			</entity-options>
+		</drop-down>
+		</field>	
+		<field name="gender" title="${uiLabelMap.FormFieldTitle_gender}">
+		<drop-down allow-empty="false" no-current-selected-key="m">
+			<option key="F"></option>
+			<option key="M" />
+		</drop-down>		
+		</field>
+		<field name="maritalStatus" title="${uiLabelMap.MaritalStatus}">
+		<drop-down allow-empty="false" no-current-selected-key="S">
+			<option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}" />
+			<option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}" />
+			<option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}" />
+			<option key="D" description="${uiLabelMap.PartyMaritalStatusDivorced}" />
+			<option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}" />
+		</drop-down>
+		</field>
+		<field name="mobileNumber" title="${uiLabelMap.Mobile}"><text></text></field>
+		<field name="residentialNumber" title="${uiLabelMap.Residential}"><text></text></field>
+		<field name="emailAddress" title="${uiLabelMap.Email}"><text></text></field>
+		<field name="panId" title="${uiLabelMap.Pan}" tooltip="${uiLabelMap.Pan1}"><text size="6" maxlength="10" /></field>
+		<field name="presentEpf" title="${uiLabelMap.Epf}" tooltip="EPF Registration Number"><text size="6" maxlength="10" /></field>
+		<field name="presentEsic" title="${uiLabelMap.Esic}" tooltip="ESIC Registration Number"><text size="6" maxlength="10" /></field>
+		<field name="previousEpf" title="${uiLabelMap.Epf}" tooltip="EPF Previous Reg Number"><text size="6" maxlength="10" /></field>
+		<field name="previousEsic" title="${uiLabelMap.Esic}" tooltip="ESIC Previous Reg Number"><text size="6" maxlength="10" /></field>
+		<field name="previousEmployer" title="${uiLabelMap.NameOfTheEmployer}"><text></text></field>
+		<field name="previousDesignation" title="${uiLabelMap.Designation}"><text></text></field>
+		<field name="prevEmplFromDate" title="${uiLabelMap.DateOfJoining}"><date-time></date-time></field>
+		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><text /></field>
+		<field name="prevEmplThruDate" title="${uiLabelMap.FormFieldTitle_terminationDate}"><date-time /></field>
+		<field name="referenceName" title="${uiLabelMap.ReferenceName}"><text></text></field>
+		<field name="referenceEmployer" title="${uiLabelMap.ReferenceEmployer}"><text></text></field>
+		<field name="refEmplContactNumber" title="${uiLabelMap.ReferenceContactNo}"><text></text></field>
+		<field name="reasonForLeaving" title="${uiLabelMap.Reason}"><textarea></textarea></field>
+		<field name="previousPfNumber" title="${uiLabelMap.PreviousPfNumber}"><text></text></field>
+		<field name="prevPfEmplAddress" title="${uiLabelMap.PreviousEmployerPfAddress}"><text></text></field>
+		<field name="previousRegionalPfCommissioner" title="${uiLabelMap.PreviousRegionalPfCommissioner}"  tooltip="Regional PF Commissioner"><text></text></field>
+		<field name="nameOfPreviousPfTrust" title="${uiLabelMap.NameOfPreviousPfTrust}"  tooltip="Name Of The PF Trust"><text></text></field>
+		<field name="referenceCheck" title="${uiLabelMap.Referencecheck}">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="N"></option>
+				<option key="Y" />
+			</drop-down>
+		</field>
+		<field name="emergencyContactName" title="${uiLabelMap.Name}"><text></text></field>
+		<field name="emergencyContactNumber" title="${uiLabelMap.Contact}"><text></text></field>
+		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><text></text></field>
+		<field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><date-time></date-time></field>
+		<field name="recDirect" title="${uiLabelMap.Direct}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumCode}">
+					<entity-constraint name="enumTypeId" value="RECR_DIRECT_TYPE" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="employeeId" title="${uiLabelMap.EmployeeId}"><text></text></field>
+		<field name="employeeReferral" title="${uiLabelMap.EmployeeReferral}"><lookup target-form-name="LookupEmployeeName" /></field>
+		<field name="recConsultancy" title="${uiLabelMap.Consultancy}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumCode}">
+					<entity-constraint name="enumTypeId" value="RECR_CONSLTNCY_TYPE" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="N"></option>
+				<option key="Y" />
+			</drop-down>
+		</field>
+		<field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}"><text></text></field>
+    	<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        
+     	<sort-order>
+			<field-group title="${uiLabelMap.EmployeeDetails}" collapsible="true" initially-collapsed="false">
+				<sort-field name="salutation" />
+				<sort-field name="employeeId"/>
+				<sort-field name="firstName" />
+				<sort-field name="middleName"></sort-field>
+				<sort-field name="lastName" />
+				<sort-field name="birthDate"></sort-field>
+				<sort-field name="gender"></sort-field>
+				<sort-field name="maritalStatus"></sort-field>
+				<sort-field name="bloodGroup" />
+				<sort-field name="belongsTo" />
+				<sort-field name="address1"></sort-field>
+				<sort-field name="address2"></sort-field>
+				<sort-field name="city"></sort-field>
+				<sort-field name="stateProvinceGeoId"></sort-field>
+				<sort-field name="countryGeoId"></sort-field>
+				<sort-field name="postalCode" />
+				<sort-field name="panId" />
+				<sort-field name="presentEpf" />
+				<sort-field name="presentEsic" />
+				<sort-field name="fromDate" />
+				<sort-field name="partyIdFrom" />
+				<sort-field name="mobileNumber" />
+				<sort-field name="residentialNumber" />
+				<sort-field name="emailAddress" />
+				<sort-field name="employeeBankAccNo" />
+			</field-group>
+			<field-group title="${uiLabelMap.Previous}" collapsible="true" initially-collapsed="true">
+				<sort-field name="previousEmployer" />
+				<sort-field name="previousDesignation"></sort-field>
+				<sort-field name="prevEmplFromDate" />
+				<sort-field name="prevEmplThruDate" />									
+				<sort-field name="previousPfNumber" />
+				<sort-field name="prevPfEmplAddress" />
+				<sort-field name="previousRegionalPfCommissioner" />
+				<sort-field name="nameOfPreviousPfTrust" />
+				<sort-field name="previousEsic"></sort-field>
+				<sort-field name="previousEpf"></sort-field>
+				<sort-field name="reasonForLeaving"></sort-field>
+				<sort-field name="referenceName" />
+				<sort-field name="referenceEmployer"></sort-field>
+				<sort-field name="refEmplContactNumber"></sort-field>
+				<sort-field name="referenceCheck"></sort-field>
+			</field-group>
+			<field-group title="${uiLabelMap.Emergency}" collapsible="true" initially-collapsed="true">
+				<sort-field name="emergencyContactName" />
+				<sort-field name="emergencyContactNumber"></sort-field>
+			</field-group>
+			<field-group title="${uiLabelMap.PassportDetails}" collapsible="true" initially-collapsed="true">
+				<sort-field name="passportNumber" />
+				<sort-field name="passportExpireDate"></sort-field>
+			</field-group>
+			<field-group title="${uiLabelMap.SourceOfRecruitment}" collapsible="true" initially-collapsed="true">
+				<sort-field name="recDirect" />
+				<sort-field name="employeeReferral"></sort-field>
+				<sort-field name="recConsultancy"></sort-field>
+				<sort-field name="backgroundVerification"></sort-field>
+			</field-group>
+			<field-group title="${uiLabelMap.Insurance}" collapsible="true" initially-collapsed="true">
+				<sort-field name="typeOfInsurance" />
+			</field-group>
+		</sort-order>   
     </form>
+    
+    <form name="EditEmployee" extends="EditPerson" target="updateEmployee" extends-resource="component://party/widget/partymgr/PartyForms.xml">
+    	<field name="employeeId" title="${uiLabelMap.EmployeeId}"><text></text></field>                 
+    	<field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><text></text></field>
+		<field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><text></text></field>	
+    	<field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}" ><text></text></field>
+		<field name="panId" title="${uiLabelMap.Pan}"></field> 
+		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><text/></field>
+		<field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><text></text></field>
+        <field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
+         	<drop-down allow-empty="false">             
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
+				<entity-constraint name="enumTypeId" value="BLOOD_TYPE" />
+				<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>         
+        </field>        
+        <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><drop-down allow-empty="false" no-current-selected-key="Y"><option key="N"></option><option key="Y"/></drop-down></field>
+	  	<sort-order>
+			<sort-field name="partyId"/>
+			<sort-field name="employeeId"/>
+			<sort-field name="memberId"/>			
+            <sort-field name="firstName"/>
+            <sort-field name="middleName"/>
+            <sort-field name="lastName"/>            
+            <sort-field name="gender"/>
+            <sort-field name="maritalStatus"/>
+            <sort-field name="belongsTo"/>
+            <sort-field name="bloodGroup"/>
+            <sort-field name="birthDate"/>
+            <sort-field name="personalTitle"/>
+            <sort-field name="mothersMaidenName"/>
+            <sort-field name="socialSecurityNumber"/>
+            <sort-field name="suffix"/>
+            <sort-field name="nickname"/>
+            <sort-field name="firstNameLocal"/>
+            <sort-field name="middleNameLocal"/>
+        	<sort-field name="lastNameLocal"/>
+            <sort-field name="otherLocal"/>
+            <sort-field name="deceasedDate"/>
+            <sort-field name="height"/>
+        	<sort-field name="weight"/>
+            <sort-field name="passportNumber"/>
+            <sort-field name="passportExpireDate"/>
+            <sort-field name="comments"/>
+            <sort-field name="occupation"/>
+            <sort-field name="existingCustomer"/>        
+            <sort-field name="totalYearsWorkExperience"/>
+            <sort-field name="yearsWithEmployer"/>
+            <sort-field name="monthsWithEmployer"/>
+			<sort-field name="salutation"/>
+            <sort-field name="cardId"/>
+            <sort-field name="description"/>
+             <sort-field name="externalId"/>   
+            <sort-field name="employmentStatusEnumId"/>
+            <sort-field name="residenceStatusEnumId"/>
+            <sort-field name="preferredCurrencyUomId"/>
+            <sort-field name="statusId"/>
+            <sort-field name="backgroundVerification"/>           
+            <sort-field name="EditEmployee"/>
+            <sort-field name="employeeId"/>
+            <sort-field name="memberId"/>
+            <sort-field name="emergencyContactName"/>
+            <sort-field name="emergencyContactNumber"/>
+            <sort-field name="typeOfInsurance"/>
+            <sort-field name="panId"/>
+            <sort-field name="groupName"/>
+            <sort-field name="employeeBankAccNo"/>          
+            <sort-field name="submitButton"/>
+            <sort-field name="cancelLink"/>
+      	</sort-order>
+    </form>
+    
+    <form name="PreviousEmploymentDetails" type="single" target="updatePreviousEmployment" default-map-name="EmployeeDetail">
+		<field name="partyId"><display></display></field>
+		<field name="previousEmployer" title="${uiLabelMap.NameOfTheEmployer}"><text></text></field>
+		<field name="previousDesignation" title="${uiLabelMap.Designation}"><text></text></field>
+		<field name="prevEmplFromDate" title="${uiLabelMap.DateOfJoining}"><date-time></date-time></field>
+		<field name="prevEmplThruDate" title="${uiLabelMap.FormFieldTitle_terminationDate}"><date-time></date-time></field>
+		<field name="reasonForLeaving" title="${uiLabelMap.Reason}"><textarea></textarea></field>
+		<field name="previousPfNumber" title="${uiLabelMap.PreviousPfNumber}"><text></text></field>
+		<field name="prevPfEmplAddress" title="${uiLabelMap.PreviousEmployerPfAddress}"><text></text></field>
+		<field name="previousRegionalPfCommissioner" title="${uiLabelMap.PreviousRegionalPfCommissioner}"><text></text></field>
+		<field name="nameOfPreviousPfTrust" title="${uiLabelMap.NameOfPreviousPfTrust}"><text></text></field>
+		<field name="previousEpf" title="${uiLabelMap.Epf}" tooltip="EPF Previous Reg Number" ><text></text></field>  
+		<field name="previousEsic" title="${uiLabelMap.Esic}" tooltip="ESIC Previous Reg Number" ><text></text></field>				
+		<field name="referenceName" title="${uiLabelMap.ReferenceName}"><text></text></field>
+		<field name="referenceEmployer" title="${uiLabelMap.ReferenceEmployer}"><text></text></field>
+		<field name="refEmplContactNumber" title="${uiLabelMap.ReferenceContactNo}"><text></text></field>		
+		<field name="referenceCheck" title="${uiLabelMap.ReferenceCheck}"><drop-down allow-empty="false" no-current-selected-key="Y"><option key="N"></option><option key="Y"/></drop-down></field>				
+		<field name="update" title="${uiLabelMap.CommonUpdate}"><submit/></field>
+    </form>    
+    
+     <form name="ViewEmployeeProfile" type="single" default-map-name="lookupPersonPartyAndEmployeeDetail" >
+        <field name="partyId"><display/></field>
+        <field name="employeeId" title="${uiLabelMap.EmployeeId}"><display></display></field>
+        <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPersonPartyAndEmployeeDetail.personalTitle} ${lookupPersonPartyAndEmployeeDetail.firstName} ${lookupPersonPartyAndEmployeeDetail.middleName} ${lookupPersonPartyAndEmployeeDetail.lastName}"/></field>
+        <field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><display/></field>
+        <field name="comments" title="${uiLabelMap.PartyComments}"><display/></field>
+        <field name="externalId"><display/></field>
+        <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>   
+        <field name="birthDate" title="${uiLabelMap.DateOfBirth}"><display-entity entity-name="Person" key-field-name="partyId" description="${birthDate}" ></display-entity></field>           
+        <field name="bloodGroup" title="${uiLabelMap.BloodGroup}"><display/></field>
+        <field name="gender" title="${uiLabelMap.FormFieldTitle_gender}"><display-entity entity-name="Person" key-field-name="partyId" description="${gender}" ></display-entity></field>
+        <field name="maritalStatus" title="${uiLabelMap.MaritalStatus}"><display-entity entity-name="Person" key-field-name="partyId" description="${maritalStatus}" ></display-entity></field>
+        <field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyName}"></display-entity></field>
+        <field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyContactNumber}"></display-entity></field>       
+        <field name="panId" title="${uiLabelMap.Pan}"><display-entity entity-name="Person" key-field-name="partyId" description="${panId}" ></display-entity></field>
+        <field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${typeOfInsurance}"></display-entity></field>
+		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${employeeBankAccNo}"></display-entity></field>       	
+        <field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
+        <field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportExpireDate}" ></display-entity></field>
+        <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>       
+   </form>
+    
+   <form name="AddDependent" type="single" target="createPartyRelationshipDependent">
+		<field name="empPartyId"><hidden value="${partyId}"/></field>
+         <field name="partyRelationshipTypeId" title="${uiLabelMap.Relation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+      		<drop-down allow-empty="false">
+                <entity-options entity-name="PartyRelationshipType" key-field-name="partyRelationshipTypeId" description="${description}">
+                    <entity-constraint name="parentTypeId" value="DEPENDENT"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="dependentFirstName" title="${uiLabelMap.FormFieldTitle_firstName}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><text></text></field>
+        <field name="dependentLastName" title="${uiLabelMap.FormFieldTitle_lastName}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><text></text></field>
+        <field name="dependentBirthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required"><date-time></date-time></field>
+        <field name="fromDate"><hidden value="nowTimestamp"></hidden></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+    </form> 
+    
+	<form name="ListDependentContacts" type="list" list-name="dependents" default-table-style="basic-table" >	
+		<row-actions>
+        	<set field="dependentBirthDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getIntervalInDays(org.ofbiz.base.util.UtilDateTime.toTimestamp(birthDate), org.ofbiz.base.util.UtilDateTime.nowTimestamp())/365}Yrs"/>
+        </row-actions>
+		<field name="empPartyId"><hidden></hidden></field>        
+        <field name="dependentFirstName" title="${uiLabelMap.FormFieldTitle_firstName}"><display default-value="${firstName}"></display></field>
+        <field name="dependentLastName" title="${uiLabelMap.FormFieldTitle_lastName}" ><display default-value="${lastName}"></display></field>
+        <field name="fromDate"><hidden></hidden></field>
+        <field name="partyIdTo"><hidden></hidden></field> 
+		<field name="partyRelationshipTypeId" title="${uiLabelMap.Relation}"><display default-value="${partyRelationshipTypeId}"></display></field>
+		<field name="dependentBirthDate" title="${uiLabelMap.Age}"><display></display></field>
+     	<field name="deletePartyRelationship" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteDependent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+               	<parameter param-name="partyIdTo"/>
+               	<parameter param-name="partyIdFrom" from-field="parameters.empPartyId"/>
+             	<parameter param-name="fromDate"/>
+             	<parameter param-name="partyRelationshipTypeId"/>
+              	<parameter param-name="roleTypeIdFrom" value="EMPLOYEE"/>
+               	<parameter param-name="roleTypeIdTo" value="FAMILY_MEMBER"/>
+            </hyperlink>
+        </field> 
+	</form>
+    
     <form name="AddEmployeeSkills" type="single" target="createEmployeeSkill" default-map-name="partySkill">
         <field name="partyId"><hidden/></field>
         <field name="skillTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">

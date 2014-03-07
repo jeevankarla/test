@@ -21,7 +21,7 @@ under the License.
     <fo:table-header height="14px">
       <fo:table-row border-bottom-style="solid" border-bottom-width="thin" border-bottom-color="black">
         <fo:table-cell text-align="right" number-columns-spanned="2">
-          <fo:block font-weight="bold" text-align="right">${uiLabelMap.PayGradeName}</fo:block>
+          <fo:block font-weight="bold" text-align="right">${uiLabelMap.HumanResPayGradeName}</fo:block>
         </fo:table-cell>              
         <fo:table-cell text-align="right" number-columns-spanned="2">
           <fo:block font-weight="bold" text-align="right">${uiLabelMap.CommonAmount}</fo:block>
@@ -36,10 +36,10 @@ under the License.
             <#assign grossSalary = (grossSalary + partyBenefit.amount)>          
                 <fo:table-row height="14px" space-start=".15in">
                     <fo:table-cell number-columns-spanned="2">
-                        <fo:block text-align="right">${partyBenefit.payGradeName}</fo:block>
+                        <fo:block text-align="left">${partyBenefit.payGradeName}</fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="right" number-columns-spanned="2">
-                        <fo:block>${partyBenefit.amount}</fo:block>
+                        <fo:block><@ofbizCurrency amount=partyBenefit.amount isoCode=defaultOrganizationPartyCurrencyUomId/></fo:block>
                     </fo:table-cell>
                 </fo:table-row>           
         </#list>
@@ -53,10 +53,10 @@ under the License.
         <#-- the Salary grossTotal total -->
         <fo:table-row>
            <fo:table-cell number-columns-spanned="2">
-              <fo:block font-weight="bold">${uiLabelMap.SalgrossTotal}</fo:block>
+              <fo:block font-weight="bold">${uiLabelMap.HumanResGrossSalary}</fo:block>
            </fo:table-cell>
            <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" number-columns-spanned="2">
-              <fo:block text-align="right"><@ofbizCurrency amount=grossSalary isoCode="INR"/></fo:block>
+              <fo:block text-align="right"><@ofbizCurrency amount=grossSalary isoCode=defaultOrganizationPartyCurrencyUomId/></fo:block>
            </fo:table-cell>
         </fo:table-row>
          <#-- if the Party benefits -->
@@ -64,30 +64,30 @@ under the License.
             <#assign totalDeductions = (totalDeductions + partyDeduction.amount)>          
                 <fo:table-row height="14px" space-start=".15in">
                     <fo:table-cell number-columns-spanned="2">
-                        <fo:block text-align="right">${partyDeduction.payGradeName}</fo:block>
+                        <fo:block text-align="left">${partyDeduction.payGradeName}</fo:block>
                     </fo:table-cell>
                     <fo:table-cell text-align="right" number-columns-spanned="2">
-                        <fo:block>${partyDeduction.amount}</fo:block>
+                        <fo:block><@ofbizCurrency amount=partyDeduction.amount isoCode=defaultOrganizationPartyCurrencyUomId/></fo:block>
                     </fo:table-cell>
                 </fo:table-row>           
         </#list>
          <fo:table-row height="14px">           
            <fo:table-cell number-columns-spanned="2">
-              <fo:block text-align="right">${uiLabelMap.TotalDeductions}</fo:block>
+              <fo:block text-align="left">${uiLabelMap.HumanResDeductionAmount}</fo:block>
            </fo:table-cell>
            <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" number-columns-spanned="2">
               <fo:block text-align="right">
-                 <@ofbizCurrency amount=totalDeductions isoCode="INR"/>
+                 <@ofbizCurrency amount=totalDeductions isoCode=defaultOrganizationPartyCurrencyUomId/>
               </fo:block>
            </fo:table-cell>
         </fo:table-row>      
         <fo:table-row height="14px">           
            <fo:table-cell number-columns-spanned="2">
-              <fo:block text-align="right">${uiLabelMap.NetSalTotal}</fo:block>
+              <fo:block text-align="left" font-weight="bold">${uiLabelMap.HumanResNetSalary}</fo:block>
            </fo:table-cell>
-           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" number-columns-spanned="2">
+           <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" number-columns-spanned="2" font-weight="bold">
               <fo:block text-align="right">
-                 <@ofbizCurrency amount=(grossSalary-totalDeductions) isoCode="INR"/>
+                 <@ofbizCurrency amount=(grossSalary-totalDeductions) isoCode=defaultOrganizationPartyCurrencyUomId/>
               </fo:block>
            </fo:table-cell>
         </fo:table-row>

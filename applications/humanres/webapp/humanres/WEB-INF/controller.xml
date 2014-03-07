@@ -42,7 +42,13 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
-
+    
+    <request-map uri="orgSubTree">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="orgTree.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="getPartyBenefitCost">
         <security auth="true" https="true"/>    
         <event type="service" invoke="getPartyBenefitCost"/>
@@ -109,14 +115,91 @@ under the License.
     </request-map> 
      <request-map uri="deletePunch">
         <security https="true" auth="true"/>
-           
-        <response name="success" type="request" value="deletePunchInternal"/>               
+         <response name="success" type="request" value="deletePunchInternal"/>               
     </request-map>
 	<request-map uri="week">
 		<security https="true" auth="true"/>
 	    <response name="success" type="view" value="Week"/>
     </request-map>
-	
+	<request-map uri="AttendanceReport">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="AttendanceReport"/>
+    </request-map>
+	<request-map uri="PFtransfer">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="PFtransfer"/>
+    </request-map>
+    
+    <request-map uri="PFclaiming">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="PFclaiming"/>
+    </request-map>
+    
+    <request-map uri="PFnomination">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="PFnomination"/>
+    </request-map>
+    
+    <request-map uri="PFleaving">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="PFleaving"/>
+    </request-map>
+    
+    <request-map uri="ESIchangefamilydeclaration">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="ESIchangefamilydeclaration"/>
+    </request-map>
+    
+    <request-map uri="ESIfamilydeclaration">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="ESIfamilydeclaration"/>
+    </request-map>
+    
+    <request-map uri="ESIdeclaration">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="ESIdeclaration"/>
+    </request-map>
+    
+    <request-map uri="PFqualified">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="PFqualified"/>
+    </request-map>
+    
+    <request-map uri="PFReport">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="PFReport"/>
+    </request-map>
+    
+    <request-map uri="TDSReport">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="TDSReport"/>
+    </request-map>
+    
+    <request-map uri="TDSform16a">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="TDSform16a"/>
+    </request-map>
+    
+    <request-map uri="TDSchallan">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="TDSchallan"/>
+    </request-map>
+    
+    <request-map uri="TDSemployee">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="TDSemployee"/>
+    </request-map>
+    
+    <request-map uri="ESIReport">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="ESIReport"/>
+    </request-map>
+    
+    <request-map uri="ESIannualinformation">
+		<security https="true" auth="true"/>
+	    <response name="success" type="view" value="ESIannualinformation"/>
+    </request-map>
+    
 	<request-map uri="inOutEmployee">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="InOutEmployee"/>
@@ -650,9 +733,15 @@ under the License.
     </request-map>
     <request-map uri="createEmployee">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createEmployee"/>
+        <event type="service" invoke="createEmployee"/>     
         <response name="success" type="request" value="EmployeeProfile"/>
         <response name="error" type="view" value="NewEmployee"/>
+    </request-map>
+    <request-map uri="updatePreviousEmployment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePreviousEmployment"/>     
+        <response name="success" type="request" value="PreviousEmployementProfile"/>
+        <response name="error" type="view" value="PreviousEmployementProfile"/>
     </request-map>
     <request-map uri="EditEmployeeSkills">
         <security https="true" auth="true"/>
@@ -676,6 +765,34 @@ under the License.
         <response name="success" type="view" value="EditEmployeeSkills"/>
         <response name="error" type="view" value="EditEmployeeSkills"/>
     </request-map>
+          
+    <request-map uri="deleteDependent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyRelationship"/>
+        <response name="success" type="view-home"/>
+        <response name="error" type="view-home"/>
+    </request-map>
+    <request-map uri="updateEmployee">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateEmployee"/>
+        <response name="success" type="view-last"/>
+        <response name="error" type="view" value="EditEmployee"/>
+    </request-map>
+     <request-map uri="editEmployee">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditEmployee"/>
+        <response name="error" type="view" value="EditEmployee"/>
+    </request-map>
+    <request-map uri="createPartyRelationshipDependent">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyRelationshipDependent"/>
+        <response name="success" type="view-home"/>
+        <response name="error" type="view-home"/>
+    </request-map>   
+     <request-map uri="PreviousEmployementProfile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PreviousEmployementProfile" save-home-view="true"/>
+    </request-map>    
     <request-map uri="EditEmployeeQuals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmployeeQuals"/>
@@ -1150,14 +1267,8 @@ under the License.
     </request-map>
      <request-map uri="LeaveTypeListCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListCsv"></response></request-map>
     <request-map uri="LeaveTypeListPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListPdf"></response></request-map>
-    <request-map uri="EmployeeType">
-       <security https="true" auth="true"/>
-        <response name="success" type="view" value="EmployeeType"/>
-    </request-map>
-    <request-map uri="EmployeeGroups">
-       <security https="true" auth="true"/>
-        <response name="success" type="view" value="EmployeeGroups"/>
-    </request-map>
+    
+   
     <request-map uri="Employees">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="Employees"/>
@@ -1178,24 +1289,7 @@ under the License.
     </request-map>
      <request-map uri="EmployeeProfileCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="EmployeeProfileCsv"></response></request-map>
     <request-map uri="EmployeeProfilePdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="EmployeeProfilePdf"></response></request-map>
-   <request-map uri="PartyProfile">
-       <security https="true" auth="true"/>
-        <response name="success" type="view" value="PartyProfile"/>
-    </request-map>
-     <request-map uri="PartyProfileCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="PartyProfileCsv"></response></request-map>
-    <request-map uri="PartyProfilePdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="PartyProfilePdf"></response></request-map>
-   
-    <request-map uri="PaySheet">
-       <security https="true" auth="true"/>
-        <response name="success" type="view" value="PaySheet"/>
-    </request-map>
-    <request-map uri="EmployeeContactDetails">
-       <security https="true" auth="true"/>
-        <response name="success" type="view" value="EmployeeContactDetails"/>
-    </request-map>
-    <request-map uri="EmployeeContactDetailsCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="EmployeeContactDetailsCsv"></response></request-map>
-    <request-map uri="EmployeeContactDetailsPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="EmployeeContactDetailsPdf"></response></request-map>
-   
+        
     <request-map uri="PaySlipEmployeeWise">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="PaySlipEmployeeWise"/>
@@ -1211,8 +1305,13 @@ under the License.
     </request-map>
     <request-map uri="EmployeeWiseSalaryDetailsCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="EmployeeWiseSalaryDetailsCsv"></response></request-map>
     <request-map uri="EmployeeWiseSalaryDetailsPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="EmployeeWiseSalaryDetailsPdf"></response></request-map>
-   
-   
+   <request-map uri="EmployeeBankDetails"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeBankDetails"/>
+    </request-map>
+    <request-map uri="EmployeeBankDetailsPdf.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeBankDetailsPdf"></response>
+        </request-map>
+      
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
 <request-map uri="calendar"><security https="true" auth="true"/>
@@ -1236,6 +1335,37 @@ under the License.
         <response name="success" type="view-home" value="calendar"/>
         <response name="error" type="view" value="calendar"/>
     </request-map>
+    
+    <!-- Generate Report request -->
+    
+    <request-map uri="CompanyPunchReport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CompanyPunchReport"/>
+    </request-map>
+    <request-map uri="EmployeePunchReport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeePunchReport"/>
+    </request-map>
+    
+    <request-map uri="orgPunchReportSubTree">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/reports/" invoke="EmployeeInOutReport.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    
+    <request-map uri="emplDailyPunchReport.csv">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="emplDailyPunchReport"/>
+        <response name="success" type="view" value="emplDailyPunchReport"/>
+        <response name="error" type="view" value="emplDailyPunchReport"/>
+    </request-map>
+    <request-map uri="EmplMonthlyPunchReport.csv">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="emplMonthlyPunchReport"/>
+        <response name="success" type="view" value="emplMonthlyPunchReport"/>
+        <response name="error" type="view" value="emplMonthlyPunchReport"/>
+    </request-map>
+    
 
     <!-- ===================Lookup Request===================== -->
     <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
@@ -1312,6 +1442,9 @@ under the License.
     <view-map name="FindEmployee" type="screen" page="component://humanres/widget/EmployeeScreens.xml#FindEmployee"/>
     <view-map name="NewEmployee" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewEmployee"/>
     <view-map name="EmployeeProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EmployeeProfile"/>
+   
+	<view-map name="EditEmployee" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployee" />   
+    <view-map name="PreviousEmployementProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#PreviousEmployementProfile"/>
     <view-map name="EditEmployeeSkills" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeSkills"/>
     <view-map name="EditEmployeeTrainings" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeTrainings"/>
     <view-map name="EditEmployeeQuals" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditEmployeeQuals"/>
@@ -1369,7 +1502,7 @@ under the License.
     <view-map name="EditEmplLeaveReasonTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditEmplLeaveReasonTypes"/>
     <view-map name="FindLeaveApprovals" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindLeaveApprovals"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
-    <!--====================Reports View===================================-->
+ <!--====================Reports View===================================-->
     <view-map name="HRReports" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>
  <view-map name="LeaveTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>
  <view-map name="LeaveTypeListCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypeListCsv" content-type="text/csv" encoding="none"/>
@@ -1402,10 +1535,28 @@ under the License.
  <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>
   <view-map name="EmployeeWiseSalaryDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="EmployeeWiseSalaryDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsPdf" content-type="application/pdf" encoding="none"/>
+
+ <view-map name="EmployeeBankDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetails"/> 
+ <view-map name="EmployeeBankDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetailsPdf" content-type="application/pdf" encoding="none"/>
+ <view-map name="PFtransfer" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFtransfer" content-type="application/pdf" encoding="none"/>
+ <view-map name="PFclaiming" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFclaiming" content-type="application/pdf" encoding="none"/>
+ <view-map name="PFnomination" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFnomination" content-type="application/pdf" encoding="none"/>
+ <view-map name="PFqualified" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFqualified" content-type="application/pdf" encoding="none"/>
+ <view-map name="PFleaving" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFleaving" content-type="application/pdf" encoding="none"/>
+ <view-map name="ESIdeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIdeclaration" content-type="application/pdf" encoding="none"/>
+ <view-map name="ESIchangefamilydeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIchangefamilydeclaration" content-type="application/pdf" encoding="none"/>
+ <view-map name="ESIfamilydeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIfamilydeclaration" content-type="application/pdf" encoding="none"/>
+ <view-map name="ESIannualinformation" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIannualinformation" content-type="application/pdf" encoding="none"/>
+ <view-map name="TDSemployee" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSemployee" content-type="application/pdf" encoding="none"/>
+ <view-map name="TDSform16a" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSform16a" content-type="application/pdf" encoding="none"/>
+ <view-map name="TDSchallan" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSchallan" content-type="application/pdf" encoding="none"/>
  
+ <view-map name="PFReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFReport"/>
+ <view-map name="ESIReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIReport"/>
+ <view-map name="TDSReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSReport"/>
  
- 
-  <!--====================Reports View===================================-->
+  
+   <!--====================Reports View===================================-->
      <!-- ==================IN/Out & Attendance View Map===================== -->
 	<view-map name="InOutEmployee" type="screen" page="component://humanres/widget/EmplInOutScreens.xml#EditEmplInOut"/>
 	<view-map name="InOutAdmin" type="screen" page="component://humanres/widget/AdminInOutScreens.xml#EditAdminInOut"/>
@@ -1414,6 +1565,16 @@ under the License.
 	 <view-map name="AdminPunch" type="screen" page="component://humanres/widget/AdminPunchScreens.xml#EditAdminPunch"/>
      <view-map name="Month" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarMonth"/>
     <view-map name="UpComing" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarUpcoming"/>
+    
+    <!-- <view-map name="WeeklyInOutExport" type="screen" page="component://humanres/widget/CalendarScreens.xml#WeeklyInOutExport"/> -->
+    
+    <view-map name="CompanyPunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CompanyPunchReport"/>
+    <view-map name="EmployeePunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport"/>
+    <!-- <view-map name="EmployeePunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport" content-type="text/csv" encoding="none"/> -->
+    
+    <view-map name="AttendanceReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#AttendanceReport"/>
+    <view-map name="emplDailyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplDailyPunchReport" content-type="text/csv" encoding="none"/>
+    <view-map name="emplMonthlyPunchReport" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#emplMonthlyPunchReport" content-type="text/csv" encoding="none"/>
     
     <!-- ==================Recruitment View Map===================== -->
     <view-map name="FindJobRequisitions" type="screen" page="component://humanres/widget/RecruitmentScreens.xml#FindJobRequisitions"/>

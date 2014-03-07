@@ -47,7 +47,7 @@ if(orgId != null){
 		Map contactDetailsMap=[:];
 		List conditionList=[];
 		Map employeeSub=[:];
-		employee.fromDate = (employee.fromDate).getDateString();
+		employee.fromDate = UtilDateTime.toDateString(employee.fromDate, "dd/MM/yyyy");
 		
 		conditionList = UtilMisc.toList(
                 EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, employee.partyIdTo));
@@ -76,5 +76,5 @@ if(orgId != null){
 	}
 	
 }
-
+employeeList = UtilMisc.sortMaps(employeeList, UtilMisc.toList("partyIdTo"));
 context.employeeList=employeeList;

@@ -42,6 +42,53 @@ under the License.
   <!-- org.ofbiz.humanres.ability -->
   <!-- ========================================================= -->
 
+	<entity entity-name="EmployeeDetail" package-name="org.ofbiz.humanres.employment"
+		title="employee Detail Entity">
+		<field name="partyId" type="id-ne"></field>
+		<field name="employeeId" type="id"></field>
+		<field name="previousEpf" type="id"></field>
+		<field name="presentEpf" type="id"></field>
+		<field name="previousEsic" type="id"></field>
+		<field name="presentEsic" type="id"></field>		
+		<field name="previousEmployer" type="name"></field>		
+		<field name="previousDesignation" type="name"></field>		
+		<field name="prevEmplFromDate" type="date-time"></field>
+		<field name="prevEmplThruDate" type="date-time"></field>
+		<field name="referenceName" type="name"></field>		
+		<field name="referenceEmployer" type="name"></field>		
+		<field name="refEmplContactNumber" type="short-varchar"></field>		
+		<field name="previousPfNumber" type="id"></field>
+		<field name="prevPfEmplAddress" type="long-varchar"></field>
+		<field name="previousRegionalPfCommissioner" type="name"></field>
+		<field name="nameOfPreviousPfTrust" type="name"></field>
+		<field name="reasonForLeaving" type="long-varchar"></field>
+		<field name="referenceCheck" type="indicator"></field>
+		<field name="employeeBankAccNo" type="short-varchar"></field>		
+		<field name="emergencyContactName" type="name"></field>
+		<field name="emergencyContactNumber" type="short-varchar"></field>
+		<field name="recDirect" type="name"></field>
+		<field name="employeeReferral" type="id"></field>
+		<field name="recConsultancy" type="name"></field>
+		<field name="backgroundVerification" type="indicator"></field>
+		<field name="typeOfInsurance" type="name"></field>
+
+		<prim-key field="partyId" />
+		<relation type="one" fk-name="EMPL_DETAIL_PRTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>		
+		<relation type="one" fk-name="EMPL_REC_ENUM" rel-entity-name="Enumeration">
+            <key-map field-name="recDirect" rel-field-name="enumId"/>
+        </relation>        
+        <relation type="one" fk-name="EMPL_REC_CUN_ENUM" rel-entity-name="Enumeration">
+            <key-map field-name="recConsultancy" rel-field-name="enumId"/>
+        </relation> 
+        <relation type="one" fk-name="EMPL_REC_EMPREF" rel-entity-name="Employment">
+            <key-map field-name="employeeReferral" rel-field-name="partyIdTo"/>
+        </relation>
+				
+	</entity> 
+
     <entity entity-name="PartyQual" package-name="org.ofbiz.humanres.ability" title="Party Qualification Entity">
         <field name="partyId" type="id-ne"></field>
         <field name="partyQualTypeId" type="id-ne"></field>
@@ -51,6 +98,8 @@ under the License.
         <field name="verifStatusId" type="id"><description>Verification done for this entry if any</description></field>
         <field name="fromDate" type="date-time"></field>
         <field name="thruDate" type="date-time"></field>
+        <field name="universityBoard" type="id-long"></field>
+		<field name="percentageOfMarks" type="fixed-point"></field>
         <prim-key field="partyId"/>
         <prim-key field="partyQualTypeId"/>
         <prim-key field="fromDate"/>
@@ -462,6 +511,25 @@ under the License.
         </relation>
         <relation type="one" fk-name="EMPL_LEAVE_APPR" title="Approver" rel-entity-name="Party">
             <key-map field-name="approverPartyId" rel-field-name="partyId"/>
+        </relation>
+    </entity>
+    <entity entity-name="EmplLeaveStatus" package-name="org.ofbiz.humanres.employment">
+    	<field name="partyId" type="id-ne"/>
+        <field name="leaveTypeId" type="id-ne"/>
+        <field name="leaveUomId" type="short-varchar"/>        
+        <field name="availableLeaves" type="fixed-point"/>        
+        <field name="availedLeaves" type="fixed-point"/>
+        <field name="accruedLeaves" type="fixed-point"/>
+         <prim-key field="partyId"/>
+         <prim-key field="leaveTypeId"/>
+         <relation type="one" fk-name="EMPL_LEAVE_ST_PRTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVE_ST_TYP" title="Leave Type" rel-entity-name="EmplLeaveType">
+            <key-map field-name="leaveTypeId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVE_ST_UOM" title="Uom" rel-entity-name="Uom">
+            <key-map field-name="leaveUomId" rel-field-name="uomId"/>
         </relation>
     </entity>
     <entity entity-name="EmplLeaveType"

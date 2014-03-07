@@ -18,6 +18,189 @@
     under the License.
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<property key="AttendanceReport">
+		<value xml:lang="en">Attendance Report</value>
+	</property>
+	
+	<property key="AttendanceMonthlyReport">
+		<value xml:lang="en">Attendance Monthly Report</value>
+	</property>
+	
+	<property key="AttendanceDailyReport">
+		<value xml:lang="en">Attendance Daily Report</value>
+	</property>
+
+	<property key="EmployeeBankAccountNumber">
+		<value xml:lang="en">Employee Bank Account Number</value>
+	</property>
+	<property key="PreviousEmployerPfAddress">
+		<value xml:lang="en">Previous Employer PF Reg Address</value>
+	</property>
+	
+	<property key="PreviousRegionalPfCommissioner">
+		<value xml:lang="en">Previous Regional PF Commissioner</value>
+	</property>
+	<property key="NameOfPreviousPfTrust">
+		<value xml:lang="en">Name Of Previous PF Trust</value>
+	</property>
+	
+	<property key="PreviousPfNumber">
+		<value xml:lang="en">Previous PF Number</value>
+	</property>
+	<property key="EmployeeDetails">
+		<value xml:lang="en">Employee Details</value>
+	</property>
+	<property key="MaritalStatus">
+		<value xml:lang="en">Marital Status</value>
+	</property>	
+	<property key="DateOfBirth">
+		<value xml:lang="en">Date Of Birth</value>
+	</property>
+	<property key="BloodGroup">
+		<value xml:lang="en">Blood Group</value>
+	</property>
+	<property key="SonWifeDaughter">
+		<value xml:lang="en">S/O,D/O,W/O</value>
+	</property>
+	<property key="Age">
+		<value xml:lang="en">Age</value>
+	</property>
+	<property key="DateOfJoining">
+		<value xml:lang="en">Date Of Joining</value>
+	</property>
+	<property key="ReferenceName">
+		<value xml:lang="en">Reference Name</value>
+	</property>	
+	<property key="InsuranceDetails">
+		<value xml:lang="en">Insurance Details</value>
+	</property>
+	<property key="InsuranceType">
+		<value xml:lang="en">Type Of Insurance</value>
+	</property>	
+	<property key="Previous">
+		<value xml:lang="en">Previous Employer Details</value>
+	</property>
+	<property key="NameOfTheEmployer">
+		<value xml:lang="en">Name of the Employer</value>
+	</property>
+	<property key="Duration">
+		<value xml:lang="en">Duration</value>
+	</property>
+	<property key="ReasonForLeaving">
+		<value xml:lang="en">Reason for leaving</value>
+	</property>
+	<property key="ReferenceCheck">
+		<value xml:lang="en">Refernce verified or not</value>
+	</property>
+	<property key="Designation">
+		<value xml:lang="en">Designation</value>
+	</property>
+	<property key="ContactDetails">
+		<value xml:lang="en">Contact Details</value>
+	</property>
+	<property key="Mobile">
+		<value xml:lang="en">Mobile</value>
+	</property>
+	<property key="Residential">
+		<value xml:lang="en">Residential</value>
+	</property>
+	<property key="Email">
+		<value xml:lang="en">E-mail</value>
+	</property>
+	<property key="Emergency">
+		<value xml:lang="en">In emergency case to whom to contact</value>
+	</property>
+	<property key="EmergencyContactName">
+		<value xml:lang="en">Emergency Contact Name</value>
+	</property>
+	<property key="EmergencyContactNumber">
+		<value xml:lang="en">Emergency Contact Number</value>
+	</property>
+	<property key="Name">
+		<value xml:lang="en">Name</value>
+	</property>
+	<property key="ReferenceContactNo">
+		<value xml:lang="en">Reference Contact Number</value>
+	</property>	
+ 	<property key="References">
+       	<value xml:lang="en">References</value>
+    </property>
+ 	<property key="Organization">
+       	<value xml:lang="en">Organization</value>
+    </property>
+	<property key="FamilyDetails">
+       	<value xml:lang="en">Family Details</value>
+    </property>
+	<property key="Dependents">
+       	<value xml:lang="en">Dependents Covered Under Insurance</value>
+    </property>
+	<property key="Relation">
+       	<value xml:lang="en">Relation</value>
+    </property>
+    <property key="DependentId">
+       	<value xml:lang="en">DependentId</value>
+    </property>
+	<property key="Epf">
+       	<value xml:lang="en">EPF</value>
+    </property>   
+    <property key="Esic">
+       	<value xml:lang="en">ESIC</value>
+    </property>   
+    <property key="PassportDetails">
+       	<value xml:lang="en">Passport Details</value>
+    </property>
+    <property key="Number">
+       	<value xml:lang="en">Number</value>
+    </property>   
+    <property key="SourceOfRecruitment">
+       	<value xml:lang="en">Sources Of Recruitment</value>
+    </property>  
+    <property key="Direct">
+       	<value xml:lang="en">Direct</value>
+    </property>
+    <property key="EmployeeReferral">
+       	<value xml:lang="en">Employee Referral</value>
+    </property>
+    <property key="Consultancy">
+       	<value xml:lang="en">Consultancy</value>
+    </property>
+    <property key="BackgroundVerification">
+       	<value xml:lang="en">Background Verification</value>
+    </property>
+    <property key="EmployeeId">
+       	<value xml:lang="en">EmployeeId</value>
+    </property>
+    <property key="ExternalId">
+        <value xml:lang="en">External Id</value>
+    </property>
+    <property key="EmployeeInformation">
+       	<value xml:lang="en">Employee Information</value>
+    </property>
+     <property key="PageTitleEditEmployeeInformation">
+        <value xml:lang="en">Edit Employee Information</value>
+    </property>
+    <property key="PageTitleViewEmployeeProfile">
+        <value xml:lang="en">View Employee Profile</value>
+    </property>
+    <property key="PageTitlePreviousEmploymentProfile">
+        <value xml:lang="en">Edit Previous Employment Profile</value>
+    </property>
+    <property key="DependentInformation">
+        <value xml:lang="en">Dependent Information</value>
+    </property>           
+    <property key="Pan">
+        <value xml:lang="en">PAN</value>
+    </property>         
+     <property key="Pan1">
+        <value xml:lang="en">PAN Registration Number</value>
+    </property>       
+      <property key="Employment">       
+        <value xml:lang="en">Employment Details</value>        
+    </property>  
+     <property key="EmploymentDate">       
+        <value xml:lang="en">Employment Date</value>        
+    </property>
     <property key="FormFieldTitle_accountNumber">
         <value xml:lang="en">Account Number</value>
         <value xml:lang="fr">N° de compte</value>
@@ -92,7 +275,7 @@
         <value xml:lang="fr">Approbateur</value>
         <value xml:lang="pt_BR">Participante responsável</value>
     </property>
-    <property key="FormFieldTitle_bankName">
+    <property key="FormFieldTitle_Name">
         <value xml:lang="en">Bank Name</value>
         <value xml:lang="fr">Nom de la banque</value>
         <value xml:lang="it">Nome Banca</value>
@@ -544,6 +727,15 @@
         <value xml:lang="pt_BR">Id da razão de encerramento</value>
         <value xml:lang="th">รหัสขอบเขตเหตุผล</value>
         <value xml:lang="zh">雇佣关系终止原因编号</value>
+    </property>
+    <property key="FormFieldTitle_terminationDate">
+        <value xml:lang="en">Date Of Termination</value>
+    </property>
+    <property key="ReferenceEmployer">
+        <value xml:lang="en">Reference Employer</value>
+    </property>
+    <property key="PreviousEmployementProfile">
+        <value xml:lang="en">Previous Employement Profile</value>
     </property>
     <property key="FormFieldTitle_terminationTypeId">
         <value xml:lang="en">Termination Type Id</value>
@@ -2327,4 +2519,50 @@
         <value xml:lang="pt_BR">Visualizar treinamento de pessoa</value>
         <value xml:lang="zh">查看个人培训</value>
     </property>
+     <property key="HumanResPayGradeName">       
+        <value xml:lang="en">PayGrade Name</value>       
+    </property>
+     <property key="HumanResGrossSalary">       
+        <value xml:lang="en">Gross Salary</value>       
+    </property>
+    <property key="HumanResNetSalary">       
+        <value xml:lang="en">Net Salary</value>       
+    </property>
+    <property key="HumanResDeductionAmount">
+        <value xml:lang="en">Total Deductions</value>       
+    </property>
+    <property key="HumanResEmployeeProfile">  
+       <value xml:lang="en">Employee Personal Profile</value>  
+    </property> 
+    <property key="PayHeadTypes">  
+       <value xml:lang="en">Pay Head Types</value>  
+    </property>
+    <property key="LeaveTypes">  
+       <value xml:lang="en">Leave Types</value>  
+    </property>
+    <property key="PaySlipEmployeeWise">  
+       <value xml:lang="en">Pay Slip Employee Wise</value>  
+    </property> 
+    <property key="HumanResEmployeeSalaryDetails">  
+       <value xml:lang="en">Employee Wise Salary Details</value>  
+    </property>
+	<property key="HumanResEmployeeBankDetails">
+		<value xml:lang="en">Employee Bank Details</value>
+	</property>
+	<property key="EmployeeId">
+		<value xml:lang="en">Employee Id</value>
+	</property>
+	<property key="EmployeeName">
+		<value xml:lang="en">Employee Name</value>
+	</property>
+	<property key="AccountNumber">
+		<value xml:lang="en">Account Number</value>
+	</property>
+	<property key="Amount">
+		<value xml:lang="en">Amount</value>
+	</property>  
+	<property key="HumanResEmployeeInOutReport">
+        <value xml:lang="en">Employee In/Out Puch Report</value>
+    </property>  
+          
 </resource>

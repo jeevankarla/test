@@ -80,13 +80,7 @@
                 </and>
             </condition>
             <link target="${parameters._LAST_VIEW_NAME_}?period=week${urlParam}"/>
-        </menu-item>
-        
-        <menu-item name="dummy" title="--------">
-            <condition>
-                <if-compare field="parameters.period" operator="not-equals" value="upcoming"/>
-            </condition>
-        </menu-item>
+        </menu-item>          
     </menu>
 <!--*********************************************************************************************-->
     <menu name="HumanResAppBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -174,40 +168,49 @@
                <parameter param-name="organizationPartyId"/>
            </link>
        </menu-item>
-       <menu-item name="EmployeeProfile" title="${uiLabelMap.EmployeeProfile}">
+       <menu-item name="EmployeeProfileReport" title="${uiLabelMap.HumanResEmployeeProfile}">
            <link target="EmployeeProfileReport">
                <parameter param-name="organizationPartyId"/>
            </link>
-       </menu-item>
-       <menu-item name="PartyProfile" title="${uiLabelMap.EmployeeWiseProfile}">
-           <link target="PartyProfile">
-               <parameter param-name="organizationPartyId"/>
-           </link>
-       </menu-item>
-<!--         
-       <menu-item name="PaySheet" title="${uiLabelMap.PaySheet}">
-           <link target="PaySheet">
-               <parameter param-name="organizationPartyId"/>
-           </link>
-       </menu-item>
-       -->
-       <menu-item name="EmployeeContactDetails" title="${uiLabelMap.EmployeeContactDetails}">
-           <link target="EmployeeContactDetails">
-               <parameter param-name="organizationPartyId"/>
-           </link>
-       </menu-item>
-         
+       </menu-item>         
        <menu-item name="PaySlipEmployeeWise" title="${uiLabelMap.PaySlipEmployeeWise}">
            <link target="PaySlipEmployeeWise">
                <parameter param-name="organizationPartyId"/>
            </link>
        </menu-item>
        
-       <menu-item name="EmployeeWiseSalaryDetails" title="${uiLabelMap.EmployeeWiseSalaryDetails}">
+       <menu-item name="EmployeeWiseSalaryDetails" title="${uiLabelMap.HumanResEmployeeSalaryDetails}">
            <link target="EmployeeWiseSalaryDetails">
                <parameter param-name="organizationPartyId"/>
            </link>
        </menu-item>
+	<menu-item name="EmployeeBankDetails" title="${uiLabelMap.HumanResEmployeeBankDetails}">
+		<link target="EmployeeBankDetails">
+			<parameter param-name="organizationPartyId" />
+		</link>
+	</menu-item>
+	<menu-item name="AttendanceReport" title="${uiLabelMap.AttendanceReport}">
+        <link target="AttendanceReport">
+            <parameter param-name="organizationPartyId" />
+        </link>
+    </menu-item>
+    
+<!--     <menu-item name="PFReport" title="PF reports">
+		<link target="PFReport">
+			<parameter param-name="partyId" />
+		</link>
+	</menu-item>
+	<menu-item name="ESIReport" title="ESI reports">
+		<link target="ESIReport">
+			<parameter param-name="partyId" />
+		</link>
+	</menu-item>
+	<menu-item name="TDSReport" title="TDS Reports">
+		<link target="TDSReport">
+			<parameter param-name="partyId" />
+		</link>
+	</menu-item>-->
+	
    </menu>
     <menu name="EmploymentBar" default-menu-item-name="EditPartyBenefit" default-selected-style="selected"
         type="simple" menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem">
@@ -363,6 +366,13 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
+        
+        <menu-item name="PreviousEmployementProfile" title="${uiLabelMap.PreviousEmployementProfile}">
+            <link target="PreviousEmployementProfile">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+             
         <menu-item name="ListEmployment" title="${uiLabelMap.HumanResEmployment}">
             <link target="ListEmployments">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
@@ -411,6 +421,14 @@
         </menu-item>
     </menu>
 
+	<menu name="EmployeeUpdate">
+    <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="editEmployee">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+            </link>
+        </menu-item>
+    </menu>
+	
     <menu name="EmplPositionTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditEmplPositionType" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="EditEmplPositionType" title="${uiLabelMap.HumanResEmplPositionType}">

@@ -68,7 +68,6 @@ under the License.
     <screen name="OrgTree">
         <section>
             <actions>
-                <set field="partyId" value="Company"/>
 				<script  
 					location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/orgTree.groovy" />                
             </actions>

@@ -17,14 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.EmployeeSalaryDetails}</h3>
-  </div>
+
   <#if salaryDetailsList?has_content>
     <table class="basic-table hover-bar" cellspacing="0">
       <tr class="header-row">
-        <td>${uiLabelMap.PayGradeName}</td>
+        <td>${uiLabelMap.HumanResPayGradeName}</td>
         <td>${uiLabelMap.HumanResPayrollPreferenceFlatAmount}</td>                
       </tr>
       <#assign grossSalary=0>
@@ -37,7 +34,7 @@ under the License.
           <#list partyBenefitList as partyBenefit>           
             <tr<#if alt_row> class="alternate-row"</#if>>
               <td>${partyBenefit.payGradeName}</td>
-              <td>${partyBenefit.amount}</td> 
+              <td><@ofbizCurrency amount=partyBenefit.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td> 
               <#assign grossSalary = (grossSalary + partyBenefit.amount)>             
             </tr>
             <#assign alt_row = !alt_row>
@@ -45,7 +42,7 @@ under the License.
         </#if>
         <tr<#if alt_row> class="alternate-row"</#if>>
             <td>Gross Salary</td>
-            <td>${grossSalary}</td>              
+            <td><@ofbizCurrency amount=grossSalary isoCode=defaultOrganizationPartyCurrencyUomId/></td>              
         </tr>
         <#assign partyDeductionList = salaryDetail.partyDeductionList>
         <#if partyDeductionList?has_content>
@@ -54,7 +51,7 @@ under the License.
           <#list partyDeductionList as partyDeduction>           
             <tr<#if alt_row> class="alternate-row"</#if>>
               <td>${partyDeduction.payGradeName}</td>
-              <td>${partyDeduction.amount}</td> 
+              <td><@ofbizCurrency amount=partyDeduction.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td> 
               <#assign totalDeductions = (totalDeductions + partyDeduction.amount)>             
             </tr>
             <#assign alt_row = !alt_row>
@@ -62,15 +59,14 @@ under the License.
         </#if>
         <tr<#if alt_row> class="alternate-row"</#if>>
             <td>Total Deductions</td>
-            <td>${totalDeductions}</td>              
+            <td><@ofbizCurrency amount=totalDeductions isoCode=defaultOrganizationPartyCurrencyUomId/></td>              
         </tr>
         <tr<#if alt_row> class="alternate-row"</#if>>
             <td>Net Salary</td>
-            <td>${grossSalary-totalDeductions}</td>              
+            <td><@ofbizCurrency amount=(grossSalary-totalDeductions) isoCode=defaultOrganizationPartyCurrencyUomId/></td>              
         </tr>
       </#list>
     </table>
   <#else>
     <div class="screenlet-body">${uiLabelMap.NoRecordsFound}.</div>
   </#if>
-</div>

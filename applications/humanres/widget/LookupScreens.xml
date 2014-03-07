@@ -33,18 +33,17 @@
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>                
                 <!-- entries needed for lookup ajax auto completer -->
                 <!-- required: entity to search in -->
-                <set field="entityName" value="PartyNameView"/>                
+                <set field="entityName" value="EmploymentAndPerson"/>                
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/conditionLookUp.groovy"/>
                 <!-- required: fields to search a match -->
                 <!-- the first element from searchFields is returned after user selection --> 
                 <!-- it might be hidden based on widget.autocompleter.displayReturnField property in widget.properties -->                
-                <set field="searchFields" value="[partyId, firstName, middleName, lastName, groupName]"/>
+                <set field="searchFields" value="[partyId, firstName, middleName, lastName]"/>
  
                 <!-- optional: fields to display in the given order, default is searchFields -->
-                <set field="displayFields" value="[firstName, lastName, groupName]"/>
+                <set field="displayFields" value="[firstName, lastName]"/>      
                 
-                <!-- optional: additional entity condition (named andCondition) added to search query -->
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/StatusCondition.groovy"/>
+               
             </actions>
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">

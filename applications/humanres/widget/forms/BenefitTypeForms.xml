@@ -56,7 +56,7 @@
         </field>
     </form>
     <form name="EditBenefit" type="single" target="updateBenefit" title=""
-        header-row-style="header-row" default-table-style="basic-table" default-map-name="Benefit">
+        header-row-style="header-row" default-table-style="basic-table" default-map-name="benefitType">
         <alt-target use-when="benefitTypeId==null" target="createBenefit"/>
         <auto-fields-service service-name="updateBenefit"/>
         <field use-when="Benefit!=null" name="benefitTypeId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -71,6 +71,7 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="description"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="benefitType!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
