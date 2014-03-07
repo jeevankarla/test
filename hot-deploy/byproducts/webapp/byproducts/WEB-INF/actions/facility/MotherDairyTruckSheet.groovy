@@ -256,11 +256,11 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							productWiseTotalCratesMap.put(productId, cratesDetailMap);
 						}						
 					}			
-					/*lmsProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, lmsProductList) , null, ["sequenceNum"], null, false);
+					lmsProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, lmsProductList) , null, ["sequenceNum"], null, false);
 					lmsProdIdsList= EntityUtil.getFieldListFromEntityList(lmsProdSeqList, "productId", true);
 					byProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, byProdList) , null, ["sequenceNum"], null, false);
 					byProdIdsList= EntityUtil.getFieldListFromEntityList(byProdSeqList, "productId", true);
-					*/
+					
 					 //getting vehicle role for vehcileId
 					String vehicleId="";
 					vehicleRole=ByProductNetworkServices.getVehicleRole(dispatcher.getDispatchContext(),[facilityId:routeId,supplyDate:estimatedDeliveryDateTime]).get("vehicleRole");
@@ -270,8 +270,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					}
 					Map boothDetailsMap=FastMap.newInstance();
 					boothDetailsMap.put("boothWiseMap", boothWiseMap);
-					boothDetailsMap.put("lmsProdList", lmsProductList);
-					boothDetailsMap.put("byProdList", byProdList);
+					boothDetailsMap.put("lmsProdList", lmsProdIdsList);
+					boothDetailsMap.put("byProdList", byProdIdsList);
 					boothDetailsMap.put("routeWiseTotals", routeProdTotals);
 					boothDetailsMap.put("routeWiseCrates", productWiseTotalCratesMap);
 					boothDetailsMap.put("routeAmount", routeAmount);
