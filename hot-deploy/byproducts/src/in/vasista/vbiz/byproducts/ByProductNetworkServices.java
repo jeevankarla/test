@@ -562,6 +562,68 @@ public class ByProductNetworkServices {
 			
 			return shipments;
 	}
+	   
+	 public static List getDayShipmentIds(Delegator delegator,Timestamp fromDate, Timestamp thruDate,String shipmentTypeId,List routeIds){
+			//TO DO:for now getting one shipment id  we need to get pm and am shipment id irrespective of Shipment type Id
+			List conditionList= FastList.newInstance();
+			List shipmentList =FastList.newInstance();
+			List shipments = FastList.newInstance();
+			Timestamp dayBegin = UtilDateTime.getDayStart(fromDate);
+			Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);		
+			if(UtilValidate.isNotEmpty(shipmentTypeId) && ("AM".equals(shipmentTypeId))){
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.IN , UtilMisc.toList("AM_SHIPMENT")));
+				if(UtilValidate.isNotEmpty(routeIds)){
+					conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.IN , routeIds));
+				}
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+				try {
+					shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
+				}catch (Exception e) {
+					Debug.logError(e, "Unable to get shipment list: ", module);		   
+				}
+				if(!UtilValidate.isEmpty(shipmentList)){
+					shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
+				}
+			}
+			else if(UtilValidate.isNotEmpty(shipmentTypeId) && ("PM".equals(shipmentTypeId))){
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.IN , UtilMisc.toList("PM_SHIPMENT")));
+				if(UtilValidate.isNotEmpty(routeIds)){
+					conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.IN , routeIds));
+				}
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.addDaysToTimestamp(dayBegin, -1)));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.addDaysToTimestamp(dayEnd, -1)));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+				try {
+					shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
+				}catch (Exception e) {
+					Debug.logError(e, "Unable to get shipment list: ", module);		   
+				}
+				if(!UtilValidate.isEmpty(shipmentList)){
+					shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
+				}
+			}else{
+				conditionList.clear();
+				//conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS , shipmentTypeId));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+				try {
+					shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
+				}catch (Exception e) {
+					Debug.logError(e, "Unable to get shipment list: ", module);		  	   
+				}			
+				shipments = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false);	
+			}
+			return shipments;
+		} 
+	 
+	
 	
 	public static Map<String, Object> getByProductActiveFacilities(Delegator delegator, Timestamp effectiveDate){
 		    
