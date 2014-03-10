@@ -303,7 +303,7 @@ public class ByProductChangeIndentServices {
   				Map.Entry entry = (Entry) mapIterator.next();
     			prodId = (String)entry.getKey();
   	        	categoryType = (String)entry.getValue();
-  	        	if(categoryType.equals("CRATE") || categoryType.equals("CAN")){
+  	        	if((categoryType.equals("CRATE") || categoryType.equals("CAN")) && !productSubscriptionTypeId.equals("EMP_SUBSIDY")){
   	        		crateCanIndentProductList.add(prodId);
   	        	}
       		}

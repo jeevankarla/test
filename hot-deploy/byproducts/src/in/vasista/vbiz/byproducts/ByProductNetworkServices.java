@@ -624,7 +624,6 @@ public class ByProductNetworkServices {
 		} 
 	 
 	
-	
 	public static Map<String, Object> getByProductActiveFacilities(Delegator delegator, Timestamp effectiveDate){
 		    
 		Map<String, Object> result = FastMap.newInstance(); 
@@ -863,7 +862,12 @@ public class ByProductNetworkServices {
 	    			Map boothDetails = (Map)(getBoothRoute(dctx, boothCtxMap)).get("boothDetails");
 	    			routeId = (String)boothDetails.get("routeId");
 	    		}
-	    		if(!isEnableProductSubscription){
+	    		
+	    		List prevshipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId, routeId);
+	    		if(UtilValidate.isNotEmpty(prevshipmentIds)){
+	    			return ServiceUtil.returnError("Trucksheet already generated for the route :"+ routeId); 
+	    		}
+	    		 if(!isEnableProductSubscription){
 	    			if(UtilValidate.isEmpty(facility.getString("categoryTypeEnum"))){
 	    				productSubscriptionTypeId = "CASH";
 	    			} 
@@ -942,7 +946,7 @@ public class ByProductNetworkServices {
 	    			BigDecimal quantityIncluded = (EntityUtil.getFirst(EntityUtil.filterByAnd(productList, UtilMisc.toMap("productId",productId)))).getBigDecimal("quantityIncluded");
 	    			if(UtilValidate.isEmpty(changeQuantityMap.get(productId))){
 	    				changeQuantityMap.put(productId, product.getBigDecimal("quantity")); 
-	    				if(UtilValidate.isNotEmpty(qtyCategory) && (qtyCategory.equals("CRATE") || qtyCategory.equals("CAN"))){//if(crateIndentProductList.contains(productId)){
+	    				if(UtilValidate.isNotEmpty(qtyCategory) && (qtyCategory.equals("CRATE") || qtyCategory.equals("CAN")) && !productSubscriptionTypeId.equals("EMP_SUBSIDY")){//if(crateIndentProductList.contains(productId)){
 	    					if(UtilValidate.isEmpty(product.getBigDecimal("crateQuantity"))){
 	    						product.set("crateQuantity", convertPacketsToCrates(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "packetQuantity", product.getBigDecimal("quantity"))));
 	    						product.store();
@@ -2562,7 +2566,12 @@ public class ByProductNetworkServices {
 		    }
 		    return result;
 		}
+		
 		public static List getShipmentIdsByAMPM(Delegator delegator,String estimatedDeliveryDateString,String subscriptionType){
+			return getShipmentIdsByAMPM(delegator, estimatedDeliveryDateString, subscriptionType, null);
+		}
+
+		public static List getShipmentIdsByAMPM(Delegator delegator,String estimatedDeliveryDateString,String subscriptionType, String routeId){
 			
 			List shipmentIds = FastList.newInstance();
 			if(!subscriptionType.equals("AM") && !subscriptionType.equals("PM")){			
@@ -2577,8 +2586,13 @@ public class ByProductNetworkServices {
 			}		
 			return shipmentIds;
 		}
-		// This will return the list of ShipmentIds for the selected 
 		public static List getShipmentIds(Delegator delegator,String estimatedDeliveryDateString,String shipmentTypeId){
+			//TO DO:for now getting one shipment id  we need to get pm and am shipment id irrespective of Shipment type Id
+			return getShipmentIds(delegator,estimatedDeliveryDateString,shipmentTypeId, null); 
+		
+		}
+		// This will return the list of ShipmentIds for the selected 
+		public static List getShipmentIds(Delegator delegator,String estimatedDeliveryDateString,String shipmentTypeId, String routeId){
 			//TO DO:for now getting one shipment id  we need to get pm and am shipment id irrespective of Shipment type Id
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 			Timestamp estimatedDeliveryDate = UtilDateTime.nowTimestamp();
@@ -2596,6 +2610,9 @@ public class ByProductNetworkServices {
 			if(shipmentTypeId == null){
 				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.IN , UtilMisc.toList("AM_SHIPMENT","AM_SHIPMENT_SUPPL")));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				if(UtilValidate.isNotEmpty(routeId)){
+					conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
+				}
 				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
 				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
@@ -2632,7 +2649,9 @@ public class ByProductNetworkServices {
 					conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
 					conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
 				}
-				
+				if(UtilValidate.isNotEmpty(routeId)){
+					conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
+				}
 				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
 				try {
 					shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
@@ -2648,6 +2667,9 @@ public class ByProductNetworkServices {
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
 				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
 				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+				if(UtilValidate.isNotEmpty(routeId)){
+					conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
+				}
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
 				try {
 					shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
@@ -4427,7 +4449,7 @@ public class ByProductNetworkServices {
 	        return result;
 	    }
 	    
-	   /* public static Map<String, Object> getFacilityByCategory(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    public static Map<String, Object> getFacilityByCategory(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");	
 			String categoryTypeEnum = (String) context.get("categoryTypeEnum");
@@ -4458,7 +4480,7 @@ public class ByProductNetworkServices {
 	        }    
 	        
 	        return result;
-	    }*/
+	    }
 	    
 	    public static Map<String, Object> getFacilityGroupDetail(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
