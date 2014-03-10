@@ -43,7 +43,21 @@ under the License.
   <!-- ========================================================= -->
   <!-- org.ofbiz.party.agreement -->
   <!-- ========================================================= -->
-
+    <view-entity entity-name="PartyPersonAndEmployeeDetail"
+		package-name="org.ofbiz.party.party" title="Party Person And EmployeeDetail View Entity">
+		<member-entity entity-alias="PY" entity-name="Party" />
+		<member-entity entity-alias="PE" entity-name="Person" />
+		<member-entity entity-alias="ED" entity-name="EmployeeDetail" />
+		<alias-all entity-alias="PY" />
+		<alias-all entity-alias="PE" />
+		<alias-all entity-alias="ED" />		
+		<view-link entity-alias="PY" rel-entity-alias="PE" rel-optional="true">
+			<key-map field-name="partyId" />
+		</view-link>
+		<view-link entity-alias="PY" rel-entity-alias="ED" rel-optional="true">
+			<key-map field-name="partyId" />
+		</view-link>
+	</view-entity>
     <entity entity-name="Addendum"
             package-name="org.ofbiz.party.agreement"
             title="Addendum Entity">
