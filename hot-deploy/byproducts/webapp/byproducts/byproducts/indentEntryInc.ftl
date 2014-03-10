@@ -58,8 +58,9 @@
 function cleanUpGrid(value){
 	$('[name=boothId]').val(value);
 	$('[name=tempRouteId]').val('');
+	$('[name=routeId]').val('');
     $('span#boothTooltip').html('<label></label>');
-	//$('span#routeTooltip').html('<label></label>');
+	$('span#routeTooltip').html('<label></label>');
 	$('span#boothDepositTip').html('<label></label>');
 	//$('span#routeCrateTotal').html('<label></label>');
 	var emptyJson= [];
@@ -348,7 +349,7 @@ function updateGrid(){
 				$(_grid.getCellNode(cell.row, 1)).click();
 				e.stopPropagation();	
 			}else if (e.which == $.ui.keyCode.ENTER) {
-        		if (cell && cell.cell == 0) {
+        	  /*	if (cell && cell.cell == 0) {
 					_grid.getEditController().commitCurrentEdit();	
 					if (cell.row == 0) {
 						_grid.navigateRight();    
@@ -358,24 +359,27 @@ function updateGrid(){
         			}
         			e.stopPropagation();	
         			return false;
-        		}  
+        		}  */
         		_grid.getEditController().commitCurrentEdit();
-				//jQuery("#changeSave").click();
-				if(cell.row == data.length){
+				jQuery("#changeSave").click();
+				
+				/*if(cell.row == data.length){
 					$(_grid.getCellNode(cell.row, 1)).click();
 				}else{
 					$(_grid.getCellNode(cell.row, 1)).click();
-				}
+				} */
+				
 				//$(_grid.getCellNode(cell.row, 1)).click();   
             	e.stopPropagation();
             	e.preventDefault();        	
             }else if (e.keyCode == 27) {
+             //here ESC to Save grid
         		if (cell && cell.cell == 0) {
         			$(_grid.getCellNode(cell.row - 1, 1)).click();
         			return false;
         		}  
         		_grid.getEditController().commitCurrentEdit();
-				jQuery("#changeSave").click();   
+				   
             	e.stopPropagation();
             	e.preventDefault();        	
             }
