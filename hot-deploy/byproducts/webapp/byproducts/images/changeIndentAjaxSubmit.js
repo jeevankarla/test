@@ -106,6 +106,16 @@ $(function() {
 	      }	
 	 });
      $('#routeId').keyup(function (e) {
+ 	 	if (e.keyCode == 8 || e.keyCode == 46) {
+ 	 		updateGrid1([]); 
+ 	 		$("#boothId").val("");
+ 	 		$('span#boothTooltip').html('<label>'+''+'</label>');
+ 	 		jQuery("#routeId").focus();
+ 	 		
+ 	      }	
+ 	 });
+     
+     $('#routeId').keyup(function (e) {
  	 	if (e.which == $.ui.keyCode.ENTER) {
  	 		 $('#routeId').autocomplete('close');
  	 		 $("#boothId").focus();
