@@ -74,7 +74,7 @@ under the License.
 		<!--  kmf specific fields-->
         <field name="weeklyOff" type="short-varchar"></field>
          <field name="attendanceIndn" type="indicator"></field>
-         <field name="paymentMode" type="indicator"></field>
+         <field name="paymentMode" type="short-varchar"></field>
          <field name="motherTongue" type="short-varchar"></field>
          <field name="caste" type="short-varchar"></field>
          <field name="religion" type="short-varchar"></field>
@@ -98,7 +98,21 @@ under the License.
         <relation type="one" fk-name="EMPL_REC_EMPREF" rel-entity-name="Employment">
             <key-map field-name="employeeReferral" rel-field-name="partyIdTo"/>
         </relation>
-				
+		<relation type="one" fk-name="EMPL_REC_CAS" rel-entity-name="Enumeration">
+            <key-map field-name="caste" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_REC_VHT" rel-entity-name="Enumeration">
+            <key-map field-name="vehicleType" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_REC_QTP" rel-entity-name="Enumeration">
+            <key-map field-name="quarterType" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_REC_MT" rel-entity-name="Enumeration">
+            <key-map field-name="motherTongue" rel-field-name="enumId"/>
+        </relation>  		
+         <relation type="one" fk-name="EMPL_REC_RE" rel-entity-name="Enumeration">
+            <key-map field-name="religion" rel-field-name="enumId"/>
+        </relation>
 	</entity> 
 
     <entity entity-name="PartyQual" package-name="org.ofbiz.humanres.ability" title="Party Qualification Entity">
