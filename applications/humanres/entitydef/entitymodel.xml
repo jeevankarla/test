@@ -104,12 +104,6 @@ under the License.
         <relation type="one" fk-name="EMPL_REC_QTP" rel-entity-name="Enumeration">
             <key-map field-name="quarterType" rel-field-name="enumId"/>
         </relation>
-        <relation type="one" fk-name="EMPL_REC_MT" rel-entity-name="Enumeration">
-            <key-map field-name="motherTongue" rel-field-name="enumId"/>
-        </relation>  		
-         <relation type="one" fk-name="EMPL_REC_RE" rel-entity-name="Enumeration">
-            <key-map field-name="religion" rel-field-name="enumId"/>
-        </relation>
 	</entity> 
 
     <entity entity-name="PartyQual" package-name="org.ofbiz.humanres.ability" title="Party Qualification Entity">

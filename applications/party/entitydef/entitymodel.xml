@@ -2975,6 +2975,12 @@ under the License.
       <relation type="one" fk-name="PERSON_RESS_ENUM" title="ResidenceStatus" rel-entity-name="Enumeration">
         <key-map field-name="residenceStatusEnumId" rel-field-name="enumId"/>
       </relation>
+      <relation type="one" fk-name="PERSON_REC_MT" rel-entity-name="Enumeration">
+            <key-map field-name="motherTongue" rel-field-name="enumId"/>
+        </relation>  		
+         <relation type="one" fk-name="PERSON_REC_RE" rel-entity-name="Enumeration">
+            <key-map field-name="religion" rel-field-name="enumId"/>
+        </relation>
       <index name="FIRST_NAME_IDX">
         <index-field name="firstName"/>
       </index>
