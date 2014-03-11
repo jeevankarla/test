@@ -281,7 +281,7 @@ function updateGrid(){
 		var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
 			{id:"cQuantity", name:"Qty(Pkt)", field:"cQuantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-			{id:"quantity", name:"Qty(Crate/Can)", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"quantity", name:"Qty(Crate/Can)", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
 			<#if screenFlag?exists && screenFlag != 'DSCorrection'>
 				<#--{id:"supply", name:"C/P/B ", field:"uomId", width:35, minWidth:35, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
 				{id:"LtrKgs", name:"Ltr/Kgs", field:"LtrKgs", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, focusable :false , align:"right"},-->
