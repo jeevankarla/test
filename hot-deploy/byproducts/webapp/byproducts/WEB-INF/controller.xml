@@ -600,6 +600,11 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DealerBankChallanPDF"/>
     </request-map>
+     <request-map uri="IndentManualCollection">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="IndentManualCollection"/>
+    </request-map>
+    
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -673,6 +678,7 @@
 	<view-map name="createInstBillingConfig" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createInstBillingConfig"/>
 	<view-map name="PartywiseBalanceAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PartywiseBalanceAbstractPDF" content-type="application/pdf"/>
 	<view-map name="DealerBankChallanPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanPDF" content-type="application/pdf"/>
+	<view-map name="IndentManualCollection" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentManualCollection" content-type="application/pdf"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>
