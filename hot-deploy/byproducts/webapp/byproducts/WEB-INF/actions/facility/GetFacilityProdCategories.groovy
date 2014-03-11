@@ -25,7 +25,7 @@ indentProdCatList = [];
 dctx = dispatcher.getDispatchContext();
 
 
-result = ByProductNetworkServices.getFacilityIndentQtyCategories(delegator, dctx.getDispatcher(),UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
+result = ByProductNetworkServices.getFacilityIndentQtyCategories(dctx,UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
 indentQtyCatMap = result.get("indentQtyCategory");
 productCategories.each{ eachItem ->
 	indentCatMap = [:];

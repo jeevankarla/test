@@ -174,8 +174,8 @@ function updateGrid(){
 	//var uomMap = ${StringUtil.wrapString(uomMapJSON)!'{}'};
 	var productQtyInc = ${StringUtil.wrapString(productQtyIncJSON)!'{}'};
 	var priceTags;
+	var qtyInPieces;
 	var prodIndentQtyCat;
-	//var productCrates = ${StringUtil.wrapString(productCratesJSON)!'{}'};
 		
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
@@ -280,10 +280,11 @@ function updateGrid(){
 		}
 		var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
-			{id:"cQuantity", name:"Quantity", field:"cQuantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"cQuantity", name:"Qty(Pkt)", field:"cQuantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"quantity", name:"Qty(Crate/Can)", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			<#if screenFlag?exists && screenFlag != 'DSCorrection'>
-				{id:"supply", name:"C/P/B ", field:"uomId", width:35, minWidth:35, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
-				{id:"LtrKgs", name:"Ltr/Kgs", field:"LtrKgs", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, focusable :false , align:"right"},
+				<#--{id:"supply", name:"C/P/B ", field:"uomId", width:35, minWidth:35, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
+				{id:"LtrKgs", name:"Ltr/Kgs", field:"LtrKgs", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, focusable :false , align:"right"},-->
 			</#if>
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
@@ -317,11 +318,11 @@ function updateGrid(){
 				$(_grid.getCellNode(cell.row+1, 0)).click();
 				e.stopPropagation();
 			}
-			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data.length && cell.cell == 1){
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data.length && cell.cell == 2){
 				_grid.getEditController().commitCurrentEdit();	
-				$(_grid.getCellNode(0, 1)).click();
+				$(_grid.getCellNode(0, 2)).click();
 				e.stopPropagation();
-			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data.length-1) && cell.cell == 1){
+			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data.length-1) && cell.cell == 2){
 				_grid.getEditController().commitCurrentEdit();
 				_grid.gotoCell(data.length, 0, true);
 				$(_grid.getCellNode(data.length, 0)).edit();
@@ -330,13 +331,13 @@ function updateGrid(){
 			}
 			
 			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
-				&& cell.row == data.length && cell.cell == 1){
+				&& cell.row == data.length && cell.cell == 2){
   				_grid.getEditController().commitCurrentEdit();	
 				$(_grid.getCellNode(cell.row, 0)).click();
 				e.stopPropagation();
 			
 			}else if (e.which == $.ui.keyCode.RIGHT &&
-				cell && (cell.cell == 1) && 
+				cell && (cell.cell == 2) && 
 				cell.row != data.length) {
 				_grid.getEditController().commitCurrentEdit();	
 				$(_grid.getCellNode(cell.row+1, 0)).click();
@@ -346,7 +347,7 @@ function updateGrid(){
 				cell && (cell.cell == 0) && 
 				cell.row != data.length) {
 				_grid.getEditController().commitCurrentEdit();	
-				$(_grid.getCellNode(cell.row, 1)).click();
+				$(_grid.getCellNode(cell.row, 2)).click();
 				e.stopPropagation();	
 			}else if (e.which == $.ui.keyCode.ENTER) {
         	  /*	if (cell && cell.cell == 0) {
@@ -355,7 +356,7 @@ function updateGrid(){
 						_grid.navigateRight();    
 						_grid.navigateUp(); 
 					} else {
-        				$(_grid.getCellNode(cell.row - 1, 1)).click();
+        				$(_grid.getCellNode(cell.row - 1, 2)).click();
         			}
         			e.stopPropagation();	
         			return false;
@@ -364,18 +365,18 @@ function updateGrid(){
 				jQuery("#changeSave").click();
 				
 				/*if(cell.row == data.length){
-					$(_grid.getCellNode(cell.row, 1)).click();
+					$(_grid.getCellNode(cell.row, 2)).click();
 				}else{
-					$(_grid.getCellNode(cell.row, 1)).click();
+					$(_grid.getCellNode(cell.row, 2)).click();
 				} */
 				
-				//$(_grid.getCellNode(cell.row, 1)).click();   
+				//$(_grid.getCellNode(cell.row, 2)).click();   
             	e.stopPropagation();
             	e.preventDefault();        	
             }else if (e.keyCode == 27) {
              //here ESC to Save grid
         		if (cell && cell.cell == 0) {
-        			$(_grid.getCellNode(cell.row - 1, 1)).click();
+        			$(_grid.getCellNode(cell.row - 1, 2)).click();
         			return false;
         		}  
         		_grid.getEditController().commitCurrentEdit();
@@ -399,7 +400,8 @@ function updateGrid(){
       		_grid.updateRowCount();
       		_grid.render();
     	});
-    	      
+    	
+    	   
         _grid.onCellChange.subscribe(function(e,args) {
         	
         	if (args.cell == 0 || args.cell == 1) {
@@ -407,6 +409,7 @@ function updateGrid(){
 				var qty = parseFloat(data[args.row]["cQuantity"]);
 				var price = parseFloat(priceTags[prod]);
 				var indentCat = prodIndentQtyCat[prod];
+				var qtyInBulk = qtyInPieces[prod];
 				if(isNaN(price)){
 					price = 0;
 				}
@@ -414,15 +417,16 @@ function updateGrid(){
 					qty = 0;
 				}
 				
-				if(indentCat == "CRATE"){
-					data[args.row]["uomId"] = "CR";
-				}
-				else if(indentCat == "CAN"){
-					data[args.row]["uomId"] = "CN";
+				if(indentCat == null && indentCat == undefined){
+					data[args.row]["quantity"] = "";
 				}
 				else{
-					data[args.row]["uomId"] = "P";
+					if(!isNaN(qty) && qtyInBulk != 0){
+						data[args.row]["quantity"] = parseFloat(Math.round((qty/qtyInBulk)*100)/100);
+					}
+					
 				}
+				
 				var roundedAmount;
 				if(screenFlag != 'DSCorrection'){
 					var crateQty = parseFloat(qtyInPieces[prod]);
@@ -437,9 +441,58 @@ function updateGrid(){
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
+				
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
 				_grid.updateRow(args.row);
+				var totalAmount = 0;
+				for (i = 0; i < data.length; i++) {
+					totalAmount += data[i]["amount"];
+				}
+				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+			
+				if(amt > 0 ){
+					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+				}
+				else{
+					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+				}
+				jQuery("#totalAmount").html(dispText);
+			}
+			
+			if (args.cell == 2) {
+				var prod = data[args.row]["cProductId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
+				var indentCat = prodIndentQtyCat[prod];
+				var qtyInBulk = qtyInPieces[prod];
+				var price = parseFloat(priceTags[prod]);
+				if(indentCat == null && indentCat == undefined){
+					data[args.row]["cQuantity"] = qty;
+				}
+				else{
+					if(!isNaN(qty)){
+						data[args.row]["cQuantity"] = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
+					}
+					
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qty)){
+					qty = 0;
+				}
+				
+				
+				var roundedAmount = Math.round(qty*price);
+				
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				
+				data[args.row]["unitPrice"] = price;
+				data[args.row]["amount"] = roundedAmount;
+				_grid.updateRow(args.row);
+				
 				var totalAmount = 0;
 				for (i = 0; i < data.length; i++) {
 					totalAmount += data[i]["amount"];
@@ -463,7 +516,7 @@ function updateGrid(){
 				if(prod != null && screenFlag != 'DSCorrection' ){
 					var supType = prodIndentQtyCat[prod];
 					if(supType !=null){
-						data[args.row]["uomId"] = supType.charAt(0);
+						//data[args.row]["uomId"] = supType.charAt(0);
 						_grid.updateRow(args.row);
 					}
 				}
@@ -571,13 +624,14 @@ function updateGrid(){
 			var qty = parseFloat(data[i]["cQuantity"]);
 			var price = parseFloat(priceTags[prod]);
 			var indentCat = prodIndentQtyCat[prod];
+			var qtyInBulk = qtyInPieces[prod];
 			if(isNaN(price)){
 				price = 0;
 			}
 			if(isNaN(qty)){
 				qty = 0;
 			}
-			if(indentCat == "CRATE"){
+			/*if(indentCat == "CRATE"){
 				data[i]["uomId"] = "CR";
 			}
 			else if(indentCat == "CAN"){
@@ -585,8 +639,17 @@ function updateGrid(){
 			}
 			else{
 				data[i]["uomId"] = "P";
-			}
+			}*/
 			
+			if(indentCat == null && indentCat == undefined){
+				data[i]["quantity"] = "";
+			}
+			else{
+				if(!isNaN(qty) && qtyInBulk != 0){
+					data[i]["quantity"] = parseFloat(Math.round((qty/qtyInBulk)*100)/100);
+				}
+			}
+				
 			data[i]["unitPrice"] = price;
 			var amount = Math.round(qty*price);
 			if(isNaN(amount)){

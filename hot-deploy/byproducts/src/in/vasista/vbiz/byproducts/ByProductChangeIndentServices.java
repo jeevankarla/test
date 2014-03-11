@@ -293,23 +293,23 @@ public class ByProductChangeIndentServices {
     		List<GenericValue> packetIndentProducts = ProductWorker.getProductsByCategory(delegator ,"PACKET_INDENT" ,UtilDateTime.getDayStart(effectiveDate));
     		List<String> crateIndentProductList = EntityUtil.getFieldListFromEntityList( crateIndentProducts, "productId", true);
     		List<String> packetIndentProductList = EntityUtil.getFieldListFromEntityList(packetIndentProducts, "productId", true);*/
-    		Map prodIndentCat = (Map)ByProductNetworkServices.getFacilityIndentQtyCategories(delegator, dctx.getDispatcher(),UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId)).get("indentQtyCategory");
+    		Map prodIndentCat = (Map)ByProductNetworkServices.getFacilityIndentQtyCategories(dctx,UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId)).get("indentQtyCategory");
     		List crateCanIndentProductList = FastList.newInstance();
     		if(UtilValidate.isNotEmpty(prodIndentCat)){
     			String prodId = "";
     			String categoryType = "";
     			Iterator mapIterator = prodIndentCat.entrySet().iterator();
-  			while (mapIterator.hasNext()) {
-  				Map.Entry entry = (Entry) mapIterator.next();
-    			prodId = (String)entry.getKey();
-  	        	categoryType = (String)entry.getValue();
-  	        	if((categoryType.equals("CRATE") || categoryType.equals("CAN")) && !productSubscriptionTypeId.equals("EMP_SUBSIDY")){
-  	        		crateCanIndentProductList.add(prodId);
-  	        	}
-      		}
-    	}
-    	List<GenericValue> subscriptionProdList =FastList.newInstance();
-  		List conditionList = UtilMisc.toList(
+	  			while (mapIterator.hasNext()) {
+	  				Map.Entry entry = (Entry) mapIterator.next();
+	    			prodId = (String)entry.getKey();
+	  	        	categoryType = (String)entry.getValue();
+	  	        	if((categoryType.equals("CRATE") || categoryType.equals("CAN")) && !productSubscriptionTypeId.equals("EMP_SUBSIDY")){
+	  	        		crateCanIndentProductList.add(prodId);
+	  	        	}
+	      		}
+    		}
+    		List<GenericValue> subscriptionProdList =FastList.newInstance();
+    		List conditionList = UtilMisc.toList(
   				  EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
   		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
   		  /*conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));*/  		  
@@ -336,18 +336,20 @@ public class ByProductChangeIndentServices {
   				  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
   				  BigDecimal crateQuantity = BigDecimal.ZERO;
   				  if(crateCanIndentProductList.contains(productId)){
-  					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
-  					  crateQuantity = quantity;
-  					  quantity = ByProductNetworkServices.convertCratesToPackets(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "crateQuantity",crateQuantity));
+  					  //GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
+  					  crateQuantity = ByProductNetworkServices.convertPacketsToCrates(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "packetQuantity",quantity));
+  					  //crateQuantity = quantity;
+  					  //quantity = ByProductNetworkServices.convertCratesToPackets(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "crateQuantity",crateQuantity));
   	    		  
-  				  }else{
+  				  }
+  				  /*else{
   					  GenericValue product = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId",EntityOperator.EQUALS, productId )));
   					  //crateQuantity = quantity;
   					  if(UtilValidate.isNotEmpty(product)){
   						  crateQuantity = ByProductNetworkServices.convertPacketsToCrates(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "packetQuantity",quantity));
   					  }
   	    		  
-  				  }
+  				  }*/
   				  List<GenericValue> subscriptionProductsList =FastList.newInstance();
   				  subscriptionProductsList = EntityUtil.filterByCondition(subscriptionProdList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
   				  /*List conditionList = UtilMisc.toList(

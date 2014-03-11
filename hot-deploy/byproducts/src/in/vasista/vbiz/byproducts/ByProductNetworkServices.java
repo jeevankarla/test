@@ -890,7 +890,7 @@ public class ByProductNetworkServices {
 	    		inputCtx.put("userLogin", userLogin);
 	    		inputCtx.put("supplyDate",dayBegin);
 	    		inputCtx.put("facilityId",boothId);
-	    		Map qtyResultMap = getFacilityIndentQtyCategories(delegator, dctx.getDispatcher(), inputCtx);
+	    		Map qtyResultMap = getFacilityIndentQtyCategories(dctx, inputCtx);
 	    		prodIndentQtyCat = (Map)qtyResultMap.get("indentQtyCategory");
 	    		qtyInPieces = (Map)qtyResultMap.get("qtyInPieces");
 	    		result.put("prodIndentQtyCat", prodIndentQtyCat);
@@ -943,8 +943,9 @@ public class ByProductNetworkServices {
 	    				qtyCategory = (String)prodIndentQtyCat.get(productId);
 	    			}
 	    			
-	    			BigDecimal quantityIncluded = (EntityUtil.getFirst(EntityUtil.filterByAnd(productList, UtilMisc.toMap("productId",productId)))).getBigDecimal("quantityIncluded");
-	    			if(UtilValidate.isEmpty(changeQuantityMap.get(productId))){
+	    			changeQuantityMap.put(productId, product.getBigDecimal("quantity"));
+	    			//BigDecimal quantityIncluded = (EntityUtil.getFirst(EntityUtil.filterByAnd(productList, UtilMisc.toMap("productId",productId)))).getBigDecimal("quantityIncluded");
+	    			/*if(UtilValidate.isEmpty(changeQuantityMap.get(productId))){
 	    				changeQuantityMap.put(productId, product.getBigDecimal("quantity")); 
 	    				if(UtilValidate.isNotEmpty(qtyCategory) && (qtyCategory.equals("CRATE") || qtyCategory.equals("CAN")) && !productSubscriptionTypeId.equals("EMP_SUBSIDY")){//if(crateIndentProductList.contains(productId)){
 	    					if(UtilValidate.isEmpty(product.getBigDecimal("crateQuantity"))){
@@ -961,7 +962,7 @@ public class ByProductNetworkServices {
 	    				if(UtilValidate.isNotEmpty(qtyCategory) && (qtyCategory.equals("CRATE") || qtyCategory.equals("CAN"))){//if(crateIndentProductList.contains(productId)){
 	    					changeQuantityMap.put(productId, product.getBigDecimal("crateQuantity"));
 	    				}
-	    			}
+	    			}*/
 	            }
 	    		
 	    		
@@ -1000,8 +1001,8 @@ public class ByProductNetworkServices {
 	            	tempChangeProdMap.put("cProductId", productId);
 	            	tempChangeProdMap.put("cProductName", product.getString("brandName")+" [ "+product.getString("description")+"]");
 	            	tempChangeProdMap.put("cQuantity","");
-	            	String qtyIndentCat = (String)prodIndentQtyCat.get(productId);
-	            	if(UtilValidate.isNotEmpty(qtyIndentCat) && qtyIndentCat.equals("CRATE")){
+	            	//String qtyIndentCat = (String)prodIndentQtyCat.get(productId);
+	            	/*if(UtilValidate.isNotEmpty(qtyIndentCat) && qtyIndentCat.equals("CRATE")){
 	            		tempChangeProdMap.put("indentProdCat","CR");
 	            	}
 	            	else if(UtilValidate.isNotEmpty(qtyIndentCat) && qtyIndentCat.equals("CAN")){
@@ -1009,7 +1010,7 @@ public class ByProductNetworkServices {
 	            	}
 	            	else{
 	            		tempChangeProdMap.put("indentProdCat","P");
-	            	}
+	            	}*/
 	            	
 	            	/*if(crateIndentProductList.contains(productId)){
 	            		tempChangeProdMap.put("indentProdCat","C");
@@ -1020,6 +1021,11 @@ public class ByProductNetworkServices {
 	            	}*/
 	            	if(UtilValidate.isNotEmpty(changeQuantityMap.get(productId))){
 	            		tempChangeProdMap.put("cQuantity", changeQuantityMap.get(productId));
+	            		/*Map prodQtyMap = (Map)changeQuantityMap.get(productId);
+	            		Map tempMap = FastMap.newInstance();
+	            		tempMap.put("quantity", prodQtyMap.get("quantity"));
+	            		tempMap.put("crateQuantity", prodQtyMap.get("crateQuantity"));
+	            		tempChangeProdMap.put("cQuantity", tempMap);*/
 	            	}/*else{
 	            		tempChangeProdMap.put("cQuantity", prevQuantityMap.get(productId));
 	            	}*/
@@ -4541,8 +4547,9 @@ public class ByProductNetworkServices {
 	        
 	        return result;
 	    }
-	    public static Map<String, Object> getFacilityIndentQtyCategories(Delegator delegator, LocalDispatcher dispatcher, Map<String, ? extends Object> context) {
+	    public static Map<String, Object> getFacilityIndentQtyCategories(DispatchContext ctx, Map<String, ? extends Object> context) {
 	        Map<String, Object> result = FastMap.newInstance();
+	        Delegator delegator = ctx.getDelegator();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");          
 	        String facilityId = (String) context.get("facilityId");
 	        Timestamp supplyDate = (Timestamp) context.get("supplyDate");
@@ -4554,7 +4561,7 @@ public class ByProductNetworkServices {
 	        List<GenericValue> productList =FastList.newInstance();
 	    	List<GenericValue> productCategory = FastList.newInstance();
 	    	List productCategoryIds = FastList.newInstance();
-	    	Map quantityIncludedMap = FastMap.newInstance();
+	    	Map qtyInPiecesMap = FastMap.newInstance();
 	    	BigDecimal crateLtrQty = BigDecimal.ZERO;
 	        try{
 	        	productCategory = delegator.findList("ProductCategory", EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "PACKING_PRODUCT"), UtilMisc.toSet("productCategoryId"), null, null, false);
@@ -4567,11 +4574,20 @@ public class ByProductNetworkServices {
 	        	*/EntityCondition productsListCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	        	List<String> orderBy = UtilMisc.toList("sequenceNum");
 	    	
-	    		productList =delegator.findList("ProductAndCategoryMember", productsListCondition,null,orderBy, null, false);
+	    		productList =delegator.findList("ProductAndCategoryMember", productsListCondition,UtilMisc.toSet("productId", "productCategoryId"),orderBy, null, false);
 	    		
+	    		Map resultQtyMap = (Map)getProductCratesAndCans(ctx, UtilMisc.toMap("userLogin", userLogin));
+		    	Map cratesMap = (Map)resultQtyMap.get("piecesPerCrate");
+		    	Map cansMap = (Map)resultQtyMap.get("piecesPerCan");
+		    	
 	    		for(GenericValue productCat : productList){
 	    			indentQtyCategory.put(productCat.getString("productId"), productCat.getString("productCategoryId"));
-	    			quantityIncludedMap.put(productCat.getString("productId"), (BigDecimal)productCat.get("quantityIncluded"));
+	    			if(UtilValidate.isNotEmpty(cratesMap) && UtilValidate.isNotEmpty(cratesMap.get(productCat.getString("productId")))){
+	    				qtyInPiecesMap.put(productCat.getString("productId"), (BigDecimal)cratesMap.get(productCat.getString("productId")));
+	    			}
+	    			if(UtilValidate.isNotEmpty(cansMap) && UtilValidate.isNotEmpty(cansMap.get(productCat.getString("productId")))){
+	    				qtyInPiecesMap.put(productCat.getString("productId"), (BigDecimal)cansMap.get(productCat.getString("productId")));
+	    			}
 	            }
 	    		
 	    		/*List<GenericValue> facWiseProdCat = delegator.findList("FacilityWiseProductCategory", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
@@ -4589,21 +4605,6 @@ public class ByProductNetworkServices {
 	    		Debug.logError(e.toString(), module);
 				return ServiceUtil.returnError(e.toString());
 			}
-	    	
-	    	Map qtyInPiecesMap = FastMap.newInstance();
-	    	/*for ( Map.Entry<String, String> entry : indentQtyCategory.entrySet()){
-				
-	        	String prodId = (String)entry.getKey();
-	        	String qtyCat = (String)entry.getValue();
-	        	if(qtyCat.equals("CRATE")){
-	        		BigDecimal qtyInc = (BigDecimal)quantityIncludedMap.get(prodId);
-	        		BigDecimal packetQty = (crateLtrQty.divide(qtyInc,2,rounding)).setScale(2, rounding);
-	    			qtyInPiecesMap.put(prodId, packetQty);
-	    		}
-	    		else{
-	    			qtyInPiecesMap.put(prodId, BigDecimal.ONE);
-	    		}
-			}*/
 	    	result.put("qtyInPieces", qtyInPiecesMap);
 	    	result.put("indentQtyCategory", indentQtyCategory);
 	        return result;
