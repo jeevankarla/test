@@ -2953,6 +2953,8 @@ under the License.
       <field name="yearsWithEmployer" type="numeric"></field>
       <field name="monthsWithEmployer" type="numeric"></field>
       <field name="existingCustomer" type="indicator"></field>
+      <field name="motherTongue" type="short-varchar"></field>
+      <field name="religion" type="short-varchar"></field>
       <field name="cardId" type="id-long" ></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">

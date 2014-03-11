@@ -75,9 +75,6 @@ under the License.
         <field name="weeklyOff" type="short-varchar"></field>
          <field name="attendanceIndn" type="indicator"></field>
          <field name="paymentMode" type="short-varchar"></field>
-         <field name="motherTongue" type="short-varchar"></field>
-         <field name="caste" type="short-varchar"></field>
-         <field name="religion" type="short-varchar"></field>
         <field name="canteenFacin" type="indicator"></field>
         <field name="vehicleType" type="short-varchar"></field>
         <field name="quarterType" type="short-varchar"></field>
