@@ -627,7 +627,21 @@
 		<set field="newEntity.employeeReferral" from-field="parameters.employeeReferral" />
 		<set field="newEntity.recConsultancy" from-field="parameters.recConsultancy" />
 		<set field="newEntity.backgroundVerification" from-field="parameters.backgroundVerification" />
-		<set field="newEntity.typeOfInsurance" from-field="parameters.typeOfInsurance" />		
+		<set field="newEntity.typeOfInsurance" from-field="parameters.typeOfInsurance" />	
+		<set field="newEntity.vehicleType" from-field="parameters.vehicleType" />
+		<set field="newEntity.quarterType" from-field="parameters.quarterType" />
+		<set field="newEntity.religion" from-field="parameters.religion" />
+		<set field="newEntity.motherTongue" from-field="parameters.motherTongue" />
+		<set field="newEntity.weeklyOff" from-field="parameters.weeklyOff" />
+		<set field="newEntity.attendanceIndn" from-field="parameters.attendanceIndn" />
+		<log level="verbose" message="=======${parameters.paymentMode}"></log>
+		<set field="newEntity.paymentMode" from-field="parameters.paymentMode" />
+		<set field="newEntity.motherTongue" from-field="parameters.motherTongue" />
+		<set field="newEntity.canteenFacin" from-field="parameters.canteenFacin" />
+		<set field="newEntity.companyBus" from-field="parameters.companyBus" />
+		<set field="newEntity.busRouteNo" from-field="parameters.busRouteNo" />
+		<set field="newEntity.flexibleShift" from-field="parameters.flexibleShift" />
+		<log level="verbose" message="===${newEntity}"></log>
 		<create-value value-field="newEntity" />
     </simple-method>
 

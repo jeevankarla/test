@@ -102,6 +102,76 @@
 		<field name="previousDesignation" title="${uiLabelMap.Designation}"><text></text></field>
 		<field name="prevEmplFromDate" title="${uiLabelMap.DateOfJoining}"><date-time></date-time></field>
 		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><text /></field>
+		<field name="vehicleType" title="${uiLabelMap.VehicleType}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_VHT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="quarterType" title="${uiLabelMap.QuarterType}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_QTP" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="motherTongue" title="${uiLabelMap.MotherTongue}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_MT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="religion" title="${uiLabelMap.Religion}">
+		     <drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="Sunday"/>
+				<option key="Monday" />
+				<option key="Tuesday"/>
+				<option key="Wednesday" />
+				<option key="Thursday"/>
+				<option key="Friday" />
+				<option key="SaturDay" />
+			</drop-down>
+		</field>
+		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><text /></field>
+		<field name="paymentMode" title="${uiLabelMap.PaymentMode}">	
+			<drop-down allow-empty="true">
+                <entity-options entity-name="PaymentMethodType" description="${description}" key-field-name="paymentMethodTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+		<field name="canteenFacin" title="${uiLabelMap.CanteenFacin}">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>
+		</field>
+		<field name="companyBus" title="${uiLabelMap.CompanyBus}">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>		
+		</field>
+		<field name="busRouteNo" title="${uiLabelMap.BusRouteNo}"><text /></field>
+		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>
+		</field>
 		<field name="prevEmplThruDate" title="${uiLabelMap.FormFieldTitle_terminationDate}"><date-time /></field>
 		<field name="referenceName" title="${uiLabelMap.ReferenceName}"><text></text></field>
 		<field name="referenceEmployer" title="${uiLabelMap.ReferenceEmployer}"><text></text></field>
@@ -175,6 +245,17 @@
 				<sort-field name="residentialNumber" />
 				<sort-field name="emailAddress" />
 				<sort-field name="employeeBankAccNo" />
+				<sort-field name="vehicleType" />
+				<sort-field name="quarterType" />
+				<sort-field name="motherTongue" />
+				<sort-field name="religion" />
+				<sort-field name="weeklyOff" />
+				<sort-field name="attendanceIndn" />
+				<sort-field name="paymentMode" />
+				<sort-field name="canteenFacin" />
+				<sort-field name="companyBus" />
+				<sort-field name="busRouteNo" />
+				<sort-field name="flexibleShift" />
 			</field-group>
 			<field-group title="${uiLabelMap.Previous}" collapsible="true" initially-collapsed="true">
 				<sort-field name="previousEmployer" />
@@ -218,8 +299,72 @@
     	<field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><text></text></field>
 		<field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><text></text></field>	
     	<field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}" ><text></text></field>
-		<field name="panId" title="${uiLabelMap.Pan}"></field> 
+		<field name="panId" title="${uiLabelMap.Pan}"><text/></field> 
 		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><text/></field>
+		<field name="vehicleType" title="${uiLabelMap.VehicleType}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_VHT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="quarterType" title="${uiLabelMap.QuarterType}">
+		    <drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_QTP" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="motherTongue" title="${uiLabelMap.MotherTongue}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_MT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="religion" title="${uiLabelMap.Religion}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>
+		</field>
+		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><text /></field>
+		<field name="paymentMode" title="${uiLabelMap.PaymentMode}">
+			<drop-down allow-empty="true">
+                <entity-options entity-name="PaymentMethodType" description="${description}" key-field-name="paymentMethodTypeId">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+		<field name="canteenFacin" title="${uiLabelMap.CanteenFacin}">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down></field>
+		<field name="companyBus" title="${uiLabelMap.CompanyBus}">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>
+		</field>
+		<field name="busRouteNo" title="${uiLabelMap.BusRouteNo}"><text /></field>
+		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}">
+			<drop-down allow-empty="false" no-current-selected-key="Y">
+				<option key="Y"></option>
+				<option key="N" />
+			</drop-down>
+		</field>
 		<field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><text></text></field>
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
          	<drop-down allow-empty="false">             
@@ -280,6 +425,17 @@
             <sort-field name="panId"/>
             <sort-field name="groupName"/>
             <sort-field name="employeeBankAccNo"/>          
+		    <sort-field name="vehicleType" />
+			<sort-field name="quarterType" />
+			<sort-field name="motherTongue" />
+			<sort-field name="religion" />   
+			<sort-field name="weeklyOff" />
+			<sort-field name="attendanceIndn" />
+			<sort-field name="paymentMode" />
+			<sort-field name="canteenFacin" />
+			<sort-field name="companyBus" />
+			<sort-field name="busRouteNo" />
+			<sort-field name="flexibleShift" />     
             <sort-field name="submitButton"/>
             <sort-field name="cancelLink"/>
       	</sort-order>
@@ -322,6 +478,17 @@
         <field name="panId" title="${uiLabelMap.Pan}"><display-entity entity-name="Person" key-field-name="partyId" description="${panId}" ></display-entity></field>
         <field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${typeOfInsurance}"></display-entity></field>
 		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${employeeBankAccNo}"></display-entity></field>       	
+		<field name="vehicleType" title="${uiLabelMap.VehicleType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+		<field name="quarterType" title="${uiLabelMap.QuarterType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+		<field name="motherTongue" title="${uiLabelMap.MotherTongue}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+		<field name="religion" title="${uiLabelMap.Religion}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${weeklyOff}"></display-entity></field>
+		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${attendanceIndn}"></display-entity></field>
+		<field name="paymentMode" title="${uiLabelMap.PaymentMode}"><display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"></display-entity></field>
+		<field name="canteenFacin" title="${uiLabelMap.CanteenFacin}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${canteenFacin}"></display-entity></field>
+		<field name="companyBus" title="${uiLabelMap.CompanyBus}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${companyBus}"></display-entity></field>
+		<field name="busRouteNo" title="${uiLabelMap.BusRouteNo}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${busRouteNo}"></display-entity></field>
+		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${flexibleShift}"></display-entity></field>
         <field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
         <field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportExpireDate}" ></display-entity></field>
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>       

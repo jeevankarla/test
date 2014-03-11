@@ -2564,5 +2564,40 @@
 	<property key="HumanResEmployeeInOutReport">
         <value xml:lang="en">Employee In/Out Puch Report</value>
     </property>  
-          
+      <property key="Caste">
+		<value xml:lang="en">Caste</value>
+	</property>
+	<property key="VehicleType">
+		<value xml:lang="en">Vehicle Type</value>
+	</property>
+	<property key="QuarterType">
+		<value xml:lang="en">Quarter Type</value>
+	</property>
+	<property key="MotherTongue">
+		<value xml:lang="en">Mother Tongue</value>
+	</property> 
+	<property key="Religion">
+		<value xml:lang="en">Religion</value>
+	</property>   
+	<property key="WeeklyOff">
+		<value xml:lang="en">Weekly Off</value>
+	</property>
+	<property key="AttendanceIndn">
+		<value xml:lang="en">Attendance</value>
+	</property>
+	<property key="PaymentMode">
+		<value xml:lang="en">Payment Mode</value>
+	</property> 
+	<property key="CanteenFacin">
+		<value xml:lang="en">canteen Facility</value>
+	</property>   
+	<property key="CompanyBus">
+		<value xml:lang="en">Company Bus</value>
+	</property>
+	<property key="BusRouteNo">
+		<value xml:lang="en">Bus Route No</value>
+	</property>
+	<property key="FlexibleShift">
+		<value xml:lang="en">Flexible Shift</value>
+	</property> 
 </resource>
