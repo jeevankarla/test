@@ -80,9 +80,9 @@ under the License.
 				<fo:table>
 					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="760pt"/>
-					<fo:table-column column-width="60pt"/>
-					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="40pt"/>
+					<fo:table-column column-width="45pt"/>
+					<fo:table-column column-width="60pt"/>
 					<fo:table-body>
 					<#-- 
 						<fo:table-row>
@@ -243,8 +243,8 @@ under the License.
 				<fo:table>
 					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="760pt"/>
-					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="50pt"/>
+					<fo:table-column column-width="40pt"/>
+					<fo:table-column column-width="45pt"/>
 					<fo:table-column column-width="60pt"/>
 					<fo:table-body>
 						<fo:table-row>
@@ -394,14 +394,14 @@ under the License.
 							</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="6pt" text-align="left"><#if (boothDetails.getValue().get("subsidy"))?has_content>${boothDetails.getValue().get("subsidy")?if_exists}</#if></fo:block>
+								<fo:block font-size="5pt" text-align="left"><#if (boothDetails.getValue().get("subsidy"))?has_content>${boothDetails.getValue().get("subsidy")?if_exists}</#if></fo:block>
 							</fo:table-cell>
 							
 							<fo:table-cell>
 								<fo:block font-size="6pt" text-align="left">${boothDetails.getValue().get("amount")?if_exists?string("#0.00")}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="5pt" text-align="left"><fo:block font-size="7pt" text-align="left">${boothDetails.getValue().get("paymentMode")?if_exists}</fo:block></fo:block>
+								<fo:block font-size="5pt" text-align="left" keep-together="always"><fo:block font-size="7pt" text-align="left">${boothDetails.getValue().get("paymentMode")?if_exists}</fo:block></fo:block>
 							</fo:table-cell>
 						</fo:table-row>	
 					</fo:table-body>
@@ -414,9 +414,9 @@ under the License.
 			<fo:table>
 				<fo:table-column column-width="80pt"/>
 				<fo:table-column column-width="760pt"/>
-				<fo:table-column column-width="80pt"/>
-				<fo:table-column column-width="50pt"/>
-				<fo:table-column column-width="20pt"/>
+				<fo:table-column column-width="40pt"/>
+				<fo:table-column column-width="45pt"/>
+				<fo:table-column column-width="60pt"/>
 				<fo:table-body>
 					<fo:table-row>
 						<fo:table-cell>

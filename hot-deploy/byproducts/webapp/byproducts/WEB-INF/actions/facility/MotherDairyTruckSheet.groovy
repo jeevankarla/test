@@ -33,6 +33,8 @@ if(parameters.estimatedShipDate){
 }
 context.put("estimatedDeliveryDate", estimatedDeliveryDateTime);
 productNames = [:];
+paymentMethodTypeList = [];
+paymentMethodTypeMap = [:];
 
 allProductsList = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",estimatedDeliveryDateTime));
 
@@ -40,7 +42,10 @@ allProductsList.each{ eachProd ->
 	productNames.put(eachProd.productId, eachProd.brandName);
 }
 context.productNames = productNames;
-
+paymentMethodTypeList = delegator.findList("PaymentMethodType", null,UtilMisc.toSet("paymentMethodTypeId","description"),null, null, false);
+paymentMethodTypeList.each{ paymentMethodType ->
+	paymentMethodTypeMap.put(paymentMethodType.paymentMethodTypeId ,paymentMethodType.description );
+}
 lmsProductsList=ProductWorker.getProductsByCategory(delegator ,"LMS" ,null);
 byProductsList=  EntityUtil.filterByCondition(allProductsList, EntityCondition.makeCondition("productId",EntityOperator.NOT_IN , lmsProductsList.productId));
 
@@ -172,7 +177,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							if(UtilValidate.isNotEmpty(partyProfileFacilityMap)){
 							paymentMethodType=partyProfileFacilityMap.get(boothId);
 							}
-							boothWiseProd.put("paymentMode",paymentMethodType)
+							boothWiseProd.put("paymentMode",paymentMethodTypeMap.get(paymentMethodType));
 							boothWiseMap.put(boothId, boothWiseProd);							
 						}
 					
