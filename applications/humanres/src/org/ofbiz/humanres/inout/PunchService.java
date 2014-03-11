@@ -583,21 +583,27 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		if(UtilValidate.isEmpty(thruDate)){
 			thruDate = UtilDateTime.nowTimestamp();
 		}
+		
 		try {
 			List<String> orderBy = UtilMisc.toList("groupName");
-			List<GenericValue> internalOrgs = delegator.findByAnd(
-					"PartyRelationshipAndDetail", UtilMisc.toMap("partyIdFrom",
-							orgId, "partyRelationshipTypeId", "GROUP_ROLLUP"),
-					orderBy);
-			for (GenericValue internalOrg : internalOrgs) {
-				punchMap.put("orgId", internalOrg.get("partyId"));
-				populateChildren(dctx, punchMap, employeeList);
+			if(UtilValidate.isNotEmpty(orgId)){
+				List<GenericValue> internalOrgs = delegator.findByAnd(
+						"PartyRelationshipAndDetail", UtilMisc.toMap("partyIdFrom",
+								orgId, "partyRelationshipTypeId", "GROUP_ROLLUP"),
+						orderBy);
+				for (GenericValue internalOrg : internalOrgs) {
+					punchMap.put("orgId", internalOrg.get("partyId"));
+					populateChildren(dctx, punchMap, employeeList);
+				}
 			}
+			
 
 			List<String> order = UtilMisc.toList("firstName");
 			List condList = FastList.newInstance();
-			condList.add(EntityCondition.makeCondition("partyIdFrom",
+			if(UtilValidate.isNotEmpty(orgId)){
+				condList.add(EntityCondition.makeCondition("partyIdFrom",
 					EntityOperator.EQUALS, orgId));
+			}
 			condList.add(EntityCondition.makeCondition("roleTypeIdTo",
 					EntityOperator.EQUALS, "EMPLOYEE"));
 			if(UtilValidate.isNotEmpty(employeeId)){

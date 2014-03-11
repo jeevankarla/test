@@ -1078,7 +1078,7 @@ under the License.emplpunch
      <service name="emplMonthlyPunchReport" engine="java"
              location="org.ofbiz.humanres.inout.PunchService" invoke="emplMonthlyPunchReport" auth="true">
         <description>Employee Monthly Punch Report</description>
-        <attribute name="partyId"  mode="IN" type="String" optional="false"/>
+        <attribute name="partyId"  mode="IN" type="String" optional="true"/>
         <attribute name="employeeId"  mode="IN" type="String" optional="true"/>
         <attribute name="customTimePeriodId"  mode="IN" type="String" optional="true"/>
         <attribute name="fromDate"  mode="IN" type="Timestamp" optional="true"/>
@@ -1089,7 +1089,7 @@ under the License.emplpunch
      <service name="emplMonthlyLeaveReport" engine="java"
              location="org.ofbiz.humanres.inout.PunchService" invoke="emplMonthlyLeaveReport" auth="true">
         <description>Employee Monthly Punch Report</description>
-        <attribute name="partyId"  mode="IN" type="String" optional="false"/>
+        <attribute name="partyId"  mode="IN" type="String" optional="true"/>
         <attribute name="employeeId"  mode="IN" type="String" optional="true"/>
         <attribute name="customTimePeriodId"  mode="IN" type="String" optional="true"/>
         <attribute name="fromDate"  mode="IN" type="Timestamp" optional="true"/>
