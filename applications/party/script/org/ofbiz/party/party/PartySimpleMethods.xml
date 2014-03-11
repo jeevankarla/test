@@ -100,12 +100,24 @@ under the License.
         <if-not-empty field="parameters.address1">
             <call-map-processor processor-name="postalAddress" in-map-name="parameters" out-map-name="postalAddressContext"
                 xml-resource="component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml"/>
-        </if-not-empty>
-
+        </if-not-empty>    
+        
         <if-not-empty field="parameters.contactNumber">
             <call-map-processor processor-name="telecomNumber" in-map-name="parameters" out-map-name="telecomNumberContext"
                 xml-resource="component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml"/>
         </if-not-empty>
+        
+        <if-not-empty field="parameters.mobileNumber">
+        	<set field="contactInMap.contactNumber" from-field="parameters.mobileNumber"></set>
+            <call-map-processor processor-name="telecomNumber" in-map-name="contactInMap" out-map-name="mobileNumberContext"
+                xml-resource="component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml"/>
+        </if-not-empty>
+
+		<if-not-empty field="parameters.residentialNumber">
+			<set field="contactInMap.contactNumber" from-field="parameters.residentialNumber"></set>
+			<call-map-processor processor-name="telecomNumber" in-map-name="contactInMap" out-map-name="homeContext"
+				xml-resource="component://party/script/org/ofbiz/party/contact/PartyContactMechMapProcs.xml"></call-map-processor>
+		</if-not-empty>
 
         <if-not-empty field="parameters.emailAddress">
             <call-map-processor in-map-name="parameters" out-map-name="emailAddressContext">
@@ -208,6 +220,22 @@ under the License.
             </if-not-empty>
             <call-service service-name="createPartyTelecomNumber" in-map-name="telecomNumberContext"/>
         </if-not-empty>
+
+		<!-- mobile phone -->
+		<if-not-empty field="mobileNumberContext">
+			<set field="mobileNumberContext.partyId" from-field="partyId" />
+			<set field="mobileNumberContext.contactMechPurposeTypeId" value="PHONE_MOBILE" />
+			<call-service service-name="createPartyTelecomNumber"
+				in-map-name="mobileNumberContext" />
+		</if-not-empty>
+		
+		<!-- home phone -->
+		<if-not-empty field="homeContext">
+			<set field="homeContext.partyId" from-field="partyId" />
+			<set field="homeContext.contactMechPurposeTypeId" value="PHONE_HOME" />
+			<call-service service-name="createPartyTelecomNumber"
+				in-map-name="homeContext" />
+		</if-not-empty>
 
         <!-- email address -->
         <if-not-empty field="emailAddressContext">

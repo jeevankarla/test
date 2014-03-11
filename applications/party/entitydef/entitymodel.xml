@@ -2526,6 +2526,7 @@ under the License.
       <alias entity-alias="PER" name="lastNameLocal"/>
       <alias entity-alias="PER" name="personalTitle"/>
       <alias entity-alias="PER" name="suffix"/>
+      <alias entity-alias="PER" name="birthDate"/>
       <alias entity-alias="PTYGRP" name="groupName"/>
       <alias entity-alias="PTYGRP" name="groupNameLocal"/>
       <view-link entity-alias="PTY" rel-entity-alias="PTYREL" rel-optional="true">
@@ -2940,7 +2941,10 @@ under the License.
       <field name="deceasedDate" type="date"></field>
       <field name="height" type="floating-point"></field>
       <field name="weight" type="floating-point"></field>
+      <field name="fatherName" type="long-varchar" encrypt="true"></field>
+      <field name="motherName" type="long-varchar" encrypt="true"></field>
       <field name="mothersMaidenName" type="long-varchar" encrypt="true"></field>
+      <field name="fatherOccupation" type="long-varchar" encrypt="true"></field>
       <field name="maritalStatus" type="indicator"></field>
       <field name="socialSecurityNumber" type="long-varchar" encrypt="true"></field>
       <field name="passportNumber" type="long-varchar" encrypt="true"></field>
@@ -2956,6 +2960,11 @@ under the License.
       <field name="motherTongue" type="short-varchar"></field>
       <field name="religion" type="short-varchar"></field>
       <field name="cardId" type="id-long" ></field>
+
+      <field name="panId" type="id"></field>
+      <field name="bloodGroup" type="id"></field>
+      <field name="belongsTo" type="name"></field>
+
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
