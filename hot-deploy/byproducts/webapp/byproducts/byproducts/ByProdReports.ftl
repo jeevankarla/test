@@ -7,6 +7,18 @@
     <div class="screenlet-body">
     
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+       <tr>
+        	<form id="nextDayIndentCollection" name="nextDayIndentCollection" method="post"  target="_blank" action="<@ofbizUrl>IndentManualCollection</@ofbizUrl>">	
+      			<td width="34%">NextDay Manual Indent Collection </td>
+      			
+      			<td width="33%">Route 
+				<select name="routeId" class='h4'>
+					<#list routesList as route>    
+  	    				<option value='${route}'>${route}</option>
+					</#list>  
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+        </tr> 
       	<tr>
       	   <form id="RouteQuantityAbst" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>routeWiseQtyAbstract.txt</@ofbizUrl>" target="_blank">	
       		  <td width="33%">Route Wise Sales Abst</td>
