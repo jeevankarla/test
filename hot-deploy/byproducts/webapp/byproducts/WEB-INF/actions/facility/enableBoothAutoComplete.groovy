@@ -25,6 +25,8 @@ supplyTypesList = EntityUtil.getFieldListFromEntityList(supplyTypes, "facilityGr
 facilityGroupMember = delegator.findList("FacilityGroupMember", EntityCondition.makeCondition("facilityGroupId", EntityOperator.IN, supplyTypesList), null, null, null, false);
 facilityGroupMember = EntityUtil.filterByDate(facilityGroupMember, UtilDateTime.nowTimestamp());
 
+routeCollectionMap=[:];//for indent collection report
+
 JSONObject supplyRouteItemsJSON = new JSONObject();
 JSONArray routesJSON = new JSONArray();
 Set routesSet = new HashSet();
@@ -89,10 +91,12 @@ if(tempRoute){
 	JSONObject facilityItemsJSON = new JSONObject();
 	JSONArray boothsJSON = new JSONArray();
 	Set boothsSet = new HashSet();
+	
 	routesList.each{route ->
 		boothsList = ByProductNetworkServices.getRouteBooths(delegator , UtilMisc.toMap("routeId",route.facilityId)).get("boothsList");
 		boothsList = EntityUtil.filterByDate(boothsList, nowTimestamp, "openedDate", "closedDate", true);
 		JSONArray boothItemsJSON = new JSONArray();
+		routeBoothsList=[];
 		routeboothMap = [:];
 		boothsList.each{booth ->
 			JSONObject newBoothObj = new JSONObject();
@@ -100,6 +104,13 @@ if(tempRoute){
 			//newBoothObj.put("label",booth.facilityName+" ["+route.facilityName+"]");
 			newBoothObj.put("label",booth.facilityName+" ["+booth.facilityId+"]");
 			boothItemsJSON.add(newBoothObj);
+			
+			//use for indent collection report
+			innerMap=[:];
+			innerMap.put("code", booth.facilityId);
+			innerMap.put("name", booth.facilityName);
+			routeBoothsList.add(innerMap);
+			
 			if(!boothsSet.contains(booth.facilityId)){
 				boothsJSON.add(newBoothObj);
 				boothsSet.add(booth.facilityId);
@@ -107,10 +118,12 @@ if(tempRoute){
 		}
 		routeId = route.facilityId;
 		facilityItemsJSON.put(routeId, boothItemsJSON);
+		routeCollectionMap.put(routeId, routeBoothsList);
 	}
 	context.facilityItemsJSON = facilityItemsJSON;
 	context.boothsJSON = boothsJSON;
 	/*Debug.log("boothsJson #######################################"+boothsJSON);*/
+	context.routeCollectionMap = routeCollectionMap;
 }
 
 context.routesJSON = routesJSON;
