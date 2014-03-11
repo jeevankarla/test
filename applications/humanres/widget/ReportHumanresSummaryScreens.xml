@@ -1077,6 +1077,30 @@
             </widgets>
         </section>
     </screen>
+      <screen name="DailyPunchInoutTrend">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>  
+ 				<set field="tabButtonItem2" value="salesRevenueTrend" />                                                                                    
+                <set field="headerItem" value="analytics"/>
+                <set field="DailyPunchInoutTrend" value="true"></set>
+               <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePunchTrend.groovy"/>                                                 
+            </actions>            
+            <widgets>
+                    <container style="lefthalf">
+                        <platform-specific> 
+                            	<html><html-template location="component://humanres/webapp/humanres/humanres/dayPunchINOutTrend.ftl"/></html>
+                         </platform-specific>                        
+                     </container>
+                      <container style="righthalf">
+                        <platform-specific> 
+                            	<html><html-template location="component://humanres/webapp/humanres/humanres/EmplLeaveTrend.ftl"/></html>
+                         </platform-specific>                        
+                     </container>                       
+            </widgets>
+        </section>
+    </screen>
 </screens>
 
     

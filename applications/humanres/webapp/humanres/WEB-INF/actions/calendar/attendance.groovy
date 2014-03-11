@@ -68,7 +68,6 @@ data=delegator.findByCondition("EmplPunch" , condition, null, null);
 //data=delegator.findAll("EmplPunch");
 
 
-System.out.println("\n\n\n Please Work ==============================party id==================================="+partyId);
 context.put("data",data);
 context.put("partyId",partyId);
 

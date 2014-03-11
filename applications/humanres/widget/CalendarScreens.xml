@@ -76,7 +76,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    
+                                
                                 <screenlet id="AddEmplWageTypePanel" title="Attendance Screen" collapsible="false">
                                 <section>
                                 
@@ -90,10 +90,11 @@ under the License.
                                 <include-form name="partylookup" location="component://humanres/widget/attendancesheet.xml"/>
                              </widgets>
                                   </section>
-                                                          
+                                
                         <platform-specific>
                             <html><html-template location="component://humanres/webapp/humanres/calendar/new_week.ftl"/></html>
-                        </platform-specific></screenlet> 
+                        </platform-specific></screenlet>
+                         <include-screen name="DailyPunchInoutTrend" location="component://humanres/widget/ReportHumanresSummaryScreens.xml"/>                          
                     </decorator-section>
                 </decorator-screen>
             </widgets>

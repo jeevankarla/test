@@ -1079,11 +1079,23 @@ under the License.emplpunch
              location="org.ofbiz.humanres.inout.PunchService" invoke="emplMonthlyPunchReport" auth="true">
         <description>Employee Monthly Punch Report</description>
         <attribute name="partyId"  mode="IN" type="String" optional="false"/>
-        <attribute name="customTimePeriodId"  mode="IN" type="String" optional="false"/>
+        <attribute name="employeeId"  mode="IN" type="String" optional="true"/>
+        <attribute name="customTimePeriodId"  mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate"  mode="IN" type="Timestamp" optional="true"/>
+         <attribute name="thruDate"  mode="IN" type="Timestamp" optional="true"/>
         <attribute name="punchDataList" mode="OUT" type="List"/>
         <attribute name="columnTitleMap" mode="OUT" type="Map"/>
     </service>  
-    
+     <service name="emplMonthlyLeaveReport" engine="java"
+             location="org.ofbiz.humanres.inout.PunchService" invoke="emplMonthlyLeaveReport" auth="true">
+        <description>Employee Monthly Punch Report</description>
+        <attribute name="partyId"  mode="IN" type="String" optional="false"/>
+        <attribute name="employeeId"  mode="IN" type="String" optional="true"/>
+        <attribute name="customTimePeriodId"  mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate"  mode="IN" type="Timestamp" optional="true"/>
+         <attribute name="thruDate"  mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="leaveDataList" mode="OUT" type="List"/>
+    </service>  
 
    <!-- this is for notification rules -->
      <service name="createNotificationRule" default-entity-name="NotificationRule" engine="simple"

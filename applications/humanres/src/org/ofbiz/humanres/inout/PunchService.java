@@ -19,6 +19,7 @@
 
 package org.ofbiz.humanres.inout;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -576,6 +577,7 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map punchMap = FastMap.newInstance();
 		String orgId = (String) context.get("orgId");
+		String employeeId = (String) context.get("employeeId");
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
 		if(UtilValidate.isEmpty(thruDate)){
@@ -593,9 +595,20 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 			}
 
 			List<String> order = UtilMisc.toList("firstName");
-			List<GenericValue> employments = delegator.findByAnd(
-					"EmploymentAndPerson", UtilMisc.toMap("partyIdFrom", orgId,
-							"roleTypeIdTo", "EMPLOYEE"), order);
+			List condList = FastList.newInstance();
+			condList.add(EntityCondition.makeCondition("partyIdFrom",
+					EntityOperator.EQUALS, orgId));
+			condList.add(EntityCondition.makeCondition("roleTypeIdTo",
+					EntityOperator.EQUALS, "EMPLOYEE"));
+			if(UtilValidate.isNotEmpty(employeeId)){
+				condList.add(EntityCondition.makeCondition("partyIdTo",
+						EntityOperator.EQUALS, employeeId));
+			}
+			EntityCondition condition = EntityCondition.makeCondition(
+					condList, EntityOperator.AND);
+			List<GenericValue> employments = delegator.findList("EmploymentAndPerson", condition,
+					null, order, null, false);
+			
 			employments = EntityUtil.filterByDate(employments, thruDate);
 			for (GenericValue employee : employments) {
 				employeeList.add(employee);
@@ -618,11 +631,14 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		Locale locale = Locale.getDefault();
 
 		String partyId = (String) context.get("partyId");
+		String employeeId = (String) context.get("employeeId");
 		String customTimePeriodId = (String) context.get("customTimePeriodId");
 		java.sql.Timestamp fromDate = null;
 		java.sql.Timestamp thruDate = null;
 		
-		GenericValue customTimePeriod;
+		
+		if(UtilValidate.isNotEmpty(customTimePeriodId)){
+			GenericValue customTimePeriod;
 		try {
 			customTimePeriod = delegator.findOne("CustomTimePeriod",
 					UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
@@ -637,17 +653,27 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 			return ServiceUtil
 			.returnError("NULL in customTimePeriod" + e1);
 		}
-		fromDate = new java.sql.Timestamp(
-				((Date) customTimePeriod.get("fromDate")).getTime());
-		thruDate = new java.sql.Timestamp(
-				((Date) customTimePeriod.get("thruDate")).getTime());
 		
+			fromDate = new java.sql.Timestamp(
+					((Date) customTimePeriod.get("fromDate")).getTime());
+			thruDate = new java.sql.Timestamp(
+					((Date) customTimePeriod.get("thruDate")).getTime());
+		}else{
+			fromDate = (Timestamp)context.get("fromDate");
+			thruDate = (Timestamp)context.get("thruDate");
+		}
+		
+		if(UtilValidate.isEmpty(fromDate) || UtilValidate.isEmpty(thruDate)){
+			thruDate = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 1));
+			fromDate =  UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -30));
+		}
 		int totalDays = UtilDateTime.getIntervalInDays(
 				UtilDateTime.toTimestamp(fromDate),
 				UtilDateTime.toTimestamp(thruDate)) + 1;
 		
 		ArrayList<GenericValue> employeeList = new ArrayList();
 		emplDailyPunchMap.put("orgId", partyId);
+		emplDailyPunchMap.put("employeeId", employeeId);
 		emplDailyPunchMap.put("fromDate", fromDate);
 		emplDailyPunchMap.put("thruDate", thruDate);
 		populateChildren(dctx, emplDailyPunchMap, employeeList);
@@ -666,6 +692,12 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		/*-------------------------------------------------------------------------------------------------------------------*/
 		try {
 			ArrayList punchDataList = new ArrayList();
+			if(UtilValidate.isEmpty(employeeList)){
+				result.put("columnTitleMap", columnTitleMap);
+				result.put("punchDataList", punchDataList);
+				return result;
+			}
+			
 			for (int i = 0; i < employeeList.size(); i++) {
 				String empId = employeeList.get(i).getString("partyIdTo");
 
@@ -776,6 +808,119 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 		}
 		return result;
 	}
+	
+	public static Map emplMonthlyLeaveReport(DispatchContext dctx, Map context) {
 
+		Map emplDailyPunchMap = FastMap.newInstance();
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+
+		//Map columnTitleMap = FastMap.newInstance();
+		TimeZone timeZone = TimeZone.getDefault();
+		Locale locale = Locale.getDefault();
+
+		String partyId = (String) context.get("partyId");
+		String employeeId = (String) context.get("employeeId");
+		String customTimePeriodId = (String) context.get("customTimePeriodId");
+		java.sql.Timestamp fromDate = null;
+		java.sql.Timestamp thruDate = null;
+		
+		
+		if(UtilValidate.isNotEmpty(customTimePeriodId)){
+			GenericValue customTimePeriod;
+		try {
+			customTimePeriod = delegator.findOne("CustomTimePeriod",
+					UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+		} catch (GenericEntityException e1) {
+			Debug.logError(e1, e1.getMessage());
+			return ServiceUtil
+			.returnError("Error in customTimePeriod" + e1);
+		}
+		if(customTimePeriod == null) {
+			GenericEntityException e1 = null;
+			Debug.logError(e1, e1.getMessage());
+			return ServiceUtil
+			.returnError("NULL in customTimePeriod" + e1);
+		}
+		
+			fromDate = new java.sql.Timestamp(
+					((Date) customTimePeriod.get("fromDate")).getTime());
+			thruDate = new java.sql.Timestamp(
+					((Date) customTimePeriod.get("thruDate")).getTime());
+		}else{
+			fromDate = (Timestamp)context.get("fromDate");
+			thruDate = (Timestamp)context.get("thruDate");
+		}
+		
+		if(UtilValidate.isEmpty(fromDate) || UtilValidate.isEmpty(thruDate)){
+			thruDate = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 1));
+			fromDate =  UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(thruDate, -360));
+		}
+		int totalDays = UtilDateTime.getIntervalInDays(
+				UtilDateTime.toTimestamp(fromDate),
+				UtilDateTime.toTimestamp(thruDate)) + 1;
+		
+		ArrayList<GenericValue> employeeList = new ArrayList();
+		emplDailyPunchMap.put("orgId", partyId);
+		emplDailyPunchMap.put("employeeId", employeeId);
+		emplDailyPunchMap.put("fromDate", fromDate);
+		emplDailyPunchMap.put("thruDate", thruDate);
+		populateChildren(dctx, emplDailyPunchMap, employeeList);
+		
+		try {
+			ArrayList leaveDataList = new ArrayList();
+			if(UtilValidate.isEmpty(employeeList)){
+				result.put("leaveDataList", leaveDataList);
+				return result;
+			}
+			for (int i = 0; i < employeeList.size(); i++) {
+				String empId = employeeList.get(i).getString("partyIdTo");
+				List<GenericValue> employeeLeaves = new ArrayList();
+				Map emplLeaveMap = FastMap.newInstance();
+				Map leaveDetailMap = FastMap.newInstance();
+				List conditionList1 = UtilMisc
+						.toList(EntityCondition.makeCondition("partyId",
+								EntityOperator.EQUALS, empId));
+				conditionList1.add(EntityCondition.makeCondition("fromDate",
+						EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+				conditionList1.add(EntityCondition.makeCondition("thruDate",
+						EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+				
+				EntityCondition condition1 = EntityCondition.makeCondition(
+						conditionList1, EntityOperator.AND);
+				employeeLeaves = delegator.findList("EmplLeave", condition1,
+						null, UtilMisc.toList("fromDate"), null, false);
+				
+                 for(GenericValue emplLeave :employeeLeaves){
+                	 Timestamp monthStart =  UtilDateTime.getMonthStart(emplLeave.getTimestamp("fromDate"));
+                	 BigDecimal noLeaves = emplLeave.getBigDecimal("effectedCreditDays");
+                	 if(UtilValidate.isNotEmpty(leaveDetailMap.get(monthStart))){
+                		 noLeaves = noLeaves.add((BigDecimal)leaveDetailMap.get(monthStart));
+                	 }
+                	 leaveDetailMap.put(monthStart, noLeaves);
+                 }
+			
+				emplLeaveMap.put("partyId", empId);
+				String EmployeeName = PartyHelper.getPartyName(delegator,
+						empId, false);
+				emplLeaveMap.put("Employee", EmployeeName);
+				emplLeaveMap.put("emplLeaveDetail", leaveDetailMap);
+				leaveDataList.add(emplLeaveMap);
+			}
+			//result.put("columnTitleMap", columnTitleMap);
+			result.put("leaveDataList", leaveDataList);
+			
+		} catch (GenericEntityException e) {
+			Debug.logError(e, e.getMessage());
+			return ServiceUtil
+					.returnError("Error while finding Punch Date" + e);
+		} catch (Exception e) {
+			Debug.logError(e, e.getMessage());
+			return ServiceUtil
+					.returnError("Error while finding Punch Time" + e);
+		}
+		return result;
+	}
 
 }
