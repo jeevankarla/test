@@ -145,7 +145,7 @@ $(document).ready(function(){
 </div>-->
 <div class="screenlet">
     <div class="screenlet-title-bar">
-      <h3>Leave Trend (in days)<#if employeeId?exists> For Employee : ${employeeId} ,</#if></h3>
+      <h3>Leave analysis (in days)<#if employeeId?exists> For Employee : ${employeeId} ,</#if></h3>
     </div>
     <div class="screenlet-body">
    		<div id="graph2" class="graph"></div>
