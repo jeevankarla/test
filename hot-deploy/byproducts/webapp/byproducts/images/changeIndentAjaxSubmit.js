@@ -149,7 +149,14 @@ function prepareAjaxDataString(){
 	 var querystring = "";
 	for(i=0; i< data.length;i++){
 		var changeItem = data[i];
-		var sequenceNum = jQuery("#tempRouteId").val();
+		var sequenceNum;
+		if(screenFlag == 'indentAlt'){
+			sequenceNum = changeItem["seqRouteId"];
+		}
+		else{
+			sequenceNum = jQuery("#tempRouteId").val();
+		}
+		 
 		var qty = parseFloat(changeItem["cQuantity"]);
 		if( typeof changeItem["cProductId"] != "undefined"   && changeItem["cProductId"] != "" && !isNaN(qty)){				
 			
@@ -168,9 +175,9 @@ function prepareAjaxDataString(){
 		}		
 	}	 
 	
-var dataString = $(formId).serialize();
-querystring +=dataString;
-return querystring;
+	var dataString = $(formId).serialize();
+	querystring +=dataString;
+	return querystring;
 
 }
 

@@ -261,6 +261,7 @@
             <link target="ChangeIndentInit">
             	<parameter param-name="screenFlag" value="indent"/>
             	<parameter param-name="ChangeIndentTitle" value="ChangeIndentInit"/>
+            	<parameter param-name="tabButtonItem" value="ChangeIndentInit"/> 
             </link>
        </menu-item>  
         <menu-item name="QuotaList" title="Indent History">
@@ -327,9 +328,9 @@
         <menu-item name="ReturnCrates" title="Return Crates">
             <link target="ReturnCrates"/>
         </menu-item>
-        <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
+        <!-- <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
             <link target="CreditInstitutionBilling"/>
-        </menu-item>
+        </menu-item> -->
         
         <menu-item name="InstBillingPeriodSearch" title="Cr. Inst. Billing Config">
             <link target="InstBillingPeriodSearch"/>
@@ -358,8 +359,14 @@
             </condition>         
             <link target="FindPastBoothPayments"/>        
        </menu-item>
-       <menu-item name="facilityCustomTimePeriod" title="Facility Custom Time Period">
+       <menu-item name="facilityCustomTimePeriod" title="Cr. Inst. Billing">
             <link target="facilityCustomTimePeriod">
+            </link>
+        </menu-item>
+        <menu-item name="indentAlt" title="Indent Alt">
+            <link target="ChangeIndentInit">
+        		<parameter param-name="screenFlag" value="indentAlt"/>
+        		<parameter param-name="tabButtonItem" value="indentAlt"/>    	
             </link>
         </menu-item>
     </menu>

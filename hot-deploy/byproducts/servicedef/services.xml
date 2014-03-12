@@ -278,6 +278,7 @@
         <attribute name="subscriptionTypeId" mode="IN" type="String" optional="false"/>      
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
         <attribute name="changeIndentProductList" mode="OUT" type="List" optional="true"/>
+        <attribute name="screenFlag" mode="IN" type="String" optional="true"/>
         <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
         <attribute name="tempRouteId" mode="OUT" type="String" optional="true"/>
         <attribute name="boothName" mode="OUT" type="String" optional="true"/>

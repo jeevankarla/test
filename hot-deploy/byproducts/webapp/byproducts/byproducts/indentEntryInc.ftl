@@ -84,7 +84,7 @@ function updateGrid(){
 						"supplyDate":$('[name=effectiveDate]').val(),
 						"subscriptionTypeId": $('[name=subscriptionTypeId]').val(),
 						"productSubscriptionTypeId" : $('[name=productSubscriptionTypeId]').val(),
-						"tripId" : $('[name=tripId]').val(),
+						"screenFlag":screenFlag,
 						"routeId" : $('[name=routeId]').val()							
 					};
 	 $('div#changeIndentEntry_spinner').removeClass("errorMessage");
@@ -106,13 +106,15 @@ function updateGrid(){
 						//$('div#errorMsg').html('<label>'+msg +'</label>');
 						gridHideCall();
 					}else{
+					
 					    $('div#changeIndentEntry_spinner').html('');
 						var changeIndentProductList = result["changeIndentProductList"];
-						var tripId = result["tripId"];
+						//var tripId = result["tripId"];
 						if(screenFlag != 'DSCorrection'){
 							var categoryTot = result["categoryTotals"];
 							var tempRouteId = result["tempRouteId"];
-							var  tripNo = tripId.charAt(tripId.length-1);
+							permanentRouteId = result["routeId"];
+							//var  tripNo = tripId.charAt(tripId.length-1);
 							var routeCrateTotal = result["routeCrateTotal"];
 							prodIndentQtyCat = result["prodIndentQtyCat"];
 							priceTags = result["productPrice"];
@@ -146,7 +148,7 @@ function updateGrid(){
               			$('span#routeTooltip').html('<label>'+routeName+'</label>');
 						$('span#routeCapacity').html('<b>'+routeCapacity +'</b>');
 						$('span#routeName').html('<b>'+routeName +'</b>');
-						$('span#tripName').html('<b>'+tripNo +'</b>');
+						//$('span#tripName').html('<b>'+tripNo +'</b>');
 						$('span#routeCrateTotal').html('<b>'+routeCrateTotal +'</b>');
 						
 					}								 
@@ -174,8 +176,17 @@ function updateGrid(){
 	//var uomMap = ${StringUtil.wrapString(uomMapJSON)!'{}'};
 	var productQtyInc = ${StringUtil.wrapString(productQtyIncJSON)!'{}'};
 	var priceTags;
+	var permanentRouteId;
 	var qtyInPieces;
 	var prodIndentQtyCat;
+	var routeIdLabelMap;
+	var routeLabelIdMap;
+	var routeTags;
+	<#if screenFlag?exists && screenFlag == 'indentAlt'>
+		routeIdLabelMap = ${StringUtil.wrapString(routeIdLabelJSON)!'{}'};
+		routeLabelIdMap = ${StringUtil.wrapString(routeLabelIdJSON)!'{}'};
+		routeTags = ${StringUtil.wrapString(routeItemsJSON)!'[]'};
+	</#if>
 		
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
@@ -220,6 +231,24 @@ function updateGrid(){
       if (item != null && item != undefined ) {
       	item['cProductId'] = productLabelIdMap[value];
 	  }      
+      return {valid: true, msg: null};
+    }
+    
+    function routeValidator(value,item) {
+      var currProdCnt = 1;
+	  for (var rowCount=0; rowCount < data.length; ++rowCount)
+	  { 
+	  	 if (data[rowCount]['seqRouteId'] != null && data[rowCount]['seqRouteId'] != undefined && value == data[rowCount]['seqRouteId']) {
+			if (item['cProductName'] == data[rowCount]['cProductName']) {
+				++currProdCnt;
+			}	
+		 }
+	  }
+	  
+      if (currProdCnt > 1) {
+        return {valid: false, msg: "Duplicate Product " + value};      				
+      }
+            
       return {valid: true, msg: null};
     }
 	
@@ -279,12 +308,20 @@ function updateGrid(){
 			data = ajaxJson;
 		}
 		var columns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
+			<#if screenFlag?exists && screenFlag == 'indentAlt'>
+				{id:"cProductName", name:"Product", field:"cProductName", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, sortable:false ,toolTip:""},
+			<#else>
+				{id:"cProductName", name:"Product", field:"cProductName", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
+			</#if>
+			
 			{id:"cQuantity", name:"Qty(Pkt)", field:"cQuantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			{id:"quantity", name:"Qty(Crate/Can)", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
 			<#if screenFlag?exists && screenFlag != 'DSCorrection'>
 				<#--{id:"supply", name:"C/P/B ", field:"uomId", width:35, minWidth:35, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
 				{id:"LtrKgs", name:"Ltr/Kgs", field:"LtrKgs", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, focusable :false , align:"right"},-->
+			</#if>
+			<#if screenFlag?exists && screenFlag == 'indentAlt'>
+				{id:"seqRouteId", name:"Route", field:"seqRouteId", width:65, minWidth:65, cssClass:"cell-title", availableTags: routeTags, validator: routeValidator, editor: AutoCompleteEditor, sortable:false, align:"right"},
 			</#if>
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
@@ -312,17 +349,21 @@ function updateGrid(){
 			$(_grid.getCellNode(0,0)).click();
 		}
 		_grid.onKeyDown.subscribe(function(e) {
+			var cellNav = 2;
+			<#if screenFlag?exists && screenFlag == 'indentAlt'>
+				cellNav = 3;
+			</#if>
 			var cell = _grid.getCellFromEvent(e);		
 			if(e.which == $.ui.keyCode.UP && cell.row == 0){
 				_grid.getEditController().commitCurrentEdit();	
 				$(_grid.getCellNode(cell.row+1, 0)).click();
 				e.stopPropagation();
 			}
-			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data.length && cell.cell == 2){
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data.length && cell.cell == cellNav){
 				_grid.getEditController().commitCurrentEdit();	
 				$(_grid.getCellNode(0, 2)).click();
 				e.stopPropagation();
-			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data.length-1) && cell.cell == 2){
+			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data.length-1) && cell.cell == cellNav){
 				_grid.getEditController().commitCurrentEdit();
 				_grid.gotoCell(data.length, 0, true);
 				$(_grid.getCellNode(data.length, 0)).edit();
@@ -331,13 +372,13 @@ function updateGrid(){
 			}
 			
 			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
-				&& cell.row == data.length && cell.cell == 2){
+				&& cell.row == data.length && cell.cell == cellNav){
   				_grid.getEditController().commitCurrentEdit();	
 				$(_grid.getCellNode(cell.row, 0)).click();
 				e.stopPropagation();
 			
 			}else if (e.which == $.ui.keyCode.RIGHT &&
-				cell && (cell.cell == 2) && 
+				cell && (cell.cell == cellNav) && 
 				cell.row != data.length) {
 				_grid.getEditController().commitCurrentEdit();	
 				$(_grid.getCellNode(cell.row+1, 0)).click();
@@ -347,7 +388,7 @@ function updateGrid(){
 				cell && (cell.cell == 0) && 
 				cell.row != data.length) {
 				_grid.getEditController().commitCurrentEdit();	
-				$(_grid.getCellNode(cell.row, 2)).click();
+				$(_grid.getCellNode(cell.row, cellNav)).click();
 				e.stopPropagation();	
 			}else if (e.which == $.ui.keyCode.ENTER) {
         	  /*	if (cell && cell.cell == 0) {
@@ -356,7 +397,7 @@ function updateGrid(){
 						_grid.navigateRight();    
 						_grid.navigateUp(); 
 					} else {
-        				$(_grid.getCellNode(cell.row - 1, 2)).click();
+        				$(_grid.getCellNode(cell.row - 1, cellNav)).click();
         			}
         			e.stopPropagation();	
         			return false;
@@ -365,18 +406,18 @@ function updateGrid(){
 				jQuery("#changeSave").click();
 				
 				/*if(cell.row == data.length){
-					$(_grid.getCellNode(cell.row, 2)).click();
+					$(_grid.getCellNode(cell.row, cellNav)).click();
 				}else{
-					$(_grid.getCellNode(cell.row, 2)).click();
+					$(_grid.getCellNode(cell.row, cellNav)).click();
 				} */
 				
-				//$(_grid.getCellNode(cell.row, 2)).click();   
+				//$(_grid.getCellNode(cell.row, cellNav)).click();   
             	e.stopPropagation();
             	e.preventDefault();        	
             }else if (e.keyCode == 27) {
              //here ESC to Save grid
         		if (cell && cell.cell == 0) {
-        			$(_grid.getCellNode(cell.row - 1, 2)).click();
+        			$(_grid.getCellNode(cell.row - 1, cellNav)).click();
         			return false;
         		}  
         		_grid.getEditController().commitCurrentEdit();
@@ -441,7 +482,13 @@ function updateGrid(){
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
-				
+				if(screenFlag == 'indentAlt'){
+					if(data[args.row]["seqRouteId"] == null || data[args.row]["seqRouteId"] == undefined){
+						data[args.row]["seqRouteId"] = permanentRouteId;
+						_grid.getEditController().commitCurrentEdit();
+					}
+					
+				}
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
 				_grid.updateRow(args.row);
@@ -488,7 +535,13 @@ function updateGrid(){
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
 				}
-				
+				if(screenFlag == 'indentAlt'){
+					if(data[args.row]["seqRouteId"] == null || data[args.row]["seqRouteId"] == undefined){
+						data[args.row]["seqRouteId"] = permanentRouteId;
+						_grid.getEditController().commitCurrentEdit();
+					}
+					
+				}
 				data[args.row]["unitPrice"] = price;
 				data[args.row]["amount"] = roundedAmount;
 				_grid.updateRow(args.row);
@@ -621,6 +674,7 @@ function updateGrid(){
 	function updateProductInfo() {
 		for(var i=0;i<data.length;i++){
 			var prod = data[i]["cProductId"];
+			
 			var qty = parseFloat(data[i]["cQuantity"]);
 			var price = parseFloat(priceTags[prod]);
 			var indentCat = prodIndentQtyCat[prod];
@@ -655,16 +709,11 @@ function updateGrid(){
 			if(isNaN(amount)){
 				amount = 0;
 			}
-			if(screenFlag != 'DSCorrection'){
-				//var crateQty = parseFloat(qtyInPieces[prod]);
-				//data[i]["LtrKgs"] = parseFloat(productQtyInc[prod])*qty*crateQty;
-				//var supType = prodIndentQtyCat[prod];
-				//data[i]["uomId"] = supType.charAt(0);
-				//data[i]["amount"] = Math.round((qty*price) * 100)/100;
+			
+			data[i]["amount"] = amount; //onload update amount
+			if(screenFlag == 'indentAlt'){
+				//data[i]["seqRouteId"] = data[i]["cProductId"];
 			}
-			//else{
-				data[i]["amount"] = amount; //onload update amount
-			//}
 			_grid.updateRow(i);
 		}
 		var totalAmount = 0;

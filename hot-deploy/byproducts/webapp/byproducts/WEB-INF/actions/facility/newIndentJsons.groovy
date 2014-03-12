@@ -84,3 +84,21 @@ context.productIdLabelJSON = productIdLabelJSON;
 context.productLabelIdJSON = productLabelIdJSON;
 context.productQtyIncJSON = productQtyIncJSON;
 /*context.productCratesJSON = productCratesJSON;*/
+
+if(screenFlag && screenFlag == 'indentAlt'){
+	JSONArray routeItemsJSON = new JSONArray();
+	JSONObject routeIdLabelJSON = new JSONObject();
+	JSONObject routeLabelIdJSON = new JSONObject();
+	routes = delegator.findList("Facility", EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "ROUTE"), null, null, null, false);
+	routes.each{ eachRoute->
+		JSONObject newRouteObj = new JSONObject();
+		newRouteObj.put("value",eachRoute.facilityId);
+		newRouteObj.put("label", eachRoute.facilityId);
+		routeItemsJSON.add(newRouteObj);
+		routeIdLabelJSON.put(eachRoute.facilityId,  eachRoute.facilityId);
+		routeLabelIdJSON.putAt(eachRoute.facilityId, eachRoute.facilityId);
+	}
+	context.routeItemsJSON = routeItemsJSON;
+	context.routeIdLabelJSON = routeIdLabelJSON;
+	context.routeLabelIdJSON = routeLabelIdJSON;
+}

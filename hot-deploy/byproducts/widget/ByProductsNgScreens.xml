@@ -643,7 +643,7 @@
         <section>
             <actions>
                <set field="titleProperty" value="Indent Entry"/>	
-               <set field="tabButtonItem" value="ChangeIndentInit"/>
+               <set field="tabButtonItem" value="${parameters.tabButtonItem}"/>
                <set field="ChangeIndentTitle" from-field="parameters.ChangeIndentTitle"/> 
                <set field="tabButtonItem2" value="${ChangeIndentTitle}"/>
                <set field="supplyDate" from-field="parameters.supplyDate"/>
@@ -680,7 +680,7 @@
          <section>
             <actions>
                <set field="titleProperty" value="Change Indent MIS"/>	
-               <set field="tabButtonItem" value="ChangeIndentInit"/>
+               <set field="tabButtonItem" value="${parameters.tabButtonItem}"/>
                <set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}"/>
                <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
                <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
@@ -1737,10 +1737,11 @@
            	<actions>
 				<set field="titleProperty" value="Delivery Schedule"/> 
 				<set field="tabButtonItem" value="facilityCustomTimePeriod" />
-				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/appendRoute.js" global="true"/> 
+				<!-- <set field="layoutSettings.javaScripts[]" value="/byproducts/images/appendRoute.js" global="true"/> --> 
 				<set field="tabButtonItem2" value="facilityCustomTimePeriod" />				
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>   
+                <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
 			</actions>
             <widgets>
                 <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -1748,10 +1749,10 @@
                       	<section>
                         	<widgets>
 								<container style="button-bar">
-									<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/NewDeliverySchedule.ftl"/></html></platform-specific>							  	        					
-									<link url-mode="plain" target="javascript:showTruckSheetGenerateForm();" text="Generate Facility Time Period" style="buttontext create"  link-type="anchor"/>
+									<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/NewCustomBilling.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showBillingGenerateForm();" text="Generate Institution Billing" style="buttontext create"  link-type="anchor"/>
 								</container>	
-								<screenlet title="Trucksheet List">				
+								<screenlet title="Billing List">				
 									<include-form name="ListFacilityTimePeriod" location="component://byproducts/widget/ByProductsNgForms.xml" />
 								</screenlet>
 							</widgets>
@@ -1761,6 +1762,7 @@
             </widgets>
         </section>
     </screen>  
+    
     <screen name="InstBillingPeriodSearch">
         <section>
             <actions>

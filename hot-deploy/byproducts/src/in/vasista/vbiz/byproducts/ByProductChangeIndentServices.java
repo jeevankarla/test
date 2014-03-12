@@ -211,7 +211,6 @@ public class ByProductChangeIndentServices {
     		       
     	  }//end row count for loop
     	  
-    
     	 Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
     	 processChangeIndentHelperCtx.put("subscriptionId", subscription.getString("subscriptionId"));
     	 processChangeIndentHelperCtx.put("boothId", boothId);
@@ -329,6 +328,7 @@ public class ByProductChangeIndentServices {
   			
   			List productsList = EntityUtil.getFieldListFromEntityList(subscriptionProdList, "productId", true);
   			List activeProdList = FastList.newInstance();
+  			List<GenericValue> subscriptionProductsList =FastList.newInstance();
   			  for(int i=0; i< productQtyList.size() ; i++){
   				  Map productQtyMap = productQtyList.get(i);
   				  String productId = (String)productQtyMap.get("productId");
@@ -350,8 +350,11 @@ public class ByProductChangeIndentServices {
   					  }
   	    		  
   				  }*/
-  				  List<GenericValue> subscriptionProductsList =FastList.newInstance();
-  				  subscriptionProductsList = EntityUtil.filterByCondition(subscriptionProdList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+  				  conditionList.clear();
+  				  conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+  				  conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));
+  				  EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+  				  subscriptionProductsList = EntityUtil.filterByCondition(subscriptionProdList, cond);
   				  /*List conditionList = UtilMisc.toList(
   					  EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
   				  conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));

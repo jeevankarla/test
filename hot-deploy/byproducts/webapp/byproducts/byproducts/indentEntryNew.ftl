@@ -83,7 +83,7 @@
 	    			</#if>    
         			<tr><td><br/></td></tr>
         			<input type="hidden" name="productSubscriptionTypeId" id="productSubscriptionTypeId" value="CASH"/>             
-       				<tr>
+       				<#--<tr>
           				<td>&nbsp;</td>
 	          			<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Trip:</div></td>
 	          			<td>&nbsp;</td>
@@ -113,33 +113,36 @@
 	          				</td>
 	       				</#if>   
         			</tr>
-       				<tr><td><br/></td></tr>
-       				<tr>
-       					<td>&nbsp;</td>
-          				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Route:</div></td>
-          				<td>&nbsp;</td>
-       	  				<td valign='middle'>
-          					<#assign isDefault = false> 
-          					<#if routeId?exists && (routeId == route.facilityId)>
-				 				<input type="hidden" name="routeId" id="routeId" size="15"/>
-          					<#else>
-          						<#if screenFlag?exists && screenFlag != 'indent'>
-          							<input type="text" name="routeId" id="routeId" size="8" onblur='this.value=this.value.toUpperCase()'/>
-          						<#else>
-          							<input type="text" name="routeId" id="routeId" size="8" onblur='this.value=this.value.toUpperCase(),setRouteBoothsDropDown(this);'/>
-          						</#if>	
-      	    					<span class="tooltipbold" id="routeTooltip"></span>
-      	    				</#if>
-      	    				
-          				</td>
-         				<td>
-         					<div id="tempRouteDiv" style="display:none">	
-				        	 	<a class="button" href="javascript:showRouteToChange();">Route Change </a>
-				        	</div>
-				        </td>
-			        </tr>
-			        <input type="hidden" name="routeChangeFlag" id="routeChangeFlag"/>           
-			        <tr><td><br/></td></tr>
+       				<tr><td><br/></td></tr>-->
+       				<#if screenFlag?exists && screenFlag != 'indentAlt'>
+	       				<tr>
+	       					<td>&nbsp;</td>
+	          				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Route:</div></td>
+	          				<td>&nbsp;</td>
+	       	  				<td valign='middle'>
+	          					<#assign isDefault = false> 
+	          					<#if routeId?exists && (routeId == route.facilityId)>
+					 				<input type="hidden" name="routeId" id="routeId" size="15"/>
+	          					<#else>
+	          						<#if screenFlag?exists && screenFlag != 'indent'>
+	          							<input type="text" name="routeId" id="routeId" size="8" onblur='this.value=this.value.toUpperCase()'/>
+	          						<#else>
+	          							<input type="text" name="routeId" id="routeId" size="8" onblur='this.value=this.value.toUpperCase(),setRouteBoothsDropDown(this);'/>
+	          						</#if>	
+	      	    					<span class="tooltipbold" id="routeTooltip"></span>
+	      	    				</#if>
+	      	    				
+	          				</td>
+	         				<td>
+	         					<div id="tempRouteDiv" style="display:none">	
+					        	 	<a class="button" href="javascript:showRouteToChange();">Route Change </a>
+					        	</div>
+					        </td>
+				        </tr>
+			        	<input type="hidden" name="routeChangeFlag" id="routeChangeFlag"/>
+			        	<tr><td><br/></td></tr>
+			        </#if>	           
+			        
 			        <#if (showBoothAutoSuggest?has_content) && (showBoothAutoSuggest != 'N')>
 			        	<tr>
 			          
