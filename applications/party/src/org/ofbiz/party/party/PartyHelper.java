@@ -86,7 +86,7 @@ public class PartyHelper {
                 if (UtilFormatOut.checkNull(partyValue.getString("lastName")) != null) {
                     result.append(UtilFormatOut.checkNull(partyValue.getString("lastName")));
                     if (partyValue.getString("firstName") != null) {
-                        result.append(", ");
+                        result.append(" ");
                     }
                 }
                 result.append(UtilFormatOut.checkNull(partyValue.getString("firstName")));
