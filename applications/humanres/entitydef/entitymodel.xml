@@ -81,6 +81,7 @@ under the License.
         <field name="companyBus" type="indicator"></field>
         <field name="busRouteNo" type="short-varchar"></field>
         <field name="flexibleShift" type="indicator"></field>
+        <field name="punchType" type="short-varchar"></field>
       <prim-key field="partyId" />
 		<relation type="one" fk-name="EMPL_DETAIL_PRTY"
 			rel-entity-name="Party">
@@ -95,14 +96,15 @@ under the License.
         <relation type="one" fk-name="EMPL_REC_EMPREF" rel-entity-name="Employment">
             <key-map field-name="employeeReferral" rel-field-name="partyIdTo"/>
         </relation>
-		<relation type="one" fk-name="EMPL_REC_CAS" rel-entity-name="Enumeration">
-            <key-map field-name="caste" rel-field-name="enumId"/>
-        </relation>
+		
         <relation type="one" fk-name="EMPL_REC_VHT" rel-entity-name="Enumeration">
             <key-map field-name="vehicleType" rel-field-name="enumId"/>
         </relation>
         <relation type="one" fk-name="EMPL_REC_QTP" rel-entity-name="Enumeration">
             <key-map field-name="quarterType" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_REC_PUN" rel-entity-name="Enumeration">
+            <key-map field-name="punchType" rel-field-name="enumId"/>
         </relation>
 	</entity> 
 
