@@ -16,14 +16,6 @@
         <description>Service to get the list of booths that have payments pending</description>
         <attribute type="List" mode="OUT" name="boothList" optional="true"/>
     </service>
-
-    <service name="getBoothDues" engine="java"  auth="true" export="true"
-        location="org.ofbiz.network.NetworkServices" invoke="getBoothDues">
-        <description>Service to get the dues for the given booth</description>
-        <attribute name="boothId" type="String" mode="IN" optional="false"/>       
-        <attribute type="Map" mode="OUT" name="boothDues" optional="true"/>
-    </service>
-        
     <service name="getRouteDues" engine="java"  auth="true" export="true"
         location="org.ofbiz.network.NetworkServices" invoke="getRouteDues">
         <description>Service to get the list of dues for the given route</description>
@@ -31,13 +23,6 @@
         <attribute type="List" mode="OUT" name="boothList" optional="true"/>
     </service>
     
-    <service name="makeBoothPayments" engine="java"  auth="true" export="true"
-        location="org.ofbiz.network.NetworkServices" invoke="makeBoothPayments">
-        <description>Service to get the list of routes</description>
-        <attribute name="paymentChannel" type="String" mode="IN" optional="false"/>        
-        <attribute name="transactionId" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentLocationId" type="String" mode="IN" optional="true"/>        
-        <attribute type="List" mode="IN" name="boothPayments" optional="false"/>
-    </service>    
+       
         
 </services>   

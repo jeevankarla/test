@@ -184,7 +184,7 @@ public class ByProductReportServices {
         return result;
     }
     
-	 public static Map<String, Object> getByProductPeriodTotals(DispatchContext dctx, Map<String, ? extends Object> context ) {
+	/* public static Map<String, Object> getByProductPeriodTotals(DispatchContext dctx, Map<String, ? extends Object> context ) {
 		 	Delegator delegator = dctx.getDelegator();
 		    LocalDispatcher dispatcher = dctx.getDispatcher();
 		    GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -263,7 +263,7 @@ public class ByProductReportServices {
 			}
 	    	List activeProdList = EntityUtil.getFieldListFromEntityList(boothOrderItemsList, "productId", true);
 	    	
-	    	/*==============GET PRICES BASED ON PARTY CLASSIFICATION=============*/
+	    	==============GET PRICES BASED ON PARTY CLASSIFICATION=============
 	    	Map classificationMap = FastMap.newInstance();
 	    	
 	    	List<GenericValue> partyClassificationList = null;
@@ -280,7 +280,7 @@ public class ByProductReportServices {
 	    		Map productsPrice = (Map) ByProductReportServices.getByProductPricesForPartyClassification(dctx, UtilMisc.toMap("userLogin",userLogin,"partyClassificationId", partyClassifications.get(i))).get("productsPrice");
     	        classificationMap.put(partyClassifications.get(i), productsPrice);
 	    	}
-	    	/*==============END=============*/
+	    	==============END=============
 	    	
 	    	Map productCategoryMap = FastMap.newInstance();
 	    	for(int i = 0; i < categoryIdsList.size(); i++){
@@ -380,10 +380,10 @@ public class ByProductReportServices {
 			     			return ServiceUtil.returnError("No partyRole found for given partyId");
 			     		}
 	    	    		
-	    	    		/*========================GET PRODUCT SALE TOTALS AND PRICES================================*/
+	    	    		========================GET PRODUCT SALE TOTALS AND PRICES================================
 	    	    		
 			     		
-			     			/*=========GET MRP PRICES========*/
+			     			=========GET MRP PRICES========
 		     		    Map MRPPriceMap = (Map) classificationMap.get("PM_RC_MRP");
 			     		Map MRPProdPriceMap = (Map)MRPPriceMap.get(productId);
 			     		BigDecimal MRPBasicPrice = (BigDecimal)MRPProdPriceMap.get("basicPrice");
@@ -402,7 +402,7 @@ public class ByProductReportServices {
 	        			catMRPTotalValue = catMRPTotalValue.add(MRPTotalValue);
 	        			catMRPVatValue = catMRPVatValue.add(MRPVatValue);
 			     		
-	        			    /*=========GET BASIC PRICES========*/
+	        			    =========GET BASIC PRICES========
 			     		Map priceMap = (Map) classificationMap.get(partyClassificationTypeId);
 			     		Map prodPriceMap = (Map)priceMap.get(productId);
 			     		BigDecimal basicPrice = (BigDecimal)prodPriceMap.get("basicPrice");
@@ -551,8 +551,8 @@ public class ByProductReportServices {
 	    					tempUpdateMap.putAll(updateDetailMap);
 	    					facCategoryTotalsMap.put(facilityCategory, tempUpdateMap);
 	    				}
-	    				/*========================GET PURCHASE TOTALS AND PRICES================================*/
-	    				/*if(!unionProductList.contains(productId)){
+	    				========================GET PURCHASE TOTALS AND PRICES================================
+	    				if(!unionProductList.contains(productId)){
 	    					quantity = BigDecimal.ZERO;
 	    					continue;
 	    				}
@@ -626,13 +626,13 @@ public class ByProductReportServices {
 	    					Map tempUpdateMap = FastMap.newInstance();
 	    					tempUpdateMap.putAll(updateDetailMap);
 	    					facCategoryPurTotMap.put(facilityCategory, tempUpdateMap);
-	    				}*/
+	    				}
 	                    
 	    	    	}
 	    	    	if( totalQty.compareTo(BigDecimal.ZERO) <= 0 ){
     	    			continue;
     	    		}
-	    	    	/*========================POPULATE SALES TOTALS================================*/
+	    	    	========================POPULATE SALES TOTALS================================
 	    	    	Map productTotalsMap = FastMap.newInstance();
 	    	    	productTotalsMap.put("quantity", totalQty);
 	    	    	productTotalsMap.put("qtyInc", subTotalQtyInc);
@@ -659,7 +659,7 @@ public class ByProductReportServices {
 	    	    	
 	    	    	saleAndPurchaseMap.put("sale", tempSupplyMap); 
 	    	    	
-	    	    	/*========================POPULATE PURCHASE TOTALS================================*/
+	    	    	========================POPULATE PURCHASE TOTALS================================
 	    	    	Map productPurchaseTotalsMap = FastMap.newInstance();
 	    	    	
 	    	    	productPurchaseTotalsMap.put("quantity", totalQty);
@@ -668,13 +668,13 @@ public class ByProductReportServices {
 	    	    	productPurchaseTotalsMap.put("vatPercentage", vatPercentage);
 	    	    	productPurchaseTotalsMap.put("vatValue", totalPurchaseVatValue);
 	    	    	
-	    	    	/*if(!unionProductList.contains(productId)){
+	    	    	if(!unionProductList.contains(productId)){
 	    	    		productPurchaseTotalsMap.put("quantity", BigDecimal.ZERO);
 	    	    		productPurchaseTotalsMap.put("qtyInc", BigDecimal.ZERO);
 		    	    	productPurchaseTotalsMap.put("basicValue", BigDecimal.ZERO);
 		    	    	productPurchaseTotalsMap.put("vatPercentage", BigDecimal.ZERO);
 		    	    	productPurchaseTotalsMap.put("vatValue", BigDecimal.ZERO);
-    				}*/
+    				}
 	    	    	
 	    	    	Map tempproductPurchaseTotalsMap = FastMap.newInstance();
 	    	    	tempproductPurchaseTotalsMap.putAll(productPurchaseTotalsMap);
@@ -700,7 +700,7 @@ public class ByProductReportServices {
 	    			continue;
 	    		}
 	    		
-	    		/*================POPULATE CATEGORY-WISE SALE AND PURCHASE TOTALS================*/
+	    		================POPULATE CATEGORY-WISE SALE AND PURCHASE TOTALS================
     	    	Map prodCategoryTotalsMap = FastMap.newInstance();
     	    	prodCategoryTotalsMap.put("catSaleQty", catSaleQty);
     	    	prodCategoryTotalsMap.put("catSaleQtyInc", catSaleQtyInc);
@@ -760,7 +760,7 @@ public class ByProductReportServices {
 	    	result.put("productWiseTotalsMap", productWiseTotalsMap);	    	
 	        return result;
 	 }
-
+*/
 	 public static Map<String, Object> getCategoryProducts(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");

@@ -5149,7 +5149,66 @@ public class ByProductNetworkServices {
 			 
 	        return result;
 	    }  
-	    
+	    /**
+	     * Make booth payments
+	     * @param ctx the dispatch context
+	     * @param context 
+	     * Note: This method is used only by eSeva.  Sometimes we can get more than one makePayment request
+	     * for the same booth from the eSeva server. To eliminate this issue we don't allow more than one 
+	     * payment for the same booth for the same day.
+	     */
+	    public static Map<String, Object> makeBoothPayments(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+			String paymentChannel = (String) context.get("paymentChannel");     	
+			String transactionId = (String) context.get("transactionId");     	
+			String paymentLocationId = (String) context.get("paymentLocationId");
+			LocalDispatcher dispatcher = ctx.getDispatcher();
+			List<Map<String, Object>> boothPayments = (List<Map<String, Object>>) context.get("boothPayments");
+			String infoString = "makeBoothPayments:: " + "paymentChannel=" + paymentChannel 
+				+";transactionId=" + transactionId + ";paymentLocationId=" + paymentLocationId 
+				+ " " + boothPayments;
+	Debug.logInfo(infoString, module);
+			if (boothPayments.isEmpty()) {
+	            Debug.logError("No payment amounts found; " + infoString, module);
+	            return ServiceUtil.returnError("No payment amounts found; " + infoString);			
+			}
+			for (Map boothPayment: boothPayments) { 
+	        	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentMethodTypeId", paymentChannel);    		
+	    		paymentCtx.put("userLogin", context.get("userLogin"));
+	    		paymentCtx.put("facilityId", (String)boothPayment.get("boothId"));
+	    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
+	            paymentCtx.put("paymentLocationId", paymentLocationId); 
+	            paymentCtx.put("paymentRefNum", transactionId);                        	    		            
+	    		paymentCtx.put("amount", ((Double)boothPayment.get("amount")).toString());
+	    		
+	        	Map<String, Object> paidPaymentCtx = UtilMisc.<String, Object>toMap("paymentMethodTypeId", paymentChannel);    
+	        	paidPaymentCtx.put("paymentDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
+				paidPaymentCtx.put("facilityId", (String)boothPayment.get("boothId"));
+				
+				Map boothsPaymentsDetail = getBoothPaidPayments( ctx , paidPaymentCtx);
+				List boothPaymentsList = (List)boothsPaymentsDetail.get("boothPaymentsList");
+				if (boothPaymentsList.size() > 0) {
+		            Debug.logError("Already received payment for booth " + (String)boothPayment.get("boothId") + " from eSeva," +
+		            		"hence skipping... Existing payment details:" + boothPaymentsList.get(0) + "; Current payment details:" +
+		            		paymentCtx, module);
+		            continue;
+				}
+				try{
+					Map<String, Object> paymentResult =  dispatcher.runSync("createPaymentForBooth",paymentCtx);
+					if (ServiceUtil.isError(paymentResult)) {
+		    			Debug.logError("Payment failed for: " + infoString + "[" + paymentResult + "]", module);    			
+		    			return paymentResult;
+		    		}
+					Debug.logInfo("Made following payment:" + paymentCtx, module);    		
+				}catch (GenericServiceException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);    			
+					return ServiceUtil.returnError(e.getMessage());
+				}
+	        }		
+	    	return ServiceUtil.returnSuccess();
+	    }
+
 	    /**
 	     * Make booth payments
 	     * @param ctx the dispatch context

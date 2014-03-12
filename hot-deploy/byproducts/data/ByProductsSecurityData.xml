@@ -141,4 +141,12 @@
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_TRCKSHEET"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_TRSHEETCR"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_REPORTS"/>
+    
+    
+    <SecurityGroup description=" payment API operations" groupId="PAYMENT_OPS"/>    
+    <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCTG_PREF_VIEW"/>    
+    <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCOUNTING_PAYMENT_EDIT"/>  
+    <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCTG_ATX_CREATE"/>
+     
+    
 </entity-engine-xml>
