@@ -121,7 +121,7 @@
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="PERSON_REC_MT" />
+					<entity-constraint name="enumTypeId" value="EMPL_REC_MT" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
@@ -129,7 +129,7 @@
 		<field name="religion" title="${uiLabelMap.Religion}">
 		     <drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="PERSON_REC_RE" />
+					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
@@ -172,6 +172,8 @@
 				<option key="N" />
 			</drop-down>
 		</field>
+		<field name="appointmentDate" title="${uiLabelMap.appointmentDate}"><date-time /></field>
+		<field name="resignationDate" title="${uiLabelMap.resignationDate}"><date-time /></field>
 		<field name="prevEmplThruDate" title="${uiLabelMap.FormFieldTitle_terminationDate}"><date-time /></field>
 		<field name="referenceName" title="${uiLabelMap.ReferenceName}"><text></text></field>
 		<field name="referenceEmployer" title="${uiLabelMap.ReferenceEmployer}"><text></text></field>
@@ -256,6 +258,8 @@
 				<sort-field name="companyBus" />
 				<sort-field name="busRouteNo" />
 				<sort-field name="flexibleShift" />
+				<sort-field name="appointmentDate" />
+				<sort-field name="resignationDate" />
 			</field-group>
 			<field-group title="${uiLabelMap.Previous}" collapsible="true" initially-collapsed="true">
 				<sort-field name="previousEmployer" />
@@ -320,7 +324,7 @@
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="PERSON_REC_MT" />
+					<entity-constraint name="enumTypeId" value="EMPL_REC_MT" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
@@ -328,7 +332,7 @@
 		<field name="religion" title="${uiLabelMap.Religion}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="PERSON_REC_RE" />
+					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
@@ -365,6 +369,8 @@
 				<option key="N" />
 			</drop-down>
 		</field>
+		<field name="appointmentDate" title="${uiLabelMap.appointmentDate}"><date-time /></field>
+		<field name="resignationDate" title="${uiLabelMap.resignationDate}"><date-time /></field>
 		<field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><text></text></field>
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
          	<drop-down allow-empty="false">             
@@ -435,7 +441,9 @@
 			<sort-field name="canteenFacin" />
 			<sort-field name="companyBus" />
 			<sort-field name="busRouteNo" />
-			<sort-field name="flexibleShift" />     
+			<sort-field name="flexibleShift" /> 
+			<sort-field name="appointmentDate" />
+			<sort-field name="resignationDate" />
             <sort-field name="submitButton"/>
             <sort-field name="cancelLink"/>
       	</sort-order>
@@ -489,6 +497,8 @@
 		<field name="companyBus" title="${uiLabelMap.CompanyBus}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${companyBus}"></display-entity></field>
 		<field name="busRouteNo" title="${uiLabelMap.BusRouteNo}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${busRouteNo}"></display-entity></field>
 		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${flexibleShift}"></display-entity></field>
+		<field name="appointmentDate" title="${uiLabelMap.appointmentDate}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${appointmentDate}"></display-entity></field>
+		<field name="resignationDate" title="${uiLabelMap.resignationDate}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${resignationDate}"></display-entity></field>
         <field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
         <field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportExpireDate}" ></display-entity></field>
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>       
@@ -757,9 +767,11 @@
                 <parameter param-name="emplPositionId" from-field="employmentData.emplPosition.emplPositionId"/>
             </hyperlink>
         </field>
-        <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
+         <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
             <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
         </field>
+        <field name="appointmentDate" entry-name="employment.appointmentDate"><display/></field>
+        <field name="resignationDate" entry-name="employment.resignationDate"><display/></field>
     </form>
 </forms>
 
