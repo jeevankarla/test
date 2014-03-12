@@ -589,6 +589,13 @@
             <call-service service-name="createPartyRelationship" in-map-name="partyRelationshipCtx"/>
         </if-not-empty>
         <field-to-result field="partyId"/>
+        <if-not-empty field="parameters.caste">
+        	<set field="partyClassificationCtx.partyId" from-field="partyId" />
+			<set field="partyClassificationCtx.partyClassificationGroupId" from-field="parameters.caste" />
+			<set field="partyClassificationCtx.fromDate" from-field="parameters.fromDate" />
+			<call-service service-name="createPartyClassification"
+				in-map-name="partyClassificationCtx" />
+        </if-not-empty>
         <if-not-empty field="parameters.fromDate">
 			<set field="createEmploymentCtx.partyIdTo" from-field="partyId" />
 			<set field="createEmploymentCtx.roleTypeIdFrom" value="INTERNAL_ORGANIZATIO" />

@@ -597,7 +597,8 @@ under the License.emplpunch
         <attribute name="postalAddContactMechPurpTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="OUT"/>
         <attribute name="partyIdFrom" type="String" mode="IN" optional="true" />
-		<attribute name="residentialNumber" mode="IN" type="String" optional="true"></attribute>	
+		<attribute name="residentialNumber" mode="IN" type="String" optional="true"></attribute>
+		<attribute name="caste" mode="IN" type="String" optional="true"></attribute>	
     </service>
     
     <service name="createPartyRelationshipDependent" engine="simple"

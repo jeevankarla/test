@@ -134,6 +134,13 @@
 				</entity-options>
 			</drop-down>
 		</field>
+		<field name="caste" title="${uiLabelMap.Caste}" >
+			<drop-down allow-empty="true">
+				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${partyClassificationGroupId}">
+					<entity-order-by field-name="partyClassificationGroupId"/>
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
 				<option key="Sunday"/>
@@ -249,6 +256,7 @@
 				<sort-field name="quarterType" />
 				<sort-field name="motherTongue" />
 				<sort-field name="religion" />
+				<sort-field name="caste" />
 				<sort-field name="weeklyOff" />
 				<sort-field name="attendanceIndn" />
 				<sort-field name="paymentMode" />
@@ -330,6 +338,12 @@
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
 					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="caste" title="${uiLabelMap.Caste}">
+		     <drop-down allow-empty="true">
+				<entity-options entity-name="PartyClassification" key-field-name="partyId" description="${partyClassificationGroupId}">
 				</entity-options>
 			</drop-down>
 		</field>
@@ -428,7 +442,8 @@
 		    <sort-field name="vehicleType" />
 			<sort-field name="quarterType" />
 			<sort-field name="motherTongue" />
-			<sort-field name="religion" />   
+			<sort-field name="religion" />  
+			<sort-field name="caste" /> 
 			<sort-field name="weeklyOff" />
 			<sort-field name="attendanceIndn" />
 			<sort-field name="paymentMode" />
@@ -462,10 +477,30 @@
     </form>    
     
      <form name="ViewEmployeeProfile" type="single" default-map-name="lookupPersonPartyAndEmployeeDetail" >
+     	<actions>
+     		<entity-condition entity-name="PartyClassification" list="classification">
+     			<condition-list>
+     				<condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
+     			</condition-list>
+     		</entity-condition>
+     		<entity-condition entity-name="PartyAndPostalAddress" list="address">
+     			<condition-list>
+     				<condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
+     			</condition-list>
+     		</entity-condition>
+     		
+     	</actions>
+     	<!-- <row-actions>
+            <entity-one entity-name="ContactMech" value-field="contactMech"/>
+            <set field="contactMechTypeId" from-field="contactMech.contactMechTypeId"/>
+            <entity-one entity-name="PostalAddress" value-field="postalAddress"/>
+            <entity-one entity-name="TelecomNumber" value-field="telecomNumber"/>
+        </row-actions> -->
         <field name="partyId"><display/></field>
         <field name="employeeId" title="${uiLabelMap.EmployeeId}"><display></display></field>
         <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPersonPartyAndEmployeeDetail.personalTitle} ${lookupPersonPartyAndEmployeeDetail.firstName} ${lookupPersonPartyAndEmployeeDetail.middleName} ${lookupPersonPartyAndEmployeeDetail.lastName}"/></field>
         <field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><display/></field>
+        <field name="address1" title="${uiLabelMap.CommonAddress1}" ><display description="${address[0].address1}"/></field>
         <field name="comments" title="${uiLabelMap.PartyComments}"><display/></field>
         <field name="externalId"><display/></field>
         <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>   
