@@ -121,7 +121,7 @@
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="EMPL_REC_MT" />
+					<entity-constraint name="enumTypeId" value="PERSON_REC_MT" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
@@ -129,7 +129,7 @@
 		<field name="religion" title="${uiLabelMap.Religion}">
 		     <drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
+					<entity-constraint name="enumTypeId" value="PERSON_REC_RE" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
@@ -320,7 +320,7 @@
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="EMPL_REC_MT" />
+					<entity-constraint name="enumTypeId" value="PERSON_REC_MT" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
@@ -328,7 +328,7 @@
 		<field name="religion" title="${uiLabelMap.Religion}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="EMPL_REC_RE" />
+					<entity-constraint name="enumTypeId" value="PERSON_REC_RE" />
 					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
