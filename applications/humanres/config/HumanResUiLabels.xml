@@ -2600,4 +2600,8 @@
 	<property key="FlexibleShift">
 		<value xml:lang="en">Flexible Shift</value>
 	</property> 
+	<property key="PunchType">
+		<value xml:lang="en">Punch Type</value>
+	</property> 
+	
 </resource>

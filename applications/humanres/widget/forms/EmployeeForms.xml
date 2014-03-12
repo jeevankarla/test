@@ -141,6 +141,14 @@
 				</entity-options>
 			</drop-down>
 		</field>
+		<field name="punchType" title="${uiLabelMap.PunchType}">
+		     <drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_PUN" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
 				<option key="Sunday"/>
@@ -257,6 +265,7 @@
 				<sort-field name="motherTongue" />
 				<sort-field name="religion" />
 				<sort-field name="caste" />
+				<sort-field name="punchType" />
 				<sort-field name="weeklyOff" />
 				<sort-field name="attendanceIndn" />
 				<sort-field name="paymentMode" />
@@ -344,6 +353,14 @@
 		<field name="caste" title="${uiLabelMap.Caste}">
 		     <drop-down allow-empty="true">
 				<entity-options entity-name="PartyClassification" key-field-name="partyId" description="${partyClassificationGroupId}">
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="punchType" title="${uiLabelMap.PunchType}">
+		     <drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_PUN" />
+					<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>
 		</field>
@@ -444,6 +461,7 @@
 			<sort-field name="motherTongue" />
 			<sort-field name="religion" />  
 			<sort-field name="caste" /> 
+			<sort-field name="punchType" />
 			<sort-field name="weeklyOff" />
 			<sort-field name="attendanceIndn" />
 			<sort-field name="paymentMode" />
@@ -517,6 +535,7 @@
 		<field name="quarterType" title="${uiLabelMap.QuarterType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="religion" title="${uiLabelMap.Religion}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+		<field name="punchType" title="${uiLabelMap.PunchType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${weeklyOff}"></display-entity></field>
 		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${attendanceIndn}"></display-entity></field>
 		<field name="paymentMode" title="${uiLabelMap.PaymentMode}"><display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"></display-entity></field>

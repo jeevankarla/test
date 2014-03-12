@@ -645,6 +645,7 @@
 		<set field="newEntity.companyBus" from-field="parameters.companyBus" />
 		<set field="newEntity.busRouteNo" from-field="parameters.busRouteNo" />
 		<set field="newEntity.flexibleShift" from-field="parameters.flexibleShift" />
+		<set field="newEntity.punchType" from-field="parameters.punchType" />
 		<create-value value-field="newEntity" />
     </simple-method>
 
