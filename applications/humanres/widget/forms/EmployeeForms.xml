@@ -505,24 +505,18 @@
     
      <form name="ViewEmployeeProfile" type="single" default-map-name="lookupPersonPartyAndEmployeeDetail" >
      	<actions>
-     		<entity-condition entity-name="PartyClassification" list="classification">
+     		<entity-condition entity-name="PartyClassification" list="classification" filter-by-date="true">
      			<condition-list>
      				<condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
      			</condition-list>
      		</entity-condition>
-     		<entity-condition entity-name="PartyAndPostalAddress" list="address">
-     			<condition-list>
-     				<condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
-     			</condition-list>
-     		</entity-condition>
-     		
+     		<set field="partyClassificationTypeId" value="${classification[0].partyClassificationGroupId}"/>
+     		<entity-one entity-name="PartyClassificationType" value-field="partyClassificationType">
+					<field-map field-name="partyClassificationTypeId" from-field="partyClassificationTypeId" />
+				</entity-one>
+				<set field="caste" value="${partyClassificationType.description}"/>
      	</actions>
-     	<!-- <row-actions>
-            <entity-one entity-name="ContactMech" value-field="contactMech"/>
-            <set field="contactMechTypeId" from-field="contactMech.contactMechTypeId"/>
-            <entity-one entity-name="PostalAddress" value-field="postalAddress"/>
-            <entity-one entity-name="TelecomNumber" value-field="telecomNumber"/>
-        </row-actions> -->
+     	
         <field name="partyId"><display/></field>
         <field name="employeeId" title="${uiLabelMap.EmployeeId}"><display></display></field>
         <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPersonPartyAndEmployeeDetail.personalTitle} ${lookupPersonPartyAndEmployeeDetail.firstName} ${lookupPersonPartyAndEmployeeDetail.middleName} ${lookupPersonPartyAndEmployeeDetail.lastName}"/></field>
@@ -546,9 +540,7 @@
 		<field name="quarterType" title="${uiLabelMap.QuarterType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="religion" title="${uiLabelMap.Religion}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
-		<field name="caste" title="${uiLabelMap.Caste}" >
-			<display description="${classification[0].partyClassificationGroupId}"></display>
-		</field>
+		<field name="caste" title="${uiLabelMap.Caste}" ><display description="${caste}"></display></field>
 		<field name="punchType" title="${uiLabelMap.PunchType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${weeklyOff}"></display-entity></field>
 		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${attendanceIndn}"></display-entity></field>
