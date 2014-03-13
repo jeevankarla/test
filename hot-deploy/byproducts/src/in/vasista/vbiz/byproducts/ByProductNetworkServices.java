@@ -3858,6 +3858,7 @@ public class ByProductNetworkServices {
 	    	BigDecimal totalPacket = ZERO;
 	    	BigDecimal totalFat = ZERO;
 	    	BigDecimal totalSnf = ZERO;
+	    	BigDecimal totalVatRevenue = ZERO;
 	    	
 	    	Map<String, Object> boothZoneMap = FastMap.newInstance();
 	    	boothZoneMap = getAllBoothsZonesMap(delegator); 
@@ -3879,6 +3880,11 @@ public class ByProductNetworkServices {
 	            BigDecimal revenue = price.multiply(quantity);
 	            totalRevenue = totalRevenue.add(revenue);
 	            totalPacket = totalPacket.add(packetQuantity);
+	            
+	            BigDecimal vatAmount  = orderItem.getBigDecimal("vatAmount"); 
+	            BigDecimal vatRevenue = vatAmount.multiply(quantity);
+	            totalVatRevenue=totalVatRevenue.add(vatRevenue);
+	            
 	            quantity = quantity.multiply(orderItem.getBigDecimal("quantityIncluded"));
 	    		totalQuantity = totalQuantity.add(quantity);   
 	    		BigDecimal fat = ZERO;
@@ -3910,6 +3916,7 @@ public class ByProductNetworkServices {
 					newMap.put("total", quantity);
 					newMap.put("packetQuantity", packetQuantity);
 					newMap.put("totalRevenue", revenue);
+					newMap.put("vatRevenue", vatRevenue);
 					newMap.put("excludeIncentive", orderItem.getString("excludeIncentive"));
 					newMap.put("categoryTypeEnum", orderItem.getString("categoryTypeEnum"));
 					Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
@@ -3922,6 +3929,7 @@ public class ByProductNetworkServices {
 	    				supplyTypeDetailsMap.put("total", ZERO);
 	    				supplyTypeDetailsMap.put("packetQuantity", ZERO);
 	    				supplyTypeDetailsMap.put("totalRevenue", ZERO);
+	    				supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 	    				iteratorMap.put(type.getString("enumId"), supplyTypeDetailsMap);
 	    				newMap.put("supplyTypeTotals", iteratorMap);
 	    			}
@@ -3931,6 +3939,7 @@ public class ByProductNetworkServices {
 					supplyTypeDetailsMap.put("total", quantity);
 					supplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 					supplyTypeDetailsMap.put("totalRevenue", revenue);
+					supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 					supplyTypeMap.put(prodSubscriptionTypeId, supplyTypeDetailsMap);
 					newMap.put("supplyTypeTotals", supplyTypeMap);
 					
@@ -3943,11 +3952,13 @@ public class ByProductNetworkServices {
 					productSupplyTypeDetailsMap.put("total", quantity);
 					productSupplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 					productSupplyTypeDetailsMap.put("totalRevenue", revenue);
+					productSupplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 					productSupplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), productSupplyTypeDetailsMap);
 					productItemMap.put("supplyTypeTotals", productSupplyTypeMap);
 	                productItemMap.put("total", quantity);
 	                productItemMap.put("packetQuantity", packetQuantity);
 					productItemMap.put("totalRevenue", revenue);
+					productItemMap.put("vatRevenue", vatRevenue);
 					
 					Map<String, Object> productMap = FastMap.newInstance();
 					productMap.put(productId, productItemMap);
@@ -3963,11 +3974,15 @@ public class ByProductNetworkServices {
 					
 					boothMap.put("total", runningTotal);
 					BigDecimal runningTotalRevenue = (BigDecimal)boothMap.get("totalRevenue");
-					
 					runningTotalRevenue = runningTotalRevenue.add(revenue);
 					boothMap.put("totalRevenue", runningTotalRevenue);
 					runningPacketTotal = runningPacketTotal.add(packetQuantity);
-					boothMap.put("packetQuantity", runningPacketTotal);    			    				
+					boothMap.put("packetQuantity", runningPacketTotal);
+					
+					BigDecimal runningVatRevenue = (BigDecimal)boothMap.get("vatRevenue");
+					runningVatRevenue = runningVatRevenue.add(vatRevenue);
+					boothMap.put("vatRevenue", runningVatRevenue);
+					
 					// next handle type totals
 					Map tempMap = (Map)boothMap.get("supplyTypeTotals");
 					Map typeMap = (Map)tempMap.get(prodSubscriptionTypeId);
@@ -3979,10 +3994,14 @@ public class ByProductNetworkServices {
 					BigDecimal typeRunningPacketTotal = (BigDecimal) typeMap.get("packetQuantity");
 					typeRunningPacketTotal = typeRunningPacketTotal.add(packetQuantity);
 					
+					BigDecimal typeRunningVatRevenue = (BigDecimal) typeMap.get("vatRevenue");
+					typeRunningVatRevenue = typeRunningVatRevenue.add(vatRevenue);
+					
 					typeMap.put("name", prodSubscriptionTypeId);
 					typeMap.put("total", typeRunningTotal);
 					typeMap.put("packetQuantity", typeRunningPacketTotal);
 					typeMap.put("totalRevenue", typeRunningTotalRevenue);
+					typeMap.put("vatRevenue",typeRunningVatRevenue);
 					// next handle product totals
 					Map boothProductTotals = (Map)boothMap.get("productTotals");
 					Map productMap = (Map)boothProductTotals.get(productId);
@@ -3994,12 +4013,14 @@ public class ByProductNetworkServices {
 						supplyTypeDetailsMap.put("total", quantity);
 						supplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 						supplyTypeDetailsMap.put("totalRevenue", revenue);
+						supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 						supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), supplyTypeDetailsMap);
 	    				productItemMap.put("name", productName);
 	    				productItemMap.put("supplyTypeTotals", supplyTypeMap);
 	    				productItemMap.put("total", quantity);
 	    				productItemMap.put("packetQuantity", packetQuantity);
 	    				productItemMap.put("totalRevenue", revenue);
+	    				productItemMap.put("vatRevenue", vatRevenue);
 	    				boothProductTotals.put(productId, productItemMap);
 	    				
 					}else{
@@ -4014,6 +4035,10 @@ public class ByProductNetworkServices {
 	    				productRunningPacketTotals = productRunningPacketTotals.add(packetQuantity);
 	    				productMap.put("packetQuantity", productRunningPacketTotals);
 	    				
+	    				BigDecimal productRunningVatRevenue = (BigDecimal)productMap.get("vatRevenue");
+	    				productRunningVatRevenue = productRunningVatRevenue.add(productRunningVatRevenue);
+	    				productMap.put("vatRevenue", productRunningVatRevenue);
+	    				
 	    				
 	    				Map supplyTypeMap = (Map) productMap.get("supplyTypeTotals");
 	    				if(supplyTypeMap.get(orderItem.getString("productSubscriptionTypeId") )!= null){
@@ -4024,11 +4049,14 @@ public class ByProductNetworkServices {
 	        				runningTotalRevenueproductSubscriptionType = runningTotalRevenueproductSubscriptionType.add(revenue);
 	        				BigDecimal runningPacketTotalproductSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("packetQuantity");
 	        				runningPacketTotalproductSubscriptionType = runningPacketTotalproductSubscriptionType.add(packetQuantity);
+	        				BigDecimal runningVatRevenueProductSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("vatRevenue");
+	        				runningVatRevenueProductSubscriptionType = runningVatRevenueProductSubscriptionType.add(vatRevenue);
 	        				
 	        				supplyTypeDetailsMap.put("name", orderItem.getString("productSubscriptionTypeId"));
 	        				supplyTypeDetailsMap.put("total", runningTotalproductSubscriptionType);
 	        				supplyTypeDetailsMap.put("packetQuantity", runningPacketTotalproductSubscriptionType);
 	        				supplyTypeDetailsMap.put("totalRevenue", runningTotalRevenueproductSubscriptionType);
+	        				supplyTypeDetailsMap.put("vatRevenue", runningVatRevenueProductSubscriptionType);
 	        				supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), supplyTypeDetailsMap);
 	        				productMap.put("supplyTypeTotals", supplyTypeMap);
 	        				boothProductTotals.put(productId, productMap);
@@ -4039,6 +4067,7 @@ public class ByProductNetworkServices {
 	    					supplyTypeDetailsMap.put("total", quantity);
 	    					supplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 	    					supplyTypeDetailsMap.put("totalRevenue", revenue);
+	    					supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 	    					supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), supplyTypeDetailsMap);
 	    					productMap.put("supplyTypeTotals", supplyTypeMap);
 	    					boothProductTotals.put(productId, productMap);
@@ -4052,6 +4081,7 @@ public class ByProductNetworkServices {
 					newMap.put("total", quantity);
 					newMap.put("packetQuantity", packetQuantity);
 					newMap.put("totalRevenue", revenue); 
+					newMap.put("vatRevenue", vatRevenue); 
 					newMap.put("excludeIncentive", orderItem.getString("excludeIncentive"));
 					newMap.put("categoryTypeEnum", orderItem.getString("categoryTypeEnum"));
 			        Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
@@ -4064,6 +4094,7 @@ public class ByProductNetworkServices {
 	    				supplyTypeDetailsMap.put("total", ZERO);
 	    				supplyTypeDetailsMap.put("packetQuantity", ZERO);
 	    				supplyTypeDetailsMap.put("totalRevenue", ZERO);
+	    				supplyTypeDetailsMap.put("vatRevenue", ZERO);
 	    				iteratorMap.put(type.getString("enumId"), supplyTypeDetailsMap);
 	    				newMap.put("supplyTypeTotals", iteratorMap);
 					}
@@ -4073,6 +4104,7 @@ public class ByProductNetworkServices {
 					supplyTypeDetailsMap.put("total", quantity);
 					supplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 					supplyTypeDetailsMap.put("totalRevenue", revenue);
+					supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 					supplyTypeMap.put(prodSubscriptionTypeId, supplyTypeDetailsMap);
 					newMap.put("supplyTypeTotals", supplyTypeMap);
 					
@@ -4084,11 +4116,13 @@ public class ByProductNetworkServices {
 					productSupplyTypeDetailsMap.put("total", quantity);
 					productSupplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 					productSupplyTypeDetailsMap.put("totalRevenue", revenue);
+					productSupplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 					productSupplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), productSupplyTypeDetailsMap);
 					productItemMap.put("supplyTypeTotals", productSupplyTypeMap);
 	                productItemMap.put("total", quantity);
 	                productItemMap.put("packetQuantity", packetQuantity);
 					productItemMap.put("totalRevenue", revenue);
+					productItemMap.put("vatRevenue", vatRevenue);
 					
 					Map<String, Object> productMap = FastMap.newInstance();
 					productMap.put(productId, productItemMap);
@@ -4106,6 +4140,9 @@ public class ByProductNetworkServices {
 					BigDecimal runningPacketTotal = (BigDecimal)dayWiseMap.get("packetQuantity");
 					runningPacketTotal = runningPacketTotal.add(packetQuantity);
 					dayWiseMap.put("packetQuantity", runningPacketTotal);
+					BigDecimal runningVatRevenue = (BigDecimal)dayWiseMap.get("vatRevenue");
+					runningVatRevenue = runningVatRevenue.add(vatRevenue);
+					dayWiseMap.put("vatRevenue", runningVatRevenue);
 					// next handle type totals
 					Map tempMap = (Map)dayWiseMap.get("supplyTypeTotals");
 					Map typeMap = (Map)tempMap.get(prodSubscriptionTypeId);
@@ -4115,11 +4152,15 @@ public class ByProductNetworkServices {
 					typeRunningTotalRevenue = typeRunningTotalRevenue.add(revenue);
 					BigDecimal typeRunningPacketTotal = (BigDecimal) typeMap.get("packetQuantity");
 					typeRunningPacketTotal = typeRunningPacketTotal.add(packetQuantity);
+					BigDecimal typeRunningVatRevenue = (BigDecimal) typeMap.get("vatRevenue");
+					typeRunningVatRevenue = typeRunningVatRevenue.add(vatRevenue);
 					
 					typeMap.put("name", prodSubscriptionTypeId);
 					typeMap.put("total", typeRunningTotal);
 					typeMap.put("totalRevenue", typeRunningTotalRevenue);
 					typeMap.put("packetQuantity", typeRunningPacketTotal);
+					typeMap.put("vatRevenue", typeRunningVatRevenue);
+					
 					// next handle product totals
 					Map dayWiseProductTotals = (Map)dayWiseMap.get("productTotals");
 					Map productMap = (Map)dayWiseProductTotals.get(productId);
@@ -4132,12 +4173,14 @@ public class ByProductNetworkServices {
 						supplyTypeDetailsMap.put("total", quantity);
 						supplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 						supplyTypeDetailsMap.put("totalRevenue", revenue);
+						supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 						supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), supplyTypeDetailsMap);
 	    				productItemMap.put("name", productName);
 	    				productItemMap.put("supplyTypeTotals", supplyTypeMap);
 	    				productItemMap.put("total", quantity);
 	    				productItemMap.put("packetQuantity", packetQuantity);
 	    				productItemMap.put("totalRevenue", revenue);
+	    				productItemMap.put("vatRevenue", vatRevenue);
 	    				dayWiseProductTotals.put(productId, productItemMap);
 	    				
 					}else{
@@ -4150,6 +4193,9 @@ public class ByProductNetworkServices {
 	    				BigDecimal productRunningPacketTotal = (BigDecimal)productMap.get("packetQuantity");
 	    				productRunningPacketTotal = productRunningPacketTotal.add(packetQuantity);
 	    				productMap.put("packetQuantity", productRunningPacketTotal);
+	    				BigDecimal productRunningVatRevenue = (BigDecimal)productMap.get("vatRevenue");
+	    				productRunningVatRevenue = productRunningVatRevenue.add(vatRevenue);
+	    				productMap.put("vatRevenue", productRunningVatRevenue);
 	    				
 	    				Map supplyTypeMap = (Map) productMap.get("supplyTypeTotals");
 	    				if(supplyTypeMap.get(orderItem.getString("productSubscriptionTypeId") )!= null){
@@ -4162,11 +4208,14 @@ public class ByProductNetworkServices {
 	        				
 	        				BigDecimal runningTotalPacketSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("packetQuantity");
 	        				runningTotalPacketSubscriptionType = runningTotalPacketSubscriptionType.add(packetQuantity);
+	        				BigDecimal runningVatRevenueProductSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("vatRevenue");
+	        				runningVatRevenueProductSubscriptionType = runningVatRevenueProductSubscriptionType.add(vatRevenue);
 	        				
 	        				supplyTypeDetailsMap.put("name", orderItem.getString("productSubscriptionTypeId"));
 	        				supplyTypeDetailsMap.put("total", runningTotalproductSubscriptionType);
 	        				supplyTypeDetailsMap.put("packetQuantity", runningTotalPacketSubscriptionType);
 	        				supplyTypeDetailsMap.put("totalRevenue", runningTotalRevenueproductSubscriptionType);
+	        				supplyTypeDetailsMap.put("vatRevenue", runningVatRevenueProductSubscriptionType);
 	        				supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), supplyTypeDetailsMap);
 	        				productMap.put("supplyTypeTotals", supplyTypeMap);
 	        				dayWiseProductTotals.put(productId, productMap);
@@ -4177,6 +4226,7 @@ public class ByProductNetworkServices {
 	    					supplyTypeDetailsMap.put("total", quantity);
 	    					supplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 	    					supplyTypeDetailsMap.put("totalRevenue", revenue);
+	    					supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 	    					supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), supplyTypeDetailsMap);
 	    					productMap.put("supplyTypeTotals", supplyTypeMap);
 	    					dayWiseProductTotals.put(productId, productMap);
@@ -4281,11 +4331,13 @@ public class ByProductNetworkServices {
 					supplyTypeDetailsMap.put("total", quantity);
 					supplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 					supplyTypeDetailsMap.put("totalRevenue", revenue);
+					supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 					supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), supplyTypeDetailsMap);
 					newMap.put("supplyTypeTotals", supplyTypeMap);
 					newMap.put("total", quantity);
 					newMap.put("packetQuantity", packetQuantity);
 					newMap.put("totalRevenue", revenue);
+					newMap.put("vatRevenue", vatRevenue);
 					newMap.put("totalFat", fat);
 					newMap.put("totalSnf", snf);
 					productTotals.put(productId, newMap);
@@ -4301,6 +4353,9 @@ public class ByProductNetworkServices {
 					BigDecimal runningPacketTotal = (BigDecimal)productMap.get("packetQuantity");
 					runningPacketTotal = runningPacketTotal.add(packetQuantity);
 					productMap.put("packetQuantity", runningPacketTotal);
+					BigDecimal runningVatRevenue = (BigDecimal)productMap.get("vatRevenue");
+					runningVatRevenue = runningVatRevenue.add(vatRevenue);
+					productMap.put("vatRevenue", runningVatRevenue);
 					
 					BigDecimal runningTotalFat = (BigDecimal)productMap.get("totalFat");
 					runningTotalFat = runningTotalFat.add(fat);
@@ -4315,13 +4370,17 @@ public class ByProductNetworkServices {
 						BigDecimal runningTotalproductSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("total");
 						BigDecimal runningPacketTotalSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("packetQuantity");
 						BigDecimal runningRevenueproductSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("totalRevenue");
+						BigDecimal runningVatRevenueProductSubscriptionType = (BigDecimal)supplyTypeDetailsMap.get("vatRevenue");
 						runningTotalproductSubscriptionType = runningTotalproductSubscriptionType.add(quantity);
 	    				runningRevenueproductSubscriptionType = runningRevenueproductSubscriptionType.add(revenue);
 	    				runningPacketTotalSubscriptionType = runningPacketTotalSubscriptionType.add(packetQuantity);
+	    				runningVatRevenueProductSubscriptionType=runningVatRevenueProductSubscriptionType.add(vatRevenue);
 	    				supplyTypeDetailsMap.put("name", orderItem.getString("productSubscriptionTypeId"));
 	    				supplyTypeDetailsMap.put("total", runningTotalproductSubscriptionType);
 	    				supplyTypeDetailsMap.put("packetQuantity", runningPacketTotalSubscriptionType);
 	    				supplyTypeDetailsMap.put("totalRevenue", runningRevenueproductSubscriptionType);
+	    				supplyTypeDetailsMap.put("vatRevenue", runningVatRevenueProductSubscriptionType);
+	    				
 	    				supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"),supplyTypeDetailsMap);
 	    				productMap.put("supplyTypeTotals", supplyTypeMap);
 					}else{
@@ -4330,6 +4389,7 @@ public class ByProductNetworkServices {
 						supplyTypeDetailsMap.put("total", quantity);
 						supplyTypeDetailsMap.put("packetQuantity", packetQuantity);
 						supplyTypeDetailsMap.put("totalRevenue", revenue);
+						supplyTypeDetailsMap.put("vatRevenue", vatRevenue);
 						supplyTypeMap.put(orderItem.getString("productSubscriptionTypeId"), supplyTypeDetailsMap);
 						productMap.put("supplyTypeTotals", supplyTypeMap);
 					}
@@ -4342,6 +4402,7 @@ public class ByProductNetworkServices {
 					newMap.put("total", quantity);
 					newMap.put("packetQuantity", packetQuantity);
 					newMap.put("totalRevenue", revenue); 
+					newMap.put("vatRevenue", vatRevenue); 
 					supplyTypeTotals.put(prodSubscriptionTypeId, newMap);
 				}
 				else {
@@ -4354,7 +4415,10 @@ public class ByProductNetworkServices {
 					supplyTypeMap.put("totalRevenue", runningTotalRevenue);  
 					BigDecimal runningPacketTotal = (BigDecimal)supplyTypeMap.get("packetQuantity");
 					runningPacketTotal = runningPacketTotal.add(packetQuantity);
-					supplyTypeMap.put("packetQuantity", runningPacketTotal);  
+					supplyTypeMap.put("packetQuantity", runningPacketTotal); 
+					BigDecimal runningVatRevenue = (BigDecimal)supplyTypeMap.get("vatRevenue");
+					runningVatRevenue = runningVatRevenue.add(vatRevenue);
+					supplyTypeMap.put("vatRevenue", runningVatRevenue); 
 				}
 			}
 	    	  	
@@ -4362,7 +4426,8 @@ public class ByProductNetworkServices {
 			totalRevenue = totalRevenue.setScale(decimals, rounding);
 			totalPacket = totalPacket.setScale(decimals, rounding);
 			totalFat = totalFat.setScale(decimals, rounding);    
-			totalSnf = totalSnf.setScale(decimals, rounding);    
+			totalSnf = totalSnf.setScale(decimals, rounding);   
+			totalVatRevenue = totalVatRevenue.setScale(decimals, rounding);
 			
 			/*// set scale
 	        for ( Map.Entry<String, Object> entry : zoneTotals.entrySet() ) {
@@ -4425,7 +4490,10 @@ public class ByProductNetworkServices {
 	        	productValue.put("totalFat", tempVal);	
 	        	tempVal = (BigDecimal)productValue.get("totalSnf");
 	        	tempVal = tempVal.setScale(decimals, rounding); 
-	        	productValue.put("totalSnf", tempVal);		        	
+	        	productValue.put("totalSnf", tempVal);	
+	        	tempVal = (BigDecimal)productValue.get("vatRevenue");
+	        	tempVal = tempVal.setScale(decimals, rounding); 
+	        	productValue.put("vatRevenue", tempVal);	
 	        }
 	        for ( Map.Entry<String, Object> entry : supplyTypeTotals.entrySet() ) {
 	        	Map<String, Object> supplyTypeValue = (Map<String, Object>)entry.getValue();
@@ -4439,11 +4507,16 @@ public class ByProductNetworkServices {
 	        	
 	        	tempVal = (BigDecimal)supplyTypeValue.get("totalRevenue");
 	        	tempVal = tempVal.setScale(decimals, rounding); 
-	        	supplyTypeValue.put("totalRevenue", tempVal);	    	        	
+	        	supplyTypeValue.put("totalRevenue", tempVal);	
+	        	tempVal = (BigDecimal)supplyTypeValue.get("vatRevenue");
+	        	tempVal = tempVal.setScale(decimals, rounding); 
+	        	supplyTypeValue.put("vatRevenue", tempVal);	
+	        	
 	        }	        
 			Map<String, Object> result = FastMap.newInstance();        
 	        result.put("totalQuantity", totalQuantity);
 	        result.put("totalRevenue", totalRevenue);
+	        result.put("totalVatRevenue", totalVatRevenue);
 	        result.put("totalPacket", totalPacket);
 	        result.put("totalFat", totalFat);   
 	        result.put("totalSnf", totalSnf);                
