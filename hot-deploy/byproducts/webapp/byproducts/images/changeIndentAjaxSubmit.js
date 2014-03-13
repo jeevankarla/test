@@ -86,6 +86,13 @@ $(function() {
        
        
        $("#boothId").autocomplete({ source: boothsList }).keydown(function(e){
+    	   $.ui.autocomplete.filter = function (array, term) { 
+               var matcher = new RegExp($.ui.autocomplete.escapeRegex(term), "i");
+               return $.grep(array, function (value) {
+                   return matcher.test(value.label || value.value || value);
+               });
+           };
+
 			if (e.keyCode === 13){
 		      	 $('#boothId').autocomplete('close');
 		      	 if( typeof $("#boothId").val() != "undefined"   && $("#boothId").val() != ""){ 
@@ -96,7 +103,14 @@ $(function() {
 		});
        // booth auto Complete
      $('#boothId').keypress(function (e) {
-			$("#boothId").autocomplete({ source: boothsList});	
+			$("#boothId").autocomplete({ source: boothsList});
+			$.ui.autocomplete.filter = function (array, term) { 
+                var matcher = new RegExp($.ui.autocomplete.escapeRegex(term), "i");
+                return $.grep(array, function (value) {
+                    return matcher.test(value.label || value.value || value);
+                });
+            };
+
 	 });
      
      $('#boothId').keyup(function (e) {
