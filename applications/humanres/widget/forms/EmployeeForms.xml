@@ -89,6 +89,8 @@
 			<option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}" />
 		</drop-down>
 		</field>
+		<field name="height" title="${uiLabelMap.Height}"><text></text></field>
+		<field name="weight" title="${uiLabelMap.Weight}"><text></text></field>
 		<field name="mobileNumber" title="${uiLabelMap.Mobile}"><text></text></field>
 		<field name="residentialNumber" title="${uiLabelMap.Residential}"><text></text></field>
 		<field name="emailAddress" title="${uiLabelMap.Email}"><text></text></field>
@@ -242,6 +244,8 @@
 				<sort-field name="birthDate"></sort-field>
 				<sort-field name="gender"></sort-field>
 				<sort-field name="maritalStatus"></sort-field>
+				<sort-field name="height"></sort-field>
+				<sort-field name="weight"></sort-field>
 				<sort-field name="bloodGroup" />
 				<sort-field name="belongsTo" />
 				<sort-field name="address1"></sort-field>
@@ -420,6 +424,8 @@
             <sort-field name="lastName"/>            
             <sort-field name="gender"/>
             <sort-field name="maritalStatus"/>
+            <sort-field name="height"/>
+        	<sort-field name="weight"/>
             <sort-field name="belongsTo"/>
             <sort-field name="bloodGroup"/>
             <sort-field name="birthDate"/>
@@ -433,8 +439,6 @@
         	<sort-field name="lastNameLocal"/>
             <sort-field name="otherLocal"/>
             <sort-field name="deceasedDate"/>
-            <sort-field name="height"/>
-        	<sort-field name="weight"/>
             <sort-field name="passportNumber"/>
             <sort-field name="passportExpireDate"/>
             <sort-field name="comments"/>
@@ -531,6 +535,8 @@
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}"><display/></field>
         <field name="gender" title="${uiLabelMap.FormFieldTitle_gender}"><display-entity entity-name="Person" key-field-name="partyId" description="${gender}" ></display-entity></field>
         <field name="maritalStatus" title="${uiLabelMap.MaritalStatus}"><display-entity entity-name="Person" key-field-name="partyId" description="${maritalStatus}" ></display-entity></field>
+        <field name="height" title="${uiLabelMap.Height}"><display/></field>
+		<field name="weight" title="${uiLabelMap.Weight}"><display/></field>
         <field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyName}"></display-entity></field>
         <field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyContactNumber}"></display-entity></field>       
         <field name="panId" title="${uiLabelMap.Pan}"><display-entity entity-name="Person" key-field-name="partyId" description="${panId}" ></display-entity></field>
