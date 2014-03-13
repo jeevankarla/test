@@ -351,8 +351,9 @@
 			</drop-down>
 		</field>
 		<field name="caste" title="${uiLabelMap.Caste}">
-		     <drop-down allow-empty="true">
-				<entity-options entity-name="PartyClassification" key-field-name="partyId" description="${partyClassificationGroupId}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${partyClassificationGroupId}">
+					<entity-order-by field-name="partyClassificationGroupId"/>
 				</entity-options>
 			</drop-down>
 		</field>
