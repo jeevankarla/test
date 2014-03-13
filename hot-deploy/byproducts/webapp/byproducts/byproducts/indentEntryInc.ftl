@@ -516,24 +516,26 @@ function updateGrid(){
 				var indentCat = prodIndentQtyCat[prod];
 				var qtyInBulk = qtyInPieces[prod];
 				var price = parseFloat(priceTags[prod]);
+				var qtyPieces;
 				if(indentCat == null && indentCat == undefined){
 					data[args.row]["cQuantity"] = qty;
 				}
 				else{
 					if(!isNaN(qty)){
 						data[args.row]["cQuantity"] = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
+						qtyPieces = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
 					}
 					
 				}
 				if(isNaN(price)){
 					price = 0;
 				}
-				if(isNaN(qty)){
-					qty = 0;
+				if(isNaN(qtyPieces)){
+					qtyPieces = 0;
 				}
 				
 				
-				var roundedAmount = Math.round(qty*price);
+				var roundedAmount = Math.round(qtyPieces*price);
 				
 				if(isNaN(roundedAmount)){
 					roundedAmount = 0;
