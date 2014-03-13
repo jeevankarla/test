@@ -74,5 +74,17 @@ under the License.
     
                         
     <SecurityGroupPermission groupId="BasicEmployee" permissionId="HUMANRES_LEAVE_EDIT"/>  
-    <SecurityGroupPermission groupId="BasicEmployee" permissionId="HUMANRES_PUNCH_EDIT"/>            
+    <SecurityGroupPermission groupId="BasicEmployee" permissionId="HUMANRES_PUNCH_EDIT"/>     
+    
+   <SecurityGroup description="HumanRes View group, has complete permissions to View all HR activities." groupId="HUMANRESVIEW"/>
+    
+        <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_VIEW"/>      
+    <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_EMPLOYEEPOS_VIEW"/>    
+    <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_EMPLOYEE_VIEW"/> 
+    <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_EMPLOYMENT_VIEW"/>  
+    <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_GLOBALHR_VIEW"/> 
+    <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_REPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="OFBTOOLS_VIEW"/>
+   
+           
 </entity-engine-xml>
