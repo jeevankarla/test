@@ -535,6 +535,9 @@
 		<field name="quarterType" title="${uiLabelMap.QuarterType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="religion" title="${uiLabelMap.Religion}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
+		<field name="caste" title="${uiLabelMap.Caste}" >
+			<display description="${classification[0].partyClassificationGroupId}"></display>
+		</field>
 		<field name="punchType" title="${uiLabelMap.PunchType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${weeklyOff}"></display-entity></field>
 		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${attendanceIndn}"></display-entity></field>
