@@ -59,8 +59,7 @@
 		<field name="birthDate" title="${uiLabelMap.DateOfBirth}"><date-time></date-time></field>
 		<field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
 			<drop-down allow-empty="true">
-			<entity-options entity-name="Enumeration"
-				key-field-name="enumId" description="${enumCode}">
+			<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 				<entity-constraint name="enumTypeId" value="BLOOD_TYPE" />
 				<entity-order-by field-name="sequenceId" />
 			</entity-options>
@@ -405,7 +404,7 @@
 		<field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><text></text></field>
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
          	<drop-down allow-empty="false">             
-				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 				<entity-constraint name="enumTypeId" value="BLOOD_TYPE" />
 				<entity-order-by field-name="sequenceId" />
 				</entity-options>
@@ -524,9 +523,9 @@
         <field name="employeeId" title="${uiLabelMap.EmployeeId}"><display></display></field>
         <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPersonPartyAndEmployeeDetail.personalTitle} ${lookupPersonPartyAndEmployeeDetail.firstName} ${lookupPersonPartyAndEmployeeDetail.middleName} ${lookupPersonPartyAndEmployeeDetail.lastName}"/></field>
         <field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><display/></field>
-        <field name="address1" title="${uiLabelMap.CommonAddress1}" ><display description="${address[0].address1}"/></field>
+        <!-- <field name="address1" title="${uiLabelMap.CommonAddress1}" ><display description="${address[0].address1}"/></field> -->
         <field name="comments" title="${uiLabelMap.PartyComments}"><display/></field>
-        <field name="externalId"><display/></field>
+        <!-- <field name="externalId"><display/></field> -->
         <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>   
         <field name="birthDate" title="${uiLabelMap.DateOfBirth}"><display-entity entity-name="Person" key-field-name="partyId" description="${birthDate}" ></display-entity></field>           
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}"><display/></field>
