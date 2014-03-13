@@ -817,5 +817,13 @@
         <field name="appointmentDate" entry-name="employment.appointmentDate"><display/></field>
         <field name="resignationDate" entry-name="employment.resignationDate"><display/></field>
     </form>
+    <form name="AccountDetailsList" type="list" list-name="AccountDetails" default-table-style="basic-table" >	
+		<field name="partyId"><hidden/></field>
+		<field name="finAccountCode" title="Account Id"><display default-value="${AccountDetails[0].finAccountCode}"></display></field>
+        <field name="finAccountName" title="Account Name" ><display default-value="${AccountDetails[0].AccountName}"></display></field>
+        <field name="finAccountTypeId" title="Account Type" ><display default-value="${AccountDetails[0].finAccountTypeId}"></display></field>
+        <field name="finAccountBranch" title="Account Branch" ><display default-value="${AccountDetails[0].finAccountBranch}"></display></field> 
+		<field name="ifscCode" title="Ifsc Code"><display default-value="${AccountDetails[0].ifscCode}"></display></field>
+	</form>
 </forms>
 
