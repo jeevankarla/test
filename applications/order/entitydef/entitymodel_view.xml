@@ -161,6 +161,8 @@ under the License.
       <alias entity-alias="OI" name="unitListPrice"/>
       <alias entity-alias="OI" name="itemDescription"/>
       <alias entity-alias="OI" name="unitListPrice"/>
+      <alias entity-alias="OI" name="vatPercent"/><!--  newly added for vat caliulation -->
+      <alias entity-alias="OI" name="vatAmount"/>
       <alias entity-alias="OI" name="changeByUserLoginId"/>
       <alias entity-alias="OI" name="changeDatetime"/>
       <alias entity-alias="SH" name="estimatedShipDate"/>
