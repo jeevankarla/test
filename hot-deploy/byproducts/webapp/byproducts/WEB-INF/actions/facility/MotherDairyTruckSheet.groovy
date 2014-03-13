@@ -115,6 +115,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				
 				boothsList.each{ boothId ->
 					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:tempShipList, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
+					
 					if(UtilValidate.isNotEmpty(dayTotals)){
 						productTotals = dayTotals.get("productTotals");		
 						Map boothWiseProd= FastMap.newInstance();						
@@ -169,6 +170,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							amount=dayTotals.get("totalRevenue");
 							boothWiseProd.put("prodDetails", productTotals);
 							boothWiseProd.put("amount", amount);
+							boothWiseProd.put("vatAmount", dayTotals.get("totalVatRevenue"));
 							boothWiseProd.put("crates", cratesTotalSub.intValue());
 							boothWiseProd.put("excess", noPacketsexc);
 							boothWiseProd.put("cans", canTotalSub.intValue());
@@ -225,6 +227,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								   tempRtExcess=((rtQty.intValue())%(crateDivisior.intValue()));
 								   rtCrates = rtCrates+tempRtCrates;
 								   rtExcessPkts = rtExcessPkts+tempRtExcess;
+								   cratesDetailMap.put("prodCrates", tempRtCrates);
+								   cratesDetailMap.put("packetsExces", tempRtExcess);
 							   }
 								
 							}
@@ -243,7 +247,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								tempRtExcess=(rtQty.intValue()%(piecesPerCrate.get(productId).intValue()));
 							}*/
 							//rtCrates = rtCrates+tempRtCrates;
-							
+							productWiseTotalCratesMap.put(productId, cratesDetailMap);
 						}
 								/*if("CRATE_INDENT".equals(prodCategory)){
 									qtyValue=entry.getValue().get("packetQuantity");
@@ -255,10 +259,9 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 										packetsExces = (qtyValue.intValue()%(piecesPerCrate.get(productId.intValue())));
 									}
 									
-									cratesDetailMap.put("prodCrates", prodCrates);
-									cratesDetailMap.put("packetsExces", packetsExces);
+									
 								}*/
-							productWiseTotalCratesMap.put(productId, cratesDetailMap);
+							
 						}						
 					}			
 					lmsProdSeqList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, lmsProductList) , null, ["sequenceNum"], null, false);
@@ -280,6 +283,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					boothDetailsMap.put("routeWiseTotals", routeProdTotals);
 					boothDetailsMap.put("routeWiseCrates", productWiseTotalCratesMap);
 					boothDetailsMap.put("routeAmount", routeAmount);
+					boothDetailsMap.put("routeVatAmount", routeTotals.get("totalVatRevenue"));
 					boothDetailsMap.put("contractorName", contractorName);
 					boothDetailsMap.put("vehicleId", vehicleId);
 					boothDetailsMap.put("rtCrates", rtCrates);
