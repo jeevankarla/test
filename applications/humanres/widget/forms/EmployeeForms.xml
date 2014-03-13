@@ -366,8 +366,13 @@
 		</field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
-				<option key="Y"></option>
-				<option key="N" />
+				<option key="Sunday"/>
+				<option key="Monday" />
+				<option key="Tuesday"/>
+				<option key="Wednesday" />
+				<option key="Thursday"/>
+				<option key="Friday" />
+				<option key="SaturDay" />
 			</drop-down>
 		</field>
 		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><text /></field>
