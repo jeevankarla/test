@@ -403,7 +403,10 @@ function updateGrid(){
         			return false;
         		}  */
         		_grid.getEditController().commitCurrentEdit();
-				jQuery("#changeSave").click();
+				if(cell.cell == 1 || cell.cell == 2){
+					jQuery("#changeSave").click();
+				}
+				
 				
 				/*if(cell.row == data.length){
 					$(_grid.getCellNode(cell.row, cellNav)).click();
