@@ -932,13 +932,22 @@ public class ByProductNetworkServices {
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		EntityCondition cond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	    		
-	    		List<GenericValue> subProdList =delegator.findList("SubscriptionProduct", cond, null,null, null, false);
-	    		subProdList = EntityUtil.filterByDate(subProdList , dayBegin);
-	    		if(UtilValidate.isNotEmpty(subProdList)){
-	    			productList.addAll(EntityUtil.getFieldListFromEntityList(subProdList, "productId", true));
+	    		List<GenericValue> tempSubProdList =delegator.findList("SubscriptionProduct", cond, null,null, null, false);
+	    		tempSubProdList = EntityUtil.filterByDate(tempSubProdList , dayBegin);
+	    		List<GenericValue> subProdList = FastList.newInstance();
+	    		
+	    		if(UtilValidate.isNotEmpty(tempSubProdList)){
+	    			productList.addAll(EntityUtil.getFieldListFromEntityList(tempSubProdList, "productId", true));
 	    		}
 	    		List<String> orderBy = UtilMisc.toList("-sequenceNum");
 	    		productList = delegator.findList("Product",EntityCondition.makeCondition("productId" , EntityOperator.IN, productList), null, orderBy, null, true);
+	    		List productListIds = EntityUtil.getFieldListFromEntityList(productList, "productId", true);
+	    		
+	    		for(int j=0;j<productListIds.size();j++){
+	    			String productId = (String)productListIds.get(j);
+	    			List<GenericValue> prodSubList = EntityUtil.filterByCondition(tempSubProdList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	    			subProdList.addAll(prodSubList);
+	    		}
 	    		String qtyCategory = "";
 	    		for(GenericValue product : subProdList){
 	    			Map changeQuantityMap =FastMap.newInstance();
