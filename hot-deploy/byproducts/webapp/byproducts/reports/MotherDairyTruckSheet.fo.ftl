@@ -26,7 +26,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
             margin-top="0.3in" margin-bottom=".3in" margin-left=".3in" margin-right=".3in">
-        <fo:region-body margin-top="1.6in"/>
+        <fo:region-body margin-top="1.7in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -36,7 +36,7 @@ under the License.
 	<#assign routeDetailsList =routeWiseMap.entrySet()>
 	<#assign numberOfLines = 60>
 	<#list routeDetailsList as routesMap>
-	<#assign routeTotalCrates = routeWiseTotalCrates.get(routesMap.getKey())>
+	<#assign routeTotalCrates = routeWiseTotalCrates.get(routesMap.getKey()?if_exists)>
 	<fo:page-sequence master-reference="main" force-page-count="no-force">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="7pt">
 			<fo:block text-align="center" keep-together="always" white-space-collapse="false">VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
@@ -82,6 +82,7 @@ under the License.
 					<fo:table-column column-width="760pt"/>
 					<fo:table-column column-width="40pt"/>
 					<fo:table-column column-width="45pt"/>
+					<fo:table-column column-width="45pt"/>
 					<fo:table-column column-width="60pt"/>
 					<fo:table-body>
 					<#-- 
@@ -102,6 +103,9 @@ under the License.
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="7pt" text-align="left">Subsidy</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block font-size="7pt" text-align="left">VAT</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="7pt" text-align="left">NET Receivable</fo:block>
@@ -245,6 +249,7 @@ under the License.
 					<fo:table-column column-width="760pt"/>
 					<fo:table-column column-width="40pt"/>
 					<fo:table-column column-width="45pt"/>
+					<fo:table-column column-width="45pt"/>
 					<fo:table-column column-width="60pt"/>
 					<fo:table-body>
 						<fo:table-row>
@@ -299,7 +304,7 @@ under the License.
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+																<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 															</fo:table-cell>
 														</#if>
 													</#if>
@@ -330,7 +335,7 @@ under the License.
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+																<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 															</fo:table-cell>
 														</#if>
 													</#if>
@@ -356,7 +361,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>
@@ -382,7 +387,7 @@ under the License.
 																</fo:table-cell>
 															<#else>
 																<fo:table-cell>		
-																	<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+																	<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 																</fo:table-cell>
 															</#if>
 														</#if>
@@ -396,7 +401,9 @@ under the License.
 							<fo:table-cell>
 								<fo:block font-size="5pt" text-align="left"><#if (boothDetails.getValue().get("subsidy"))?has_content>${boothDetails.getValue().get("subsidy")?if_exists}</#if></fo:block>
 							</fo:table-cell>
-							
+							<fo:table-cell>
+								<fo:block font-size="6pt" text-align="left">${boothDetails.getValue().get("vatAmount")?if_exists?string("#0.00")}</fo:block>
+							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="6pt" text-align="left">${boothDetails.getValue().get("amount")?if_exists?string("#0.00")}</fo:block>
 							</fo:table-cell>
@@ -416,163 +423,12 @@ under the License.
 				<fo:table-column column-width="760pt"/>
 				<fo:table-column column-width="40pt"/>
 				<fo:table-column column-width="45pt"/>
+				<fo:table-column column-width="45pt"/>
 				<fo:table-column column-width="60pt"/>
 				<fo:table-body>
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block>VST_ASCII-027VST_ASCII-069</fo:block>
-						</fo:table-cell>
-					</fo:table-row>
-					<fo:table-row>
-						<fo:table-cell>
-							<fo:block font-size="7pt" keep-together="always">TOTAL</fo:block>
-						</fo:table-cell>
-						<fo:table-cell>
-							<fo:block font-size="7pt">
-								<fo:table>
-									<#assign colCounter = 0>
-									<#list lmsProdList as product>
-										<#assign colCounter = colCounter+1>
-										<fo:table-column column-width="40pt"/>
-									</#list>
-									<#if (colCounter <20)>
-										<#assign colCounter = colCounter+1>
-										<fo:table-column column-width="40pt"/>
-									</#if>
-									<#if (colCounter <20)>
-										<#assign colCounter = colCounter+1>
-										<fo:table-column column-width="40pt"/>
-									</#if>
-									<#list byProdList as product>
-										<#if (colCounter <20)>
-											<#assign colCounter = colCounter+1>
-											<fo:table-column column-width="40pt"/>
-										</#if>
-									</#list>
-									
-									<fo:table-body>
-										<#assign counter =0>
-										<#assign lmsProdCounter =0>
-										<#assign byProdCounter =0>
-										<#assign productSize = lmsProdList.size()+byProdList.size()>
-										<fo:table-row>
-											<#list lmsProdList as product>
-												<#assign counter = counter+1>
-												<#if (counter<20)>
-													<#assign lmsProdCounter = lmsProdCounter+1>
-													<#assign qty=0>
-													<#if routeTotals.get(product)?has_content>
-														<#assign qty= routeTotals.get(product).get("packetQuantity")>
-													</#if>
-													<#if qty !=0>
-														<fo:table-cell>		
-															<fo:block text-align="center">${qty?if_exists}</fo:block>																									
-														</fo:table-cell>
-													<#else>
-														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
-														</fo:table-cell>
-													</#if>
-												</#if>
-											</#list>
-											<#if (counter < 20)>
-												<#assign counter = counter+1>
-												<fo:table-cell>
-													<fo:block font-size="7pt">${(routesMap.getValue().get("rtCrates"))?if_exists}+${(routesMap.getValue().get("rtExcessPkts"))?if_exists}</fo:block>
-												</fo:table-cell>
-											</#if>
-											<#if (counter < 20) >
-												<#assign counter = counter+1>
-												<fo:table-cell>
-													<fo:block font-size="7pt">${(routesMap.getValue().get("rtCans"))?if_exists}</fo:block>
-												</fo:table-cell>
-											</#if>
-											<#list byProdList as byProd>
-												<#assign counter = counter+1>
-												<#if (counter < 20) >
-													<#assign byProdCounter = byProdCounter+1>
-													<#assign byProdQty=0>
-													<#if routeTotals.get(byProd)?has_content>
-														<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
-													</#if>
-													<#if byProdQty !=0>
-														<fo:table-cell>		
-															<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
-														</fo:table-cell>
-													<#else>
-														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
-														</fo:table-cell>
-													</#if>	
-												</#if>
-											</#list>
-											
-										</fo:table-row>
-										<#if (productSize > lmsProdCounter+byProdCounter)>
-											<fo:table-row>
-												<#assign counter = 0>
-												<#assign prodCount = 0>
-												<#list byProdList as byProd>
-													<#assign counter = counter+1>
-													<#if (counter > byProdCounter && prodCount < 19) >
-														<#assign byProdCounter = byProdCounter+1>
-														<#assign prodCount = prodCount + 1>
-														<#assign byProdQty=0>
-														<#if routeTotals.get(byProd)?has_content>
-															<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
-														</#if>
-														<#if byProdQty !=0>
-															<fo:table-cell>		
-																<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
-															</fo:table-cell>
-														<#else>
-															<fo:table-cell>		
-																<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
-															</fo:table-cell>
-														</#if>	
-													</#if>
-												</#list>
-											</fo:table-row>
-										</#if>
-										<#if (productSize > lmsProdCounter+byProdCounter)>
-											<fo:table-row>
-												<#assign counter = 0>
-												<#assign prodCount = 0>
-												<#list byProdList as byProd>
-													<#assign counter = counter+1>
-													<#if (counter > byProdCounter && prodCount < 19) >
-														<#assign byProdCounter = byProdCounter+1>
-														<#assign prodCount = prodCount + 1>
-														<#assign byProdQty=0>
-														<#if routeTotals.get(byProd)?has_content>
-															<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
-														</#if>
-														<#if byProdQty !=0>
-															<fo:table-cell>		
-																<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
-															</fo:table-cell>
-														<#else>
-															<fo:table-cell>		
-																<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
-															</fo:table-cell>
-														</#if>
-													</#if>
-												</#list>
-											</fo:table-row>
-										</#if>
-									</fo:table-body>
-								</fo:table>
-							</fo:block>
-						</fo:table-cell>
-						<fo:table-cell><fo:block></fo:block></fo:table-cell>
-						<fo:table-cell>
-							<fo:block font-size="7pt" text-align="left">${(routesMap.getValue().get("routeAmount"))?if_exists?string("#0.00")}</fo:block>
-						</fo:table-cell>
-						<fo:table-cell><fo:block></fo:block></fo:table-cell>
-					</fo:table-row>
-					<fo:table-row>
-						<fo:table-cell>
-							<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -613,9 +469,11 @@ under the License.
 												<#if (counter<20)>
 													<#assign lmsProdCounter = lmsProdCounter+1>
 													<#assign qty=0>
-													<#assign crateDetail = routeTotalCrates.get(product)>
+													<#if routeTotalCrates?has_content>
+													<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
 													<#if crateDetail?has_content>
 														<#assign qty = crateDetail.get('prodCrates')>
+													</#if>
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
@@ -623,7 +481,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -646,9 +504,11 @@ under the License.
 												<#if (counter < 20) >
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign qty=0>
-													<#assign crateDetail = routeTotalCrates.get(byProd)>
+													<#if routeTotalCrates?has_content>
+													<#assign crateDetail = routeTotalCrates.get(byProd?if_exists)>
 													<#if crateDetail?has_content>
 														<#assign qty = crateDetail.get('prodCrates')>
+													</#if>
 													</#if>
 													<#if qty !=0>
 														<#--<#assign product = (delegator.findOne("Product", {"productId" : byProd}, false))!>-->
@@ -658,7 +518,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -674,9 +534,11 @@ under the License.
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<#assign qty=0>
-													<#assign crateDetail = routeTotalCrates.get(byProd)>
+													<#if routeTotalCrates?has_content>
+													<#assign crateDetail = routeTotalCrates.get(byProd?if_exists)>
 													<#if crateDetail?has_content>
 														<#assign qty = crateDetail.get('prodCrates')>
+													</#if>
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
@@ -684,7 +546,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -701,9 +563,11 @@ under the License.
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<#assign qty=0>
-													<#assign crateDetail = routeTotalCrates.get(byProd)>
+													<#if routeTotalCrates?has_content>
+													<#assign crateDetail = routeTotalCrates.get(byProd?if_exists)>
 													<#if crateDetail?has_content>
 														<#assign qty = crateDetail.get('prodCrates')>
+													</#if>
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
@@ -711,7 +575,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -771,9 +635,11 @@ under the License.
 												<#if (counter<20)>
 													<#assign lmsProdCounter = lmsProdCounter+1>
 													<#assign qty=0>
-													<#assign crateDetail = routeTotalCrates.get(product)>
+													<#if routeTotalCrates?has_content>
+													<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
 													<#if crateDetail?has_content>
 														<#assign qty = crateDetail.get('packetsExces')>
+													</#if>
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
@@ -781,7 +647,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -803,9 +669,11 @@ under the License.
 												<#if (counter < 20) >
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign qty=0>
-													<#assign crateDetail = routeTotalCrates.get(byProd)>
+													<#if routeTotalCrates?has_content>
+													<#assign crateDetail = routeTotalCrates.get(byProd?if_exists)>
 													<#if crateDetail?has_content>
 														<#assign qty = crateDetail.get('packetsExces')>
+													</#if>
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
@@ -813,7 +681,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -830,9 +698,11 @@ under the License.
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<#assign qty=0>
-													<#assign crateDetail = routeTotalCrates.get(byProd)>
+													<#if routeTotalCrates?has_content>
+													<#assign crateDetail = routeTotalCrates.get(byProd?if_exists)>
 													<#if crateDetail?has_content>
 														<#assign qty = crateDetail.get('packetsExces')>
+													</#if>
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
@@ -840,7 +710,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#if>
@@ -858,7 +728,7 @@ under the License.
 													<#assign byProdCounter = byProdCounter+1>
 													<#assign prodCount = prodCount + 1>
 													<fo:table-cell>		
-														<fo:block text-align="center" linefeed-treatment="preserve">&#160;</fo:block>																									
+														<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
 													</fo:table-cell>
 												</#if>
 											</#list>
@@ -877,6 +747,160 @@ under the License.
 						</fo:table-cell>
 						<fo:table-cell><fo:block></fo:block></fo:table-cell>
 					</fo:table-row>
+					<fo:table-row>
+						<fo:table-cell>
+							<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					<fo:table-row>
+						<fo:table-cell>
+							<fo:block font-size="7pt" keep-together="always">TOTAL</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block font-size="7pt">
+								<fo:table>
+									<#assign colCounter = 0>
+									<#list lmsProdList as product>
+										<#assign colCounter = colCounter+1>
+										<fo:table-column column-width="40pt"/>
+									</#list>
+									<#if (colCounter <20)>
+										<#assign colCounter = colCounter+1>
+										<fo:table-column column-width="40pt"/>
+									</#if>
+									<#if (colCounter <20)>
+										<#assign colCounter = colCounter+1>
+										<fo:table-column column-width="40pt"/>
+									</#if>
+									<#list byProdList as product>
+										<#if (colCounter <20)>
+											<#assign colCounter = colCounter+1>
+											<fo:table-column column-width="40pt"/>
+										</#if>
+									</#list>
+									
+									<fo:table-body>
+										<#assign counter =0>
+										<#assign lmsProdCounter =0>
+										<#assign byProdCounter =0>
+										<#assign productSize = lmsProdList.size()+byProdList.size()>
+										<fo:table-row>
+											<#list lmsProdList as product>
+												<#assign counter = counter+1>
+												<#if (counter<20)>
+													<#assign lmsProdCounter = lmsProdCounter+1>
+													<#assign qty=0>
+													<#if routeTotals.get(product)?has_content>
+														<#assign qty= routeTotals.get(product).get("packetQuantity")>
+													</#if>
+													<#if qty !=0>
+														<fo:table-cell>		
+															<fo:block text-align="center">${qty?if_exists}</fo:block>																									
+														</fo:table-cell>
+													<#else>
+														<fo:table-cell>		
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
+														</fo:table-cell>
+													</#if>
+												</#if>
+											</#list>
+											<#if (counter < 20)>
+												<#assign counter = counter+1>
+												<fo:table-cell>
+													<fo:block font-size="7pt">${(routesMap.getValue().get("rtCrates"))?if_exists}+${(routesMap.getValue().get("rtExcessPkts"))?if_exists}</fo:block>
+												</fo:table-cell>
+											</#if>
+											<#if (counter < 20) >
+												<#assign counter = counter+1>
+												<fo:table-cell>
+													<fo:block font-size="7pt">${(routesMap.getValue().get("rtCans"))?if_exists}</fo:block>
+												</fo:table-cell>
+											</#if>
+											<#list byProdList as byProd>
+												<#assign counter = counter+1>
+												<#if (counter < 20) >
+													<#assign byProdCounter = byProdCounter+1>
+													<#assign byProdQty=0>
+													<#if routeTotals.get(byProd)?has_content>
+														<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
+													</#if>
+													<#if byProdQty !=0>
+														<fo:table-cell>		
+															<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
+														</fo:table-cell>
+													<#else>
+														<fo:table-cell>		
+															<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
+														</fo:table-cell>
+													</#if>	
+												</#if>
+											</#list>
+											
+										</fo:table-row>
+										<#if (productSize > lmsProdCounter+byProdCounter)>
+											<fo:table-row>
+												<#assign counter = 0>
+												<#assign prodCount = 0>
+												<#list byProdList as byProd>
+													<#assign counter = counter+1>
+													<#if (counter > byProdCounter && prodCount < 19) >
+														<#assign byProdCounter = byProdCounter+1>
+														<#assign prodCount = prodCount + 1>
+														<#assign byProdQty=0>
+														<#if routeTotals.get(byProd)?has_content>
+															<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
+														</#if>
+														<#if byProdQty !=0>
+															<fo:table-cell>		
+																<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
+															</fo:table-cell>
+														<#else>
+															<fo:table-cell>		
+																<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
+															</fo:table-cell>
+														</#if>	
+													</#if>
+												</#list>
+											</fo:table-row>
+										</#if>
+										<#if (productSize > lmsProdCounter+byProdCounter)>
+											<fo:table-row>
+												<#assign counter = 0>
+												<#assign prodCount = 0>
+												<#list byProdList as byProd>
+													<#assign counter = counter+1>
+													<#if (counter > byProdCounter && prodCount < 19) >
+														<#assign byProdCounter = byProdCounter+1>
+														<#assign prodCount = prodCount + 1>
+														<#assign byProdQty=0>
+														<#if routeTotals.get(byProd)?has_content>
+															<#assign byProdQty= routeTotals.get(byProd).get("packetQuantity")>
+														</#if>
+														<#if byProdQty !=0>
+															<fo:table-cell>		
+																<fo:block text-align="center">${byProdQty?if_exists}</fo:block>																									
+															</fo:table-cell>
+														<#else>
+															<fo:table-cell>		
+																<fo:block text-align="center" linefeed-treatment="preserve">-</fo:block>																									
+															</fo:table-cell>
+														</#if>
+													</#if>
+												</#list>
+											</fo:table-row>
+										</#if>
+									</fo:table-body>
+								</fo:table>
+							</fo:block>
+						</fo:table-cell>
+						<fo:table-cell><fo:block></fo:block></fo:table-cell>
+						<fo:table-cell><fo:block font-size="7pt" text-align="left" >${(routesMap.getValue().get("routeVatAmount"))?if_exists?string("#0.00")}</fo:block></fo:table-cell>
+						<fo:table-cell>
+							<fo:block font-size="7pt" text-align="right">${(routesMap.getValue().get("routeAmount"))?if_exists?string("#0.00")}</fo:block>
+						</fo:table-cell>
+						<fo:table-cell><fo:block></fo:block></fo:table-cell>
+					</fo:table-row>
+					
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block>VST_ASCII-027VST_ASCII-070</fo:block>
