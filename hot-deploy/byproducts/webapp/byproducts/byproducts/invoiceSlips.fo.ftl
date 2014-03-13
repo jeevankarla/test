@@ -264,6 +264,8 @@ under the License.
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" >${vatAmount?string("#0.00")?if_exists}</fo:block>
 			                        </fo:table-cell>
+			                        ()
+			                         <#assign vatAmount = (invoiceItem.quantity)*vatAmount>
 			                        <#assign vatTotal = (vatTotal.add(vatAmount))>
 			                         <#assign totalAmount = (Static["java.math.BigDecimal"].ZERO)>
 			                         
