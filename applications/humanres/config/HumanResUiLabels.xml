@@ -2603,5 +2603,7 @@
 	<property key="PunchType">
 		<value xml:lang="en">Punch Type</value>
 	</property> 
-	
+	<property key="AccountDetails">
+        <value xml:lang="en">Account Details</value>
+    </property>          
 </resource>
