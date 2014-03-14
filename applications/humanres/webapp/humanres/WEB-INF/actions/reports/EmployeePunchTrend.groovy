@@ -29,10 +29,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import net.sf.json.JSONArray;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
-//partyId = parameters.get("partyId");
-//delegator=request.getAttribute("delegator");
 employeeId = parameters.get("employeeId");
-//System.out.println("\n\n\n==============================party id==================================="+partyId);
 if(parameters.get("employeeId") != null){
 	GenericValue party = delegator.findByPrimaryKey("EmployeeDetail", UtilMisc.toMap("partyId", employeeId));
 	partyId = party.get("partyId");
@@ -65,7 +62,11 @@ if(punchDataList){
 	for(Map.Entry entry : partyPunchData.entrySet()){
 		
 		dayNo = entry.getKey();
-		totalHours = entry.getValue();
+		totalHours = "0";
+		if(UtilValidate.isNotEmpty(entry.getValue())){
+			totalHours = entry.getValue();
+		}
+		
 		keyname = dayNo+"Title";
 		if(columnTitleMap.get(keyname)){
 			JSONArray dayInoutList= new JSONArray();
@@ -108,8 +109,6 @@ if(leaveDataList){
 		month = entry.getKey();
 		totalDays = entry.getValue();
 		JSONArray monthLeaveList= new JSONArray();
-		Debug.log("month============"+month);
-		Debug.log("totalDays============"+totalDays);
 		//monthLeaveList.add(new SimpleDateFormat("MMMM").format(month));
 		monthLeaveList.add(i);
 		monthLeaveList.add(totalDays);

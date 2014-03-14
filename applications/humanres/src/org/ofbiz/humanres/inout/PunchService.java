@@ -783,8 +783,10 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 									emplPunchIn.getDate("punchdate").getTime());
 							int dateHeading = UtilDateTime.getDayOfMonth(
 									eachPunchDay, timeZone, locale);
+							int monthNo = UtilDateTime.getMonth(
+									eachPunchDay, timeZone, locale);
 							String heading = "temp"
-									+ new Integer(dateHeading).toString();
+									+ new Integer(dateHeading).toString()+"-"+new Integer(monthNo).toString();
 							emplPunchMap.put(heading, totalTime.toString());
 							break;
 						}
@@ -794,9 +796,11 @@ public static Map emplDailyPunchReport(DispatchContext dctx, Map context) {
 				for (int a = 1; a <= totalDays; a++) {
 					int dateHeading = UtilDateTime.getDayOfMonth(tempStartDate,
 							timeZone, locale);
+					int monthNo = UtilDateTime.getMonth(
+							tempStartDate, timeZone, locale);
 					emplPunchMap.put("d" + new Integer(a).toString(),
 							emplPunchMap.get("temp"
-									+ new Integer(dateHeading).toString()));
+									+ new Integer(dateHeading).toString()+"-"+new Integer(monthNo).toString()));
 					tempStartDate = UtilDateTime.addDaysToTimestamp(tempStartDate, 1);
 				}
 				punchDataList.add(emplPunchMap);
