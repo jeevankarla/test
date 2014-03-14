@@ -2964,7 +2964,8 @@ under the License.
       <field name="panId" type="id"></field>
       <field name="bloodGroup" type="id"></field>
       <field name="belongsTo" type="name"></field>
-
+	  <field name="placeOfBirth" type="short-varchar"></field>
+	  <field name="nationality" type="short-varchar"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PERSON_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -2979,6 +2980,9 @@ under the License.
             <key-map field-name="motherTongue" rel-field-name="enumId"/>
         </relation>  		
          <relation type="one" fk-name="PERSON_REC_RE" rel-entity-name="Enumeration">
+            <key-map field-name="religion" rel-field-name="enumId"/>
+        </relation>
+        <relation type="one" fk-name="PERSON_REC_NA" rel-entity-name="Enumeration">
             <key-map field-name="religion" rel-field-name="enumId"/>
         </relation>
       <index name="FIRST_NAME_IDX">
