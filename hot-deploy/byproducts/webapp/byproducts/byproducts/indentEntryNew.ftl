@@ -134,22 +134,15 @@
 	      	    				</#if>
 	      	    				
 	          				</td>
-	         				<td>
+	         				<#--<td>
 	         					<div id="tempRouteDiv" style="display:none">	
 					        	 	<a class="button" href="javascript:showRouteToChange();">Route Change </a>
 					        	</div>
-					        </td>
+					        </td>-->
 				        </tr>
 			        	<input type="hidden" name="routeChangeFlag" id="routeChangeFlag"/>
 			        	<tr><td><br/></td></tr>
 			        </#if>	           
-			        
-			        <#if (showBoothAutoSuggest?has_content) && (showBoothAutoSuggest != 'N')>
-			        	<tr>
-			          
-			        	</tr> 
-			        	<tr><td><br/></td></tr> 
-			        </#if>          
 			        <tr>
 			          <td>&nbsp;</td>
 			          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.Retailer}:</div></td>
