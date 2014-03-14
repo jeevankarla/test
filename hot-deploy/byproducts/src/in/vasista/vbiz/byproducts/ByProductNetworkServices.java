@@ -1089,9 +1089,16 @@ public class ByProductNetworkServices {
 	        }
 	    	//Collections.reverse(changeIndentProductList);
 	    	//Collections.sort(changeIndentProductList);
+	    	String tempRouteId = routeId;
+	    	if(screenFlag.equals("indentAlt")){
+	    		tempRouteId = "";
+	    	}
+	    	Map boothDetailResult = getRouteCrateDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId,"supplyDate", dayBegin, "subscriptionTypeId", subscriptionTypeId, "tripId", tripId, "routeId", tempRouteId));
+	    	List routeTotalList = (List)boothDetailResult.get("routeTotalList");
+	    	result.put("routeTotalsList", routeTotalList);
 	    	// lets populate route totals
 	    	try{
-	    		conditionList.clear();
+	    		/*conditionList.clear();
     			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
@@ -1103,23 +1110,24 @@ public class ByProductNetworkServices {
 	    		List<GenericValue> subProdList =delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condExpr, null,null, null, false);
 	    		
 	    		subProdList = EntityUtil.filterByDate(subProdList , dayBegin);
-	    		/* Hard coded the categories ... get the few categories by type for indent totals*/
+	    		 Hard coded the categories ... get the few categories by type for indent totals
 	    		
 	    		result.put("routeCapacity", BigDecimal.ZERO);
-	    		
+	    		*/
 	    		GenericValue route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
     			result.put("routeName", route.getString("facilityName"));
     			result.put("routeCapacity", route.getBigDecimal("facilitySize"));
-	    		List condProdCatList = UtilMisc.toList("MILK","CURD", "FMILK_CATEGORY");
+	    		
+    			/*List condProdCatList = UtilMisc.toList("MILK","CURD", "FMILK_CATEGORY");
 	    		
 	    		conditionList.clear();
 	    		conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, condProdCatList));
 	    		conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(subProdList, "productId", true)));
 	    		EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	    		List<GenericValue> productCategoryList = delegator.findList("ProductAndCategoryMember", cond, null, null, null, true);
+	    		*/
 	    		
-	    		
-	    		BigDecimal routeCrateTotal = BigDecimal.ZERO;
+	    		/*BigDecimal routeCrateTotal = BigDecimal.ZERO;
 	    		Map<String ,BigDecimal> categoryTotals = FastMap.newInstance();
 	    		for(GenericValue subProd : subProdList){
 	    			String productId = subProd.getString("productId");
@@ -1140,7 +1148,7 @@ public class ByProductNetworkServices {
 	    		}
 	    		int totalCrates = routeCrateTotal.intValue();
 	    		result.put("routeCrateTotal", totalCrates);
-	    		
+	    		*/
 	    		Map prodPriceMap = FastMap.newInstance();
 	    		Map inputProductRate = FastMap.newInstance();
 	    		inputProductRate.put("productStoreId", productStoreId);
@@ -1153,7 +1161,7 @@ public class ByProductNetworkServices {
 	    		prodPriceMap = (Map)priceResultMap.get("priceMap");
 	    		result.put("productPrice", prodPriceMap);
 	    		
-	    		BigDecimal totalMilkInLtrs = BigDecimal.ZERO;
+	    		/*BigDecimal totalMilkInLtrs = BigDecimal.ZERO;
 	    		List categoryList = FastList.newInstance();
 	    		for ( Map.Entry<String, BigDecimal> entry : categoryTotals.entrySet()){
 	    			Map categoryTotalMap = FastMap.newInstance();
@@ -1165,7 +1173,7 @@ public class ByProductNetworkServices {
 		        	categoryList.add(categoryTotalMap);
 	    		}
 	    		result.put("routeTotalLtr", totalMilkInLtrs);
-	    		result.put("categoryTotals", categoryList);
+	    		result.put("categoryTotals", categoryList);*/
 	    	}catch (Exception e) {
 	    		Debug.logError(e, e.getMessage());
 			}
@@ -1173,6 +1181,110 @@ public class ByProductNetworkServices {
 			result.put("changeIndentProductList", changeIndentProductList);
 			return result;
 	    }
+	 	public static Map<String ,Object>  getRouteCrateDetails(DispatchContext dctx, Map<String, ? extends Object> context){
+			  Delegator delegator = dctx.getDelegator();
+		      LocalDispatcher dispatcher = dctx.getDispatcher();
+		      Locale locale = (Locale) context.get("locale");
+		      GenericValue userLogin = (GenericValue) context.get("userLogin");
+		      Map<String, Object> result = ServiceUtil.returnSuccess();
+		      String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+		      String tripId = (String) context.get("tripId");
+		      Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+		      String facilityId = (String) context.get("facilityId");
+		      String routeId = (String) context.get("routeId");
+		      List conditionList = FastList.newInstance();
+		      if(UtilValidate.isEmpty(supplyDate)){
+		    	  supplyDate = UtilDateTime.nowTimestamp();
+		      }
+		      Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
+		      Timestamp dayEnd = UtilDateTime.getDayEnd(supplyDate);
+		      List routeTotalList = FastList.newInstance();
+		      try{
+	    		conditionList.clear();
+	    		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	    		conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
+	    		if(UtilValidate.isNotEmpty(tripId)){
+	    			conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+	    		}
+	    		EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	    		List<GenericValue> subscriptionList =delegator.findList("Subscription", condExpr, UtilMisc.toSet("subscriptionId"),null, null, false);
+	    		
+	    		if(UtilValidate.isEmpty(subscriptionList)){
+	    			Debug.logError("No Active subscription found for the retailer: "+facilityId, module);
+			    	return ServiceUtil.returnError("No Active subscription found for the retailer: "+facilityId);
+	    		}
+	    		String subscriptionId = ((GenericValue)EntityUtil.getFirst(subscriptionList)).getString("subscriptionId");
+	    		
+	    		conditionList.clear();
+	    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+	    		if(UtilValidate.isNotEmpty(routeId)){
+	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
+	    		}
+	    		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	    		List<GenericValue> subProdList =delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null,null, null, false);
+	    		
+	    		subProdList = EntityUtil.filterByDate(subProdList , dayBegin);
+	    		
+	    		List<String> routesListIds = EntityUtil.getFieldListFromEntityList(subProdList, "sequenceNum", true);
+	    		
+	    		List<GenericValue> routes = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, routesListIds), null, null, null, false);
+	    		
+	    		List<GenericValue> crateProductsList=ProductWorker.getProductsByCategory(delegator ,"CRATE" ,null);
+	    		//List<GenericValue> canProductsList=ProductWorker.getProductsByCategory(delegator ,"CAN" ,null);
+
+	    		List crateProductsIdsList=EntityUtil.getFieldListFromEntityList(crateProductsList, "productId", false);
+	    		//List canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "productId", false);
+	    		 
+	    		for(String routeListId : routesListIds){
+	    			List<GenericValue> routeProducts = EntityUtil.filterByCondition(subProdList, EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeListId));
+	    			BigDecimal crateTotal = BigDecimal.ZERO;
+	    			//BigDecimal canTotal = BigDecimal.ZERO;
+	    			
+	    			conditionList.clear();
+	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeListId));
+	    			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
+	    			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
+		    		EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    		List<GenericValue> routeTotalIndents = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", cond, UtilMisc.toSet("crateQuantity"),null, null, false);
+		    		BigDecimal routeLoad = BigDecimal.ZERO;
+		    		for(GenericValue routeIndent : routeTotalIndents){
+		    			BigDecimal crateQty = routeIndent.getBigDecimal("crateQuantity");
+		    			if(UtilValidate.isNotEmpty(crateQty)){
+		    				routeLoad = routeLoad.add(crateQty);
+		    			}
+		    			
+		    		}
+		    		
+	    			Map routeTotalMap = FastMap.newInstance();
+	    			List<GenericValue> route = EntityUtil.filterByCondition(routes, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, routeListId));
+	    			BigDecimal routeCapacity = BigDecimal.ZERO;
+	    			if(UtilValidate.isNotEmpty(((GenericValue)EntityUtil.getFirst(route)).getBigDecimal("facilitySize"))){
+	    				routeCapacity = ((GenericValue)EntityUtil.getFirst(route)).getBigDecimal("facilitySize");
+	    			}
+	    			for(GenericValue routeProduct : routeProducts){
+	    				String productId = routeProduct.getString("productId");
+	    				BigDecimal crateQty = routeProduct.getBigDecimal("crateQuantity");
+	    				if(crateProductsIdsList.contains(productId) && UtilValidate.isNotEmpty(crateQty)){
+	    					crateTotal = crateTotal.add(crateQty);
+	    				}
+	    				/*if(canProductsIdsList.contains(productId) && UtilValidate.isNotEmpty(crateQty)){
+	    					canTotal = canTotal.add(crateQty);
+	    				}*/
+	    			}
+	    			routeTotalMap.put("routeId", routeListId);
+	    			routeTotalMap.put("retailerIndentCrate", crateTotal);
+	    			routeTotalMap.put("routeLoad", routeLoad);
+	    			//routeTotalMap.put("retailerIndentCan", canTotal);
+	    			routeTotalMap.put("routeCapacity", routeCapacity);
+	    			routeTotalList.add(routeTotalMap);
+	    		}
+	    	}catch (Exception e) {
+	    		Debug.logError(e, e.getMessage());
+			}
+	    	result.put("routeTotalList", routeTotalList);
+	    	return result;
+	 	}
+	 	
 	 	public static Map<String ,Object>  processDSCorrectionHelper(DispatchContext dctx, Map<String, ? extends Object> context){
 			  Delegator delegator = dctx.getDelegator();
 		      LocalDispatcher dispatcher = dctx.getDispatcher();

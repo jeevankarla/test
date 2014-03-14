@@ -66,7 +66,7 @@ function cleanUpGrid(value){
 	var emptyJson= [];
 	$('div#tempRouteDiv').css("display","none");
 	updateGrid1(emptyJson);
-	//updateGrid2(emptyJson);
+	setupGrid2(emptyJson);
 }
 function updateGrid(){
  	screenFlag = '${screenFlag}';
@@ -119,6 +119,7 @@ function updateGrid(){
 							prodIndentQtyCat = result["prodIndentQtyCat"];
 							priceTags = result["productPrice"];
 							qtyInPieces = result["qtyInPieces"];
+							routeTotals = result["routeTotalsList"];
 							if(routeCapacity != undefined){
 								if(routeCapacity < routeCrateTotal){
 									alert("Route capacity exceeded");
@@ -137,7 +138,7 @@ function updateGrid(){
 						gridShowCall();
 						updateGrid1(changeIndentProductList);
 						if(screenFlag != "DSCorrection"){
-							updateGrid2(categoryTot);	
+							updateGrid2(routeTotals);	
 						}
 						$('span#boothTooltip').html('<label>'+boothName +'</label>');
 						$('span#boothDepositTip').html('<label> Security Deposit:: Rs. '+securityDeposit +'</label>');
@@ -182,6 +183,7 @@ function updateGrid(){
 	var routeIdLabelMap;
 	var routeLabelIdMap;
 	var routeTags;
+	var routeTotals;
 	<#if screenFlag?exists && screenFlag == 'indentAlt'>
 		routeIdLabelMap = ${StringUtil.wrapString(routeIdLabelJSON)!'{}'};
 		routeLabelIdMap = ${StringUtil.wrapString(routeLabelIdJSON)!'{}'};
@@ -607,8 +609,10 @@ function updateGrid(){
 		}
 
 		var columns = [
-			{id:"categoryId", name:"Category", field:"categoryId", width:200, minWidth:200, cssClass:"cell-title", sortable:false},
-			{id:"totalLtr", name:"Total in Ltrs/Kgs", field:"totalLtr", width:150, minWidth:150, cssClass:"cell-title", sortable:false}
+			{id:"routeId", name:"Route", field:"routeId", width:200, minWidth:200, cssClass:"cell-title", sortable:false},
+			{id:"retailerIndentCrate", name:"Retailer Indent", field:"retailerIndentCrate", width:150, minWidth:150, cssClass:"cell-title", sortable:false},
+			{id:"routeLoad", name:"Load", field:"routeLoad", width:150, minWidth:150, cssClass:"cell-title", sortable:false},
+			{id:"routeCapacity", name:"Capacity", field:"routeCapacity", width:150, minWidth:150, cssClass:"cell-title", sortable:false}
 		];
 
 		var options = {
@@ -646,7 +650,13 @@ function updateGrid(){
 	jQuery(function(){
 		
 		setupGrid1([]);
-		jQuery("#routeId").focus();
+		if(screenFlag == 'indentAlt'){
+			jQuery("#boothId").focus();
+		}
+		else{
+			jQuery("#routeId").focus();
+		}
+		
 		 $("select#subscriptionTypeId").change();
 		if(screenFlag !="DSCorrection"){
 			setupGrid2([]);

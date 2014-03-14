@@ -28,6 +28,7 @@
 			<form name="changeindentinit" id="changeindentinit">  
    	  			<input type="hidden" name="tempRouteId" id="tempRouteId"/>
    	  			<input type="hidden" name="tempTripId" id="tempTripId"/>
+   	  			<input type="hidden" name="screenFlag" id="screenFlag" value="${screenFlag?if_exists}">
       			<table width="60%" border="0" cellspacing="0" cellpadding="0">     
         			<tr>
           				<td>&nbsp;</td>
@@ -179,10 +180,7 @@
  	<div class="screenlet">
     	<div class="screenlet-body">
  			<div class="grid-header" style="width:100%">
-				<label>Route:: <font color="red"><span id="routeName"></span></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				Trip:: <font color="red"><span id="tripName"></span></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				Total Crates:: <font color="red"><span id="routeCrateTotal"></span></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				Capacity:: <font color="red"><span id="routeCapacity"></span></font></label>
+				<label>Route Details
 				</label> 
 			</div>    
 		<div id="myGrid2" style="width:100%;height:150px;"></div>		
