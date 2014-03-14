@@ -38,8 +38,12 @@ def populateChildren(org, treeNode) {
 		attrNode.put("nodetype", "employee");
 		attrNode.put("id", employment.partyId);
 		personNode.put("attr", attrNode);		
-		JSONObject dataNode= new JSONObject();			
-		dataNode.put("title", employment.firstName + " " + employment.lastName);
+		JSONObject dataNode= new JSONObject();	
+		String lastName="";
+		if(employment.lastName!=null){
+			lastName=employment.lastName;
+		}
+		dataNode.put("title", employment.firstName + " " + lastName);
 		JSONObject href = new JSONObject();
 		href.put("href", "#");
 		href.put("onClick","callDocument('EmployeeProfile?partyId=" + employment.partyId + "')");
