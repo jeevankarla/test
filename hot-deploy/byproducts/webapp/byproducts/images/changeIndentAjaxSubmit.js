@@ -37,7 +37,7 @@ $(function() {
     	   $('div#changeIndentEntry_spinner').removeClass("errorMessage");
     	   $('div#changeIndentEntry_spinner')
     		  .html('<img src="/images/ajax-loader64.gif">');
-    	   	
+    	   	var screenFlag = $("#screenFlag").val();
     	   	var action;
     	   	if(screenFlag == 'DSCorrection'){
     	   		action = "processDSCorrectionMISAjax";
@@ -72,7 +72,12 @@ $(function() {
 
                }
                cleanUpGrid();
-               $("#routeId").focus();
+               if(screenFlag == 'indentAlt'){
+            	   $("#boothId").focus();
+               }
+               else{
+            	   $("#routeId").focus();
+               }
                $('input[name=changeSave]').removeAttr('disabled');
               
              } ,
@@ -97,25 +102,26 @@ $(function() {
 		      	 $('#boothId').autocomplete('close');
 		      	 if( typeof $("#boothId").val() != "undefined"   && $("#boothId").val() != ""){ 
 		      		updateGrid();
+		      		
 		      	 }
 				return false;
 			}
 		});
        // booth auto Complete
      $('#boothId').keypress(function (e) {
-			$("#boothId").autocomplete({ source: boothsList});
+			$("#boothId").autocomplete({ source: boothsList ,filterOpt : ""});	
 			$.ui.autocomplete.filter = function (array, term) { 
                 var matcher = new RegExp($.ui.autocomplete.escapeRegex(term), "i");
                 return $.grep(array, function (value) {
                     return matcher.test(value.label || value.value || value);
                 });
             };
-
 	 });
      
      $('#boothId').keyup(function (e) {
 	 	if (e.keyCode == 8 || e.keyCode == 46) {
-	 		updateGrid1([]); 
+	 		updateGrid1([]);
+	 		setupGrid2([]);
 	 		jQuery("#boothId").focus(); 
 	      }	
 	 });
