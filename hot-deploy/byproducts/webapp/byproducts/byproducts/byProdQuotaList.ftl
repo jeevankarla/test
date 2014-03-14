@@ -8,6 +8,9 @@
 	.cell-title {
 		font-weight: normal;
 	}
+	.cell-DealerTitle {
+		font-weight: bold;
+	}
 	.cell-effort-driven {
 		text-align: center;
 	}
@@ -39,7 +42,7 @@
 		var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 
 		var columns = [
-			{id:"boothId", name:"Dealer", field:"boothId", width:80, minWidth:80, cssClass:"cell-title", sortable:false},
+			{id:"boothId", name:"DealerCode[Name]", field:"boothId", width:130, minWidth:130, cssClass:"cell-DealerTitle", sortable:false},
 			{id:"routeId", name:"Route", field:"routeId", width:80, minWidth:80, cssClass:"cell-title", sortable:false},
 			{id:"tripId", name:"Trip", field:"tripId", width:80, minWidth:80, cssClass:"cell-title", sortable:false},
 			{id:"createdUser", name:"Entry By", field:"createdUser", width:80, minWidth:80, cssClass:"cell-title", sortable:false},
