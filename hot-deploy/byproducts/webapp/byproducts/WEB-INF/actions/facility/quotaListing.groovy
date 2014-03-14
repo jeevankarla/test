@@ -228,7 +228,7 @@ while (mapIter.hasNext()) {
 	createdUser = boothTotalsMap.get("createdUser");
 	JSONObject newObj = new JSONObject(boothTotalsMap);
 	newObj.put("id",boothId);
-	newObj.put("boothId",boothName);
+	newObj.put("boothId",boothId+" ["+boothName+"]");
 	newObj.put("routeId",routeStr);
 	newObj.put("tripId",tripStr);
 	entryDate = UtilDateTime.toDateString(entryDate, "dd/MM/yyyy");
