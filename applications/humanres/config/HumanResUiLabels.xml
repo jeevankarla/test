@@ -2605,5 +2605,11 @@
 	</property> 
 	<property key="AccountDetails">
         <value xml:lang="en">Account Details</value>
-    </property>          
+    </property>
+    <property key="ShiftType">
+        <value xml:lang="en">Shift Type</value>
+    </property>  
+    <property key="PlaceOfBirth">
+        <value xml:lang="en">Place Of Birth</value>
+    </property>     
 </resource>

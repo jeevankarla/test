@@ -142,6 +142,14 @@
 				</entity-options>
 			</drop-down>
 		</field>
+		<field name="nationality" title="${uiLabelMap.Nationality}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="PERSON_REC_NA" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="punchType" title="${uiLabelMap.PunchType}">
 		     <drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -188,6 +196,14 @@
 				<option key="N" />
 			</drop-down>
 		</field>
+		<field name="shiftType" title="${uiLabelMap.ShiftType}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_SHT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="prevEmplThruDate" title="${uiLabelMap.FormFieldTitle_terminationDate}"><date-time /></field>
 		<field name="referenceName" title="${uiLabelMap.ReferenceName}"><text></text></field>
 		<field name="referenceEmployer" title="${uiLabelMap.ReferenceEmployer}"><text></text></field>
@@ -232,6 +248,7 @@
 			</drop-down>
 		</field>
 		<field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}"><text></text></field>
+		<field name="placeOfBirth" title="${uiLabelMap.PlaceOfBirth}"><text></text></field>
     	<field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         
      	<sort-order>
@@ -242,6 +259,7 @@
 				<sort-field name="middleName"></sort-field>
 				<sort-field name="lastName" />
 				<sort-field name="birthDate"></sort-field>
+				<sort-field name="placeOfBirth"></sort-field>
 				<sort-field name="gender"></sort-field>
 				<sort-field name="maritalStatus"></sort-field>
 				<sort-field name="height"></sort-field>
@@ -268,6 +286,7 @@
 				<sort-field name="motherTongue" />
 				<sort-field name="religion" />
 				<sort-field name="caste" />
+				<sort-field name="nationality" />
 				<sort-field name="punchType" />
 				<sort-field name="weeklyOff" />
 				<sort-field name="attendanceIndn" />
@@ -276,6 +295,7 @@
 				<sort-field name="companyBus" />
 				<sort-field name="busRouteNo" />
 				<sort-field name="flexibleShift" />
+				<sort-field name="shiftType" />
 			</field-group>
 			<field-group title="${uiLabelMap.Previous}" collapsible="true" initially-collapsed="true">
 				<sort-field name="previousEmployer" />
@@ -360,6 +380,14 @@
 				</entity-options>
 			</drop-down>
 		</field>
+		<field name="nationality" title="${uiLabelMap.Nationality}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="PERSON_REC_NA" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="punchType" title="${uiLabelMap.PunchType}">
 		     <drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -405,6 +433,14 @@
 				<option key="N" />
 			</drop-down>
 		</field>
+		<field name="shiftType" title="${uiLabelMap.ShiftType}">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="EMPL_REC_SHT" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><text></text></field>
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
          	<drop-down allow-empty="false">             
@@ -413,7 +449,10 @@
 				<entity-order-by field-name="sequenceId" />
 				</entity-options>
 			</drop-down>         
-        </field>        
+        </field> 
+        <field name="placeOfBirth" title="${uiLabelMap.PlaceOfBirth}"><text></text></field>      
+        <field name="height" title="${uiLabelMap.Height}"><text></text></field>
+		<field name="weight" title="${uiLabelMap.Weight}"><text></text></field>  
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><drop-down allow-empty="false" no-current-selected-key="Y"><option key="N"></option><option key="Y"/></drop-down></field>
 	  	<sort-order>
 			<sort-field name="partyId"/>
@@ -426,9 +465,10 @@
             <sort-field name="maritalStatus"/>
             <sort-field name="height"/>
         	<sort-field name="weight"/>
-            <sort-field name="belongsTo"/>
             <sort-field name="bloodGroup"/>
+            <sort-field name="belongsTo"/>
             <sort-field name="birthDate"/>
+            <sort-field name="placeOfBirth"/>
             <sort-field name="personalTitle"/>
             <sort-field name="mothersMaidenName"/>
             <sort-field name="socialSecurityNumber"/>
@@ -470,6 +510,7 @@
 			<sort-field name="motherTongue" />
 			<sort-field name="religion" />  
 			<sort-field name="caste" /> 
+			<sort-field name="nationality" /> 
 			<sort-field name="punchType" />
 			<sort-field name="weeklyOff" />
 			<sort-field name="attendanceIndn" />
@@ -477,7 +518,8 @@
 			<sort-field name="canteenFacin" />
 			<sort-field name="companyBus" />
 			<sort-field name="busRouteNo" />
-			<sort-field name="flexibleShift" /> 
+			<sort-field name="flexibleShift" />
+			<sort-field name="shiftType" />  
             <sort-field name="submitButton"/>
             <sort-field name="cancelLink"/>
       	</sort-order>
@@ -525,7 +567,8 @@
         <field name="comments" title="${uiLabelMap.PartyComments}"><display/></field>
         <!-- <field name="externalId"><display/></field> -->
         <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>   
-        <field name="birthDate" title="${uiLabelMap.DateOfBirth}"><display-entity entity-name="Person" key-field-name="partyId" description="${birthDate}" ></display-entity></field>           
+	    <field name="birthDate" title="${uiLabelMap.DateOfBirth}"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(lookupPersonPartyAndEmployeeDetail.birthDate, &quot;dd/MM/yyyy&quot;);}"/></field>    
+        <field name="placeOfBirth" title="${uiLabelMap.PlaceOfBirth}"><display-entity entity-name="Person" key-field-name="partyId" description="${panId}" ></display-entity></field>
         <field name="bloodGroup" title="${uiLabelMap.BloodGroup}"><display/></field>
         <field name="gender" title="${uiLabelMap.FormFieldTitle_gender}"><display-entity entity-name="Person" key-field-name="partyId" description="${gender}" ></display-entity></field>
         <field name="maritalStatus" title="${uiLabelMap.MaritalStatus}"><display-entity entity-name="Person" key-field-name="partyId" description="${maritalStatus}" ></display-entity></field>
@@ -541,6 +584,7 @@
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="religion" title="${uiLabelMap.Religion}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="caste" title="${uiLabelMap.Caste}" ><display description="${caste}"></display></field>
+		<field name="nationality" title="${uiLabelMap.Nationality}" ><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="punchType" title="${uiLabelMap.PunchType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${weeklyOff}"></display-entity></field>
 		<field name="attendanceIndn" title="${uiLabelMap.AttendanceIndn}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${attendanceIndn}"></display-entity></field>
@@ -549,6 +593,7 @@
 		<field name="companyBus" title="${uiLabelMap.CompanyBus}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${companyBus}"></display-entity></field>
 		<field name="busRouteNo" title="${uiLabelMap.BusRouteNo}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${busRouteNo}"></display-entity></field>
 		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${flexibleShift}"></display-entity></field>
+		<field name="shiftType" title="${uiLabelMap.ShiftType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${shiftType}"></display-entity></field>
 		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
         <field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportExpireDate}" ></display-entity></field>
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>       

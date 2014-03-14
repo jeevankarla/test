@@ -46,7 +46,9 @@ under the License.
 	<process field="bloodGroup"><copy></copy></process>
 	<process field="belongsTo"><copy></copy></process>
 	<process field="motherTongue"><copy></copy></process> 
-	<process field="religion"><copy></copy></process>     
+	<process field="religion"><copy></copy></process>
+	<process field="placeOfBirth"><copy></copy></process> 
+	<process field="nationality"><copy></copy></process>        
   </simple-map-processor>
 
   <simple-map-processor name="partyGroup">
