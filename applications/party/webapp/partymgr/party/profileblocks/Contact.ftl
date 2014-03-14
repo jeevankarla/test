@@ -39,6 +39,9 @@ under the License.
           <#list contactMeches as contactMechMap>
             <#assign contactMech = contactMechMap.contactMech>
             <#assign partyContactMech = contactMechMap.partyContactMech>
+<#if "EMAIL_ADDRESS" = contactMech.contactMechTypeId && !contactMech.infoString?has_content>
+<#-- skip  -->          
+<#else>
             <tr><td colspan="4"><hr /></td></tr>
             <tr>
               <td class="label align-top">${contactMechMap.contactMechType.get("description",locale)}</td>
@@ -155,6 +158,7 @@ under the License.
                 </#if>
               </td>
             </tr>
+ </#if>           
           </#list>
         </table>
       <#else>

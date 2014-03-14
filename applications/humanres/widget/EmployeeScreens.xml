@@ -173,17 +173,18 @@ under the License.
 		                                    <widgets>
 		                                        <container style="profile-left">
 		                                            <include-screen name="EmployeeInformation" location="component://humanres/widget/EmployeeScreens.xml"/>
-		                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-		                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+<!--		                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
+		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                        </container>
 		                                        <container style="profile-right">
 		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
-		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <include-screen name="AccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
+<!--		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
+		                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+
 		                                            <include-screen name="Dependent" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                            <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-		                                            <include-screen name="AccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                        </container>
 		                                    </widgets>
 		                                </section>
