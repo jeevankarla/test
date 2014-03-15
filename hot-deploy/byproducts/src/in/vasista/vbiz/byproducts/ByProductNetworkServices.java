@@ -3992,11 +3992,12 @@ public class ByProductNetworkServices {
 	            BigDecimal revenue = price.multiply(quantity);
 	            totalRevenue = totalRevenue.add(revenue);
 	            totalPacket = totalPacket.add(packetQuantity);
-	            
-	            BigDecimal vatAmount  = orderItem.getBigDecimal("vatAmount"); 
+	            BigDecimal vatAmount=ZERO;
+	            if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("vatAmount"))){
+	             vatAmount  = orderItem.getBigDecimal("vatAmount"); 
+	            }
 	            BigDecimal vatRevenue = vatAmount.multiply(quantity);
 	            totalVatRevenue=totalVatRevenue.add(vatRevenue);
-	            
 	            quantity = quantity.multiply(orderItem.getBigDecimal("quantityIncluded"));
 	    		totalQuantity = totalQuantity.add(quantity);   
 	    		BigDecimal fat = ZERO;
