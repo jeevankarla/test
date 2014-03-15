@@ -797,11 +797,13 @@ function updateGrid(){
 				}				
 			}	
 			function setRouteBoothsDropDown(selection){	
+				if(typeof selection.value == "undefined"){
+				   selection.value = $("#routeId").val();
+				}
 				boothsList = routeBoothsData[selection.value];
-				
 				if(selection.value =="" || typeof selection.value == "undefined"){
 					boothsList =  ${StringUtil.wrapString(boothsJSON)}
-				}				
+				}	
 			}
 			<#if subscriptionTypeId?exists && subscriptionTypeId?has_content> 
 				routesList =  supplyRouteList["${subscriptionTypeId}"]; 
