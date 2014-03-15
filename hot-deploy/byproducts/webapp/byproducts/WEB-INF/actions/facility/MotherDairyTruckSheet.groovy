@@ -129,6 +129,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							crateDivisior=12;
 							packetTotal=0;
 							subsidyTotal=0;
+							productsCrateMap=[:];
 							while (prodIter.hasNext()) {
 								Map.Entry entry = prodIter.next();
 								 String itrProductId=entry.getKey();
@@ -148,6 +149,10 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 										   tempExcess=((qty.intValue())%(crateDivisior.intValue()));
 										   cratesTotalSub = cratesTotalSub+tempCrates;
 										   noPacketsexc = noPacketsexc+tempExcess;
+										   cratesMap =[:];
+										   cratesMap["crates"]=tempCrates;
+										   cratesMap["loosePkts"]=tempExcess;
+										   productsCrateMap[itrProductId]=cratesMap;
 									   }
 										
 									}
@@ -169,6 +174,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							
 							amount=dayTotals.get("totalRevenue");
 							boothWiseProd.put("prodDetails", productTotals);
+							boothWiseProd.put("productsCrateMap", productsCrateMap);
 							boothWiseProd.put("amount", amount);
 							boothWiseProd.put("vatAmount", dayTotals.get("totalVatRevenue"));
 							boothWiseProd.put("crates", cratesTotalSub.intValue());
@@ -191,12 +197,14 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				
 				productWiseTotalCratesMap =[:];
 				routeTotQty=0;
+				rtCrates = 0;
+				rtExcessPkts = 0;
+				rtCans = 0;
+				rtLooseCans = 0;
 				if(UtilValidate.isNotEmpty(routeTotals)){
 					routeProdTotals = routeTotals.get("productTotals");
 					routeAmount= routeTotals.get("totalRevenue");
-					rtCrates = 0;
-					rtExcessPkts = 0;
-					rtCans = 0;
+					
 					if(UtilValidate.isNotEmpty(routeProdTotals)){
 						Iterator mapIter = routeProdTotals.entrySet().iterator();	
 						while (mapIter.hasNext()) {
@@ -236,6 +244,10 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								if(piecesPerCan && piecesPerCan.get(productId)){
 									int canDivisior=(piecesPerCan.get(productId)).intValue();
 								   tempRtCan = (rtQty/(canDivisior)).intValue();
+								   tempLooseRtCan=((rtQty.intValue())%(canDivisior));
+								   if(tempLooseRtCan>0){
+								   rtLooseCans=rtLooseCans+1;
+								   }
 								   rtCans = rtCans+tempRtCan;
 							   }
 								
@@ -289,6 +301,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					boothDetailsMap.put("rtCrates", rtCrates);
 					boothDetailsMap.put("rtExcessPkts", rtExcessPkts);
 					boothDetailsMap.put("rtCans", rtCans);
+					boothDetailsMap.put("rtLooseCans", rtLooseCans);
 					if(UtilValidate.isNotEmpty(boothWiseMap)){
 						routeWiseMap.put(routeId, boothDetailsMap);
 					}
