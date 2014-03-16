@@ -865,8 +865,8 @@
          <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
             <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
         </field>
-        <field name="appointmentDate" entry-name="employment.appointmentDate"><display/></field>
-        <field name="resignationDate" entry-name="employment.resignationDate"><display/></field>
+        <field name="appointmentDate" entry-name="employment.appointmentDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="resignationDate" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
     </form>
     <form name="AccountDetailsList" type="list" list-name="AccountDetails" default-table-style="basic-table" >	
 		<field name="partyId"><hidden/></field>
