@@ -163,12 +163,14 @@ $(function() {
 			$("#routeId").autocomplete({ source: routesList });	
 	 }); 
      
-     $('#boothId').focus(function (e) {   
-    	 setRouteBoothsDropDown($('#routeId'));
-    	 var e = jQuery.Event("keypress");
-    	 $("#boothId").trigger(e);
-    	 
-	 }); 
+     if(screenFlag != 'indentAlt'){
+    	 $('#boothId').focus(function (e) {   
+        	 setRouteBoothsDropDown($('#routeId'));
+        	 var e = jQuery.Event("keypress");
+        	 $("#boothId").trigger(e);
+        	 
+    	 });
+     }
 
     $('#boothId').autocomplete({
          minLength: 0
