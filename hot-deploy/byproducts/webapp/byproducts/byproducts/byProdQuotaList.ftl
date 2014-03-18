@@ -46,12 +46,12 @@
 			{id:"routeId", name:"Route", field:"routeId", width:80, minWidth:80, cssClass:"cell-title", sortable:false},
 			{id:"tripId", name:"Trip", field:"tripId", width:80, minWidth:80, cssClass:"cell-title", sortable:false},
 			{id:"createdUser", name:"Entry By", field:"createdUser", width:80, minWidth:80, cssClass:"cell-title", sortable:false},
-			{id:"entryDate", name:"Entry Date", field:"entryDate", width:80, minWidth:80, cssClass:"cell-title", sortable:false},
         <#if productList?exists> 
 	        <#list productList as product>				
-				{id:"${product.productId}", name:"${product.brandName}", field:"${product.productId}", width:75, minWidth:75, cssClass:"cell-custom-quantity" ,toolTip :"${product.description}"}<#if product_has_next>,</#if>
+				{id:"${product.productId}", name:"${product.brandName}", field:"${product.productId}", width:75, minWidth:75, cssClass:"cell-custom-quantity" ,toolTip :"${product.description}"},
 			</#list>
 		</#if>		
+			{id:"entryDate", name:"Entry Date", field:"entryDate", width:80, minWidth:80, cssClass:"cell-title", sortable:false}	
 		];
 		
 		var options = {
