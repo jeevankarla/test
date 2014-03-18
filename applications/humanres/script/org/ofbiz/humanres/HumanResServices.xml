@@ -846,7 +846,7 @@
         <!-- position -->
         <entity-and entity-name="EmplPositionAndFulfillment" list="emplPositionAndFulfillments" filter-by-date="true">
             <field-map field-name="employeePartyId" from-field="parameters.partyId"/>
-            <field-map field-name="partyId" from-field="employment.partyIdFrom"/>
+<!--            <field-map field-name="partyId" from-field="employment.partyIdFrom"/>-->
         </entity-and>
         <first-from-list entry="emplPositionAndFulfillment" list="emplPositionAndFulfillments"/>
         <field-to-result field="emplPositionAndFulfillment" result-name="emplPosition"/>
