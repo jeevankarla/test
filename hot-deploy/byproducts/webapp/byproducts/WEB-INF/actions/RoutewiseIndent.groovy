@@ -37,34 +37,24 @@ import org.ofbiz.service.DispatchContext;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import org.ofbiz.base.util.UtilNumber;
-import  org.ofbiz.network.NetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import org.ofbiz.product.product.ProductWorker;
 /*rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 context.rounding = rounding;*/
 
 routesList = [];
-if(parameters.routeId){
-	routesList.add(parameters.routeId);
+conditionList=[];
+if(parameters.routeId !="All-Routes"){
+	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , parameters.routeId));
 }
-else{
-	routesList = ByProductServices.getByproductRoutes(delegator).get("routeIdsList");
-}
+conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS ,"ROUTE"));
+condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+routesList = delegator.findList("Facility",condition,null,null,null,false);
 
-productStoreId = ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
 
 List productList = [];
-/*if(context.reportTypeFlag){
-	reportTypeFlag = context.reportTypeFlag;
-	if(reportTypeFlag == "UNION"){
-		productList = ByProductServices.getProdStoreProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("productStoreId", productStoreId)).get("categoryProduct").get("UNION_PRODUCTS");
-	}
-	else if(reportTypeFlag == "DAIRY"){
-		productList = ByProductServices.getProdStoreProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("productStoreId", productStoreId)).get("categoryProduct").get("DAIRY_PRODUCTS");
-	}
-}
-else{*/
-	productList = ByProductServices.getProdStoreProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("productStoreId", productStoreId)).get("productIdsList");
-//}
+
 
 effectiveDate = null;
 effectiveDateStr = parameters.supplyDate;
@@ -84,23 +74,42 @@ dayBegin = UtilDateTime.getDayStart(effectiveDate);
 dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 dctx = dispatcher.getDispatchContext();
 context.put("dctx",dctx);
+context.put("effectiveDate",effectiveDate);
+
+piecesPerCrate=[:];
+piecesPerCan=[:];
+result =ByProductNetworkServices.getProductCratesAndCans(dctx, UtilMisc.toMap("userLogin",userLogin, "saleDate", effectiveDate));
+piecesPerCrate = result.get("piecesPerCrate");
+piecesPerCan = result.get("piecesPerCan");
+
+crateProductsList=ProductWorker.getProductsByCategory(delegator ,"CRATE" ,null);
+canProductsList=ProductWorker.getProductsByCategory(delegator ,"CAN" ,null);
+
+crateProductsIdsList=EntityUtil.getFieldListFromEntityList(crateProductsList, "productId", false);
+canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "productId", false);
+
 conditionList=[];
 routeMap = [:];
-
+routeWiseIndentMap = [:];
 for(i=0; i<routesList.size(); i++){
 	grandTotalMap =[:];
-	routeId = routesList.get(i);
+	productFinalMap = [:];
+	route = routesList.get(i);
+	routeId=route.get("facilityId");
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
+	if(UtilValidate.isEmpty(parameters.subscriptionTypeId)){
 	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.IN, ["AM","PM"]));
+	}else{
+	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, parameters.subscriptionTypeId));
+	}
 	conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
-	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN ,productList));
-	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
-	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
+	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd),
+				   EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	fieldsToSelect = ["productId", "quantity","productSubscriptionTypeId", "sequenceNum"] as Set;
 	subscriptionsItemsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, fieldsToSelect , ["productId"], null, false);
-	
 	if(subscriptionsItemsList){
 		subscriptionsItemsList.each { eachItem ->
 			productId = eachItem.get("productId");
@@ -115,8 +124,7 @@ for(i=0; i<routesList.size(); i++){
 			if(productSubscriptionTypeId == "SPECIAL_ORDER"){
 				detailMap["otherQuantity"] = BigDecimal.ZERO;
 				detailMap["splQuantity"] = indentQty;
-			}
-			else{
+			}else{
 				detailMap["otherQuantity"] = indentQty;
 				detailMap["splQuantity"] = BigDecimal.ZERO;
 			}
@@ -125,13 +133,11 @@ for(i=0; i<routesList.size(); i++){
 			
 			if(UtilValidate.isEmpty(grandTotalMap[productId])){
 				grandTotalMap[productId] = tempTotalsMap;
-			}
-			else{
+			}else{
 				updateDetailMap = grandTotalMap[productId];
 				if(productSubscriptionTypeId == "SPECIAL_ORDER"){
 					updateDetailMap["splQuantity"] += indentQty;
-				}
-				else{
+				}else{
 					updateDetailMap["otherQuantity"] += indentQty;
 				}
 				tempUpdateMap = [:];
@@ -146,8 +152,45 @@ for(i=0; i<routesList.size(); i++){
 	tempRouteMap = [:];
 	tempRouteMap.putAll(grandTotalMap);
 	
+	grandTotalMap.each{prodEntry->
+		productId=prodEntry.getKey();
+		qty=prodEntry.getValue().get("otherQuantity");
+		prodMap =[:];
+		prodMap["qty"]=qty;
+		if(crateProductsIdsList.contains(productId)){
+			if(piecesPerCrate && piecesPerCrate.get(productId)){
+				int crateDivisior=(piecesPerCrate.get(productId)).intValue();
+			   tempCrates = (qty/(crateDivisior)).intValue();
+			   tempExcess=((qty.intValue())%(crateDivisior.intValue()));
+			   crateMap=[:];
+			   prodMap["crates"]=tempCrates;
+			   prodMap["loosePkts"]=tempExcess;
+			   cratesMap =[:];
+			   cratesMap["crates"]=tempCrates;
+			   cratesMap["loosePkts"]=tempExcess;
+			   prodMap["crateMap"]=cratesMap;
+		   }
+			
+		}
+		if(canProductsIdsList.contains(productId)){
+			if(piecesPerCan && piecesPerCan.get(productId)){
+				int canDivisior=(piecesPerCan.get(productId)).intValue();
+			   tempCan = (qty/(canDivisior)).intValue();
+			   tempCanExcess=((qty.intValue())%(canDivisior.intValue()));
+			   cansMap=[:];
+			   cansMap["cans"]=tempCan;
+			   prodMap["cansMap"]=cansMap;
+		   }
+			
+		}
+		productFinalMap[productId]=prodMap;
+	}
+	tempFinalMap=[:];
+	tempFinalMap.putAll(productFinalMap);
+	routeWiseIndentMap.put(routeId, tempFinalMap);
 	routeMap.put(routeId, tempRouteMap);
 }
 context.routeMap = routeMap;
+context.routeWiseIndentMap = routeWiseIndentMap;
 context.indentDate = UtilDateTime.toDateString(effectiveDate, "dd.MM.yyyy");
 return "success";
