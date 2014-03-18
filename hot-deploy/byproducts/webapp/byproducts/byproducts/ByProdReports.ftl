@@ -19,6 +19,26 @@
 					<input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr> 
+        <tr>
+        	<form id="IndentAbstractReport" name="IndentAbstractReport" method="post"  target="_blank" action="<@ofbizUrl>IndentAbstractReport</@ofbizUrl>">	
+      			<td width="34%">RouteWise Indent Abstract Report </td>
+      			 <td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="rtIndentSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>
+      			<td width="33%">Route 
+				 <select name="routeId" class='h4'>
+				<option value='All-Routes'>All</option>
+					<#list routesList as route>    
+  	    				<option value='${route}'>${route}</option>
+					</#list> 
+					</select>
+					Type 
+					<select name='subscriptionTypeId' class='h4'>
+					<option value=''>All</option>
+					<option value='AM'>AM</option>
+					<option value='PM'>PM</option>
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+        </tr> 
       	<tr>
       	   <form id="RouteQuantityAbst" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>routeWiseQtyAbstract.txt</@ofbizUrl>" target="_blank">	
       		  <td width="33%">Route Wise Sales Abst</td>
