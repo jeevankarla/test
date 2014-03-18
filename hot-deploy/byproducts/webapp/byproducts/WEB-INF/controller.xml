@@ -406,6 +406,11 @@
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="RouteQuantityAbstractTXT"/>
     </request-map> 
+     <request-map uri="IndentAbstractReport">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="IndentAbstractReport"/>
+    </request-map> 
+    
   	
      <request-map uri="EmployeeSearch">
         <security https="true" auth="true"/>               
@@ -679,6 +684,7 @@
 	<view-map name="PartywiseBalanceAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PartywiseBalanceAbstractPDF" content-type="application/pdf"/>
 	<view-map name="DealerBankChallanPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanPDF" content-type="application/pdf"/>
 	<view-map name="IndentManualCollection" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentManualCollection" content-type="application/pdf"/>
+	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>
