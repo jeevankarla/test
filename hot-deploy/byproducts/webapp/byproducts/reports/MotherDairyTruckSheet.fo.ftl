@@ -143,25 +143,26 @@ under the License.
 												<#assign columnCounter =0>
 												<#list lmsProdList as product>
 														<#assign columnCounter = columnCounter+1>
-														<fo:table-cell>	
-															<fo:block text-align="right">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>																									
-														</fo:table-cell>
-														<#if (columnCounter > 11) > <#-- 11 means 12 products for each column and morethan 12 we will wrap to next line -->
-														<#assign columnCounter =0>
+														<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
 													    </#if>
+														<fo:table-cell>	
+															<fo:block text-align="right">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>																									
+														</fo:table-cell>
+														
 												</#list>
 												<#list byProdList as product>
 													<#assign columnCounter = columnCounter+1>
+													<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+													    </#if>
 													<fo:table-cell>
 															<fo:block text-align="right">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>
 													</fo:table-cell>
-													<#if (columnCounter > 11) >
-														<#assign columnCounter =0>
-														</fo:table-row>	
-														<fo:table-row>
-													</#if>
 												</#list>
 												<#-- 
 												<fo:table-cell>
@@ -229,27 +230,32 @@ under the License.
 											<#assign columnCounter =0>
 												<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
-														<#assign qty=0>
-														<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
-															<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
-														</#if>
-														<#if qty !=0>
-															<fo:table-cell>		
-																<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")}</#if></fo:block>																									
-															</fo:table-cell>
-														<#else>
-															<fo:table-cell>		
-																<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
-															</fo:table-cell>
-														</#if>
-														<#if (columnCounter > 11) >
+											        <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+													<#assign columnCounter =1>
+													</fo:table-row>	
+													<fo:table-row>
+												    </#if>
+													<#assign qty=0>
+													<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
+														<#assign qty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
+													</#if>
+													<#if qty !=0>
+														<fo:table-cell>		
+															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")}</#if></fo:block>																									
+														</fo:table-cell>
+													<#else>
+														<fo:table-cell>		
+															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+														</fo:table-cell>
+													</#if>
+												</#list>
+												<#list byProdList as product>
+													<#assign columnCounter =1>
+													 <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
 														<#assign columnCounter =0>
 														</fo:table-row>	
 														<fo:table-row>
-													    </#if>
-												</#list>
-												<#list byProdList as product>
-													<#assign columnCounter = columnCounter+1>
+													  </#if>
 														<#assign byProdQty=0>
 														<#if boothDetails.getValue().get("prodDetails").get(product)?has_content>
 															<#assign byProdQty= boothDetails.getValue().get("prodDetails").get(product).get("packetQuantity")>
@@ -263,11 +269,6 @@ under the License.
 																<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
 															</fo:table-cell>
 														</#if>
-														<#if (columnCounter > 11) >
-															<#assign columnCounter =0>
-															</fo:table-row>	
-															<fo:table-row>
-													    </#if>
 												</#list>
 												<#-- 
 												<fo:table-cell>
@@ -333,27 +334,27 @@ under the License.
 										<#assign productSize = lmsProdList.size()+byProdList.size()>
 										<fo:table-row>
 											<#assign columnCounter =0>
+											<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+												<#assign columnCounter =1>
+												</fo:table-row>	
+												<fo:table-row>
+											</#if>
 											<#list lmsProdList as product>
 													<#assign columnCounter = columnCounter+1>
 													<fo:table-cell>	
 														<fo:block text-align="right">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>																									
 													</fo:table-cell>
-													<#if (columnCounter > 11) > <#-- 11 means 12 products for each column and morethan 12 we will wrap to next line -->
-													<#assign columnCounter =0>
-													</fo:table-row>	
-													<fo:table-row>
-												    </#if>
 											</#list>
 											<#list byProdList as product>
 												<#assign columnCounter = columnCounter+1>
+												<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+												</#if>
 												<fo:table-cell>
 														<fo:block text-align="right">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>
 												</fo:table-cell>
-												<#if (columnCounter > 11) >
-													<#assign columnCounter =0>
-													</fo:table-row>	
-													<fo:table-row>
-												</#if>
 											</#list>
 											<#-- 
 											<fo:table-cell>
@@ -403,45 +404,45 @@ under the License.
 											<#assign columnCounter = 0>
 											<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
-													<#assign qty=0>
-													<#if routeTotals.get(product)?has_content>
-														<#assign qty= routeTotals.get(product).get("packetQuantity")>
-													</#if>
-													<#if qty !=0>
-														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}</fo:block>																									
-														</fo:table-cell>
-													<#else>
-														<fo:table-cell>		
-															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
-														</fo:table-cell>
-													</#if>
-													<#if (columnCounter > 11) >
-													<#assign columnCounter =0>
-													</fo:table-row>	
-													<fo:table-row>
-												    </#if>	
+												 <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+												</#if>
+												<#assign qty=0>
+												<#if routeTotals.get(product)?has_content>
+													<#assign qty= routeTotals.get(product).get("packetQuantity")>
+												</#if>
+												<#if qty !=0>
+													<fo:table-cell>		
+														<fo:block text-align="right">${qty?if_exists}</fo:block>																									
+													</fo:table-cell>
+												<#else>
+													<fo:table-cell>		
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													</fo:table-cell>
+												</#if>
 											</#list>
 											<#list byProdList as product>
 											<#assign columnCounter = columnCounter+1>
-													<#assign byProdQty=0>
-													<#if routeTotals.get(product)?has_content>
-														<#assign byProdQty= routeTotals.get(product).get("packetQuantity")>
-													</#if>
-													<#if byProdQty !=0>
-														<fo:table-cell>		
-															<fo:block text-align="right">${byProdQty?if_exists}</fo:block>																									
-														</fo:table-cell>
-													<#else>
-														<fo:table-cell>		
-															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
-														</fo:table-cell>
-													</#if>
-													<#if (columnCounter > 11) >
-													<#assign columnCounter =0>
-													</fo:table-row>	
-													<fo:table-row>
-												    </#if>	
+											   <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+												</#if>
+												<#assign byProdQty=0>
+												<#if routeTotals.get(product)?has_content>
+													<#assign byProdQty= routeTotals.get(product).get("packetQuantity")>
+												</#if>
+												<#if byProdQty !=0>
+													<fo:table-cell>		
+														<fo:block text-align="right">${byProdQty?if_exists}</fo:block>																									
+													</fo:table-cell>
+												<#else>
+													<fo:table-cell>		
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													</fo:table-cell>
+												</#if>
 											</#list>
 											<#-- 
 												<fo:table-cell>
@@ -494,30 +495,35 @@ under the License.
 										<#assign columnCounter =0>
 												<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
-													<#assign qty=0>
-													<#if routeTotalCrates?has_content>
-													<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
-													<#if crateDetail?has_content>
-														<#assign qty = crateDetail.get('prodCrates')>
-													</#if>
-													</#if>
-													<#if qty !=0>
-														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}</fo:block>																									
-														</fo:table-cell>
-													<#else>
-														<fo:table-cell>		
-															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
-														</fo:table-cell>
-													</#if>
-													<#if (columnCounter > 11) >
-														<#assign columnCounter =0>
+												<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
-													 </#if>
+												</#if>
+												<#assign qty=0>
+												<#if routeTotalCrates?has_content>
+												<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
+												<#if crateDetail?has_content>
+													<#assign qty = crateDetail.get('prodCrates')>
+												</#if>
+												</#if>
+												<#if qty !=0>
+													<fo:table-cell>		
+														<fo:block text-align="right">${qty?if_exists}</fo:block>																									
+													</fo:table-cell>
+												<#else>
+													<fo:table-cell>		
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													</fo:table-cell>
+												</#if>
 												</#list>
 												<#list byProdList as product>
 													<#assign columnCounter = columnCounter+1>
+													<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+												    </#if>
 													<#assign qty=0>
 													<#if routeTotalCrates?has_content>
 													<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
@@ -533,11 +539,6 @@ under the License.
 														<fo:table-cell>		
 															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
 														</fo:table-cell>
-													</#if>
-													<#if (columnCounter > 11) >
-														<#assign columnCounter =0>
-														</fo:table-row>	
-														<fo:table-row>
 													</#if>
 												</#list>
 												<#-- 
@@ -595,52 +596,54 @@ under the License.
 									<#assign columnCounter =0>
 											<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
-													<#assign qty=0>
-													<#if routeTotalCrates?has_content>
-													<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
-													<#if crateDetail?has_content>
-														<#assign qty = crateDetail.get('packetsExces')>
-													</#if>
-													</#if>
-													<#if qty !=0>
-														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}(1)</fo:block>																									
-														</fo:table-cell>
-														<#assign looseCrats = looseCrats+1>
-													<#else>
-														<fo:table-cell>		
-															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
-														</fo:table-cell>
-													</#if>
-												   <#if (columnCounter > 11) >
-														<#assign columnCounter =0>
+												
+												<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
-													</#if>
+												</#if>
+												
+												<#assign qty=0>
+												<#if routeTotalCrates?has_content>
+												<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
+												<#if crateDetail?has_content>
+													<#assign qty = crateDetail.get('packetsExces')>
+												</#if>
+												</#if>
+												<#if qty !=0>
+													<fo:table-cell>		
+														<fo:block text-align="right">${qty?if_exists}(1)</fo:block>																									
+													</fo:table-cell>
+													<#assign looseCrats = looseCrats+1>
+												<#else>
+													<fo:table-cell>		
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													</fo:table-cell>
+												</#if>
 											</#list>
 											<#list byProdList as product>
 											<#assign columnCounter = columnCounter+1>
-													<#assign qty=0>
-													<#if routeTotalCrates?has_content>
-													<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
-													<#if crateDetail?has_content>
-														<#assign qty = crateDetail.get('packetsExces')>
-													</#if>
-													</#if>
-													<#if qty !=0>
-														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}(1)</fo:block>																									
-														</fo:table-cell>
-														<#assign looseCrats = looseCrats+1>
-													<#else>
-														<fo:table-cell>		
-															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
-														</fo:table-cell>
-													</#if>
-												<#if (columnCounter > 11) >
-													<#assign columnCounter =0>
-													</fo:table-row>	
-												    <fo:table-row>
+											    <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+												</#if>
+												<#assign qty=0>
+												<#if routeTotalCrates?has_content>
+												<#assign crateDetail = routeTotalCrates.get(product?if_exists)>
+												<#if crateDetail?has_content>
+													<#assign qty = crateDetail.get('packetsExces')>
+												</#if>
+												</#if>
+												<#if qty !=0>
+													<fo:table-cell>		
+														<fo:block text-align="right">${qty?if_exists}(1)</fo:block>																									
+													</fo:table-cell>
+													<#assign looseCrats = looseCrats+1>
+												<#else>
+													<fo:table-cell>		
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													</fo:table-cell>
 												</#if>
 											</#list>
 											 <#-- 
