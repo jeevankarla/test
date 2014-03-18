@@ -102,7 +102,7 @@
 		<field name="previousEmployer" title="${uiLabelMap.NameOfTheEmployer}"><text></text></field>
 		<field name="previousDesignation" title="${uiLabelMap.Designation}"><text></text></field>
 		<field name="prevEmplFromDate" title="${uiLabelMap.DateOfJoining}"><date-time></date-time></field>
-		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><text /></field>
+<!--	<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><text /></field> -->
 		<field name="vehicleType" title="${uiLabelMap.VehicleType}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -280,7 +280,7 @@
 				<sort-field name="mobileNumber" />
 				<sort-field name="residentialNumber" />
 				<sort-field name="emailAddress" />
-				<sort-field name="employeeBankAccNo" />
+<!-- 			<sort-field name="employeeBankAccNo" /> -->
 				<sort-field name="vehicleType" />
 				<sort-field name="quarterType" />
 				<sort-field name="motherTongue" />
@@ -340,7 +340,7 @@
 		<field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><text></text></field>	
     	<field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}" ><text></text></field>
 		<field name="panId" title="${uiLabelMap.Pan}"><text/></field> 
-		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><text/></field>
+<!-- 	<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><text/></field> -->
 		<field name="vehicleType" title="${uiLabelMap.VehicleType}">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -504,7 +504,7 @@
             <sort-field name="typeOfInsurance"/>
             <sort-field name="panId"/>
             <sort-field name="groupName"/>
-            <sort-field name="employeeBankAccNo"/>          
+<!--        <sort-field name="employeeBankAccNo"/>           -->
 		    <sort-field name="vehicleType" />
 			<sort-field name="quarterType" />
 			<sort-field name="motherTongue" />
@@ -578,7 +578,7 @@
         <field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyContactNumber}"></display-entity></field>       
         <field name="panId" title="${uiLabelMap.Pan}"><display-entity entity-name="Person" key-field-name="partyId" description="${panId}" ></display-entity></field>
         <field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${typeOfInsurance}"></display-entity></field>
-		<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${employeeBankAccNo}"></display-entity></field>       	
+<!-- 	<field name="employeeBankAccNo" title="${uiLabelMap.EmployeeBankAccountNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${employeeBankAccNo}"></display-entity></field>       	 -->
 		<field name="vehicleType" title="${uiLabelMap.VehicleType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="quarterType" title="${uiLabelMap.QuarterType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
@@ -870,7 +870,7 @@
     </form>
     <form name="AccountDetailsList" type="list" list-name="AccountDetails" default-table-style="basic-table" >	
 		<field name="partyId"><hidden/></field>
-		<field name="finAccountCode" title="Account Id"><display default-value="${AccountDetails[0].finAccountCode}"></display></field>
+		<field name="finAccountCode" title="Account No"><display default-value="${AccountDetails[0].finAccountCode}"></display></field>
         <field name="finAccountName" title="Account Name" ><display default-value="${AccountDetails[0].AccountName}"></display></field>
         <field name="finAccountTypeId" title="Account Type" ><display default-value="${AccountDetails[0].finAccountTypeId}"></display></field>
         <field name="finAccountBranch" title="Account Branch" ><display default-value="${AccountDetails[0].finAccountBranch}"></display></field> 
