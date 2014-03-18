@@ -36,7 +36,7 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 routesFacilitiesList = delegator.findList("Facility",condition,null,null,null,false);
 routesFacilitiesList = EntityUtil.filterByDate(routesFacilitiesList, nowTimestamp, "openedDate", "closedDate", true);
 routesList = EntityUtil.filterByCondition(routesFacilitiesList, EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "ROUTE"));
-boothsList = ByProductNetworkServices.getAllBooths(delegator);
+boothsList = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum);
 if(tempRoute){
 	JSONArray boothsJSON = new JSONArray();
 	routesList.each{route ->
@@ -102,7 +102,7 @@ if(tempRoute){
 			JSONObject newBoothObj = new JSONObject();
 			newBoothObj.put("value",booth.facilityId);
 			//newBoothObj.put("label",booth.facilityName+" ["+route.facilityName+"]");
-			newBoothObj.put("label",booth.facilityName+" ["+booth.facilityId+"]");
+			newBoothObj.put("label",booth.facilityId+" ["+booth.facilityName+"]");
 			boothItemsJSON.add(newBoothObj);
 			
 			//use for indent collection report
@@ -122,7 +122,6 @@ if(tempRoute){
 	}
 	context.facilityItemsJSON = facilityItemsJSON;
 	context.boothsJSON = boothsJSON;
-	/*Debug.log("boothsJson #######################################"+boothsJSON);*/
 	context.routeCollectionMap = routeCollectionMap;
 }
 
