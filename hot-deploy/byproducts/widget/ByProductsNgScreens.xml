@@ -1828,4 +1828,53 @@
             </widgets>
         </section>
     </screen>
+     <screen name="FacilityRateSearchForm">
+        <section>
+            <actions>
+            <set field="tabButtonItem" value="FacilityRate"/>
+            <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+            <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set> 
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      	<section>
+                        	<widgets>
+                        	<link target="createFacilityRate" text="Create" style="buttontext"></link>
+                        		<screenlet title="Facility Rate Search Form">
+                        			<include-form name="FacilityRateSearchForm" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Facility Rate Search Result">
+                        			<include-form name="FacilityRateSearchResultForm" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    <screen name="createFacilityRate">
+        <section>
+            <actions>
+            <set field="tabButtonItem" value="FacilityRate"/>
+            <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+            <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set> 
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      	<section>
+                        	<widgets>
+                        		
+                        		<screenlet title="Facility Rate">
+                        			<include-form name="createFacilityRate" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

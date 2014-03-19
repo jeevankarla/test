@@ -764,4 +764,62 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
     	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
     </form>
+    <form name="FacilityRateSearchForm" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
+    	default-table-style="basic-table hover-bar" separate-columns="true" target="FacilityRate">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+    	<field name="facilityId" title="Retailer Id"><text/></field>    	
+        <field name="rateTypeId" title="Rate type Id" >
+         <drop-down>
+                <entity-options description="${description}" key-field-name="rateTypeId" entity-name="RateType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+     <form name="FacilityRateSearchResultForm" type="list" list-name="listIt" odd-row-style="alternate-row" 
+      default-entity-name="FacilityRate" default-table-style="basic-table hover-bar" >
+    	<actions>    	
+    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FacilityRate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> 
+        </actions>
+    	<field name="facilityId" title="Retailer Id"><display/></field>    	
+        <field name="rateTypeId" title="Rate type" ><display description="${rateTypeId}"></display><!-- <display-entity entity-name="RateType" key-field-name="ratetypeId" description="${description} "/> --></field>
+        <field name="productId" title="product"><display/></field>
+        <field name="supplyTypeEnumId" title="supplyType"><display/></field>
+        <field name="rateAmount" title="Rate Amount"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+    	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+    </form>
+    <form name="createFacilityRate" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="createOrUpdateFacilityRate"
+    	default-table-style="basic-table hover-bar" separate-columns="true">
+    	<field name="facilityId" title="Retailer Id" required-field="true"><lookup target-form-name="LookupFacility"></lookup></field>
+    	
+        <field name="rateTypeId" title="Rate type Id">
+         <drop-down>
+                <entity-options description="${description}" key-field-name="rateTypeId" entity-name="RateType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productId" title="product Id" ><lookup target-form-name="LookupProduct"/></field>
+        <field name="supplyTypeEnumId" title="supplyTypeEnumId">
+			<drop-down allow-empty="false" no-current-selected-key="N">
+				<option key="AM"></option>
+				<option key="PM" />
+				<option key="_NA_" />
+			</drop-down>
+        </field>
+        <field name="rateAmount" title="Rate Amount"><text/></field>
+        <field name="productId" title="Product"><hidden value="_NA_"></hidden></field>
+        <field name="rateCurrencyUomId" ><hidden value="INR"></hidden></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
+	    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit/></field>       
+    </form>
 </forms>

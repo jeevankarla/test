@@ -609,7 +609,22 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="IndentManualCollection"/>
     </request-map>
-    
+    <request-map uri="FacilityRate">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="FacilityRateSearchForm"/>
+    </request-map> 
+     <request-map uri="createFacilityRate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createFacilityRate"/>
+         <response name="failed" type="view" value="createFacilityRate"/>
+   </request-map>
+    <request-map uri="createOrUpdateFacilityRate">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createOrUpdateFacilityRate"/>
+       <response name="success" type="view" value="FacilityRateSearchForm"/>
+        <response name="failed" type="view" value="createFacilityRate"/>
+        <response name="error" type="view" value="createFacilityRate"/>
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -716,4 +731,7 @@
  <view-map name="FindPastBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPastBoothPayments"/>
  <view-map name="FindBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindBoothPayments"/>
  <view-map name="facilityCustomTimePeriod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#facilityCustomTimePeriod"/>
+ <view-map name="FacilityRateSearchForm" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FacilityRateSearchForm"/>
+ <view-map name="createFacilityRate" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createFacilityRate"/>
+ 
 </site-conf>

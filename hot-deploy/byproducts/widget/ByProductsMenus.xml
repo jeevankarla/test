@@ -364,7 +364,10 @@
             <link target="facilityCustomTimePeriod">
             </link>
         </menu-item>
-        
+        <menu-item name="FacilityRate" title="Shopee Rent">
+            <link target="FacilityRate">
+            </link>
+        </menu-item>
     </menu>
     <menu name="ReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="findReturn" title="Find Return">

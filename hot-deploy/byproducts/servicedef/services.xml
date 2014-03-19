@@ -465,4 +465,16 @@
         <attribute name="boothIds" type="List" mode="IN" optional="false"/>        
         <attribute name="boothRunningTotal" type="BigDecimal" mode="OUT" optional="false"/>       
     </service>
+     <service name="createOrUpdateFacilityRate" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateFacilityRate">
+        <description>create Facility Rate</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="rateTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="rateAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="supplyTypeEnumId" type="String" mode="IN" optional="false"/>
+        <attribute name="rateCurrencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
 </services>

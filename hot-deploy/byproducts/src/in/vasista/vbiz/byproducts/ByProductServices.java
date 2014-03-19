@@ -4255,4 +4255,125 @@ public class ByProductServices {
  				}
 			return result;
 	    }
+	    public static Map<String, Object> getFacilityRates(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String facilityId = (String) context.get("facilityId");
+	        Timestamp fromDate = (Timestamp) context.get("fromDate");
+	        String rateTypeId = (String) context.get("rateTypeId");
+	        List facilityRatesList=null;
+	        BigDecimal rateAmount=BigDecimal.ZERO;
+	        Map result = ServiceUtil.returnSuccess();
+	        if(fromDate==null){
+	        	fromDate= UtilDateTime.nowTimestamp();
+	        }
+	        fromDate=UtilDateTime.getDayStart(fromDate);
+	        List conditionList = UtilMisc.toList(
+	        		EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+            		conditionList.add( EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+	                EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				try {
+					facilityRatesList = delegator.findList("FacilityRate", condition, null, null, null, false);
+					List<GenericValue> facilityRates = EntityUtil.filterByDate(facilityRatesList,fromDate);
+					 if(UtilValidate.isNotEmpty(facilityRates) && facilityRates.size()>0){
+						 GenericValue facilityRateDesc = delegator.findOne("RateType", UtilMisc.toMap("rateTypeId", rateTypeId), false);	
+				         return ServiceUtil.returnError("Error in getting "+facilityRateDesc.get("description"));
+			         }
+						GenericValue facilityRate = facilityRates.get(0);
+				       	rateAmount = facilityRate.getBigDecimal("rateAmount");
+				       	rateTypeId = facilityRate.getString("rateTypeId");
+				}catch (GenericEntityException e) {
+					Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+				} 
+	        return result;
+	    }
+	    
+	    public static Map<String, Object> createOrUpdateFacilityRate(DispatchContext ctx,Map<String, Object> context) {
+	        Map<String, Object> finalResult = FastMap.newInstance();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Delegator delegator = ctx.getDelegator();
+	        LocalDispatcher dispatcher = ctx.getDispatcher();
+	        Locale locale = (Locale) context.get("locale");
+	        String facilityId = (String) context.get("facilityId");
+	        String productId = (String) context.get("productId");
+	        String rateTypeId = (String) context.get("rateTypeId");
+	        BigDecimal rateAmount = (BigDecimal) context.get("rateAmount");
+	        String rateCurrencyUomId = (String) context.get("rateCurrencyUomId");
+	        Timestamp fromDate = (Timestamp) context.get("fromDate");
+	        Timestamp thruDate = (Timestamp) context.get("thruDate");
+	        String supplyTypeEnumId = (String) context.get("supplyTypeEnumId");
+	        List<GenericValue> facilityRateList = FastList.newInstance();
+	        List<GenericValue> activeFacilityRate = FastList.newInstance();
+	        List<GenericValue> futureFacilityRate = FastList.newInstance();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Timestamp tempfromDate=null;
+	        boolean isNewFacility = true;
+	        if(fromDate==null){
+	        	fromDate= UtilDateTime.nowTimestamp();
+	        }
+	        if(UtilValidate.isNotEmpty(thruDate)){
+	        	thruDate=UtilDateTime.getDayEnd(thruDate);
+	        }
+	        fromDate=UtilDateTime.getDayStart(fromDate);
+	        if(fromDate.before(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()))){
+	        	Debug.logError("From date  shoud be greater than current date : "+fromDate+ "\t",module);
+				return ServiceUtil.returnError("From date  shoud be greater than current date  : "+fromDate);
+	        }
+	        List conditionList = UtilMisc.toList(
+	                EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	                conditionList.add( EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));
+	                conditionList.add( EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+	                conditionList.add( EntityCondition.makeCondition("supplyTypeEnumId", EntityOperator.EQUALS, supplyTypeEnumId));
+	                conditionList.add( EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
+	                EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  
+	               
+				try {
+					 facilityRateList = delegator.findList("FacilityRate", condition, null, UtilMisc.toList("-fromDate"), null, false);
+					 activeFacilityRate = EntityUtil.filterByDate(facilityRateList, fromDate);
+					 futureFacilityRate = EntityUtil.filterByCondition(facilityRateList, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, fromDate));
+					 if(UtilValidate.isNotEmpty(futureFacilityRate)){
+							GenericValue facilityRateDesc = delegator.findOne("RateType", UtilMisc.toMap("rateTypeId", rateTypeId), false);	
+					        return ServiceUtil.returnError("Cannot create "+facilityRateDesc.get("description"));
+					 }
+					 GenericValue newEntity = delegator.makeValue("FacilityRate");
+					 if(UtilValidate.isNotEmpty(activeFacilityRate)){
+							GenericValue activeRate = activeFacilityRate.get(0);
+					       	tempfromDate = activeRate.getTimestamp("fromDate");
+					    	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))>0){
+					    		activeRate.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+					       		activeRate.store();
+						    }
+					       	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))==0){
+					       		activeRate.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+					       		activeRate.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+					       		activeRate.set("rateAmount",rateAmount);
+					       		activeRate.store();
+					       		isNewFacility=false;
+					       	}
+					 }
+				if(isNewFacility ){
+	     	        newEntity.set("facilityId", facilityId);
+	     	        newEntity.set("productId", productId);
+	     	        newEntity.set("rateTypeId", rateTypeId);
+	     	        newEntity.set("supplyTypeEnumId", supplyTypeEnumId);
+	     	        newEntity.set("rateCurrencyUomId", rateCurrencyUomId);
+	     	        newEntity.set("rateAmount", rateAmount);
+	     	        newEntity.set("fromDate", fromDate);
+	     	        newEntity.set("thruDate", thruDate);
+	     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+	    	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+	 		        try {
+	 					delegator.create(newEntity);
+	 				}catch (GenericEntityException e) {
+	 					Debug.logError("Error in creating Facility Rate: "+facilityId+ "\t"+e.toString(),module);
+	 					return ServiceUtil.returnError(e.getMessage());
+	 				}
+				  }
+				}catch (GenericEntityException e) {
+					Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+				} 
+			return result;
+	    }
 }

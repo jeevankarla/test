@@ -1154,6 +1154,10 @@ under the License.
 			<description>Describes when a rate amount will be valid untl. If null, valid indefinitly.</description>
 		</field>
 		<field name="rateAmount" type="fixed-point" />
+		<field name="createdDate" type="date-time"></field>
+	    <field name="createdByUserLogin" type="id-vlong"></field>
+	    <field name="lastModifiedDate" type="date-time"></field>
+	    <field name="lastModifiedByUserLogin" type="id-vlong"></field>
 		<prim-key field="facilityId" />
 		<prim-key field="productId" />
 		<prim-key field="supplyTypeEnumId" />
