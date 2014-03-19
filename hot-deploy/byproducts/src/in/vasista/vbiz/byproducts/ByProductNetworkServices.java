@@ -926,7 +926,7 @@ public class ByProductNetworkServices {
 	    		conditionList.clear();
 	    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 	    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
-	    		if(!screenFlag.equals("indentAlt")){
+	    		if(UtilValidate.isNotEmpty(screenFlag) && !screenFlag.equals("indentAlt")){
 	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		}
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
@@ -956,7 +956,7 @@ public class ByProductNetworkServices {
 	    			if(UtilValidate.isNotEmpty(prodIndentQtyCat)){
 	    				qtyCategory = (String)prodIndentQtyCat.get(productId);
 	    			}
-	    			if(screenFlag.equals("indentAlt")){
+	    			if(UtilValidate.isEmpty(screenFlag) && screenFlag.equals("indentAlt")){
 	    				Map tempMap = FastMap.newInstance();
 		    			tempMap.put("quantity", product.getBigDecimal("quantity"));
 		    			tempMap.put("seqRouteId", product.getString("sequenceNum"));
@@ -1029,7 +1029,7 @@ public class ByProductNetworkServices {
 	            	tempChangeProdMap.put("cProductId", productId);
 	            	tempChangeProdMap.put("cProductName", product.getString("brandName")+" [ "+product.getString("description")+"]");
 	            	tempChangeProdMap.put("cQuantity","");
-	            	if(screenFlag.equals("indentAlt")){
+	            	if(UtilValidate.isEmpty(screenFlag) && screenFlag.equals("indentAlt")){
 	            		tempChangeProdMap.put("seqRouteId","");
 	            	}
 	            	//String qtyIndentCat = (String)prodIndentQtyCat.get(productId);
@@ -1052,7 +1052,7 @@ public class ByProductNetworkServices {
 	            	}*/
 	            	if(UtilValidate.isNotEmpty(changeQuantityMap.get(productId))){
 	            		
-	            		if(screenFlag.equals("indentAlt")){
+	            		if(UtilValidate.isEmpty(screenFlag) && screenFlag.equals("indentAlt")){
 	            			tempChangeProdMap.put("cQuantity", (BigDecimal)((Map)changeQuantityMap.get(productId)).get("quantity"));
 	            			tempChangeProdMap.put("seqRouteId", (String)((Map)changeQuantityMap.get(productId)).get("seqRouteId"));
 	            		}
