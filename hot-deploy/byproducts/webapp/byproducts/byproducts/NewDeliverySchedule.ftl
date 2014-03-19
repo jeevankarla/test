@@ -112,8 +112,8 @@
 			message += "<tr class='h3'><td align='left' class='h3' width='40%'>Supply Date:</td><td align='right' width='60%'><input class='h3' type='text' id='estimatedDeliveryDate' name='estimatedDeliveryDate' onmouseover='datepick()' size='13'/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='40%'>Route:</td><td align='left' width='60%'><select name='routeId' id='routeId'>"+
 						"<#list routeList as eachRoute><option value='${eachRoute.facilityId?if_exists}' >${eachRoute.facilityId?if_exists}</option></#list></select></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='40%'>Trip:</td><td align='left' width='60%'><select name='tripId' id='tripId'>"+
-						"<#list prodSubTrips as eachTrip><option value='${eachTrip.enumId?if_exists}'>${eachTrip.description?if_exists}</option></#list></select></td></tr>"+            
+						<#--"<tr class='h3'><td align='left' class='h3' width='40%'>Trip:</td><td align='left' width='60%'><select name='tripId' id='tripId'>"+
+						"<#list prodSubTrips as eachTrip><option value='${eachTrip.enumId?if_exists}'>${eachTrip.description?if_exists}</option></#list></select></td></tr>"+-->            
 						"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='generateTruckSheet' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		message += "</table></form>";				
 		var title = "<h2><center>Generate Delivery Schedule</center></h2>";
@@ -134,8 +134,8 @@
 			message += "<tr class='h3'><td align='left' class='h3' width='40%'><input type='hidden' name='shipmentTypeId' id='shipmentTypeId'/>Supply Date:</td><td align='right' width='60%'><input class='h3' type='text' id='estimatedDateFormatted' name='estimatedDateFormatted' size='20' readonly><input class='h3' type='hidden' id='estimatedDeliveryDate' name='estimatedDeliveryDate' size='20' readonly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='40%'>Route:</td><td align='left' width='60%'><select name='routeId' id='routeId'>"+
 						"<#list routeList as eachRoute><option value='${eachRoute.facilityId?if_exists}' >${eachRoute.facilityId?if_exists}</option></#list></select></td></tr>"+            
-						"<tr class='h3'><td align='left' class='h3' width='40%'>Trip:</td><td align='left' width='60%'><select name='tripId' id='tripId'>"+
-						"<#list prodSubTrips as eachTrip><option value='${eachTrip.enumId?if_exists}'>${eachTrip.description?if_exists}</option></#list></select></td></tr>"+            
+						<#--"<tr class='h3'><td align='left' class='h3' width='40%'>Trip:</td><td align='left' width='60%'><select name='tripId' id='tripId'>"+
+						"<#list prodSubTrips as eachTrip><option value='${eachTrip.enumId?if_exists}'>${eachTrip.description?if_exists}</option></#list></select></td></tr>"+-->            
 						"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='cancelGenerateTruckSheet' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		message += "</table></form>";
 		var title = "<h2><center>Cancel Delivery Schedule</center></h2>";
