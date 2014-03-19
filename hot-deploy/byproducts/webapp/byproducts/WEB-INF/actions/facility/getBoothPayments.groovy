@@ -77,14 +77,17 @@ if(statusId =="PAID"){
 if(parameters.paymentIds){
 	paymentIds = parameters.paymentIds;	
 }
+boothPaymentsList=[];
 if(hideSearch == "N"){
 	if (statusId == "PAID") {
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
+		boothPaymentsList = boothsPaymentsDetail["paymentsList"];
 	}
 	else {
-		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);	
+		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);
+		boothPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	}
-	boothPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
+	
 
 	context.boothPaymentsList = boothPaymentsList;	
 	context.paymentDate= paymentDate;

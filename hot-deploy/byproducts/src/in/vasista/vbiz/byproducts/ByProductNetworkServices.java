@@ -3075,7 +3075,7 @@ public class ByProductNetworkServices {
 					if(tempFacilityId == ""){
 						tempFacilityId = boothPayment.getString("facilityId");
 						tempPayment.put("facilityId", boothPayment.getString("facilityId"));
-						tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
+						//tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
 						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))) {
 							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
 						}
@@ -3124,7 +3124,8 @@ public class ByProductNetworkServices {
 				tempPaymentsList.add(entry);		
 			}
 			boothsPaymentsDetail.put("invoicesTotalAmount", invoicesTotalAmount);
-			boothsPaymentsDetail.put("boothPaymentsList", tempPaymentsList);		
+			boothsPaymentsDetail.put("boothPaymentsList", tempPaymentsList);
+			boothsPaymentsDetail.put("paymentsList", paymentsList);
 			return boothsPaymentsDetail;   
 	    }
 	   
