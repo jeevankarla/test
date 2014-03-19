@@ -956,7 +956,7 @@ public class ByProductNetworkServices {
 	    			if(UtilValidate.isNotEmpty(prodIndentQtyCat)){
 	    				qtyCategory = (String)prodIndentQtyCat.get(productId);
 	    			}
-	    			if(UtilValidate.isEmpty(screenFlag) && screenFlag.equals("indentAlt")){
+	    			if(UtilValidate.isNotEmpty(screenFlag) && screenFlag.equals("indentAlt")){
 	    				Map tempMap = FastMap.newInstance();
 		    			tempMap.put("quantity", product.getBigDecimal("quantity"));
 		    			tempMap.put("seqRouteId", product.getString("sequenceNum"));
@@ -1029,7 +1029,7 @@ public class ByProductNetworkServices {
 	            	tempChangeProdMap.put("cProductId", productId);
 	            	tempChangeProdMap.put("cProductName", product.getString("brandName")+" [ "+product.getString("description")+"]");
 	            	tempChangeProdMap.put("cQuantity","");
-	            	if(UtilValidate.isEmpty(screenFlag) && screenFlag.equals("indentAlt")){
+	            	if(UtilValidate.isNotEmpty(screenFlag) && screenFlag.equals("indentAlt")){
 	            		tempChangeProdMap.put("seqRouteId","");
 	            	}
 	            	//String qtyIndentCat = (String)prodIndentQtyCat.get(productId);
@@ -1052,7 +1052,7 @@ public class ByProductNetworkServices {
 	            	}*/
 	            	if(UtilValidate.isNotEmpty(changeQuantityMap.get(productId))){
 	            		
-	            		if(UtilValidate.isEmpty(screenFlag) && screenFlag.equals("indentAlt")){
+	            		if(UtilValidate.isNotEmpty(screenFlag) && screenFlag.equals("indentAlt")){
 	            			tempChangeProdMap.put("cQuantity", (BigDecimal)((Map)changeQuantityMap.get(productId)).get("quantity"));
 	            			tempChangeProdMap.put("seqRouteId", (String)((Map)changeQuantityMap.get(productId)).get("seqRouteId"));
 	            		}
@@ -1090,7 +1090,7 @@ public class ByProductNetworkServices {
 	    	//Collections.reverse(changeIndentProductList);
 	    	//Collections.sort(changeIndentProductList);
 	    	String tempRouteId = routeId;
-	    	if(screenFlag.equals("indentAlt")){
+	    	if(UtilValidate.isNotEmpty(screenFlag) && screenFlag.equals("indentAlt")){
 	    		tempRouteId = "";
 	    	}
 	    	Map boothDetailResult = getRouteCrateDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId,"supplyDate", dayBegin, "subscriptionTypeId", subscriptionTypeId, "tripId", tripId, "routeId", tempRouteId));
