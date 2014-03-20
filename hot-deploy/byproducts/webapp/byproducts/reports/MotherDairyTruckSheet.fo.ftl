@@ -334,13 +334,13 @@ under the License.
 										<#assign productSize = lmsProdList.size()+byProdList.size()>
 										<fo:table-row>
 											<#assign columnCounter =0>
-											<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
-												<#assign columnCounter =1>
-												</fo:table-row>	
-												<fo:table-row>
-											</#if>
 											<#list lmsProdList as product>
 													<#assign columnCounter = columnCounter+1>
+													<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+													</#if>
 													<fo:table-cell>	
 														<fo:block text-align="right">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>																									
 													</fo:table-cell>
