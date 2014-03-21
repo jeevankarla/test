@@ -1741,14 +1741,12 @@
 				<set field="tabButtonItem2" value="facilityCustomTimePeriod" />				
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-                <!-- <set field="parameters.categoryTypeEnum" value="CR_INST"/>   
-                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/customPeriodBilling.groovy"/>
                 <entity-condition list="periodTypes" entity-name="PeriodType">
-                	<condition-expr field-name="periodTypeId" operator="like" value="INST_%"/>
-                </entity-condition>
-                
-                <entity-condition list="institutionList" entity-name="Facility">
-                	<condition-expr field-name="categoryTypeEnum" operator="equals" value="CR_INST"/>
+                	<condition-list combine="and">
+                		<condition-expr field-name="periodTypeId" operator="like" value="INST_%"/>
+                	<condition-expr field-name="periodTypeId" operator="not-equals" value="INST_DAILY_BILL"/>	
+                	</condition-list>
                 </entity-condition>
 			</actions>
             <widgets>

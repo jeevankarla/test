@@ -702,38 +702,36 @@
             </hyperlink>
         </field>
     </form>
-    <form name="ListFacilityTimePeriod"   id="ListTruckSheetId" list-name="listDeliverySchedule" title="" type="list" paginate-target="TruckSheetMotherDairy"
+    <form name="ListFacilityTimePeriod" id="ListFacilityTimePeriod" list-name="generatedPeriods" title="" type="list" paginate-target="facilityCustomTimePeriod"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
     	<row-actions>
-    		<entity-condition entity-name="Shipment" list="shipmentRouteList">
+    		<entity-condition entity-name="PeriodBilling" list="facilityBillingList">
     			<condition-list combine="and">
-                		<condition-expr field-name="estimatedShipDate" value="${estimatedShipDate}"/>
                 		<condition-expr field-name="statusId" operator="equals" value="GENERATED"/>
-                		<condition-expr field-name="shipmentTypeId" operator="equals" value="${shipmentTypeId}"/>
+                		<condition-expr field-name="customTimePeriodId" operator="equals" value="${customTimePeriodId}"/>
                 </condition-list>
-                <order-by field-name="routeId"/>
+                <order-by field-name="facilityId"/>
     		</entity-condition>
-    		<set field="scheduleDate" 
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /> 
     	</row-actions>
-    	<field name="date" title="Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>    
-        <field name="facilityId" title="Facility Id"><display-entity entity-name="facilityId"/></field>
-        <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
-         <field name="time period" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name = "truckSheet">
-            <hyperlink target="truckSheetReport.txt" description="Truck Sheet Report" target-window="_blank" >
-              	 <parameter param-name="facilityId" from-field="facilityId"/> 
-               	 <parameter param-name="date" from-field="date"/>
-            </hyperlink>
+        <field name="customTimePeriodId"><hidden/></field>
+        <field name="periodTypeId" title="PeriodType"><display-entity key-field-name="periodTypeId" entity-name="PeriodType" description="${description}"/></field>
+        <field name="periodName" title="TimePeriod"><display/></field>
+        <field name="periodBillingId" title="Institution" id-name="periodBillingId">
+            <drop-down allow-empty="false">
+                <option key="allInstitutions" description="All-Institutions"/>
+                <list-options list-name="facilityBillingList" key-name="periodBillingId" description="${facilityId}"/>
+            </drop-down>
         </field>
-        <field name="report" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="routeAbstract">
-            <hyperlink target="report.txt" description="report" target-window="_blank" >
+        <field name="report" widget-style="buttontext" id-name="routeAbstract">
+            <!-- <hyperlink target="report.txt" description="report" target-window="_blank" >
                 <parameter param-name="facilityId" from-field="facilityId"/> 
                	  <parameter param-name="date" from-field="date"/>
                	  <parameter param-name="reportTypeFlag" value="abstract"/>                                                   
-            </hyperlink>
+            </hyperlink> -->
+            <display/>
         </field>
-        <field name="cancelShipment" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
-            <hyperlink target-type="plain" target="javascript:showCancelTruckSheetGenerate('${estimatedShipDate}','${scheduleDate}' ,'${shipmentTypeId}');" description="${uiLabelMap.CommonCancel}">
+        <field name="cancelBilling" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target-type="plain" target="javascript:showCancelBilling('${customTimePeriodId}', '${periodTypeId}', '${facilityBillingList}');" description="${uiLabelMap.CommonCancel}">
             </hyperlink>
             </field>
     </form>

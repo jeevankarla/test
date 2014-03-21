@@ -29,26 +29,42 @@
         <attribute name="returnQuantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="receiptId" type="String" mode="OUT" optional="true"/>
     </service>
-    
-    <service name="createInvoiceForItems" engine="java" 
+    <service name="createInvoiceForAllOrders" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForAllOrders">
+        <description>
+            Create an invoice from order list
+        </description>
+        <attribute name="orderIds" type="List" mode="IN" optional="false"/>
+        <attribute name="invoiceDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <!-- <service name="createInvoiceForItems" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForItems">
         <description>Create Invoice for the list of products and quantities</description>
-        <attribute name="invocieTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyIdFrom" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="productItemsList" type="List" mode="IN" optional="false"/>
         <attribute name="taxAdjList" type="List" mode="IN" optional="true"/>
         <attribute name="dueDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
-    </service>
+    </service> -->
     
     
     <service name="processInstitutionBilling" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processInstitutionBilling">
-        <description>Get Rate Amount</description>
-        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <description>Process Credit Institution Custom Billing</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="processCancelInstitutionBilling" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processCancelInstitutionBilling">
+        <description>Process Cancel Credit Institution Custom Billing</description>
+        <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>
         <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
     </service>
    	
@@ -219,7 +235,8 @@
         <attribute name="facilityGroupId" mode="IN" type="String" optional="true"/>
         <attribute name="shipmentIds" mode="IN" type="List" optional="false"/>
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="routeId" mode="IN" type="String" optional="true"/>        
+        <attribute name="routeId" mode="IN" type="String" optional="true"/>
+        <attribute name="excludeInvoiceForFacilityIds" mode="IN" type="List" optional="true"/>        
     </service>
     <service name="cancelByProdShipment" engine="java" auth="true" transaction-timeout="300"
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelByProdShipment">

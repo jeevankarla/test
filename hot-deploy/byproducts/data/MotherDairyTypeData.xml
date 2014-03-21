@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 	<RoleType description="Employee subsidy Role" hasTable="N" parentTypeId="" roleTypeId="EMPSUBISDY_ROLE"/>	
-    <PaymentMethodType paymentMethodTypeId="AXISHTOH_PAYIN"></PaymentMethodType>
+	<PaymentMethodType paymentMethodTypeId="AXISHTOH_PAYIN"></PaymentMethodType>
+	<PeriodType description="Fortnightly Bill" periodLength="2" periodTypeId="INST_FORTNIGHT_BILL" uomId="TF_wk"/>
+    <PeriodType description="Monthly Bill" periodLength="1" periodTypeId="INST_MONTH_BILL" uomId="TF_mon"/> 
+    <PeriodType description="Quarterly Bill" periodLength="3" periodTypeId="INST_QUARTER_BILL" uomId="TF_mon"/> 
+    <PeriodType description="Weekly Bill" periodLength="1" periodTypeId="INST_WEEK_BILL" uomId="TF_wk"/>
+    <PeriodType description="Daily Bill" periodLength="1" periodTypeId="INST_DAILY_BILL"/>
+    
+    <EnumerationType description="Period billing" enumTypeId="PERIOD_BILLING"/>  
+    
+    <Enumeration description="Credit Institution Billing" enumCode="CREDIT INST BILLING" enumId="CR_INST_BILLING" enumTypeId="PERIOD_BILLING"/> 
 </entity-engine-xml>

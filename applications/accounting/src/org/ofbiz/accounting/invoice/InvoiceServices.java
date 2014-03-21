@@ -808,7 +808,7 @@ public class InvoiceServices {
             if (orderHeader == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingNoOrderHeader",locale));
             }
-
+            
             // figure out the invoice type
             String invoiceType = null;
 
@@ -867,6 +867,10 @@ public class InvoiceServices {
             Timestamp estimatedDeliveryDate = orderHeader.getTimestamp("estimatedDeliveryDate");            
             if (dueDate == null && estimatedDeliveryDate != null) {
             	dueDate = estimatedDeliveryDate;
+            }
+            List orderIds = EntityUtil.getFieldListFromEntityList(billItems, "orderId", true);
+            if(orderIds.size()>1){
+            	dueDate = invoiceDate;
             }
             
             // create the invoice record
@@ -1012,7 +1016,6 @@ public class InvoiceServices {
                 } else {
                     Debug.logError("Unexpected entity " + currentValue + " of type " + currentValue.getEntityName(), module);
                 }
-
                 if (orderItem == null && itemIssuance != null) {
                     orderItem = itemIssuance.getRelatedOne("OrderItem");
                 } else if ((orderItem == null) && (shipmentReceipt != null)) {
@@ -1025,7 +1028,6 @@ public class InvoiceServices {
                 if (orderItem.get("productId") != null) {
                     product = orderItem.getRelatedOne("Product");
                 }
-
                 // get some quantities
                 BigDecimal billingQuantity = null;
                 if (itemIssuance != null) {
@@ -1046,7 +1048,6 @@ public class InvoiceServices {
                     }
                 }
                 if (billingQuantity == null) billingQuantity = ZERO;
-
                 // check if shipping applies to this item.  Shipping is calculated for sales invoices, not purchase invoices.
                 boolean shippingApplies = false;
                 if ((product != null) && (ProductWorker.shippingApplies(product)) && (invoiceType.equals("SALES_INVOICE"))) {
@@ -1054,7 +1055,6 @@ public class InvoiceServices {
                 }
 
                 BigDecimal billingAmount = orderItem.getBigDecimal("unitPrice").setScale(invoiceTypeDecimals, ROUNDING);
-
                 Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
                 createInvoiceItemContext.put("invoiceId", invoiceId);
                 createInvoiceItemContext.put("invoiceItemSeqId", invoiceItemSeqId);
@@ -1067,7 +1067,7 @@ public class InvoiceServices {
                 createInvoiceItemContext.put("overrideGlAccountId", orderItem.get("overrideGlAccountId"));
                 //createInvoiceItemContext.put("uomId", "");
                 createInvoiceItemContext.put("userLogin", userLogin);
-
+                
                 String itemIssuanceId = null;
                 if (itemIssuance != null && itemIssuance.get("inventoryItemId") != null) {
                     itemIssuanceId = itemIssuance.getString("itemIssuanceId");
@@ -1077,7 +1077,6 @@ public class InvoiceServices {
                 if ((product != null) && (invoiceType.equals("SALES_INVOICE"))) {
                     createInvoiceItemContext.put("taxableFlag", product.get("taxable"));
                 }
-
                 Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
                 if (ServiceUtil.isError(createInvoiceItemResult)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceItemFromOrder",locale), null, null, createInvoiceItemResult);

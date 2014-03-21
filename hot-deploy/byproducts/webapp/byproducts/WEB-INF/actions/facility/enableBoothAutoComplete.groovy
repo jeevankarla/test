@@ -36,7 +36,11 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 routesFacilitiesList = delegator.findList("Facility",condition,null,null,null,false);
 routesFacilitiesList = EntityUtil.filterByDate(routesFacilitiesList, nowTimestamp, "openedDate", "closedDate", true);
 routesList = EntityUtil.filterByCondition(routesFacilitiesList, EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "ROUTE"));
-boothsList = ByProductNetworkServices.getAllBooths(delegator);
+categoryTypeEnum = null;
+if(parameters.categoryTypeEnum){
+	categoryTypeEnum = parameters.categoryTypeEnum;
+}
+boothsList = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum);
 if(tempRoute){
 	JSONArray boothsJSON = new JSONArray();
 	routesList.each{route ->

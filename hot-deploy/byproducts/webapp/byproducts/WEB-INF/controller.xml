@@ -66,6 +66,16 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="InstitutionBillingConfig"/>    	
     </request-map>
+    <request-map uri="processInstitutionBilling">
+    	<security https="true" auth="true"/>  
+    	<event type="service"  path="" invoke="processInstitutionBilling"/>   	
+    	<response name="success" type="view" value="facilityCustomTimePeriod"/>    	
+    </request-map>
+    <request-map uri="cancelBillingPeriod">
+    	<security https="true" auth="true"/>  
+    	<event type="service"  path="" invoke="processCancelInstitutionBilling"/>   	
+    	<response name="success" type="view" value="facilityCustomTimePeriod"/>    	
+    </request-map>
     
     <request-map uri="ReturnCrates">
     	<security https="true" auth="true"/>    	

@@ -497,7 +497,7 @@ public class ByProductNetworkServices {
 		 return result;
 	 }
 	 
-	 public static Map getByProductSubscriptionId(Delegator delegator, String facilityId)  {
+	 /*public static Map getByProductSubscriptionId(Delegator delegator, String facilityId)  {
 		 
 		 Map result = FastMap.newInstance();
 		 String subscriptionId = "";
@@ -519,7 +519,7 @@ public class ByProductNetworkServices {
     	 }
     	 result.put("subscriptionId", subscriptionId);
 		 return result;
-	 }
+	 }*/
 	 
 	 public static List getByProdShipmentIds(Delegator delegator,Timestamp fromDate,Timestamp thruDate){
 		 List shipments = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, thruDate, null);
@@ -624,7 +624,7 @@ public class ByProductNetworkServices {
 		} 
 	 
 	
-	public static Map<String, Object> getByProductActiveFacilities(Delegator delegator, Timestamp effectiveDate){
+	/*public static Map<String, Object> getByProductActiveFacilities(Delegator delegator, Timestamp effectiveDate){
 		    
 		Map<String, Object> result = FastMap.newInstance(); 
 		List<String> boothIds = FastList.newInstance(); 
@@ -644,7 +644,7 @@ public class ByProductNetworkServices {
 		result.put("boothsList", booths);
 	    result.put("boothsIdsList", boothIds);
 		return result;
-	}
+	}*/
 	 
 	 public static List getByProdShipmentIdsByType(Delegator delegator,Timestamp fromDate,Timestamp thruDate ,String shipmentTypeId){
 		 List shipments = ByProductNetworkServices.getByProdShipmentIdsByType(delegator, fromDate, thruDate, shipmentTypeId, null);
@@ -751,7 +751,11 @@ public class ByProductNetworkServices {
 	            currencyDefaultUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "INR");
 	        }
 	        
-	        Timestamp dayBegin =UtilDateTime.getDayStart(fromDate);
+	        List<GenericValue> indentProductList=ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
+
+	        List productIdsList=EntityUtil.getFieldListFromEntityList(indentProductList, "productId", false);
+
+	        /*Timestamp dayBegin =UtilDateTime.getDayStart(fromDate);
 	    	List<GenericValue> productList =FastList.newInstance();
 	    	List condList =FastList.newInstance();
 	    	condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, UtilMisc.toList("CONTINUES_INDENT","DAILY_INDENT")));
@@ -768,7 +772,7 @@ public class ByProductNetworkServices {
 	    		Debug.logError(e, module);
 			} 
 	       List productIdsList=FastList.newInstance();
-	       productIdsList = EntityUtil.getFieldListFromEntityList(productList, "productId", true);
+	       productIdsList = EntityUtil.getFieldListFromEntityList(productList, "productId", true);*/
 	       if(UtilValidate.isNotEmpty(productIdsList)){
 	    	   for(int i = 0 ; i<productIdsList.size();i++){
 	    		    String eachProd = (String)productIdsList.get(i);
@@ -1762,7 +1766,7 @@ public class ByProductNetworkServices {
 	    		return ServiceUtil.returnError("Error in service findLastClosedDate");
 	    	}
 	 	    
-	 	    List<GenericValue> facilityDetails = (List<GenericValue>)getAllBooths(delegator).get("boothsDetailsList");
+	 	    List<GenericValue> facilityDetails = (List<GenericValue>)getAllBooths(delegator, null).get("boothsDetailsList");
 	 	    
 	 	    try{
 	 	    	String boothId = "";
@@ -2506,12 +2510,18 @@ public class ByProductNetworkServices {
 		}
 
 		// This will return All boothsList 
-		public static Map<String, Object> getAllBooths(Delegator delegator){
+		public static Map<String, Object> getAllBooths(Delegator delegator, String categoryTypeEnum){
 		    Map<String, Object> result = FastMap.newInstance(); 
 		    List boothsList = FastList.newInstance();
 		    List boothsDetailsList = FastList.newInstance();
+		    List conditionList = FastList.newInstance();
 			try {
-				List<GenericValue> booths = delegator.findList("Facility", EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"), null, UtilMisc.toList("facilityId"), null, false);
+				conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
+				if(UtilValidate.isNotEmpty(categoryTypeEnum)){
+					conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, categoryTypeEnum));
+				}
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
 		        Iterator<GenericValue> boothIter = booths.iterator();
 		    	while(boothIter.hasNext()) {
 		            GenericValue booth = boothIter.next();
@@ -2704,7 +2714,7 @@ public class ByProductNetworkServices {
 			       Debug.logError(e, module);	
 				}
 		 	}
-		 	List<GenericValue> boothsList =   (List<GenericValue>)getAllBooths(delegator).get("boothsDetailsList");
+		 	List<GenericValue> boothsList =   (List<GenericValue>)getAllBooths(delegator, null).get("boothsDetailsList");
 		    for (GenericValue booth: boothsList ) { 
 		    	    Map <String, Object> boothMap = FastMap.newInstance();
 	                String boothId= booth.getString("facilityId");
@@ -3304,7 +3314,7 @@ public class ByProductNetworkServices {
 					Map facilityOwner = FastMap.newInstance();
 					if(UtilValidate.isEmpty(facilityId)){
 						//return ServiceUtil.returnSuccess();
-					 facilityIds = (List)getAllBooths(delegator).get("boothsList");
+					 facilityIds = (List)getAllBooths(delegator, null).get("boothsList");
 					}else{
 					    GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
 						if(facility.getString("facilityTypeId").equals("ROUTE")){
@@ -5708,7 +5718,7 @@ public class ByProductNetworkServices {
 	    	 
 	    	
 	    	 if(UtilValidate.isEmpty(facilityList)){
-	    		 facilityList = (List)getAllBooths(delegator).get("boothsList");
+	    		 facilityList = (List)getAllBooths(delegator, null).get("boothsList");
 			 }
 	    	// conditionList.add(EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "BYPROD_PAYMENT"));
 	    	 if(UtilValidate.isNotEmpty(facilityList)){
@@ -5814,7 +5824,7 @@ public class ByProductNetworkServices {
 			 Map result = FastMap.newInstance();
 			 List boothsList = FastList.newInstance();
 			 if(UtilValidate.isEmpty(facilityList)){
-				 boothsList = (List)getAllBooths(delegator).get("boothsList");
+				 boothsList = (List)getAllBooths(delegator, null).get("boothsList");
 			 }
 			 else{
 				 boothsList.addAll(facilityList);
@@ -5889,7 +5899,7 @@ public class ByProductNetworkServices {
 			 Map result = FastMap.newInstance();
 			 List boothsList = FastList.newInstance();
 			 if(UtilValidate.isEmpty(facilityList)){
-				 boothsList = (List)getAllBooths(delegator).get("boothsList");
+				 boothsList = (List)getAllBooths(delegator, null).get("boothsList");
 			 }
 			 else{
 				 boothsList.addAll(facilityList);
