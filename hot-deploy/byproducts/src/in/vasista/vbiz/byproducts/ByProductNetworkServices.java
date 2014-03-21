@@ -5982,6 +5982,56 @@ public class ByProductNetworkServices {
 			 return result;
 		 }
 	    
+	    public static Map<String, Object> getFacilityFinAccountInfo(DispatchContext dctx, Map context) {
+	    	
+	    	Delegator delegator = (Delegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = ServiceUtil.returnSuccess();
+		
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String facilityId = (String) context.get("facilityId");
+			Map accountInfo = FastMap.newInstance();
+			try{
+				
+				List<GenericValue> facilityFinAccounts = null;
+				List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"),EntityOperator.OR ,EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, null)));
+				conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				facilityFinAccounts = delegator.findList("FacilityAndFinAccount", condition, null, null, null, false);
+				facilityFinAccounts = EntityUtil.filterByDate(facilityFinAccounts);
+				if(UtilValidate.isEmpty(facilityFinAccounts)){
+					Debug.logError("No Financial Accounts available for the Facility:"+facilityId, module);
+					accountInfo.put("facilityId", facilityId);
+					result.put("accountInfo", accountInfo);
+					return ServiceUtil.returnSuccess();
+				}
+				
+				GenericValue finAccountDetail = EntityUtil.getFirst(facilityFinAccounts);
+				accountInfo.put("finAccountName", "");
+				accountInfo.put("finAccountBranch", "");
+				accountInfo.put("facilityId", facilityId);
+				if(UtilValidate.isNotEmpty(finAccountDetail.getString("finAccountName"))){
+					accountInfo.put("finAccountName", finAccountDetail.getString("finAccountName"));        	
+	            }
+				if(UtilValidate.isNotEmpty(finAccountDetail.getString("finAccountBranch"))){
+					accountInfo.put("finAccountBranch", finAccountDetail.getString("finAccountBranch"));        	
+	            }
+				accountInfo.put("finAccountId", finAccountDetail.getString("finAccountId"));
+				accountInfo.put("finAccountCode", finAccountDetail.getString("finAccountCode"));
+				
+			}catch (Exception e) {
+				// TODO: handle exception
+				 Debug.logError(e.toString(), module);
+				 return ServiceUtil.returnError(e.toString());
+			}
+			result.put("accountInfo", accountInfo);
+			return result;
+	    }
+
+	    
+	    
 }
 	
 	

@@ -155,7 +155,17 @@ under the License.
        		<key-map field-name="ownerPartyId" rel-field-name="partyId"/>
      	</view-link>
     </view-entity>
-    
+    <view-entity entity-name="FacilityAndFinAccount"
+        package-name="org.ofbiz.product.category"
+        title="Facility, Person And FinAccount View Entity">
+        <member-entity entity-alias="FA" entity-name="Facility"/>
+        <member-entity entity-alias="FIN" entity-name="FinAccount"/>
+        <alias-all entity-alias="FA"/>
+        <alias-all entity-alias="FIN"/>
+        <view-link entity-alias="FA" rel-entity-alias="FIN" rel-optional="true">
+            <key-map field-name="ownerPartyId" />
+        </view-link>
+    </view-entity>
     <view-entity entity-name="PaymentAndFacility"
           package-name="org.ofbiz.order.order" 
           title="Payment and Facility View Entity">

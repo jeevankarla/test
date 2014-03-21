@@ -490,12 +490,7 @@ under the License.
     	<response name="success" type="view" value="VendorMargins"/>
     	<response name="error" type="view" value="VendorMargins"/>       	
     </request-map>
-     <request-map uri="createPastDuePaymentForBooth">
-    	<security https="true" auth="true"/>
-    	<event type="service" invoke="createPaymentForBooth"/>   	
-    	<response name="success" type="view" value="FindPastBoothPayments"/>
-    	<response name="error" type="view" value="FindPastBoothPayments"/>       	
-    </request-map>
+    
      <request-map uri="createAponlinePaymentForBooth">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createPaymentForBooth"/>   	

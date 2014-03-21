@@ -235,7 +235,7 @@
         <attribute name="facilityGroupId" mode="IN" type="String" optional="true"/>
         <attribute name="shipmentIds" mode="IN" type="List" optional="false"/>
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="routeId" mode="IN" type="String" optional="true"/>
+        <attribute name="routeId" mode="IN" type="String" optional="true"/>        
         <attribute name="excludeInvoiceForFacilityIds" mode="IN" type="List" optional="true"/>        
     </service>
     <service name="cancelByProdShipment" engine="java" auth="true" transaction-timeout="300"
@@ -482,6 +482,7 @@
         <attribute name="boothIds" type="List" mode="IN" optional="false"/>        
         <attribute name="boothRunningTotal" type="BigDecimal" mode="OUT" optional="false"/>       
     </service>
+     
      <service name="createOrUpdateFacilityRate" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateFacilityRate">
         <description>create Facility Rate</description>
@@ -493,5 +494,11 @@
         <attribute name="rateCurrencyUomId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="getFacilityFinAccountInfo" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getFacilityFinAccountInfo" auth="true">
+        <description>Get Special order Contact details.</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="accountInfo" type="Map" optional="true" mode="OUT"/>       
     </service>
 </services>

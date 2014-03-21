@@ -147,6 +147,15 @@
     <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCTG_PREF_VIEW"/>    
     <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCOUNTING_PAYMENT_EDIT"/>  
     <SecurityGroupPermission groupId="PAYMENT_OPS" permissionId="ACCTG_ATX_CREATE"/>
-     
+      <SecurityGroup description="Cash Counter Wing Permissions" groupId="CASHCOUNTER_WING"/>      
+   		 	
+	<SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="MYPORTALBASE_ADMIN"/>	
+	<SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="CASH_ADMIN"/>
+    <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="ACCTG_ATX_CREATE"/>
+    <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="ACCTG_PREF_VIEW"/>
+    <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="ACCOUNTING_PAYMENT_EDIT"/>
+    <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="PARTYMGR_VIEW"/>
     
 </entity-engine-xml>

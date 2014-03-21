@@ -553,6 +553,12 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="PrintBoothPayments"/>    	
     </request-map>
+   <request-map uri="createPastDuePaymentForBooth">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createPaymentForBooth"/>   	
+    	<response name="success" type="view" value="FindPastBoothPayments"/>
+    	<response name="error" type="view" value="FindPastBoothPayments"/>       	
+    </request-map>
         <request-map uri="createPaymentForBooth">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createPaymentForBooth"/>   	
@@ -619,6 +625,7 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="IndentManualCollection"/>
     </request-map>
+    
     <request-map uri="FacilityRate">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="FacilityRateSearchForm"/>
@@ -634,6 +641,12 @@
        <response name="success" type="view" value="FacilityRateSearchForm"/>
         <response name="failed" type="view" value="createFacilityRate"/>
         <response name="error" type="view" value="createFacilityRate"/>
+    </request-map>
+    <request-map uri="getFacilityFinAccountInfo">
+        <security auth="true" https="true"/>    
+        <event type="service" invoke="getFacilityFinAccountInfo"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
     </request-map>
     
     <!-- View Mappings -->

@@ -97,10 +97,10 @@ under the License.
     <span class="label" id="showBoothRunningTotal"></span>
   </div>
   <form name="listBooths" id="listBooths"  method="post" action="massMakeBoothPayments">
-    <div align="right">     
+ <!--   <div align="right">     
       <input id="submitButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment"/>
     </div>
-
+-->
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
@@ -109,7 +109,7 @@ under the License.
             <td>PaymentMethodType</td>
           <td>${uiLabelMap.DueAmount}</td>
           <td>${uiLabelMap.makePayment}</td> 
-          <td align="right">${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllFacilities" name="checkAllFacilities" onchange="javascript:toggleFacilityId(this);"/></td>
+        <!-- <td align="right">${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllFacilities" name="checkAllFacilities" onchange="javascript:toggleFacilityId(this);"/></td> -->
         </tr>
       </thead>
       <tbody>
@@ -124,8 +124,8 @@ under the License.
                 ${(payment.paymentMethodType)?if_exists}
               </td>
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><input id="submitButton" type="button"  onclick="javascript:setCreatePaymentParameters(this);" value="Make Payment"/></td>
-              <td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:getBoothRunningTotal();"/></td>
+              <td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.facilityId}' ,'${payment.grandTotal}');" value="Make Payment"/></td>
+             <!-- <td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:getBoothRunningTotal();"/></td> -->
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>

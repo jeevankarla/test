@@ -1063,8 +1063,8 @@
 														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
 														<parameter param-name="statusId" from-field="parameters.statusId"/>	
 									  	        	</link>	
-												    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>							  	        		
-									  	        	<!-- <include-form name="ListDealerPayments" location="component://motherdairy/widget/MotherDairyForms.xml" /> -->
+												    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>
+												  						  	        		
 									  	        	<platform-specific>
                             							<html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListPayments.ftl"/></html>
                         							</platform-specific>
@@ -1547,7 +1547,19 @@
                 </service>
                 <set field="hasPaymentCancelPermission" from-field="permResult.hasPermission"/>	
     			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>										
-    			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>				
+    			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>
+    			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
+				<entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+					<condition-list combine="or">
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHALLAN_PAYIN"/>
+                	</condition-list>
+                 	<order-by field-name="-description"/>
+           		</entity-condition>
+           		<entity-condition entity-name="PaymentMethodType" list="paymentMethodType">
+                	<order-by field-name="paymentMethodTypeId"/>
+                </entity-condition>				
 			</actions>
 			<widgets>
 				<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -1589,6 +1601,10 @@
 														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
 														<parameter param-name="statusId" from-field="parameters.statusId"/>	
 									  	        	</link>
+									  	        	<platform-specific><html>
+												  		<html-template location="component://byproducts/webapp/byproducts/byproducts/DuePayment.ftl"/>
+												  		</html>
+												  	</platform-specific>	
 									  	        	<platform-specific>
                                             			<html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchBoothDues.ftl"/></html>
                                         			</platform-specific>
@@ -1647,7 +1663,19 @@
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;dd MMMMM, yyyy&quot;);}" /> 				
 				<script
 					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getBoothPayments.groovy" />
-				<set field="hasPastPaymentAdmin" value="${groovy:security.hasEntityPermission(&quot;PASTDUE&quot;, &quot;_ADMIN&quot;, session) || ((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}"/>				
+				<set field="hasPastPaymentAdmin" value="${groovy:security.hasEntityPermission(&quot;PASTDUE&quot;, &quot;_ADMIN&quot;, session) || ((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}"/>
+				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/paymentMethodType.js" global="true"/>
+				<entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+					<condition-list combine="or">
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHALLAN_PAYIN"/>
+                	</condition-list>
+                 	<order-by field-name="-description"/>
+           		</entity-condition>
+           		<entity-condition entity-name="PaymentMethodType" list="paymentMethodType">
+                	<order-by field-name="paymentMethodTypeId"/>
+               </entity-condition>						
 			</actions>
 			<widgets>
 				<section>					
@@ -1689,7 +1717,11 @@
 														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
 														<parameter param-name="statusId" from-field="parameters.statusId"/>	
 									  	        	</link>	
-												    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>							  	        		
+												    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>
+												      <platform-specific><html>
+												  			<html-template location="component://byproducts/webapp/byproducts/byproducts/DuePayment.ftl"/>
+												  		</html>
+												  	 </platform-specific>									  	        		
 									  	        	<include-form name="ListPastBoothPayments" location="component://byproducts/widget/ByProductsNgForms.xml" />
 										        </screenlet>
 										    </widgets> 
@@ -1744,7 +1776,7 @@
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/customPeriodBilling.groovy"/>
                 <entity-condition list="periodTypes" entity-name="PeriodType">
                 	<condition-list combine="and">
-                		<condition-expr field-name="periodTypeId" operator="like" value="INST_%"/>
+                	<condition-expr field-name="periodTypeId" operator="like" value="INST_%"/>
                 	<condition-expr field-name="periodTypeId" operator="not-equals" value="INST_DAILY_BILL"/>	
                 	</condition-list>
                 </entity-condition>

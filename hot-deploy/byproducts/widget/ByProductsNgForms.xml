@@ -675,14 +675,18 @@
         <field name="grandTotal" parameter-name="dueAmount" title="${uiLabelMap.ToDayDueAmount}"><display type="currency" currency="${currencyUomId}" description="${grandTotal}"/></field>
         <field name="totalDueAmount" title="${uiLabelMap.TotalDueAmount}"><display type="currency" currency="${currencyUomId}" description="${totalDue}"/></field> 
         <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="View Details"  target="javascript:showPaymentHistory('${facilityId}');"></hyperlink></field>
-        <field name="paymentMethodTypeId" required-field="true">
+       <!--  <field name="paymentMethodTypeId" required-field="true">
     		<drop-down allow-empty="true" no-current-selected-key="${defaultPaymentMethodId}">
          		<entity-options description="${description}" entity-name="PaymentMethodType">
          		</entity-options>
          	</drop-down>
-        </field>          
+        </field>  
+       
        <field name="amount" required-field="true"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.makePayment}" widget-style="smallSubmit"><submit/></field>    	    	
+        <field name="submitButton" title="${uiLabelMap.makePayment}" widget-style="smallSubmit"><submit/></field>     -->
+          <field name="makePayment" title="" widget-style="buttontext">
+        <hyperlink  target-type="plain" description="${uiLabelMap.makePayment}"  target="javascript:showPaymentEntryQTip('${facilityId}', 0);"></hyperlink>
+        </field>         	    	
     </form>
    <form name="ListPaidBoothPayments"  type="list" list-name="boothPaymentsList"  paginate-target="FindBoothPayments"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">    	   	        	
