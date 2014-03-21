@@ -3164,6 +3164,7 @@ public class ByProductServices {
 				  Debug.logError(e, "Error cancelling Invoice for period billing", module);		  
 				  return ServiceUtil.returnError("Error cancelling Invoice for period billing");			  
 			  }
+		      result = ServiceUtil.returnSuccess("Billing generated successfully !!");
 		      return result;
 	    }
 	    
