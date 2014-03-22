@@ -124,7 +124,7 @@ under the License.
                 ${(payment.paymentMethodType)?if_exists}
               </td>
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.facilityId}' ,'${payment.grandTotal}');" value="Make Payment"/></td>
+              <td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.facilityId}' ,'${payment.grandTotal}', '${payment.paymentMethodType}');" value="Make Payment"/></td>
              <!-- <td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:getBoothRunningTotal();"/></td> -->
             </tr>
             <#-- toggle the row color -->

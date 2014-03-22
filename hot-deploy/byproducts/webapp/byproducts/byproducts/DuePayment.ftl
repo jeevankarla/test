@@ -10,6 +10,9 @@
 	 * We'll use this method to create both our prompt and confirm dialogues
 	 * as they share very similar styles, but with varying content and titles.
 	 */
+	 var booth;
+	 var dueAmount;
+	 var paymentMethod;
 	function dialogue(content, title) {
 		/* 
 		 * Since the dialogue isn't really a tooltip as such, we'll use a dummy
@@ -80,12 +83,13 @@
 		return false;
 	}
 	var accountInfo;
-	var boothId;
-	var dueAmount;
+	//var boothId;
+	//var dueAmount;
 	function showPaymentEntryQTip(boothId, duesPay) {
 		var message = "";
-		boothId = boothId;
+		booth = boothId;
 		dueAmount = duesPay;
+		
 		message += "<html><head></head><body><form action='createPastDuePaymentForBooth' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' value='${facilityId?if_exists}' readOnly/></td></tr>"+
@@ -109,13 +113,14 @@
 		
 	}	
 	
-	function showPaymentEntry(boothId ,amount) {
+	function showPaymentEntry(boothId ,amount, paymentMethodType) {
 		var message = "";
-		boothId = boothId;
+		booth = boothId;
 		dueAmount = amount;
+		paymentMethod = paymentMethodType;
 		message += "<html><head></head><body><form action='createPaymentForBooth' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
-			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' value='${facilityId?if_exists}' readOnly/></td></tr>"+
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentMethodTypeId' id='paymentMethodTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
 						"<#list paymentMethodList as eachMethodType><option value='${eachMethodType.paymentMethodTypeId}' >${eachMethodType.description}</option></#list>"+            
 						"</select></td></tr>"+
@@ -132,6 +137,7 @@
 		var title = "Dues Payment : "+boothId;
 		Alert(message, title);
 		getFinaccountDetails(boothId);
+		
 	}
 	function getFinaccountDetails(facilityId){
 		$.ajax({
@@ -157,7 +163,16 @@
 			jQuery("#facilityId").val(accountInfo["facilityId"]);
 			jQuery("#issuingAuthority").val(accountInfo["finAccountName"]);
 			jQuery("#issuingAuthorityBranch").val(accountInfo["finAccountBranch"]);
-		}			
+		}
+		jQuery("#facilityId").val(booth);
+		jQuery("#amount").val(dueAmount);
+		$element = $('select#paymentMethodTypeId');
+		$options = $element.find('option');
+		$wanted_element = $options.filter(function () {
+  			return $(this).val() == paymentMethod || $(this).text() == paymentMethod
+		});
+		$wanted_element.prop('selected', true);
+		$( "#paymentMethodTypeId" ).trigger( "onchange" );
 	}
-
+	
 </script>
