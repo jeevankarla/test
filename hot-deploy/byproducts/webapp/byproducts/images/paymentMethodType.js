@@ -1,6 +1,5 @@
 function paymentFieldsOnchange(){
 	var str=jQuery("#paymentMethodTypeId").val();
-	alert(str);
 	var paymentMethodType = jQuery("select[name='paymentTypeId']").val();
 	if(str == undefined){
 		return;
