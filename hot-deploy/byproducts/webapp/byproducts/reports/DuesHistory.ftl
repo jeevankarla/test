@@ -76,6 +76,7 @@
 			message += "<tr><td align='left'>" + boothPayments[i].supplyDate + "</td><td align='right'>" +
 				boothPayments[i].amount + "</td></tr>";
 		}
+		message += "<tr class='h3'><td class='h3' align='center'><span align='center'><button value='${uiLabelMap.CommonOk}' onclick='return cancelForm();' class='submit'>Close</button></span></td></tr>";
 		message += "</table>";	
 		var title = "Dues for Booth " + boothId + "<br /> [Total: " + boothMap["totalAmount"] + "]";
 		Alert(message, title);
