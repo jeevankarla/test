@@ -112,10 +112,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				Map boothWiseMap =[:];
 				
 				partyProfileFacilityMap=ByProductNetworkServices.getPartyProfileDafult(dispatcher.getDispatchContext(),[boothIds:boothsList,supplyDate:estimatedDeliveryDateTime]).get("partyProfileFacilityMap");
-				
 				boothsList.each{ boothId ->
 					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:tempShipList, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
-					
 					if(UtilValidate.isNotEmpty(dayTotals)){
 						productTotals = dayTotals.get("productTotals");		
 						Map boothWiseProd= FastMap.newInstance();						
@@ -196,6 +194,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				routeAmount=0;
 				
 				productWiseTotalCratesMap =[:];
+				routeProdTotals=[:];
 				routeTotQty=0;
 				rtCrates = 0;
 				rtExcessPkts = 0;
