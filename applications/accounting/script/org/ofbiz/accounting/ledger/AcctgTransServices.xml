@@ -203,7 +203,7 @@ under the License.
         <field-to-result field="creditTotal"/>
         <field-to-result field="debitCreditDifference"/>
     </simple-method>
-    <simple-method method-name="postAcctgTrans" short-description="Post a AcctgTrans">
+    <simple-method method-name="postAcctgTrans" short-description="Post a AcctgTrans">    
         <!-- make sure the AcctgTrans has not already been posted -->
         <entity-one entity-name="AcctgTrans" value-field="acctgTrans" auto-field-map="true"/>
         <if-compare field="acctgTrans.isPosted" operator="equals" value="Y">
@@ -300,9 +300,10 @@ under the License.
                 <field-to-result field="error_list" result-name="successMessageList"/>
             </if-not-empty>
             <return/>
-        <else>
+        <else>        
             <!-- if there are errors and we have an error journal assign to the journal and return -->
             <if-not-empty field="error_list">
+            	<log level="always" message="postAcctgTrans==========actgTransId=${parameters.acctgTransId}: error_list=${error_list}"/>            
                 <iterate list="acctgTransEntryList" entry="acctgTransEntry">
                     <set field="partyAccountingPreferencesCallMap.organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
                      <call-service service-name="getPartyAccountingPreferences" in-map-name="partyAccountingPreferencesCallMap">
