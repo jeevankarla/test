@@ -5232,7 +5232,7 @@ under the License.
             package-name="org.ofbiz.product.inventory"
             title="Crates Cans Accounts" default-resource-name="ProductEntityLabels">     
 	      <field name="routeId" type="id"></field>
-	      <field name="supplyDate" type="date"></field>  
+	      <field name="supplyDate" type="date"></field> 
           <field name="cratesSent" type="fixed-point"></field>
           <field name="cratesReceived" type="fixed-point"></field>
           <field name="cansSent" type="fixed-point"></field>
@@ -5245,6 +5245,30 @@ under the License.
 	      <prim-key field="supplyDate"/>     
 	      <relation type="one" fk-name="CCA_FAC" rel-entity-name="Facility">
 	        <key-map field-name="routeId" rel-field-name="facilityId"/>
+	      </relation>
+	      <relation type="one" fk-name="CCA_UL" rel-entity-name="UserLogin">
+				<key-map field-name="createdByUserLogin"  rel-field-name="userLoginId"/>
+		  </relation>
+	      <relation type="one" fk-name="CCA_ULM" rel-entity-name="UserLogin">
+				<key-map field-name="lastModifiedByUserLogin"  rel-field-name="userLoginId"/>
+		  </relation>		  		 
+    </entity>
+    
+    <entity entity-name="CrateCanAccount"
+            package-name="org.ofbiz.product.inventory"
+            title="Crates Cans Accounts" default-resource-name="ProductEntityLabels">     
+	      <field name="shipmentId" type="id-ne"></field> 
+          <field name="cratesSent" type="fixed-point"></field>
+          <field name="cratesReceived" type="fixed-point"></field>
+          <field name="cansSent" type="fixed-point"></field>
+          <field name="cansReceived" type="fixed-point"></field>	      
+	      <field name="createdDate" type="date-time"></field>
+	      <field name="createdByUserLogin" type="id-vlong"></field>
+	      <field name="lastModifiedDate" type="date-time"></field>
+	      <field name="lastModifiedByUserLogin" type="id-vlong"></field>           
+	      <prim-key field="shipmentId"/>
+	      <relation type="one" fk-name="CCA_SHP" rel-entity-name="Shipment">
+	        <key-map field-name="shipmentId"/>
 	      </relation>
 	      <relation type="one" fk-name="CCA_UL" rel-entity-name="UserLogin">
 				<key-map field-name="createdByUserLogin"  rel-field-name="userLoginId"/>

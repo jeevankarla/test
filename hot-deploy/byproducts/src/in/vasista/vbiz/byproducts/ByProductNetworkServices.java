@@ -5026,78 +5026,34 @@ public class ByProductNetworkServices {
 		    List facilityList = FastList.newInstance();
 			exprList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 			EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);				
-			
+			BigDecimal totalCrateQty = BigDecimal.ZERO;
+			BigDecimal totalCanQty = BigDecimal.ZERO;
 			try{
 				List<GenericValue> shippedOrderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null ,null, null, false);
-				facilityList = EntityUtil.getFieldListFromEntityList(shippedOrderItems, "originFacilityId", true);
-				String facilityId = "";
-				BigDecimal totalCrateQty = BigDecimal.ZERO;
-				BigDecimal totalCanQty = BigDecimal.ZERO;
-				Map partyCratesMap = FastMap.newInstance();
-				Map partyCansMap = FastMap.newInstance();
-				Map productQtyInc = FastMap.newInstance();
-				for(int i=0;i<facilityList.size();i++){
-					facilityId = (String)facilityList.get(i);
-					List<GenericValue> facilityOrderItems = EntityUtil.filterByCondition(shippedOrderItems, EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
-					int partyCrates = 0;
-					BigDecimal totalQty = BigDecimal.ZERO;
-					Map prodQtyMap = FastMap.newInstance();
-					String productId = "";
-					for(GenericValue orderItem : facilityOrderItems){
-						BigDecimal qtyInc = orderItem.getBigDecimal("quantityIncluded");
-						productId = orderItem.getString("productId");
+				List<String> productList = EntityUtil.getFieldListFromEntityList(shippedOrderItems, "productId", true);
+				 
+				for(String productId: productList){
+					List<GenericValue> productOrderItems = EntityUtil.filterByCondition(shippedOrderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					BigDecimal prodTotQty = BigDecimal.ZERO;
+					BigDecimal prodTotCrate = BigDecimal.ZERO;
+					BigDecimal prodTotCan = BigDecimal.ZERO;
+					for(GenericValue orderItem : productOrderItems){
 						BigDecimal qty = orderItem.getBigDecimal("quantity");
-						productQtyInc.put(productId, qtyInc);
-						if(prodQtyMap.containsKey(productId)){
-							BigDecimal tempQty = (BigDecimal)prodQtyMap.get(productId);
-							tempQty = tempQty.add(qty);
-							prodQtyMap.put(productId, tempQty);
-						}
-						else{
-							prodQtyMap.put(productId, qty);
-						}
+						prodTotQty = prodTotQty.add(qty);
 					}
-					int partyTotalCrate = 0;
-					int partyTotalCan = 0;
-					Iterator prodQtyIter = prodQtyMap.entrySet().iterator();
-					BigDecimal totalCalCrates = BigDecimal.ZERO;
-					BigDecimal totalCalCans = BigDecimal.ZERO;
-					while (prodQtyIter.hasNext()) {
-						Map.Entry prodQtyEntry = (Entry) prodQtyIter.next();
-			        	productId = (String)prodQtyEntry.getKey();
-			        	BigDecimal qty = (BigDecimal)prodQtyEntry.getValue();
-			        	BigDecimal prodCrates = BigDecimal.ZERO;
-			        	BigDecimal prodCans = BigDecimal.ZERO;
-			        	//calculate crates
-			        	if(UtilValidate.isNotEmpty(piecesPerCrate) && piecesPerCrate.containsKey(productId)){
-			        		prodCrates = (qty.divide((BigDecimal)piecesPerCrate.get(productId),2,BigDecimal.ROUND_HALF_UP));
-			        	}
-			        	BigDecimal tempTotalCrates = ((new BigDecimal(partyTotalCrate)).add(prodCrates));
-			        	partyTotalCrate = ((new BigDecimal(partyTotalCrate)).add(prodCrates)).intValue();
-			        	totalCalCrates = totalCalCrates.add(tempTotalCrates);
-			        	
-			        	//calculate cans
-			        	if(UtilValidate.isNotEmpty(piecesPerCan) && piecesPerCan.containsKey(productId)){
-			        		prodCans = (qty.divide((BigDecimal)piecesPerCan.get(productId),2,BigDecimal.ROUND_HALF_UP));
-			        	}
-			        	BigDecimal tempTotalCans = ((new BigDecimal(partyTotalCan)).add(prodCans));
-			        	partyTotalCan = ((new BigDecimal(partyTotalCrate)).add(prodCrates)).intValue();
-			        	totalCalCans = totalCalCans.add(tempTotalCans);
-			        	
-					}
-					partyCratesMap.put(facilityId, partyTotalCrate);
-					totalCrateQty = totalCrateQty.add(totalCalCrates);
-					
-					partyCansMap.put(facilityId, partyTotalCan);
-					totalCanQty = totalCanQty.add(totalCalCans);
+					if(UtilValidate.isNotEmpty(piecesPerCrate) && piecesPerCrate.containsKey(productId)){
+						prodTotCrate = (prodTotQty.divide((BigDecimal)piecesPerCrate.get(productId),0,BigDecimal.ROUND_CEILING));
+			        	totalCrateQty = totalCrateQty.add(prodTotCrate);
+		        	}
+		        	
+		        	//calculate cans
+		        	if(UtilValidate.isNotEmpty(piecesPerCan) && piecesPerCan.containsKey(productId)){
+		        		prodTotCan = (prodTotQty.divide((BigDecimal)piecesPerCan.get(productId),0,BigDecimal.ROUND_CEILING));
+			        	totalCanQty = totalCanQty.add(prodTotCan);
+		        	}
 				}
-				BigDecimal totCrate = (totalCrateQty).setScale(0, BigDecimal.ROUND_CEILING);
-				BigDecimal totCan = (totalCanQty).setScale(0, BigDecimal.ROUND_CEILING);
-				partyCansMap.put("totalCans", totCan);
-				result.put("shipmentCans", partyCansMap);
-				
-				partyCratesMap.put("totalCrates", totCrate);
-				result.put("shipmentCrates", partyCratesMap);
+				result.put("totalCans", totalCanQty);
+				result.put("totalCrates", totalCrateQty);
 			}catch (Exception e) {
 				Debug.logError("Error calculating crates for the shipment", module);
 	    		return ServiceUtil.returnError("Error calculating crates for the shipment"); 

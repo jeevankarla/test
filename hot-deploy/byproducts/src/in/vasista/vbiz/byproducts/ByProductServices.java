@@ -633,8 +633,8 @@ public class ByProductServices {
 	     		  	shipment.store();
 	                return result;
       		  	}
-      		  	BigDecimal crateQty = (BigDecimal)((Map)result.get("shipmentCrates")).get("totalCrates");
-      		  	BigDecimal canQty = (BigDecimal)((Map)result.get("shipmentCans")).get("totalCans");
+      		  	BigDecimal crateQty = (BigDecimal)result.get("totalCrates");
+      		  	BigDecimal canQty = (BigDecimal)result.get("totalCans");
       		  	
       		  	List prodQty = FastList.newInstance();
       		  	if(crateQty.compareTo(BigDecimal.ZERO)>0){
@@ -663,7 +663,23 @@ public class ByProductServices {
 		  		  		Debug.logError(errMsg , module);
 		  		  	}
       		  	}
-    	  		  	
+    	  		
+      		  	GenericValue cratesCansAccnt = delegator.findOne("CrateCanAccount", UtilMisc.toMap("shipmentId", shipmentId), false);
+      		  	
+      		  	if(UtilValidate.isNotEmpty(cratesCansAccnt)){
+      		  		delegator.removeValue(cratesCansAccnt);
+      		  	}
+      		  	
+      		  	GenericValue crateCanAcct = null;
+      		  	crateCanAcct = delegator.makeValue("CrateCanAccount");
+      		  	crateCanAcct.put("shipmentId", shipmentId);
+      		  	crateCanAcct.put("cratesSent", crateQty);
+      		  	crateCanAcct.put("cratesReceived", BigDecimal.ZERO);
+      		  	crateCanAcct.put("cansSent", canQty);
+      		  	crateCanAcct.put("cansReceived", BigDecimal.ZERO);
+      		  	crateCanAcct.put("createdDate", UtilDateTime.nowTimestamp());
+      		  	crateCanAcct.put("createdByUserLogin", userLogin.get("userLoginId"));
+      		  	crateCanAcct.create();
     	  		  	
     	  		  	/*List invExpr = FastList.newInstance();
     	  		  	List<GenericValue> productStoreFacility = delegator.findList("ProductStoreFacility", EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, "9004"), null, null, null, false);
@@ -1151,7 +1167,7 @@ public class ByProductServices {
 		/*
 		 * removing the itemIssuance
 		 */ 
-		List invExpr = FastList.newInstance();
+		/*List invExpr = FastList.newInstance();
 		String invFacility = "";
 		String invItemId = "";
 		try{
@@ -1173,7 +1189,7 @@ public class ByProductServices {
 		}catch(Exception e){
 			Debug.logError("Error fetching inventory items for crate"+e, module);
     		return ServiceUtil.returnError("Error fetching inventory items for crate"); 
-		}
+		}*/
 		
 	  	
         for(int i = 0; i < shipmentList.size(); i++){
@@ -1196,8 +1212,18 @@ public class ByProductServices {
      		} catch (GenericEntityException e) {
      			 Debug.logError(e, module);      
      		}
+     		try{
+     			GenericValue crateCanAcct = delegator.findOne("CrateCanAccount", UtilMisc.toMap("shipmentId", shipmentId), false);
+         		if(UtilValidate.isNotEmpty(crateCanAcct)){
+         			delegator.removeValue(crateCanAcct);
+         		}
+     		}catch(GenericEntityException e){
+     			Debug.logError(e, module);
+     			return ServiceUtil.returnError(e.getMessage()); 
+     		}
+     		
         	//shipment.set("statusId", "CANCEL_INPROCESS");
-        	invExpr.clear();
+        	/*invExpr.clear();
         	invExpr.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS, invItemId));
         	invExpr.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
         	
@@ -1215,7 +1241,7 @@ public class ByProductServices {
     	  		  	inventoryItemDetailCtx.put("quantityOnHandDiff", qty.negate());
     	  		  	inventoryItemDetailCtx.put("availableToPromiseDiff", qty.negate());
     	  		  	inventoryItemDetailCtx.put("shipmentId", shipmentId);
-    	  		  	/*inventoryItemDetailCtx.put("itemIssuanceId", itemIssueId);*/
+    	  		  	inventoryItemDetailCtx.put("itemIssuanceId", itemIssueId);
     	  		  	inventoryItemDetailCtx.put("userLogin", userLogin);
     	  		  	
     	  		  	result = dispatcher.runSync("createInventoryItemDetail", inventoryItemDetailCtx);
@@ -1230,7 +1256,7 @@ public class ByProductServices {
     			// TODO: handle exception
         		Debug.logError("Unable to Store Shipment Status"+e, module);
         		return ServiceUtil.returnError("Unable to Store Shipment Status"); 
-    		}
+    		}*/
         	
         	
         }

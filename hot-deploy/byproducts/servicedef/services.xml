@@ -103,8 +103,8 @@
             location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="calculateCratesForShipment" auth="true">
         <description>Cancel Return Items</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
-        <attribute name="shipmentCrates" type="Map" mode="OUT" optional="true"/>
-        <attribute name="shipmentCans" type="Map" mode="OUT" optional="true"/>
+        <attribute name="totalCrates" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="totalCans" type="BigDecimal" mode="OUT" optional="true"/>
     </service>
     
     <service name="processReturnItemsHelper" engine="java"
