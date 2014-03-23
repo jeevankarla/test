@@ -482,15 +482,15 @@
         </field> --> 
            
         <field name="facilityId" title="Retailer"><lookup target-form-name="LookupFacility"></lookup></field>
-        <field name="productId" title="Product"> <lookup target-form-name="LookupProduct"></lookup></field>    
+        <field name="productId" title="Product"> <lookup target-form-name="LookupProduct"></lookup></field>   
         <field name="routeId" title="Route"><lookup target-form-name="LookupFacility"/></field>
-        <field name="tripId" title="Trip" widget-style="h3">
+      <!--   <field name="tripId" title="Trip" widget-style="h3">
         	<drop-down allow-empty="true">
         		<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
         			<entity-constraint name="enumTypeId" operator="equals" value="MULTI_TRIP"/>
         		</entity-options>
         	</drop-down>
-        </field>
+        </field> -->
        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
     <form name="FindDealerPayments" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="FindDealerPayments"
@@ -766,6 +766,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
     	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
     </form>
+   
     <form name="FacilityRateSearchForm" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
     	default-table-style="basic-table hover-bar" separate-columns="true" target="FacilityRate">
     	<field name="hideSearch"><hidden value="Y" /></field>
@@ -823,5 +824,46 @@
         <field name="fromDate"><date-time/></field>
         <field name="thruDate"><date-time/></field>
 	    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit/></field>       
+    </form>
+    <form name="ListVehicleStatus" type="list" list-name="vehicleTripStatusList"   paginate-target="VehicleStatus" id="VehicleStatusListId"
+    		 header-row-style="header-row-2"  default-table-style="basic-table hover-bar" separate-columns="true">
+         <row-actions>
+         
+            <entity-condition entity-name="VehicleTrip" list="vehicleTripsList">
+    			<condition-list combine="and">
+                		<condition-expr field-name="vehicleId" operator="equals" value="${vehicleId}"/>
+                		<condition-expr field-name="originFacilityId" operator="equals" value="${facilityId}"/>
+                		<condition-expr field-name="sequenceNum" operator="equals" value="${sequenceNum}"/>
+                </condition-list>
+    		</entity-condition>
+    		
+    		<!-- <entity-one entity-name="Shipment">
+        		<field-map field-name="shipmentId" from-field="shipmentId"/>
+        		<select-field field-name="routeId"/>
+        		<select-field field-name="tripNum"/>
+        	</entity-one>
+        	<set field="routeId" from-field="routeId"/>
+        	<set field="tripId" from-field="tripNum"/> -->
+        	
+            <set field="shipmentId" from-field="vehicleTripsList[0].shipmentId"/>  
+            <entity-one entity-name="Shipment"  value-field="shipment" use-cache="false">
+            	<field-map field-name="shipmentId" from-field="shipmentId"/>
+            </entity-one>
+            <set field="estimatedShipDate" type="Timestamp" from-field="shipment.estimatedShipDate"/>
+        </row-actions>
+        
+        <field name="date" title="date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>
+    	<field name="facilityId" title="${uiLabelMap.Route}" sort-field="true"><display description="${facilityId}"/></field>
+    	<field name="vehicleId"><display></display></field>    	 	 	
+         <field name="statusId"  title="status"  ><display description="${statusId}"/></field>
+         <field name="changedDate" title="createdDate" ><display description="${createdDate}" /></field>
+          <field name="Update Status"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"   widget-style="buttontext">
+            <hyperlink target="VehicleStatusChange"  description="Update Status" target-window="_blank">
+                <parameter param-name="statusId"/>
+                <parameter param-name="facilityId"/>
+                 <parameter param-name="shipmentId"/>
+                 <parameter param-name="vehicleId"/>
+            </hyperlink>
+        </field>
     </form>
 </forms>
