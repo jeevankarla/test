@@ -67,12 +67,12 @@ function changeRowColor(){
 	
 	var tableObj = $('#_col table tr');
 	$(tableObj).each( function( index, element ){
-	    var result = $(this).find("td:contains('VEHICLE_RETURNED')");
+	    var result = $(this).find("td:contains('Returned')");
 	    var compText=$.trim($(result).text());
-	    if (compText==("VEHICLE_RETURNED")){
+	    if (compText==("Returned")){
 	    	 $(this).css("background-color", "#77BA72");
 	    }else{
-	    	$(this).css("background-color", "#D76871");
+	    	$(this).css("background-color", "#FFCC88");
 	    }
 	});
 	
