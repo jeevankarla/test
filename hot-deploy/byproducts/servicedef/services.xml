@@ -24,6 +24,7 @@
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="routeId" type="String" mode="IN" optional="false"/>
         <attribute name="tripId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="returnQuantity" type="BigDecimal" mode="IN" optional="false"/>
@@ -317,7 +318,7 @@
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getOrderReturnItems" auth="true">
         <attribute name="boothId" mode="IN" type="String" optional="true"/>
         <attribute name="returnHeaderTypeId" mode="IN" type="String" optional="false"/>
-        <attribute name="tripId" mode="IN" type="String" optional="false"/>      
+       <!--  <attribute name="tripId" mode="IN" type="String" optional="false"/>   -->    
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
         <attribute name="routeId" mode="IN" type="String" optional="true"/>
         <attribute name="orderReturnList" mode="OUT" type="List" optional="true"/>
@@ -326,14 +327,22 @@
     </service>
      <service name="getRouteVehicleForShipment" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getRouteVehicleForShipment" auth="true">
-       
         <attribute name="returnHeaderTypeId" mode="IN" type="String" optional="false"/>
-        <attribute name="tripId" mode="IN" type="String" optional="false"/>      
+       <!--  <attribute name="tripId" mode="IN" type="String" optional="false"/>       -->
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
-        <attribute name="routeId" mode="IN" type="String" optional="true"/>
-        <attribute name="vehcileId" mode="OUT" type="String" optional="true"/>
-        <attribute name="routeId" mode="OUT" type="String" optional="true"/>
+        <attribute name="subscriptionTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="vehicleId" mode="OUT" type="String" optional="true"/>
+        <attribute name="shipmentId" mode="OUT" type="String" optional="true"/>
     </service>
+    <service name="getItemIssuenceForShipments" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getItemIssuenceForShipments" auth="true">
+        <attribute name="shipmentIds" mode="IN" type="List" optional="true"/>
+        <attribute name="issuanceProductTotals" mode="OUT" type="Map" optional="true"/>  
+        <attribute name="crateTotal" mode="OUT" type="BigDecimal" optional="true"/>  
+        <attribute name="canTotal" mode="OUT" type="BigDecimal" optional="true"/>   
+    </service>
+    
     
     
     <service name="getBoothOrderDetails" engine="java"
@@ -377,9 +386,9 @@
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="finalizeOrders" auth="true">
         <attribute name="routeId" mode="IN" type="String" optional="false"/>
         <attribute name="tripId" mode="IN" type="String" optional="true"/>
-        <attribute name="estimatedShipDate" mode="IN" type="String" optional="false"/>
+        <attribute name="estimatedShipDate" mode="IN" type="String" optional="true"/>
         <attribute name="shipmentId" mode="IN" type="String" optional="false"/>
-        <attribute name="shipmentTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="shipmentTypeId" mode="IN" type="String" optional="true"/>
     </service>
    <service name="createOrUpdateEmployeeSubsidy" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateEmployeeSubsidy">
@@ -482,6 +491,7 @@
         <attribute name="boothIds" type="List" mode="IN" optional="false"/>        
         <attribute name="boothRunningTotal" type="BigDecimal" mode="OUT" optional="false"/>       
     </service>
+    
      
      <service name="createOrUpdateFacilityRate" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateFacilityRate">
