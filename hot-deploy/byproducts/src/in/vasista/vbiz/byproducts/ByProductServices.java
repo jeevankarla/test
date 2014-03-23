@@ -3154,7 +3154,7 @@ public class ByProductServices {
 	    		  List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", checkExpr, null, null, null, false);
 	    		  if(UtilValidate.isEmpty(periodBillingList)){
 	    			  Debug.logError("No valid period billing exists to cancel for the billingId "+periodBillingId, module);
-                    return ServiceUtil.returnError("No valid period billing exists to cancel for the billingId "+periodBillingId);
+                      return ServiceUtil.returnError("No valid period billing exists to cancel for the billingId "+periodBillingId);
 	    		  }
 		    	  
 	    		  List<String> facilityIdsList = EntityUtil.getFieldListFromEntityList(periodBillingList, "facilityId", true);
@@ -3203,14 +3203,14 @@ public class ByProductServices {
 	        Locale locale = (Locale) context.get("locale");
 	        Map<String, Object> result = ServiceUtil.returnSuccess();
 	        try {
-              if(UtilValidate.isEmpty(orderIds)){
-              	Debug.logError("order List of empty", module);
-                  return ServiceUtil.returnError("order list is empty");
-              }
-              
-              String tempOrderId = (String)orderIds.get(0);
-              List<GenericValue> billItems = FastList.newInstance();
-              
+                if(UtilValidate.isEmpty(orderIds)){
+                	Debug.logError("order List of empty", module);
+                    return ServiceUtil.returnError("order list is empty");
+                }
+                
+                String tempOrderId = (String)orderIds.get(0);
+                List<GenericValue> billItems = FastList.newInstance();
+                
 	        	for(String orderId : orderIds){
 	        		List<GenericValue> orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
 	        		billItems.addAll(orderItems);
@@ -3322,6 +3322,7 @@ public class ByProductServices {
 			  result.put("invoiceId", invoiceId);
 			  return result;  
 	    }*/
+	    
 	public static Map<String, Object> updateCrateQtyConfig(DispatchContext dctx, Map<String, ? extends Object> context){
 	    Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -3333,191 +3334,6 @@ public class ByProductServices {
         if(UtilValidate.isEmpty(liters)){
         	Debug.logError("Liters field is Empty, nothing to update", module);
             return ServiceUtil.returnError("Liters field is Empty, nothing to update");
-        }
-        if(UtilValidate.isEmpty(uomId) || UtilValidate.isEmpty(uomIdTo)){
-   			Debug.logError("uomId is Empty", module);
-   			return ServiceUtil.returnError("uomId is Empty");
-   		}
-        GenericValue uomConversion = null;
-		try {
-			uomConversion = delegator.findOne("UomConversion", UtilMisc.toMap("uomId", uomId, "uomIdTo", uomIdTo), false);
-			if(UtilValidate.isEmpty(uomConversion)){
-				GenericValue newEntity = delegator.makeValue("UomConversion");
-				newEntity.set("uomId", uomId);
-				newEntity.set("uomIdTo", uomIdTo);
-				newEntity.set("conversionFactor", liters);
-				newEntity.create();
-			}
-			else{
-				uomConversion.set("conversionFactor", liters);
-				uomConversion.store();
-			}
-		} catch (GenericEntityException e) {
-			Debug.logError(e, module);
-			return ServiceUtil.returnError(e.toString());
-		}
-		
-        result = ServiceUtil.returnSuccess("Successfully Updated!!");
-        return result;
-    }
-	public static Map<String, Object> createReturnCrate(DispatchContext ctx, Map<String, ? extends Object> context){
-		
-      	Delegator delegator = ctx.getDelegator();
-      	Locale locale = (Locale) context.get("locale");
-      	GenericValue userLogin = (GenericValue) context.get("userLogin");
-      	LocalDispatcher dispatcher = ctx.getDispatcher();
-      	String productId = (String)context.get("productId");
-      	BigDecimal returnQuantity = (BigDecimal)context.get("returnQuantity");
-      	String productStoreId = (String)context.get("productStoreId");
-      	Timestamp shipmentDate = (Timestamp)context.get("shipmentDate");
-      	String tripId = (String)context.get("tripId");
-    	String shipmentId = (String)context.get("shipmentId");
-      	String routeId = (String)context.get("routeId");
-      	Map<String, Object> result = ServiceUtil.returnSuccess();
-      	List conditionList = FastList.newInstance();
-      	Timestamp startDate = UtilDateTime.getDayStart(shipmentDate);
-      	Timestamp endDate = UtilDateTime.getDayEnd(shipmentDate);
-		try {
-			GenericValue route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
-			if(UtilValidate.isEmpty(route)){
-				Debug.logError("Given route does not exists : "+routeId,module);
- 				return ServiceUtil.returnError("Given route does not exists : "+routeId);
-			}
-			if(UtilValidate.isEmpty(shipmentId)){
-			conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
-			if(UtilValidate.isNotEmpty(tripId)){
-				conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
-			}
-			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
-			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			List<GenericValue> shipments = delegator.findList("Shipment", condition, UtilMisc.toSet("shipmentId"), null, null, false);
-			if(UtilValidate.isEmpty(shipments)){
-				Debug.logError("No Shipment found for the given details",module);
- 				return ServiceUtil.returnError("No Shipment found for the given details");
-			}
-		    shipmentId = ((GenericValue)EntityUtil.getFirst(shipments)).getString("shipmentId");
-			}
-			/*conditionList.clear();
-			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			*/
-			List<GenericValue> productStoreFacility = delegator.findList("ProductStoreFacility", EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, productStoreId), null, null, null, false);
-	  		productStoreFacility = EntityUtil.filterByDate(productStoreFacility, startDate);
-	  		String invFacility = "";
-	  		String invItemId = "";
-	  		
-	  		List invExpr = FastList.newInstance();
-	  		if(UtilValidate.isNotEmpty(productStoreFacility)){
-	  		  	invFacility = ((GenericValue)EntityUtil.getFirst(productStoreFacility)).getString("facilityId");
-	  		}
-	  		  
-	  		invExpr.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, "CRATE"));
-	  		invExpr.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, invFacility));
-	  		EntityCondition cond1 = EntityCondition.makeCondition(invExpr, EntityOperator.OR);
-	  		List<GenericValue> invItemDetail = delegator.findList("InventoryItem", cond1, null, null, null, true);
-	  		  	
-	  		if(UtilValidate.isNotEmpty(invItemDetail)){
-	  		  	invItemId = ((GenericValue)EntityUtil.getFirst(invItemDetail)).getString("inventoryItemId");
-	  		}
-			
-			
-			Map receiptCtx = FastMap.newInstance();
-			receiptCtx.put("datetimeReceived", startDate);
-			receiptCtx.put("userLogin", userLogin);
-			receiptCtx.put("productId", productId);
-			receiptCtx.put("quantityAccepted", returnQuantity);
-			receiptCtx.put("quantityRejected", BigDecimal.ZERO);
-			receiptCtx.put("shipmentId", shipmentId);
-			receiptCtx.put("inventoryItemId", invItemId);
-			
-			Map receiptMap = dispatcher.runSync("createShipmentReceipt", receiptCtx);
-			if(ServiceUtil.isError(receiptMap)){
-				Debug.logError("There was an error while creating  receipt of crate from transporter" + ServiceUtil.getErrorMessage(result), module);
-         		return ServiceUtil.returnError("There was an error while creating  receipt of crate from transporter" + ServiceUtil.getErrorMessage(result));
-			}
-			String receiptId = (String)receiptMap.get("receiptId");
-		} catch (Exception e) {
-			Debug.logError(e, module);
-			return ServiceUtil.returnError(e.toString());
-		}
-		
-        result = ServiceUtil.returnSuccess("Successfully received crates from transporter!!");
-        Debug.log("====result====afterCreationOf =CrateReturn"+result);
-        return result;
-    }
-	
-	public static Map<String, Object> adjustEmployeeSubsidyForOrder(DispatchContext dctx, Map<String, ? extends Object> context){
-        Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String orderId = (String) context.get("orderId");
-        Locale locale = (Locale) context.get("locale");     
-        Map result = ServiceUtil.returnSuccess();
-        BigDecimal subPercent = new BigDecimal("50");
-        BigDecimal subAmount = BigDecimal.ZERO;
-		try {
-			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-			List<GenericValue> orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
-			for(GenericValue orederItem : orderItems){
-				BigDecimal itemSubAmt = orederItem.getBigDecimal("unitPrice").multiply(subPercent.divide(new BigDecimal("100")));
-				subAmount = (subAmount.add(itemSubAmt)).multiply(orederItem.getBigDecimal("quantity"));
-			}
-			// add employee subsidy adjustment "EMPSUBSID_ADJUSTMENT"
-			String orderAdjustmentTypeId = "EMPSUBSID_ADJUSTMENT";
-			 Map createOrderAdjustmentCtx = UtilMisc.toMap("userLogin",userLogin);
-	    	 createOrderAdjustmentCtx.put("orderId", orderId);
-	    	 createOrderAdjustmentCtx.put("orderAdjustmentTypeId", orderAdjustmentTypeId);    	
-	    	 createOrderAdjustmentCtx.put("amount", subAmount.negate());
-	    	 result = dispatcher.runSync("createOrderAdjustment", createOrderAdjustmentCtx);
-	     	 if (ServiceUtil.isError(result)) {
-	                Debug.logWarning("There was an error while creating  the adjustment: " + ServiceUtil.getErrorMessage(result), module);
-	         		return ServiceUtil.returnError("There was an error while creating the adjustment: " + ServiceUtil.getErrorMessage(result));          	            
-	         } 
-		
-		} catch (Exception e) {
-			Debug.logError(e, module);
-			return ServiceUtil.returnError(e.toString());
-		}
-        result = ServiceUtil.returnSuccess("Successfully added the adjustment!!");
-        result.put("orderId", orderId);
-        return result;
-    }
-	/**
-	 * Employee subsidy 
-	 */
-	public static Map<String, Object> createOrUpdateEmployeeSubsidy(DispatchContext ctx,Map<String, Object> context) {
-        Map<String, Object> finalResult = FastMap.newInstance();
-        Map<String, Object> result = FastMap.newInstance();
-        Delegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
-        String partyId = (String) context.get("partyId");
-        String facilityId = (String) context.get("facilityId");
-        String productId = (String) context.get("productId");
-        String shipmentTypeId = (String) context.get("shipmentTypeId");
-        String tripId = (String) context.get("tripId");
-        BigDecimal quantity =BigDecimal.ZERO;
-        Timestamp fromDate = (Timestamp) context.get("fromDate");
-        Timestamp thruDate = (Timestamp) context.get("thruDate");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String subscriptionId = "";
-        String indentChanged = "";
-        String tempFacId = "";
-        String tempPartyId = "";
-        String roleTypeId="EMPSUBISDY_ROLE";
-        List<GenericValue> subscriptionList=FastList.newInstance();
-        Map<String  ,Object> productQtyMap = FastMap.newInstance();
-        List<Map> subscriptionProductsList = FastList.newInstance();
-        Map<String, Object> resultMap = ServiceUtil.returnSuccess();;
-        String subscriptionTypeId = "";
-        if(UtilValidate.isNotEmpty(shipmentTypeId)){
-        	if(shipmentTypeId.equals("AM_SHIPMENT")){
-        		subscriptionTypeId = "AM";
-        	}else{
-        		subscriptionTypeId = "PM";
-        	}
         }
         if(UtilValidate.isEmpty(uomId) || UtilValidate.isEmpty(uomIdTo)){
    			Debug.logError("uomId is Empty", module);
