@@ -836,15 +836,6 @@
                 		<condition-expr field-name="sequenceNum" operator="equals" value="${sequenceNum}"/>
                 </condition-list>
     		</entity-condition>
-    		
-    		<!-- <entity-one entity-name="Shipment">
-        		<field-map field-name="shipmentId" from-field="shipmentId"/>
-        		<select-field field-name="routeId"/>
-        		<select-field field-name="tripNum"/>
-        	</entity-one>
-        	<set field="routeId" from-field="routeId"/>
-        	<set field="tripId" from-field="tripNum"/> -->
-        	
             <set field="shipmentId" from-field="vehicleTripsList[0].shipmentId"/>  
             <entity-one entity-name="Shipment"  value-field="shipment" use-cache="false">
             	<field-map field-name="shipmentId" from-field="shipmentId"/>
@@ -852,12 +843,14 @@
             <set field="estimatedShipDate" type="Timestamp" from-field="shipment.estimatedShipDate"/>
         </row-actions>
         
-        <field name="date" title="date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>
+        <field name="SupplyDate" title="Supply Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>
     	<field name="facilityId" title="${uiLabelMap.Route}" sort-field="true"><display description="${facilityId}"/></field>
-    	<field name="vehicleId"><display></display></field>    	 	 	
-         <field name="statusId"  title="status"  ><display description="${statusId}"/></field>
+    	<field name="vehicleId"><display></display></field>  
+    	<field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
          <field name="changedDate" title="createdDate" ><display description="${createdDate}" /></field>
-          <field name="Update Status"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"   widget-style="buttontext">
+          <field name="Update Status"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"    widget-style="buttontext">
             <hyperlink target="VehicleStatusChange"  description="Update Status" target-window="_blank">
                 <parameter param-name="statusId"/>
                 <parameter param-name="facilityId"/>
