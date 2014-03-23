@@ -2092,7 +2092,7 @@ public class ByProductNetworkServices {
     			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
     			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
     			conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
-    			conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+    			/*conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));*/
     			EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     			List<GenericValue> shipment = delegator.findList("Shipment", cond, UtilMisc.toSet("shipmentId"), null, null, false);
     			String shipmentId = "";
@@ -2165,9 +2165,22 @@ public class ByProductNetworkServices {
 	        String tripId = (String) context.get("tripId");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        Timestamp estimatedShipDate =null;	
-	   
-	        estimatedShipDate=Timestamp.valueOf(estimatedShipDateStr);
-	        Map result = ServiceUtil.returnSuccess("Successfully created Invoices  For Selected Shipment!");
+	        String vehicleId="";
+	    		if (UtilValidate.isNotEmpty(estimatedShipDateStr)) { 
+	    			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+	    			try {
+	    				estimatedShipDate = new java.sql.Timestamp(sdf.parse(estimatedShipDateStr).getTime());
+	    			} catch (ParseException e) {
+	    				Debug.logError("Cannot parse date string: "+estimatedShipDateStr, module);
+		    			return ServiceUtil.returnError("Cannot parse date string"); 
+	    			} catch (NullPointerException e) {
+	    				Debug.logError("Cannot parse date string: "+estimatedShipDateStr, module);
+		    			return ServiceUtil.returnError("Cannot parse date string"); 
+	    			}
+	    		}
+	    		
+	        //estimatedShipDate=Timestamp.valueOf(estimatedShipDateStr);
+	       
 	        Map resultMap = FastMap.newInstance();
 	        List<String> shipmentIds = FastList.newInstance();
 	        List<String> routeIdsList = FastList.newInstance();
@@ -2179,7 +2192,7 @@ public class ByProductNetworkServices {
 	    	 boolean isComparsionFaild=false;
            try{
 	        if(UtilValidate.isNotEmpty(shipmentId)){
-	        	if(shipmentId.equals("allRoutes")){
+	        	/*if(shipmentId.equals("allRoutes")){
 		        	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, estimatedShipDate));
 		        	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(estimatedShipDate)));
 		        	conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, shipmentTypeId));
@@ -2188,11 +2201,12 @@ public class ByProductNetworkServices {
 		        	List<String> shipIds = EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
 	        		shipmentIds.addAll(shipIds);
 	        		//routeIdsList.addAll(EntityUtil.getFieldListFromEntityList(shipments, "routeId", false));
-	        	}else{
+	        	}else{*/
 	        		 GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId",shipmentId) , false);
 	        		shipmentIds.add((String)shipment.get("shipmentId"));
+	        		estimatedShipDate=shipment.getTimestamp("estimatedShipDate");
 	        		//routeIdsList.add(shipment.get("shipmentId"));
-	        	}
+	        	//}
 	        	
 	        }
 	    	if(UtilValidate.isNotEmpty(shipmentIds)){
@@ -2208,11 +2222,38 @@ public class ByProductNetworkServices {
 	    		Debug.log("==isComparsionFaild==:"+isComparsionFaild+"==for ShipmentId===="+shipmentIds+"==resultcomapreMap=="+resultCompareMap);
 	    	if(isFailedStr.equals("Y")){
 	    		 isComparsionFaild=true;
-	    		 Debug.logError("==for ShipmentId===="+shipmentIds+"==resultcomapreMap=="+resultCompareMap, module);
 	    		  return ServiceUtil.returnError("Failed to create invoice..!"+resultCompareMap.get("failedProductItemsMap"));
 	    	}
 	    
 	    	if(!isComparsionFaild){
+	    		Map vehicleTripInMap=FastMap.newInstance();
+	    		vehicleTripInMap.put("shipmentId",shipmentId);
+	    		vehicleTripInMap.put("routeId",routeId);
+	    		 Map vehcileResultMap=getVehicleTrip(dctx,vehicleTripInMap);
+	    		 GenericValue vehicleTrip=(GenericValue)vehcileResultMap.get("vehicleTrip");
+		    		 if(UtilValidate.isNotEmpty(vehicleTrip)){
+		    			  vehicleId=vehicleTrip.getString("vehicleId");
+		    			 Map<String, Object> vehicleTripStatusMap = FastMap.newInstance(); 
+		    			 vehicleTripStatusMap.put("vehicleId", vehicleTrip.getString("vehicleId"));
+		    			 vehicleTripStatusMap.put("facilityId",vehicleTrip.getString("originFacilityId"));
+		    			 vehicleTripStatusMap.put("sequenceNum", vehicleTrip.getString("sequenceNum"));
+		    			 vehicleTripStatusMap.put("userLogin", userLogin);
+		    			 vehicleTripStatusMap.put("statusId", "VEHICLE_RETURNED");
+		    			 vehicleTripStatusMap.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			 vehicleTripStatusMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+				        try {
+				        	 Map vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
+				            if (ServiceUtil.isError(vehicleTripStatusResult)) {
+				  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
+				  		  		Debug.logError(errMsg , module);
+				  		  	    return ServiceUtil.returnError("Error while Updating Status To VEHICLE_RETURNED"+ vehicleId);   
+				  		  	}
+				        }catch (GenericServiceException e) {
+				            Debug.logError(e, "Error while Updating Status To VEHICLE_RETURNED", module);
+				            return ServiceUtil.returnError(e.getMessage());
+				        }
+		    		 }
+	    		/*
 	    	   conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 				conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(dayBegin)));
@@ -2233,21 +2274,6 @@ public class ByProductNetworkServices {
 		                    Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(resultMap), module);
 		            		return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(resultMap));          	            
 		                } 
-			        	/*Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
-			             invoiceCtx.put("userLogin", userLogin);
-			             invoiceCtx.put("statusId","INVOICE_READY");
-			             try{
-			             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
-			             	if (ServiceUtil.isError(invoiceResult)) {
-			             		Debug.logError(invoiceResult.toString(), module);
-			                     return ServiceUtil.returnError(null, null, null, invoiceResult);
-			                 }	             	
-			             }catch(GenericServiceException e){
-			             	 Debug.logError(e, e.toString(), module);
-			                 return ServiceUtil.returnError(e.toString());
-			             }      */  		
-		        		// apply invoice if any adavance payments from this  party
-						  			            
 						Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
 						if (ServiceUtil.isError(resultPaymentApp)) {						  
 			        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
@@ -2259,7 +2285,8 @@ public class ByProductNetworkServices {
 		            } 
 		            resultMap.put("orderId", orderId);
 		        
-				}//end of OrderIteration
+				}//end of OrderIteration */
+				
 	    	   }//if close
 	 	      }
            }catch (Exception e) {
@@ -2267,7 +2294,7 @@ public class ByProductNetworkServices {
 				return ServiceUtil.returnError(e.toString());
            }
        	//result.put("routeProductList", routeProductList);
-           
+          Map result = ServiceUtil.returnSuccess("Finalization Done successfully for Vehicle "+vehicleId+" and Vehicle chnaged to Return Status");
 		return result;
 	 	}
 		public static Map<String, Object>  compareOrdersAndItemIssuence(DispatchContext dctx, Map<String, ? extends Object> context){
@@ -2318,15 +2345,16 @@ public class ByProductNetworkServices {
 					Map.Entry entry =(Map.Entry) prodIter.next();
 					  String productId =(String)entry.getKey();
 					  Map prodTotalMap= (Map)productTotals.get(productId);
-					  BigDecimal prodQty= (BigDecimal)prodTotalMap.get("total");	
-					  GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId",productId) , false);
-					  BigDecimal pktTotal=(new BigDecimal(1)).divide((BigDecimal)product.get("quantityIncluded"));
-					  BigDecimal actQtyTotal= prodQty.multiply(pktTotal);
+					  BigDecimal prodQty= (BigDecimal)prodTotalMap.get("packetQuantity");	
+					  /*GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId",productId) , false);
+					  Debug.log("==productId=="+productId+"==quantityIncluded=="+(BigDecimal)product.get("quantityIncluded"));
+					  BigDecimal pktTotal=(new BigDecimal(1.00)).divide((BigDecimal)product.get("quantityIncluded"),2,rounding);
+					  BigDecimal actQtyTotal= prodQty.multiply(pktTotal);*/
 					  BigDecimal itemIssuQty= (BigDecimal) issuanceProductTotals.get(productId);
 					 if(UtilValidate.isNotEmpty(itemIssuQty)){
-						 if(actQtyTotal.compareTo(itemIssuQty)!=0){
+						 if(prodQty.compareTo(itemIssuQty)!=0){
 							 Map itemInnerMap=FastMap.newInstance();
-							itemInnerMap.put("ordrQty",actQtyTotal);
+							itemInnerMap.put("ordrQty",prodQty);
 							itemInnerMap.put("issuanceQty",itemIssuQty);
 							failedProductItemsMap.put(productId,itemInnerMap);
 							isComparisonFailed=true;
@@ -5547,6 +5575,34 @@ public class ByProductNetworkServices {
 			}
 	        return result;
 	    }
+	    public static Map<String, Object> getVehicleTrip(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+			String routeId = (String) context.get("routeId");
+			String shipmentId = (String) context.get("shipmentId");
+	        Map<String, Object> result = FastMap.newInstance(); 
+	        GenericValue routeFacility;
+	        GenericValue vehicleTrip=null;
+	        try {
+	        	routeFacility = delegator.findOne("Facility",true, UtilMisc.toMap("facilityId", routeId));
+	        	if (routeFacility == null) {
+	                Debug.logError("Invalid routeId " + routeId, module);
+	                return ServiceUtil.returnError("Invalid routeId " + routeId);         		
+	        	}
+	        	List condList = FastList.newInstance();
+	        	condList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS ,routeId));
+	        	condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS ,shipmentId));
+	        	EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
+	        	List<GenericValue> vehicleTripList = delegator.findList("VehicleTrip", cond, null, null, null, true);
+    			 if(UtilValidate.isNotEmpty(vehicleTripList)){
+    				 vehicleTrip = EntityUtil.getFirst(vehicleTripList);
+    			 }
+    			 result.put("vehicleTrip",vehicleTrip);
+	        }catch(GenericEntityException e){
+				Debug.logError(e, module);	
+	            return ServiceUtil.returnError(e.toString());			
+			}
+	        return result;
+	    }
 	    public static Map<String, Object> getProductCratesAndCans(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
 	    	LocalDispatcher dispatcher = ctx.getDispatcher();
@@ -5600,6 +5656,7 @@ public class ByProductNetworkServices {
 	        String tripId = (String) context.get("tripId");
 	        String returnHeaderTypeId = (String) context.get("returnHeaderTypeId");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
 	        Map result = ServiceUtil.returnSuccess(); 
 	        List conditionList = FastList.newInstance();
 	        Timestamp supplyDate = null;
@@ -5630,14 +5687,48 @@ public class ByProductNetworkServices {
     			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
     			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
     			conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
-    			conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+    			if(UtilValidate.isNotEmpty(subscriptionTypeId)){
+    				if("AM".equals(subscriptionTypeId)){
+    					conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "AM_SHIPMENT"));
+    				}else if("PM".equals(subscriptionTypeId)){
+    			      conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "PM_SHIPMENT"));
+    			    }
+    			}
+    			/*conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));*/
     			EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     			List<GenericValue> shipment = delegator.findList("Shipment", cond, null, null, null, false);
     			String shipmentId = "";
     			String vehicleId = "";
+    			String sequenceNum = "";
     			if(UtilValidate.isNotEmpty(shipment)){
     				shipmentId = ((GenericValue)EntityUtil.getFirst(shipment)).getString("shipmentId");
-    				vehicleId=((GenericValue)EntityUtil.getFirst(shipment)).getString("vehcileId");
+    				vehicleId=((GenericValue)EntityUtil.getFirst(shipment)).getString("vehicleId");
+    			}
+    			conditionList.clear();
+    			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+    			conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, routeId));
+    			//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("RETURN_CANCELLED")));
+    			EntityCondition vhCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    			List<GenericValue> vehicleTrp = delegator.findList("VehicleTrip", vhCondition, null, null, null, false);
+    			if(UtilValidate.isNotEmpty(vehicleTrp)){
+    				vehicleId = ((GenericValue)EntityUtil.getFirst(vehicleTrp)).getString("vehicleId");
+    				sequenceNum=((GenericValue)EntityUtil.getFirst(vehicleTrp)).getString("sequenceNum");
+    			}else{
+    				Debug.logError("Truck not Loaded yet for Route "+routeId +" on Selected Date !", module);
+	    			return ServiceUtil.returnError("Truck not Loaded yet for Route "+routeId+" on Selected Date !");
+    			}
+    			
+    			conditionList.clear();
+    			conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS, vehicleId));
+    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));
+    			conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, routeId));
+    			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("VEHICLE_RETURNED")));
+    			EntityCondition vhTripCondi = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    			List<GenericValue> vehicleTripStatus = delegator.findList("VehicleTripStatus", vhTripCondi, null, null, null, false);
+    			if(UtilValidate.isNotEmpty(vehicleTripStatus)){
+    				vehicleId = ((GenericValue)EntityUtil.getFirst(vehicleTripStatus)).getString("vehicleId");
+    				Debug.logError("Vehicle "+vehicleId+" is Finalized and in Return State" , module);
+	    			return ServiceUtil.returnError("Vehicle "+vehicleId+" is Finalized and in Return State");
     			}
     			conditionList.clear();
     			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -5649,8 +5740,10 @@ public class ByProductNetworkServices {
     				Debug.logError("One return allowed for one shipment, Cancel return :"+returnId+" and re-enter the return" , module);
 	    			return ServiceUtil.returnError("One return allowed for one shipment, Cancel return :"+returnId+" and re-enter the return");
     			}
-				result.put("vehcileId", vehicleId);
+				result.put("vehicleId", vehicleId);
 				result.put("routeId", routeId);
+				result.put("shipmentId", shipmentId);
+				
 	    	}catch (Exception e) {
 				// TODO: handle exception
 				Debug.logError(e.toString(), module);
@@ -5937,6 +6030,47 @@ public class ByProductNetworkServices {
 	    	 result.put("facilityPenalty", facilityPenalty);
 			 return result;
 		 }
+	    public static Map<String, Object>  getItemIssuenceForShipments(DispatchContext dctx, Map<String, ? extends Object> context){
+		     Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();
+		        List<String> shipmentIds =(List<String>) context.get("shipmentIds");	
+		        Map result = ServiceUtil.returnSuccess(); 
+		        Map resultMap = FastMap.newInstance();
+			    List conditionList = FastList.newInstance();
+		    	Map	issuanceProductTotals =  FastMap.newInstance();
+		    	Map	failedProductItemsMap =  FastMap.newInstance();
+		    	try{
+		    	//get Issueance Details
+		    	conditionList.clear();
+		    	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+	        	EntityCondition itemIssueanceCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	        	List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", itemIssueanceCond, null, null, null , false);
+	        	//List<GenericValue> itemIssuanceList = delegator.findList("ItemIssuance", itemIssueanceCond, null, UtilMisc.toList("productId"), false);
+	        	for(GenericValue itemIssueance : itemIssuanceList){
+	        		BigDecimal quantity = itemIssueance.getBigDecimal("quantity");
+	        		String issueProductId = itemIssueance.getString("productId");
+		        	if(quantity.compareTo(BigDecimal.ZERO)>0){
+		        		BigDecimal tempQuantity = BigDecimal.ZERO;
+		        		if(UtilValidate.isEmpty(issuanceProductTotals.get(issueProductId))){
+		        			//issuanceProductTotals.put(issueProductId,quantity);
+		        			tempQuantity =quantity;
+		        		}else{
+		        			tempQuantity=tempQuantity.add((BigDecimal)issuanceProductTotals.get(issueProductId));
+		        			
+		        		}
+		        		issuanceProductTotals.put(issueProductId,tempQuantity);
+		        	}
+		 	    }//for close
+		    	 }catch(Exception e){
+					 Debug.logError(e, e.toString(), module);
+		             return ServiceUtil.returnError(e.toString());
+				 }
+		    	resultMap.put("issuanceProductTotals",issuanceProductTotals);
+		    	resultMap.put("crateTotal",issuanceProductTotals.get("CRATE"));
+		    	resultMap.put("canTotal",issuanceProductTotals.get("CAN"));
+		    	
+			return resultMap;
+		}
 	    
 	    public static Map<String, Object> getFacilityFinAccountInfo(DispatchContext dctx, Map context) {
 	    	
