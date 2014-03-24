@@ -104,7 +104,7 @@ under the License.
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>${uiLabelMap.OrderFacilityBooth}</td>
+          <td>Retailer</td>
           <td>${uiLabelMap.Route}</td>
             <td>PaymentMethodType</td>
           <td>${uiLabelMap.DueAmount}</td>

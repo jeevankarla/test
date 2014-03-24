@@ -9,6 +9,9 @@ import org.ofbiz.base.util.*;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
 
 dctx = dispatcher.getDispatchContext();
 Map boothsPaymentsDetail = [:];
@@ -45,6 +48,7 @@ if(parameters.paymentMethodTypeId){
 }else{
 	paymentMethodTypeId = context.paymentMethodTypeId;
 }
+
 Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
 
 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -78,6 +82,7 @@ if(parameters.paymentIds){
 	paymentIds = parameters.paymentIds;	
 }
 boothPaymentsList=[];
+Debug.log("Hi im here");
 if(hideSearch == "N"){
 	if (statusId == "PAID") {
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
@@ -123,3 +128,8 @@ if(hideSearch == "N"){
 context.boothsDuesDaywiseJSON = boothsDuesDaywiseJSON;
 
 context.statusId = statusId;
+
+partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.toSet("defaultPayMeth"), null, null, false);
+paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defaultPayMeth", true);
+paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, paymentTypes), null, null, null, false);
+context.paymentMethodType = paymentMethodType;

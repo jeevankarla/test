@@ -617,8 +617,7 @@
         <field name="facilityId" title="${uiLabelMap.BoothRoute}"><lookup target-form-name="LookupFacility"/></field>
          <field name="paymentMethodTypeId">
          	<drop-down allow-empty="true">
-         		<entity-options description="${description}" entity-name="PaymentMethodType">
-         		</entity-options>
+         		<list-options key-name="paymentMethodTypeId" list-name="paymentMethodType" description="${description}"/>
          	</drop-down>
          </field>        
        	<field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
@@ -637,8 +636,7 @@
         <field name="facilityId" title="${uiLabelMap.BoothRouteZone}" required-field="true"><lookup target-form-name="LookupFacility"/></field>
         <field name="paymentMethodTypeId">
          	<drop-down allow-empty="true">
-         		<entity-options description="${description}" entity-name="PaymentMethodType">
-         		</entity-options>
+         		<list-options key-name="paymentMethodTypeId" list-name="paymentMethodType" description="${description}"/>
          	</drop-down>
          </field>        
        	<field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
