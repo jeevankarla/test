@@ -94,14 +94,14 @@
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' value='${facilityId?if_exists}' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentMethodTypeId' id='paymentMethodTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
-						"<#list paymentMethodList as eachMethodType><option value='${eachMethodType.paymentMethodTypeId}' >${eachMethodType.description}</option></#list>"+            
+						"<#if paymentMethodList?has_content><#list paymentMethodList as eachMethodType><option value='${eachMethodType.paymentMethodTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
 						"</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Bank Branch:</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthorityBranch' name='issuingAuthorityBranch' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' id='effectiveDate' name='effectiveDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Ref. No. :</td><td align='left' width='60%'><input class='h4' type='text' id='paymentRefNum' name='paymentRefNum' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/></td></tr>" +
-				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='supplyDate' value='${paymentDate}'/></td></tr>"+
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='supplyDate' value='${paymentDate?if_exists}'/></td></tr>"+
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='useFifo' value='TRUE'/></td></tr>"+
 				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 				 		
@@ -122,7 +122,7 @@
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentMethodTypeId' id='paymentMethodTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
-						"<#list paymentMethodList as eachMethodType><option value='${eachMethodType.paymentMethodTypeId}' >${eachMethodType.description}</option></#list>"+            
+						"<#if paymentMethodList?has_content><#list paymentMethodList as eachMethodType><option value='${eachMethodType.paymentMethodTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
 						"</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Bank Branch:</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthorityBranch' name='issuingAuthorityBranch' /></td></tr>" +
