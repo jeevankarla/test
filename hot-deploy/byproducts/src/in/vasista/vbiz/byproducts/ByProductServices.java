@@ -3117,6 +3117,7 @@ public class ByProductServices {
 			    	  String refNum = "CR_PB_"+periodBillingId;
 			    	  GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
 			    	  invoice.set("referenceNumber",refNum);
+			    	  invoice.set("periodBillingId",periodBillingId);
 			    	  invoice.store();
 			    	  
 		    	  }
@@ -3167,6 +3168,7 @@ public class ByProductServices {
 	    			  conditionList.clear();
 	    			  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facId));
 		    		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+		    		  conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, billingId));
 		    		  conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS, invoiceReferenceNum));
 		    		  EntityCondition invCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		    		  

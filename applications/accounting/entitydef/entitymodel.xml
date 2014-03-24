@@ -1314,6 +1314,7 @@
 		<field name="invoiceDate" type="date-time"></field>
 		<field name="dueDate" type="date-time"></field>
 		<field name="paidDate" type="date-time"></field>
+		<field name="periodBillingId" type="id"></field>
 		<field name="invoiceMessage" type="long-varchar"></field>
 		<field name="referenceNumber" type="short-varchar"></field> <!-- used to record things like the vendor's invoice number -->
 		<field name="description" type="description"></field>
@@ -1339,6 +1340,9 @@
 		<relation type="one" fk-name="INVOICE_ROLETYP"
 			rel-entity-name="RoleType">
 			<key-map field-name="roleTypeId" />
+		</relation>
+		<relation type="one" fk-name="INVOICE_BILLING" rel-entity-name="PeriodBilling">
+			<key-map field-name="periodBillingId" />
 		</relation>
 		<relation type="one-nofk" rel-entity-name="PartyRole">
 			<key-map field-name="partyId" />
