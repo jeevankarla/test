@@ -670,7 +670,7 @@
     	<field name="hideSearch"><hidden value="N"/></field>
     	<field name="useFifo"><hidden value="true"/></field>
     	<field name="paymentLocationId"><hidden value="${paymentLocationId}"/></field>    	 	 	
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display description="${facilityId}"/></field>
+        <field name="facilityId" title="Retailer"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
         <field name="routeId" title="${uiLabelMap.Route}" sort-field="true"><display description="${routeId}"/></field>
         <field name="grandTotal" parameter-name="dueAmount" title="${uiLabelMap.ToDayDueAmount}"><display type="currency" currency="${currencyUomId}" description="${grandTotal}"/></field>
         <field name="totalDueAmount" title="${uiLabelMap.TotalDueAmount}"><display type="currency" currency="${currencyUomId}" description="${totalDue}"/></field> 
