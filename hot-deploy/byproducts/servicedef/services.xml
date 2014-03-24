@@ -318,8 +318,9 @@
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getOrderReturnItems" auth="true">
         <attribute name="boothId" mode="IN" type="String" optional="true"/>
         <attribute name="returnHeaderTypeId" mode="IN" type="String" optional="false"/>
-       <!--  <attribute name="tripId" mode="IN" type="String" optional="false"/>   -->    
-        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
+       <!--  <attribute name="tripId" mode="IN" type="String" optional="false"/>   -->
+       	<attribute name="shipmentId" mode="IN" type="String" optional="true"/>    
+        <!-- <attribute name="supplyDate" mode="IN" type="String" optional="true"/> -->
         <attribute name="routeId" mode="IN" type="String" optional="true"/>
         <attribute name="orderReturnList" mode="OUT" type="List" optional="true"/>
         <attribute name="vehcileId" mode="OUT" type="String" optional="true"/>
@@ -364,7 +365,7 @@
     <service name="getRouteIssuanceDetails" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getRouteIssuanceDetails" auth="true">
         <attribute name="routeId" mode="IN" type="String" optional="false"/>
-        <attribute name="tripId" mode="IN" type="String" optional="false"/>
+        <attribute name="tripId" mode="IN" type="String" optional="true"/>
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
         <attribute name="routeProductList" mode="OUT" type="List" optional="true"/>
         <attribute name="routeName" mode="OUT" type="String" optional="true"/>

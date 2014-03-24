@@ -26,7 +26,7 @@
           					</td>
        					</#if>
         			</tr>
-        			<tr><td><br/></td></tr>
+        			<#-- <tr><td><br/></td></tr>
         			<tr>
           				<td>&nbsp;</td>
 	          			<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Trip:</div></td>
@@ -45,7 +45,7 @@
 	      						</#list>            
 							</select>
           				</td>
-        			</tr>
+        			</tr>-->
         			<tr><td><br/></td></tr>
        				<tr>
        					<td>&nbsp;</td>
