@@ -3412,8 +3412,9 @@ public class ByProductNetworkServices {
 				boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
 			}
 			
-			Map partyPaymentMethodDesc=(Map)getPartyProfileDafult(dispatcher.getDispatchContext(),UtilMisc.toMap("boothIds", UtilMisc.toList(facilityIdsList),"supplyDate",fromDate)).get("partyPaymentMethodDesc"); 
-			 
+			Map resultCtx=(Map)getPartyProfileDafult(dispatcher.getDispatchContext(),UtilMisc.toMap("boothIds", UtilMisc.toList(facilityIdsList),"supplyDate",fromDate)); 
+			Map partyPaymentMethodDesc =  (Map)resultCtx.get("partyPaymentMethodDesc");
+			Map partyProfileFacilityMap = (Map)resultCtx.get("partyProfileFacilityMap");
 			//Map paymentMethod = (Map)getPaymentMethodTypeForBooth(dctx, UtilMisc.toMap("facilityId", facilityId, "userLogin", userLogin,"fromDate",fromDate)).get("partyPaymentMethod");
 			Set currentDayShipments = new HashSet(getShipmentIds(delegator ,UtilDateTime.toDateString(thruDate, "yyyy-MM-dd HH:mm:ss"),null));
 			boolean enableSoCrPmntTrack = Boolean.FALSE;
@@ -3533,7 +3534,10 @@ public class ByProductNetworkServices {
 						}
 						tempPayment.put("supplyDate",  boothPayment.getTimestamp("estimatedDeliveryDate"));
 						if(UtilValidate.isNotEmpty(partyPaymentMethodDesc.get(tempFacilityId))){
-							tempPayment.put("paymentMethodType", partyPaymentMethodDesc.get(tempFacilityId));
+							tempPayment.put("paymentMethodTypeDesc", partyPaymentMethodDesc.get(tempFacilityId));
+						}
+						if(UtilValidate.isNotEmpty(partyProfileFacilityMap.get(tempFacilityId))){
+							tempPayment.put("paymentMethodTypeId", partyProfileFacilityMap.get(tempFacilityId));
 						}
 						tempPayment.put("grandTotal", BigDecimal.ZERO);
 						tempPayment.put("totalDue", BigDecimal.ZERO);				
@@ -3548,8 +3552,11 @@ public class ByProductNetworkServices {
 						if(UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))){
 							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
 						}
+						if(UtilValidate.isNotEmpty(partyProfileFacilityMap.get(tempFacilityId))){
+							tempPayment.put("paymentMethodTypeId", partyProfileFacilityMap.get(tempFacilityId));
+						}
 						if(UtilValidate.isNotEmpty(partyPaymentMethodDesc.get(tempFacilityId))){
-							tempPayment.put("paymentMethodType", partyPaymentMethodDesc.get(tempFacilityId));
+							tempPayment.put("paymentMethodTypeDesc", partyPaymentMethodDesc.get(tempFacilityId));
 						}
 						tempPayment.put("grandTotal", BigDecimal.ZERO);
 						tempPayment.put("totalDue", BigDecimal.ZERO);					
@@ -5503,7 +5510,20 @@ public class ByProductNetworkServices {
 				} 		
 	    		
 			}		 
-	    	
+	    	if(UtilValidate.isNotEmpty(paymentIds) && paymentIds.size() > 1){
+	    		try{
+	    			Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", UtilMisc.toMap("paymentIds", paymentIds, "paymentGroupTypeId", "ROUTE_BATCH_PAYMENT", "userLogin", userLogin));
+		    		if(ServiceUtil.isError(resultCtx)){
+		    			Debug.logError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx), module);
+	        			return ServiceUtil.returnError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx));
+		    		}
+	    		}
+	    		catch(GenericServiceException e){
+	    			Debug.logError(e, module);    			
+					return ServiceUtil.returnError(e.getMessage());
+	    		}
+	    		
+	    	}
 			 Map result = ServiceUtil.returnSuccess("Payment successfully done.");
 			result.put("paymentIds",paymentIds);
 	        return result;

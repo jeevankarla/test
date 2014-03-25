@@ -111,6 +111,31 @@
             </hyperlink>
         </field>
     </form>
+    <form name="FindAbsenteeBooths" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="AbsenteeList"
+    	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
+    	<field name="hideSearch"><hidden value="N"/></field>
+    	<field name="paymentDate" title="${uiLabelMap.SupplyDate}" ><hidden/></field>       
+        <field name="facilityId" title="${uiLabelMap.BoothRouteZone}"><text/></field>        
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="ListAbsenteeBooths" odd-row-style="alternate-row" header-row-style="header-row" type="list"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="boothPaymentsList">   
+    	<row-actions>
+    		<set field="supplyDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" type="Timestamp"/>
+    	</row-actions>
+    	<field name="supplyDate"><hidden value="supplyDate"/></field>        
+        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display description="${facilityId}"/></field>
+        <field name="routeId" title="${uiLabelMap.Route}"><display description="${routeId}" /></field>
+        <field name="grandTotal" parameter-name="dueAmount" title="${uiLabelMap.ToDayDueAmount}"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="totalDueAmount" title="${uiLabelMap.TotalDueAmount}"><display type="currency" currency="${currencyUomId}" description="${totalDue}"/></field> 
+        <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="View Details"  target="javascript:showPaymentHistory(${facilityId});"></hyperlink></field>
+        <field name="Override" widget-style="buttontext">
+        <hyperlink target="absenteeOverrideForBooth" description="Override" confirmation-message="Are You Sure You Want To Override">
+        	<parameter param-name="facilityId" from-field="originFacilityId"/>
+        	<parameter param-name="supplyDate" from-field="supplyDate"/>
+        </hyperlink>
+        </field>
+    </form>
     <form name="FindReturns" type="single"  target="FindReturns" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="returnHeaderTypeId">
@@ -670,6 +695,7 @@
     	<field name="paymentLocationId"><hidden value="${paymentLocationId}"/></field>    	 	 	
         <field name="facilityId" title="Retailer"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
         <field name="routeId" title="${uiLabelMap.Route}" sort-field="true"><display description="${routeId}"/></field>
+        <field name="paymentMethodTypeDesc" title="PaymentMethod"><display/></field>
         <field name="grandTotal" parameter-name="dueAmount" title="${uiLabelMap.ToDayDueAmount}"><display type="currency" currency="${currencyUomId}" description="${grandTotal}"/></field>
         <field name="totalDueAmount" title="${uiLabelMap.TotalDueAmount}"><display type="currency" currency="${currencyUomId}" description="${totalDue}"/></field> 
         <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="View Details"  target="javascript:showPaymentHistory('${facilityId}');"></hyperlink></field>
