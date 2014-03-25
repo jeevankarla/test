@@ -1537,14 +1537,14 @@
     			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>										
     			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>
     			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
-    			<!-- <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+    			<entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
 					<condition-list combine="or">
                 		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
                 		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
                 		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHALLAN_PAYIN"/>
                 	</condition-list>
                  	<order-by field-name="-description"/>
-           		</entity-condition> -->
+           		</entity-condition>
            		<!-- <entity-condition entity-name="PaymentMethodType" list="paymentMethodType">
                 	<order-by field-name="paymentMethodTypeId"/>
                 </entity-condition>		 -->		
@@ -1653,7 +1653,7 @@
 					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getBoothPayments.groovy" />
 				<set field="hasPastPaymentAdmin" value="${groovy:security.hasEntityPermission(&quot;PASTDUE&quot;, &quot;_ADMIN&quot;, session) || ((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}"/>
 				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/paymentMethodType.js" global="true"/>
-				<!-- <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+				 <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
 					<condition-list combine="or">
                 		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
                 		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
@@ -1661,7 +1661,7 @@
                 	</condition-list>
                  	<order-by field-name="-description"/>
            		</entity-condition>
-           		<entity-condition entity-name="PaymentMethodType" list="paymentMethodType">
+           		<!--<entity-condition entity-name="PaymentMethodType" list="paymentMethodType">
                 	<order-by field-name="paymentMethodTypeId"/>
                </entity-condition> -->						
 			</actions>
