@@ -2109,7 +2109,7 @@ public class ByProductNetworkServices {
     				Debug.logError("One return allowed for one shipment, Cancel return :"+returnId+" and re-enter the return" , module);
 	    			return ServiceUtil.returnError("One return allowed for one shipment, Cancel return :"+returnId+" and re-enter the return");
     			}
-    				
+    			
     			Map orderedQty = FastMap.newInstance();
     			conditionList.clear();
     			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -3412,7 +3412,7 @@ public class ByProductNetworkServices {
 				boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
 			}
 			
-			 Map partyPaymentMethodDesc=(Map)getPartyProfileDafult(dispatcher.getDispatchContext(),UtilMisc.toMap("boothIds", UtilMisc.toList(facilityIdsList),"supplyDate",fromDate)).get("partyPaymentMethodDesc");
+			Map partyPaymentMethodDesc=(Map)getPartyProfileDafult(dispatcher.getDispatchContext(),UtilMisc.toMap("boothIds", UtilMisc.toList(facilityIdsList),"supplyDate",fromDate)).get("partyPaymentMethodDesc"); 
 			 
 			//Map paymentMethod = (Map)getPaymentMethodTypeForBooth(dctx, UtilMisc.toMap("facilityId", facilityId, "userLogin", userLogin,"fromDate",fromDate)).get("partyPaymentMethod");
 			Set currentDayShipments = new HashSet(getShipmentIds(delegator ,UtilDateTime.toDateString(thruDate, "yyyy-MM-dd HH:mm:ss"),null));
@@ -5518,10 +5518,13 @@ public class ByProductNetworkServices {
 	        Map<String, Object> result = FastMap.newInstance(); 
 	        GenericValue boothFacility;
 	        Map  partyProfileFacilityMap=FastMap.newInstance(); 
-	        Map  partyPaymentMethodDesc=FastMap.newInstance(); 
+	        Map  partyPaymentMethodDesc=FastMap.newInstance();
+	        Map paymentTypeFacilityMap = FastMap.newInstance();
 	        try {
 	        	List partyCondList = FastList.newInstance();
-	        	partyCondList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,boothIds));
+	        	if(UtilValidate.isNotEmpty(boothIds)){
+	        		partyCondList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,boothIds));
+	        	}
 	        	partyCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(supplyDate)));
 	        	partyCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(supplyDate))));
 				
@@ -5535,8 +5538,16 @@ public class ByProductNetworkServices {
 	        		partyProfileFacilityMap.put(partyProfileDafault.getString("facilityId"), partyProfileDafault.getString("defaultPayMeth"));
 	        		partyPaymentMethodDesc.put(partyProfileDafault.getString("facilityId"), partyProfileDafault.getString("description"));
 	        	}
+	        	List<String> paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefaultList, "defaultPayMeth", true);
+	        	for(String paymentType : paymentTypes){
+	        		List<GenericValue> paymentTypeEntry = EntityUtil.filterByCondition(partyProfileDefaultList, EntityCondition.makeCondition("defaultPayMeth", EntityOperator.EQUALS ,paymentType));
+	        		List paymentTypeFacility = EntityUtil.getFieldListFromEntityList(paymentTypeEntry, "facilityId", true);
+	        		paymentTypeFacilityMap.put(paymentType, paymentTypeFacility);
+	        	}
+	        	
     			 result.put("partyProfileFacilityMap",partyProfileFacilityMap);
     			 result.put("partyPaymentMethodDesc",partyPaymentMethodDesc);
+    			 result.put("paymentTypeFacilityMap",paymentTypeFacilityMap);
 	        }catch(GenericEntityException e){
 				Debug.logError(e, module);	
 	            return ServiceUtil.returnError(e.toString());			
