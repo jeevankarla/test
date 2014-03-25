@@ -245,12 +245,12 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+															<fo:block text-align="right" >-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#list>
 												<#list byProdList as product>
-													<#assign columnCounter =1>
+													<#assign columnCounter =columnCounter+1>
 													 <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
 														<#assign columnCounter =0>
 														</fo:table-row>	
@@ -266,7 +266,7 @@ under the License.
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+																<fo:block text-align="right" >-</fo:block>																									
 															</fo:table-cell>
 														</#if>
 												</#list>
