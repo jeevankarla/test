@@ -60,6 +60,12 @@ try {
 }
 JSONObject boothsDuesDaywiseJSON = new JSONObject();
 
+Map resultCtx = ByProductNetworkServices.getPartyProfileDafult(dctx, UtilMisc.toMap("boothIds", []));
+Map paymentTypeFacilityMap = (Map)resultCtx.get("paymentTypeFacilityMap");
+filterFacilityList = [];
+if(paymentMethodTypeId){
+	filterFacilityList =  paymentTypeFacilityMap.get(paymentMethodTypeId);
+}
 
 if(parameters.hideSearch){
 	hideSearch = parameters.hideSearch;
@@ -81,19 +87,30 @@ if(statusId =="PAID"){
 if(parameters.paymentIds){
 	paymentIds = parameters.paymentIds;	
 }
+partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.toSet("defaultPayMeth"), null, null, false);
+paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defaultPayMeth", true);
+paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, paymentTypes), null, null, null, false);
+context.paymentMethodType = paymentMethodType;
+
 boothPaymentsList=[];
-Debug.log("Hi im here");
 if(hideSearch == "N"){
 	if (statusId == "PAID") {
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
-		boothPaymentsList = boothsPaymentsDetail["paymentsList"];
+		boothTempPaymentsList = boothsPaymentsDetail["paymentsList"];
 	}
 	else {
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);
-		boothPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
+		boothTempPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	}
 	
-
+	boothPaymentsList = [];
+	boothTempPaymentsList.each{boothPay ->
+		facilityId = boothPay.get("facilityId");
+		if(!filterFacilityList || (filterFacilityList && filterFacilityList.contains(facilityId))){
+			boothPaymentsList.add(boothPay);
+		}
+	}
+	
 	context.boothPaymentsList = boothPaymentsList;	
 	context.paymentDate= paymentDate;
 	context.paymentTimestamp= paymentTimestamp;
@@ -129,7 +146,4 @@ context.boothsDuesDaywiseJSON = boothsDuesDaywiseJSON;
 
 context.statusId = statusId;
 
-partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.toSet("defaultPayMeth"), null, null, false);
-paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defaultPayMeth", true);
-paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, paymentTypes), null, null, null, false);
-context.paymentMethodType = paymentMethodType;
+
