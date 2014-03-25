@@ -68,6 +68,7 @@ under the License.
         <description>Imports all entity xml files contained in a directory</description>
         <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
         <attribute name="path" type="String" mode="IN" optional="true"/>
+        <attribute name="recursiveImport" type="Boolean" mode="IN" optional="true"/>
         <attribute name="mostlyInserts" type="String" mode="IN" optional="true"/>
         <attribute name="maintainTimeStamps" type="String" mode="IN" optional="true"/>
         <attribute name="createDummyFks" type="String" mode="IN" optional="true"/>

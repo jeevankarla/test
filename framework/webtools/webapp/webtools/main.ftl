@@ -79,6 +79,7 @@ under the License.
           <li><a href="<@ofbizUrl>EntityExportAll</@ofbizUrl>">${uiLabelMap.PageTitleEntityExportAll}</a></li>
           <li><a href="<@ofbizUrl>EntityImport</@ofbizUrl>">${uiLabelMap.PageTitleEntityImport}</a></li>
           <li><a href="<@ofbizUrl>EntityImportDir</@ofbizUrl>">${uiLabelMap.PageTitleEntityImportDir}</a></li>
+          <li><a href="<@ofbizUrl>EntityImportExcel</@ofbizUrl>">${uiLabelMap.PageTitleEntityImportExcel}</a></li>
           <li><a href="<@ofbizUrl>EntityImportReaders</@ofbizUrl>">${uiLabelMap.PageTitleEntityImportReaders}</a></li>
           <li><a href="<@ofbizUrl>CsvToXml</@ofbizUrl>">${uiLabelMap.PageTitleCsvToXml}</a></li>
           <li><a href="<@ofbizUrl>CsvToDbf</@ofbizUrl>">${uiLabelMap.PageTitleCsvToDbf}</a></li>

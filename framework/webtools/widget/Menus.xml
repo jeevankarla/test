@@ -99,6 +99,9 @@ under the License.
         <menu-item name="entityImport" title="${uiLabelMap.PageTitleEntityImport}">
             <link target="EntityImport"/>
         </menu-item>
+         <menu-item name="EntityImportExcel" title="${uiLabelMap.PageTitleEntityImportExcel}">
+            <link target="EntityImportExcel"/>
+        </menu-item>
         <menu-item name="entityImportDir" title="${uiLabelMap.PageTitleEntityImportDir}">
             <link target="EntityImportDir"/>
         </menu-item>

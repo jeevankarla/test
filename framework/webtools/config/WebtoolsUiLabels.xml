@@ -269,6 +269,15 @@
         <value xml:lang="th">นำเข้าข้อมูล xml ใน Directory</value>
         <value xml:lang="zh">XML数据导入目录 </value>
     </property>
+     <property key="PageTitleEntityImportExcel">
+        <value xml:lang="de">XML Datenimport aus Verzeichnis</value>
+        <value xml:lang="en">XML Data Import Excel</value>
+        <value xml:lang="fr">Import de données XML depuis un répertoire</value>
+        <value xml:lang="it">Importa dati XML in directory</value>
+        <value xml:lang="ro">Importa Datele din XML in Directory</value>
+        <value xml:lang="th">นำเข้าข้อมูล xml ใน Directory</value>
+        <value xml:lang="zh">XML数据导入目录 </value>
+    </property>
      <property key="PageTitleCsvToXml">       
         <value xml:lang="en">CSV Data To Xml Conversion</value>        
     </property>

@@ -124,6 +124,24 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="EntityImportExcel">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleCsvToDbf"/>
+                <set field="tabButtonItem" value="EntityImportExcel"/>
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>                
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonImportExportDecorator" location="component://webtools/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <screenlet>
+                           <include-form name="EntityImportExcel" location="component://webtools/widget/EntityForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="DbfToVbiz">
         <section>
             <actions>

@@ -393,6 +393,17 @@ under the License.
         <security https="true" auth="true"/>      
         <response name="success" type="view" value="CsvToDbf"/>
         <response name="error" type="view" value="CsvToDbf"/>
+    </request-map> 
+    <request-map uri="EntityImportExcel">
+        <security https="true" auth="true"/>      
+        <response name="success" type="view" value="EntityImportExcel"/>
+        <response name="error" type="view" value="EntityImportExcel"/>
+    </request-map>
+    <request-map uri="importExcelEntityData">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.webtools.Conversion" invoke="importExcelEntityData"/>
+        <response name="success" type="view" value="EntityImportExcel"/>
+        <response name="error" type="view" value="EntityImportExcel"/>
     </request-map>
     <request-map uri="saveCsvToDbf">
         <security https="true" auth="true"/>
@@ -702,8 +713,10 @@ under the License.
     <view-map name="EntitySQLProcessor" page="component://webtools/widget/EntityScreens.xml#EntitySQLProcessor" type="screen"/>
     <view-map name="EntityExportAll" page="component://webtools/widget/EntityScreens.xml#EntityExportAll" type="screen"/>
     <view-map name="EntityImportDir" page="component://webtools/widget/EntityScreens.xml#EntityImportDir" type="screen"/>
+    <view-map name="EntityImportExcel" page="component://webtools/widget/EntityScreens.xml#EntityImportExcel" type="screen"/>
     <view-map name="CsvToXml" page="component://webtools/widget/EntityScreens.xml#CsvToXml" type="screen"/>
     <view-map name="CsvToDbf" page="component://webtools/widget/EntityScreens.xml#CsvToDbf" type="screen"/>
+    
     <view-map name="DbfToVbiz" page="component://webtools/widget/EntityScreens.xml#DbfToVbiz" type="screen"/>
     
     <view-map name="EntityImport" page="component://webtools/widget/EntityScreens.xml#EntityImport" type="screen"/>

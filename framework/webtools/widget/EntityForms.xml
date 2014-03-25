@@ -56,6 +56,13 @@ under the License.
         <field name="uploadedFile" title="${uiLabelMap.CommonUpload}" tooltip="uplaod .csv file only*"><file/></field>        
         <field name="Convert"><submit button-type="button"/></field>
     </form> 
+    <form name="EntityImportExcel" target="importExcelEntityData" type="upload" 
+  		header-row-style="header-row">    
+        <field name="mimeTypeId"><hidden value="application/vnd.ms-excel"/>    
+        </field>
+        <field name="uploadedFile" title="${uiLabelMap.CommonUpload}" tooltip="uplaod .xls file only*"><file/></field>        
+        <field name="Upload"><submit button-type="button"/></field>
+    </form> 
     <form name="dbfToVbiz" id="dbfToVbiz" target="saveDbfToVbiz" type="upload" 
   		header-row-style="header-row">    
         <field name="mimeTypeId"><hidden value="text/csv"/></field>
