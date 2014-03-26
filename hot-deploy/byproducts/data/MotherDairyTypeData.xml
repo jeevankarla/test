@@ -7,7 +7,7 @@
     <PeriodType description="Quarterly Bill" periodLength="3" periodTypeId="INST_QUARTER_BILL" uomId="TF_mon"/> 
     <PeriodType description="Weekly Bill" periodLength="1" periodTypeId="INST_WEEK_BILL" uomId="TF_wk"/>
     <PeriodType description="Daily Bill" periodLength="1" periodTypeId="INST_DAILY_BILL"/>
-    
+    <PaymentGroupType description="Route Batch Payment" parentTypeId="BATCH_PAYMENT" paymentGroupTypeId="ROUTE_BATCH_PAYMENT"/>
     <EnumerationType description="Period billing" enumTypeId="PERIOD_BILLING"/>  
     
     <Enumeration description="Credit Institution Billing" enumCode="CREDIT INST BILLING" enumId="CR_INST_BILLING" enumTypeId="PERIOD_BILLING"/> 
