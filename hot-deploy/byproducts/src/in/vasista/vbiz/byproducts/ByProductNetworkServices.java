@@ -5393,6 +5393,7 @@ public class ByProductNetworkServices {
 			String transactionId = (String) context.get("transactionId");     	
 			String paymentLocationId = (String) context.get("paymentLocationId");
 			LocalDispatcher dispatcher = ctx.getDispatcher();
+			GenericValue userLogin = (GenericValue)context.get("userLogin");
 			List<Map<String, Object>> boothPayments = (List<Map<String, Object>>) context.get("boothPayments");
 			String infoString = "makeBoothPayments:: " + "paymentChannel=" + paymentChannel 
 				+";transactionId=" + transactionId + ";paymentLocationId=" + paymentLocationId 
@@ -5403,6 +5404,14 @@ public class ByProductNetworkServices {
 	            return ServiceUtil.returnError("No payment amounts found; " + infoString);			
 			}
 			for (Map boothPayment: boothPayments) { 
+				Map boothResult = getBoothDues(ctx,UtilMisc.<String, Object>toMap("boothId", 
+						(String)boothPayment.get("boothId"), "userLogin", userLogin));
+				Map boothDues = (Map)boothResult.get("boothDues");
+				BigDecimal amount = new BigDecimal(boothDues.get("amount").toString());
+				if(amount.compareTo(new BigDecimal(((Double)boothPayment.get("amount")).toString())) != 0){
+					 Debug.logError("received partial payment or no dues for booth :" + (String)boothPayment.get("boothId"), module);
+					 return ServiceUtil.returnError("received partial payment or no dues for booth :" + (String)boothPayment.get("boothId")); 
+				}
 	        	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentMethodTypeId", paymentChannel);    		
 	    		paymentCtx.put("userLogin", context.get("userLogin"));
 	    		paymentCtx.put("facilityId", (String)boothPayment.get("boothId"));
@@ -5418,10 +5427,12 @@ public class ByProductNetworkServices {
 				Map boothsPaymentsDetail = getBoothPaidPayments( ctx , paidPaymentCtx);
 				List boothPaymentsList = (List)boothsPaymentsDetail.get("boothPaymentsList");
 				if (boothPaymentsList.size() > 0) {
-		            Debug.logError("Already received payment for booth " + (String)boothPayment.get("boothId") + " from eSeva," +
+		            Debug.logError("Already received payment for booth " + (String)boothPayment.get("boothId") + " from ," +paymentChannel+
 		            		"hence skipping... Existing payment details:" + boothPaymentsList.get(0) + "; Current payment details:" +
 		            		paymentCtx, module);
-		            continue;
+		            return ServiceUtil.returnError("Already received payment for booth " + (String)boothPayment.get("boothId") + " from ," +paymentChannel+
+		            		"hence skipping... Existing payment details:" + boothPaymentsList.get(0) + "; Current payment details:" +
+		            		paymentCtx);
 				}
 				try{
 					Map<String, Object> paymentResult =  dispatcher.runSync("createPaymentForBooth",paymentCtx);

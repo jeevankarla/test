@@ -64,7 +64,7 @@
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="makeBoothPayments">
         <description>Service to get the list of routes</description>
         <attribute name="paymentChannel" type="String" mode="IN" optional="false"/>        
-        <attribute name="transactionId" type="String" mode="IN" optional="true"/>
+        <attribute name="transactionId" type="String" mode="IN" optional="false"/>
         <attribute name="paymentLocationId" type="String" mode="IN" optional="true"/>        
         <attribute type="List" mode="IN" name="boothPayments" optional="false"/>
     </service> 
