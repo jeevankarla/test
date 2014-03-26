@@ -716,11 +716,11 @@
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">    	   	        	
     	<field name="paymentDate" title="Payment Time" sort-field="true"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate, &quot;dd/MM/yyyy HH:mm:ss&quot;);}"/></field>        
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}" sort-field="true"><display description="${facilityId}"/></field>
-        <field name="routeId" title="${uiLabelMap.Route}" sort-field="true"><display description="${routeId}"/></field>
+        <!-- <field name="routeId" title="${uiLabelMap.Route}" sort-field="true"><display description="${routeId}"/></field> -->
         <field name="paidAmount" sort-field-style="true"><display description="${amount}" /></field>
         <field name="paymentMethodTypeId" sort-field="true"><display-entity  entity-name="PaymentMethodType" description="${description}"/></field>
         <field name="paymentId" widget-style="buttontext">
-        	<hyperlink target="massPrintReceipt" description="Print Receipt">
+        	<hyperlink target="massPrintReceipt" description="Print Receipt" target-window="_blank">
 	        	<parameter param-name="paymentId" from-field="paymentId"/>	        	
         	</hyperlink>
         </field>

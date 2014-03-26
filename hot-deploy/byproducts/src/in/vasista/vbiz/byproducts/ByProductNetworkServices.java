@@ -5375,7 +5375,8 @@ public class ByProductNetworkServices {
 			 result.put("enablePaymentSms",enablePaymentSms);
 			 result.put("paymentId",paymentId);
 			 result.put("paymentMethodTypeId",paymentMethodType);
-			 
+			 result.put("statusFlag", "PAID");
+			 result.put("hideSearch", "N");
 	        return result;
 	    }  
 	    /**

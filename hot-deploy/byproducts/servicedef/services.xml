@@ -321,7 +321,7 @@
        <!--  <attribute name="tripId" mode="IN" type="String" optional="false"/>   -->
        	<attribute name="shipmentId" mode="IN" type="String" optional="true"/>    
         <!-- <attribute name="supplyDate" mode="IN" type="String" optional="true"/> -->
-        <attribute name="routeId" mode="IN" type="String" optional="true"/>
+        <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
         <attribute name="orderReturnList" mode="OUT" type="List" optional="true"/>
         <attribute name="vehcileId" mode="OUT" type="String" optional="true"/>
         <attribute name="returnId" mode="OUT" type="String" optional="true"/>
@@ -470,6 +470,8 @@
         <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/>
         <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
         <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
+        <attribute name="statusFlag" mode="OUT" type="String" optional="true"/>
+        <attribute name="hideSearch" mode="OUT" type="String" optional="true"/>
         <attribute name="enablePaymentSms" mode="OUT" type="Boolean" optional="true"/>
     </service>
      <service name="massMakeBoothPayments" engine="java"  auth="true" export="true"
