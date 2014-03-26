@@ -79,9 +79,10 @@ under the License.
 			<fo:block font-size="6pt">
 				<fo:table>
 					<fo:table-column column-width="78pt"/>
-					<fo:table-column column-width="580pt"/>
+					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="33pt"/>
 					<fo:table-column column-width="37pt"/>
+					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="55pt"/>
 					<fo:table-body>
@@ -99,7 +100,7 @@ under the License.
 								<fo:block font-size="6pt" keep-together="always" white-space-collapse="false">Code-Dealer Name</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="6pt" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+								<fo:block font-size="6pt" keep-together="always" white-space-collapse="false">------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="6pt" text-align="right">Subsidy</fo:block>
@@ -109,6 +110,9 @@ under the License.
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="6pt" text-align="right">NET Receivable</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block font-size="6pt" text-align="right">ShopeeRent</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="6pt" text-align="right">PaymentType</fo:block>
@@ -143,7 +147,7 @@ under the License.
 												<#assign columnCounter =0>
 												<#list lmsProdList as product>
 														<#assign columnCounter = columnCounter+1>
-														<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+														<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -155,7 +159,7 @@ under the License.
 												</#list>
 												<#list byProdList as product>
 													<#assign columnCounter = columnCounter+1>
-													<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+													<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -199,13 +203,16 @@ under the License.
     		<fo:block font-size="6pt">
 				<fo:table>
 				<fo:table-column column-width="78pt"/>
-					<fo:table-column column-width="580pt"/>
+					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="33pt"/>
 					<fo:table-column column-width="37pt"/>
+					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="55pt"/>
 				<fo:table-body>
 						<fo:table-row>
+						
+						<#--<#assign amountList = shopeeRentAmount.get('amountMap').get(boothDetails.getKey())?if_exists>-->
 							<#assign facility = delegator.findOne("Facility", {"facilityId" : boothDetails.getKey()}, true)>
 							<#assign partyTelephoneResult = dispatcher.runSync("getPartyTelephone", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", facility.ownerPartyId, "userLogin", userLogin))/>
 							<fo:table-cell><fo:block font-size="5pt" keep-together="always">${boothDetails.getKey()}-${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.facilityName?if_exists)),18)}</fo:block>
@@ -230,7 +237,7 @@ under the License.
 											<#assign columnCounter =0>
 												<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
-											        <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+											        <#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 													<#assign columnCounter =1>
 													</fo:table-row>	
 													<fo:table-row>
@@ -251,7 +258,7 @@ under the License.
 												</#list>
 												<#list byProdList as product>
 													<#assign columnCounter =columnCounter+1>
-													 <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+													 <#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =0>
 														</fo:table-row>	
 														<fo:table-row>
@@ -292,6 +299,9 @@ under the License.
 								<fo:block font-size="6pt" text-align="right">${boothDetails.getValue().get("amount")?if_exists?string("#0.00")}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
+								<fo:block font-size="5pt" text-align="center"><#if shopeeRentAmount?has_content && (shopeeRentAmount.get('amountMap'))?has_content && (shopeeRentAmount.get('amountMap')).get(boothDetails.getKey())?has_content>${shopeeRentAmount.get('amountMap').get(boothDetails.getKey()).get("rentAmount")?string("#0.00")?if_exists}+${shopeeRentAmount.get('amountMap').get(boothDetails.getKey()).get("tax")?string("#0.00")?if_exists}</#if></fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
 								<fo:block font-size="5pt" text-align="center">${boothDetails.getValue().get("paymentMode")?if_exists}</fo:block>
 							</fo:table-cell>
 						</fo:table-row>	
@@ -304,9 +314,10 @@ under the License.
 		<fo:block font-size="6pt">
 			<fo:table>
 				<fo:table-column column-width="78pt"/>
-					<fo:table-column column-width="580pt"/>
+					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="33pt"/>
 					<fo:table-column column-width="37pt"/>
+					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="55pt"/>
 				<fo:table-body>
@@ -336,7 +347,7 @@ under the License.
 											<#assign columnCounter =0>
 											<#list lmsProdList as product>
 													<#assign columnCounter = columnCounter+1>
-													<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+													<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -347,7 +358,7 @@ under the License.
 											</#list>
 											<#list byProdList as product>
 												<#assign columnCounter = columnCounter+1>
-												<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+												<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -404,7 +415,7 @@ under the License.
 											<#assign columnCounter = 0>
 											<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
-												 <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+												 <#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -425,7 +436,7 @@ under the License.
 											</#list>
 											<#list byProdList as product>
 											<#assign columnCounter = columnCounter+1>
-											   <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+											   <#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -495,7 +506,7 @@ under the License.
 										<#assign columnCounter =0>
 												<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
-												<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+												<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -519,7 +530,7 @@ under the License.
 												</#list>
 												<#list byProdList as product>
 													<#assign columnCounter = columnCounter+1>
-													<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+													<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -597,7 +608,7 @@ under the License.
 											<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
 												
-												<#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+												<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -623,7 +634,7 @@ under the License.
 											</#list>
 											<#list byProdList as product>
 											<#assign columnCounter = columnCounter+1>
-											    <#if (columnCounter > 12) > <#--  12 products for each row and if morethan 12 then we will wrap to next line -->
+											    <#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>

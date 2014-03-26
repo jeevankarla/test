@@ -514,4 +514,21 @@
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="accountInfo" type="Map" optional="true" mode="OUT"/>       
     </service>
+     <service name="createInvoiceForShopeeRent" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForShopeeRent">
+        <description>create Facility Rate</description>
+        <attribute name="dueDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+    <service name="cancelShopeeRent" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelShopeeRent">
+        <description>cancel Shopee Rent</description>
+        <attribute name="estimatedDeliveryDate" type="Timestamp" mode="INOUT" optional="true"/>
+    </service>
+     <service name="getShopeeRentAmount" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getShopeeRentAmount">
+        <description>get Shopee Rent Amount</description>
+        <attribute name="estimatedDeliveryDate" type="Timestamp" mode="INOUT" optional="true"/>
+    </service>
 </services>
