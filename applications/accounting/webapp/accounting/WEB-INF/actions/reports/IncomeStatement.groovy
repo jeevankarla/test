@@ -24,7 +24,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.party.party.PartyWorker;
-
+import org.ofbiz.entity.util.EntityUtil;
 import javolution.util.FastList;
 
 if (!fromDate) {
@@ -70,7 +70,7 @@ transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
 List revenueAndExprs = FastList.newInstance(mainAndExprs);
 revenueAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, revenueAccountClassIds));
-transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(revenueAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount"), UtilMisc.toList("glAccountId"), null, false);
+transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(revenueAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount","parentGlAccountId"), UtilMisc.toList("glAccountId"), null, false);
 if (transactionTotals) {
     Map transactionTotalsMap = [:];
     balanceTotalCredit = BigDecimal.ZERO;
@@ -103,6 +103,10 @@ if (transactionTotals) {
     balanceTotal = balanceTotalCredit.subtract(balanceTotalDebit);
 }
 context.revenueAccountBalanceList = accountBalanceList;
+revParentGlAccount =[];
+revParentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(transactionTotals, "parentGlAccountId", true)), UtilMisc.toSet("glAccountId", "accountName", "accountCode"), null, null, false);
+context.revParentGlAccount = revParentGlAccount;
+
 context.revenueAccountBalanceList.add(UtilMisc.toMap("accountName", "TOTAL REVENUES", "balance", balanceTotal));
 context.revenueBalanceTotal = balanceTotal;
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingNetSales", "balance", balanceTotal));
@@ -114,7 +118,7 @@ transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
 List expenseAndExprs = FastList.newInstance(mainAndExprs);
 expenseAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, expenseAccountClassIds));
-transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(expenseAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount"), UtilMisc.toList("glAccountId"), null, false);
+transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(expenseAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount","parentGlAccountId"), UtilMisc.toList("glAccountId"), null, false);
 if (transactionTotals) {
     Map transactionTotalsMap = [:];
     balanceTotalCredit = BigDecimal.ZERO;
@@ -150,6 +154,11 @@ context.expenseAccountBalanceList = accountBalanceList;
 context.expenseAccountBalanceList.add(UtilMisc.toMap("accountName", "TOTAL EXPENSES", "balance", balanceTotal));
 context.expenseBalanceTotal = balanceTotal;
 
+expenParentGlAccount =[];
+expenParentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(transactionTotals, "parentGlAccountId", true)), UtilMisc.toSet("glAccountId", "accountName", "accountCode"), null, null, false);
+context.expenParentGlAccount = expenParentGlAccount;
+
+
 // COST OF GOODS SOLD (COGS_EXPENSE)
 // account balances
 accountBalanceList = [];
@@ -157,7 +166,7 @@ transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
 List cogsExpenseAndExprs = FastList.newInstance(mainAndExprs);
 cogsExpenseAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, cogsExpenseAccountClassIds));
-transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(cogsExpenseAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount"), UtilMisc.toList("glAccountId"), null, false);
+transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(cogsExpenseAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount","parentGlAccountId"), UtilMisc.toList("glAccountId"), null, false);
 if (transactionTotals) {
     Map transactionTotalsMap = [:];
     balanceTotalCredit = BigDecimal.ZERO;
@@ -191,7 +200,11 @@ if (transactionTotals) {
 }
 context.cogsExpense = balanceTotal;
 balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingCostOfGoodsSold", "balance", balanceTotal));
+/*cogsExpenParentGlAccount =[];
+cogsExpenParentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(transactionTotals, "parentGlAccountId", true)), UtilMisc.toSet("glAccountId", "accountName", "accountCode"), null, null, false);
+context.cogsExpenParentGlAccount = cogsExpenParentGlAccount;
 
+*/
 // OPERATING EXPENSES (SGA_EXPENSE)
 // account balances
 accountBalanceList = [];
@@ -199,7 +212,7 @@ transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
 List sgaExpenseAndExprs = FastList.newInstance(mainAndExprs);
 sgaExpenseAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, sgaExpenseAccountClassIds));
-transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(sgaExpenseAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount"), UtilMisc.toList("glAccountId"), null, false);
+transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(sgaExpenseAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount","parentGlAccountId"), UtilMisc.toList("glAccountId"), null, false);
 if (transactionTotals) {
     Map transactionTotalsMap = [:];
     balanceTotalCredit = BigDecimal.ZERO;
@@ -232,7 +245,10 @@ if (transactionTotals) {
     balanceTotal = balanceTotalDebit.subtract(balanceTotalCredit);
 }
 sgaExpense = balanceTotal;
-
+/*sgaExpenParentGlAccount =[];
+sgaExpenParentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(transactionTotals, "parentGlAccountId", true)), UtilMisc.toSet("glAccountId", "accountName", "accountCode"), null, null, false);
+context.sgaExpenParentGlAccount = sgaExpenParentGlAccount;
+*/
 // INCOME
 // account balances
 accountBalanceList = [];
@@ -240,7 +256,7 @@ transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
 List incomeAndExprs = FastList.newInstance(mainAndExprs);
 incomeAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, incomeAccountClassIds));
-transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(incomeAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount"), UtilMisc.toList("glAccountId"), null, false);
+transactionTotals = delegator.findList("AcctgTransEntrySums", EntityCondition.makeCondition(incomeAndExprs, EntityOperator.AND), UtilMisc.toSet("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount" ,"parentGlAccountId"), UtilMisc.toList("glAccountId"), null, false);
 if (transactionTotals) {
     Map transactionTotalsMap = [:];
     balanceTotalCredit = BigDecimal.ZERO;
@@ -275,6 +291,9 @@ if (transactionTotals) {
 context.incomeAccountBalanceList = accountBalanceList;
 context.incomeAccountBalanceList.add(UtilMisc.toMap("accountName", "TOTAL INCOME", "balance", balanceTotal));
 context.incomeBalanceTotal = balanceTotal;
+incomeParentGlAccount =[];
+incomeParentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(transactionTotals, "parentGlAccountId", true)), UtilMisc.toSet("glAccountId", "accountName", "accountCode"), null, null, false);
+context.incomeParentGlAccount = incomeParentGlAccount;
 
 // GROSS MARGIN = NET SALES - COSTS OF GOODS SOLD
 context.grossMargin = (context.revenueBalanceTotal).subtract(context.cogsExpense);

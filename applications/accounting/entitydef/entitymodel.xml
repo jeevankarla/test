@@ -2209,6 +2209,7 @@
 		<alias entity-alias="GLA" name="glAccountClassId" group-by="true" />
 		<alias entity-alias="GLA" name="accountName" group-by="true" />
 		<alias entity-alias="GLA" name="accountCode" group-by="true" />
+		<alias entity-alias="GLA" name="parentGlAccountId" group-by="true"/>
 		<alias entity-alias="ACT" name="glFiscalTypeId" group-by="true" />
 		<alias entity-alias="ACT" name="acctgTransTypeId" group-by="false" />
 		<alias entity-alias="ATE" name="debitCreditFlag" group-by="true" />

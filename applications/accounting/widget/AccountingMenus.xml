@@ -1079,12 +1079,17 @@
 	<menu name="OrganizationAccountingReportsTabBar" extends="CommonTabBarMenu"
 		extends-resource="component://common/widget/CommonMenus.xml"
 		selected-menuitem-context-field-name="tabButtonItem2"
-		default-menu-item-name="TrialBalance">
+		default-menu-item-name="TrialBalance">		
 		<menu-item name="TrialBalance" title="${uiLabelMap.AccountingTrialBalance}">
 			<link target="TrialBalance">
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
+		<menu-item name="TrialBalanceDrillDown" title="${uiLabelMap.AccountingTrialBalanceDrillDown}">
+			<link target="TrialBalanceDrillDown">
+				<parameter param-name="organizationPartyId" />
+			</link>
+		</menu-item>		
 		<menu-item name="TransactionTotals" title="${uiLabelMap.AccountingTransactionTotals}">
 			<link target="TransactionTotals">
 				<parameter param-name="organizationPartyId" />
@@ -1661,4 +1666,30 @@
 			</link>
 		</menu-item>		
 	</menu>
+	<menu name="IncomeStatementSubTabBar" extends="CommonTabBarMenu"
+		extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem3">
+		<menu-item name="IncomeStatement" title="${uiLabelMap.AccountingIncomeStatement}">
+			<link target="IncomeStatement">
+				<parameter param-name="organizationPartyId" />
+			</link>
+		</menu-item>
+		<menu-item name="IncomeStatementDrillDown" title="${uiLabelMap.AccountingIncomeStatementDrillDown}">
+			<link target="IncomeStatementDrillDown">
+				<parameter param-name="organizationPartyId" />
+			</link>
+		</menu-item>
+	</menu>
+	<menu name="BalanceSheetSubTabBar" extends="CommonTabBarMenu"
+		extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem3">
+		<menu-item name="BalanceSheet" title="${uiLabelMap.AccountingBalanceSheet}">
+			<link target="BalanceSheet">
+				<parameter param-name="organizationPartyId" />
+			</link>
+		</menu-item>
+		<menu-item name="BalanceSheetDrillDown" title="${uiLabelMap.AccountingBalanceSheetDrillDown}">
+			<link target="BalanceSheetDrillDown">
+				<parameter param-name="organizationPartyId" />
+			</link>
+		</menu-item>
+	</menu>		
 </menus>

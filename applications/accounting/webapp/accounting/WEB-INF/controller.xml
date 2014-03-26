@@ -2387,7 +2387,21 @@ under the License.
     <request-map uri="AgingAnalysis"><security https="true" auth="true"/><response name="success" type="view" value="AgingAnalysis"/></request-map>
 
     <request-map uri="TrialBalance"><security https="true" auth="true"/><response name="success" type="view" value="TrialBalance"/></request-map>
-    <request-map uri="IncomeStatement"><security https="true" auth="true"/><response name="success" type="view" value="IncomeStatement"/></request-map>
+    <request-map uri="TrialBalanceDrillDown"><security https="true" auth="true"/><response name="success" type="view" value="TrialBalanceDrillDown"/></request-map>
+    <request-map uri="AcctgTransDrillDown">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="AcctgTransDrillDown"/>
+    </request-map>
+
+    <request-map uri="IncomeStatement">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="IncomeStatement"/>
+    </request-map>
+    <request-map uri="IncomeStatementDrillDown">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="IncomeStatementDrillDown"/>
+    </request-map>
+    
     <request-map uri="ComparativeIncomeStatement">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ComparativeIncomeStatement"/>
@@ -2395,6 +2409,10 @@ under the License.
     </request-map>
     <request-map uri="BalanceSheet"><security https="true" auth="true"/><response name="success" type="view" value="BalanceSheet"/></request-map>
     <request-map uri="BalanceSheetForIndian"><security https="true" auth="true"/><response name="success" type="view" value="BalanceSheetForIndian"/></request-map>
+   <request-map uri="BalanceSheetDrillDown">
+	    <security https="true" auth="true"/>
+	    <response name="success" type="view" value="BalanceSheetDrillDown"/>
+    </request-map>
     <request-map uri="ComparativeBalanceSheet"><security https="true" auth="true"/><response name="success" type="view" value="ComparativeBalanceSheet"/></request-map>
     <request-map uri="ComparativeBalanceSheet.pdf"><security https="true" auth="true"/><response name="success" type="view" value="ComparativeBalanceSheetPdf"/></request-map>
     <request-map uri="ComparativeBalanceSheet.csv"><security https="true" auth="true"/><response name="success" type="view" value="ComparativeBalanceSheetCsv"/></request-map>
@@ -2600,6 +2618,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TrialBalanceSearchResultsPdf"/>
     </request-map>
+     <request-map uri="TrialBalanceDrillDown.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TrialBalanceDrillDownPDF"/>
+    </request-map>
+    
 
     <request-map uri="TrialBalanceSearchResultsCsv.csv">
         <security https="true" auth="true"/>
@@ -3009,15 +3032,24 @@ under the License.
     <!--<view-map name="SalesInvoiceByProductCategorySummary" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#SalesInvoiceByProductCategorySummary"/>-->
     <view-map name="AgingAnalysis" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#AgingAnalysis"/>
     <view-map name="TrialBalance" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalance"/>
+    <view-map name="TrialBalanceDrillDown" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceDrillDown"/>
+    
+      <view-map name="TrialBalanceDrillDownPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceDrillDownPDF" content-type="application/pdf" encoding="none"/>
+    
+    <view-map name="AcctgTransDrillDown" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#AcctgTransDrillDown"/>
+
     <view-map name="TrialBalanceSearchResultsPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="TrialBalanceSearchResultsCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsCsv" content-type="text/csv" encoding="none"/>
     <view-map name="IncomeStatement" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#IncomeStatement"/>
+    <view-map name="IncomeStatementDrillDown" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#IncomeStatementDrillDown"/>
     <view-map name="IncomeStatementListPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#IncomeStatementListPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="IncomeStatementListCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#IncomeStatementListCsv" content-type="text/csv" encoding="none"/>
     <view-map name="ComparativeIncomeStatement" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeIncomeStatement"/>
     <view-map name="ComparativeIncomeStatementsPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeIncomeStatementsPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="ComparativeIncomeStatementsCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ComparativeIncomeStatementsCsv" content-type="text/csv" encoding="none"/>
     <view-map name="BalanceSheet" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BalanceSheet"/>
+    <view-map name="BalanceSheetDrillDown" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BalanceSheetDrillDown"/>
+    
     <view-map name="BalanceSheetCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BalanceSheetCsv" content-type="text/csv" encoding="none"/>
     <view-map name="BalanceSheetPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BalanceSheetPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="BalanceSheetForIndian" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BalanceSheetForIndian"/>

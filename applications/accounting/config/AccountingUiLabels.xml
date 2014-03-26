@@ -4851,7 +4851,20 @@
         <value xml:lang="th">รายงานรายได้</value>
         <value xml:lang="zh">所得[损益]计算书</value>
     </property>
-    
+    <property key="AccountingIncomeStatementDrillDown">
+        <value xml:lang="ar">تصربح الدخل</value>
+        <value xml:lang="de">Ertragsrechnung</value>
+        <value xml:lang="en">Income Statement Drill Down</value>
+        <value xml:lang="es">Declaración de ingresos</value>
+        <value xml:lang="fr">Déclaration de revenus</value>
+        <value xml:lang="hi_IN">आय विवरण</value>
+        <value xml:lang="it">Conto Economico</value>
+        <value xml:lang="nl">Inkomensoverzicht</value>
+        <value xml:lang="ro">Extract Cont in Intrare</value>
+        <value xml:lang="ru">Результативный счет</value>
+        <value xml:lang="th">รายงานรายได้</value>
+        <value xml:lang="zh">所得[损益]计算书</value>
+    </property>
     <property key="AccountingIncomeStatementOrgName">
         <value xml:lang="ar">تصربح الدخل</value>
         <value xml:lang="de">Ertragsrechnung</value>

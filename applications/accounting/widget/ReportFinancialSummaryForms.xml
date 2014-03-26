@@ -226,6 +226,20 @@ under the License.
         <field name="skipDecorator"><hidden/></field>        
         <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    <form name="BalanceSheetDrillDownParameters" type="single" target="BalanceSheetDrillDown"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="thruDate"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
+            <drop-down>
+                <entity-options entity-name="GlFiscalType" description="${description}">
+                    <entity-order-by field-name="glFiscalTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="skipDecorator"><hidden/></field>        
+        <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     <form name="BalanceSheetAssets" type="list" list-name="assetAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="accountCode">
@@ -283,7 +297,8 @@ under the License.
     </form>
     <form name="BalanceSheetAssetsForIndian" type="list" list-name="assetAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="glAccountClassId" title-area-style="tableheadwide"><display description="${glAccountClassId}"/></field>
+        <!-- <field name="glAccountClassId" title-area-style="tableheadwide"><display description="${glAccountClassId}"/></field> -->
+        <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
@@ -295,7 +310,7 @@ under the License.
     </form>
     <form name="BalanceSheetLiabilitiesForIndian" type="list" list-name="liabilityAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="glAccountClassId" title-area-style="tableheadwide"><display description="${glAccountClassId}"/></field>
+        <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
@@ -307,7 +322,7 @@ under the License.
     </form>
     <form name="BalanceSheetEquitiesForIndian" type="list" list-name="equityAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="glAccountClassId" title-area-style="tableheadwide"><display description="${glAccountClassId}"/></field>
+       <field name="glAccountClassId" ><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
@@ -600,6 +615,21 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+    <form name="TrialBalanceDrillDownFinancialTimePeriodSelection" type="single" header-row-style="header-row" target="TrialBalanceDrillDown" default-table-style="basic-table">
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="like" value="FISCAL_%"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="skipDecorator"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
     <form name="TrialBalanceReport" type="list" list-name="glAccountAndHistories"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
