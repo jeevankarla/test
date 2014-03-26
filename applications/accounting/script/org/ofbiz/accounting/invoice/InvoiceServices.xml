@@ -580,22 +580,30 @@ under the License.
        		<entity-one value-field="userLogin" entity-name="UserLogin">
        			<field-map field-name="userLoginId" from-field="invoiceMap.createdByUserLogin"/>
        		</entity-one>
-        	<iterate entry="invoiceItem" list="invoiceItemList">
-	        	<if-not-empty field="invoiceItem.taxAuthPartyId">
-	        		<set field="createTaxInvoiceMap.userLogin" from-field="userLogin"/>	        		
-					<set field="createTaxInvoiceMap.taxAuthPartyId" from-field="invoiceItem.taxAuthPartyId"/>
-		       		<set field="createTaxInvoiceMap.invoiceId" from-field="parameters.invoiceId"/>
-		        	<set field="createTaxInvoiceMap.invoiceItemTypeId" from-field="invoiceItem.invoiceItemTypeId"/>
-		         	<set field="createTaxInvoiceMap.invoiceItemSeqId" from-field="invoiceItem.invoiceItemSeqId"/>        
-		        	<set field="createTaxInvoiceMap.amount" from-field="invoiceItem.amount"/>
-		       	    <set field="createTaxInvoiceMap.quantity" from-field="invoiceItem.quantity" type="String"/>
-		        	<set field="createTaxInvoiceMap.currencyUomId" from-field="invoiceMap.currencyUomId"/>
-		        	<set field="createTaxInvoiceMap.approverUserLogin" from-field="parameters.userLogin"/>		        	
-					<call-service service-name="createTaxInvoice" include-user-login="true" in-map-name="createTaxInvoiceMap">
-						<results-to-map map-name="taxInvoice"/>
-					</call-service>
-				</if-not-empty> 
-			</iterate>	      
+       	    <!-- accounting optional if enable acctg then do child invoice  -->
+       	    <set field="checkEnableAccountingCtx.userLogin" from-field="userLogin"/>
+       	     <set field="checkEnableAccountingCtx.invoiceId" from-field="parameters.invoiceId"/>	 
+       	    <call-service service-name="checkEnableAccounting" in-map-name="checkEnableAccountingCtx">
+       	       <result-to-field result-name="conditionReply" field="isEnableAccounting"/>
+       	    </call-service>
+       	    <if-compare operator="equals" value="TRUE" field="isEnableAccounting" type="Boolean">
+	        	<iterate entry="invoiceItem" list="invoiceItemList">
+		        	<if-not-empty field="invoiceItem.taxAuthPartyId">
+		        		<set field="createTaxInvoiceMap.userLogin" from-field="userLogin"/>	        		
+						<set field="createTaxInvoiceMap.taxAuthPartyId" from-field="invoiceItem.taxAuthPartyId"/>
+			       		<set field="createTaxInvoiceMap.invoiceId" from-field="parameters.invoiceId"/>
+			        	<set field="createTaxInvoiceMap.invoiceItemTypeId" from-field="invoiceItem.invoiceItemTypeId"/>
+			         	<set field="createTaxInvoiceMap.invoiceItemSeqId" from-field="invoiceItem.invoiceItemSeqId"/>        
+			        	<set field="createTaxInvoiceMap.amount" from-field="invoiceItem.amount"/>
+			       	    <set field="createTaxInvoiceMap.quantity" from-field="invoiceItem.quantity" type="String"/>
+			        	<set field="createTaxInvoiceMap.currencyUomId" from-field="invoiceMap.currencyUomId"/>
+			        	<set field="createTaxInvoiceMap.approverUserLogin" from-field="parameters.userLogin"/>		        	
+						<call-service service-name="createTaxInvoice" include-user-login="true" in-map-name="createTaxInvoiceMap">
+							<results-to-map map-name="taxInvoice"/>
+						</call-service>
+					</if-not-empty> 
+				</iterate>
+			</if-compare>	      
     	</if-compare>    	
         <entity-one entity-name="Invoice" value-field="invoice"/>
         <field-to-result field="invoice.statusId" result-name="oldStatusId"/>
