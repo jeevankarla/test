@@ -75,7 +75,7 @@ under the License.
     	formName=document.forms['listBooths'];    	
 		var hiddenBoothId = document.createElement("input");
 	    hiddenBoothId.setAttribute("type", "hidden");
-	    hiddenBoothId.setAttribute("name", "boothIds");	   
+	    hiddenBoothId.setAttribute("name", "boothIds");
 	  	hiddenBoothId.setAttribute("value", currentEle.parent().siblings(":nth-child(1)").text());	  	
 	    formName.appendChild(hiddenBoothId);
 	    formName.submit();   
@@ -104,7 +104,8 @@ under the License.
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>Retailer</td>
+          <td>Retailer Code</td>
+          <td>Retailer Name</td>
           <td>${uiLabelMap.Route}</td>
             <td>PaymentMethodType</td>
           <td>${uiLabelMap.DueAmount}</td>
@@ -114,9 +115,11 @@ under the License.
       </thead>
       <tbody>
         <#assign alt_row = false>
-        <#list boothPaymentsList as payment>          
+        <#list boothPaymentsList as payment>
+        	<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : payment.facilityId}, false)>          
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
               <td>${(payment.facilityId)?if_exists}</td>
+              <td>${facilityDetails.get('facilityName')?if_exists}</td>
               <td>               
                 ${(payment.routeId)?if_exists}
               </td>
