@@ -277,7 +277,13 @@
             collapsedGroups[groupingValue] = true;
             refresh();
         }
-
+        function collapseAllGroups() {
+        	beginUpdate();
+            for (var i = 0; i < getGroups().length; i++) {
+                collapseGroup(getGroups()[i].value);
+            }
+           endUpdate();
+        }
         function expandGroup(groupingValue) {
             delete collapsedGroups[groupingValue];
             refresh();
@@ -502,6 +508,7 @@
             "groupBy":          groupBy,
             "setAggregators":   setAggregators,
             "collapseGroup":    collapseGroup,
+            "collapseAllGroups":   collapseAllGroups,
             "expandGroup":      expandGroup,
             "getGroups":        getGroups,
             "getIdxById":       getIdxById,
