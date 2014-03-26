@@ -49,6 +49,7 @@ import javolution.util.FastSet;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
@@ -225,6 +226,7 @@ public class WebToolsServices {
         String maintainTimeStamps = (String) context.get("maintainTimeStamps");
         String createDummyFks = (String) context.get("createDummyFks");
         boolean deleteFiles = (String) context.get("deleteFiles") != null;
+        Boolean recursive = (Boolean) context.get("recursiveImport");
         String checkDataOnly = (String) context.get("checkDataOnly");
 
         Integer txTimeout = (Integer)context.get("txTimeout");
@@ -244,11 +246,23 @@ public class WebToolsServices {
             if (baseDir.isDirectory() && baseDir.canRead()) {
                 File[] fileArray = baseDir.listFiles();
                 FastList<File> files = FastList.newInstance();
-                for (File file: fileArray) {
-                    if (file.getName().toUpperCase().endsWith("XML")) {
-                        files.add(file);
-                    }
+                if(UtilValidate.isNotEmpty(recursive)){
+                   try{
+                	   List<File> resourceFiles = FileUtil.findXmlFiles(path, null, null, null);
+                       files.addAll(resourceFiles);
+                   }catch (Exception e) {
+					// TODO: handle exception
+                	   messages.add(UtilProperties.getMessage(resource, "EntityImportFailedFile", UtilMisc.toMap("fileName",files), locale)); 
+				}
+                
+                }else{
+                	 for (File file: fileArray) {
+                         if (file.getName().toUpperCase().endsWith("XML")) {
+                             files.add(file);
+                         }
+                     }
                 }
+               
 
                 int passes=0;
                 int initialListSize = files.size();
@@ -270,7 +284,11 @@ public class WebToolsServices {
                             URL furl = f.toURI().toURL();
                             parseEntityXmlFileArgs.put("url", furl);
                             Map<String, Object> outputMap = dispatcher.runSync("parseEntityXmlFile", parseEntityXmlFileArgs);
+                            
                             Long numberRead = (Long) outputMap.get("rowProcessed");
+                            if (ServiceUtil.isError(outputMap)) {
+                                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "WebtoolsErrrorParsingFile", UtilMisc.toMap("errorString", ServiceUtil.getErrorMessage(outputMap)), locale));
+                            }
                             messages.add(UtilProperties.getMessage(resource, "EntityImportNumberOfEntityToBeProcessed", UtilMisc.toMap("numberRead", numberRead.toString(), "fileName", f.getName()), locale));
                             if (deleteFiles) {
                                 messages.add(UtilProperties.getMessage(resource, "EntityImportDeletFile", UtilMisc.toMap("fileName", f.getName()), locale));

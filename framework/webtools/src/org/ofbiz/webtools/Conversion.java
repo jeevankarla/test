@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -36,8 +37,18 @@ import com.linuxense.javadbf.*;
 
 import javolution.util.FastMap;
 import in.vasista.vbiz.datapop.SlurpCSV;
+import jxl.*; 
+import jxl.demo.CSV;
+import java.util.Iterator;
+
 
 public class Conversion {
+	final static private String IN_DATA_DIR = "vasistautils/datapop/data/csv";
+	final static private String OUT_DATA_DIR = "/vasistautils/datapop/data/xml";
+	final static private String OUT_DATA_DIR_UPLOAD = "vasistautils/datapop/data/xml";
+	final static private String TEMP_FOLDER = "/runtime/tmp";
+	final static private String TEMP_FOLDER_CSV = "/runtime/tmp/csv";
+	final static private String TEMP_FOLDER_XML = "/runtime/tmp/xml";
 	
 	public static final String module = Conversion.class.getName();
 	public static String curDir = System.getProperty("user.dir"); 
@@ -198,7 +209,9 @@ public class Conversion {
 	                  tmpF.delete();	                  
 	              }
 	          }
-		}	
+		}else{
+			dir.delete();
+		}
 	}	
 	public static String uploadDbfFile(HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -504,5 +517,137 @@ public class Conversion {
 		return "success";
 		// Uploading the file content - End
 	}
+	
+	public static String importExcelEntityData(HttpServletRequest request, HttpServletResponse response)  throws Exception{
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		String errorMessage ="";  
+		Map paramMap = UtilHttp.getParameterMap(request);
+		
+		String tmpUploadRepository = UtilProperties.getPropertyValue(
+				"general.properties", "http.upload.tmprepository",
+				"runtime/tmp");
+		ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(
+				10240, new File(tmpUploadRepository))); // Creation of
+														// servletfileupload
+
+		java.util.List lst = null;
+		File dir=new File(curDir + "/"+ tmpUploadRepository);
+		
+		String file_name = "";
+		try {
+			lst = UtilGenerics.checkList(fu.parseRequest(request));
+		} catch (FileUploadException fup_ex) {
+			fup_ex.printStackTrace();
+			errorMessage = "Attachement not found";
+			Debug.logError(errorMessage+fup_ex, module);			
+			request.setAttribute("_ERROR_MESSAGE_",errorMessage);
+			return "error";
+		}
+		String fileName ="";
+		FileItem file_item = null;
+		FileItem selected_file_item = null;
+
+		// Checking for form fields - Start
+		for (int i = 0; i < lst.size(); i++) {
+			file_item = (FileItem) lst.get(i);
+			String fieldName = file_item.getFieldName();
+			// Check for the attributes for user selected file - Start
+			if (fieldName.equals("uploadedFile")) {
+				selected_file_item = file_item;
+				file_name = tmpUploadRepository + "/" + file_item.getName(); // Getting
+																				// the
+																				// file
+																				// name
+				break;
+			}
+			// Check for the attributes for user selected file - End
+		}
+		// Checking for form fields - End
+
+		// Uploading the file content - Start
+		if (selected_file_item == null) // If selected file item is null
+		{
+			errorMessage = "Attachement not found";
+			Debug.logError(errorMessage, module);
+			request.setAttribute("_ERROR_MESSAGE_",errorMessage);
+			return "error";
+		}
+
+		byte[] file_bytes = selected_file_item.get();
+		byte[] extract_bytes = new byte[file_bytes.length];
+
+		for (int l = 0; l < file_bytes.length; l++) {
+			extract_bytes[l] = file_bytes[l];
+		}
+
+		if (extract_bytes == null) {
+			errorMessage = "AttachementException";
+			Debug.logError(errorMessage, module);
+			request.setAttribute("_ERROR_MESSAGE_",errorMessage);
+			return "error";
+            	
+		}
+		// Creation & writing to the file in server - Start
+		FileOutputStream fout=null;
+		File fileCsv = new File(tmpUploadRepository + "/" +"excelToCsv.csv");
+		FileOutputStream csvOut = new FileOutputStream(fileCsv);
+		
+		try {
+			fout = new FileOutputStream(file_name);
+			fout.flush();
+			fout.write(extract_bytes);
+			
+			Workbook workbook = Workbook.getWorkbook(new File(file_name));
+			new ExcelToCSV(workbook,csvOut,null,false,IN_DATA_DIR);
+			csvOut.flush();
+			csvOut.close();
+			
+		} catch (IOException ioe_ex) {
+			Debug.logInfo(ioe_ex.getMessage(), module);			
+			request.setAttribute("_ERROR_MESSAGE_",ioe_ex.getMessage());
+			return "error";
+		} 
+		finally{
+			fout.flush();
+			fout.close();
+			csvOut.flush();
+			csvOut.close();
+		}
+		SlurpCSV.processFiles(IN_DATA_DIR, OUT_DATA_DIR);
+		Map entityImportDirMap = FastMap.newInstance();
+		Map resultMap = FastMap.newInstance();
+		entityImportDirMap.put("userLogin", userLogin);
+		entityImportDirMap.put("path", OUT_DATA_DIR_UPLOAD);
+		entityImportDirMap.put("recursiveImport", Boolean.TRUE);
+		try{
+			resultMap = dispatcher.runSync("entityImportDir",entityImportDirMap);
+		    if(ServiceUtil.isError(resultMap)){
+		    	emptyTmpDir(fileCsv);
+			    emptyTmpDir(new File(file_name));
+			    emptyTmpDir(new File(OUT_DATA_DIR_UPLOAD));
+			    emptyTmpDir(new File(IN_DATA_DIR));
+					String resultMsg = (String)resultMap.get("errorMessage");
+					request.setAttribute("_ERROR_MESSAGE_", resultMsg);
+					return "error";
+				}
+		    //empty all directories 
+		    emptyTmpDir(fileCsv);
+		    emptyTmpDir(new File(file_name));
+		    emptyTmpDir(new File(OUT_DATA_DIR_UPLOAD));
+		    emptyTmpDir(new File(IN_DATA_DIR));
+		    
+			}catch (GenericServiceException e) {
+				Debug.logError("Error while coverting mpMas To sql "+e, module);
+				request.setAttribute("_ERROR_MESSAGE_","Error while coverting mpMas To sql :"+e.getMessage());
+				return "error";
+			}
+		//fileName = file_name.replace(tmpUploadRepository+"/" ,"");
+		//String resultMsg = (String)resultMap.get("messages"); 
+		request.setAttribute("_EVENT_MESSAGE_", (resultMap.get("messages")).toString());
+		return "success";
+	}//End of the service
 	
 }
