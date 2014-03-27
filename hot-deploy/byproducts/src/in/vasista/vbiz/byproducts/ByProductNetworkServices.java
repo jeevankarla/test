@@ -2636,6 +2636,8 @@ public class ByProductNetworkServices {
 		    	Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");
 		    	String boothCategory = (String)context.get("boothCategory");
 		    	String facilityId = (String)context.get("facilityId");
+		    	List<String> facilityIdsList = FastList.newInstance();//tat means all  booths or Routes
+		       
 		    	Map boothRouteIdsMap =FastMap.newInstance(); 
 		    	
 		    	if(UtilValidate.isEmpty(effectiveDate)){
@@ -2650,16 +2652,25 @@ public class ByProductNetworkServices {
 			    	if(UtilValidate.isNotEmpty(facilityDetail)){
 			    	facilityTypeId= facilityDetail.getString("facilityTypeId");
 			    	}
-			    	
-		    		if(UtilValidate.isNotEmpty(boothCategory)){
+			    	if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){
+			    		 facilityIdsList = (List)context.get("facilityIdsList");//tat means all  booths or Routes
+			    	}
+			    	if(UtilValidate.isNotEmpty(facilityId)){
+			    		facilityIdsList.add(facilityId);
+			    	}
+			    	if(UtilValidate.isNotEmpty(boothCategory)){
 		    			condList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS ,boothCategory));
+		    		}
+			    	
+		    		if(UtilValidate.isNotEmpty((String)context.get("facilityTypeId"))){//if context type is Not empty consider tat only
+		    			facilityTypeId=(String)context.get("facilityTypeId");
 		    		}
 		        	condList.add(EntityCondition.makeCondition("facilityGroupTypeId", EntityOperator.EQUALS ,"RT_BOOTH_GROUP"));
 		        	if((UtilValidate.isNotEmpty(facilityTypeId))&& facilityTypeId.equals("BOOTH")){
-		        		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS ,facilityId));
+		        		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,facilityIdsList));
 		        	}
 		        	if((UtilValidate.isNotEmpty(facilityTypeId))&& facilityTypeId.equals("ROUTE")){
-		        		condList.add(EntityCondition.makeCondition("ownerFacilityId", EntityOperator.EQUALS ,facilityId));
+		        		condList.add(EntityCondition.makeCondition("ownerFacilityId", EntityOperator.IN ,facilityIdsList));
 		        	}
 		        	
 		        	EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
@@ -2951,6 +2962,60 @@ public class ByProductNetworkServices {
 			
 			return shipments;
 		}    
+		public static List getShipmentIdsSupplyType(Delegator delegator,Timestamp fromDate, Timestamp thruDate,String supplyTypeId){
+			//TO DO:for now getting one shipment id  we need to get pm and am shipment id irrespective of Shipment type Id
+			List conditionList= FastList.newInstance();
+			List shipmentList =FastList.newInstance();
+			List shipments = FastList.newInstance();
+			Timestamp dayBegin = UtilDateTime.getDayStart(fromDate);
+			Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);		
+			if(UtilValidate.isNotEmpty(supplyTypeId) && ("AM".equals(supplyTypeId))){
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.IN , UtilMisc.toList("AM_SHIPMENT","AM_SHIPMENT_SUPPL")));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+				try {
+					shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
+				}catch (Exception e) {
+					Debug.logError(e, "Unable to get shipment list: ", module);		   
+				}
+				if(!UtilValidate.isEmpty(shipmentList)){
+					shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
+				}
+			}
+			else if(UtilValidate.isNotEmpty(supplyTypeId) && ("PM".equals(supplyTypeId))){
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.IN , UtilMisc.toList("PM_SHIPMENT","PM_SHIPMENT_SUPPL")));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO , dayEnd));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+				try {
+					shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
+				}catch (Exception e) {
+					Debug.logError(e, "Unable to get shipment list: ", module);		   
+				}
+				if(!UtilValidate.isEmpty(shipmentList)){
+					shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
+				}
+			}else{
+				conditionList.clear();
+				//conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS , shipmentTypeId));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+				try {
+					shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
+				}catch (Exception e) {
+					Debug.logError(e, "Unable to get shipment list: ", module);		  	   
+				}			
+				shipments = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false);	
+			}
+			return shipments;
+		} 
+	 
 	    
 	    /**
 	     * Get all routes
@@ -3030,7 +3095,7 @@ public class ByProductNetworkServices {
 	        String paymentDate = (String) context.get("paymentDate");
 	        Timestamp fromDate = UtilDateTime.nowTimestamp();
 	        Timestamp thruDate = UtilDateTime.nowTimestamp();
-	        List facilityIdsList=FastList.newInstance();
+	        List facilityIdsList=(List)context.get("facilityIdsList");
 	        Map boothRouteIdsMap = FastMap.newInstance();
 	        
 	        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
@@ -3043,11 +3108,22 @@ public class ByProductNetworkServices {
 	        	boothsPaymentsDetail = getCurrentDuesBoothPaidPayments( dctx , context);
 	        	return boothsPaymentsDetail;
 	        }
-	        Map boothRouteResultMap =getBoothsRouteMap(delegator,UtilMisc.toMap("facilityId",facilityId,"effectiveDate",fromDate));
+	         Map boothRtInMap=UtilMisc.toMap("facilityId",facilityId);
+	         boothRtInMap.put("facilityIdsList",facilityIdsList);
+	         if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){//if not Empty Consider them only
+	        	 boothRtInMap.put("facilityTypeId","BOOTH");
+			 }
+	        boothRtInMap.put("effectiveDate",fromDate);
+	        
+	        Map boothRouteResultMap =getBoothsRouteMap(delegator,boothRtInMap);
 			facilityIdsList=(List)boothRouteResultMap.get("boothIdsList");
 			//get All booths RouteIds
+		
 			if(UtilValidate.isNotEmpty(boothRouteResultMap)){
 				boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
+			}
+			if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){//if not Empty Consider tehm only
+				facilityIdsList=(List)context.get("facilityIdsList");
 			}
 			Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
 			if(paymentDate != null) {
@@ -3166,6 +3242,7 @@ public class ByProductNetworkServices {
 			boothsPaymentsDetail.put("invoicesTotalAmount", invoicesTotalAmount);
 			boothsPaymentsDetail.put("boothPaymentsList", tempPaymentsList);
 			boothsPaymentsDetail.put("paymentsList", paymentsList);
+			boothsPaymentsDetail.put("boothRouteIdsMap", boothRouteIdsMap);//for reporting purpose (boothId,routeId) for which route tat booth belongsto
 			return boothsPaymentsDetail;   
 	    }
 	    public static Map<String, Object> absenteeOverrideForBooth(DispatchContext dctx, Map<String, Object> context){
@@ -3660,7 +3737,7 @@ public class ByProductNetworkServices {
 			boothsPaymentsDetail.put("invoicesTotalAmount", invoicesTotalAmount);
 			boothsPaymentsDetail.put("invoicesTotalDueAmount", invoicesTotalDueAmount);
 			boothsPaymentsDetail.put("boothPaymentsUnRoundedList", boothPaymentsList);		
-			boothsPaymentsDetail.put("boothPaymentsList", tempPaymentsList);		
+			boothsPaymentsDetail.put("boothPaymentsList", tempPaymentsList);	
 			return boothsPaymentsDetail;
 		}
 	    /**
