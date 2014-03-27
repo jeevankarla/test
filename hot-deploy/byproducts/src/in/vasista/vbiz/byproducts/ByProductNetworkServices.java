@@ -5196,7 +5196,10 @@ public class ByProductNetworkServices {
 	        Locale locale = (Locale) context.get("locale");     
 	        String paymentMethodType = (String) context.get("paymentMethodTypeId");
 	        String paymentLocationId = (String) context.get("paymentLocationId");                
-	        String paymentRefNum = (String) context.get("paymentRefNum");
+	        String paymentRefNum = (String) context.get("paymentRefNum"); 
+            String issuingAuthority = (String) context.get("issuingAuthority");
+            String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
+            Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
 	        boolean useFifo = Boolean.FALSE;       
 	        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
 	        	useFifo = (Boolean)context.get("useFifo");
@@ -5345,12 +5348,16 @@ public class ByProductNetworkServices {
 	            if (!UtilValidate.isEmpty(paymentRefNum) ) {
 	                paymentCtx.put("paymentRefNum", paymentRefNum);                        	
 	            }
+	            paymentCtx.put("issuingAuthority", issuingAuthority);  
+	            paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
+	            paymentCtx.put("instrumentDate", instrumentDate);
+	            
 	            paymentCtx.put("statusId", "PMNT_RECEIVED");
 	            paymentCtx.put("isEnableAcctg", "N");
 	            paymentCtx.put("amount", paymentAmount);
 	            paymentCtx.put("userLogin", userLogin); 
 	            paymentCtx.put("invoices", invoiceIds);
-	    		
+	            
 	            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
 	            if (ServiceUtil.isError(paymentResult)) {
 	            	Debug.logError(paymentResult.toString(), module);
