@@ -4,7 +4,7 @@
 		<fo:simple-page-master master-name="main" page-height="8.27in"  page-width="11.29in" 
 		 margin-top="0.3in" margin-bottom=".3in" 
 		 margin-left=".3in" margin-right=".3in">
-			<fo:region-body margin-top="1.59in" />
+			<fo:region-body margin-top="2.1in" />
 			<fo:region-before extent="1in" />
 			<fo:region-after extent="1in" />
 		</fo:simple-page-master>
@@ -57,10 +57,12 @@
 							</fo:table-cell>
 						</fo:table-row>-->
 						<fo:table-row>
-		                    <fo:table-cell>
+		                    <fo:table-cell border-style="hidden">
+		                    	<fo:block-container position="absolute">
 		                      <fo:block font-size="14pt" keep-together="always">
 		                        ${screens.render("component://order/widget/ordermgr/OrderPrintScreens.xml#CompanyLogo")}
 		                      </fo:block>
+		                      </fo:block-container>
 		                    </fo:table-cell>
 		                    <fo:table-cell>
 		                    <fo:block text-align="center" white-space-collapse="false"
@@ -77,10 +79,43 @@
 		                      </fo:block>
 		                    </fo:table-cell>
 				       </fo:table-row>
-				       
+				        <fo:table-row>
+		                    <fo:table-cell>
+		                      <fo:block font-size="14pt" keep-together="always" color="blue">&#160;
+		                      </fo:block>
+		                    </fo:table-cell>
+		                    <fo:table-cell>
+		                    <fo:block font-size="14pt" keep-together="always" color="blue">&#160;
+		                      </fo:block>
+		                    </fo:table-cell>
+				       </fo:table-row>
+				        <fo:table-row>
+		                    <fo:table-cell>
+		                      <fo:block font-size="14pt" keep-together="always" color="blue">&#160;
+		                      </fo:block>
+		                    </fo:table-cell>
+		                    <fo:table-cell>
+		                    <fo:block font-size="14pt" keep-together="always" color="blue">&#160;
+		                      </fo:block>
+		                    </fo:table-cell>
+				       </fo:table-row>
+				         <fo:table-row>
+		                    <fo:table-cell>
+		                      <fo:block font-size="14pt" keep-together="always" color="blue">&#160;
+		                      </fo:block>
+		                    </fo:table-cell>
+		                    <fo:table-cell>
+		                    <fo:block font-size="14pt" keep-together="always" color="blue">&#160;
+		                      </fo:block>
+		                    </fo:table-cell>
+				       </fo:table-row>
+				        <fo:table-row>
+		                    <fo:table-cell number-columns-spanned="3">
+		                    <fo:block text-align="left"  font-size="10pt" >&#160;    &#160;    &#160;${uiLabelMap.AccountingTimePeriod}   : ${(customTimePeriod.fromDate)!}  ${uiLabelMap.CommonTo}  ${(customTimePeriod.thruDate)!}</fo:block>
+		                   </fo:table-cell>
+				       </fo:table-row>
 					</fo:table-body>
 				</fo:table>
-				<fo:block text-align="left"  font-size="10pt" >&#160;    &#160;    &#160;${uiLabelMap.AccountingTimePeriod}   : ${(customTimePeriod.fromDate)!}  ${uiLabelMap.CommonTo}  ${(customTimePeriod.thruDate)!}</fo:block>
 			</fo:block>
 			<fo:block>
 				<fo:table table-layout="fixed" width="120%" space-before="0.2in"
