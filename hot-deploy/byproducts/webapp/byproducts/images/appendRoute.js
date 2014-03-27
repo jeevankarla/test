@@ -19,6 +19,7 @@
         
       
     }
+	
 	// finalize orders calling another  Javscript
 	function finalizeFormSubmit(existingUrl) {
 	      
@@ -43,3 +44,16 @@
                 finalizeNetSales.append("<input type='hidden' name='routeId' value='"+facilityId+"'/>");
                 finalizeNetSales.submit();
     }
+	
+	function appendBillingParam(existingUrl){
+		//alert(existingUrl);
+		var updatedUrl = $(existingUrl).attr('href');
+		var domObj = $(existingUrl).parent().parent();
+		
+		var periodBillingDOM = $(domObj).find( "[name='"+"periodBillingId"+"']");
+		//alert($(periodBillingDOM).val());
+		var periodBillingId = $(periodBillingDOM).val();
+		
+		var resultUrl = updatedUrl + "&periodBillingId="+periodBillingId;
+        $('a[href="'+$(existingUrl).attr('href')+'"]').attr('href', resultUrl);
+	}

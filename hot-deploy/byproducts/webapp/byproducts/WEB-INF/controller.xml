@@ -137,6 +137,11 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DueParticularsTXT"/>
     </request-map>
+    <request-map uri="instBillOfSaleReport.txt">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="InstBillOfSaleReportTXT"/>
+    </request-map>
+    
     
     <request-map uri="specialOrderSuppliedDetails.pdf">
     	<security https="true" auth="true"/>
@@ -717,7 +722,7 @@
     <view-map name="BankRemittanceStatementTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#BankRemittanceStatementTXT" content-type="text/plain"/>
     <view-map name="ByProdReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#ByProdReports"/>
    
-    
+    <view-map name="InstBillOfSaleReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InstBillOfSaleReportTXT" content-type="application/pdf"/>
     <!-- NG View Mappings -->
   
     <view-map name="TruckSheetMotherDairy" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheet"/>

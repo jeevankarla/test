@@ -772,13 +772,11 @@
                 <list-options list-name="facilityBillingList" key-name="periodBillingId" description="${facilityId}"/>
             </drop-down>
         </field>
-        <field name="report" widget-style="buttontext" id-name="routeAbstract">
-            <!-- <hyperlink target="report.txt" description="report" target-window="_blank" >
-                <parameter param-name="facilityId" from-field="facilityId"/> 
-               	  <parameter param-name="date" from-field="date"/>
-               	  <parameter param-name="reportTypeFlag" value="abstract"/>                                                   
-            </hyperlink> -->
-            <display/>
+        <field name="billOfSale" title="Bill of Sale" widget-style="buttontext" id-name="billOfSale" event="onclick" action="javascript:appendBillingParam(this);">
+            <hyperlink target="instBillOfSaleReport.txt" description="Report" target-window="_blank" >
+                <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+               	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
+            </hyperlink>
         </field>
         <field name="cancelBilling" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target-type="plain" target="javascript:showCancelBilling('${customTimePeriodId}', '${periodTypeId}', '${facilityBillingList}');" description="${uiLabelMap.CommonCancel}">
