@@ -312,7 +312,10 @@
             </link>
        </menu-item>       
         <menu-item name="AbsenteeList" title="${uiLabelMap.AbsenteeOverride}">
-            <link target="AbsenteeList"/>
+            <link target="AbsenteeList">
+            	<parameter param-name="shipListType" value="absenteeList"/>
+            </link>
+            
         </menu-item> 
      
       <!--   <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
@@ -384,7 +387,20 @@
             	<parameter param-name="returnId" from-field="parameters.returnId"/>
             </link>
         </menu-item>
-     </menu>      
+     </menu>
+     <menu name="AbsenteeOverrideTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
+          <menu-item name="AbsenteeList" title="${uiLabelMap.AbsenteeList}">
+            <link target="AbsenteeList">
+            	<parameter param-name="shipListType" value="absenteeList"/>
+            </link>
+          </menu-item>
+          <menu-item name="OverrideList" title="${uiLabelMap.OverrideList}">
+            <link target="AbsenteeOverride">
+            	<parameter param-name="shipListType" value="overrideList"/>
+            </link>            
+          </menu-item>         
+    </menu>      
      <menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="channelSalesChart" title="Sales Mix Trend">
         	<condition>

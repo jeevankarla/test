@@ -80,7 +80,7 @@ public class ByProductServices {
     static {
         decimals = 2;//UtilNumber.getBigDecimalScale("order.decimals");
         rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
-
+	
         // set zero to the proper scale
         if (decimals != -1) ZERO = ZERO.setScale(decimals);
     }
@@ -225,8 +225,31 @@ public class ByProductServices {
 			return ServiceUtil.returnError("Failed to Generate TruckSheet ,Cannot parse date string:" + e);
 			// effectiveDate = UtilDateTime.nowTimestamp();
 		}
+		boolean enableStopShip = Boolean.TRUE;
+		List stopShipList = FastList.newInstance();
+		 try{
+			 GenericValue tenantConfigEnableStopShip = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableStopShip"), true);
+			 if (UtilValidate.isNotEmpty(tenantConfigEnableStopShip) && (tenantConfigEnableStopShip.getString("propertyValue")).equals("N")) {
+				 enableStopShip = Boolean.FALSE;
+				}
+		 }catch (GenericEntityException e) {
+			// TODO: handle exception
+			 Debug.logError(e, module);             
+		}
+		if(enableStopShip){
+			 Map<String,  Object> stopShipCtx = FastMap.newInstance();
+		     stopShipCtx.putAll(context);
+		     stopShipCtx.put("supplyDate", estimatedDeliveryDate);
+		     Map  boothPaymentsMap = ByProductNetworkServices.getStopShipList(dctx ,stopShipCtx);
+		     List stopList =(List)boothPaymentsMap.get("boothList");       
+		     HashSet stopShipSet = new HashSet(stopList);
+		     Debug.logImportant("stopShipList ======"+stopList, "");
+		     stopShipList = UtilMisc.toList(stopShipSet);
+		 } 
 		List creditInstList= (List)ByProductNetworkServices.getAllBooths(delegator, "CR_INST").get("boothsList");
 		List<GenericValue> facilityCustomTimePeriod = FastList.newInstance();
+		
+		
 		List dailyBillingFacility = FastList.newInstance();
 		try{
 			facilityCustomTimePeriod = delegator.findList("FacilityCustomBilling", EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "INST_DAILY_BILL"), null, null, null, false);
@@ -260,6 +283,7 @@ public class ByProductServices {
         	
         	List conditionList = UtilMisc.toList(
     			EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, estimatedDeliveryDate));
+        	
             conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
             		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, estimatedDeliveryDate)));
             conditionList.add(EntityCondition.makeCondition("quantity", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
@@ -400,11 +424,12 @@ public class ByProductServices {
 	        	runSACOContext.put("facilityGroupId", facilityGroupId);
 	        	runSACOContext.put("subscriptionTypeId", subscriptionTypeId);
 	        	runSACOContext.put("excludeInvoiceForFacilityIds", exclInvoiceFacilityIdsList);
+	        	runSACOContext.put("stopShipList", stopShipList);
 	            dispatcher.runAsync("runSubscriptionAutoCreateByprodOrders", runSACOContext);
 	        } catch (GenericServiceException e) {
 	            Debug.logError(e, "Error calling runSubscriptionAutoCreateOrders service", module);
 	            return ServiceUtil.returnError(e.getMessage());
-	        }
+	        }  
 	      	int day=UtilDateTime.getDayOfMonth(estimatedDeliveryDate,TimeZone.getDefault(),Locale.getDefault());
 	        if(day==05){
 	        try{
@@ -441,6 +466,7 @@ public class ByProductServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         List<GenericValue> subscriptionList=FastList.newInstance();
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        List stopShipList = (List)context.get("stopShipList");
         Timestamp estimatedDeliveryDate = (Timestamp) context.get("estimatedDeliveryDate");
         List shipmentIds = (List) context.get("shipmentIds");
         List excludeInvoiceForFacilityIds = (List) context.get("excludeInvoiceForFacilityIds");
@@ -486,7 +512,9 @@ public class ByProductServices {
                if(UtilValidate.isNotEmpty(tripId)){
               		conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
                }
-              
+               if(UtilValidate.isNotEmpty(stopShipList)){
+            	   conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, stopShipList));
+           	   }
               	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
                List<String> orderBy = UtilMisc.toList("subscriptionId", "productSubscriptionTypeId","-productId"); 
            	subscriptionProductsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, orderBy, null, false);
@@ -1408,7 +1436,7 @@ public class ByProductServices {
 					} catch (GenericServiceException e) {
 						 Debug.logError("Error in cancel Shipment"+e, module);
 				    	 return ServiceUtil.returnError("Error in cancel Shipment"); 
-	
+        
 					}
 		       }
 	        }catch (Exception e) {

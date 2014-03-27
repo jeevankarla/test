@@ -57,7 +57,22 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AbsenteeList"/>
     </request-map>
-
+	<request-map uri="AbsenteeOverride">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="AbsenteeOverride"/>    	
+    </request-map>
+    <request-map uri="absenteeOverrideForBooth">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="absenteeOverrideForBooth"/>   	
+    	<response name="success" type="view" value="AbsenteeOverride"/>
+    	<response name="error" type="view" value="AbsenteeOverride"/>       	
+    </request-map>
+    <request-map uri="removeAbsenteeOverride">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="removeAbsenteeOverride"/>   	
+    	<response name="success" type="view" value="AbsenteeOverride"/>
+    	<response name="error" type="view" value="AbsenteeOverride"/>       	
+    </request-map>
     <request-map uri="ConfigChange">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="ConfigChange"/>    	
@@ -727,6 +742,7 @@
 	<view-map name="DispatchReconciliation" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DispatchReconciliation"/>
 	<view-map name="GatePassShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#GatePassShipment"/>
 	<view-map name="AbsenteeList" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AbsenteeList"/>
+	<view-map name="AbsenteeOverride" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AbsenteeOverride"/>
 	<view-map name="ReturnCrates" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnCrates"/>
 	<view-map name="CreditInstitutionBilling" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#CreditInstitutionBilling"/>
 	<view-map name="InstBillingPeriodSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InstBillingPeriodSearch"/>

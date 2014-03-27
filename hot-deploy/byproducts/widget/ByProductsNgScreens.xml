@@ -427,7 +427,8 @@
 		<section>
 			<actions>
                <set field="titleProperty" value="AbsenteeList"/>	            
-               <set field="tabButtonItem" value="AbsenteeList"/>            
+               <set field="tabButtonItem" value="AbsenteeList"/>
+               <set field="subTabButtonItem" value="AbsenteeList"/>            
                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
@@ -438,10 +439,13 @@
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
                <set field="layoutSettings.javaScripts[]" value="/byproducts/images/dispatchReconcilAjaxSubmit.js" global="true"/> -->
+               <set field="supplyDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" type="Timestamp"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getAbsenteeOverride.groovy" />
 			</actions>
 			<widgets>
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                    	<include-menu name="AbsenteeOverrideTabBar"	location="component://byproducts/widget/ByProductsMenus.xml"/>
                    		<section>
                    			<condition>
 	               				<or>
@@ -450,15 +454,110 @@
 	                   			</or>
            				 	</condition>
                       		<widgets>
-                           		<label style="h3">Coming Soon ...!</label>                      
-                           	</widgets>
-                    	</section>  							  	
+                           		<!-- <label style="h3">Coming Soon ...!</label> -->
+                        		        <screenlet title="${uiLabelMap.CommonSearchOptions}">				
+									        <include-form name="FindAbsenteeBooths" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								        </screenlet>
+							  	        <screenlet>				
+							  	        	<link target="stopShipList.csv" text="Export As CSV" style="buttontext create" >
+							  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+												<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+											</link>		
+										    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>							  	        														
+									        <include-form name="ListAbsenteeBooths" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								        </screenlet>
+								    </widgets> 
+						</section>  							  	
 					</decorator-section>	
 				</decorator-screen>
 			</widgets>
 		</section>
 	</screen>
-	
+	<screen name="AbsenteeOverride">
+		<section>
+			<actions>
+				<set field="titleProperty" value="PageTitleAbsenteeOverride"/>
+				<set field="tabButtonItem" value="AbsenteeList" />
+				<set field="subTabButtonItem" value="OverrideList" />
+				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+				<set field="supplyDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" type="Timestamp"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getAbsenteeOverride.groovy" />				
+			</actions> 
+			<widgets>
+				<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					<include-menu name="AbsenteeOverrideTabBar"	location="component://byproducts/widget/ByProductsMenus.xml"/>
+						<section>
+							<condition>
+								<and>
+									<or>
+										<if-has-permission permission="CASH" action="_ADMIN"/>
+										<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+									</or>
+									<or>
+										<if-empty field="parameters.shipListType"/>
+										<if-compare operator="equals"  field="parameters.shipListType" value="absenteeList"/>
+									</or>	
+								</and>	
+							</condition>
+							<widgets>
+									   <section>
+									        <widgets>
+									         <screenlet title="Vendor ${uiLabelMap.PaymentSearchResults} :(${invoicesTotalAmount})">				
+											        <include-form name="ListAbsenteeOverride" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+										    </widgets> 
+										   </section>
+									</widgets>
+							<widgets>
+							   <section>
+							        <widgets> 		
+								        <screenlet title="${uiLabelMap.CommonSearchOptions}">				
+									        <include-form name="FindAbsenteeBooths" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								        </screenlet>
+							  	        <screenlet>				
+							  	        	<link target="stopShipList.csv" text="Export As CSV" style="buttontext create" >
+							  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+												<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+											</link>		
+										    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>							  	        														
+									        <include-form name="ListAbsenteeBooths" location="component://byproducts/widget/ByProductsNgForms.xml" />
+								        </screenlet>
+								    </widgets> 
+								   </section>
+							</widgets>
+							<fail-widgets>
+								<section>
+									<condition>
+										<and>
+											<or>
+												<if-has-permission permission="CASH" action="_ADMIN"/>
+												<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+											</or>											
+											<if-compare operator="equals" field="parameters.shipListType" value="overrideList" />																				
+										</and>	
+									</condition>
+									<actions>
+										<set field="subTabButtonItem" value="OverrideList" />
+										<set field="tabButtonItem" value="AbsenteeOverride" />
+									</actions>
+									<widgets>
+									   <section>
+									        <widgets>
+									         <screenlet title="Vendor ${uiLabelMap.PaymentSearchResults} :(${invoicesTotalAmount})">				
+											        <include-form name="ListAbsenteeOverride" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+										    </widgets> 
+										   </section>
+									</widgets>
+								</section>
+							</fail-widgets>
+						</section>						
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="GatePassShipment">
 		<section>
 			<actions>
@@ -1645,6 +1744,8 @@
 				<set field="titleProperty" value="pageTitleFindPayments" />
 				<set field="tabButtonItem" value="PastPayments" />
 				<set field="subTabButtonItem" value="FindPayments" />
+				<set field="statusId" value="${parameters.statusFlag}"/>
+				<set field="hideSearch" value="${parameters.hideSearch}"/>
 				<set field="enablePastPaymentService" value="${groovy:session.getAttribute(&quot;enablePastPaymentService&quot;)}"/>
 				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
 			    <set field="defaultEffectiveDate" 

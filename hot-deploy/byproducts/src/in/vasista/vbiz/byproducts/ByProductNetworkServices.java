@@ -3168,7 +3168,66 @@ public class ByProductNetworkServices {
 			boothsPaymentsDetail.put("paymentsList", paymentsList);
 			return boothsPaymentsDetail;   
 	    }
-	   
+	    public static Map<String, Object> absenteeOverrideForBooth(DispatchContext dctx, Map<String, Object> context){
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String facilityId = (String) context.get("facilityId");
+	        Locale locale = (Locale) context.get("locale");       
+	        Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+	        Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+	        BigDecimal overrideAmount = (BigDecimal) context.get("overrideAmount");
+	        Map<String, Object> result = new HashMap<String, Object>();
+	        Map boothsPaymentsDetail = FastMap.newInstance();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        boothsPaymentsDetail = getBoothPayments(delegator ,dispatcher ,userLogin , UtilDateTime.nowDateString("yyyy-MM-dd"),null ,facilityId ,null ,Boolean.FALSE);        
+	        List boothPaymentsList = (List)boothsPaymentsDetail.get("boothPaymentsList");
+	        if (UtilValidate.isEmpty(boothPaymentsList)) {
+	            Debug.logError("No payment dues found for booth; " + facilityId, module);
+	            return ServiceUtil.returnError("No payment dues found for Booth " + facilityId);			
+			}
+	        GenericValue newEntity = delegator.makeValue("AbsenteeOverride");
+	        newEntity.set("boothId", facilityId);
+	        newEntity.set("supplyDate", new java.sql.Date((new Date().getTime())+(1000 * 60 * 60 * 24)));
+	        newEntity.set("amount", overrideAmount);
+	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+	        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+	        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	        try {
+	            delegator.create(newEntity);            
+	        } catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());            
+	        } 
+	        return result;
+	    }
+	    public static Map<String, Object> removeAbsenteeOverride(DispatchContext dctx, Map<String, Object> context){
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String facilityId = (String) context.get("facilityId");
+	        Locale locale = (Locale) context.get("locale");       
+	        Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+	        Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+	        Map<String, Object> result = new HashMap<String, Object>();
+	        Map boothsPaymentsDetail = FastMap.newInstance();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");        
+	        GenericValue newEntity = delegator.makeValue("AbsenteeOverride");
+	        newEntity.set("boothId", facilityId);
+	        try{
+	         newEntity.set("supplyDate",((new DateTimeConverters.TimestampToSqlDate()).convert(supplyDate)));
+	        }catch(ConversionException e){
+	            Debug.logError(e, module);			
+	            return ServiceUtil.returnError(e.getMessage());        	
+			}       
+	       
+	        try {
+	            delegator.removeValue(newEntity);            
+	        } catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());            
+	        } 
+	        return result;
+	    }
 	    public static Map getCurrentDuesBoothPaidPayments(DispatchContext dctx, Map<String, ? extends Object> context) {
 	        Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -5196,7 +5255,7 @@ public class ByProductNetworkServices {
 	        Locale locale = (Locale) context.get("locale");     
 	        String paymentMethodType = (String) context.get("paymentMethodTypeId");
 	        String paymentLocationId = (String) context.get("paymentLocationId");                
-	        String paymentRefNum = (String) context.get("paymentRefNum"); 
+	        String paymentRefNum = (String) context.get("paymentRefNum");
             String issuingAuthority = (String) context.get("issuingAuthority");
             String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
             Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
@@ -5357,7 +5416,7 @@ public class ByProductNetworkServices {
 	            paymentCtx.put("amount", paymentAmount);
 	            paymentCtx.put("userLogin", userLogin); 
 	            paymentCtx.put("invoices", invoiceIds);
-	            
+	    		
 	            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
 	            if (ServiceUtil.isError(paymentResult)) {
 	            	Debug.logError(paymentResult.toString(), module);
@@ -6248,12 +6307,12 @@ public class ByProductNetworkServices {
  	 		  		  Debug.logError(e, "Problem in getting custom time period", module);	 		  		  
  	 		  		  return ServiceUtil.returnError("Problem in getting custom time period");
  	 		  	  }
- 	 			
+	    
  	 			  if(UtilValidate.isEmpty(custTimePeriodList)){
  	 				  Debug.logError( "There no active cust Time Periods.", module);	 				 
  	 				  return ServiceUtil.returnError("There no active cust Time Periods");
  	 			  }
-				
+	    
 			}catch(Exception e){
 				Debug.logError(e, "Error in getShopeeRentAmount");
 				return ServiceUtil.returnError("Error in getShopeeRentAmount " + e);

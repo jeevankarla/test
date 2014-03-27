@@ -235,6 +235,7 @@
         <attribute name="estimatedDeliveryDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
         <attribute name="facilityGroupId" mode="IN" type="String" optional="true"/>
         <attribute name="shipmentIds" mode="IN" type="List" optional="false"/>
+        <attribute name="stopShipList" mode="IN" type="List" optional="true"/>
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="routeId" mode="IN" type="String" optional="true"/>        
         <attribute name="excludeInvoiceForFacilityIds" mode="IN" type="List" optional="true"/>        
@@ -483,6 +484,17 @@
         <attribute name="boothIds" type="List" mode="IN" optional="false"/>
         <attribute type="List" mode="OUT" name="paymentIds" optional="true"/>
     </service> 
+    <service name="absenteeOverrideForBooth" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="absenteeOverrideForBooth" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="supplyDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="overrideAmount" mode="IN" type="BigDecimal" optional="false"/>
+    </service> 
+    <service name="removeAbsenteeOverride" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="removeAbsenteeOverride" auth="true">
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="supplyDate" mode="IN" type="Timestamp" optional="false"/>
+    </service>
     <service name="createInstConfig" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateInstBillingPeriod">
         <description>create Institution Billing Period</description>

@@ -100,8 +100,8 @@ under the License.
 <#if boothPaymentsList?has_content>
   <form name="cancelPayment" id="cancelPayment"  method="post" action="cancelBoothPayment">
   </form>
-  <form name="listBooths" id="listBooths"  method="post" action="massPrintReceipt">
-    <div align="right">    
+  <form name="listBooths" id="listBooths"  method="post" action="massPrintReceipt" target="_blank">
+    <div align="right">
       <input id="submitButton" type="button"  onclick="javascript:jQuery('#listBooths').submit();" value="Print Receipt"/>
     </div>
 
@@ -137,7 +137,7 @@ under the License.
               </td>
             <#--  <td><a class="buttontext" href="<@ofbizUrl>massPrintReceipt?paymentId=${payment.paymentId}</@ofbizUrl>">Print Receipt</a></td> 
               <td><a class="buttontext" href="javascript:setVoidPaymentParameters();">Cancel</a></td>   -->
-              <td><input id="submitButton" type="button"  onclick="javascript:setPrintPaymentParameters(this);" value="Print Receipt" /></td> 
+              <td><input id="submitButton" type="button"  onclick="javascript:setPrintPaymentParameters(this);" value="Print Receipt"/></td> 
               <td><#if hasPaymentCancelPermission>
               			 <input id="submitButton" type="button"  onclick="javascript:setVoidPaymentParameters(this);" value="Cancel"/></td>   
               	  </#if>                   
