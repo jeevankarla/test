@@ -1042,6 +1042,32 @@
                 		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/> -->                 	 
                 	</condition-list>
                 </entity-condition>
+                 <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+					<condition-list combine="or">
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHALLAN_PAYIN"/>
+                	</condition-list>
+                 	<order-by field-name="-description"/>
+           		</entity-condition>
+                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   
+                 <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+                 </entity-one>
+                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/> 
+                <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+                  <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
+                    </condition-list>                    
+                </entity-condition>
+               <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+                
                 <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/>
             </actions>
             <widgets>
