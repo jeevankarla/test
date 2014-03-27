@@ -6323,22 +6323,18 @@ public class ByProductNetworkServices {
 		          Timestamp newDate=UtilDateTime.getMonthStart(estimatedShipDate);
 		    	  pMonthStart=UtilDateTime.getMonthStart(UtilDateTime.addDaysToTimestamp(newDate, -1));
 		    	  pMonthEnd=UtilDateTime.getMonthEnd(UtilDateTime.addDaysToTimestamp(newDate, -1),TimeZone.getDefault(),Locale.getDefault());
-		          conditionList.clear();
-				  conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,"SALES_MONTH"));
-	 			  conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(pMonthStart.getTime())));
-	 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(pMonthEnd.getTime())));				  
-	 			  EntityCondition CustCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	 				 try{
- 	 				  custTimePeriodList = delegator.findList("CustomTimePeriod", CustCondition, null, null, null,false); 
-	 	  	 		  for(GenericValue eachcustTimePeriodList: custTimePeriodList){
-	 	  	 			   customTimePeriodId=eachcustTimePeriodList.getString("customTimePeriodId");
-	 	  	 		  }
- 	  	 			  conditionList.clear();
-			    	  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
-			    	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
-			    	  conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "SHOPEE_RENT"));
-			    	  EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			    	  List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", condExpr, null, null, null, false);
+ 	 				 Map<String, Object> resultMap=dispatcher.runSync("getCustomTimePeriodId", UtilMisc.toMap("periodTypeId","SALES_MONTH","fromDate",pMonthStart,"thruDate",pMonthEnd,"userLogin", userLogin));   
+ 			    	  if (ServiceUtil.isError(resultMap)) {
+ 		                	Debug.logError("Error getting Custom Time Period", module);	
+ 		                    return ServiceUtil.returnError("Error getting Custom Time Period");
+ 		              }
+ 			    	  customTimePeriodId=(String)resultMap.get("customTimePeriodId");
+ 	 				  Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","COM_CANCELLED","userLogin", userLogin));   
+			    	  List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+			    	  if (UtilValidate.isEmpty(periodBillingList)) {
+		                	Debug.logError("Error getting PeriodBilling", module);	
+		                    return ServiceUtil.returnError("Error getting Period Billing");
+		              }
 			    	  periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
 			  		  List<GenericValue>invoiceList; 
 			  		  List<GenericValue>InvoiceItemList; 
@@ -6380,15 +6376,6 @@ public class ByProductNetworkServices {
 			  			Debug.logError(e, "Error getting Invoice Ids", module);
 			  			return ServiceUtil.returnError("Error getting Invoice Ids ");
 			  		  }
- 	 			  }catch (GenericEntityException e) {
- 	 		  		  Debug.logError(e, "Problem in getting custom time period", module);	 		  		  
- 	 		  		  return ServiceUtil.returnError("Problem in getting custom time period");
- 	 		  	  }
-	    
- 	 			  if(UtilValidate.isEmpty(custTimePeriodList)){
- 	 				  Debug.logError( "There no active cust Time Periods.", module);	 				 
- 	 				  return ServiceUtil.returnError("There no active cust Time Periods");
- 	 			  }
 	    
 			}catch(Exception e){
 				Debug.logError(e, "Error in getShopeeRentAmount");

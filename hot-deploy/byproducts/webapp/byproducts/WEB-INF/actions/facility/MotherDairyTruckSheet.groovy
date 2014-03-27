@@ -36,7 +36,7 @@ productNames = [:];
 paymentMethodTypeList = [];
 paymentMethodTypeMap = [:];
 shopeeRentAmount = [:];
-shopeeRentAmount = ByProductNetworkServices.getShopeeRentAmount(dispatcher.getDispatchContext(), [estimatedDeliveryDate :estimatedDeliveryDateTime]);
+shopeeRentAmount = ByProductNetworkServices.getShopeeRentAmount(dispatcher.getDispatchContext(), [estimatedDeliveryDate :estimatedDeliveryDateTime,userLogin :userLogin]);
 context.shopeeRentAmount = shopeeRentAmount;
 allProductsList = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",estimatedDeliveryDateTime));
 

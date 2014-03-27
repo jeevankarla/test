@@ -546,4 +546,20 @@
         <description>get Shopee Rent Amount</description>
         <attribute name="estimatedDeliveryDate" type="Timestamp" mode="INOUT" optional="true"/>
     </service>
+    <service name="getCustomTimePeriodId" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getCustomTimePeriodId">
+        <description>Get Custom time period</description>
+        <attribute name="periodTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="customTimePeriodId" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="getPeriodBillingList" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getPeriodBillingList">
+        <description>Get Custom time period</description>
+        <attribute name="billingTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="statusId" mode="IN" type="String" optional="false"/>
+        <attribute name="periodBillingList" type="List" mode="OUT" optional="true"/>
+    </service>
 </services>

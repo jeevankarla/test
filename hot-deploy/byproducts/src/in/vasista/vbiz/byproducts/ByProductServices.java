@@ -4662,51 +4662,27 @@ public class ByProductServices {
 			    	  if(UtilValidate.isEmpty(dueDate)){
 			    	  		dueDate = UtilDateTime.getDayStart(now);
 			    	  }
-			    	  List custConditionList = UtilMisc.toList(
-	  	 					  EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,periodTypeId));
-	  	 			  custConditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime())));
-	  	 			  custConditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
-	  	 			  EntityCondition CustCondition = EntityCondition.makeCondition(custConditionList, EntityOperator.AND);
-	  	 			  try{
-	  	 				   custTimePeriodList = delegator.findList("CustomTimePeriod", CustCondition, null, null, null,false); 
-	  	 				   dayBeginFromDate= UtilDateTime.getDayStart(UtilDateTime.toTimestamp( EntityUtil.getFirst(custTimePeriodList).getDate("fromDate")));
-		  	 			   dayStartThruDate  = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp( EntityUtil.getFirst(custTimePeriodList).getDate("thruDate")));
-				    	   customTimePeriodId=EntityUtil.getFirst(custTimePeriodList).getString("customTimePeriodId");
-	  	 			  }catch (GenericEntityException e) {
-	  	 		  		  Debug.logError(e, "Problem getting custom time period", module);	 		  		  
-	  	 		  		  return ServiceUtil.returnError("Problem getting custom time period");
-	  	 		  	  }
-	  	 			 
-	  	 			  if(UtilValidate.isEmpty(custTimePeriodList)){
-	  	 				  Debug.logError( "There no active Custom Time Periods", module);	 				 
-	  	 				  return ServiceUtil.returnError("There no active Custom Time Periods.");
-	  	 			  }
-		    	      conditionList.clear();
-		    	      conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "SHOPEE_RENT"));
-			    	  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
-			    	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "COM_CANCELLED"));
-			    	  EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			    	  try{
-			    	  List<GenericValue> periodBillingChk = delegator.findList("PeriodBilling", condExpr, null, null, null, false);
-			    	  if(UtilValidate.isNotEmpty(periodBillingChk)){
-			    		  Debug.logError("Billing has been generated for the period to the dealer :"+facilityId, module);
-			    		  return ServiceUtil.returnError("Billing has been generated for the period to the dealer :"+facilityId);
-			    	  }  
-			    	  }catch (GenericEntityException e) {
-	  	 		  		  Debug.logError(e, "Problem in getting periodBilling", module);	 		  		  
-	  	 		  		  return ServiceUtil.returnError("Problem in getting period Billing");
-	  	 		  	  }
-			    	      GenericValue newEntity = delegator.makeValue("PeriodBilling");
-				    	  newEntity.set("billingTypeId", "SHOPEE_RENT");
-				    	  newEntity.set("customTimePeriodId", customTimePeriodId);
-				    	  newEntity.set("statusId", "GENERATED");
-				    	  try{
-					            delegator.createSetNextSeqId(newEntity);   
-					            periodBillingId = newEntity.getString("periodBillingId");
-					         }catch(GenericEntityException e) {
-					            Debug.logError(e, module);
-					            return ServiceUtil.returnError("Failed to create a new Period Billing " + e);            
-					         } 
+			    	  Map<String, Object> resultMap=dispatcher.runSync("getCustomTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",fromDate,"thruDate",thruDate,"userLogin", userLogin));   
+			    	  if (ServiceUtil.isError(resultMap)) {
+		                	Debug.logError("Error getting Custom Time Period", module);	
+		                    return ServiceUtil.returnError("Error getting Custom Time Period"+facilityId);
+		              }
+			    	  customTimePeriodId=(String)resultMap.get("customTimePeriodId");
+				    	  Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","COM_CANCELLED","userLogin", userLogin));   
+				    	  List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+				    	  if (UtilValidate.isEmpty(periodBillingList)) {
+				    		  GenericValue newEntity = delegator.makeValue("PeriodBilling");
+					    	  newEntity.set("billingTypeId", "SHOPEE_RENT");
+					    	  newEntity.set("customTimePeriodId", customTimePeriodId);
+					    	  newEntity.set("statusId", "GENERATED");
+					    	  try{
+						            delegator.createSetNextSeqId(newEntity);   
+						            periodBillingId = newEntity.getString("periodBillingId");
+						         }catch(GenericEntityException e) {
+						            Debug.logError(e, module);
+						            return ServiceUtil.returnError("Failed to create a new Period Billing " + e);            
+						         }
+			              }
 		    	  	   facilityList= (List)ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
 			    	   for(GenericValue eachFacility: facilityList){
 			    		  String invoiceId ="";
@@ -4778,34 +4754,28 @@ public class ByProductServices {
 		    Timestamp dayEnd = UtilDateTime.getDayEnd(estimatedShipDate);
 		    List conditionList = FastList.newInstance();
 		    List<GenericValue> custTimePeriodList =FastList.newInstance();
-		    //int size = (Integer) context.get("size");
 		    Timestamp pMonthStart=null;
 		    Timestamp pMonthEnd=null;
-		    Timestamp dayStartThruDate =null;
-	 		Timestamp dayBeginFromDate=null;
+	 		String periodTypeId="SALES_MONTH";
 	 		String customTimePeriodId = "";
 	 		List<String> periodBillingIds =FastList.newInstance();
 			try{
 		          Timestamp newDate=UtilDateTime.getMonthStart(estimatedShipDate);
 		    	  pMonthStart=UtilDateTime.getMonthStart(UtilDateTime.addDaysToTimestamp(newDate, -1));
 		    	  pMonthEnd=UtilDateTime.getMonthEnd(UtilDateTime.addDaysToTimestamp(newDate, -1),TimeZone.getDefault(),Locale.getDefault());
-		          conditionList.clear();
-				  conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,"SALES_MONTH"));
-	 			  conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(pMonthStart.getTime())));
-	 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(pMonthEnd.getTime())));				  
-	 			  EntityCondition CustCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	 				 try{
- 	 				  custTimePeriodList = delegator.findList("CustomTimePeriod", CustCondition, null, null, null,false); 
-	 	  	 		  for(GenericValue eachcustTimePeriodList: custTimePeriodList){
-	 	  	 			   customTimePeriodId=eachcustTimePeriodList.getString("customTimePeriodId");
-	 	  	 		  }
- 	  	 			  conditionList.clear();
-			    	  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
-			    	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
-			    	  conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "SHOPEE_RENT"));
-			    	  EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			    	  try{
-				    	  List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", condExpr, null, null, null, false);
+		    	  Map<String, Object> resultMap=dispatcher.runSync("getCustomTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",pMonthStart,"thruDate",pMonthEnd,"userLogin", userLogin));   
+		    	  if (ServiceUtil.isError(resultMap)) {
+	                	Debug.logError("Error getting Custom Time Period", module);	
+	                    return ServiceUtil.returnError("Error getting Custom Time Period");
+	              }
+		    	  customTimePeriodId=(String)resultMap.get("customTimePeriodId");
+			    	  Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","COM_CANCELLED","userLogin", userLogin));   
+			    	  List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+			    	  if (UtilValidate.isEmpty(periodBillingList)) {
+		                	Debug.logError("Error getting PeriodBilling", module);	
+		                    return ServiceUtil.returnError("Error getting Period Billing");
+		              }
+		    	      try{
 				    	  periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
 				    	  for(String billingId: periodBillingIds){
 					  		  GenericValue periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", billingId), false);
@@ -4835,16 +4805,6 @@ public class ByProductServices {
 			  		  		Debug.logError(errMsg , module);
 			  		  	    return ServiceUtil.returnError("Error in shopee rent cancellation" );    
 			  		  } 
- 	 			  }catch (GenericEntityException e) {
- 	 		  		  Debug.logError(e, "Error in getting custom time period", module);	 		  		  
- 	 		  		  return ServiceUtil.returnError("Error in getting custom time period");
- 	 		  	  }
- 	 			
- 	 			  if(UtilValidate.isEmpty(custTimePeriodList)){
- 	 				  Debug.logError( "There no active cust Time Periods.", module);	 				 
- 	 				  return ServiceUtil.returnError("There no active cust Time Periods");
- 	 			  }
-				
 			}catch(Exception e){
 				Debug.logError(e, module);
 				return ServiceUtil.returnError("Error in cancel shipment " + e);
@@ -4852,5 +4812,64 @@ public class ByProductServices {
 			
 			return result;
 		}
-		
+		public static Map<String, Object> getCustomTimePeriodId(DispatchContext dctx, Map context) {
+			 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			 LocalDispatcher dispatcher = dctx.getDispatcher();
+			 String periodBillingId = (String) context.get("periodTypeId");
+		     Timestamp fromDate = (Timestamp) context.get("fromDate");
+		     Timestamp thruDate = (Timestamp) context.get("thruDate");
+		     List<GenericValue> custTimePeriodList =FastList.newInstance();
+			 List conditionList = FastList.newInstance();
+			 Map<String, Object> result = ServiceUtil.returnSuccess();
+			 String customTimePeriodId = "";
+			try{
+				  conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,"SALES_MONTH"));
+	 			  conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime())));
+	 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
+	 			  EntityCondition CustCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	 			  custTimePeriodList = delegator.findList("CustomTimePeriod", CustCondition, null, null, null,false); 
+	 			  Debug.log("customTimePeriodId"+custTimePeriodList);
+	 			 if(UtilValidate.isNotEmpty(custTimePeriodList)){
+	 			      customTimePeriodId=((GenericValue)EntityUtil.getFirst(custTimePeriodList)).getString("customTimePeriodId");
+	 			      Debug.log("customTimePeriodId"+customTimePeriodId);
+	 			      result.put("customTimePeriodId",customTimePeriodId);
+	 			 }
+	 			 if(UtilValidate.isEmpty(custTimePeriodList)){
+	 				  Debug.logError( "There no active cust Time Periods.", module);	 				 
+	 				  return ServiceUtil.returnError("There no active cust Time Periods");
+	 			 }
+	 			
+			}catch(Exception e){
+				Debug.logError(e, module);
+				Debug.logError(e, "Error in getting custom time period", module);	 		  		  
+ 		  		return ServiceUtil.returnError("Error in getting custom time period");
+			}
+			return result;
+		}
+		public static Map<String, Object> getPeriodBillingList(DispatchContext dctx, Map context) {
+			 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			 LocalDispatcher dispatcher = dctx.getDispatcher();
+			 String customTimePeriodId = (String) context.get("customTimePeriodId");
+		     String statusId = (String) context.get("statusId");
+		     String billingTypeId = (String) context.get("billingTypeId");
+		     List<GenericValue> custTimePeriodList =FastList.newInstance();
+			 List conditionList = FastList.newInstance();
+			 Map<String, Object> result = ServiceUtil.returnSuccess();
+			try{
+				  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+		    	  conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, billingTypeId));
+		    	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,statusId));
+		    	  EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    	  List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", condExpr, null, null, null, false);
+		    	  if(UtilValidate.isNotEmpty(periodBillingList)){
+		    		  result.put("periodBillingList", periodBillingList);
+		    	  }  
+		    	  result.put("periodBillingList", periodBillingList);
+			}catch(Exception e){
+				Debug.logError(e, module);
+				Debug.logError(e, "Problem in getting periodBilling", module);	 		  		  
+		  		return ServiceUtil.returnError("Problem in getting periodBilling");
+			}
+			return result;
+		}
 }
