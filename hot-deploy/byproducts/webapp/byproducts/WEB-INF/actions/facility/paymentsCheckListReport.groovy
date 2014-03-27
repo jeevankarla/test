@@ -6,8 +6,17 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.base.util.UtilNumber;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import javolution.util.FastList;
+import org.ofbiz.base.util.*;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+
 int decimals;
 int rounding;
+dctx = dispatcher.getDispatchContext();
 decimals = 0;//UtilNumber.getBigDecimalScale("order.decimals");
 rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 allChanges= false;
@@ -45,3 +54,66 @@ dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, local
    }
 
 context.checkListReportList = checkListReportList;
+
+//report invoking for Daily checklist report
+
+boothPaymentCheckMap=[:];
+bankPaidMap=[:];
+boothRouteIdsMap=[:];
+if(UtilValidate.isNotEmpty(reportTypeFlag) && "DailyPaymentCheckList".equals(reportTypeFlag)){
+paymentDate=parameters.paymentDate;
+paymentMethodTypeId = parameters.paymentMethodTypeId;
+
+fromDateTime=UtilDateTime.nowTimestamp();
+//Debug.log("=====fromDate=="+paymentDate);
+def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+try {
+	fromDateTime = new java.sql.Timestamp(sdf.parse(paymentDate+" 00:00:00").getTime());
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: "+paymentDate, "");
+}
+dayStart = UtilDateTime.getDayStart(fromDateTime);
+dayEnd = UtilDateTime.getDayEnd(fromDateTime);
+
+routeIds=[];
+List<GenericValue> paymentsList = FastList.newInstance();
+conditionList=[];
+facilityIdsList=[];
+
+	if(parameters.routeId !="All"){
+		facilityIdsList =ByProductNetworkServices.getRouteBooths(dctx,  [routeId:parameters.routeId]);
+	}
+	facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
+
+	boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:dayStart ,paymentMethodTypeId:paymentMethodTypeId,thruDate:dayEnd , facilityIdsList:facilityIdsList]);
+	boothTempPaymentsList = boothPaidDetail["paymentsList"];
+	boothRouteIdsMap= boothPaidDetail["boothRouteIdsMap"];
+	boothTempPaymentsList.each{eachBoothPayment->
+			if(UtilValidate.isNotEmpty(eachBoothPayment.issuingAuthority)){
+				bankName=eachBoothPayment.issuingAuthority;
+					if(UtilValidate.isEmpty(bankPaidMap.get(bankName))){
+					List<GenericValue> tempboothPaidList=FastList.newInstance();
+					tempboothPaidList.add(eachBoothPayment);
+					bankPaidMap[bankName]=tempboothPaidList;
+					}else{
+					List<GenericValue> tempboothPaidList=FastList.newInstance();
+					tempboothPaidList=bankPaidMap.get(bankName);
+					tempboothPaidList.add(eachBoothPayment);
+					bankPaidMap[bankName]=tempboothPaidList;
+					}
+			}else{
+				if(UtilValidate.isEmpty(bankPaidMap.get("noBankName"))){
+				List<GenericValue> tempboothPaidListnew=FastList.newInstance();
+				tempboothPaidListnew.add(eachBoothPayment);
+				bankPaidMap["noBankName"]=tempboothPaidListnew;
+				}else{
+				List<GenericValue> tempboothPaidList=FastList.newInstance();
+				tempboothPaidList=bankPaidMap.get("noBankName");
+				tempboothPaidList.add(eachBoothPayment);
+				bankPaidMap["noBankName"]=tempboothPaidList;
+				}
+			}
+	}
+}
+context.bankPaidMap=bankPaidMap;
+context.boothRouteIdsMap=boothRouteIdsMap;
