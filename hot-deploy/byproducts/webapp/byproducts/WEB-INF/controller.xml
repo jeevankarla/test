@@ -522,6 +522,11 @@
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="PaymentsCheckList"/>        
     </request-map>
+     <request-map uri="DailyPaymentCheckList">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="DailyPaymentCheckList"/>        
+    </request-map>
+    
     <!--  margin requests -->
     <request-map uri="TransporterMargins">
         <security https="true" auth="true"/>
@@ -678,6 +683,10 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+     <request-map uri="RetailerLedgerAbstract.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="RetailerLedgerAbstractPDF"/>
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -711,6 +720,7 @@
     <view-map name="DueParticularsTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="text/plain"/>
     <view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
     <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="text/plain" encoding="none"/>
+    <view-map name="DailyPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckList" content-type="text/plain" encoding="none"/>
     <view-map name="PrintBoothPayments" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintBoothPayments"/>
     <view-map name="InvoicePrePrnt" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoicePrePrnt" content-type="text/plain"/>
     <view-map name="DeliveryNoteCumGatePassReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DeliveryNoteCumGatePassReportTXT" content-type="text/plain"/>
@@ -756,6 +766,7 @@
 	<view-map name="DealerBankChallanPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanPDF" content-type="application/pdf"/>
 	<view-map name="IndentManualCollection" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentManualCollection" content-type="application/pdf"/>
 	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>
+	<view-map name="RetailerLedgerAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerLedgerAbstractPDF" content-type="application/pdf"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>
