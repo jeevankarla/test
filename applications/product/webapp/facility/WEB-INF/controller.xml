@@ -431,12 +431,6 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
     
-     <request-map uri="cancelBoothPayment">
-     	 <security https="true" auth="true"/>     	
-        <event type="service" invoke="voidPayment"/>
-        <response name="success" type="request" value="FindBoothPayments"/>
-        <response name="error" type="request" value="FindBoothPayments"/>
-    </request-map>
     <request-map uri="cancelPayment">
      	 <security https="true" auth="true"/>     	
         <event type="service" invoke="voidPayment"/>
@@ -469,10 +463,10 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="BoothMasterCSV"/> 
     </request-map>
-    <request-map uri="AbsenteeOverride">
+    <!-- <request-map uri="AbsenteeOverride">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="AbsenteeOverride"/>    	
-    </request-map>
+    </request-map> -->
     <request-map uri="stopShipList.csv">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="StopShipListCSV"/>    	
@@ -519,18 +513,18 @@ under the License.
         <response name="success" type="view" value="FacilityRecovery"/>
         <response name="error" type="view" value="CreateRecovery"/>
     </request-map>
-    <request-map uri="absenteeOverrideForBooth">
+    <!-- <request-map uri="absenteeOverrideForBooth">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="absenteeOverrideForBooth"/>   	
     	<response name="success" type="view" value="AbsenteeOverride"/>
     	<response name="error" type="view" value="AbsenteeOverride"/>       	
-    </request-map>
-    <request-map uri="removeAbsenteeOverride">
+    </request-map> -->
+    <!-- <request-map uri="removeAbsenteeOverride">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="removeAbsenteeOverride"/>   	
     	<response name="success" type="view" value="AbsenteeOverride"/>
     	<response name="error" type="view" value="AbsenteeOverride"/>       	
-    </request-map>
+    </request-map> -->
      <request-map uri="checkListReport">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="checkListReport"/>        

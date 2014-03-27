@@ -5203,6 +5203,7 @@ under the License.
             title="Absentee Override" default-resource-name="ProductEntityLabels">     
 	      <field name="boothId" type="id"></field>
 	      <field name="supplyDate" type="date"></field>  
+	      <field name="amount" type="fixed-point"></field>
 	      <field name="createdDate" type="date-time"></field>
 	      <field name="createdByUserLogin" type="id-vlong"></field>
 	      <field name="lastModifiedDate" type="date-time"></field>

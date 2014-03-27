@@ -1443,14 +1443,7 @@ under the License.
         </field>        
     </form>
     
-    <form name="FindAbsenteeBooths" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="AbsenteeOverride"
-    	default-table-style="basic-table hover-bar" separate-columns="true">    	   	
-    	<field name="hideSearch"><hidden value="N"/></field>
-    	<field name="paymentDate" title="${uiLabelMap.SupplyDate}" ><hidden/></field>       
-        <field name="facilityId" title="${uiLabelMap.BoothRouteZone}"><text/></field>        
-       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
-    </form>   
- 	 <form name="FindAbsenteeOverride" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="AbsenteeOverride"
+    <form name="FindAbsenteeOverride" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="AbsenteeOverride"
     	default-table-style="basic-table hover-bar" separate-columns="true" extends="FindAbsenteeBooths">
     	<field name="paymentDate" title="${uiLabelMap.SupplyDate}" ><hidden/></field>      	   	
     	<field name="shipListType"><hidden value="overrideList"/></field>      
@@ -1580,43 +1573,7 @@ under the License.
      	<field name="MAS" title="MAS"><display/></field>
      	<field name="DELETED" title="DELETED"><display/></field>
      </form>
-    <form name="ListAbsenteeBooths" odd-row-style="alternate-row" header-row-style="header-row" type="list"
-    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="boothPaymentsList">   
-    	<row-actions>
-    		<set field="supplyDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" type="Timestamp"/>
-    	</row-actions>
-    	<field name="supplyDate"><hidden value="supplyDate"/></field>        
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display description="${facilityId}"/></field>
-        <field name="routeId" title="${uiLabelMap.Route}"><display description="${routeId}" /></field>
-        <field name="grandTotal" parameter-name="dueAmount" title="${uiLabelMap.ToDayDueAmount}"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="totalDueAmount" title="${uiLabelMap.TotalDueAmount}"><display type="currency" currency="${currencyUomId}" description="${totalDue}"/></field> 
-        <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="View Details"  target="javascript:showPaymentHistory(${facilityId});"></hyperlink></field>
-        <field name="Override" widget-style="buttontext">
-        <hyperlink target="absenteeOverrideForBooth" description="Override" confirmation-message="Are You Sure You Want To Override">
-        	<parameter param-name="facilityId" from-field="originFacilityId"/>
-        	<parameter param-name="supplyDate" from-field="supplyDate"/>
-        </hyperlink>
-        </field>
-    </form>
-    <form name="ListAbsenteeOverride" odd-row-style="alternate-row" header-row-style="header-row" type="list"
-    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="absenteeOverrideList">   
-    	<row-actions>
-    		<set field="supplyDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" type="Timestamp"/>
-    	</row-actions>
-    	<field name="shipListType"><hidden value="overrideList"/></field>
-    	<field name="supplyDate" title="${uiLabelMap.SupplyDate}"><display description="${bsh:org.ofbiz.base.util.UtilDateTime.toDateString(supplyDate,&quot;yyyy-MM-dd&quot;)}"/></field>        
-        <field name="createdByUserLogin" title="User Name"><display/></field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display description="${facilityId}"/></field>
-         <field name="routeId" title="${uiLabelMap.Route}"><display description="${parentFacilityId}"/></field>
-        <field name="facilityName"  title="${uiLabelMap.BoothName}"><display/></field>
-        <field name="Delete" widget-style="buttontext delete">
-        <hyperlink target="removeAbsenteeOverride" description="Delete" confirmation-message="Are You Sure You Want To Delete">
-        	<parameter param-name="facilityId" from-field="facilityId"/>
-        	<parameter param-name="supplyDate" from-field="supplyDate"/>
-        	<parameter param-name="shipListType" value="overrideList"/>
-        </hyperlink>
-        </field>
-    </form>
+    
     <form name="ListTruckSheets" list-name="listTruckSheets" title="" type="list" paginate-target="TruckSheet"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="shipmentId"><hidden/></field> 

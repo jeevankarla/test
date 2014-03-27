@@ -1024,17 +1024,7 @@ under the License.
         <description>Cancel Transporter Margin Adjustment Payment</description>        
         <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
     </service>
-    <service name="absenteeOverrideForBooth" engine="java"
-                location="org.ofbiz.product.subscription.SubscriptionServices" invoke="absenteeOverrideForBooth" auth="true">
-        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
-        <attribute name="supplyDate" mode="IN" type="Timestamp" optional="false"/>
-    </service> 
-    <service name="removeAbsenteeOverride" engine="java"
-                location="org.ofbiz.product.subscription.SubscriptionServices" invoke="removeAbsenteeOverride" auth="true">
-        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
-        <attribute name="supplyDate" mode="IN" type="Timestamp" optional="false"/>
-    </service>  
-	<service name="cancelMilkCardOrder" engine="java"
+    <service name="cancelMilkCardOrder" engine="java"
         location="org.ofbiz.product.product.ProductServices" invoke="cancelMilkCardOrder" auth="true">
         <description>Cancellation Of MilkCard Order</description>
         <attribute name="orderId" mode="IN" type="String" optional="false"/>
