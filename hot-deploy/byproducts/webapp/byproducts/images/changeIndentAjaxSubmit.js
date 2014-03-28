@@ -72,15 +72,16 @@ $(function() {
 
 
                }
-               cleanUpGrid();
+               
                if(screenFlag == 'indentAlt'){
             	   $("#boothId").focus();
                }
                else{
                $("#routeId").focus();
                }
+               cleanUpGrid();
                $('input[name=changeSave]').removeAttr('disabled');
-              
+               
              } ,
              error: function() {
             	 	alert(result["_ERROR_MESSAGE_"]);
@@ -124,7 +125,7 @@ $(function() {
      $('#boothId').keyup(function (e) {
 	 	if (e.keyCode == 8 || e.keyCode == 46) {
 	 		updateGrid1([]); 
-	 		setupGrid2([]);
+	 		updateGrid2([]);
 	 		jQuery("#boothId").focus(); 
 	      }	
 	 });
