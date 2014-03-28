@@ -6,7 +6,7 @@
 	<#include "TempRouteChangeToolTip.ftl"/>
 
 <div class="full">
-  <div class="lefthalf">
+  <div class="lefthalf" style="width:33%">
 	<div class="screenlet">
 		<#if screenFlag?exists && screenFlag == 'DSCorrection'><div class="grid-header" style="width:100%;" id="test"><#else><div class="screenlet-title-bar"></#if>
 		
@@ -14,10 +14,10 @@
         	<#if screenFlag?exists && screenFlag != 'DSCorrection'>
         	<ul>
    				<li>
-   					<a href="<@ofbizUrl>checkListReport.txt?userLoginId=${userLogin.get("userLoginId")}&&checkListType=changeindent&&all=Y</@ofbizUrl>" target="_blank">All Check List</a>
+   					<a href="<@ofbizUrl>checkListReport.txt?userLoginId=${userLogin.get("userLoginId")}&&checkListType=changeindent&&all=Y</@ofbizUrl>" target="_blank">AllList</a>
             	</li>  
    				<li>
-   					<a href="<@ofbizUrl>checkListReport.txt?userLoginId=${userLogin.get("userLoginId")}&&checkListType=changeindent</@ofbizUrl>" target="_blank">My Check List</a>
+   					<a href="<@ofbizUrl>checkListReport.txt?userLoginId=${userLogin.get("userLoginId")}&&checkListType=changeindent</@ofbizUrl>" target="_blank">MyList</a>
             	</li>                      
          	</ul>
          	</#if>
@@ -60,12 +60,10 @@
 	       				<#else>
 	          				<td valign='middle'>
 	          				<#assign isDefault = false> 
-	      					<select name="subscriptionTypeId" class='h2' id="subscriptionTypeId" onchange="javascript:setRouteDropDown(this);">
-	      						    			     			
+	          				<select name="subscriptionTypeId" class='h2' id="subscriptionTypeId" onchange="javascript:setRouteDropDown(this);">
 	                			<#list subscriptionTypeList as subType>
-	                	
 	                	    		<#if subscriptionTypeId?exists && (subscriptionTypeId == subType.subscriptionTypeId)>
-	      								<option  value="${subscriptionTypeId}" selected="selected">${subType.description}</option>
+	      								<option  value="${subscriptionTypeId}"  selected="selected">${subType.description}</option>
 	      							<#else>
 	      								<option value='${subType.subscriptionTypeId}'>
 	                    					${subType.description}
@@ -181,7 +179,7 @@
     </#if>
 </div>
 </div>
-<div class="righthalf" >
+<div class="righthalf" style="width:65%">
 <div class="screenlet"  id="GridDiv">
     <div class="screenlet-body">
     <div>

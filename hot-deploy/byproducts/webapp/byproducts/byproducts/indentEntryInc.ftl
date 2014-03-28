@@ -68,6 +68,7 @@ function cleanUpGrid(value){
 	updateGrid1(emptyJson);
 	setupGrid2(emptyJson);
 }
+
 function updateGrid(){
  	screenFlag = '${screenFlag}';
 	if(!$('[name=boothId]').val()){
@@ -311,13 +312,13 @@ function updateGrid(){
 		}
 		var columns = [
 			<#if screenFlag?exists && screenFlag == 'indentAlt'>
-				{id:"cProductName", name:"Product", field:"cProductName", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, sortable:false ,toolTip:""},
+				{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, sortable:false ,toolTip:""},
 			<#else>
-				{id:"cProductName", name:"Product", field:"cProductName", width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
+				{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
 			</#if>
 			
-			{id:"cQuantity", name:"Qty(Pkt)", field:"cQuantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-			{id:"quantity", name:"Qty(Crate/Can)", field:"quantity", width:80, minWidth:80, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
+			{id:"cQuantity", name:"Qty(Pkt)", field:"cQuantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"quantity", name:"Qty(Cr/Can)", field:"quantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
 			<#if screenFlag?exists && screenFlag != 'DSCorrection'>
 				<#--{id:"supply", name:"C/P/B ", field:"uomId", width:35, minWidth:35, cssClass:"readOnlyColumnClass", sortable:false, focusable :false},
 				{id:"LtrKgs", name:"Ltr/Kgs", field:"LtrKgs", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, focusable :false , align:"right"},-->
@@ -609,10 +610,10 @@ function updateGrid(){
 		}
 
 		var columns = [
-			{id:"routeId", name:"Route", field:"routeId", width:200, minWidth:200, cssClass:"cell-title", sortable:false},
-			{id:"retailerIndentCrate", name:"Retailer Indent", field:"retailerIndentCrate", width:150, minWidth:150, cssClass:"cell-title", sortable:false},
-			{id:"routeLoad", name:"Load", field:"routeLoad", width:150, minWidth:150, cssClass:"cell-title", sortable:false},
-			{id:"routeCapacity", name:"Capacity", field:"routeCapacity", width:150, minWidth:150, cssClass:"cell-title", sortable:false}
+			{id:"routeId", name:"Route", field:"routeId", width:60, minWidth:60, cssClass:"cell-title", sortable:false},
+			{id:"retailerIndentCrate", name:"Retailer Indent", field:"retailerIndentCrate", width:60, minWidth:60, cssClass:"cell-title", sortable:false},
+			{id:"routeLoad", name:"Load", field:"routeLoad", width:60, minWidth:60, cssClass:"cell-title", sortable:false},
+			{id:"routeCapacity", name:"Capacity", field:"routeCapacity", width:60, minWidth:60, cssClass:"cell-title", sortable:false}
 		];
 
 		var options = {
@@ -789,12 +790,11 @@ function updateGrid(){
 			var supplyRouteList =  ${StringUtil.wrapString(supplyRouteItemsJSON)}
 			function setRouteDropDown(selection){	
 				//routesList = routesList;
-				
 				routesList = supplyRouteList[selection.value];
 				
 				if(selection.value =="" || typeof selection.value == "undefined"){
 					routesList =  ${StringUtil.wrapString(routesJSON)}
-				}				
+				}
 			}	
 			function setRouteBoothsDropDown(selection){	
 				if(typeof selection.value == "undefined"){
