@@ -30,5 +30,36 @@
         <key-map field-name="facilityId"/>
       </relation>
     </entity>
-    
+    <!--Import entity for MD KMF  -->
+     <entity entity-name="Dailyindent"
+            package-name="org.ofbiz.common.period"
+            title="Daily indent ">
+      <field name="id" type="numeric"></field>
+      <field name="routeid" type="numeric"></field>
+      <field name="retailerid" type="numeric" />
+      <field name="indentsourceid" type="numeric" />
+      <field name="dispatchshiftid" type="numeric" />
+	  <field name="indentdate" type="id-vlong" />
+      <field name="createddatetime" type="id-vlong"></field>
+      <field name="createdby" type="id-vlong"></field>
+      <field name="modifieddatetime" type="id-vlong"></field>
+      <field name="modifiedby" type="id-vlong"></field>  
+      <prim-key field="id"/>
+    </entity>
+    <entity entity-name="Dailyindentdetail"
+            package-name="org.ofbiz.common.period"
+            title="Daily indent Detail">
+      <field name="id" type="numeric"></field>
+      <field name="dailyindentid" type="numeric"></field>
+      <field name="productid" type="id" />
+	  <field name="quantity" type="currency-amount" />
+      <field name="createddatetime" type="id-vlong"></field>
+      <field name="createdby" type="id-vlong"></field>
+      <field name="modifieddatetime" type="id-vlong"></field>
+      <field name="modifiedby" type="id-vlong"></field>  
+      <prim-key field="id"/>
+      <relation type="many" fk-name="DID_ID"  rel-entity-name="Dailyindent">
+        <key-map field-name="dailyindentid" rel-field-name="id"/>
+      </relation>
+    </entity>
 </entitymodel>
