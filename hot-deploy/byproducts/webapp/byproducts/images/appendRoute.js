@@ -47,7 +47,13 @@
 	
 	function appendBillingParam(existingUrl){
 		//alert(existingUrl);
+		
 		var updatedUrl = $(existingUrl).attr('href');
+		var billingIndex = updatedUrl.indexOf("periodBillingId");
+		
+        if(billingIndex > 0){
+            updatedUrl = updatedUrl.substring(0, billingIndex -1);
+        }
 		var domObj = $(existingUrl).parent().parent();
 		
 		var periodBillingDOM = $(domObj).find( "[name='"+"periodBillingId"+"']");
