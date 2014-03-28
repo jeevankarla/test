@@ -60,10 +60,10 @@
 	       				<#else>
 	          				<td valign='middle'>
 	          				<#assign isDefault = false> 
-	          				<select name="subscriptionTypeId" class='h2' id="subscriptionTypeId" onchange="javascript:setRouteDropDown(this);">
+	          				<select name="subscriptionTypeId" class='h2' id="subscriptionTypeId" onchange="<#if screenFlag?exists && screenFlag == 'indent'>javascript:setRouteDropDown(this);<#else>javascript:setSupplyDate(this);</#if>" >
 	                			<#list subscriptionTypeList as subType>
 	                	    		<#if subscriptionTypeId?exists && (subscriptionTypeId == subType.subscriptionTypeId)>
-	      								<option  value="${subscriptionTypeId}"  selected="selected">${subType.description}</option>
+	      								<option  value="${subscriptionTypeId}">${subType.description}</option>
 	      							<#else>
 	      								<option value='${subType.subscriptionTypeId}'>
 	                    					${subType.description}

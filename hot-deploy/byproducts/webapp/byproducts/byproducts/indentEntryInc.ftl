@@ -658,7 +658,7 @@ function updateGrid(){
 			jQuery("#routeId").focus();
 		}
 		
-		 $("select#subscriptionTypeId").change();
+		 //$("select#subscriptionTypeId").change();
 		if(screenFlag !="DSCorrection"){
 			setupGrid2([]);
 		} 
@@ -788,6 +788,7 @@ function updateGrid(){
 	<#if (showBoothAutoSuggest?has_content) && (showBoothAutoSuggest != 'N') && screenFlag?exists && screenFlag == 'indent'>
 			var routeBoothsData = ${StringUtil.wrapString(facilityItemsJSON)}
 			var supplyRouteList =  ${StringUtil.wrapString(supplyRouteItemsJSON)}
+			$("#subscriptionTypeId").trigger("onchange");
 			function setRouteDropDown(selection){	
 				//routesList = routesList;
 				routesList = supplyRouteList[selection.value];
@@ -795,6 +796,8 @@ function updateGrid(){
 				if(selection.value =="" || typeof selection.value == "undefined"){
 					routesList =  ${StringUtil.wrapString(routesJSON)}
 				}
+				setSupplyDate(selection);
+								
 			}	
 			function setRouteBoothsDropDown(selection){	
 				if(typeof selection.value == "undefined"){
@@ -813,4 +816,21 @@ function updateGrid(){
 			</#if>	
 						
 	</#if>
+	function setSupplyDate(selection){
+		var type = selection.value;
+		var dateStr = $("#effectiveDate").val();
+		if(type == 'PM'){
+			var date = new Date(dateStr);
+			date.setDate(date.getDate()-1);
+			var newDate = new Date(date);
+			$("#effectiveDate").val($.datepicker.formatDate('dd MM, yy', newDate));
+		}
+		else if(type == 'AM'){
+			var date = new Date(dateStr);
+			date.setDate(date.getDate()+1);
+			var newDate = new Date(date);
+			$("#effectiveDate").val($.datepicker.formatDate('dd MM, yy', newDate));
+			//$("#effectiveDate").val($.datepicker.formatDate('dd MM, yy', date));
+		}
+	}
 </script>			
