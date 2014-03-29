@@ -2235,7 +2235,7 @@ public class ByProductServices {
 		String rateTypeId = (String) context.get("rateTypeId");
 		String rateCurrencyUomId = (String) context.get("rateCurrencyUomId");
 		GenericValue rateAmountEntry =null;
-		
+		Debug.log("context ####################"+context);
 		List<GenericValue> amountList = FastList.newInstance();
 		BigDecimal rateAmount = BigDecimal.ZERO;
 		try {
@@ -2246,6 +2246,7 @@ public class ByProductServices {
 			conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
 			conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			Debug.log("condition @#################"+condition);
 			List<GenericValue> allParamRateAmount = delegator.findList("RateAmount", condition , null, null, null, false);
 			amountList = EntityUtil.filterByDate(allParamRateAmount, dayStart);
 			if(UtilValidate.isEmpty(amountList)){
@@ -2256,6 +2257,7 @@ public class ByProductServices {
 				conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
 				conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 				EntityCondition partyCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				Debug.log("partyCond @#################"+partyCond);
 				List<GenericValue> partyRateAmount = delegator.findList("RateAmount", partyCond, null, null, null, false);
 				amountList = EntityUtil.filterByDate(partyRateAmount, dayStart);
 				if(UtilValidate.isEmpty(amountList)){
@@ -2266,6 +2268,7 @@ public class ByProductServices {
 					conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
 					conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 					EntityCondition productCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+					Debug.log("productCond @#################"+productCond);
 					List<GenericValue> prodcuRateAmount = delegator.findList("RateAmount", productCond, null, null, null, false);
 					amountList = EntityUtil.filterByDate(prodcuRateAmount, dayStart);
 					if(UtilValidate.isEmpty(amountList)){
@@ -2276,15 +2279,18 @@ public class ByProductServices {
 						conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
 						conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 						EntityCondition rateCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+						Debug.log("rateCond @#################"+rateCond);
 						List<GenericValue> rateTypeRateAmount = delegator.findList("RateAmount", rateCond, null, null, null, true);
 						amountList = EntityUtil.filterByDate(rateTypeRateAmount, dayStart);
 					}
 				}
 			}
-			
+			Debug.log("amountList ######################"+amountList);
 			if(UtilValidate.isNotEmpty(amountList)){
 				rateAmountEntry = EntityUtil.getFirst(amountList);
-				rateAmount = rateAmountEntry.getBigDecimal("rateAmount");
+				if(UtilValidate.isNotEmpty(rateAmountEntry.get("rateAmount"))){
+					rateAmount = rateAmountEntry.getBigDecimal("rateAmount");
+				}
 			}
 		} catch (Exception e) {
 			Debug.logError(e, module);
