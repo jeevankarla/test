@@ -19,6 +19,7 @@ int rounding;
 dctx = dispatcher.getDispatchContext();
 decimals = 0;//UtilNumber.getBigDecimalScale("order.decimals");
 rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+reportTypeFlag=parameters.reportTypeFlag;
 allChanges= false;
 if (parameters.all == 'Y') {
 	allChanges = true;
@@ -65,7 +66,6 @@ paymentDate=parameters.paymentDate;
 paymentMethodTypeId = parameters.paymentMethodTypeId;
 
 fromDateTime=UtilDateTime.nowTimestamp();
-//Debug.log("=====fromDate=="+paymentDate);
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(paymentDate+" 00:00:00").getTime());
