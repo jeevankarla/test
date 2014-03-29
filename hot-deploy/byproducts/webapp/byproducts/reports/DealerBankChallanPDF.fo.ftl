@@ -12,6 +12,7 @@ permissions and limitations under the License. --> <#escape x as x?xml>
 		</fo:simple-page-master>
 	</fo:layout-master-set>
          <#assign partyIdentification = delegator.findOne("PartyIdentification", {"partyId" :"Company","partyIdentificationTypeId":"PAN_NUMBER"}, true)>
+         <#assign panIdDetails=partyIdentification?if_exists>
         <#if routeWiseMap?has_content> 
         <#assign routeWiseList= routeWiseMap.entrySet()>
         <#list routeWiseList as routeBoothsMap>
@@ -56,7 +57,7 @@ permissions and limitations under the License. --> <#escape x as x?xml>
 																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always"> CASH PAYMENT	</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;          PAN:${partyIdentification.idValue}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;          PAN:${panIdDetails.idValue?if_exists}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
@@ -310,7 +311,7 @@ permissions and limitations under the License. --> <#escape x as x?xml>
 																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always"> A/C NO :</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;        PAN:</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;        PAN:${panIdDetails.idValue?if_exists}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
