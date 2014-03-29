@@ -4604,6 +4604,8 @@
 			<description>Describes when a rate amount will be valid untl. If null, valid indefinitly.</description>
 		</field>
 		<field name="rateAmount" type="fixed-point" />
+		<field name="lmsProductPriceTypeId" type="id" />
+		<field name="byprodProductPriceTypeId" type="id" />
 		<prim-key field="rateTypeId" />
 		<prim-key field="rateCurrencyUomId" />
 		<prim-key field="periodTypeId" />

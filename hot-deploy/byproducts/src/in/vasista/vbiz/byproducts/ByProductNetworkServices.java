@@ -837,16 +837,30 @@ public class ByProductNetworkServices {
 		  		  } catch (NullPointerException e) {
 		  			  Debug.logError(e, "Cannot parse date string: " + supplyDateStr, module);
 		  		  }
-			  }
-		  	  else{
-		  		supplyDate = UtilDateTime.nowTimestamp();
-		  	  }
-	          Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
-  		      Timestamp dayEnd = UtilDateTime.getDayStart(supplyDate);
+			}
+	  	  	else{
+	  	  		supplyDate = UtilDateTime.nowTimestamp();
+	  	  	}
+	        Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
+  		    Timestamp dayEnd = UtilDateTime.getDayStart(supplyDate);
   		
-  		      try{
-	    		
-	    		GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId",boothId), true);
+  		    try{
+	    		if(UtilValidate.isNotEmpty(routeId)){
+	    			GenericValue facilityRoute = delegator.findOne("Facility", UtilMisc.toMap("facilityId",routeId), true);
+		    		if(UtilValidate.isEmpty(facilityRoute)){
+		    			Debug.logError("Route doesn't exists with Id: "+routeId, module);
+		    			return ServiceUtil.returnError("Route doesn't exists with Id: "+routeId);    				
+		    		}
+		    		
+		    		Map resultCtx = getRoutesByAMPM(dctx, UtilMisc.toMap("supplyType", subscriptionTypeId, "userLogin", userLogin));
+		    		List routeIds = (List)resultCtx.get("routeIdsList");
+		    		if(UtilValidate.isEmpty(routeIds) || !routeIds.contains(routeId)){
+		    			Debug.logError("Route doesn't exists in "+subscriptionTypeId+" shipping", module);
+		    			return ServiceUtil.returnError("Route doesn't exists in "+subscriptionTypeId+" shipping");
+		    		}
+		    		
+	    		}
+	    		GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId",boothId), false);
 	    		if(UtilValidate.isEmpty(facility)){
 	    			Debug.logError("Invalid  Booth Id", module);
 	    			return ServiceUtil.returnError("Invalid  Booth Id");    				
@@ -3023,6 +3037,33 @@ public class ByProductNetworkServices {
 	     * @param context 
 	     * @return a List of routes
 	     */
+		public static Map<String, Object> getRoutesByAMPM(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+	    	String supplyType = (String) context.get("supplyType");
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	List<String> routesIdsList = FastList.newInstance();
+	    	try {
+	    		List conditionList = FastList.newInstance();
+	    		if(UtilValidate.isNotEmpty(supplyType)){
+	    			String type = supplyType+"_RT_GROUP";
+	    			conditionList.add(EntityCondition.makeCondition("primaryParentGroupId", EntityOperator.EQUALS, type));
+	    		}
+	    		conditionList.add(EntityCondition.makeCondition("facilityGroupTypeId", EntityOperator.EQUALS,"RT_BOOTH_GROUP"));
+	    		EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    		List<GenericValue> routesList = delegator.findList("FacilityGroup",condition,null,null,null,false);
+	    		if(UtilValidate.isNotEmpty(routesList)){
+	    			routesIdsList = (List)EntityUtil.getFieldListFromEntityList(routesList, "facilityGroupId", true);
+	    		}
+	    		
+	    		
+	    	} catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        }
+	    	result.put("routeIdsList", routesIdsList);        
+	        return result;
+	    }
+		
 	    public static Map<String, Object> getRoutes(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
 	    	List<String> routes= FastList.newInstance();
