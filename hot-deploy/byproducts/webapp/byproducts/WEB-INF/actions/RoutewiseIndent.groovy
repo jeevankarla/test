@@ -94,6 +94,12 @@ routeWiseIndentMap = [:];
 for(i=0; i<routesList.size(); i++){
 	grandTotalMap =[:];
 	productFinalMap = [:];
+	routeTotQty=0;
+	rtCrates = 0;
+	rtExcessPkts = 0;
+	rtLooseCrates = 0;
+	rtCans = 0;
+	rtLooseCans = 0;
 	route = routesList.get(i);
 	routeId=route.get("facilityId");
 	conditionList=[];
@@ -157,6 +163,7 @@ for(i=0; i<routesList.size(); i++){
 		qty=prodEntry.getValue().get("otherQuantity");
 		prodMap =[:];
 		prodMap["qty"]=qty;
+		routeTotQty=routeTotQty+qty;
 		if(crateProductsIdsList.contains(productId)){
 			if(piecesPerCrate && piecesPerCrate.get(productId)){
 				int crateDivisior=(piecesPerCrate.get(productId)).intValue();
@@ -168,7 +175,12 @@ for(i=0; i<routesList.size(); i++){
 			   cratesMap =[:];
 			   cratesMap["crates"]=tempCrates;
 			   cratesMap["loosePkts"]=tempExcess;
+			   rtCrates = rtCrates+tempCrates;
+			   rtExcessPkts = rtExcessPkts+tempExcess;
 			   prodMap["crateMap"]=cratesMap;
+			   if(tempExcess>0){
+			   rtLooseCrates=rtLooseCrates+1;
+			   }
 		   }
 			
 		}
@@ -179,12 +191,23 @@ for(i=0; i<routesList.size(); i++){
 			   tempCanExcess=((qty.intValue())%(canDivisior.intValue()));
 			   cansMap=[:];
 			   cansMap["cans"]=tempCan;
+			   rtCans = rtCans+tempCan;
 			   prodMap["cansMap"]=cansMap;
 		   }
 			
 		}
 		productFinalMap[productId]=prodMap;
 	}
+	allProdTotal=[:];
+	allProdTotal["routeTotQty"]=routeTotQty;
+	allProdTotal["rtCrates"]=rtCrates;
+	allProdTotal["rtExcessPkts"]=rtExcessPkts;
+	allProdTotal["rtLooseCrates"]=rtLooseCrates;
+	allProdTotal["rtCans"]=rtCans;
+	
+	
+	productFinalMap["Total"]=allProdTotal;
+	
 	tempFinalMap=[:];
 	tempFinalMap.putAll(productFinalMap);
 	routeWiseIndentMap.put(routeId, tempFinalMap);
