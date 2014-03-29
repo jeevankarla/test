@@ -85,6 +85,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
                       					<#assign facility = delegator.findOne("Facility", {"facilityId" : routeIndent.getKey()}, true)>
 	                                		<#assign totalcrates = 0>
 	                                			<#list productEntries as productEntry>
+	                                			<#if productEntry.getKey()!="Total">
 	                      								<#assign product = delegator.findOne("Product", {"productId" : productEntry.getKey()}, true)> 	                              
 		              							          <fo:table-row >  
 		              							             <fo:table-cell>
@@ -116,6 +117,54 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 						                            	         </fo:table-cell>
 								                            	</#if>
 					                         	         </fo:table-row>
+					                         	         </#if>
+					                         	         <#if productEntry.getKey() =="Total">
+					                         	          <fo:table-row >  
+		              							          <fo:table-cell>
+					                         	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
+					                         	         </fo:table-cell>
+					                         	         </fo:table-row>
+					                         	          <fo:table-row >  
+		              							             <fo:table-cell>
+                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
+                        		                             </fo:table-cell>                  
+					                            		     <fo:table-cell>
+					                                			<fo:block  text-align="left" keep-together="always">&#160;</fo:block>
+					                            			 </fo:table-cell>
+					                            	         <fo:table-cell>
+					                                	        <fo:block  text-align="right" keep-together="always">FulCrates:${productEntry.getValue().get("rtCrates")}</fo:block>
+					                            	          </fo:table-cell>	
+							                                  <fo:table-cell>
+					                                	         <fo:block  text-align="right">LooseCrates:</fo:block>
+					                            	         </fo:table-cell>
+									                      		<fo:table-cell>
+						                                	         <fo:block  text-align="">${productEntry.getValue().get("rtLooseCrates")}(${productEntry.getValue().get("rtExcessPkts")})</fo:block>
+						                            	         </fo:table-cell>
+									                      		<fo:table-cell>
+						                                	         <fo:block  text-align="right">&#160;</fo:block>
+						                            	         </fo:table-cell>
+					                         	         </fo:table-row>
+		              							          <fo:table-row >  
+		              							             <fo:table-cell>
+                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
+                        		                             </fo:table-cell>                  
+					                            		     <fo:table-cell>
+					                                			<fo:block  text-align="left" keep-together="always">Total</fo:block>
+					                            			 </fo:table-cell>
+					                            	         <fo:table-cell>
+					                                	        <fo:block  text-align="left" keep-together="always"></fo:block>
+					                            	          </fo:table-cell>	
+							                                  <fo:table-cell>
+					                                	         <fo:block  text-align="right">${productEntry.getValue().get("routeTotQty")}</fo:block>
+					                            	         </fo:table-cell>
+									                      		<fo:table-cell>
+						                                	         <fo:block  text-align="right">${(productEntry.getValue().get("rtCrates"))+(productEntry.getValue().get("rtLooseCrates"))}</fo:block>
+						                            	         </fo:table-cell>
+									                      		<fo:table-cell>
+						                                	         <fo:block  text-align="right">${productEntry.getValue().get("rtCans")}</fo:block>
+						                            	         </fo:table-cell>
+					                         	         </fo:table-row>
+					                         	         </#if>
 	                      				 		</#list>
 	                      				 		 <fo:table-row >  
 												            <fo:table-cell>
