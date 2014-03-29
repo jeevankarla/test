@@ -34,9 +34,8 @@ condList = [];
 condList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "CR_INST_BILLING"));
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-periodBillings = delegator.findList("PeriodBilling", cond, null, null, null, true);
-
-billingCustTimePeriodIds = EntityUtil.getFieldListFromEntityList(periodBillings, "customTimePeriodId", true);
+periodBillings = delegator.findList("PeriodBilling", cond, null, null, null, false);
+billingCustTimePeriodIds = EntityUtil.getFieldListFromEntityList(periodBillings, "customTimePeriodId", false);
 
 condList.clear();
 condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.IN, periodTypeList));
@@ -66,22 +65,21 @@ context.customTimePeriodLabelJSON = customTimePeriodLabelJSON;
 /*
  * Listing customTimePeriods
 */
-condList.clear();
-condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.IN, periodTypeList));
 if(billingCustTimePeriodIds){
+	condList.clear();
+	condList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.IN, periodTypeList));
 	condList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.IN, billingCustTimePeriodIds));
-}
-condition = EntityCondition.makeCondition(condList, EntityOperator.AND);
-generatedCustomTimePeriods = delegator.findList("CustomTimePeriod", condition, null, ["-lastUpdatedStamp"], null, true);
-
-generatedPeriods = [];
-generatedCustomTimePeriods.each{ eachItem ->
+	condition = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	generatedCustomTimePeriods = delegator.findList("CustomTimePeriod", condition, null, ["-lastUpdatedStamp"], null, true);
 	
-	tempMap = [:];
-	tempMap.customTimePeriodId = eachItem.customTimePeriodId;
-	tempMap.periodName = eachItem.periodName;
-	tempMap.periodTypeId = eachItem.periodTypeId;
-	generatedPeriods.add(tempMap);
+	generatedPeriods = [];
+	generatedCustomTimePeriods.each{ eachItem ->
+	
+		tempMap = [:];
+		tempMap.customTimePeriodId = eachItem.customTimePeriodId;
+		tempMap.periodName = eachItem.periodName;
+		tempMap.periodTypeId = eachItem.periodTypeId;
+		generatedPeriods.add(tempMap);
+	}
+	context.generatedPeriods = generatedPeriods;
 }
-context.generatedPeriods = generatedPeriods;
-
