@@ -1986,6 +1986,7 @@ public class ByProductServices {
 		    String productCategory = "";
 		    List lmsProductIdsList = FastList.newInstance();
 		    List byprodProductIdsList = FastList.newInstance();
+		    Debug.log("productId ###############"+productId);
 		    if (UtilValidate.isEmpty(currencyDefaultUomId)) {
 		        currencyDefaultUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "INR");
 		    }
@@ -2076,7 +2077,7 @@ public class ByProductServices {
     			Debug.logError(e, "Unable to get margin/discount: " + e.getMessage(), module);
     	        return ServiceUtil.returnError("Unable to get margin/discount: " + e.getMessage());
 	        }
-		    
+	        Debug.log("rateAmountEntry ###############"+rateAmountEntry);
 		    if(UtilValidate.isNotEmpty(rateAmountEntry)){
 		    	String lmsPriceType = rateAmountEntry.getString("lmsProductPriceTypeId");
 		    	String byprodPriceType = rateAmountEntry.getString("byprodProductPriceTypeId");
@@ -2087,11 +2088,12 @@ public class ByProductServices {
 		    		productPriceTypeId = byprodPriceType;
 		    	}
 		    }
-		    
+		    Debug.log("productPriceTypeId ###############"+productPriceTypeId);
 		    
 		    if(UtilValidate.isEmpty(productPriceTypeId)){
 		    	 // lets take DEFAULT_PRICE as default priceType any special priceType for facility Or party, this will override with the special type
 		    	  productPriceTypeId = "DEFAULT_PRICE";
+		    	  Debug.log("default called ###############");
 		    }
 		    if (productPriceTypeId.contains("_PRICE")) {
 		    	String[] prodPriceSplit = productPriceTypeId.split("_PRICE");
