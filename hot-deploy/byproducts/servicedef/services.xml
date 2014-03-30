@@ -20,15 +20,11 @@
     </service>
     <service name="createReturnCrate" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createReturnCrate">
-        <description>Get Rate Amount</description>
-        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
-        <attribute name="routeId" type="String" mode="IN" optional="false"/>
-        <attribute name="tripId" type="String" mode="IN" optional="true"/>
-        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
-        <attribute name="shipmentDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="returnQuantity" type="BigDecimal" mode="IN" optional="false"/>
-        <attribute name="receiptId" type="String" mode="OUT" optional="true"/>
+        <description>Create Crate and Can Return</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="true"/>
+        <attribute name="returnCrQuantity" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="returnCnQuantity" type="BigDecimal" mode="IN" optional="false"/>
     </service>
     <service name="createInvoiceForAllOrders" engine="java"
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForAllOrders">
@@ -118,7 +114,6 @@
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
         <attribute name="returnHeaderTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="receiveInventory" type="String" mode="IN" optional="true"/>
         <attribute name="returnId" type="String" mode="OUT" optional="true"/>
     </service>
         
@@ -321,7 +316,7 @@
         <attribute name="returnHeaderTypeId" mode="IN" type="String" optional="false"/>
        <!--  <attribute name="tripId" mode="IN" type="String" optional="false"/>   -->
        	<attribute name="shipmentId" mode="IN" type="String" optional="true"/>    
-        <!-- <attribute name="supplyDate" mode="IN" type="String" optional="true"/> -->
+         <attribute name="supplyDate" mode="IN" type="String" optional="true"/> 
         <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
         <attribute name="orderReturnList" mode="OUT" type="List" optional="true"/>
         <attribute name="vehcileId" mode="OUT" type="String" optional="true"/>

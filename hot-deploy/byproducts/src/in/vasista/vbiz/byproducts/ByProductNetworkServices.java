@@ -865,10 +865,22 @@ public class ByProductNetworkServices {
 	    			Debug.logError("Invalid  Booth Id", module);
 	    			return ServiceUtil.returnError("Invalid  Booth Id");    				
 	    		}
+	    		
 	    		boolean isActive = EntityUtil.isValueActive(facility , dayBegin, "openedDate", "closedDate");
 	    		if(!isActive){
 	    			Debug.logError("is not active facility "+boothId, module);    			
 	    			return ServiceUtil.returnError("The  facility ' "+ boothId+"' is not Active."); 
+	    		}
+	    		if(UtilValidate.isNotEmpty(routeId)){
+	    			Map permanentBoothCtxMap = FastMap.newInstance();
+	    			permanentBoothCtxMap.putAll(context);
+	    			permanentBoothCtxMap.put("supplyDate", supplyDate);
+	    			Map boothDetails = (Map)(getBoothRoute(dctx, permanentBoothCtxMap)).get("boothDetails");
+	    			String perRouteId = (String)boothDetails.get("routeId");
+	    			if(UtilValidate.isNotEmpty(perRouteId) && !(perRouteId.equals(routeId))){
+	    				Debug.logError(routeId+" is not permanent route of retailer "+boothId+ " . Use Route Shift to temporarly shift the route", module);    			
+		    			return ServiceUtil.returnError(routeId+" is not permanent route of retailer "+boothId+ " . Use Route Shift to temporarly shift the route");
+	    			}
 	    		}
 	    		partyId = facility.getString("ownerPartyId");
 	    		facilityCategory = facility.getString("categoryTypeEnum");
@@ -2072,14 +2084,20 @@ public class ByProductNetworkServices {
 	        String supplyDateStr = (String) context.get("supplyDate"); 
 	        String boothId = (String) context.get("boothId");
 	        String routeId = (String) context.get("routeId");
-	        String tripId = (String) context.get("tripId");
+	        String shipmentId = (String) context.get("shipmentId");
+	        /*String tripId = (String) context.get("tripId");*/
 	        String returnHeaderTypeId = (String) context.get("returnHeaderTypeId");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        Map result = ServiceUtil.returnSuccess(); 
 	        List conditionList = FastList.newInstance();
-	        Timestamp supplyDate = null;
-	    	try{
-	    		if (UtilValidate.isNotEmpty(supplyDateStr)) { 
+	        Timestamp supplyDate = null;	
+	        List orderReturnList = FastList.newInstance();
+	        Debug.log("shipmentId ##################"+shipmentId);
+	        Timestamp dayStart = null;
+    		Timestamp dayEnd = null;
+    		
+	        if(UtilValidate.isEmpty(shipmentId)){
+	        	if (UtilValidate.isNotEmpty(supplyDateStr)) { 
 	    			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
 	    			try {
 	    				supplyDate = new java.sql.Timestamp(sdf.parse(supplyDateStr).getTime());
@@ -2091,38 +2109,91 @@ public class ByProductNetworkServices {
 		    			return ServiceUtil.returnError("Cannot parse date string"); 
 	    			}
 	    		}
-	    		if(UtilValidate.isEmpty(returnHeaderTypeId)){
-	    			Debug.logError("Return type is empty", module);
-	    			return ServiceUtil.returnError("Return type is empty");
-	    		}
-	    		if(UtilValidate.isEmpty(supplyDate)){
+	        	if(UtilValidate.isEmpty(supplyDate)){
 	    			Debug.logError("supply date is empty", module);
 	    			return ServiceUtil.returnError("supply date is empty");
 	    		}
-	    		Timestamp dayStart =UtilDateTime.getDayStart(supplyDate);
-	    		Timestamp dayEnd =UtilDateTime.getDayEnd(supplyDate);
-	    		List orderReturnList = FastList.newInstance();
-	    		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
-    			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-    			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
-    			conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
-    			/*conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));*/
-    			EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-    			List<GenericValue> shipment = delegator.findList("Shipment", cond, UtilMisc.toSet("shipmentId"), null, null, false);
-    			String shipmentId = "";
-    			if(UtilValidate.isNotEmpty(shipment)){
-    				shipmentId = ((GenericValue)EntityUtil.getFirst(shipment)).getString("shipmentId");
-    			}
+	        	dayStart =UtilDateTime.getDayStart(supplyDate);
+	    		dayEnd =UtilDateTime.getDayEnd(supplyDate);
+	    		try{
+	    			conditionList.clear();
+		    		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+	    			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	    			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
+	    			conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
+	    			/*conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));*/
+	    			EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	    			List<GenericValue> shipment = delegator.findList("Shipment", cond, UtilMisc.toSet("shipmentId"), null, null, false);
+	    			if(UtilValidate.isNotEmpty(shipment)){
+	    				shipmentId = ((GenericValue)EntityUtil.getFirst(shipment)).getString("shipmentId");
+	    			}
+	    		}catch(GenericEntityException e){
+	    			Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+	    		}
+	        	
+	        }
+	        else{
+	        	try{
+	        		GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+	        		supplyDate = shipment.getTimestamp("estimatedShipDate");
+	        		dayStart =UtilDateTime.getDayStart(supplyDate);
+		    		dayEnd =UtilDateTime.getDayEnd(supplyDate);
+		    		
+	        	}
+	        	catch(GenericEntityException e){
+	    			Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+	    		}
+	        }
+	        
+	        try{
+	        	GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId",boothId), false);
+	    		if(UtilValidate.isEmpty(facility)){
+	    			Debug.logError("Invalid  Booth Id", module);
+	    			return ServiceUtil.returnError("Invalid  Booth Id");    				
+	    		}
+	    		
+	    		boolean isActive = EntityUtil.isValueActive(facility , dayStart, "openedDate", "closedDate");
+	    		if(!isActive){
+	    			Debug.logError("is not active facility "+boothId, module);    			
+	    			return ServiceUtil.returnError("The  facility ' "+ boothId+"' is not Active."); 
+	    		}
+	    		
+	        }catch(GenericEntityException e){
+	        	Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        }
+	        
+	        
+	        
+	        if(UtilValidate.isEmpty(returnHeaderTypeId)){
+    			Debug.logError("Return type is empty", module);
+    			return ServiceUtil.returnError("Return type is empty");
+    		}
+	        Map returnItemsMap = FastMap.newInstance();
+
+	    	try{
+	    		
     			conditionList.clear();
     			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+    			conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, boothId));
     			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("RETURN_CANCELLED")));
     			EntityCondition expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     			List<GenericValue> returnHeader = delegator.findList("ReturnHeader", expr, null, null, null, false);
+    			
     			if(UtilValidate.isNotEmpty(returnHeader)){
+    				String returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("returnId");
+    				List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), UtilMisc.toSet("productId","returnQuantity"), null, null, false);
+    				for(GenericValue returnItem : returnItems){
+    					returnItemsMap.put(returnItem.getString("productId"), returnItem.getBigDecimal("returnQuantity"));
+    				}
+    			}
+    			/*if(UtilValidate.isNotEmpty(returnHeader)){
     				String returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("returnId");
     				Debug.logError("One return allowed for one shipment, Cancel return :"+returnId+" and re-enter the return" , module);
 	    			return ServiceUtil.returnError("One return allowed for one shipment, Cancel return :"+returnId+" and re-enter the return");
-    			}
+    			}*/
     			
     			Map orderedQty = FastMap.newInstance();
     			conditionList.clear();
@@ -2148,6 +2219,7 @@ public class ByProductNetworkServices {
     				}
     				productNames.put(productId, orderItem.getString("productName"));
     			}
+    			
     			Iterator orderItemIter = orderedQty.entrySet().iterator();
 				while (orderItemIter.hasNext()) {
 					Map.Entry orderItemEntry = (Entry) orderItemIter.next();
@@ -2158,6 +2230,9 @@ public class ByProductNetworkServices {
 		        	tempMap.put("cProductName", productNames.get(productId));
 		        	tempMap.put("cQuantity", qty);
 		        	tempMap.put("returnQuantity", "");
+		        	if(UtilValidate.isNotEmpty(returnItemsMap) && UtilValidate.isNotEmpty(returnItemsMap.get(productId))){
+		        		tempMap.put("returnQuantity", (BigDecimal)returnItemsMap.get(productId));
+		        	}
 		        	orderReturnList.add(tempMap);
 				}
 				result.put("orderReturnList", orderReturnList);
@@ -6295,7 +6370,7 @@ public class ByProductNetworkServices {
 		    	resultMap.put("issuanceProductTotals",issuanceProductTotals);
 		    	resultMap.put("crateTotal",issuanceProductTotals.get("CRATE"));
 		    	resultMap.put("canTotal",issuanceProductTotals.get("CAN"));
-		    	
+		    	Debug.log("resultMap #################"+resultMap);
 			return resultMap;
 		}
 	    

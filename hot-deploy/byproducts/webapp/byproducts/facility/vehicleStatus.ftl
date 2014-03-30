@@ -134,8 +134,7 @@
 		        	<table width="60%" border="0" cellspacing="0" cellpadding="0">     
         			<tr><td><br/></td></tr>
        				<tr>
-       					<td>&nbsp;<input type="hidden" name="productStoreId" id="productStoreId" value="9004"/>
-          				    <input type="hidden" name="productId" id="productId" value="CRATE"/>
+       					<td>
 				            <input type="hidden" name="shipmentId" id="shipmentId" value="${parameters.shipmentId?if_exists}" />
           				</td>
           				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Route:</div></td>
@@ -165,7 +164,19 @@
 		          				<td>&nbsp;</td>
 		       	  				<td valign='middle'>
 		       							<div class='tabletext h3'>
-		            						<input class="h2" type="text" size="18" maxlength="20" name="quantity" id="quantity"  />
+		            						<input class="h2" type="text" size="18" maxlength="20" name="crQuantity" id="crQuantity"  />
+		            					</div>
+		          				</td>
+		          				<td align='left'><span class="tooltipbold" id="vehicleTooltip"></span></td>
+			        </tr>
+			        <tr><td><br/></td></tr>
+			         <tr>
+		       			<td>&nbsp;</td>
+		          				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>No.Of Cans Returned:</div></td>
+		          				<td>&nbsp;</td>
+		       	  				<td valign='middle'>
+		       							<div class='tabletext h3'>
+		            						<input class="h2" type="text" size="18" maxlength="20" name="cnQuantity" id="cnQuantity"  />
 		            					</div>
 		          				</td>
 		          				<td align='left'><span class="tooltipbold" id="vehicleTooltip"></span></td>
@@ -191,8 +202,7 @@
 		        	<table width="60%" border="0" cellspacing="0" cellpadding="0">     
         				<tr><td><br/></td></tr>
        				<tr>
-       					<td>&nbsp;<input type="hidden" name="productStoreId" id="productStoreId" value="9004"/>
-          				    <input type="hidden" name="productId" id="productId" value="CRATE"/>
+       					<td>
 				            <input type="hidden" name="shipmentId" id="shipmentId" value="${parameters.shipmentId?if_exists}" />
           				</td>
           				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Route:</div></td>

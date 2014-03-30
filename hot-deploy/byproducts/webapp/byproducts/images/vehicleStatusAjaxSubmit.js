@@ -12,14 +12,22 @@ $(document).ready(function() {
             	callIssuanceTotal();
             }
             if(currentIndex==1||newIndex==2){
-            		 var quantity=$("#quantity").val();
-	            	if( (quantity).length < 1 ) {
-	                    $('#quantity').css('background', 'yellow'); 
+            		 var crQuantity=$("#crQuantity").val();
+            		 var cnQuantity=$("#cnQuantity").val();
+	            	 if( (crQuantity).length < 1 ) {
+	                    $('#crQuantity').css('background', 'yellow'); 
 	                       setTimeout(function () {
-	                           $('#quantity').css('background', 'white').focus(); 
+	                           $('#crQuantity').css('background', 'white').focus(); 
 	                       }, 1000);
 	                    return false;
-	                   }
+	                 }
+	            	 if( (cnQuantity).length < 1 ) {
+	                    $('#cnQuantity').css('background', 'yellow'); 
+	                       setTimeout(function () {
+	                           $('#cnQuantity').css('background', 'white').focus(); 
+	                       }, 1000);
+	                    return false;
+		             }
            	    submitReturnCrate();
              }
                 return true;
@@ -105,7 +113,7 @@ $(function() {
             	   $("div#changeIndentEntry_spinner").fadeIn();
             	   $('div#changeIndentEntry_spinner').html();
             	   $('div#changeIndentEntry_spinner').addClass("messageStr");
-               	   $('div#changeIndentEntry_spinner').html('<span style="color:green; font-size:10pt; font-stlye:bold">Succesfully added Dispatch Reconsiliation Entry for Route : "'+$("#routeTooltip").text()+'"</span>');
+               	   $('div#changeIndentEntry_spinner').html('<span style="color:green; font-size:10pt; font-stlye:bold">Succesfully added Product Returns Entry for Route : "'+$("#routeTooltip").text()+'"</span>');
                	   $('div#changeIndentEntry_spinner').delay(7000).fadeOut('slow');
                }
                cleanUpGrid();
@@ -231,10 +239,15 @@ function callIssuanceTotal(){
 						
 					}else{
 						var crateTotal = result["crateTotal"];
-						if(typeof crateTotal !== "undefined"){
-							$('[name=quantity]').val(crateTotal);
+						var canTotal = result["canTotal"];
+						if(typeof crateTotal == "undefined" || crateTotal == null){
+							crateTotal = 0;
 						}
-						
+						if(typeof canTotal !== "undefined" || canTotal !== null){
+							canTotal = 0;
+						}
+						$('[name=crQuantity]').val(crateTotal);
+						$('[name=cnQuantity]').val(canTotal);
 					}								 
 				},
 				error: function(){
@@ -252,10 +265,9 @@ function submitReturnCrate(){
 	}
 	var action = "createReturnCrate";	
 	var dataJson = {"shipmentId":$('[name=shipmentId]').val(),
-					"productStoreId" : $('[name=productStoreId]').val(),
 					"routeId": $('[name=routeId]').val(),
-					"returnQuantity": $('[name=quantity]').val(),
-					"productId": $('[name=productId]').val(),
+					"returnCrQuantity": $('[name=crQuantity]').val(),
+					"returnCnQuantity": $('[name=cnQuantity]').val(),
 					};
 		$.ajax({
 				 type: "POST",

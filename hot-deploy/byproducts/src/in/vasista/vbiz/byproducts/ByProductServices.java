@@ -1986,7 +1986,6 @@ public class ByProductServices {
 		    String productCategory = "";
 		    List lmsProductIdsList = FastList.newInstance();
 		    List byprodProductIdsList = FastList.newInstance();
-		    Debug.log("productId ###############"+productId);
 		    if (UtilValidate.isEmpty(currencyDefaultUomId)) {
 		        currencyDefaultUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "INR");
 		    }
@@ -2077,7 +2076,7 @@ public class ByProductServices {
     			Debug.logError(e, "Unable to get margin/discount: " + e.getMessage(), module);
     	        return ServiceUtil.returnError("Unable to get margin/discount: " + e.getMessage());
 	        }
-	        Debug.log("rateAmountEntry ###############"+rateAmountEntry);
+		    
 		    if(UtilValidate.isNotEmpty(rateAmountEntry)){
 		    	String lmsPriceType = rateAmountEntry.getString("lmsProductPriceTypeId");
 		    	String byprodPriceType = rateAmountEntry.getString("byprodProductPriceTypeId");
@@ -2088,12 +2087,11 @@ public class ByProductServices {
 		    		productPriceTypeId = byprodPriceType;
 		    	}
 		    }
-		    Debug.log("productPriceTypeId ###############"+productPriceTypeId);
+		    
 		    
 		    if(UtilValidate.isEmpty(productPriceTypeId)){
 		    	 // lets take DEFAULT_PRICE as default priceType any special priceType for facility Or party, this will override with the special type
 		    	  productPriceTypeId = "DEFAULT_PRICE";
-		    	  Debug.log("default called ###############");
 		    }
 		    if (productPriceTypeId.contains("_PRICE")) {
 		    	String[] prodPriceSplit = productPriceTypeId.split("_PRICE");
@@ -2235,7 +2233,7 @@ public class ByProductServices {
 		String rateTypeId = (String) context.get("rateTypeId");
 		String rateCurrencyUomId = (String) context.get("rateCurrencyUomId");
 		GenericValue rateAmountEntry =null;
-		Debug.log("context ####################"+context);
+		
 		List<GenericValue> amountList = FastList.newInstance();
 		BigDecimal rateAmount = BigDecimal.ZERO;
 		try {
@@ -2246,7 +2244,6 @@ public class ByProductServices {
 			conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
 			conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-			Debug.log("condition @#################"+condition);
 			List<GenericValue> allParamRateAmount = delegator.findList("RateAmount", condition , null, null, null, false);
 			amountList = EntityUtil.filterByDate(allParamRateAmount, dayStart);
 			if(UtilValidate.isEmpty(amountList)){
@@ -2257,7 +2254,6 @@ public class ByProductServices {
 				conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
 				conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 				EntityCondition partyCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-				Debug.log("partyCond @#################"+partyCond);
 				List<GenericValue> partyRateAmount = delegator.findList("RateAmount", partyCond, null, null, null, false);
 				amountList = EntityUtil.filterByDate(partyRateAmount, dayStart);
 				if(UtilValidate.isEmpty(amountList)){
@@ -2268,7 +2264,6 @@ public class ByProductServices {
 					conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
 					conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 					EntityCondition productCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-					Debug.log("productCond @#################"+productCond);
 					List<GenericValue> prodcuRateAmount = delegator.findList("RateAmount", productCond, null, null, null, false);
 					amountList = EntityUtil.filterByDate(prodcuRateAmount, dayStart);
 					if(UtilValidate.isEmpty(amountList)){
@@ -2279,13 +2274,12 @@ public class ByProductServices {
 						conditionList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, rateCurrencyUomId));
 						conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 						EntityCondition rateCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-						Debug.log("rateCond @#################"+rateCond);
 						List<GenericValue> rateTypeRateAmount = delegator.findList("RateAmount", rateCond, null, null, null, true);
 						amountList = EntityUtil.filterByDate(rateTypeRateAmount, dayStart);
 					}
 				}
 			}
-			Debug.log("amountList ######################"+amountList);
+			
 			if(UtilValidate.isNotEmpty(amountList)){
 				rateAmountEntry = EntityUtil.getFirst(amountList);
 				if(UtilValidate.isNotEmpty(rateAmountEntry.get("rateAmount"))){
@@ -2725,6 +2719,7 @@ public class ByProductServices {
 	  	  String boothId = (String) request.getParameter("boothId");
 	  	  String returnHeaderTypeId = (String) request.getParameter("returnHeaderTypeId");
 	  	  String receiveInventory = (String) request.getParameter("receiveInventory");
+	  	  String shipmentId = (String) request.getParameter("shipmentId");
 	  	  String effectiveDateStr = (String) request.getParameter("effectiveDate");
 	  	  String productId = null;
 	  	  String quantityStr = null;
@@ -2739,17 +2734,53 @@ public class ByProductServices {
 	  	  GenericValue route = null;
 	  	  GenericValue dealer = null;
 	  	  List custTimePeriodList = FastList.newInstance();
-	  	  String shipmentId = "";
-	  	  if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
-	  		  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");             
-	  		  try {
-	  			  effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
-	  		  } catch (ParseException e) {
-	  			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
-	  		  } catch (NullPointerException e) {
-	  			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+	  	  
+	  	  if(UtilValidate.isEmpty(shipmentId)){
+	  		  if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
+		  		  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");             
+		  		  try {
+		  			  effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
+		  		  } catch (ParseException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+		  		  } catch (NullPointerException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+		  		  }
+		  	  }
+	  		  conditionList.clear();
+	  		  conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
+	  		  if(UtilValidate.isNotEmpty(tripId)){
+	  			  conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
 	  		  }
+	  		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+	  		  conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+	  		  conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
+			  EntityCondition shipCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
+			  try{
+				  List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond, UtilMisc.toSet("shipmentId"), null, null, false);
+		  		  if(UtilValidate.isEmpty(shipmentList)){
+		  			  request.setAttribute("_ERROR_MESSAGE_", "This Route has no shipments for the day");
+		  			  return "error";     		
+		  		  }
+		  		  shipmentId = (String)((GenericValue)EntityUtil.getFirst(shipmentList)).get("shipmentId");
+			  }catch(GenericEntityException e){
+				  Debug.logError(e, module);
+		  		  request.setAttribute("_ERROR_MESSAGE_", "Error while fetching shipment details");
+		  		  return "error";
+	    	  }
+	  			
 	  	  }
+	  	  else{
+		  		try{
+	        		GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+	        		effectiveDate = shipment.getTimestamp("estimatedShipDate");
+	        	}
+	        	catch(GenericEntityException e){
+	        		Debug.logError(e, module);
+			  		  request.setAttribute("_ERROR_MESSAGE_", "Error while fetching shipment details");
+			  		  return "error";
+	    		}
+	  	  }
+	  	  
 	  	  if (UtilValidate.isEmpty(routeId)) {
 	  		request.setAttribute("_ERROR_MESSAGE_","Route Id is empty");
 	  		return "error";
@@ -2774,6 +2805,12 @@ public class ByProductServices {
   				  request.setAttribute("_ERROR_MESSAGE_", "Dealer"+" '"+boothId+"'"+" does not exist");
   				  return "error";
   			  }
+  			  boolean isActive = EntityUtil.isValueActive(dealer , effectiveDate, "openedDate", "closedDate");
+  			  if(!isActive){
+    			Debug.logError("is not active retailer "+boothId, module);    			
+    			request.setAttribute("_ERROR_MESSAGE_", "The  retailer "+ boothId+"' is not Active.");
+				return "error";
+  			  }
 			  
 	  	  }catch (GenericEntityException e) {
 	  		  Debug.logError(e, module);
@@ -2781,26 +2818,7 @@ public class ByProductServices {
 	  		  return "error";
 	  	  }
 	  	  
-	  	  try {
-	  		  conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
-	  		  if(UtilValidate.isNotEmpty(tripId)){
-	  			  conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
-	  		  }
-	  		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
-	  		  conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
-	  		  conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
-			  EntityCondition shipCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
-			  List<GenericValue> shipmentList = delegator.findList("Shipment", shipCond, UtilMisc.toSet("shipmentId"), null, null, false);
-	  		  if(UtilValidate.isEmpty(shipmentList)){
-	  			  request.setAttribute("_ERROR_MESSAGE_", "This Route has no shipments for the day");
-	  			  return "error";     		
-	  		  }
-	  		  shipmentId = (String)((GenericValue)EntityUtil.getFirst(shipmentList)).get("shipmentId");
-	  	  }catch (GenericEntityException e) {
-	  		  Debug.logError(e, module);
-	  		  request.setAttribute("_ERROR_MESSAGE_", "Error fetching shipment details");
-	  		  return "error";
-	  	  }
+	  	  
 	  	
 	  	  List<Map>productQtyList =FastList.newInstance();
 	  	  for (int i = 0; i < rowCount; i++) {
@@ -2846,12 +2864,11 @@ public class ByProductServices {
 	  	  processReturnHelperCtx.put("productQtyList", productQtyList);
 	  	  processReturnHelperCtx.put("boothId", boothId);
 		  processReturnHelperCtx.put("returnHeaderTypeId", returnHeaderTypeId);
-		  processReturnHelperCtx.put("receiveInventory", receiveInventory);
 	  	  try{
 	  		  result = dispatcher.runSync("processReturnItemsHelper",processReturnHelperCtx);
 	  		  if (ServiceUtil.isError(result)) {
 	  			  String errMsg =  ServiceUtil.getErrorMessage(result);
-	  			  Debug.logError(errMsg , module);
+	  			  Debug.logError(errMsg, module);
 	  			  request.setAttribute("_ERROR_MESSAGE_",errMsg);
 	  			  return "error";
 	  		  }
@@ -2859,7 +2876,7 @@ public class ByProductServices {
 	  		  	Debug.logError(e, "Problem calling processReturnItemsHelper for " + routeId+" and "+boothId, module);     
 	  	  		request.setAttribute("_ERROR_MESSAGE_", "Problem calling processReturnItemsHelper for " + routeId+" and "+boothId);
 	  	  		return "error";			  
-	  	  }	 
+	  	  }
 	  	  return "success";     
 	    }
 	    
@@ -2885,6 +2902,7 @@ public class ByProductServices {
 		  	  BigDecimal crateQty = BigDecimal.ZERO;
 		  	  String productStoreId = "";
 		      try{
+		    	  
 		    	  productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
 		    	  
 		    	  route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
@@ -3275,9 +3293,7 @@ public class ByProductServices {
 	    		  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
 	    		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
 	    		  EntityCondition checkExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	    		  Debug.log("checkExpr"+checkExpr);
 	    		  List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", checkExpr, null, null, null, false);
-	    		  Debug.log("periodBillingList"+periodBillingList);
 	    		  if(UtilValidate.isEmpty(periodBillingList)){
 	    			  Debug.logError("No valid period billing exists to cancel for the billingId "+periodBillingId, module);
                       return ServiceUtil.returnError("No valid period billing exists to cancel for the billingId "+periodBillingId);
@@ -3413,79 +3429,35 @@ public class ByProductServices {
       	Locale locale = (Locale) context.get("locale");
       	GenericValue userLogin = (GenericValue) context.get("userLogin");
       	LocalDispatcher dispatcher = ctx.getDispatcher();
-      	String productId = (String)context.get("productId");
-      	BigDecimal returnQuantity = (BigDecimal)context.get("returnQuantity");
-      	String productStoreId = (String)context.get("productStoreId");
-      	Timestamp shipmentDate = (Timestamp)context.get("shipmentDate");
-      	String tripId = (String)context.get("tripId");
-      	String routeId = (String)context.get("routeId");
+      	BigDecimal returnCrQuantity = (BigDecimal)context.get("returnCrQuantity");
+      	BigDecimal returnCnQuantity = (BigDecimal)context.get("returnCnQuantity");
+      	String shipmentId = (String)context.get("shipmentId");
       	Map<String, Object> result = ServiceUtil.returnSuccess();
       	List conditionList = FastList.newInstance();
-      	Timestamp startDate = UtilDateTime.getDayStart(shipmentDate);
-      	Timestamp endDate = UtilDateTime.getDayEnd(shipmentDate);
 		try {
-			GenericValue route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
-			if(UtilValidate.isEmpty(route)){
-				Debug.logError("Given route does not exists : "+routeId,module);
- 				return ServiceUtil.returnError("Given route does not exists : "+routeId);
+			if(UtilValidate.isNotEmpty(shipmentId)){
+				conditionList.clear();
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("SHIPMENT_CANCELLED")));
+				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+				EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				List<GenericValue> shipment = delegator.findList("Shipment", cond, null, null, null, false);
+				if(UtilValidate.isEmpty(shipment)){
+					Debug.logError("No Shipment found for the given details",module);
+	 				return ServiceUtil.returnError("No Shipment found for the given details");
+				}
 			}
 			
-			conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
-			if(UtilValidate.isNotEmpty(tripId)){
-				conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
-			}
-			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate));
-			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			
-			List<GenericValue> shipments = delegator.findList("Shipment", condition, UtilMisc.toSet("shipmentId"), null, null, false);
-			if(UtilValidate.isEmpty(shipments)){
-				Debug.logError("No Shipment found for the given details",module);
- 				return ServiceUtil.returnError("No Shipment found for the given details");
+			GenericValue crateCanAcct = delegator.findOne("CrateCanAccount", UtilMisc.toMap("shipmentId", shipmentId), false);
+			if(UtilValidate.isEmpty(crateCanAcct)){
+				Debug.logError("No Entry in crate/can accounting for shipment "+shipmentId,module);
+ 				return ServiceUtil.returnError("No Entry in crate/can accounting for shipment "+shipmentId);
 			}
 			
-			String shipmentId = ((GenericValue)EntityUtil.getFirst(shipments)).getString("shipmentId");
-			
-			/*conditionList.clear();
-			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			*/
-			List<GenericValue> productStoreFacility = delegator.findList("ProductStoreFacility", EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, productStoreId), null, null, null, false);
-	  		productStoreFacility = EntityUtil.filterByDate(productStoreFacility, startDate);
-	  		String invFacility = "";
-	  		String invItemId = "";
-	  		
-	  		List invExpr = FastList.newInstance();
-	  		if(UtilValidate.isNotEmpty(productStoreFacility)){
-	  		  	invFacility = ((GenericValue)EntityUtil.getFirst(productStoreFacility)).getString("facilityId");
-	  		}
-	  		  
-	  		invExpr.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, "CRATE"));
-	  		invExpr.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, invFacility));
-	  		EntityCondition cond1 = EntityCondition.makeCondition(invExpr, EntityOperator.OR);
-	  		List<GenericValue> invItemDetail = delegator.findList("InventoryItem", cond1, null, null, null, true);
-	  		  	
-	  		if(UtilValidate.isNotEmpty(invItemDetail)){
-	  		  	invItemId = ((GenericValue)EntityUtil.getFirst(invItemDetail)).getString("inventoryItemId");
-	  		}
-			
-			
-			Map receiptCtx = FastMap.newInstance();
-			receiptCtx.put("datetimeReceived", startDate);
-			receiptCtx.put("userLogin", userLogin);
-			receiptCtx.put("productId", productId);
-			receiptCtx.put("quantityAccepted", returnQuantity);
-			receiptCtx.put("quantityRejected", BigDecimal.ZERO);
-			receiptCtx.put("shipmentId", shipmentId);
-			receiptCtx.put("inventoryItemId", invItemId);
-			
-			Map receiptMap = dispatcher.runSync("createShipmentReceipt", receiptCtx);
-			if(ServiceUtil.isError(receiptMap)){
-				Debug.logError("There was an error while creating  receipt of crate from transporter" + ServiceUtil.getErrorMessage(result), module);
-         		return ServiceUtil.returnError("There was an error while creating  receipt of crate from transporter" + ServiceUtil.getErrorMessage(result));
-			}
-			String receiptId = (String)receiptMap.get("receiptId");
+			crateCanAcct.set("cratesReceived",returnCrQuantity);
+			crateCanAcct.set("cansReceived", returnCnQuantity);
+			crateCanAcct.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+			crateCanAcct.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			crateCanAcct.store();
 		} catch (Exception e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());

@@ -67,7 +67,7 @@
 
 <script type="application/javascript">
 function cleanUpGrid(value){
-	$('[name=routeId]').val(value);
+	//$('[name=routeId]').val(value);
     $('span#boothTooltip').html('<label></label>');
 	//$('span#routeTooltip').html('<label></label>');
 	$('span#boothDepositTip').html('<label></label>');
@@ -86,7 +86,8 @@ function updateGrid(){
 						"tripId": $('[name=tripId]').val(),
 						"routeId" : $('[name=routeId]').val(),
 						"returnHeaderTypeId": $("#returnHeaderTypeId").val(),
-						"boothId" : $('[name=boothId]').val()							
+						"boothId" : $('[name=boothId]').val(),
+						"shipmentId": $('#shipmentId').val()							
 					};
 				
 	 $('div#changeIndentEntry_spinner').removeClass("errorMessage");

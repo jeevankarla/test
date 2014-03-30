@@ -104,7 +104,7 @@
     <request-map uri="createReturnCrate">
     	<security https="true" auth="true"/> 
     	<event type="service" invoke="createReturnCrate" path=""/>   	
-    	<response name="success" type="view" value="ReturnCrates"/>    	
+    	<response name="success" type="request" value="json"/>    	
     </request-map>
     
     <request-map uri="FindReturns">
