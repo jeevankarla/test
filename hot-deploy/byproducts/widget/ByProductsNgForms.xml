@@ -520,13 +520,13 @@
         		</entity-options>
         	</drop-down>
         </field>
-         <!-- <field name="productSubscriptionTypeId" title="${uiLabelMap.productSubscriptionType}">
+        <field name="productSubscriptionTypeId" title="${uiLabelMap.productSubscriptionType}">
         	<drop-down allow-empty="true">
         		<entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
         			<entity-constraint name="enumTypeId" operator="equals" value="SUB_PROD_TYPE"/>
         		</entity-options>
         	</drop-down>
-        </field> --> 
+        </field>
            
         <field name="facilityId" title="Retailer"><lookup target-form-name="LookupFacility"></lookup></field>
         <field name="productId" title="Product"> <lookup target-form-name="LookupProduct"></lookup></field>   
