@@ -76,7 +76,7 @@
             </condition>       
         	<link target="ChannelWiseSalesChart"/>
         </menu-item>   
-        <menu-item name="config" title="Config">
+       <!--  <menu-item name="config" title="Config">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -84,7 +84,7 @@
             	</or>            
             </condition>       
         	<link target="ConfigChange"/>
-        </menu-item>   
+        </menu-item>    -->
         <menu-item name="dispatchReconciliation" title="Dispatch Reconciliation">
         	<condition>
 				<or>

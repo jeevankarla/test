@@ -508,8 +508,8 @@
 										        </screenlet>
 										    </widgets> 
 										   </section>
-									</widgets>
-							<widgets>
+								<!-- 	</widgets>
+							<widgets> -->
 							   <section>
 							        <widgets> 		
 								        <screenlet title="${uiLabelMap.CommonSearchOptions}">				
@@ -1092,7 +1092,7 @@
                 <set field="defaultEffectiveDateTime" value="${supDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-				<set field="layoutSettings.javaScripts[]" value="/facility/images/changeIndentAjaxSubmit.js" global="true"/>  
+				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/changeIndentAjaxSubmit.js" global="true"/>  
 				<!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/newIndentJsons.groovy"/>   -->                            	    
             </actions>
             <widgets>

@@ -785,7 +785,7 @@ function updateGrid(){
      
 	var boothsList =  ${StringUtil.wrapString(boothsJSON)}
 	var routesList =  ${StringUtil.wrapString(routesJSON)}
-	<#if (showBoothAutoSuggest?has_content) && (showBoothAutoSuggest != 'N') && screenFlag?exists && screenFlag == 'indent'>
+	<#if (showBoothAutoSuggest?has_content) && (showBoothAutoSuggest != 'N') && screenFlag?exists && (screenFlag == 'indent' || screenFlag == 'DSCorrection')>
 			var routeBoothsData = ${StringUtil.wrapString(facilityItemsJSON)}
 			var supplyRouteList =  ${StringUtil.wrapString(supplyRouteItemsJSON)}
 			$("#subscriptionTypeId").trigger("onchange");

@@ -142,7 +142,7 @@
     </service>
     
     <service name="processDSCorrectionHelper" engine="java"
-            location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="processDSCorrectionHelper" auth="true">
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processDSCorrectionHelper" auth="true">
         <description>order correction</description>
         
         <attribute name="orderId" type="String" mode="IN" optional="false"/>

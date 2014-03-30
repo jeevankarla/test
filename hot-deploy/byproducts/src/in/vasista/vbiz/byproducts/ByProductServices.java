@@ -2710,6 +2710,117 @@ public class ByProductServices {
   	 return "success";     
 	}
 	
+	public static Map<String ,Object>  processDSCorrectionHelper(DispatchContext dctx, Map<String, ? extends Object> context){
+		  Delegator delegator = dctx.getDelegator();
+	      LocalDispatcher dispatcher = dctx.getDispatcher();
+	      Locale locale = (Locale) context.get("locale");
+	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+	      Map<String, Object> result = ServiceUtil.returnSuccess();
+	      String productSubscriptionTypeId = (String)context.get("productSubscriptionTypeId");
+	      String subscriptionId = (String)context.get("subscriptionId");
+	      String boothId = (String)context.get("boothId");
+	      String orderId = (String)context.get("orderId");
+	      String shipmentId = (String)context.get("shipmentId");
+	      String shipmentTypeId = (String)context.get("shipmentTypeId");
+	      Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");	      
+	      List<Map> productQtyList = (List)context.get("productQtyList");
+	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+	      String currencyUomId = "INR";
+	      String change = "NotChanged";
+	      String partyId = "";
+	      String productStoreId = "";
+	      String productPriceTypeId = "";
+	      List<GenericValue> orderList = FastList.newInstance();
+	      List conditionList = FastList.newInstance();
+	      List<GenericValue> orderInv = FastList.newInstance();
+	      GenericValue facility = null;
+	      GenericValue orderHeader = null;
+	      try{
+	    	  //productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
+		      orderList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+		      orderInv = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("invoiceId"), null, null, false);
+		   	  
+		      facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
+		      orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+		      partyId = facility.getString("ownerPartyId");
+	      }catch(GenericEntityException e){
+	    	  Debug.logError(e, e.toString(), module);
+	    	  return ServiceUtil.returnError("Error Fetching Orders Item for dealer"+boothId);
+	      }
+		  boolean orderChangeFlag = false;	 
+		  for(int i=0; i< productQtyList.size() ; i++){
+			  Map productQtyMap = productQtyList.get(i);
+			  String productId = (String)productQtyMap.get("productId");
+			  String sequenceNum = (String)productQtyMap.get("sequenceNum");
+			  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
+			  GenericValue orderItemInfo = EntityUtil.getFirst(EntityUtil.filterByAnd(orderList, UtilMisc.toMap("productId", productId)));
+			  if(UtilValidate.isEmpty(orderItemInfo)){
+				  orderChangeFlag = true;
+			  }
+			  else{
+				  BigDecimal qty = orderItemInfo.getBigDecimal("quantity");
+				  if(quantity.compareTo(qty) != 0){
+					 orderChangeFlag = true;
+				  }
+			  }
+		  }
+		  if(orderChangeFlag){
+		   	  change = "Changed";
+		   	  String invoiceId = (EntityUtil.getFirst(orderInv)).getString("invoiceId");
+			  try{
+				  result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
+				  if (ServiceUtil.isError(result)) {
+					  Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
+			 		  return ServiceUtil.returnError("Problem cancelling orders in Correction");
+				  } 			
+				  
+				  result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", UtilMisc.toList(invoiceId), "statusId", "INVOICE_CANCELLED", "userLogin", userLogin));
+			   	  if (ServiceUtil.isError(result)) {
+			   		  Debug.logError("Problem cancelling invoice in Correction", module);	 		  		  
+			   		  return ServiceUtil.returnError("Problem cancelling invoice in Correction");
+				  }	        	  
+			  }catch (GenericServiceException e) {
+				  Debug.logError(e, e.toString(), module);
+				  return ServiceUtil.returnError("Problem cancelling orders and invoice in Correction");
+			  }
+			  
+			  List<GenericValue> subscriptionProductsList =FastList.newInstance();
+			  Map processCorrectionCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+				  processCorrectionCtx.put("shipmentId", shipmentId);
+				  processCorrectionCtx.put("estimatedDeliveryDate", orderHeader.getTimestamp("estimatedDeliveryDate"));
+				  processCorrectionCtx.put("salesChannel", orderHeader.getString("salesChannelEnumId"));   
+				  
+			  for(int i=0; i< productQtyList.size() ; i++){
+				  Map productQtyMap = productQtyList.get(i);
+				  String productId = (String)productQtyMap.get("productId");
+				  String sequenceNum = (String)productQtyMap.get("sequenceNum");
+				  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
+				  GenericValue subscriptionFacilityProduct = delegator.makeValue("SubscriptionFacilityAndSubscriptionProduct");
+		 		  subscriptionFacilityProduct.set("facilityId", boothId);
+		 		 // subscriptionFacilityProduct.set("subscriptionId", "100000");
+		 		  subscriptionFacilityProduct.set("categoryTypeEnum", facility.get("categoryTypeEnum"));
+		 		  subscriptionFacilityProduct.set("ownerPartyId", partyId);
+		 		  subscriptionFacilityProduct.set("productSubscriptionTypeId", orderHeader.getString("productSubscriptionTypeId"));
+		 		  subscriptionFacilityProduct.set("productId", productId);
+		 		  subscriptionFacilityProduct.set("quantity", quantity);
+		 		 subscriptionProductsList.add(subscriptionFacilityProduct);
+				  
+			  }
+			 
+			 //
+			  processCorrectionCtx.put("subscriptionProductsList", subscriptionProductsList);
+				result = createSalesOrderSubscriptionProductType(dctx, processCorrectionCtx);
+				
+				orderId = (String) result.get("orderId");
+				if (ServiceUtil.isError(result)) {
+    			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+    			return ServiceUtil.returnError("Unable to generate order: " + ServiceUtil.getErrorMessage(result));
+    		}
+		   }
+		  result = ServiceUtil.returnSuccess();
+		  result.put("indentChangeFlag", change);
+		  return result;  
+}
 	public static String processReturnItemsMIS(HttpServletRequest request, HttpServletResponse response) {
 	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
 	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
