@@ -522,7 +522,9 @@
             location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getFacilityFinAccountInfo" auth="true">
         <description>Get Special order Contact details.</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
-        <attribute name="accountInfo" type="Map" optional="true" mode="OUT"/>       
+        <attribute name="accountInfo" type="Map" optional="true" mode="OUT"/>
+         <attribute name="accountNameList" type="List" optional="true" mode="OUT"/> 
+         <attribute name="facilityIds" type="List" optional="true" mode="OUT"/>           
     </service>
      <service name="createInvoiceForShopeeRent" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForShopeeRent">
