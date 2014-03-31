@@ -117,7 +117,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				boothsList.each{ boothId ->
 					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:tempShipList, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
 					if(UtilValidate.isNotEmpty(dayTotals)){
-						productTotals = dayTotals.get("productTotals");		
+						productTotals = dayTotals.get("productTotals");
 						Map boothWiseProd= FastMap.newInstance();						
 						if(UtilValidate.isNotEmpty(productTotals)){
 							//Calulating Crates
@@ -130,6 +130,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							packetTotal=0;
 							subsidyTotal=0;
 							productsCrateMap=[:];
+							amount=dayTotals.get("totalRevenue");
 							while (prodIter.hasNext()) {
 								Map.Entry entry = prodIter.next();
 								 String itrProductId=entry.getKey();
@@ -139,11 +140,13 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 									supplyTypeTotals=productTotals.get(entry.getKey()).get("supplyTypeTotals");
 									if(supplyTypeTotals && supplyTypeTotals.get("EMP_SUBSIDY")){	
 										packetTotal=supplyTypeTotals.get("EMP_SUBSIDY").get("packetQuantity");
+										subsidyRevenue = supplyTypeTotals.get("EMP_SUBSIDY").get("totalRevenue");
 										subsidyTotal=subsidyTotal+packetTotal;
 										qty = qty - packetTotal;
 										tempMap = productTotals.get(entry.getKey())
 										tempMap.packetQuantity = qty;
 										productTotals.put(entry.getKey(), tempMap);
+										amount = amount - subsidyRevenue;
 									
 									}
 									totalQuantity=totalQuantity+qty;
@@ -177,7 +180,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								//}
 							}
 							
-							amount=dayTotals.get("totalRevenue");
+							
 							boothWiseProd.put("prodDetails", productTotals);
 							boothWiseProd.put("productsCrateMap", productsCrateMap);
 							boothWiseProd.put("amount", amount);
@@ -237,6 +240,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							supplyTypeTotals=entry.getValue().get("supplyTypeTotals");
 							if(supplyTypeTotals && supplyTypeTotals.get("EMP_SUBSIDY")){
 								packetTotal=supplyTypeTotals.get("EMP_SUBSIDY").get("packetQuantity");
+								subsidyRev = supplyTypeTotals.get("EMP_SUBSIDY").get("totalRevenue");
+								routeAmount = routeAmount - subsidyRev;
 								rtQty = rtQty - packetTotal;
 								tempMap = routeProdTotals.get(productId)
 								tempMap.packetQuantity = rtQty;
