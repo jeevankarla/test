@@ -892,6 +892,10 @@ public class ByProductNetworkServices {
 	    			boothCtxMap.put("supplyDate", supplyDate);
 	    			Map boothDetails = (Map)(getBoothRoute(dctx, boothCtxMap)).get("boothDetails");
 	    			routeId = (String)boothDetails.get("routeId");
+	    			if(UtilValidate.isEmpty(routeId)){
+	    				Debug.logError("No Permanent Route exists for : "+subscriptionTypeId, module);
+	    				return ServiceUtil.returnError("No Permanent Route exists for : "+subscriptionTypeId);
+	    				}
 	    		}
 	    		
 	    		List prevshipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId, routeId);
