@@ -128,20 +128,48 @@ under the License.
 	                            <fo:table-cell >	
 	                            	<fo:block text-align="left" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(checkListReport.paymentDate, "MMM d, yyyy")}</fo:block>                               
 	                            </fo:table-cell>
+	                            <#--
 	                             <fo:table-cell >
 	                            	<fo:block text-align="right">${checkListReport.amount?if_exists}</fo:block>	                               
-	                            </fo:table-cell>
-	                            <#--
+	                            </fo:table-cell> -->
 	                            <fo:table-cell >
 	                            	<#assign totalPaymentAmont =(totalPaymentAmont+checkListReport.amount) >
 	                            	<fo:block text-align="right"><@ofbizCurrency amount=checkListReport.amount isoCode=defaultOrganizationPartyCurrencyUomId/></fo:block>	                               
-	                            </fo:table-cell> -->
+	                            </fo:table-cell> 
 	                             <#assign sno= sno+1>  	  	                            	                            
 	                        </fo:table-row>
 	                        </#list>
 	                      </#list>
+	                      <fo:table-row >
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always">&#160;</fo:block>                               
+	                            </fo:table-cell>
+	                        </fo:table-row>
+	                       <fo:table-row >
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                             <fo:table-cell >
+	                            	<fo:block text-align="left"></fo:block>	                               
+	                            </fo:table-cell>	
+	                             <fo:table-cell >
+	                            	<fo:block text-align="left"></fo:block>	                               
+	                            </fo:table-cell>
+	                        	<fo:table-cell >	
+	                            	<fo:block text-align="left" >Total:</fo:block>                               
+	                            </fo:table-cell>	
+	                        	<fo:table-cell >	
+	                            	<fo:block text-align="left" ></fo:block>                               
+	                            </fo:table-cell>		                                                    
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell >
+	                            	<fo:block text-align="right" padding="1pt"><@ofbizCurrency amount=totalPaymentAmont isoCode=defaultOrganizationPartyCurrencyUomId/></fo:block>	                               
+	                            </fo:table-cell> 
+	                        </fo:table-row>
                     </fo:table-body>
-                </fo:table>
+                   </fo:table>
                  </fo:block>
            </fo:flow>
         </fo:page-sequence>
