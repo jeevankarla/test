@@ -790,9 +790,10 @@ function updateGrid(){
      
 	var boothsList =  ${StringUtil.wrapString(boothsJSON)}
 	var routesList =  ${StringUtil.wrapString(routesJSON)}
+	var supplyRouteList =  ${StringUtil.wrapString(supplyRouteItemsJSON)}
 	<#if (showBoothAutoSuggest?has_content) && (showBoothAutoSuggest != 'N') && screenFlag?exists && (screenFlag == 'indent' || screenFlag == 'DSCorrection')>
 			var routeBoothsData = ${StringUtil.wrapString(facilityItemsJSON)}
-			var supplyRouteList =  ${StringUtil.wrapString(supplyRouteItemsJSON)}
+			
 			$("#subscriptionTypeId").trigger("onchange");
 			function setRouteDropDown(selection){	
 				setRouteDropDownByValue(selection.value);
@@ -800,13 +801,7 @@ function updateGrid(){
 								
 			}
 			
-			function setRouteDropDownByValue(selectionValue){
-				routesList = supplyRouteList[selectionValue];
-				if(selectionValue =="" || selectionValue == "undefined"){
-					routesList =  ${StringUtil.wrapString(routesJSON)}
-				}
-								
-			}	
+				
 				
 			function setRouteBoothsDropDown(selection){	
 				if(typeof selection.value == "undefined"){
@@ -825,6 +820,17 @@ function updateGrid(){
 			</#if>	
 						
 	</#if>
+	function setRouteDropDownByValue(selectionValue){
+	
+			if(supplyRouteList != "" || supplyRouteList != "undefined"){
+			
+				routesList = supplyRouteList[selectionValue];
+				if(selectionValue =="" || selectionValue == "undefined"){
+					routesList =  ${StringUtil.wrapString(routesJSON)}
+				}
+								
+			}
+	}
 	function setSupplyDate(selection){
 		var type = selection.value;
 		var dateStr = $("#effectiveDate").val();
