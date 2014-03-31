@@ -845,6 +845,7 @@ public class ByProductNetworkServices {
   		    Timestamp dayEnd = UtilDateTime.getDayStart(supplyDate);
   		
   		    try{
+  		    	
 	    		if(UtilValidate.isNotEmpty(routeId)){
 	    			GenericValue facilityRoute = delegator.findOne("Facility", UtilMisc.toMap("facilityId",routeId), true);
 		    		if(UtilValidate.isEmpty(facilityRoute)){
@@ -886,6 +887,7 @@ public class ByProductNetworkServices {
 	    		facilityCategory = facility.getString("categoryTypeEnum");
 	    		//lets override productSubscriptionTypeId based on facility category
 	    		
+
 	    		if(UtilValidate.isEmpty(routeId)){
 	    			Map boothCtxMap = FastMap.newInstance();
 	    			boothCtxMap.putAll(context);
@@ -897,6 +899,7 @@ public class ByProductNetworkServices {
 	    				return ServiceUtil.returnError("No Permanent Route exists for : "+subscriptionTypeId);
 	    				}
 	    		}
+	    		
 	    		
 	    		List prevshipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId, routeId);
 	    		if(UtilValidate.isNotEmpty(prevshipmentIds)){
@@ -1027,7 +1030,7 @@ public class ByProductNetworkServices {
 	    		
 	    	}catch (Exception e) {
 				// TODO: handle exception
-				Debug.logError(e.toString(), module);
+				Debug.logError(e.toString()+"context ===="+context, module);
 				return ServiceUtil.returnError(e.toString());
 			}
 	    	
@@ -1270,7 +1273,12 @@ public class ByProductNetworkServices {
 
 	    		List crateProductsIdsList=EntityUtil.getFieldListFromEntityList(crateProductsList, "productId", false);
 	    		//List canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "productId", false);
-	    		 
+	    		
+	    		Map resultQtyMap = (Map)getProductCratesAndCans(dctx, UtilMisc.toMap("userLogin", userLogin));
+		    	Map cratesMap = (Map)resultQtyMap.get("piecesPerCrate");
+		    	Map cansMap = (Map)resultQtyMap.get("piecesPerCan");
+		    	
+	    		
 	    		for(String routeListId : routesListIds){
 	    			List<GenericValue> routeProducts = EntityUtil.filterByCondition(subProdList, EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeListId));
 	    			BigDecimal crateTotal = BigDecimal.ZERO;
@@ -1299,13 +1307,13 @@ public class ByProductNetworkServices {
 	    			}
 	    			for(GenericValue routeProduct : routeProducts){
 	    				String productId = routeProduct.getString("productId");
-	    				BigDecimal crateQty = routeProduct.getBigDecimal("crateQuantity");
-	    				if(crateProductsIdsList.contains(productId) && UtilValidate.isNotEmpty(crateQty)){
-	    					crateTotal = crateTotal.add(crateQty);
+	    				BigDecimal qty = routeProduct.getBigDecimal("quantity");
+	    				if(crateProductsIdsList.contains(productId) && UtilValidate.isNotEmpty(cratesMap) && UtilValidate.isNotEmpty(cratesMap.get(productId))){
+	    					BigDecimal diviserCrateValue = (BigDecimal)cratesMap.get(productId);
+	    					BigDecimal crateQuantity = qty.divide(diviserCrateValue, 2 ,rounding);
+	    					crateTotal = crateTotal.add(crateQuantity);
 	    				}
-	    				/*if(canProductsIdsList.contains(productId) && UtilValidate.isNotEmpty(crateQty)){
-	    					canTotal = canTotal.add(crateQty);
-	    				}*/
+	    				
 	    			}
 	    			routeTotalMap.put("routeId", routeListId);
 	    			routeTotalMap.put("retailerIndentCrate", crateTotal);
