@@ -782,6 +782,11 @@ function updateGrid(){
             $('#myGrid1').show();
            $('#GridSaveId').show();
     }
+     $('#routeId').keypress(function (e) {
+			$("#subscriptionTypeId").trigger("onchange");
+             alert("")
+	 });
+      
      
 	var boothsList =  ${StringUtil.wrapString(boothsJSON)}
 	var routesList =  ${StringUtil.wrapString(routesJSON)}
@@ -790,15 +795,19 @@ function updateGrid(){
 			var supplyRouteList =  ${StringUtil.wrapString(supplyRouteItemsJSON)}
 			$("#subscriptionTypeId").trigger("onchange");
 			function setRouteDropDown(selection){	
-				//routesList = routesList;
-				routesList = supplyRouteList[selection.value];
-				
-				if(selection.value =="" || typeof selection.value == "undefined"){
-					routesList =  ${StringUtil.wrapString(routesJSON)}
-				}
+				setRouteDropDownByValue(selection.value);
 				setSupplyDate(selection);
 								
+			}
+			
+			function setRouteDropDownByValue(selectionValue){
+				routesList = supplyRouteList[selectionValue];
+				if(selectionValue =="" || selectionValue == "undefined"){
+					routesList =  ${StringUtil.wrapString(routesJSON)}
+				}
+								
 			}	
+				
 			function setRouteBoothsDropDown(selection){	
 				if(typeof selection.value == "undefined"){
 				   selection.value = $("#routeId").val();

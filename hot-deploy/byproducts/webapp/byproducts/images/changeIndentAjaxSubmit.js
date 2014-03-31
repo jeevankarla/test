@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	//callig to grid Hide
 	gridHideCall();
-	  
+	 setRouteDropDownByValue($("#subscriptionTypeId").val());
 	$( "#effectiveDate" ).datepicker({
 		dateFormat:'d MM, yy',
 		changeMonth: true,
