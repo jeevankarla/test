@@ -83,6 +83,7 @@ piecesPerCan = result.get("piecesPerCan");
 routeWiseMap =[:];
 conditionList = [];
 routeWiseTotalCrates = [:];
+routeShipmentMap = [:];
 if(UtilValidate.isNotEmpty(routeIdsList)){
 	routeIdsList.each{ routeId ->
 		 Set lmsProductList =new HashSet();
@@ -100,6 +101,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		boothsList = EntityUtil.getFieldListFromEntityList(orderHeader, "originFacilityId", true);
 		tempShipList = [];
 		tempShipList.add(shipId);
+		routeShipmentMap.put(routeId, shipId);
 		//prepare boothsLsit
 		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
 		if(UtilValidate.isNotEmpty(boothsList)){
@@ -330,6 +332,6 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 			}
 		}		
 	}
-
+context.routeShipmentMap = routeShipmentMap;
 context.put("routeWiseMap",routeWiseMap);
 context.putAt("routeWiseTotalCrates", routeWiseTotalCrates);

@@ -63,7 +63,7 @@ under the License.
 				                          <fo:block>DESPATCH TIME:</fo:block>
 				                  </fo:table-cell>
 				                    <fo:table-cell>
-				                         <fo:block>G.P.NUMBER:</fo:block>
+				                         <fo:block>G.P.NUMBER: ${routeShipmentMap.get(facilityDetails.get("facilityId"))?if_exists}</fo:block>
 				                         <fo:block>G.P.DATE:${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd/MM/yyyy")}</fo:block>
 				                          <fo:block>G.P.TIME:${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()}</fo:block>
 				                   </fo:table-cell>
