@@ -138,8 +138,13 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 									qty=productTotals.get(entry.getKey()).get("packetQuantity");
 									supplyTypeTotals=productTotals.get(entry.getKey()).get("supplyTypeTotals");
 									if(supplyTypeTotals && supplyTypeTotals.get("EMP_SUBSIDY")){	
-																	packetTotal=supplyTypeTotals.get("EMP_SUBSIDY").get("packetQuantity");
-									subsidyTotal=subsidyTotal+packetTotal;
+										packetTotal=supplyTypeTotals.get("EMP_SUBSIDY").get("packetQuantity");
+										subsidyTotal=subsidyTotal+packetTotal;
+										qty = qty - packetTotal;
+										tempMap = productTotals.get(entry.getKey())
+										tempMap.packetQuantity = qty;
+										productTotals.put(entry.getKey(), tempMap);
+									
 									}
 									totalQuantity=totalQuantity+qty;
 									if(crateProductsIdsList.contains(itrProductId)){
@@ -228,17 +233,26 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								byProdList.add(productId);
 							}
 							rtQty =entry.getValue().get("packetQuantity");
+							//supplyTypeTotals = [];
+							supplyTypeTotals=entry.getValue().get("supplyTypeTotals");
+							if(supplyTypeTotals && supplyTypeTotals.get("EMP_SUBSIDY")){
+								packetTotal=supplyTypeTotals.get("EMP_SUBSIDY").get("packetQuantity");
+								rtQty = rtQty - packetTotal;
+								tempMap = routeProdTotals.get(productId)
+								tempMap.packetQuantity = rtQty;
+								routeProdTotals.put(productId, tempMap);
+							}
 							routeTotQty=routeTotQty+rtQty;
 							if(crateProductsIdsList.contains(productId)){
 								if(piecesPerCrate && piecesPerCrate.get(productId)){
 									int crateDivisior=(piecesPerCrate.get(productId)).intValue();
-								   tempRtCrates = (rtQty/(crateDivisior)).intValue();
-								   tempRtExcess=((rtQty.intValue())%(crateDivisior.intValue()));
-								   rtCrates = rtCrates+tempRtCrates;
-								   rtExcessPkts = rtExcessPkts+tempRtExcess;
-								   cratesDetailMap.put("prodCrates", tempRtCrates);
-								   cratesDetailMap.put("packetsExces", tempRtExcess);
-							   }
+									tempRtCrates = (rtQty/(crateDivisior)).intValue();
+									tempRtExcess=((rtQty.intValue())%(crateDivisior.intValue()));
+									rtCrates = rtCrates+tempRtCrates;
+									rtExcessPkts = rtExcessPkts+tempRtExcess;
+									cratesDetailMap.put("prodCrates", tempRtCrates);
+									cratesDetailMap.put("packetsExces", tempRtExcess);
+								}
 								
 							}
 							if(canProductsIdsList.contains(productId)){
