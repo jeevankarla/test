@@ -763,7 +763,7 @@
 	<view-map name="InstBillingPeriodSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InstBillingPeriodSearch"/>
 	<view-map name="createInstBillingConfig" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createInstBillingConfig"/>
 	<view-map name="PartywiseBalanceAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PartywiseBalanceAbstractPDF" content-type="application/pdf"/>
-	<view-map name="DealerBankChallanPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanPDF" content-type="application/pdf"/>
+	<view-map name="DealerBankChallanPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanPDF" content-type="text/plain"  />
 	<view-map name="IndentManualCollection" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentManualCollection" content-type="application/pdf"/>
 	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>
 	<view-map name="RetailerLedgerAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerLedgerAbstractPDF" content-type="application/pdf"/>
