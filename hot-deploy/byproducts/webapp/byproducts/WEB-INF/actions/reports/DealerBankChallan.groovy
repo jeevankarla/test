@@ -64,8 +64,8 @@ if(UtilValidate.isNotEmpty(amShipmentIds)){
 		amBoothTotals = dayTotals.get("boothTotals");
 	}
 }
-toDayAmStr=UtilDateTime.toDateString(estimatedDeliveryDateTime, "dd MMMMM, yyyy");
-prevDayPmStr=UtilDateTime.toDateString(UtilDateTime.addDaysToTimestamp(estimatedDeliveryDateTime, -1), "dd MMMMM, yyyy");
+toDayAmStr=UtilDateTime.toDateString(estimatedDeliveryDateTime, "dd-MMM-yyyy");
+prevDayPmStr=UtilDateTime.toDateString(UtilDateTime.addDaysToTimestamp(estimatedDeliveryDateTime, -1), "dd-MMM-yyyy");
 //pmShipments
 if(UtilValidate.isNotEmpty(pmShipmentIds)){
 	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds,fromDate: UtilDateTime.addDaysToTimestamp(dayBegin, -1), thruDate: UtilDateTime.addDaysToTimestamp(dayEnd, -1)]);
