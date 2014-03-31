@@ -3038,6 +3038,10 @@ public class ByProductNetworkServices {
 	        List facilityIdsList=(List)context.get("facilityIdsList");
 	        Map boothRouteIdsMap = FastMap.newInstance();
 	        
+	        boolean orderByBankName= Boolean.FALSE;
+	        if(context.get("orderByBankName") != null){
+	        	orderByBankName = (Boolean)context.get("orderByBankName");
+	        }
 	        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
 	        List paymentIds = (List) context.get("paymentIds");
 	        boolean onlyCurrentDues= Boolean.FALSE;
@@ -3108,7 +3112,10 @@ public class ByProductNetworkServices {
 					Debug.logError(e, module);
 					return ServiceUtil.returnError("facilityId '"+facilityId+ "' error");				
 				}			
-			}		
+			}
+			if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){
+				exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIdsList));
+			}
 			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
 			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
 			if (!UtilValidate.isEmpty(userLoginId)) {
@@ -3122,8 +3129,13 @@ public class ByProductNetworkServices {
 			}
 			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);		
 			List paymentsList = FastList.newInstance();
+			//order by condition will change basing on requirement;
+			List<String> orderBy = UtilMisc.toList("-lastModifiedDate");
+			if(orderByBankName){
+				orderBy = UtilMisc.toList("issuingAuthority","-lastModifiedDate");
+			}
 			try {                                       
-				paymentsList = delegator.findList("PaymentAndFacility", condition, null, UtilMisc.toList("-lastModifiedDate"), null, false);			
+				paymentsList = delegator.findList("PaymentAndFacility", condition, null,orderBy , null, false);			
 				String tempFacilityId = "";	
 				Map tempPayment = FastMap.newInstance();
 				for (int i = 0; i < paymentsList.size(); i++) {				
