@@ -40,6 +40,8 @@ permissions and limitations under the License. -->
 		    		</#if>
 		    		 <#assign noOfbooths=noOfbooths+1>	
         	          <#assign facilityId = boothSaleMap.getKey()>
+        	           <#assign accNumber =  facilityBankMap.get(facilityId)?if_exists>
+        	         
         	          <#assign facility = delegator.findOne("Facility", {"facilityId" :facilityId}, true)>
         	           <#assign boothSaleDetails = boothSaleMap.getValue()>
         	                    
@@ -87,7 +89,7 @@ permissions and limitations under the License. -->
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  A/C NO :</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  A/C NO :${accNumber?if_exists}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
@@ -261,7 +263,7 @@ permissions and limitations under the License. -->
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> A/C NO :</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> A/C NO :${accNumber?if_exists}</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
 																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">&#160;        PAN:${panIdDetails.idValue?if_exists}</fo:block>
@@ -384,7 +386,7 @@ permissions and limitations under the License. -->
 																	</fo:table-row>
 															 <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --</fo:block>
+																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ </fo:block>
 																		</fo:table-cell>
 															  </fo:table-row>
 																	<fo:table-row>
