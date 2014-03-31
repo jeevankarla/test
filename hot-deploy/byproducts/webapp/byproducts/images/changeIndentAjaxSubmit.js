@@ -6,6 +6,8 @@ $(document).ready(function() {
 		dateFormat:'d MM, yy',
 		changeMonth: true,
 		numberOfMonths: 1,
+		minDate: 0,
+		maxDate:1,
 		onSelect: function( selectedDate ) {
 			$( "#effectiveDate" ).datepicker("option", selectedDate );
 		}

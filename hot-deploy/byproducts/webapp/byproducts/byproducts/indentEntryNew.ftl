@@ -41,7 +41,7 @@
        						</td>
 	       				<#else>-->
 	       					<td>
-            					<input class="h2" type="text" size="18" maxlength="20" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate?if_exists}"/>
+            					<input class="h2" readonly="true" type="text" size="18" maxlength="20" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate?if_exists}"/>
           					</td>        
             			<#--</#if>-->
           			</tr>
