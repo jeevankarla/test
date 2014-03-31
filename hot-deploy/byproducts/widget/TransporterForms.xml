@@ -25,7 +25,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="periodBillingId"><hidden/></field>       
         <field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}">
-          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}"/>
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}" />
         </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="TransporterMarginAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
@@ -65,7 +65,7 @@ under the License.
 		<field name="billingTypeId"><hidden value="PB_LMS_TRSPT_MRGN"/></field>
 		<field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}" >
         	<drop-down>																						
-            	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}" filter-by-date="false">
+            	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  filter-by-date="false" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}">
                 	 <entity-constraint name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
                  	 <entity-constraint name="isClosed" operator="equals" value="N"/>
                  	 <entity-constraint name="fromDate" operator="less" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp();}"/>
