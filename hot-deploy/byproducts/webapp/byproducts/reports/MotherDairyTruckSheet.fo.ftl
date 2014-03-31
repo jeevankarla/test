@@ -552,12 +552,12 @@ under the License.
 														</fo:table-cell>
 													</#if>
 												</#list>
-												<#-- 
+												 
 												<fo:table-cell>
-													<fo:block font-size="6pt">${(routesMap.getValue().get("rtCrates"))?if_exists}</fo:block>
+													<fo:block font-size="6pt">${(routesMap.getValue().get("routeEmpCrates"))?if_exists}</fo:block>
 												<#assign totalCrate=routesMap.getValue().get("rtCrates")>
 												</fo:table-cell>
-												<fo:table-cell>
+												<#--<fo:table-cell>
 													<fo:block font-size="6pt"></fo:block>
 												</fo:table-cell> -->
 											</fo:table-row>	
@@ -577,7 +577,6 @@ under the License.
 						</fo:table-cell>
 						
 						<fo:table-cell>
-							
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>

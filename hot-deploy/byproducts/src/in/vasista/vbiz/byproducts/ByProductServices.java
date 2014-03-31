@@ -1147,22 +1147,47 @@ public class ByProductServices {
         List boothOrderIdsList = FastList.newInstance();
         List boothInvoiceIdsList = FastList.newInstance();
         GenericValue shipment = null;
+        List shipmentList = FastList.newInstance();
        // Date shipDate = nowDate;
         String routeId = (String)context.get("routeId");
         String tripId = (String)context.get("tripId");
-        String vehicleId ="";
-        List routesList = FastList.newInstance();
-        if((UtilValidate.isNotEmpty(routeId)) && (routeId.equalsIgnoreCase("AllRoutes")) ){
-        	routesList = (List) getByproductRoutes(delegator).get("routeIdsList");
-        }else if(UtilValidate.isNotEmpty(routeId)){
-        	routesList.add(routeId);
-        }
         
+        if(UtilValidate.isEmpty(shipmentId)){
+        	Debug.logError("ShipmentId is empty", module);
+    	    return ServiceUtil.returnError("ShipmentId is empty");
+        }
+        List shipmentIdsList = FastList.newInstance();
+        String vehicleId ="";
         Timestamp estimatedShipDate = (Timestamp)context.get("estimatedDeliveryDate");
         Timestamp dayBegin = UtilDateTime.getDayStart(estimatedShipDate);
         Timestamp dayEnd = UtilDateTime.getDayEnd(estimatedShipDate);
-        List shipmentList = FastList.newInstance();
-        if(UtilValidate.isEmpty(shipmentId)  && (UtilValidate.isNotEmpty(routesList))){
+        //List routesList = FastList.newInstance();
+        
+        if((UtilValidate.isNotEmpty(shipmentId)) && (shipmentId.equalsIgnoreCase("allRoutes")) ){
+        	conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+        	if(UtilValidate.isNotEmpty(tripId)){
+        		conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS , tripId));
+        	}
+        	conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS , shipmentTypeId));
+  	        conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+  	        conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+  	        	
+        	//routesList = (List) getByproductRoutes(delegator).get("routeIdsList");
+        }else if(UtilValidate.isNotEmpty(shipmentId)){
+        	conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId));
+        }
+        
+        EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+        try {
+    	    shipmentList = delegator.findList("Shipment", condition, null,null, null, false);
+        }catch (GenericEntityException e) {
+            Debug.logError("Unable to get Shipment record from DataBase"+e, module);
+    	    return ServiceUtil.returnError("Unable to get Shipment record from DataBase "); 
+	    }
+        
+        /*if(UtilValidate.isEmpty(shipmentId)  && (UtilValidate.isNotEmpty(routesList))){
         	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
         	if(UtilValidate.isNotEmpty(tripId)){
         		conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS , tripId));
@@ -1180,18 +1205,17 @@ public class ByProductServices {
 	            Debug.logError("Unable to get Shipment record from DataBase"+e, module);
 	    	    return ServiceUtil.returnError("Unable to get Shipment record from DataBase "); 
 		    } 
-        }else{
-        	conditionList.clear();
-        	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId));
+        }else{*/
+        	/*conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIdsList));
         	EntityCondition shipCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	try {
         		shipmentList = delegator.findList("Shipment", shipCondition, null,null, null, false);
 	        }catch (GenericEntityException e) {
 	            Debug.logError("Unable to get Shipment record from DataBase"+e, module);
 	    	    return ServiceUtil.returnError("Unable to get Shipment record from DataBase "); 
-	         
-		    }
-        }
+		    }*/
+       // }
         if(UtilValidate.isEmpty(shipmentList)){
         	Debug.logError("ShipmentId or routeId should be given", module);
      		return ServiceUtil.returnError("ShipmentId or routeId should be given"); 

@@ -784,7 +784,6 @@ function updateGrid(){
     }
      $('#routeId').keypress(function (e) {
 			$("#subscriptionTypeId").trigger("onchange");
-             alert("")
 	 });
       
      

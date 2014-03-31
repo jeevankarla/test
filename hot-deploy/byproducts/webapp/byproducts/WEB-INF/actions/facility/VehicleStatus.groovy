@@ -53,7 +53,6 @@ else {
 	supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 }
 
-Debug.log("===parameters.supplyDate===="+parameters.supplyDate+"====supplyDate=="+supplyDate); 
 if(parameters.facilityId){
 	facilityId = parameters.facilityId;
 }else{

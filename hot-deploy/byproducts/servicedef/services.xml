@@ -238,7 +238,7 @@
     <service name="cancelByProdShipment" engine="java" auth="true" transaction-timeout="300"
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelByProdShipment">
         <description>Create Shipment.</description>        
-        <attribute name="shipmentId" type="String" mode="IN" optional="true"/> 
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/> 
         <attribute name="routeId" type="String" mode="IN" optional="true"/>
         <attribute name="tripId" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/> 

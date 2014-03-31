@@ -34,7 +34,7 @@
         <field name="shipmentId" title="Route" id-name="shipmentId" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
             <drop-down allow-empty="false">
                 <option key="allRoutes" description="All-Routes"/>
-                <list-options list-name="shipmentRouteList" key-name="shipmentId" description="${groovy: routes.get(routeId);}  [ ${tripNum} ]"/>
+                <list-options list-name="shipmentRouteList" key-name="shipmentId" description="${groovy: routes.get(routeId);} "/>
             </drop-down>
         </field>
         <!-- <field name="tripId" title="Trip" id-name="tripId" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" separate-column="true">
@@ -106,8 +106,8 @@
                 <parameter param-name="reportTypeFlag" value="crInstDeliveryChalan"/>                                                           
             </hyperlink>
         </field> -->
-        <field name="cancelShipment" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
-            <hyperlink target-type="plain" target="javascript:showCancelTruckSheetGenerate('${estimatedShipDate}','${scheduleDate}' ,'${shipmentTypeId}');" description="${uiLabelMap.CommonCancel}">
+        <field name="cancelShipment" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+            <hyperlink target-type="plain" target="javascript:showCancelTruckSheetGenerate('${estimatedShipDate}','${scheduleDate}' ,'${shipmentTypeId}', '${shipmentRouteList}');" description="${uiLabelMap.CommonCancel}">
             </hyperlink>
         </field>
     </form>
@@ -786,7 +786,7 @@
         <field name="cancelBilling" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target-type="plain" target="javascript:showCancelBilling('${customTimePeriodId}', '${periodTypeId}', '${facilityBillingList}');" description="${uiLabelMap.CommonCancel}">
             </hyperlink>
-            </field>
+        </field>
     </form>
     <form name="CreateInstBillingPeriodSearchForm" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
     	default-table-style="basic-table hover-bar" separate-columns="true" target="InstBillingPeriodSearch">

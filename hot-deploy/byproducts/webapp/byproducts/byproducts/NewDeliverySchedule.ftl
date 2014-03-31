@@ -8,8 +8,8 @@
 	var routeData = ${StringUtil.wrapString(facilityItemsJSON)}
 	var routeValuesList ;
 	var routeList ='';
-	
-	
+	var shipmentRouteList;
+	var cancelDom;
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -42,7 +42,8 @@
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
-				populateDate()
+				populateDate();
+				setDropDown();
 					$('button', api.elements.content).click(api.hide);
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
@@ -78,6 +79,20 @@
 	//handle cancel event
 	function cancelForm(){		 
 		return false;
+	}
+	function setDropDown(){
+		
+		
+		var cancelParentDomObj = $(cancelDom).parent().parent();
+		
+		var dropdownDom = $(cancelParentDomObj).find( "[name='"+"shipmentId"+"']");
+		
+		$(dropdownDom).clone().appendTo($("#routeShipId"));
+		$("#routeShipId").html($(dropdownDom).html());
+	}
+	
+	function setCancelDomObj(thisObj){
+		cancelDom = thisObj;
 	}
 	
 	function setRoutesList(selection){
@@ -122,8 +137,8 @@
 	var estimatedDate;	
 	var dateFormatted;
 	var shipmentTypeId;
-	function showCancelTruckSheetGenerate(estDate, scheduleDate ,shipmentTypeIdVal) {
-		
+	function showCancelTruckSheetGenerate(estDate, scheduleDate ,shipmentTypeIdVal, routeList) {
+		shipmentRouteList = routeList;
 		var message = "";
 		estimatedDate = estDate;
 		dateFormatted = scheduleDate;
@@ -132,7 +147,7 @@
 			
 			//message += "<br/><br/>";	
 			message += "<tr class='h3'><td align='left' class='h3' width='40%'><input type='hidden' name='shipmentTypeId' id='shipmentTypeId'/>Supply Date:</td><td align='right' width='60%'><input class='h3' type='text' id='estimatedDateFormatted' name='estimatedDateFormatted' size='20' readonly><input class='h3' type='hidden' id='estimatedDeliveryDate' name='estimatedDeliveryDate' size='20' readonly/></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='40%'>Route:</td><td align='left' width='60%'><select name='routeId' id='routeId'>"+
+						"<tr class='h3'><td align='left' class='h3' width='40%'>Route:</td><td align='left' width='60%'><select name='shipmentId' id='routeShipId'>"+
 						"<#list routeList as eachRoute><option value='${eachRoute.facilityId?if_exists}' >${eachRoute.facilityId?if_exists}</option></#list></select></td></tr>"+            
 						<#--"<tr class='h3'><td align='left' class='h3' width='40%'>Trip:</td><td align='left' width='60%'><select name='tripId' id='tripId'>"+
 						"<#list prodSubTrips as eachTrip><option value='${eachTrip.enumId?if_exists}'>${eachTrip.description?if_exists}</option></#list></select></td></tr>"+-->            

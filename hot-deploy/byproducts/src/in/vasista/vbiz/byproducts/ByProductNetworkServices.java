@@ -1916,7 +1916,6 @@ public class ByProductNetworkServices {
 	        List conditionList = FastList.newInstance();
 	        Timestamp supplyDate = null;	
 	        List orderReturnList = FastList.newInstance();
-	        Debug.log("shipmentId ##################"+shipmentId);
 	        Timestamp dayStart = null;
     		Timestamp dayEnd = null;
     		
@@ -5153,10 +5152,23 @@ public class ByProductNetworkServices {
 			BigDecimal totalCanQty = BigDecimal.ZERO;
 			try{
 				List<GenericValue> shippedOrderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null ,null, null, false);
+				
+				List<GenericValue> excludeSubsidy = EntityUtil.filterByCondition(shippedOrderItems, EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "EMP_SUBSIDY"));
+				BigDecimal empSubsidyCrate = BigDecimal.ZERO;
+				BigDecimal empSubsidyQty = BigDecimal.ZERO; 
+				String empProdId = "";
+				for(GenericValue subsidy: excludeSubsidy){
+					empProdId = subsidy.getString("productId");
+					empSubsidyQty = empSubsidyQty.add(subsidy.getBigDecimal("quantity"));
+				}
+				if(UtilValidate.isNotEmpty(piecesPerCrate) && UtilValidate.isNotEmpty(empProdId) && piecesPerCrate.containsKey(empProdId)){
+					empSubsidyCrate = (empSubsidyQty.divide((BigDecimal)piecesPerCrate.get(empProdId),0,BigDecimal.ROUND_CEILING));
+	        	}
+				List<GenericValue> exluEmpShippedOrderItem = EntityUtil.filterByCondition(shippedOrderItems, EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.NOT_EQUAL, "EMP_SUBSIDY")); 
 				List<String> productList = EntityUtil.getFieldListFromEntityList(shippedOrderItems, "productId", true);
 				 
 				for(String productId: productList){
-					List<GenericValue> productOrderItems = EntityUtil.filterByCondition(shippedOrderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					List<GenericValue> productOrderItems = EntityUtil.filterByCondition(exluEmpShippedOrderItem, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 					BigDecimal prodTotQty = BigDecimal.ZERO;
 					BigDecimal prodTotCrate = BigDecimal.ZERO;
 					BigDecimal prodTotCan = BigDecimal.ZERO;
@@ -5175,8 +5187,9 @@ public class ByProductNetworkServices {
 			        	totalCanQty = totalCanQty.add(prodTotCan);
 		        	}
 				}
+				BigDecimal totalFinalCrate = totalCrateQty.add(empSubsidyCrate);
 				result.put("totalCans", totalCanQty);
-				result.put("totalCrates", totalCrateQty);
+				result.put("totalCrates", totalFinalCrate);
 			}catch (Exception e) {
 				Debug.logError("Error calculating crates for the shipment", module);
 	    		return ServiceUtil.returnError("Error calculating crates for the shipment"); 
