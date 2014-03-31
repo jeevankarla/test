@@ -81,13 +81,14 @@ conditionList=[];
 facilityIdsList=[];
 
 	if(parameters.routeId !="All"){
-		facilityIdsList =ByProductNetworkServices.getRouteBooths(dctx,  [routeId:parameters.routeId]);
-	}
+		facilityIdsList =ByProductNetworkServices.getRouteBooths(delegator, parameters.routeId);
+	}else{
 	facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
-
-	boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:dayStart ,paymentMethodTypeId:paymentMethodTypeId,thruDate:dayEnd , facilityIdsList:facilityIdsList]);
+	}
+	boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:dayStart ,paymentMethodTypeId:paymentMethodTypeId,thruDate:dayEnd , facilityIdsList:facilityIdsList,orderByBankName:true]);
 	boothTempPaymentsList = boothPaidDetail["paymentsList"];
 	boothRouteIdsMap= boothPaidDetail["boothRouteIdsMap"];
+
 	boothTempPaymentsList.each{eachBoothPayment->
 			if(UtilValidate.isNotEmpty(eachBoothPayment.issuingAuthority)){
 				bankName=eachBoothPayment.issuingAuthority;
