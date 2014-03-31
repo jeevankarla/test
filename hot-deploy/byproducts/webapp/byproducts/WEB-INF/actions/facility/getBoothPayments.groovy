@@ -93,25 +93,62 @@ paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.make
 context.paymentMethodType = paymentMethodType;
 
 boothPaymentsList=[];
+finaccountInfo = ByProductNetworkServices.getFacilityFinAccountInfo(dctx ,[userLogin: userLogin ]);
+accountNameList = finaccountInfo.get("accountNameList");
+Debug.log("accountNameList============"+accountNameList);
+context.putAt("accountNameList", accountNameList);
 if(hideSearch == "N"){
 	if (statusId == "PAID") {
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
 		boothTempPaymentsList = boothsPaymentsDetail["paymentsList"];
 	}
 	else {
+		
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);
 		boothTempPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	}
+	accountNameFacilityIds = FastList.newInstance();
+if(parameters.finAccountName){
+	finaccountInfo = ByProductNetworkServices.getFacilityFinAccountInfo(dctx ,[userLogin: userLogin ,finAccountName:parameters.finAccountName]);
+	accountNameFacilityIds = finaccountInfo.get("facilityIds");
+}
 	
+	Debug.log("accountNameFacilityIds============"+accountNameFacilityIds);
+	boothPaymentsInnerList = [];
 	boothPaymentsList = [];
+	invoicesTotalAmount =0;
+	invoicesTotalDueAmount = 0;
+	if (statusId != "PAID") {
 	boothTempPaymentsList.each{boothPay ->
 		facilityId = boothPay.get("facilityId");
 		if(!filterFacilityList || (filterFacilityList && filterFacilityList.contains(facilityId))){
-			boothPaymentsList.add(boothPay);
+			boothPaymentsInnerList.add(boothPay);
+			if (statusId != "PAID") {
+				invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
+				invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
+			}
 		}
 	}
 	
-	context.boothPaymentsList = boothPaymentsList;	
+	if(accountNameFacilityIds){
+		invoicesTotalAmount =0;
+		invoicesTotalDueAmount = 0;
+		boothPaymentsInnerList.each{boothPay ->
+		facilityId = boothPay.get("facilityId");
+		invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
+		invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
+			if(accountNameFacilityIds.contains(facilityId)){
+				boothPaymentsList.add(boothPay);
+			}
+		}
+	}else{
+		boothsPaymentsDetail["boothPaymentsList"] = boothPaymentsInnerList;
+	}
+	
+		boothsPaymentsDetail["invoicesTotalAmount"] =invoicesTotalAmount;
+		boothsPaymentsDetail["invoicesTotalDueAmount"] =invoicesTotalDueAmount;
+	}
+	context.boothPaymentsList = boothsPaymentsDetail["boothPaymentsList"];	
 	context.paymentDate= paymentDate;
 	context.paymentTimestamp= paymentTimestamp;
 	context.invoicesTotalAmount = UtilFormatOut.formatCurrency(boothsPaymentsDetail["invoicesTotalAmount"], context.get("currencyUomId"), locale);

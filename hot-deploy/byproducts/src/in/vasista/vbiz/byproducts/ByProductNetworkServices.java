@@ -6194,8 +6194,7 @@ public class ByProductNetworkServices {
 		    	resultMap.put("issuanceProductTotals",issuanceProductTotals);
 		    	resultMap.put("crateTotal",issuanceProductTotals.get("CRATE"));
 		    	resultMap.put("canTotal",issuanceProductTotals.get("CAN"));
-		    	Debug.log("resultMap #################"+resultMap);
-			return resultMap;
+		    	return resultMap;
 		}
 	    
 	    public static Map<String, Object> getFacilityFinAccountInfo(DispatchContext dctx, Map context) {
@@ -6206,14 +6205,21 @@ public class ByProductNetworkServices {
 		
 			GenericValue userLogin = (GenericValue) context.get("userLogin");
 			String facilityId = (String) context.get("facilityId");
+			String finAccountName = (String) context.get("finAccountName");
 			Map accountInfo = FastMap.newInstance();
+			Map accountNameMap = FastMap.newInstance();
 			try{
 				
 				List<GenericValue> facilityFinAccounts = null;
 				List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
 				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"),EntityOperator.OR ,EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, null)));
-				conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+				if(UtilValidate.isNotEmpty(facilityId)){
+					conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+				}
+				if(UtilValidate.isNotEmpty(finAccountName)){
+					conditionList.add(EntityCondition.makeCondition("finAccountName", EntityOperator.EQUALS, finAccountName));
+				}
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				facilityFinAccounts = delegator.findList("FacilityAndFinAccount", condition, null, null, null, false);
 				facilityFinAccounts = EntityUtil.filterByDate(facilityFinAccounts);
@@ -6237,12 +6243,22 @@ public class ByProductNetworkServices {
 				accountInfo.put("finAccountId", finAccountDetail.getString("finAccountId"));
 				accountInfo.put("finAccountCode", finAccountDetail.getString("finAccountCode"));
 				
+				
+				List facilityIds = EntityUtil.getFieldListFromEntityList(facilityFinAccounts, "facilityId", true);
+				List accountNames = EntityUtil.getFieldListFromEntityList(facilityFinAccounts, "finAccountName", true);
+				List accountNameList = FastList.newInstance(); 
+				for(int i=0;i<accountNames.size();i++){
+					accountNameList.add(UtilMisc.toMap("finAccountName",accountNames.get(i)));
+				}
+				result.put("facilityIds", facilityIds);
+				result.put("accountNameList", accountNameList);
 			}catch (Exception e) {
 				// TODO: handle exception
 				 Debug.logError(e.toString(), module);
 				 return ServiceUtil.returnError(e.toString());
 			}
 			result.put("accountInfo", accountInfo);
+			
 			return result;
 	    }
 
@@ -6322,7 +6338,10 @@ public class ByProductNetworkServices {
 				return ServiceUtil.returnError("Error in getShopeeRentAmount " + e);
 			}
 			return result;
-		}	    
+		}
+		
+		
+		
 }
 	
 	
