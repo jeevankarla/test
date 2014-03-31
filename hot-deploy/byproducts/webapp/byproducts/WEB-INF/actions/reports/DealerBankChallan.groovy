@@ -24,13 +24,21 @@ routeIdsList =[];
 shipmentIds = [];
 Timestamp estimatedDeliveryDateTime = null;
 if(parameters.supplyDate){
-	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	try {
+		estimatedDeliveryDateTime = new java.sql.Timestamp(sdf.parse(parameters.supplyDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: "+parameters.supplyDate, "");
+	}
+	
+	/*SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	try {
 		estimatedDeliveryDateTime = new java.sql.Timestamp(formatter.parse(parameters.supplyDate).getTime());
 		
 	}catch (ParseException e) {
 	Debug.logError("==unparsable Date=="+parameters.supplyDate,e.toString())
-	}
+	}*/
 }else{
 estimatedDeliveryDateTime=UtilDateTime.nowTimestamp();
 }
@@ -75,19 +83,30 @@ if(UtilValidate.isNotEmpty(pmShipmentIds)){
 }
 						
 routeWiseMap =[:];
+facilityBankMap =[:];
 for(int i=0; i< routeList.size();i++){
 	route = routeList.get(i);
 	routeId=route.facilityId;
-	boothsList = ByProductNetworkServices.getRouteBooths(delegator , UtilMisc.toMap("routeId",routeId)).get("boothsList");
+	boothIdsList=[];
+	getBoothRes=ByProductNetworkServices.getRouteBooths(delegator , UtilMisc.toMap("routeId",routeId));
+	boothsList =getBoothRes.get("boothsList");
+	boothIdsList = getBoothRes.get("boothIdsList");
 	boothsList = EntityUtil.filterByDate(boothsList, estimatedDeliveryDateTime, "openedDate", "closedDate", true);
+	
+	 partyProfileFacilityMap=ByProductNetworkServices.getPartyProfileDafult(dispatcher.getDispatchContext(),[boothIds:boothIdsList]).get("partyProfileFacilityMap");
 	boothSaleMap=[:];
 	boothsList.each{ boothObj ->
 		boothId=boothObj.facilityId;
+		paymentMethodId=partyProfileFacilityMap.get(boothId);
 		boothAmPmMap=[:];
-		//get Am Details
-		amBoothTotalMap=amBoothTotals.get(boothId);
-		//get Pm details
-		pmBoothTotalMap=pmBoothTotals.get(boothId);
+		amBoothTotalMap=[:];
+		pmBoothTotalMap=[:];
+		if(UtilValidate.isNotEmpty(paymentMethodId) && (paymentMethodId=="CHALLAN_PAYIN")){
+			//get Am Details
+			amBoothTotalMap=amBoothTotals.get(boothId);
+			//get Pm details
+			pmBoothTotalMap=pmBoothTotals.get(boothId);
+		}
 		
 		if(UtilValidate.isNotEmpty(amBoothTotalMap) || UtilValidate.isNotEmpty(pmBoothTotalMap)){//only add when amount is zero
 			amDetailsMap=[:];//inner map
@@ -112,6 +131,15 @@ for(int i=0; i< routeList.size();i++){
 		}
 		if(UtilValidate.isNotEmpty(boothAmPmMap)){//if Am and Pm not empty then
 			boothSaleMap[boothId]=boothAmPmMap;
+			finAcccountRes=ByProductNetworkServices.getFacilityFinAccountInfo(dctx,[facilityId:boothId]);
+			if(UtilValidate.isNotEmpty(finAcccountRes.get("accountInfo"))){
+			accountInfo=finAcccountRes.get("accountInfo");
+			if(UtilValidate.isNotEmpty(accountInfo.finAccountCode)){
+				facilityBankMap[boothId]=accountInfo.finAccountCode;
+				}
+				
+			}
+			
 		}
 	}
 	if(UtilValidate.isNotEmpty(boothSaleMap)){
@@ -120,4 +148,5 @@ for(int i=0; i< routeList.size();i++){
 }
 
 context.put("routeWiseMap",routeWiseMap);
+context.put("facilityBankMap",facilityBankMap);
 //context.putAt("routeWiseTotalCrates", routeWiseTotalCrates);
