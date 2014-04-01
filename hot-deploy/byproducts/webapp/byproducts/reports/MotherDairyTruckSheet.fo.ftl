@@ -42,7 +42,7 @@ under the License.
 		    <fo:block> ${uiLabelMap.CommonPage} <fo:page-number/></fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-015      &#160;                                                             KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">&#160;                                                               GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">&#160;                                                                GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
 			<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : routesMap.getKey()}, true)>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=================================================================================================================================================================================================================================</fo:block>
 			 <fo:block>
@@ -253,7 +253,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="right" >-</fo:block>																									
+															<fo:block text-align="center" >&#160;&#160;&#160;&#160;&#160;  --</fo:block>																							
 														</fo:table-cell>
 													</#if>
 												</#list>
@@ -274,7 +274,7 @@ under the License.
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="right" >-</fo:block>																									
+																<fo:block text-align="center" >&#160;&#160;&#160;&#160;&#160;  --</fo:block>																									
 															</fo:table-cell>
 														</#if>
 												</#list>
@@ -322,6 +322,11 @@ under the License.
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="55pt"/>
 				<fo:table-body>
+					<fo:table-row>
+						<fo:table-cell>
+							<fo:block>VST_ASCII-027VST_ASCII-069</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
 				<fo:table-row>
 						<fo:table-cell>
 							<fo:block font-size="6pt" keep-together="always">TOTAL</fo:block>
@@ -392,11 +397,6 @@ under the License.
 					</fo:table-row>	-->
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block>VST_ASCII-027VST_ASCII-069</fo:block>
-						</fo:table-cell>
-					</fo:table-row>
-					<fo:table-row>
-						<fo:table-cell>
 							<fo:block font-size="6pt" keep-together="always">&#160;</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
@@ -451,8 +451,8 @@ under the License.
 														<fo:block text-align="right">${byProdQty?if_exists}</fo:block>																									
 													</fo:table-cell>
 												<#else>
-													<fo:table-cell>		
-														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													<fo:table-cell>	
+													<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
 													</fo:table-cell>
 												</#if>
 											</#list>
@@ -476,11 +476,7 @@ under the License.
 						<fo:table-cell><fo:block></fo:block></fo:table-cell>
 					</fo:table-row>
 					
-					<fo:table-row>
-						<fo:table-cell>
-							<fo:block>VST_ASCII-027VST_ASCII-070</fo:block>
-						</fo:table-cell>
-					</fo:table-row>	
+				
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -525,7 +521,7 @@ under the License.
 													</fo:table-cell>
 												<#else>
 													<fo:table-cell>		
-														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+														<fo:block text-align="right" >-</fo:block>																									
 													</fo:table-cell>
 												</#if>
 												</#list>
@@ -549,7 +545,7 @@ under the License.
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+															<fo:block text-align="right">-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#list>
@@ -627,8 +623,8 @@ under the License.
 													</fo:table-cell>
 													<#assign looseCrats = looseCrats+1>
 												<#else>
-													<fo:table-cell>		
-														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													<fo:table-cell>	
+													<fo:block text-align="right">-</fo:block>																									
 													</fo:table-cell>
 												</#if>
 											</#list>
@@ -653,7 +649,7 @@ under the License.
 													<#assign looseCrats = looseCrats+1>
 												<#else>
 													<fo:table-cell>		
-														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													<fo:block text-align="right" >-</fo:block>																									
 													</fo:table-cell>
 												</#if>
 											</#list>
@@ -679,6 +675,11 @@ under the License.
 							<fo:block font-size="6pt" text-align="left">${looseCrats}</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
+					<fo:table-row>
+						<fo:table-cell>
+							<fo:block>VST_ASCII-027VST_ASCII-070</fo:block>
+						</fo:table-cell>
+					</fo:table-row>	
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
