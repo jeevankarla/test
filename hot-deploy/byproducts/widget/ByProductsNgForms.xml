@@ -76,13 +76,14 @@
                	  <parameter param-name="reportTypeFlag" value="invoiceSlips"/> 
             </hyperlink>
         </field>
+         <!-- 
         <field name="FinalizeOrder" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:finalizeFormSubmit(this);" id-name="FinalizeOrder">
             <hyperlink target="FinalizeOrders"  description="Finalize Orders" > 	
                   <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
                	  <parameter param-name="estimatedShipDate" from-field="estimatedShipDate"/>
             </hyperlink>
         </field>
-        <!-- <field name="Route Dispatch  Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="deliverySchedule">
+         <field name="Route Dispatch  Sheet" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="deliverySchedule">
             <hyperlink target="MilkDeliveryScheduleReport.pdf" description="Route Dispatch  Sheet" target-window="_blank">
                 <parameter param-name="shipmentId"  from-field="shipmentId" /> 
                 <parameter param-name="reportTypeFlag" value="RouteDispatchSheet"/>                                                           
