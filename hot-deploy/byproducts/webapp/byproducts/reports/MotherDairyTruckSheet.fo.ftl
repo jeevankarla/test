@@ -549,31 +549,24 @@ under the License.
 														</fo:table-cell>
 													</#if>
 												</#list>
-												 
-												<fo:table-cell>
-													<fo:block font-size="6pt">${(routesMap.getValue().get("routeEmpCrates"))?if_exists}</fo:block>
-												<#assign totalCrate=routesMap.getValue().get("rtCrates")>
-												</fo:table-cell>
-												<#--<fo:table-cell>
-													<fo:block font-size="6pt"></fo:block>
-												</fo:table-cell> -->
 											</fo:table-row>	
 									</fo:table-body>
 								</fo:table>
 							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="right">Full</fo:block>
+								<fo:block  text-align="right" font-size="6pt">${(routesMap.getValue().get("routeEmpCrates"))?if_exists}</fo:block>
+								<#assign totalCrate=routesMap.getValue().get("rtCrates")>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="left">Crates:</fo:block>
+							<fo:block font-size="6pt" text-align="right"></fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block font-size="4pt" text-align="right">FullCrates:</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="left">${(routesMap.getValue().get("rtCrates"))?if_exists}</fo:block>
 								<#assign totalCrate=routesMap.getValue().get("rtCrates")>
-						</fo:table-cell>
-						
-						<fo:table-cell>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -666,10 +659,13 @@ under the License.
 							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="right">Loose</fo:block>
+							<fo:block font-size="6pt" text-align="right">&#160;</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="left">Crates:</fo:block>
+							<fo:block font-size="6pt" text-align="right"></fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block font-size="4pt" text-align="right">LooseCrates:</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="left">${looseCrats}</fo:block>
@@ -695,11 +691,13 @@ under the License.
 							TotalCans ->${(routesMap.getValue().get("rtCans")+routesMap.getValue().get("rtLooseCans"))?if_exists} &#160; and </fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-						
-							<fo:block font-size="6pt" text-align="right">Total</fo:block>
+							<fo:block font-size="6pt" text-align="right"></fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="left">Crates-></fo:block>
+							<fo:block font-size="6pt" text-align="right"></fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block font-size="4pt" text-align="right">TotalCrates-></fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
 						<#assign totalCrate=totalCrate+looseCrats>
