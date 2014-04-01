@@ -65,7 +65,9 @@ under the License.
                             			<fo:table-body>
 			                            	<fo:table-row>
 			                              		<fo:table-cell>
-											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
+			                              		<#-- condenser mode removed -->
+			                              		<#-- <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  VST_ASCII-015   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block> --> 
+											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;    KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 			                                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 											        <fo:block font-family="Courier,monospace" >----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 											        <#if reportTitle?has_content>
