@@ -8,12 +8,13 @@ permissions and limitations under the License. -->
 
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
-            margin-top="0.3in" margin-bottom=".3in" margin-left=".3in" margin-right=".3in">
-        <fo:region-body margin-top=".5in"/>
+            margin-top="0.2in" margin-bottom=".2in" margin-left=".3in" margin-right=".3in">
+        <fo:region-body margin-top=".6in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set> 
+${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 <#-- 
 	<fo:layout-master-set>
 		<fo:simple-page-master master-name="main" page-height="12in" page-width="12in" margin-left=".5in" margin-right=".5in">
@@ -48,11 +49,11 @@ permissions and limitations under the License. -->
         	           <#assign amSaleDetails =boothSaleDetails.get("AM")>
         	           <#assign pmSaleDetails = boothSaleDetails.get("PM")>
         	            <#assign totalValue= amSaleDetails.get("saleVal")+pmSaleDetails.get("saleVal")>
+					<#--<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" >-</fo:block> -->
 					<fo:block>
-					<#--
 					<#if (noOfbooths==1) >
 					  <fo:block> ${uiLabelMap.CommonPage} <fo:page-number/></fo:block>
-					  </#if> -->
+					  </#if>
 					<fo:table table-layout="fixed" width="100%" space-before="0.2in">
 						<fo:table-column column-width="40%" />
 						<fo:table-column column-width="5%" />
@@ -207,6 +208,7 @@ permissions and limitations under the License. -->
 					        	<#-- end of  RetailerCopy-->
 					        					
 					        	<fo:table-cell >
+									<fo:block text-align="center" font-size="10pt"></fo:block><#-- line ss-->
 									<fo:block text-align="center" font-size="10pt"></fo:block><#-- line ss-->
 									<fo:block text-align="center" font-size="10pt">|</fo:block><#-- line ss-->
 									<fo:block text-align="center" font-size="10pt">|</fo:block><#-- line ss-->
