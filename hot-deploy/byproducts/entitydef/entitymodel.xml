@@ -62,4 +62,13 @@
         <key-map field-name="dailyindentid" rel-field-name="id"/>
       </relation>
     </entity>
+    
+    <entity entity-name="FacilityIdisRetailer"
+    		package-name="org.ofbiz.common.period">
+		<field name="facilityId" type="id" />
+		<field name="IdisRetailerId" type="numeric"/>
+      	<prim-key field="facilityId"/>		
+	</entity>
+    		      
+    		
 </entitymodel>
