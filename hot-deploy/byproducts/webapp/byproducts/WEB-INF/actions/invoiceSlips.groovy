@@ -113,6 +113,8 @@ if(parameters.invoiceId){
 	shipmentId = parameters.shipmentId;
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+	conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, "CR_INST"));
+	
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
