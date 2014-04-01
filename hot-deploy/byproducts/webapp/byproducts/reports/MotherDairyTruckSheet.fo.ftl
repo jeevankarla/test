@@ -39,6 +39,7 @@ under the License.
 	<#assign routeTotalCrates = routeWiseTotalCrates.get(routesMap.getKey()?if_exists)>
 	<fo:page-sequence master-reference="main" force-page-count="no-force">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="6pt">
+		    <fo:block> ${uiLabelMap.CommonPage} <fo:page-number/></fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-015      &#160;                                                             KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">&#160;                                                               GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
@@ -52,9 +53,9 @@ under the License.
 			               <fo:table-body>
 			                 <fo:table-row>
 				                   <fo:table-cell>
-				                         <fo:block  text-indent="15pt">ROUTE NUMBER:${facilityDetails.get("facilityId")}</fo:block>
-				                         <fo:block  text-indent="15pt">VEH NUMBER:${routesMap.getValue().get("vehicleId")?if_exists}</fo:block>
-				                         <fo:block  text-indent="15pt">CONTRACTOR ID:${facilityDetails.get("ownerPartyId")}</fo:block>
+				                         <fo:block  text-indent="15pt">ROUTE NUMBER:&#160;&#160;${facilityDetails.get("facilityId")}</fo:block>
+				                         <fo:block  text-indent="15pt">VEH NUMBER:&#160;${routesMap.getValue().get("vehicleId")?if_exists}</fo:block>
+				                         <fo:block  text-indent="15pt">CONTRACTOR ID:&#160;${facilityDetails.get("ownerPartyId")}</fo:block>
 				                          <fo:block  text-indent="15pt">CONTRACTOR NAME:${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityDetails.get("ownerPartyId"), false)}</fo:block>
 				                     </fo:table-cell>
 				                      <fo:table-cell>
@@ -248,7 +249,7 @@ under the License.
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")}</#if></fo:block>																									
+															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
@@ -269,7 +270,7 @@ under the License.
 														</#if>
 														<#if byProdQty !=0>
 															<fo:table-cell>		
-																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")}</#if></fo:block>																									
+																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
