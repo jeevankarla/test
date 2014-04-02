@@ -25,7 +25,7 @@ under the License.
 
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
-            margin-top="0.3in" margin-bottom=".3in" margin-left=".3in" margin-right=".3in">
+            margin-top="0.2in" margin-bottom=".3in" margin-left=".3in" margin-right=".3in">
         <fo:region-body margin-top="1.7in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -53,7 +53,7 @@ under the License.
 			               <fo:table-body>
 			                 <fo:table-row>
 				                   <fo:table-cell>
-				                         <fo:block  text-indent="15pt">ROUTE NUMBER:&#160;&#160;${facilityDetails.get("facilityId")}</fo:block>
+				                         <fo:block  text-indent="15pt" font-size="11pt">ROUTE NUMBER:&#160;&#160;${facilityDetails.get("facilityId")}</fo:block>
 				                         <fo:block  text-indent="15pt">VEH NUMBER:&#160;${routesMap.getValue().get("vehicleId")?if_exists}</fo:block>
 				                         <fo:block  text-indent="15pt">CONTRACTOR ID:&#160;${facilityDetails.get("ownerPartyId")}</fo:block>
 				                          <fo:block  text-indent="15pt">CONTRACTOR NAME:${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityDetails.get("ownerPartyId"), false)}</fo:block>
@@ -249,7 +249,7 @@ under the License.
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")}</#if></fo:block>																									
+															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/(${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
@@ -270,7 +270,7 @@ under the License.
 														</#if>
 														<#if byProdQty !=0>
 															<fo:table-cell>		
-																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")}</#if></fo:block>																									
+																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/(${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -486,7 +486,7 @@ under the License.
 					
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block>VST_ASCII-027VST_ASCII-070</fo:block>
+							<fo:block></fo:block>
 						</fo:table-cell>
 					</fo:table-row>	
 					<fo:table-row>
@@ -706,8 +706,9 @@ under the License.
 					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block font-size="6pt" keep-together="always"></fo:block>
+							<fo:block>VST_ASCII-027VST_ASCII-069</fo:block>
 						</fo:table-cell>
+						
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="right">FullCans:${routesMap.getValue().get("rtCans")} ,&#160;
 							LooseCans:${(routesMap.getValue().get("rtLooseCans"))?if_exists}  ,&#160;
@@ -723,6 +724,9 @@ under the License.
 						<fo:table-cell>
 						<#assign totalCrate=totalCrate+looseCrats>
 							<fo:block font-size="6pt" text-align="left">${totalCrate}</fo:block>
+						</fo:table-cell>
+						<fo:table-cell>
+							<fo:block>VST_ASCII-027VST_ASCII-070</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					
