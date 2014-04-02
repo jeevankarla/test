@@ -188,6 +188,54 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
                  <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block> 
        </fo:block>
    </#list> 
+     <fo:block  font-size="8pt">  &#160;     &#160;   &#160;  &#160;    &#160;  </fo:block>
+     <fo:block  font-size="8pt">  &#160;     &#160;   &#160;  &#160;    &#160; Grand Total </fo:block>
+   <fo:block  font-size="8pt">
+       <fo:table  table-layout="fixed">                
+				                <fo:table-column column-width="33pt"/>
+ 						  		<fo:table-column column-width="55pt"/>
+ 						  		<fo:table-column column-width="180pt"/>
+ 						   	    <fo:table-column column-width="85pt"/>
+ 						   	    <fo:table-column column-width="70pt"/>
+ 						   	    <fo:table-column column-width="60pt"/>
+				                <fo:table-body>
+				               <#assign finalGrandProdList= GrandTotalProdMap.entrySet()>
+				                <#list finalGrandProdList as productEntry>
+	                      								<#assign product = delegator.findOne("Product", {"productId" : productEntry.getKey()}, true)> 	                              
+		              							          <fo:table-row >  
+		              							             <fo:table-cell>
+                        			                            <fo:block text-align="left" keep-together="always"></fo:block>
+                        		                             </fo:table-cell>                  
+					                            		     <fo:table-cell>
+					                                			<fo:block  text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("brandName")))),7)}</fo:block>
+					                            			 </fo:table-cell>
+					                            	         <fo:table-cell>
+					                                	        <fo:block  text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("productName")))),37)}</fo:block>
+					                            	          </fo:table-cell>	
+							                                  <fo:table-cell>
+					                                	         <fo:block  text-align="right">${productEntry.getValue().get("qty")}</fo:block>
+					                            	         </fo:table-cell>
+					                            	         <#assign crateVal = productEntry.getValue().get("crates")?if_exists>
+								                            	<#if crateVal?has_content>
+									                      		<fo:table-cell>
+						                                	         <fo:block  text-align="right">${productEntry.getValue().get("crates")?if_exists}+${productEntry.getValue().get("loosePkts")?if_exists}</fo:block>
+						                            	         </fo:table-cell>
+						                            	         <#else>
+						                            	         <fo:table-cell>
+						                                	         <fo:block  text-align="right">-</fo:block>
+						                            	         </fo:table-cell>
+								                            	</#if>
+								                            	 <#assign cans = productEntry.getValue().get("cans")?if_exists>
+								                            	<#if cans?has_content>
+									                      		<fo:table-cell>
+						                                	         <fo:block  text-align="right">${productEntry.getValue().get("cans")?if_exists}</fo:block>
+						                            	         </fo:table-cell>
+								                            	</#if>
+					                         	         </fo:table-row>
+					                         	         </#list>
+				                  </fo:table-body>
+				                  </fo:table> 
+				                   </fo:block>
   </fo:flow>						        	
 </fo:page-sequence>
  <#else>
