@@ -249,7 +249,7 @@ under the License.
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/(${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
+															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
@@ -270,7 +270,7 @@ under the License.
 														</#if>
 														<#if byProdQty !=0>
 															<fo:table-cell>		
-																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/(${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
+																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
