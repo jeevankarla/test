@@ -39,7 +39,7 @@ under the License.
 	<#assign routeTotalCrates = routeWiseTotalCrates.get(routesMap.getKey()?if_exists)>
 	<fo:page-sequence master-reference="main" force-page-count="no-force">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" font-size="6pt">
-		    <fo:block> ${uiLabelMap.CommonPage} <fo:page-number/></fo:block>
+			<fo:block> ${uiLabelMap.CommonPage} <fo:page-number/></fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-015      &#160;                                                             KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">&#160;                                                                GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
@@ -249,11 +249,11 @@ under the License.
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
+															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")}</#if></fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
-															<fo:block text-align="center" >&#160;&#160;&#160;&#160;&#160;  --</fo:block>																							
+															<fo:block text-align="right" >-</fo:block>																									
 														</fo:table-cell>
 													</#if>
 												</#list>
@@ -270,11 +270,11 @@ under the License.
 														</#if>
 														<#if byProdQty !=0>
 															<fo:table-cell>		
-																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
+																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}+${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")}</#if></fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
-																<fo:block text-align="center" >&#160;&#160;&#160;&#160;&#160;  --</fo:block>																									
+																<fo:block text-align="right" >-</fo:block>																									
 															</fo:table-cell>
 														</#if>
 												</#list>
@@ -322,12 +322,12 @@ under the License.
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="55pt"/>
 				<fo:table-body>
-					<fo:table-row>
-						<fo:table-cell>
-							<fo:block>VST_ASCII-027VST_ASCII-069</fo:block>
-						</fo:table-cell>
-					</fo:table-row>
 				<fo:table-row>
+					<fo:table-cell>
+							<fo:block>VST_ASCII-027VST_ASCII-069</fo:block>
+					</fo:table-cell>
+				</fo:table-row>
+					<fo:table-row>
 						<fo:table-cell>
 							<fo:block font-size="6pt" keep-together="always">TOTAL</fo:block>
 						</fo:table-cell>
@@ -385,6 +385,9 @@ under the License.
 							</fo:table>
 						</fo:block>
 					</fo:table-cell>
+					<fo:table-cell>
+						<fo:block> Subsidy</fo:block>
+					</fo:table-cell>
 					</fo:table-row>	
 					<#--
 					<fo:table-row>
@@ -395,6 +398,11 @@ under the License.
 							
 							</fo:table-cell>
 					</fo:table-row>	-->
+					<fo:table-row>
+						<fo:table-cell>
+							<fo:block>VST_ASCII-027VST_ASCII-069</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block font-size="6pt" keep-together="always">&#160;</fo:block>
@@ -451,8 +459,8 @@ under the License.
 														<fo:block text-align="right">${byProdQty?if_exists}</fo:block>																									
 													</fo:table-cell>
 												<#else>
-													<fo:table-cell>	
-													<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													<fo:table-cell>		
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
 													</fo:table-cell>
 												</#if>
 											</#list>
@@ -468,7 +476,7 @@ under the License.
 								</fo:table>
 							</fo:block>
 						</fo:table-cell>
-						<fo:table-cell><fo:block></fo:block></fo:table-cell>
+						<fo:table-cell><fo:block>${(routesMap.getValue().get("routeTotalSubsidy"))?if_exists?string("#0.00")}</fo:block></fo:table-cell>
 						<fo:table-cell><fo:block font-size="6pt" text-align="right" >${(routesMap.getValue().get("routeVatAmount"))?if_exists?string("#0.00")}</fo:block></fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="right">${(routesMap.getValue().get("routeAmount"))?if_exists?string("#0.00")}</fo:block>
@@ -476,7 +484,11 @@ under the License.
 						<fo:table-cell><fo:block></fo:block></fo:table-cell>
 					</fo:table-row>
 					
-				
+					<fo:table-row>
+						<fo:table-cell>
+							<fo:block>VST_ASCII-027VST_ASCII-070</fo:block>
+						</fo:table-cell>
+					</fo:table-row>	
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -495,9 +507,9 @@ under the License.
 							    <#list byProdList as product>
 								 <fo:table-column column-width="47pt"/>
 							    </#list>
-							     <#-- 
+							     
 								<fo:table-column column-width="35pt"/>
-								<fo:table-column column-width="35pt"/> -->
+								<#-- <fo:table-column column-width="35pt"/> -->
 									<fo:table-body>
 									<fo:table-row>
 										<#assign columnCounter =0>
@@ -521,7 +533,7 @@ under the License.
 													</fo:table-cell>
 												<#else>
 													<fo:table-cell>		
-														<fo:block text-align="right" >-</fo:block>																									
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
 													</fo:table-cell>
 												</#if>
 												</#list>
@@ -549,24 +561,34 @@ under the License.
 														</fo:table-cell>
 													</#if>
 												</#list>
+												 
+												<fo:table-cell>
+													<fo:block font-size="6pt"> - </fo:block>
+												</fo:table-cell>
+												<#--<fo:table-cell>
+													<fo:block font-size="6pt"></fo:block>
+												</fo:table-cell> -->
 											</fo:table-row>	
 									</fo:table-body>
 								</fo:table>
 							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-								<fo:block  text-align="right" font-size="6pt">${(routesMap.getValue().get("routeEmpCrates"))?if_exists}</fo:block>
-								<#assign totalCrate=routesMap.getValue().get("rtCrates")>
+							<fo:block font-size="6pt" text-align="right"><#if (routesMap.getValue().get("routeEmpCrates")>0)>${(routesMap.getValue().get("routeEmpCrates"))?if_exists}<#else>-</#if></fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="right"></fo:block>
+							<fo:block font-size="6pt" text-align="right">Full</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="4pt" text-align="right">FullCrates:</fo:block>
+							<fo:block font-size="6pt" text-align="left">Crates:</fo:block>
 						</fo:table-cell>
+						<#assign fullCrate = (routesMap.getValue().get("rtCrates"))+(routesMap.getValue().get("routeEmpCrates"))>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="left">${(routesMap.getValue().get("rtCrates"))?if_exists}</fo:block>
-								<#assign totalCrate=routesMap.getValue().get("rtCrates")>
+							<fo:block font-size="6pt" text-align="left">${fullCrate?if_exists}</fo:block>
+								<#assign totalCrate  = fullCrate>
+						</fo:table-cell>
+						
+						<fo:table-cell>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -587,9 +609,9 @@ under the License.
 							    <#list byProdList as product>
 								 <fo:table-column column-width="47pt"/>
 							    </#list>
-							      <#-- 
+							      
 								<fo:table-column column-width="35pt"/>
-								<fo:table-column column-width="35pt"/> -->
+								<#-- <fo:table-column column-width="35pt"/> -->
 									<fo:table-body>
 									<fo:table-row>
 										<#assign looseCrats = 0>
@@ -616,7 +638,7 @@ under the License.
 													</fo:table-cell>
 													<#assign looseCrats = looseCrats+1>
 												<#else>
-													<fo:table-cell>	
+													<fo:table-cell>		
 													<fo:block text-align="right">-</fo:block>																									
 													</fo:table-cell>
 												</#if>
@@ -646,11 +668,8 @@ under the License.
 													</fo:table-cell>
 												</#if>
 											</#list>
-											 <#-- 
-											<fo:table-cell>
-												<fo:block font-size="6pt">${(routesMap.getValue().get("rtExcessPkts"))?if_exists}</fo:block>
-											</fo:table-cell>
-								           	<fo:table-cell>
+											
+								           	<#-- <fo:table-cell>
 												<fo:block font-size="6pt"></fo:block>
 											</fo:table-cell> -->
 									</fo:table-row>
@@ -659,14 +678,18 @@ under the License.
 							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="right">&#160;</fo:block>
+							<fo:block font-size="6pt"><#if routesMap?has_content && (((routesMap.getValue()).get("routeTotalSubsidy"))>0)>${(routesMap.getValue().get("routeTotalSubsidy"))?if_exists}(1)<#else>-</#if></fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="right"></fo:block>
+							<fo:block font-size="6pt" text-align="right">Loose</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="4pt" text-align="right">LooseCrates:</fo:block>
+							<fo:block font-size="6pt" text-align="left">Crates:</fo:block>
 						</fo:table-cell>
+						<#if (routesMap.getValue().get("routeTotalSubsidy") > 0)>
+							<#assign looseCrats = looseCrats+1>
+						</#if>
+						
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="left">${looseCrats}</fo:block>
 						</fo:table-cell>
@@ -691,13 +714,11 @@ under the License.
 							TotalCans ->${(routesMap.getValue().get("rtCans")+routesMap.getValue().get("rtLooseCans"))?if_exists} &#160; and </fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="right"></fo:block>
+						
+							<fo:block font-size="6pt" text-align="right">Total</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt" text-align="right"></fo:block>
-						</fo:table-cell>
-						<fo:table-cell>
-							<fo:block font-size="4pt" text-align="right">TotalCrates-></fo:block>
+							<fo:block font-size="6pt" text-align="left">Crates-></fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
 						<#assign totalCrate=totalCrate+looseCrats>

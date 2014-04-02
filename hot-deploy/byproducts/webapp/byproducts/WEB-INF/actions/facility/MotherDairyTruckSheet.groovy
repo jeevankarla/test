@@ -11,13 +11,17 @@ import java.text.SimpleDateFormat;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.base.util.UtilMisc;
+
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.product.product.ProductWorker;
+import in.vasista.vbiz.byproducts.ByProductServices;
 
 dctx = dispatcher.getDispatchContext();
 routeIdsList =[];
@@ -76,6 +80,19 @@ if(parameters.shipmentId){
 }
 piecesPerCrate=[:];
 piecesPerCan=[:];
+priceResult = [:];
+priceContext = [:];
+priceContext.put("userLogin", userLogin);
+priceContext.put("productStoreId", "1003");
+priceContext.put("productId", "15");
+priceContext.put("partyId", "S1132");
+priceContext.put("facilityId", "S1132");
+priceContext.put("priceDate", UtilDateTime.nowTimestamp());
+
+priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);
+
+BigDecimal subsidyUnitPrice = (BigDecimal)priceResult.get("totalPrice");
+subsidyPrice = subsidyUnitPrice*0.5;
 result =ByProductNetworkServices.getProductCratesAndCans(dctx, UtilMisc.toMap("userLogin",userLogin, "saleDate", estimatedDeliveryDateTime));
 piecesPerCrate = result.get("piecesPerCrate");
 piecesPerCan = result.get("piecesPerCan");
@@ -118,6 +135,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				partyProfileFacilityMap=ByProductNetworkServices.getPartyProfileDafult(dispatcher.getDispatchContext(),[boothIds:boothsList,supplyDate:estimatedDeliveryDateTime]).get("partyProfileFacilityMap");
 				boothsList.each{ boothId ->
 					dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:tempShipList, facilityIds:UtilMisc.toList(boothId),fromDate:dayBegin, thruDate:dayEnd]);
+					
 					if(UtilValidate.isNotEmpty(dayTotals)){
 						productTotals = dayTotals.get("productTotals");
 						Map boothWiseProd= FastMap.newInstance();						
@@ -149,7 +167,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 										tempMap = productTotals.get(entry.getKey())
 										tempMap.packetQuantity = qty;
 										productTotals.put(entry.getKey(), tempMap);
-										amount = amount - subsidyRevenue;
+										empSubsidyAmt = subsidyPrice*packetTotal;
+										amount = amount - empSubsidyAmt;
 									
 									}
 									totalQuantity=totalQuantity+qty;
@@ -213,13 +232,13 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				rtExcessPkts = 0;
 				rtCans = 0;
 				
-				empProdId = "15";
-				addEmpCrate = 0;
+				rtEmpCrate = 0;
+				rtEmpExcess = 0;
+				addTotalSub = 0;
 				rtLooseCans = 0;
 				if(UtilValidate.isNotEmpty(routeTotals)){
 					routeProdTotals = routeTotals.get("productTotals");
 					routeAmount= routeTotals.get("totalRevenue");
-					
 					if(UtilValidate.isNotEmpty(routeProdTotals)){
 						Iterator mapIter = routeProdTotals.entrySet().iterator();	
 						while (mapIter.hasNext()) {
@@ -250,7 +269,9 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								packetTotal=supplyTypeTotals.get("EMP_SUBSIDY").get("packetQuantity");
 								subsidyRev = supplyTypeTotals.get("EMP_SUBSIDY").get("totalRevenue");
 								subsidyRtTotal = subsidyRtTotal+packetTotal;
-								routeAmount = routeAmount - subsidyRev;
+								addTotalSub = addTotalSub+packetTotal;
+								totalSubsidy = subsidyPrice*packetTotal;
+								routeAmount = routeAmount - totalSubsidy;
 								rtQty = rtQty - packetTotal;
 								tempMap = routeProdTotals.get(productId)
 								tempMap.packetQuantity = rtQty;
@@ -266,8 +287,9 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 										if(tempRtEmpExcess>0){
 											tempRtEmpExcess = 1;
 										}
-										addEmpCrate = tempRtEmpCrates+tempRtEmpExcess;
-									}
+										rtEmpCrate = rtEmpCrate+tempRtEmpCrates;
+										rtEmpExcess = rtEmpExcess+tempRtEmpExcess;
+									}//+tempRtEmpExcess
 									
 								}
 							}
@@ -321,13 +343,21 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 					if(UtilValidate.isNotEmpty(vehicleRole)){
 						vehicleId=vehicleRole.getString("vehicleId");
 					}
+					tempRtEmpExcess = 0
+					if(rtEmpExcess>0){
+						tempRtEmpExcess = 1;
+					}
+					customRtCrates = rtCrates+tempRtEmpExcess+rtEmpCrate;
 					Map boothDetailsMap=FastMap.newInstance();
 					boothDetailsMap.put("boothWiseMap", boothWiseMap);
 					boothDetailsMap.put("lmsProdList", lmsProdIdsList);
 					boothDetailsMap.put("byProdList", byProdIdsList);
 					boothDetailsMap.put("routeWiseTotals", routeProdTotals);
 					boothDetailsMap.put("routeWiseCrates", productWiseTotalCratesMap);
-					boothDetailsMap.put("routeEmpCrates", addEmpCrate);
+					boothDetailsMap.put("routeTotalSubsidy", addTotalSub);
+					boothDetailsMap.put("routeEmpCrates", rtEmpCrate);
+					boothDetailsMap.put("routeEmpPcks", rtEmpExcess);
+					boothDetailsMap.put("routeTotalCrate", customRtCrates);
 					boothDetailsMap.put("routeAmount", routeAmount);
 					boothDetailsMap.put("routeVatAmount", routeTotals.get("totalVatRevenue"));
 					boothDetailsMap.put("contractorName", contractorName);
