@@ -71,6 +71,7 @@ dayEnd = UtilDateTime.getDayEnd(supplyDate);
 boothsResultMap = [:];
 routeMap = [:];
 tripMap = [:];
+BoothRouteWiseMap= [:]
 if(hideSearch == "N") {
 	facilityId = parameters.facilityId;
 	productId = parameters.productId;
@@ -135,7 +136,7 @@ if(hideSearch == "N") {
 	
 	totalsMap =[:];
 	totalsMap.putAll(prodQuantityInitMap);
-	BoothRouteWiseMap= [:]
+	
 	
 	for (int i=0; i < quotaSubProdList.size(); i++) {
 		routesList = [];
@@ -203,6 +204,7 @@ if(hideSearch == "N") {
 	boothsResultMap["Total"].putAll(totalsMap);
 }
 context.boothsResultMap = boothsResultMap;
+context.BoothRouteWiseMap = BoothRouteWiseMap;
 context.indentCount = boothsResultMap.size() - 1;
 
 JSONArray dataJSONList= new JSONArray();
@@ -257,5 +259,5 @@ while (mapIter.hasNext()) {
 context.dataJSON = dataJSONList.toString();
 result.boothsResultMap = boothsResultMap;
 result.productList = context.productList;
-result.BoothRouteWiseMap = BoothRouteWiseMap;
+result.BoothRouteWiseMap = context.BoothRouteWiseMap;
 return result;

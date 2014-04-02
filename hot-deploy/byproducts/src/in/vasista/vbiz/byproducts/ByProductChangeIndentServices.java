@@ -382,7 +382,9 @@ public class ByProductChangeIndentServices {
   					  createNewSubscriptionProduct.put("quantity", quantity);
   					  createNewSubscriptionProduct.put("crateQuantity", crateQuantity);
   					  createNewSubscriptionProduct.put("fromDate", UtilDateTime.getDayStart(effectiveDate));
-  					  createNewSubscriptionProduct.put("thruDate", null);				  
+  					 // for now populate thruDate
+  					  //createNewSubscriptionProduct.put("thruDate", null);	
+  					  createNewSubscriptionProduct.put("thruDate",  UtilDateTime.getDayEnd(effectiveDate));
   					  if(((productSubscriptionTypeId.equals("SPECIAL_ORDER")) || (productSubscriptionTypeId.equals("CASH_FS") || dayIndentProductList.contains(productId)))&&!productSubscriptionTypeId.equals("EMP_SUBSIDY")){
   						  createNewSubscriptionProduct.put("thruDate",  UtilDateTime.getDayEnd(effectiveDate)); 
   					  }
@@ -524,7 +526,9 @@ public class ByProductChangeIndentServices {
   							  createNewSubscProduct.put("thruDate", UtilDateTime.getDayEnd(effectiveDate));
   						  }
   						  else{
-  							  createNewSubscProduct.put("thruDate", null);  
+  							  // for now populate thruDate
+  							  //createNewSubscProduct.put("thruDate", null);  
+  							createNewSubscProduct.put("thruDate", UtilDateTime.getDayEnd(effectiveDate));
   						  }
   						  				  
   						  if(((productSubscriptionTypeId.equals("SPECIAL_ORDER")) || (productSubscriptionTypeId.equals("CASH_FS") || dayIndentProductList.contains(productId)))&&!productSubscriptionTypeId.equals("EMP_SUBSIDY")){
