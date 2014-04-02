@@ -672,6 +672,25 @@
 			</widgets>
 		</section>
 	</screen>	
-	
+	<screen name="BoothPaymentsCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="Payments" />
+				<set field="subTabButtonItem" value="FindPayments" />								
+				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;dd MMMMM, yyyy&quot;);}" /> 				
+				<set field="hideSearch" value="N"/>
+				 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getBoothPayments.groovy" />
+				 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/boothPaymentsCsv.groovy" />
+			</actions>
+			<widgets>						
+	        	<container>	
+			       <include-form name="ListBoothPaymentsCSV" location="component://product/widget/facility/FacilityForms.xml" />
+		    	</container>
+		    </widgets>								
+		</section>
+	</screen> 
 	
 </screens>        
