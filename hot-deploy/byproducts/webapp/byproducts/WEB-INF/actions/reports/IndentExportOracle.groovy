@@ -55,7 +55,6 @@ if(subscriptionTypeId =="PM"){
 populateData = parameters.populateData;
 dailyIndents =[];
 dailyindentdetails =[];
-Debug.log("supplyDate=========="+supplyDate);
 SimpleDateFormat sdf = new SimpleDateFormat("MMMMM dd, yyyy");
 if(UtilValidate.isNotEmpty(supplyDate)){
 	try {
@@ -67,11 +66,10 @@ if(UtilValidate.isNotEmpty(supplyDate)){
 	}
 	
  if(populateData && populateData =="on"){
-		Debug.log("populate Data"+supplyDateTime);
 		parameters.supplyDate = UtilDateTime.toDateString(supplyDateTime , "dd MMMMM, yyyy");
 		parameters.hideSearch ="N";
 		parameters.productSubscriptionTypeIds = ["CASH","CREDIT"]
-		parameters.facilityId = "S1350";
+		//parameters.routeId = "S101";
 		quotaResult = GroovyUtil.runScriptAtLocation("component://byproducts/webapp/byproducts/WEB-INF/actions/facility/quotaListing.groovy", context);
 		//lets populate Daily indent and indent details here
 		populateDailyIndentDetail(quotaResult);
@@ -146,7 +144,6 @@ dailyindentdetails = delegator.findList("Dailyindentdetail", EntityCondition.mak
 context.sqlString =sqlString;
 
 def populateDailyIndentDetail(quotaResult){
-	//Debug.log("quotaResult====="+quotaResult);
 	facilityIdisRetailers = delegator.findList("FacilityIdisRetailer", null, null, null, null, false);
 	facilityRetailerMap = [:];
 	conditionList1 =[];
