@@ -901,6 +901,7 @@ public class ByProductServices {
                     priceContext.put("partyId", partyId);
                     priceContext.put("facilityId", subscriptionProduct.getString("facilityId")); 
                     priceContext.put("priceDate", estimatedDeliveryDate);
+                    priceContext.put("productSubscriptionTypeId", productSubscriptionTypeId);
                     priceContext.put("facilityCategory", subscriptionProduct.getString("categoryTypeEnum"));
                     
             		priceResult = calculateByProductsPrice(delegator, dispatcher, priceContext);    
@@ -1999,6 +2000,7 @@ public class ByProductServices {
 		    String partyId = (String) context.get("partyId");            
 		    String productStoreId = (String) context.get("productStoreId");
 		    String shipmentTypeId = (String) context.get("shipmentTypeId");
+		    String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
 		    Timestamp priceDate = (Timestamp) context.get("priceDate");
 		    String productStoreGroupId = "_NA_";
 		    String productPriceTypeId = (String) context.get("productPriceTypeId");
@@ -2111,7 +2113,9 @@ public class ByProductServices {
 		    		productPriceTypeId = byprodPriceType;
 		    	}
 		    }
-		    
+		    if(UtilValidate.isNotEmpty(productSubscriptionTypeId) && productSubscriptionTypeId.equals("EMP_SUBSIDY")){
+		    	productPriceTypeId ="MRP_PRICE";
+		    }
 		    
 		    if(UtilValidate.isEmpty(productPriceTypeId)){
 		    	 // lets take DEFAULT_PRICE as default priceType any special priceType for facility Or party, this will override with the special type
@@ -2143,7 +2147,7 @@ public class ByProductServices {
 			EntityCondition priceCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		    
 		    try {
-		    	prodPriceType = delegator.findList("ProductPriceAndType", priceCondition, null, null, null, false);
+		    	prodPriceType = delegator.findList("ProductPriceAndType", priceCondition, null, null, null, true);
 			} catch (GenericEntityException e) {
 				Debug.logError(e, "Failed to retrive InventoryItem ", module);
 				return ServiceUtil.returnError("Failed to retrive InventoryItem " + e);
@@ -3615,8 +3619,25 @@ public class ByProductServices {
 			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			List<GenericValue> orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
 			for(GenericValue orederItem : orderItems){
-				BigDecimal itemSubAmt = orederItem.getBigDecimal("unitPrice").multiply(subPercent.divide(new BigDecimal("100")));
+				Map<String, Object> priceContext = FastMap.newInstance();
+                priceContext.put("userLogin", userLogin);   
+                priceContext.put("productStoreId", orderHeader.getString("productStoreId"));                    
+                priceContext.put("productId", orederItem.getString("productId"));
+                //priceContext.put("partyId", "_NA_");
+                priceContext.put("facilityId", orderHeader.getString("originFacilityId")); 
+                priceContext.put("priceDate", orderHeader.getTimestamp("estimatedDeliveryDate"));
+                
+                Debug.log("priceContext==================="+priceContext);
+                Map priceResult = calculateByProductsPrice(delegator, dispatcher, priceContext);            			
+                if (ServiceUtil.isError(priceResult)) {
+                    Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
+            		return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
+                }  
+                BigDecimal defaultPrice = (BigDecimal)priceResult.get("totalPrice");
+                BigDecimal margnAmount = (orederItem.getBigDecimal("unitPrice")).subtract(defaultPrice);
+				BigDecimal itemSubAmt = (orederItem.getBigDecimal("unitPrice").multiply(subPercent.divide(new BigDecimal("100")))).add(margnAmount);
 				subAmount = (subAmount.add(itemSubAmt)).multiply(orederItem.getBigDecimal("quantity"));
+				
 			}
 			// add employee subsidy adjustment "EMPSUBSID_ADJUSTMENT"
 			String orderAdjustmentTypeId = "EMPSUBSID_ADJUSTMENT";

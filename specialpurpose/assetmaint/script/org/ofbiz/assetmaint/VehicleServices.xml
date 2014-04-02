@@ -40,9 +40,6 @@
         <set from-field="nowTimestamp" field="newEntity.lastModifiedDate"/>
         <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
         <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
-        
-        <log level="always"  message="newEntity========================${newEntity}"></log>
-        
         <create-value value-field="newEntity"></create-value>
         <field-to-result field="newEntity.vehicleId" result-name="vehicleId"/>
         <field-to-result field="newEntity.sequenceNum" result-name="sequenceNum"/>
