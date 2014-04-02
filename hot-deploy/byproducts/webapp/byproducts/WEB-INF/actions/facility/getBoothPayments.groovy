@@ -18,6 +18,7 @@ Map boothsPaymentsDetail = [:];
 paymentDate ="";
 hideSearch ="Y";
 paymentIds = FastList.newInstance();
+boothRouteIdsMap=[:];
 onlyCurrentDues = Boolean.TRUE;
 if(parameters.paymentDate){
 	paymentDate = parameters.paymentDate;
@@ -95,12 +96,12 @@ context.paymentMethodType = paymentMethodType;
 boothPaymentsList=[];
 finaccountInfo = ByProductNetworkServices.getFacilityFinAccountInfo(dctx ,[userLogin: userLogin ]);
 accountNameList = finaccountInfo.get("accountNameList");
-Debug.log("accountNameList============"+accountNameList);
 context.putAt("accountNameList", accountNameList);
 if(hideSearch == "N"){
 	if (statusId == "PAID") {
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
 		boothTempPaymentsList = boothsPaymentsDetail["paymentsList"];
+		boothRouteIdsMap=boothsPaymentsDetail["boothRouteIdsMap"];
 	}
 	else {
 		
@@ -113,7 +114,6 @@ if(parameters.finAccountName){
 	accountNameFacilityIds = finaccountInfo.get("facilityIds");
 }
 	
-	Debug.log("accountNameFacilityIds============"+accountNameFacilityIds);
 	boothPaymentsInnerList = [];
 	boothPaymentsList = [];
 	invoicesTotalAmount =0;
@@ -182,5 +182,6 @@ if(parameters.finAccountName){
 context.boothsDuesDaywiseJSON = boothsDuesDaywiseJSON;
 
 context.statusId = statusId;
+context.boothRouteIdsMap=boothRouteIdsMap;
 
 
