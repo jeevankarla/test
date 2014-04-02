@@ -100,6 +100,8 @@ if(hideSearch == "N") {
 	
 	if (productSubscriptionTypeId != "ALL") {
 		exprList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+	}else if( parameters.productSubscriptionTypeIds){
+		exprList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, parameters.productSubscriptionTypeIds));
 	}
 	if (parameters.subscriptionTypeId) {
 		subscriptionTypeId = parameters.subscriptionTypeId;
@@ -237,5 +239,6 @@ while (mapIter.hasNext()) {
 	dataJSONList.add(newObj);
 }
 context.dataJSON = dataJSONList.toString();
-result.boothsResultMap = boothsResultMap; 
+result.boothsResultMap = boothsResultMap;
+result.productList = productList;
 return result;

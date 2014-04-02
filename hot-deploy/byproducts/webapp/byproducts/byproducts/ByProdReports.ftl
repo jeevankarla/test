@@ -1,4 +1,3 @@
-
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 
 <script type="application/javascript">
@@ -55,7 +54,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("RLAFromDateId","RLAThruDateId");
 		makeDatePicker("CLRFromDateId","thuDateId");
 		makeDatePicker("DBCFromDateId","thuDateId");
-		
+		makeDatePicker("exportDate","");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -102,6 +101,22 @@ function makeDatePicker(fromDateId ,thruDateId){
 					<input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr> 
+        <tr>
+      	   <form id="indentExportOracle" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>indentExportOracle.txt</@ofbizUrl>" target="_blank">	
+      		  <td width="33%">Indent Export</td>
+      		  <td width="33%">populate Date:<input type="checkbox" name='populateData'>
+      		    SupplyTime:
+				<select name="subscriptionTypeId" class='h4'>
+					<#list subscriptionTypeList as subscriptionType>    
+  	    				<option value='${subscriptionType.subscriptionTypeId}'>${subscriptionType.description}</option>
+					</#list>            
+				</select>
+      		 </td>
+      	   	  <td width="33%">
+      	   	   Date<input type="text" name="supplyDate" id="exportDate"/>
+      	   	  <input type="submit" target="_blank" value="Download" class="buttontext"/></td>
+      	   </form>
+      	</tr>
       	<tr>
       	   <form id="RouteQuantityAbst" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>routeWiseQtyAbstract.txt</@ofbizUrl>" target="_blank">	
       		  <td width="33%">Route Wise Sales Abst</td>

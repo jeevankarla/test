@@ -34,11 +34,11 @@
      <entity entity-name="Dailyindent"
             package-name="org.ofbiz.common.period"
             title="Daily indent ">
-      <field name="id" type="numeric"></field>
-      <field name="routeid" type="numeric"></field>
-      <field name="retailerid" type="numeric" />
-      <field name="indentsourceid" type="numeric" />
-      <field name="dispatchshiftid" type="numeric" />
+      <field name="id" type="id-ne"></field>
+      <field name="routeid" type="id"></field>
+      <field name="retailerid" type="id" />
+      <field name="indentsourceid" type="id" />
+      <field name="dispatchshiftid" type="id" />
 	  <field name="indentdate" type="id-vlong" />
       <field name="createddatetime" type="id-vlong"></field>
       <field name="createdby" type="id-vlong"></field>
@@ -49,10 +49,10 @@
     <entity entity-name="Dailyindentdetail"
             package-name="org.ofbiz.common.period"
             title="Daily indent Detail">
-      <field name="id" type="numeric"></field>
-      <field name="dailyindentid" type="numeric"></field>
+      <field name="id" type="id-ne"></field>
+      <field name="dailyindentid" type="id"></field>
       <field name="productid" type="id" />
-	  <field name="quantity" type="currency-amount" />
+	  <field name="quantity" type="id" />
       <field name="createddatetime" type="id-vlong"></field>
       <field name="createdby" type="id-vlong"></field>
       <field name="modifieddatetime" type="id-vlong"></field>
