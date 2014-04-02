@@ -91,6 +91,10 @@ canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "produ
 conditionList=[];
 routeMap = [:];
 routeWiseIndentMap = [:];
+grandProdTotal=[:];
+allProdGrandTotal=[:];
+
+
 for(i=0; i<routesList.size(); i++){
 	grandTotalMap =[:];
 	productFinalMap = [:];
@@ -161,6 +165,14 @@ for(i=0; i<routesList.size(); i++){
 	grandTotalMap.each{prodEntry->
 		productId=prodEntry.getKey();
 		qty=prodEntry.getValue().get("otherQuantity");
+		if(UtilValidate.isEmpty(grandProdTotal.get(productId))){
+			grandProdTotal[productId]=qty;
+		}else{
+		tempQty=grandProdTotal.get(productId);
+		tempQty=tempQty+qty;
+		grandProdTotal[productId]=tempQty;
+		}
+		
 		prodMap =[:];
 		prodMap["qty"]=qty;
 		routeTotQty=routeTotQty+qty;
@@ -205,7 +217,6 @@ for(i=0; i<routesList.size(); i++){
 	allProdTotal["rtLooseCrates"]=rtLooseCrates;
 	allProdTotal["rtCans"]=rtCans;
 	
-	
 	productFinalMap["Total"]=allProdTotal;
 	
 	tempFinalMap=[:];
@@ -213,7 +224,39 @@ for(i=0; i<routesList.size(); i++){
 	routeWiseIndentMap.put(routeId, tempFinalMap);
 	routeMap.put(routeId, tempRouteMap);
 }
+//all routes GrandTotal
+GrandTotalProdMap=[:];
+grandProdTotal.each{prodEntry->
+	productId=prodEntry.getKey();
+	qty=prodEntry.getValue();
+	prodMap =[:];
+	prodMap["qty"]=qty;
+	routeTotQty=routeTotQty+qty;
+	if(crateProductsIdsList.contains(productId)){
+		if(piecesPerCrate && piecesPerCrate.get(productId)){
+			int crateDivisior=(piecesPerCrate.get(productId)).intValue();
+		   tempCrates = (qty/(crateDivisior)).intValue();
+		   tempExcess=((qty.intValue())%(crateDivisior.intValue()));
+		   prodMap["crates"]=tempCrates;
+		   prodMap["loosePkts"]=tempExcess;
+		  }
+		
+	}
+	if(canProductsIdsList.contains(productId)){
+		if(piecesPerCan && piecesPerCan.get(productId)){
+			int canDivisior=(piecesPerCan.get(productId)).intValue();
+		   tempCan = (qty/(canDivisior)).intValue();
+		   tempCanExcess=((qty.intValue())%(canDivisior.intValue()));
+		   prodMap["cans"]=tempCan;
+	   }
+		
+	}
+	GrandTotalProdMap[productId]=prodMap;
+}
 context.routeMap = routeMap;
 context.routeWiseIndentMap = routeWiseIndentMap;
 context.indentDate = UtilDateTime.toDateString(effectiveDate, "dd.MM.yyyy");
+
+context.GrandTotalProdMap=GrandTotalProdMap;
+
 return "success";
