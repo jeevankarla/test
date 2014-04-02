@@ -135,6 +135,7 @@ if(hideSearch == "N") {
 	
 	totalsMap =[:];
 	totalsMap.putAll(prodQuantityInitMap);
+	BoothRouteWiseMap= [:]
 	
 	for (int i=0; i < quotaSubProdList.size(); i++) {
 		routesList = [];
@@ -149,8 +150,7 @@ if(hideSearch == "N") {
 				tempRouteList.add(routeId);
 				routeMap.putAt(boothId, tempRouteList);
 			}
-		}
-		else{
+		}else{
 			routesList.add(routeId);
 			routeMap.putAt(boothId, routesList);
 		}
@@ -160,8 +160,7 @@ if(hideSearch == "N") {
 				tempTripList.add(tripId);
 				tripMap.putAt(boothId, tempTripList);
 			}
-		}
-		else{
+		}else{
 			tripsList.add(tripId);
 			tripMap.putAt(boothId, tripsList);
 		}
@@ -182,6 +181,23 @@ if(hideSearch == "N") {
 			continue;
 		}
 		boothTotalsMap[quotaSubProd.productId] += quantity;
+		tempBoothRouteMap =[:];
+		tempboothRouteWiseProdMap = [:];
+		if(UtilValidate.isNotEmpty(BoothRouteWiseMap.get(boothId))){
+			tempBoothRouteMap =BoothRouteWiseMap.get(boothId);
+			if(UtilValidate.isNotEmpty(tempBoothRouteMap.get(routeId))){
+				tempboothRouteWiseProdMap = tempBoothRouteMap.get(routeId);
+			}
+			
+		}
+		
+		if(UtilValidate.isEmpty(tempboothRouteWiseProdMap[quotaSubProd.productId])){
+			tempboothRouteWiseProdMap[quotaSubProd.productId] =0;
+		}
+		
+		tempboothRouteWiseProdMap[quotaSubProd.productId] += quantity;
+		tempBoothRouteMap[routeId] = tempboothRouteWiseProdMap;
+		BoothRouteWiseMap[boothId]=tempBoothRouteMap;
 	}
 	boothsResultMap["Total"] = [:];
 	boothsResultMap["Total"].putAll(totalsMap);
@@ -240,5 +256,6 @@ while (mapIter.hasNext()) {
 }
 context.dataJSON = dataJSONList.toString();
 result.boothsResultMap = boothsResultMap;
-result.productList = productList;
+result.productList = context.productList;
+result.BoothRouteWiseMap = BoothRouteWiseMap;
 return result;
