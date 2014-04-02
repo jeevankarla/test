@@ -115,10 +115,6 @@ under the License.
         <response name="error" type="view" value="BulkCardSale"/>
     </request-map>
     
-  
-    
-    
-   
     <request-map uri="createNewFacility"><security https="true" auth="true"/><response name="success" type="view" value="createNewFacility"/></request-map>
     <request-map uri="CreateBooth">
         <security https="true" auth="true"/>
@@ -132,9 +128,7 @@ under the License.
         <response name="success" type="view" value="EditFacility"/>
         <response name="error" type="view" value="EditFacility"/>
     </request-map>
-   
       
-  
     <request-map uri="UpdateFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFacility"/>
@@ -451,10 +445,7 @@ under the License.
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="EsevaAponlinePaymentReportCSV"/>    	
     </request-map>
-    <request-map uri="boothPayments.csv">
-    	<security https="true" auth="true"/>    	
-    	<response name="success" type="view" value="BoothPaymentsCSV"/>    	
-    </request-map>
+   
     <request-map uri="agentWiseSales.csv">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="AgentWiseSalesReportCSV"/>    	
@@ -1973,8 +1964,8 @@ under the License.
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FacilityTree"/>
-    
-    
+
+   
     <view-map name="FindFacilityTransfers" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityTransfers"/>
     <view-map name="FindFacilityLocation" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacilityLocation"/>
     <view-map name="EditFacilityLocation" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityLocation"/>
@@ -2107,7 +2098,7 @@ under the License.
 	<view-map name="AponlinePaymentEntry" type="screen" page="component://product/widget/facility/FacilityScreens.xml#AponlinePaymentEntry"/>
 	
 	<view-map name="EsevaAponlinePaymentReportCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#EsevaAponlinePaymentReportCSV"  content-type="text/csv"/>
-	<view-map name="BoothPaymentsCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#BoothPaymentsCSV"  content-type="text/csv"/>
+	
     <view-map name="BoothMasterCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#BoothMasterCSV" content-type="text/csv"/>
 	<view-map name="AbsenteeOverride" type="screen" page="component://product/widget/facility/FacilityScreens.xml#AbsenteeOverride"/>
 	<view-map name="StopShipListCSV" type="screencsv" page="component://product/widget/facility/FacilityScreens.xml#StopShipListCSV"  content-type="text/csv"/>
