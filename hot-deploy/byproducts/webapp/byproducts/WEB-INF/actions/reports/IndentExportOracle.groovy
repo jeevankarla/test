@@ -69,7 +69,7 @@ if(UtilValidate.isNotEmpty(supplyDate)){
 		parameters.supplyDate = UtilDateTime.toDateString(supplyDateTime , "dd MMMMM, yyyy");
 		parameters.hideSearch ="N";
 		parameters.productSubscriptionTypeIds = ["CASH","CREDIT"]
-		//parameters.routeId = "S101";
+	    //parameters.routeId = "S101";
 		quotaResult = GroovyUtil.runScriptAtLocation("component://byproducts/webapp/byproducts/WEB-INF/actions/facility/quotaListing.groovy", context);
 		//lets populate Daily indent and indent details here
 		populateDailyIndentDetail(quotaResult);

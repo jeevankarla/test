@@ -60,7 +60,38 @@ function makeDatePicker(fromDateId ,thruDateId){
 	});
 
 </script>
-	
+	<div >
+
+<div class="screenlet">
+    		<div class="screenlet-title-bar">
+      			<h3>Export</h3>
+    		</div>
+    		<div class="screenlet-body">
+    			<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+      				<tr>
+      	   <form id="indentExportOracle" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>indentExportOracle.txt</@ofbizUrl>" target="_blank">	
+      		  <td width="33%">Indent Export</td>
+      		  <td width="33%">populate:<input type="checkbox" name='populateData'>
+      		      Route:<select name="routeId" class='h4'><option value=''></option>
+					<#list routesList as route>    
+  	    				<option value='${route}'>${route}</option>
+					</#list>  
+				</select>
+      		 </td>
+      	   	  <td width="33%"> SupplyTime:
+				<select name="subscriptionTypeId" class='h4'><option value=''></option>
+					<#list subscriptionTypeList as subscriptionType>    
+  	    				<option value='${subscriptionType.subscriptionTypeId}'>${subscriptionType.description}</option>
+					</#list>            
+				</select>
+      	   	   Date<input type="text" name="supplyDate" id="exportDate"/>
+      	   	  <input type="submit" target="_blank" value="Download" class="buttontext"/></td>
+      	   </form>
+      	</tr>
+    </table>
+    </div>
+</div>
+</div>
 <div class="lefthalf">
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -101,22 +132,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 					<input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr> 
-        <tr>
-      	   <form id="indentExportOracle" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>indentExportOracle.txt</@ofbizUrl>" target="_blank">	
-      		  <td width="33%">Indent Export</td>
-      		  <td width="33%">populate Date:<input type="checkbox" name='populateData'>
-      		    SupplyTime:
-				<select name="subscriptionTypeId" class='h4'>
-					<#list subscriptionTypeList as subscriptionType>    
-  	    				<option value='${subscriptionType.subscriptionTypeId}'>${subscriptionType.description}</option>
-					</#list>            
-				</select>
-      		 </td>
-      	   	  <td width="33%">
-      	   	   Date<input type="text" name="supplyDate" id="exportDate"/>
-      	   	  <input type="submit" target="_blank" value="Download" class="buttontext"/></td>
-      	   </form>
-      	</tr>
       	<tr>
       	   <form id="RouteQuantityAbst" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>routeWiseQtyAbstract.txt</@ofbizUrl>" target="_blank">	
       		  <td width="33%">Route Wise Sales Abst</td>
@@ -386,3 +401,4 @@ function makeDatePicker(fromDateId ,thruDateId){
 	</div>
 </div>
 </div>
+
