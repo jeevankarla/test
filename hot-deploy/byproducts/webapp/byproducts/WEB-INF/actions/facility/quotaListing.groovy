@@ -167,21 +167,8 @@ if(hideSearch == "N") {
 		}
 		tempQuantity = (quotaSubProd.quantity).setScale(1,rounding);
 		quantity = tempQuantity;
-		totalsMap[quotaSubProd.productId] += quantity;
-		boothTotalsMap = boothsResultMap[boothId];
-		if (boothTotalsMap == null) {
-			boothTotalsMap = [:];
-			boothTotalsMap.putAll(prodQuantityInitMap);
-			boothTotalsMap[quotaSubProd.productId] = quantity;
-			boothTotalsMap["createdUser"] = quotaSubProd.lastModifiedByUserLogin;
-			boothTotalsMap["entryDate"] = quotaSubProd.lastModifiedDate;
-			boothTotalsMap["routeId"] = quotaSubProd.sequenceNum;
-			boothTotalsMap["tripId"] = quotaSubProd.tripNum;
-			boothsResultMap[boothId] = [:];
-			boothsResultMap[boothId].putAll(boothTotalsMap);
-			continue;
-		}
-		boothTotalsMap[quotaSubProd.productId] += quantity;
+		
+		// populate export indent
 		tempBoothRouteMap =[:];
 		tempboothRouteWiseProdMap = [:];
 		if(UtilValidate.isNotEmpty(BoothRouteWiseMap.get(boothId))){
@@ -199,6 +186,22 @@ if(hideSearch == "N") {
 		tempboothRouteWiseProdMap[quotaSubProd.productId] += quantity;
 		tempBoothRouteMap[routeId] = tempboothRouteWiseProdMap;
 		BoothRouteWiseMap[boothId]=tempBoothRouteMap;
+		
+		totalsMap[quotaSubProd.productId] += quantity;
+		boothTotalsMap = boothsResultMap[boothId];
+		if (boothTotalsMap == null) {
+			boothTotalsMap = [:];
+			boothTotalsMap.putAll(prodQuantityInitMap);
+			boothTotalsMap[quotaSubProd.productId] = quantity;
+			boothTotalsMap["createdUser"] = quotaSubProd.lastModifiedByUserLogin;
+			boothTotalsMap["entryDate"] = quotaSubProd.lastModifiedDate;
+			boothTotalsMap["routeId"] = quotaSubProd.sequenceNum;
+			boothTotalsMap["tripId"] = quotaSubProd.tripNum;
+			boothsResultMap[boothId] = [:];
+			boothsResultMap[boothId].putAll(boothTotalsMap);
+			continue;
+		}
+		boothTotalsMap[quotaSubProd.productId] += quantity;
 	}
 	boothsResultMap["Total"] = [:];
 	boothsResultMap["Total"].putAll(totalsMap);
