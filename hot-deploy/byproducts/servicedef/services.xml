@@ -466,7 +466,7 @@
         <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/>
         <attribute name="issuingAuthority" mode="IN" type="String" optional="true"/>
         <attribute name="issuingAuthorityBranch" mode="IN" type="String" optional="true"/>
-        <attribute name="instrumentDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="instrumentDate" mode="IN" type="String" optional="true" />
         <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
         <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
         <attribute name="statusFlag" mode="OUT" type="String" optional="true"/>
