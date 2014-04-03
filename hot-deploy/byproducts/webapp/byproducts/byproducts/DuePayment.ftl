@@ -62,7 +62,7 @@
 	function datepick()
 	{		
 		$( "#effectiveDate" ).datepicker({
-			dateFormat:'dd/mm/yy',
+			dateFormat:'dd MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1});
 		$( "#paymentDate" ).datepicker({
@@ -98,7 +98,7 @@
 						"</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Bank Branch:</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthorityBranch' name='issuingAuthorityBranch' /></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' id='effectiveDate' name='effectiveDate' onmouseover='datepick()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' id='effectiveDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Ref. No. :</td><td align='left' width='60%'><input class='h4' type='text' id='paymentRefNum' name='paymentRefNum' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='supplyDate' value='${paymentDate?if_exists}'/></td></tr>"+
@@ -126,7 +126,7 @@
 						"</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Bank Branch:</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthorityBranch' name='issuingAuthorityBranch' /></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' id='effectiveDate' name='effectiveDate' onmouseover='datepick()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' id='effectiveDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Ref. No. :</td><td align='left' width='60%'><input class='h4' type='text' id='paymentRefNum' name='paymentRefNum' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount' readOnly/></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='supplyDate' value='${paymentDate}'/></td></tr>"+
