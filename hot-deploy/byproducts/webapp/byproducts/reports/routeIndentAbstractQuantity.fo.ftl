@@ -58,7 +58,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
            			<#assign facilityGrandTotal = (Static["java.math.BigDecimal"].ZERO)>
            			<#assign totalLitres = (Static["java.math.BigDecimal"].ZERO)>
            			
-           			<#assign productEntries = (routeIndent.getValue()).entrySet()>           			       		        			
+           			<#assign productEntries = (routeIndent.getValue())>           			       		        			
            			<#if (lineNumber > numberOfLines)> 
 	           			<#assign lineNumber = 5>
 	           			<#assign facilityNumberInPage = 0>	           				          				
@@ -84,9 +84,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
                 				    <#if productEntries?has_content>                     		                      	                     	
                       					<#assign facility = delegator.findOne("Facility", {"facilityId" : routeIndent.getKey()}, true)>
 	                                		<#assign totalcrates = 0>
-	                                			<#list productEntries as productEntry>
-	                                			<#if productEntry.getKey()!="Total">
-	                      								<#assign product = delegator.findOne("Product", {"productId" : productEntry.getKey()}, true)> 	                              
+	                                		<#list prodIdsSeqList as productId>
+	                                		 <#assign  productEntryMap=productEntries.get(productId)?if_exists>
+	                                			<#if productEntryMap?has_content>
+	                      								<#assign product = delegator.findOne("Product", {"productId" : productId}, true)> 	                              
 		              							          <fo:table-row >  
 		              							             <fo:table-cell>
                         			                            <fo:block text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.get("facilityId"))),5)}</fo:block>
@@ -98,9 +99,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 					                                	        <fo:block  text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("productName")))),37)}</fo:block>
 					                            	          </fo:table-cell>	
 							                                  <fo:table-cell>
-					                                	         <fo:block  text-align="right">${productEntry.getValue().get("qty")}</fo:block>
+					                                	         <fo:block  text-align="right">${productEntryMap.get("qty")}</fo:block>
 					                            	         </fo:table-cell>
-					                            	         <#assign crateMap = productEntry.getValue().get("crateMap")?if_exists>
+					                            	         <#assign crateMap = productEntryMap.get("crateMap")?if_exists>
 								                            	<#if crateMap?has_content>
 									                      		<fo:table-cell>
 						                                	         <fo:block  text-align="right">${crateMap.get("crates")}+${crateMap.get("loosePkts")}</fo:block>
@@ -110,7 +111,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 						                                	         <fo:block  text-align="right">-</fo:block>
 						                            	         </fo:table-cell>
 								                            	</#if>
-								                            	 <#assign cansMap = productEntry.getValue().get("cansMap")?if_exists>
+								                            	 <#assign cansMap = productEntryMap.get("cansMap")?if_exists>
 								                            	<#if cansMap?has_content>
 									                      		<fo:table-cell>
 						                                	         <fo:block  text-align="right">${cansMap.get("cans")}</fo:block>
@@ -118,7 +119,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 								                            	</#if>
 					                         	         </fo:table-row>
 					                         	         </#if>
-					                         	         <#if productEntry.getKey() =="Total">
+					                         	         </#list>
+					                         	         <#assign  productEntryTotMap=productEntries.get("Total")?if_exists>
+					                         	         <#if productEntryTotMap?has_content>
 					                         	          <fo:table-row >  
 		              							          <fo:table-cell>
 					                         	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
@@ -132,13 +135,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 					                                			<fo:block  text-align="left" keep-together="always">&#160;</fo:block>
 					                            			 </fo:table-cell>
 					                            	         <fo:table-cell>
-					                                	        <fo:block  text-align="right" keep-together="always">FulCrates:${productEntry.getValue().get("rtCrates")}</fo:block>
+					                                	        <fo:block  text-align="right" keep-together="always">FulCrates:${productEntryTotMap.get("rtCrates")}</fo:block>
 					                            	          </fo:table-cell>	
 							                                  <fo:table-cell>
 					                                	         <fo:block  text-align="right">LooseCrates:</fo:block>
 					                            	         </fo:table-cell>
 									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="">${productEntry.getValue().get("rtLooseCrates")}(${productEntry.getValue().get("rtExcessPkts")})</fo:block>
+						                                	         <fo:block  text-align="">${productEntryTotMap.get("rtLooseCrates")}(${productEntryTotMap.get("rtExcessPkts")})</fo:block>
 						                            	         </fo:table-cell>
 									                      		<fo:table-cell>
 						                                	         <fo:block  text-align="right">&#160;</fo:block>
@@ -155,17 +158,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 					                                	        <fo:block  text-align="left" keep-together="always"></fo:block>
 					                            	          </fo:table-cell>	
 							                                  <fo:table-cell>
-					                                	         <fo:block  text-align="right">${productEntry.getValue().get("routeTotQty")}</fo:block>
+					                                	         <fo:block  text-align="right">${productEntryTotMap.get("routeTotQty")}</fo:block>
 					                            	         </fo:table-cell>
 									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${(productEntry.getValue().get("rtCrates"))+(productEntry.getValue().get("rtLooseCrates"))}</fo:block>
+						                                	         <fo:block  text-align="right">${(productEntryTotMap.get("rtCrates"))+(productEntryTotMap.get("rtLooseCrates"))}</fo:block>
 						                            	         </fo:table-cell>
 									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${productEntry.getValue().get("rtCans")}</fo:block>
+						                                	         <fo:block  text-align="right">${productEntryTotMap.get("rtCans")}</fo:block>
 						                            	         </fo:table-cell>
 					                         	         </fo:table-row>
 					                         	         </#if>
-	                      				 		</#list>
+	                      				 		
 	                      				 		 <fo:table-row >  
 												            <fo:table-cell>
 												                <fo:block  text-align="right" keep-together="always"></fo:block> 
@@ -199,43 +202,73 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
  						   	    <fo:table-column column-width="70pt"/>
  						   	    <fo:table-column column-width="60pt"/>
 				                <fo:table-body>
-				               <#assign finalGrandProdList= GrandTotalProdMap.entrySet()>
-				                <#list finalGrandProdList as productEntry>
-	                      								<#assign product = delegator.findOne("Product", {"productId" : productEntry.getKey()}, true)> 	                              
+				                
+				                    <#list prodIdsSeqList as productId>
+	                                		 <#assign  productEntryMap=GrandTotalProdMap.get(productId)?if_exists>
+	                                			<#if productEntryMap?has_content>
+	                      								<#assign product = delegator.findOne("Product", {"productId" : productId}, true)>
 		              							          <fo:table-row >  
-		              							             <fo:table-cell>
-                        			                            <fo:block text-align="left" keep-together="always"></fo:block>
-                        		                             </fo:table-cell>                  
+		              							            <fo:table-cell>
+                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
+                        		                             </fo:table-cell>    
 					                            		     <fo:table-cell>
-					                                			<fo:block  text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("brandName")))),7)}</fo:block>
+					                                			<fo:block  text-align="left" font-size="8pt" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("brandName")))),7)}</fo:block>
 					                            			 </fo:table-cell>
 					                            	         <fo:table-cell>
-					                                	        <fo:block  text-align="left" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("productName")))),37)}</fo:block>
+					                                	        <fo:block  text-align="left" font-size="8pt"  keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("productName")))),37)}</fo:block>
 					                            	          </fo:table-cell>	
 							                                  <fo:table-cell>
-					                                	         <fo:block  text-align="right">${productEntry.getValue().get("qty")}</fo:block>
+					                                	         <fo:block   font-size="8pt" text-align="right">${productEntryMap.get("qty")}</fo:block>
 					                            	         </fo:table-cell>
-					                            	         <#assign crateVal = productEntry.getValue().get("crates")?if_exists>
-								                            	<#if crateVal?has_content>
+					                            	         <#assign crateMap = productEntryMap.get("crateMap")?if_exists>
+								                            	<#if crateMap?has_content>
 									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${productEntry.getValue().get("crates")?if_exists}+${productEntry.getValue().get("loosePkts")?if_exists}</fo:block>
+						                                	         <fo:block  text-align="right">${crateMap.get("crates")}+${crateMap.get("loosePkts")}</fo:block>
 						                            	         </fo:table-cell>
 						                            	         <#else>
 						                            	         <fo:table-cell>
 						                                	         <fo:block  text-align="right">-</fo:block>
 						                            	         </fo:table-cell>
 								                            	</#if>
-								                            	 <#assign cans = productEntry.getValue().get("cans")?if_exists>
-								                            	<#if cans?has_content>
+								                            	 <#assign cansMap = productEntryMap.get("cansMap")?if_exists>
+								                            	<#if cansMap?has_content>
 									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${productEntry.getValue().get("cans")?if_exists}</fo:block>
+						                                	         <fo:block  text-align="right">${cansMap.get("cans")}</fo:block>
 						                            	         </fo:table-cell>
 								                            	</#if>
 					                         	         </fo:table-row>
+					                         	         </#if>
 					                         	         </#list>
+					                         	         <fo:table-row >  
+		              							             <fo:table-cell>
+                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
+                        		                             </fo:table-cell>                  
+						                            	     </fo:table-row >  
+					                         	          <fo:table-row >  
+		              							             <fo:table-cell>
+                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
+                        		                             </fo:table-cell>                  
+					                            		     <fo:table-cell>
+					                                			<fo:block  text-align="left" keep-together="always"></fo:block>
+					                            			 </fo:table-cell>
+					                            	         <fo:table-cell>
+					                                	        <fo:block  text-align="left" keep-together="always">Total FullCrates--></fo:block>
+					                            	          </fo:table-cell>	
+							                                  <fo:table-cell>
+					                                	         <fo:block  text-align="right"></fo:block>
+					                            	         </fo:table-cell>
+									                      		<fo:table-cell>
+						                                	         <fo:block  text-align="right">${totalCrates?if_exists}</fo:block>
+						                            	         </fo:table-cell>
+									                      		<fo:table-cell>
+						                                	         <fo:block  text-align="right">${totalCans?if_exists}</fo:block>
+						                            	         </fo:table-cell>
+						                            	     </fo:table-row >  
+					                         	         
 				                  </fo:table-body>
 				                  </fo:table> 
 				                   </fo:block>
+				                    <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
   </fo:flow>						        	
 </fo:page-sequence>
  <#else>
