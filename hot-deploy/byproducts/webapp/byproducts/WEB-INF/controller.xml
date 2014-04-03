@@ -146,7 +146,14 @@
     	<response name="success" type="view" value="InstBillOfSaleReportTXT"/>
     </request-map>
     
-    
+     <request-map uri="enclosureOfTaxInvoice.txt">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EnclosureOfTaxInvoiceReportTXT"/>
+    </request-map>
+    <request-map uri="taxInvoiceReport.txt">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="TaxInvoiceReportTXT"/>
+    </request-map>
     <request-map uri="specialOrderSuppliedDetails.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="SpecialOrderSuppliedDetailsPDF"/>
@@ -740,7 +747,10 @@
     <view-map name="BankRemittanceStatementTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#BankRemittanceStatementTXT" content-type="text/plain"/>
     <view-map name="ByProdReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#ByProdReports"/>
    
-    <view-map name="InstBillOfSaleReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InstBillOfSaleReportTXT" content-type="application/pdf"/>
+    <view-map name="InstBillOfSaleReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InstBillOfSaleReportTXT" content-type="text/plain"/>
+    <view-map name="EnclosureOfTaxInvoiceReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#EnclosureOfTaxInvoiceReportTXT" content-type="text/plain"/>
+ 	<view-map name="TaxInvoiceReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TaxInvoiceReportTXT" content-type="application/pdf"/>
+ 
     <!-- NG View Mappings -->
   
     <view-map name="TruckSheetMotherDairy" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheet"/>

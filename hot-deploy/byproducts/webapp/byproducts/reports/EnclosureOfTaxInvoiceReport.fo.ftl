@@ -28,7 +28,7 @@ under the License.
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
-${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
+${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
 <#if itemsListMap?has_content> 
 <#assign itemsList=itemsListMap.entrySet()>
 <#assign tinNumber="">
@@ -36,87 +36,60 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 <#list itemsList as itemlst>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-		
 	         <#assign  facilityId=itemlst.getKey()>   
 	         <#assign invoiceList=invoiceListMap.get(facilityId)>	
-	          <#if (tinNumber ="") && (cstNumber ="")>
+	         <#if (tinNumber ="") && (cstNumber ="")>
 	        	<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" :invoiceList.getString("partyId")}, true)>
 	        	<#assign tinNumber = (partyGroup.tinNumber)?if_exists>
 	    		<#assign cstNumber = (partyGroup.cstNumber)?if_exists>
-	         </#if>	
-			 	    <fo:block>
+	        </#if>	
+			<fo:block>
+	            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
+	             <fo:table-column column-width="150pt"/>
+	              <fo:table-column column-width="480pt"/>
+	               <fo:table-column column-width="330pt"/>
+	               <fo:table-body>
+	                 <fo:table-row>
+		                   <fo:table-cell>
+		                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+		                         <fo:block  text-indent="15pt">TIN :${tinNumber}</fo:block>
+		                         <fo:block  text-indent="15pt">CST :${cstNumber}</fo:block>
+		                     </fo:table-cell>
+		                    <fo:table-cell>
+		                        <fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">&#160; KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED</fo:block>
+								<fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">&#160;      UNIT : MOTHER DAIRY : BANGALORE - 560 065</fo:block>
+								<fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">&#160;                 ENCLOSURE FOR TAX INVOICE</fo:block>
+								<fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">-----------------------------------------------------------</fo:block>
+		                   </fo:table-cell>
+		                   <fo:table-cell>
+		                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+		                         <fo:block >INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
+		                         <fo:block >INVOICE NO :${invoiceList.getString("invoiceId")}</fo:block>
+		                     </fo:table-cell>
+	                     </fo:table-row>
+	                     </fo:table-body>
+	                    </fo:table>
+		     </fo:block> 
+		        <fo:block>
 		            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
 		              <fo:table-column column-width="150pt"/>
-		              <fo:table-column column-width="480pt"/>
-		              <fo:table-column column-width="350pt"/>
-		               <fo:table-body>
-		                 <fo:table-row>
-			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt">&#160;</fo:block>
-			                         <fo:block  text-indent="15pt">TIN :${tinNumber}</fo:block>
-			                         <fo:block  text-indent="15pt">CST :${cstNumber}</fo:block>
-			                     </fo:table-cell>
-			                    <fo:table-cell>
-			                        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED</fo:block>
-									<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;      UNIT : MOTHER DAIRY : BANGALORE - 560 065</fo:block>
-									<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;                 BILL OF SALE</fo:block>
-									<fo:block >-----------------------------------------------------------</fo:block>
-			                   </fo:table-cell>
-			                   <fo:table-cell>
-			                         <fo:block>&#160;</fo:block>
-			                         <fo:block>INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
-			                         <fo:block>INVOICE NO :${invoiceList.getString("invoiceId")}</fo:block>
-			                     </fo:table-cell>
-		                     </fo:table-row>
-		                     </fo:table-body>
-		                    </fo:table>
-		     </fo:block> 
-			     <fo:block>
-			           <fo:table width="100%" table-layout="fixed" space-after="0.0in">
-			           <fo:table-column column-width="150pt"/>
 		               <fo:table-column column-width="480pt"/>
-		               <fo:table-column column-width="350pt"/>
-			               <fo:table-body>
-			               <fo:table-row>
-							<fo:table-cell>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
-							</fo:table-cell>
-						</fo:table-row>	
-				          <fo:table-row>
-				             <fo:table-cell>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
-							</fo:table-cell>
-							<fo:table-cell>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">(ISSUED UNDER KARNATAKA VALUE ADDED TAX ACT 2003 WEF 01-04-2005)</fo:block>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;&#160;           FOR SALE OF VAT EXEMPTED GOODS</fo:block>
-							</fo:table-cell>
-						</fo:table-row>	
-						 </fo:table-body>	
-						 </fo:table>
-						</fo:block> 
-			    <fo:block>
-		            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
-		              <fo:table-column column-width="200pt"/>
-		               <fo:table-column column-width="430pt"/>
-		               <fo:table-column column-width="300pt"/>
+		               <fo:table-column column-width="330pt"/>
 		               <fo:table-body>
 		                 <fo:table-row>
 			                   <fo:table-cell>
 			                     <fo:block  text-indent="15pt">CUST NO :${facilityId}</fo:block>
-			                     <#assign partyTelephoneResult = dispatcher.runSync("getPartyTelephone", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", invoiceList.getString("partyId"), "userLogin", userLogin))/>
-			                     <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", invoiceList.getString("partyId"), "userLogin", userLogin))/>
+			                     <#assign partyTelephoneResult = dispatcher.runSync("getPartyTelephone", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", facilityId, "userLogin", userLogin))/>
+			                     <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", facilityId, "userLogin", userLogin))/>
 			                      <fo:block  text-indent="15pt">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityId, false)}</fo:block>
 								<#if (partyAddressResult.address1?has_content)>
 								<fo:block font-size="5pt" text-align="center" keep-together="always">&#160;(${partyAddressResult.address1?if_exists})</fo:block>
 								</#if>
-								<#if (partyTelephoneResult.contactNumber?has_content)>
-								<fo:block font-size="5pt" text-align="center" keep-together="always">&#160;(${partyTelephoneResult.contactNumber?if_exists})</fo:block>
+								<#if (partyAddressResult.contactNumber?has_content)>
+								<fo:block font-size="5pt" text-align="center" keep-together="always">&#160;(${partyAddressResult.contactNumber?if_exists})</fo:block>
 								</#if>
-								<#if (partyAddressResult.postalCode?has_content)>
-								<fo:block font-size="5pt" text-align="center" keep-together="always">&#160;(${partyAddressResult.postalCode?if_exists})</fo:block>
-								</#if>
-			                        </fo:table-cell>
-			                    <fo:table-cell>&#160;&#160;&#160;                  </fo:table-cell>
+			                    </fo:table-cell>
+			                    <fo:table-cell ><fo:block linefeed-treatment="preserve">&#xA;</fo:block> </fo:table-cell>
 			                    <fo:table-cell>
 			                         <fo:block>THE DIRECTOR:</fo:block>
 			                         <fo:block>MOTHER DAIRY</fo:block>
@@ -124,16 +97,29 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			                         <fo:block>YELAHANKA</fo:block>
 			                         <fo:block>BANGALORE</fo:block>
 			                         <fo:block>PHONE : 8460162</fo:block>
-			                         
+			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			                         <fo:block>PLEASE MAIL CHEQUES TO</fo:block>
 			                   </fo:table-cell>
 		                     </fo:table-row>
 		                     </fo:table-body>
 		                    </fo:table>
-		     </fo:block>         
-			<fo:block >------------------------------------------------------------------------------------------------------------------------------</fo:block>	
-			<fo:block >
-				<fo:table >
+		     </fo:block>  
+		       <fo:block>
+	            <fo:table>
+		             <fo:table-column column-width="30mm"/>
+	    			 <fo:table-column column-width="105mm"/>
+		               <fo:table-header height="14px">
+		                 <fo:table-row>
+		                   <fo:table-cell><fo:block text-align="left">PO Number:</fo:block></fo:table-cell>
+		                    <fo:table-cell><fo:block text-align="right">PO Date:</fo:block></fo:table-cell>
+		                  </fo:table-row>
+		                 </fo:table-header>
+		                  <fo:table-body><fo:table-row><fo:table-cell></fo:table-cell></fo:table-row></fo:table-body>
+	             </fo:table>
+		     </fo:block>      
+			  <fo:block text-align="left" keep-together="always" white-space-collapse="false">------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			  	<fo:block >
+				<fo:table>
 					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
@@ -146,30 +132,30 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 								<fo:block  text-align="left" font-weight="bold">DATE</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-weight="bold">SHIFT</fo:block>
+								<fo:block text-align="right" font-weight="bold">SHIFT</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-weight="bold">DC No</fo:block>
+								<fo:block text-align="right" font-weight="bold">DC No</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-weight="bold">PRODUCT</fo:block>
+								<fo:block text-align="right" font-weight="bold">PRODUCT</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="right" font-weight="bold">QUANTITY</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-weight="bold">AMOUNT</fo:block>
+								<fo:block text-align="right" font-weight="bold">AMOUNT</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
 						<fo:table-cell>
-							<fo:block >------------------------------------------------------------------------------------------------------------------------------</fo:block>
+						<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 						</fo:table-cell>
 					</fo:table-row>					
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
-			<fo:block >
+			<fo:block>
 				<fo:table>
 					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="120pt"/>
@@ -203,10 +189,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 								<fo:block  text-align="right">${orderLst.getString("orderId")}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">${orderLst.getString("itemDescription")}</fo:block>
+								<fo:block text-align="right">${orderLst.getString("itemDescription")}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block text-align="right">${quantity?string("#0.00")}</fo:block>
+								<fo:block  text-align="right">${quantity?string("#0.00")}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="right">${amount?string("#0.00")}</fo:block>
@@ -218,8 +204,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
-			<fo:block>------------------------------------------------------------------------------------------------------------------------------</fo:block>	
-			<fo:block>
+		  <fo:block text-align="left" keep-together="always" white-space-collapse="false">------------------------------------------------------------------------------------------------------------------------------</fo:block>	
+		  <fo:block>
 				<fo:table>
 					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="120pt"/>
@@ -233,55 +219,53 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 								<fo:block  text-align="left" font-weight="bold">TOTAL</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">&#160;</fo:block>
+								<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">&#160;</fo:block>
+								<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">&#160;</fo:block>
+								<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">${totalQuantity?string("#0.00")}</fo:block>
+								<fo:block  text-align="right" font-weight="bold">${totalQuantity?string("#0.00")}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">${totalAmount?string("#0.00")}</fo:block>
+								<fo:block  text-align="right" font-weight="bold">${totalAmount?string("#0.00")}</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
 							<fo:table-cell>
-								<fo:block >------------------------------------------------------------------------------------------------------------------------------</fo:block>
-						    </fo:table-cell>
+							  <fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+				           </fo:table-cell>
 					</fo:table-row>					
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
 			<fo:block>
-			           <fo:table width="100%" table-layout="fixed" space-after="0.0in">
-			           <fo:table-column column-width="100pt"/>
-			              <fo:table-body>
-			              <fo:table-row>
-						  <fo:table-cell>
+	           <fo:table width="100%" table-layout="fixed" space-after="0.0in">
+		           <fo:table-column column-width="100pt"/>
+		              <fo:table-body>
+		              <fo:table-row>
+						<fo:table-cell>
 								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">Please Pay:   Rupees ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()} ONLY  </fo:block>
 							</fo:table-cell>
 							</fo:table-row>		
 				          <fo:table-row>
 							<fo:table-cell>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">Note: Kindly verify the Details and confirm the invoice within three days of receiving the invoice failing which will be deemed</fo:block>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;         that the invoice is in order &amp; expedits payment within 15 days of bill received.</fo:block>
+								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">Note:  Kindly verify the Details and confirm the invoice within three days of receiving the invoice failing which will be deemed</fo:block>
+								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;         that the invoice is in order  expedits payment within 15 days of bill received.</fo:block>
 								<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 							</fo:table-cell>
 						</fo:table-row>	
 						<fo:table-row>
 						<fo:table-cell>
-							<fo:block  keep-together="always" white-space-collapse="false" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                                                                       FOR MOTHER DAIRY </fo:block>
+							<fo:block  keep-together="always" white-space-collapse="false" font-weight="bold" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                                                                      FOR MOTHER DAIRY </fo:block>
 						</fo:table-cell>
 							</fo:table-row>		
-						 </fo:table-body>	
-						 </fo:table>
+					 </fo:table-body>	
+				 </fo:table>
 			</fo:block> 
-			
-	         			  
 			 </fo:flow>
 			 </fo:page-sequence>	
 			 </#list>

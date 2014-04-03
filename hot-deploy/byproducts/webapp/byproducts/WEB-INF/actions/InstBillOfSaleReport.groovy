@@ -19,10 +19,8 @@
 	import java.math.BigDecimal;
 	import java.math.MathContext;
 	import org.ofbiz.base.util.UtilNumber;
-import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+    import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	
-	Debug.log("#####periodBillingId####"+parameters.periodBillingId);
-	Debug.log("######customTimePeriodId###"+parameters.customTimePeriodId);
 	periodBillingList=[];
 	facilityIds=[];
 	conditionList=[];
@@ -52,8 +50,8 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
 	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS ,eachFacilityId));
 	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	fieldsToSelect = ["originFacilityId","orderDate","orderId","productId","shipmentTypeId","itemDescription","quantity","unitListPrice"] as Set;
-	itemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["-estimatedDeliveryDate"], null, false);
+	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitListPrice"] as Set;
+	itemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
 	itemsListMap.put(eachFacilityId, itemsList);
 		context.itemsListMap=itemsListMap;
 	}
@@ -64,7 +62,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 //		conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,eachperiodBillingId));
 		cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		invoiceList = delegator.findList("Invoice", cond, ["invoiceId","invoiceDate","facilityId"] as Set , ["-invoiceDate"], null, false);
+		invoiceList = delegator.findList("Invoice", cond, ["invoiceId","invoiceDate","facilityId","partyId"] as Set , ["-invoiceDate"], null, false);
 		invoice=EntityUtil.getFirst(invoiceList);
 		invoiceListMap.put(invoice.getString("facilityId"), invoice);
 		context.invoiceListMap=invoiceListMap;

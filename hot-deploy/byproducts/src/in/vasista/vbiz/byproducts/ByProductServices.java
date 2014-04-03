@@ -4657,10 +4657,6 @@ public class ByProductServices {
 	        	thruDate=UtilDateTime.getDayEnd(thruDate);
 	        }
 	        fromDate=UtilDateTime.getDayStart(fromDate);
-	        if(fromDate.before(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()))){
-	        	Debug.logError("From date  shoud be greater than current date : "+fromDate+ "\t",module);
-				return ServiceUtil.returnError("From date  shoud be greater than current date  : "+fromDate);
-	        }
 	        List conditionList = UtilMisc.toList(
 	                EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	                conditionList.add( EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, rateTypeId));

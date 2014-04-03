@@ -789,6 +789,18 @@
                	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
             </hyperlink>
         </field>
+         <field name="enclosureOfTaxInvoice" title="Enclosure OF Tax Invoice" widget-style="buttontext" id-name="enclosureOfTaxInvoice" event="onclick" action="javascript:appendBillingParam(this);">
+            <hyperlink target="enclosureOfTaxInvoice.txt" description="Tax Enclosure Report" target-window="_blank" >
+                <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+               	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="taxInvoice" title="Tax Invoice" widget-style="buttontext" id-name="taxInvoice" event="onclick" action="javascript:appendBillingParam(this);">
+            <hyperlink target="taxInvoiceReport.txt" description="Tax Invoice Report" target-window="_blank" >
+                <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+               	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
+            </hyperlink>
+        </field>
         <field name="cancelBilling" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target-type="plain" target="javascript:showCancelBilling('${customTimePeriodId}', '${periodTypeId}', '${facilityBillingList}');" description="${uiLabelMap.CommonCancel}">
             </hyperlink>
