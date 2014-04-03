@@ -19,8 +19,8 @@ under the License.
 <#escape x as x?xml>
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
-      <fo:simple-page-master master-name="main" page-height="11in" page-width="7in">
-        margin-top="1in" margin-bottom=".5in" margin-left=".3in" margin-right=".2in">
+      <fo:simple-page-master master-name="main" page-height="12in" page-width="10in">
+        margin-top="0.5in" margin-bottom=".4in" margin-left=".3in" margin-right=".2in">
           <fo:region-body margin-top="1in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
@@ -34,9 +34,8 @@ under the License.
         <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         
         </fo:static-content>
-           <fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">	
-           <fo:block></fo:block>
-           
+         <fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">	
+         <fo:block></fo:block>
       <#list OrderDetailsList as orderDetail>
 	      	<#assign temp = temp +1>
 	      	
@@ -48,7 +47,13 @@ under the License.
 	         <#assign facility = delegator.findOne("Facility", {"facilityId" : orderDetail.orderHeader.originFacilityId}, true)>
 	        
 	          <#assign partyName = delegator.findOne("PartyNameView", {"partyId" : facility.ownerPartyId}, true)>
-	                 	
+	                       <#assign currentShipmentId = "">
+			              <#assign newShipmentId = "">
+	                 	 <#assign newShipmentId =orderDetail.orderHeader.shipmentId>
+			             <#if newShipmentId?exists & newShipmentId != currentShipmentId>
+			              <#assign currentShipmentId = newShipmentId>
+			               <#assign shipmentDeatils = delegator.findOne("Shipment", {"shipmentId" : newShipmentId}, true)>
+			              </#if>
          	<fo:block font-family="Courier,monospace">          
            		<fo:table width="100%" table-layout="fixed">
                 	<fo:table-column column-width="2.0in"/>
@@ -64,7 +69,7 @@ under the License.
 			                              		<fo:table-cell>
 											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;    KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 			                                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
-											        <fo:block font-family="Courier,monospace" >----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+											        <fo:block font-family="Courier,monospace" >------------------------------------------------------------------------------</fo:block>
 											        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; &#160;     BILL OF SALE</fo:block>
 			                              		</fo:table-cell>
 			                            	</fo:table-row>
@@ -82,14 +87,13 @@ under the License.
 			  										<fo:block></fo:block>
 			  									</fo:table-cell>
 											</fo:table-row>
-											
 							                     		<#if facility.get("facilityName")?has_content>
 							                        		<#assign facilityName=facility.get("facilityName")/>
 							                      		</#if>
 							                 <fo:table-row>
 							                    <fo:table-cell>
 							                      	 <fo:block font-size="4pt"  white-space-collapse="false">To</fo:block>
-							                         <fo:block font-size="4pt"  white-space-collapse="false" keep-together="always">Booth: ${orderDetail.orderHeader.originFacilityId} [ ${facilityName} ], Route:${ facilityRouteMap.get(orderDetail.orderHeader.originFacilityId)?if_exists}</fo:block>
+							                         <fo:block font-size="4pt"  white-space-collapse="false" keep-together="always">Booth: ${orderDetail.orderHeader.originFacilityId} [ ${facilityName} ], Route:${ shipmentDeatils.routeId?if_exists}, Shift:<#if parameters.shipmentTypeId="AM_SHIPMENT">MORNING<#elseif  parameters.shipmentTypeId="PM_SHIPMENT">EVENING</#if></fo:block>
 							                      	 <fo:block font-size="4pt"  white-space-collapse="false">Buyer's TIN:</fo:block>
 							                     </fo:table-cell>    
 							                 </fo:table-row>
@@ -100,16 +104,6 @@ under the License.
 											</fo:table-body>
 									</fo:table>
 			            			</fo:block>              
-						            <#if billingParty?has_content>
-						              <fo:block>
-						                <fo:table width="100%" table-layout="fixed" space-after="0.3in">
-						                  <fo:table-column column-width="2.5in"/>
-						                  <fo:table-body>
-						            </fo:table-body>
-						            </fo:table>
-						          </fo:block>
-       						 </#if>
-       					
 			            <fo:block  font-size="7pt"  font-family="Courier,monospace">  
 			              <fo:table width="100%" table-layout="fixed">
 			                  <fo:table-column column-width="65pt"/>
@@ -166,35 +160,29 @@ under the License.
 			                    </fo:table-row>                      
 			              <#if orderDetail.orderItems?has_content>
 			                <#assign orderItems = orderDetail.orderItems?if_exists />
-			              
-			                    <#assign currentShipmentId = "">
-			                    <#assign newShipmentId = "">
 			                    <#assign vatTotal = (Static["java.math.BigDecimal"].ZERO)>
 						           <#assign grandTotal = (Static["java.math.BigDecimal"].ZERO)>
 						           <#assign netTotal = (Static["java.math.BigDecimal"].ZERO)>
 			                    <#-- if the item has a description, then use its description.  Otherwise, use the description of the invoiceItemType -->
 			                    <#list orderItems as orderItem>
 			                    
-			                       <#assign newShipmentId =orderDetail.orderHeader.shipmentId>
-			                       
 			                      
-			                      <#if newShipmentId?exists & newShipmentId != currentShipmentId>
 			                        <#-- the shipment id is printed at the beginning for each
 			                           group of invoice items created for the same shipment
-			                        -->
+			                        
 			                        <fo:table-row>
 			                          <fo:table-cell number-columns-spanned="6">
 			                            <fo:block></fo:block>
 			                           </fo:table-cell>
 			                        </fo:table-row>
+			                        -->
 			                        <#-->
 			                        <fo:table-row>
 			                          <fo:table-cell number-columns-spanned="6">
 			                            <fo:block > ${uiLabelMap.ProductShipmentId}: ${newShipmentId} </fo:block>
 			                          </fo:table-cell>
 			                        </fo:table-row> -->
-			                        <#assign currentShipmentId = newShipmentId>
-			                      </#if>
+			                       
 			                      <fo:table-row>
 			                        <fo:table-cell number-columns-spanned="6">
 			                          <fo:block></fo:block>
