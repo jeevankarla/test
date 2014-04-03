@@ -28,6 +28,7 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
+
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -68,8 +69,11 @@ if(UtilValidate.isNotEmpty(supplyDate)){
  if(populateData && populateData =="on"){
 		parameters.supplyDate = UtilDateTime.toDateString(supplyDateTime , "dd MMMMM, yyyy");
 		parameters.hideSearch ="N";
-		parameters.productSubscriptionTypeIds = ["CASH","CREDIT"]
-	    //parameters.routeId = "S101";
+		parameters.productSubscriptionTypeIds = ["CASH","CREDIT"];
+		shipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDateTime, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId);
+		shiments =  delegator.findList("Shipment", EntityCondition.makeCondition("shipmentId",EntityOperator.IN , shipmentIds),  null, null, null, false);
+		 parameters.routeIds = EntityUtil.getFieldListFromEntityList(shiments, "routeId", true);
+		 //parameters.routeId = null;
 		quotaResult = GroovyUtil.runScriptAtLocation("component://byproducts/webapp/byproducts/WEB-INF/actions/facility/quotaListing.groovy", context);
 		//lets populate Daily indent and indent details here
 		populateDailyIndentDetail(quotaResult);

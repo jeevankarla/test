@@ -88,6 +88,9 @@ if(hideSearch == "N") {
 	if(tripId){
 		exprList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
 	}
+	if(parameters.routeIds){
+		exprList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.IN, parameters.routeIds));
+	}
 	if(parameters.routeId){
 		exprList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, parameters.routeId));
 	}
@@ -114,6 +117,7 @@ if(hideSearch == "N") {
 		}
 	}
 	facilityList = [];
+	
 	condition = EntityCondition.makeCondition(exprList, EntityOperator.AND); 
 	quotaSubProdList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, ["sequenceNum", "tripNum", "facilityId"], null, false);
 	prodList = EntityUtil.getFieldListFromEntityList(quotaSubProdList,"productId",true);
