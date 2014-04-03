@@ -286,9 +286,9 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 										int crateDiv=(piecesPerCrate.get(productId)).intValue();
 										tempRtEmpCrates = (subsidyRtTotal/(crateDiv)).intValue();
 										tempRtEmpExcess=((subsidyRtTotal.intValue())%(crateDiv.intValue()));
-										if(tempRtEmpExcess>0){
+										/*if(tempRtEmpExcess>0){
 											tempRtEmpExcess = 1;
-										}
+										}*/
 										rtEmpCrate = rtEmpCrate+tempRtEmpCrates;
 										rtEmpExcess = rtEmpExcess+tempRtEmpExcess;
 									}//+tempRtEmpExcess

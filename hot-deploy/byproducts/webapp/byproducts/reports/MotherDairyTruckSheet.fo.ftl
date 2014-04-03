@@ -81,7 +81,7 @@ under the License.
 				<fo:table>
 					<fo:table-column column-width="78pt"/>
 					<fo:table-column column-width="530pt"/>
-					<fo:table-column column-width="33pt"/>
+					<fo:table-column column-width="25pt"/>
 					<fo:table-column column-width="37pt"/>
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="50pt"/>
@@ -205,7 +205,7 @@ under the License.
 				<fo:table>
 				<fo:table-column column-width="78pt"/>
 					<fo:table-column column-width="530pt"/>
-					<fo:table-column column-width="33pt"/>
+					<fo:table-column column-width="25pt"/>
 					<fo:table-column column-width="37pt"/>
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="50pt"/>
@@ -316,7 +316,7 @@ under the License.
 			<fo:table>
 				<fo:table-column column-width="78pt"/>
 					<fo:table-column column-width="530pt"/>
-					<fo:table-column column-width="33pt"/>
+					<fo:table-column column-width="25pt"/>
 					<fo:table-column column-width="37pt"/>
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="50pt"/>
@@ -385,7 +385,7 @@ under the License.
 							</fo:table>
 						</fo:block>
 					</fo:table-cell>
-					<fo:table-cell>
+					<fo:table-cell text-align="right">
 						<fo:block> Subsidy</fo:block>
 					</fo:table-cell>
 					</fo:table-row>	
@@ -476,7 +476,7 @@ under the License.
 								</fo:table>
 							</fo:block>
 						</fo:table-cell>
-						<fo:table-cell><fo:block><#if routesMap.getValue().get("routeTotalSubsidy")?has_content && (routesMap.getValue().get("routeTotalSubsidy")>0)>${(routesMap.getValue().get("routeTotalSubsidy"))?if_exists}<#else>-</#if></fo:block></fo:table-cell>
+						<fo:table-cell><fo:block text-align="right"><#if routesMap.getValue().get("routeTotalSubsidy")?has_content && (routesMap.getValue().get("routeTotalSubsidy")>0)>${(routesMap.getValue().get("routeTotalSubsidy"))?if_exists}<#else>-</#if></fo:block></fo:table-cell>
 						<fo:table-cell><fo:block font-size="6pt" text-align="right" >${(routesMap.getValue().get("routeVatAmount"))?if_exists?string("#0.00")}</fo:block></fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="right">${(routesMap.getValue().get("routeAmount"))?if_exists?string("#0.00")}</fo:block>
@@ -495,7 +495,7 @@ under the License.
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
-						<fo:table-cell>
+						<fo:table-cell >
 							<fo:block font-size="6pt" keep-together="always">Crates</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
@@ -678,8 +678,8 @@ under the License.
 							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<#--<#assign subExcess = routesMap.getValue().get("routeTotalSubsidy")>-->
-							<fo:block font-size="6pt"><#if ((routesMap.getValue().get("routeEmpPcks"))>0)>${(routesMap.getValue().get("routeEmpPcks"))?if_exists}(1)<#else>-</#if></fo:block>
+							<#assign subExcess = (routesMap.getValue().get("routeTotalSubsidy")%12)>
+							<fo:block font-size="6pt" text-align="right"><#if (subExcess>0)>${subExcess?if_exists}(1)<#else>-</#if></fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="right">Loose</fo:block>
