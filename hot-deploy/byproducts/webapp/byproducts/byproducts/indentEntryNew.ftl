@@ -154,7 +154,7 @@
 					          </td>       
 				       <#else>               
 				          <td valign='middle'>          
-				             <input  type="text" size="8" maxlength="10" name="boothId" id="boothId" value="" onblur='this.value=this.value.toUpperCase()'/>        
+				             <input  type="text" size="12" maxlength="12" name="boothId" id="boothId" value="" onblur='this.value=this.value.toUpperCase()'/>        
 				             <span class="tooltipbold" id="boothTooltip">Input name and press Enter</span>*
 				             <div id="errorMsg"></div> 
 				          </td>
