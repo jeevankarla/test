@@ -845,7 +845,7 @@ public class ByProductNetworkServices {
   		    Timestamp dayEnd = UtilDateTime.getDayStart(supplyDate);
   		
   		    try{
-  		    	//Debug.log("routeId****=============="+routeId);
+  		    	
 	    		if(UtilValidate.isNotEmpty(routeId)){
 	    			GenericValue facilityRoute = delegator.findOne("Facility", UtilMisc.toMap("facilityId",routeId), true);
 		    		if(UtilValidate.isEmpty(facilityRoute)){
@@ -966,11 +966,10 @@ public class ByProductNetworkServices {
 	    		if(UtilValidate.isNotEmpty(screenFlag) && !screenFlag.equals("indentAlt")){
 	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		}else{
-	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
+	    			/*conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));*/
 	    		}
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		EntityCondition cond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	    		
 	    		List<GenericValue> tempSubProdList =delegator.findList("SubscriptionProduct", cond, null,null, null, false);
 	    		tempSubProdList = EntityUtil.filterByDate(tempSubProdList , dayBegin);
 	    		List<GenericValue> subProdList = FastList.newInstance();
