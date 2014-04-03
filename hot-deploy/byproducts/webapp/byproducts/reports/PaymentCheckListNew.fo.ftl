@@ -126,7 +126,7 @@ under the License.
 	                            	<fo:block text-align="left" >${checkListReport.paymentRefNum?if_exists}</fo:block>                               
 	                            </fo:table-cell>		                                                    
 	                            <fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(checkListReport.paymentDate, "MMM d, yyyy")}</fo:block>                               
+	                            	<fo:block text-align="left" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(checkListReport.paymentDate, "dd-MM-yyyy")}</fo:block>                               
 	                            </fo:table-cell>
 	                            <#--
 	                             <fo:table-cell >
