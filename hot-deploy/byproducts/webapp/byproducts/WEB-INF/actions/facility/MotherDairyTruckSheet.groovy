@@ -78,7 +78,7 @@ if(parameters.shipmentId){
 	}
 	
 }
-piecesPerCrate=[:];
+/*piecesPerCrate=[:];
 piecesPerCan=[:];
 priceResult = [:];
 priceContext = [:];
@@ -92,7 +92,9 @@ priceContext.put("priceDate", UtilDateTime.nowTimestamp());
 priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);
 
 BigDecimal subsidyUnitPrice = (BigDecimal)priceResult.get("totalPrice");
-subsidyPrice = subsidyUnitPrice*0.5;
+*/
+subsidyPrice = 13.34;
+//Debug.log("#################################subsidyPrice ##############"+subsidyPrice);
 result =ByProductNetworkServices.getProductCratesAndCans(dctx, UtilMisc.toMap("userLogin",userLogin, "saleDate", estimatedDeliveryDateTime));
 piecesPerCrate = result.get("piecesPerCrate");
 piecesPerCan = result.get("piecesPerCan");
@@ -168,7 +170,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 										tempMap.packetQuantity = qty;
 										productTotals.put(entry.getKey(), tempMap);
 										empSubsidyAmt = subsidyPrice*packetTotal;
-										amount = amount - empSubsidyAmt;
+										amount = amount - subsidyRevenue + empSubsidyAmt;
 									
 									}
 									totalQuantity=totalQuantity+qty;
@@ -271,7 +273,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 								subsidyRtTotal = subsidyRtTotal+packetTotal;
 								addTotalSub = addTotalSub+packetTotal;
 								totalSubsidy = subsidyPrice*packetTotal;
-								routeAmount = routeAmount - totalSubsidy;
+								routeAmount = routeAmount - subsidyRev + totalSubsidy;
 								rtQty = rtQty - packetTotal;
 								tempMap = routeProdTotals.get(productId)
 								tempMap.packetQuantity = rtQty;
