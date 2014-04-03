@@ -845,7 +845,7 @@ public class ByProductNetworkServices {
   		    Timestamp dayEnd = UtilDateTime.getDayStart(supplyDate);
   		
   		    try{
-  		    	
+  		    	//Debug.log("routeId****=============="+routeId);
 	    		if(UtilValidate.isNotEmpty(routeId)){
 	    			GenericValue facilityRoute = delegator.findOne("Facility", UtilMisc.toMap("facilityId",routeId), true);
 		    		if(UtilValidate.isEmpty(facilityRoute)){
@@ -855,6 +855,7 @@ public class ByProductNetworkServices {
 		    		
 		    		Map resultCtx = getRoutesByAMPM(dctx, UtilMisc.toMap("supplyType", subscriptionTypeId, "userLogin", userLogin));
 		    		List routeIds = (List)resultCtx.get("routeIdsList");
+		    		
 		    		if(UtilValidate.isEmpty(routeIds) || !routeIds.contains(routeId)){
 		    			Debug.logError("Route doesn't exists in "+subscriptionTypeId+" shipping", module);
 		    			return ServiceUtil.returnError("Route doesn't exists in "+subscriptionTypeId+" shipping");
@@ -893,14 +894,13 @@ public class ByProductNetworkServices {
 	    			boothCtxMap.putAll(context);
 	    			boothCtxMap.put("supplyDate", supplyDate);
 	    			Map boothDetails = (Map)(getBoothRoute(dctx, boothCtxMap)).get("boothDetails");
-	    			routeId = (String)boothDetails.get("routeId");
-	    			if(UtilValidate.isEmpty(routeId)){
+	    			
+	    			if(UtilValidate.isEmpty(boothDetails) || UtilValidate.isEmpty(boothDetails.get("routeId"))){
 	    				Debug.logError("No Permanent Route exists for : "+subscriptionTypeId, module);
 	    				return ServiceUtil.returnError("No Permanent Route exists for : "+subscriptionTypeId);
-	    				}
+	    			}
+	    			routeId = (String)boothDetails.get("routeId");
 	    		}
-	    		
-	    		
 	    		List prevshipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId, routeId);
 	    		if(UtilValidate.isNotEmpty(prevshipmentIds)){
 	    			return ServiceUtil.returnError("Trucksheet already generated for the route :"+ routeId); 
@@ -2426,6 +2426,10 @@ public class ByProductNetworkServices {
 	        } 
 	        
 	        Map<String, Object> boothDetails = FastMap.newInstance();
+	        if(UtilValidate.isEmpty(routeFacility)){
+	        	 Debug.logError("permanent route  not configured for:"+boothId, module);
+		            return ServiceUtil.returnError("permanent route  not configured for:"+boothId); 
+	        }
 	        boothDetails.put("routeId", routeFacility.getString("facilityId"));
 	        boothDetails.put("boothId", boothId);
 	        result.put("boothDetails", boothDetails);
