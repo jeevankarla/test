@@ -85,7 +85,17 @@ facilityIdsList=[];
 	}else{
 	facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
 	}
-	boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:dayStart ,paymentMethodTypeId:paymentMethodTypeId,thruDate:dayEnd , facilityIdsList:facilityIdsList,orderByBankName:true]);
+	paidPaymentInput=[:];
+	paidPaymentInput["fromDate"]=dayStart;
+	paidPaymentInput["thruDate"]=dayEnd;
+	paidPaymentInput["paymentMethodTypeId"]=paymentMethodTypeId;
+	paidPaymentInput["facilityIdsList"]=facilityIdsList;
+	paidPaymentInput["orderByBankName"]=true;
+	
+	if(UtilValidate.isNotEmpty(paymentMethodTypeId) && (paymentMethodTypeId=="CHEQUE_PAYIN")){
+		paidPaymentInput["findByInstrumentDate"]=true;
+	}
+	boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
 	boothTempPaymentsList = boothPaidDetail["paymentsList"];
 	boothRouteIdsMap= boothPaidDetail["boothRouteIdsMap"];
 
