@@ -12,23 +12,23 @@ function paymentFieldsOnchange(){
 		
 		if(paymentMethodType == "PENALTY_PAYIN"){
 			jQuery("input[name='paymentRefNum']").parent().parent().show();
-			jQuery("input[name='effectiveDate']").parent().parent().show();
+			jQuery("input[name='instrumentDate']").parent().parent().show();
 			jQuery("input[name='paymentRefNum']").addClass("required");
-			jQuery("input[name='effectiveDate']").addClass("required");
+			jQuery("input[name='instrumentDate']").addClass("required");
 		}else{
 			jQuery("input[name='paymentRefNum']").parent().parent().hide();
 			jQuery("input[name='paymentRefNum']").removeClass("required"); 
-			jQuery("input[name='effectiveDate']").parent().parent().hide();
-			jQuery("input[name='effectiveDate']").removeClass("required");
+			jQuery("input[name='instrumentDate']").parent().parent().hide();
+			jQuery("input[name='instrumentDate']").removeClass("required");
 		}
 	}else{
 	
 		jQuery("input[name='paymentRefNum']").parent().parent().show();
-		jQuery("input[name='effectiveDate']").parent().parent().show();
+		jQuery("input[name='instrumentDate']").parent().parent().show();
 		jQuery("input[name='issuingAuthority']").parent().parent().show();
 		jQuery("input[name='issuingAuthorityBranch']").parent().parent().show();
 		jQuery("input[name='paymentRefNum']").addClass("required");
-		jQuery("input[name='effectiveDate']").addClass("required");
+		jQuery("input[name='instrumentDate']").addClass("required");
 		jQuery("input[name='issuingAuthority']").addClass("required");	
 		jQuery("input[name='issuingAuthorityBranch']").addClass("required");	
 	}
