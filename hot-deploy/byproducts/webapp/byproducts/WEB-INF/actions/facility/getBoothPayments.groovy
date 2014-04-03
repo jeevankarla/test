@@ -148,7 +148,8 @@ if(parameters.finAccountName){
 		boothsPaymentsDetail["invoicesTotalAmount"] =invoicesTotalAmount;
 		boothsPaymentsDetail["invoicesTotalDueAmount"] =invoicesTotalDueAmount;
 	}
-	context.boothPaymentsList = boothsPaymentsDetail["boothPaymentsList"];	
+	boothPaymentsList = boothsPaymentsDetail["boothPaymentsList"];	
+	context.boothPaymentsList = boothPaymentsList;	
 	context.paymentDate= paymentDate;
 	context.paymentTimestamp= paymentTimestamp;
 	context.invoicesTotalAmount = UtilFormatOut.formatCurrency(boothsPaymentsDetail["invoicesTotalAmount"], context.get("currencyUomId"), locale);
