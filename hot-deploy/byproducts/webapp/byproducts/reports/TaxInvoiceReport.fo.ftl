@@ -26,14 +26,14 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-${setRequestAttribute("OUTPUT_FILENAME", "GenerateTrnsptMarginReport.txt")}
+${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 <#if itemsListMap?has_content> 
 <#assign itemsList=itemsListMap.entrySet()>
 <#assign tinNumber="">
 <#assign cstNumber="">
+ <#list itemsList as itemlst>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-  <#list itemsList as itemlst>
 	         <#assign  facilityId=itemlst.getKey()>   
 	         <#assign invoiceList=invoiceListMap.get(facilityId)>	
 	          <#if (tinNumber ="") && (cstNumber ="")>
@@ -399,9 +399,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "GenerateTrnsptMarginReport.txt")}
 			 </fo:table-body> 
  	</fo:table>
  	</fo:block>
- 	</#list>
  </fo:flow>
- </fo:page-sequence>	
+ </fo:page-sequence>
+ </#list>	
 	<#else>	
 	<fo:page-sequence master-reference="main">
     	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
