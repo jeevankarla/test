@@ -87,13 +87,15 @@ canProductsList=ProductWorker.getProductsByCategory(delegator ,"CAN" ,null);
 
 crateProductsIdsList=EntityUtil.getFieldListFromEntityList(crateProductsList, "productId", false);
 canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "productId", false);
+Set allProductsSet=new HashSet();
 
 conditionList=[];
 routeMap = [:];
 routeWiseIndentMap = [:];
 grandProdTotal=[:];
 allProdGrandTotal=[:];
-
+totalCrates=0;
+totalCans=0;
 
 for(i=0; i<routesList.size(); i++){
 	grandTotalMap =[:];
@@ -164,30 +166,24 @@ for(i=0; i<routesList.size(); i++){
 	
 	grandTotalMap.each{prodEntry->
 		productId=prodEntry.getKey();
+		allProductsSet.add(productId);//adding to set
 		qty=prodEntry.getValue().get("otherQuantity");
-		if(UtilValidate.isEmpty(grandProdTotal.get(productId))){
-			grandProdTotal[productId]=qty;
-		}else{
-		tempQty=grandProdTotal.get(productId);
-		tempQty=tempQty+qty;
-		grandProdTotal[productId]=tempQty;
-		}
 		
 		prodMap =[:];
 		prodMap["qty"]=qty;
 		routeTotQty=routeTotQty+qty;
+		tempCrates=0;tempExcess=0;
 		if(crateProductsIdsList.contains(productId)){
 			if(piecesPerCrate && piecesPerCrate.get(productId)){
 				int crateDivisior=(piecesPerCrate.get(productId)).intValue();
 			   tempCrates = (qty/(crateDivisior)).intValue();
 			   tempExcess=((qty.intValue())%(crateDivisior.intValue()));
 			   crateMap=[:];
-			   prodMap["crates"]=tempCrates;
-			   prodMap["loosePkts"]=tempExcess;
 			   cratesMap =[:];
 			   cratesMap["crates"]=tempCrates;
 			   cratesMap["loosePkts"]=tempExcess;
 			   rtCrates = rtCrates+tempCrates;
+			   totalCrates+=tempCrates;
 			   rtExcessPkts = rtExcessPkts+tempExcess;
 			   prodMap["crateMap"]=cratesMap;
 			   if(tempExcess>0){
@@ -196,6 +192,7 @@ for(i=0; i<routesList.size(); i++){
 		   }
 			
 		}
+		tempCan=0;
 		if(canProductsIdsList.contains(productId)){
 			if(piecesPerCan && piecesPerCan.get(productId)){
 				int canDivisior=(piecesPerCan.get(productId)).intValue();
@@ -204,11 +201,37 @@ for(i=0; i<routesList.size(); i++){
 			   cansMap=[:];
 			   cansMap["cans"]=tempCan;
 			   rtCans = rtCans+tempCan;
+			   totalCans+=tempCan;
 			   prodMap["cansMap"]=cansMap;
 		   }
 			
 		}
 		productFinalMap[productId]=prodMap;
+		//allRoutes grandTotal
+		if(UtilValidate.isEmpty(grandProdTotal.get(productId))){
+			grandProdTotal[productId]=prodMap;
+		}else{
+		tempPrdMap=grandProdTotal.get(productId);
+		tempQty=tempPrdMap.get("qty");
+		tempQty=tempQty+qty;
+		newProdMap=[:];
+		newProdMap["qty"]=tempQty;
+		oldCrateMap=tempPrdMap.get("crateMap");
+			if(UtilValidate.isNotEmpty(oldCrateMap)){
+			oldCrate=oldCrateMap.get("crates");
+			oldExcess=oldCrateMap.get("loosePkts");
+			oldCrateMap["crates"]=oldCrate+tempCrates;
+			oldCrateMap["loosePkts"]=oldExcess+tempExcess;
+			newProdMap["crateMap"]=oldCrateMap;
+			}
+			
+		oldCansMap=tempPrdMap.get("cansMap");
+			if(UtilValidate.isNotEmpty(oldCansMap)){
+			oldCansMap["cans"]=oldCansMap["cans"]+tempCan;
+			newProdMap["cansMap"]=oldCansMap;
+			}
+			grandProdTotal[productId]=newProdMap;
+		}
 	}
 	allProdTotal=[:];
 	allProdTotal["routeTotQty"]=routeTotQty;
@@ -224,39 +247,16 @@ for(i=0; i<routesList.size(); i++){
 	routeWiseIndentMap.put(routeId, tempFinalMap);
 	routeMap.put(routeId, tempRouteMap);
 }
-//all routes GrandTotal
-GrandTotalProdMap=[:];
-grandProdTotal.each{prodEntry->
-	productId=prodEntry.getKey();
-	qty=prodEntry.getValue();
-	prodMap =[:];
-	prodMap["qty"]=qty;
-	routeTotQty=routeTotQty+qty;
-	if(crateProductsIdsList.contains(productId)){
-		if(piecesPerCrate && piecesPerCrate.get(productId)){
-			int crateDivisior=(piecesPerCrate.get(productId)).intValue();
-		   tempCrates = (qty/(crateDivisior)).intValue();
-		   tempExcess=((qty.intValue())%(crateDivisior.intValue()));
-		   prodMap["crates"]=tempCrates;
-		   prodMap["loosePkts"]=tempExcess;
-		  }
-		
-	}
-	if(canProductsIdsList.contains(productId)){
-		if(piecesPerCan && piecesPerCan.get(productId)){
-			int canDivisior=(piecesPerCan.get(productId)).intValue();
-		   tempCan = (qty/(canDivisior)).intValue();
-		   tempCanExcess=((qty.intValue())%(canDivisior.intValue()));
-		   prodMap["cans"]=tempCan;
-	   }
-		
-	}
-	GrandTotalProdMap[productId]=prodMap;
-}
+prodSequenceList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, allProductsSet) , null, ["sequenceNum"], null, false);
+prodIdsSeqList= EntityUtil.getFieldListFromEntityList(prodSequenceList, "productId", true);
+context.prodIdsSeqList=prodIdsSeqList;
+
 context.routeMap = routeMap;
 context.routeWiseIndentMap = routeWiseIndentMap;
 context.indentDate = UtilDateTime.toDateString(effectiveDate, "dd.MM.yyyy");
 
-context.GrandTotalProdMap=GrandTotalProdMap;
+context.GrandTotalProdMap=grandProdTotal;
+context.totalCrates=totalCrates;
+context.totalCans=totalCans;
 
 return "success";
