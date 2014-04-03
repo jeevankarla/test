@@ -2429,7 +2429,7 @@ public class ByProductNetworkServices {
 	        	 Debug.logError("permanent route  not configured for:"+boothId, module);
 		            return ServiceUtil.returnError("permanent route  not configured for:"+boothId); 
 	        }
-	        boothDetails.put("routeId", routeFacility.getString("facilityId"));
+	        boothDetails.put("routeId",routeFacility.getString("facilityId") );
 	        boothDetails.put("boothId", boothId);
 	        result.put("boothDetails", boothDetails);
 	        
@@ -3044,6 +3044,11 @@ public class ByProductNetworkServices {
 	        if(context.get("orderByBankName") != null){
 	        	orderByBankName = (Boolean)context.get("orderByBankName");
 	        }
+	        boolean findByInstrumentDate= Boolean.FALSE;
+	        if(context.get("findByInstrumentDate") != null){
+	        	findByInstrumentDate = (Boolean)context.get("findByInstrumentDate");
+	        }
+	        
 	        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
 	        List paymentIds = (List) context.get("paymentIds");
 	        boolean onlyCurrentDues= Boolean.FALSE;
@@ -3118,7 +3123,11 @@ public class ByProductNetworkServices {
 			if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){
 				exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIdsList));
 			}
-			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+			if(findByInstrumentDate){//findByInstrumentDate  filtering used for  cheQue paymentChecklist
+			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("instrumentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("instrumentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+			}else{
+				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+			}
 			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
 			if (!UtilValidate.isEmpty(userLoginId)) {
 				exprList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS, userLoginId));
@@ -3129,7 +3138,7 @@ public class ByProductNetworkServices {
 			if (!UtilValidate.isEmpty(paymentIds)) {
 				exprList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds));
 			}
-			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);		
+			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 			List paymentsList = FastList.newInstance();
 			//order by condition will change basing on requirement;
 			List<String> orderBy = UtilMisc.toList("-lastModifiedDate");
@@ -5303,7 +5312,7 @@ public class ByProductNetworkServices {
 	        String paymentRefNum = (String) context.get("paymentRefNum");
             String issuingAuthority = (String) context.get("issuingAuthority");
             String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
-            Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
+            String instrumentDateStr = (String) context.get("instrumentDate");
 	        boolean useFifo = Boolean.FALSE;       
 	        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
 	        	useFifo = (Boolean)context.get("useFifo");
@@ -5317,12 +5326,24 @@ public class ByProductNetworkServices {
 	        List boothOrdersList = FastList.newInstance();
 	        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
 	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	        Timestamp instrumentDate=UtilDateTime.nowTimestamp();
 			try {
 				paymentTimestamp = UtilDateTime.toTimestamp(dateFormat.parse(supplyDate));
 			} catch (ParseException e) {
 				Debug.logError(e, "Cannot parse date string: " + supplyDate, module);
 	            return ServiceUtil.returnError(e.toString());		   
 			}	
+			
+			if(UtilValidate.isNotEmpty(instrumentDateStr)){
+				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+		  		  try {
+		  			instrumentDate = new java.sql.Timestamp(sdf.parse(instrumentDateStr).getTime());
+		  		  } catch (ParseException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + instrumentDateStr, module);
+		  		  } catch (NullPointerException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + instrumentDateStr, module);
+		  		  }
+			}
 			//getting default payment methodtype if empty
 			if(UtilValidate.isEmpty(paymentMethodType)){
 				 Map partyProfileFacilityMap=(Map)getPartyProfileDafult(dispatcher.getDispatchContext(),UtilMisc.toMap("boothIds", UtilMisc.toList(facilityId),"supplyDate",paymentTimestamp)).get("partyProfileFacilityMap");
