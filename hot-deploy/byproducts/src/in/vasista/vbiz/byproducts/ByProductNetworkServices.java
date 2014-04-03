@@ -3530,7 +3530,7 @@ public class ByProductNetworkServices {
 		    if(enableSoCrPmntTrack){
 				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","SPECIAL_ORDER","CREDIT")));
 			}else{
-				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH"));
+				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("EMP_SUBSIDY","CASH")));
 			}
 			
 			//exprListForParameters.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(paymentTimestamp)));
@@ -4059,6 +4059,7 @@ public class ByProductNetworkServices {
 	    	Map productAttributes = new TreeMap<String, Object>();    
 	    	List productSubscriptionTypeList = FastList.newInstance();
 	    	Map<String , String> dayShipmentMap = FastMap.newInstance();
+	    	List adjustmentOrderList = FastList.newInstance();
 	    	try {
 	    		List exprListForParameters = FastList.newInstance();
 	    		exprListForParameters.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "FAT"));
@@ -4137,6 +4138,19 @@ public class ByProductNetworkServices {
 	            BigDecimal packetQuantity  = orderItem.getBigDecimal("quantity");
 	            BigDecimal price  = orderItem.getBigDecimal("unitListPrice"); 
 	            BigDecimal revenue = price.multiply(quantity);
+	            if(!(adjustmentOrderList.contains(orderItem.getString("orderId"))) && (prodSubscriptionTypeId.equals("EMP_SUBSIDY"))){
+	            	try{
+	            		List<GenericValue>  adjustemntsList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS , orderItem.getString("orderId")), null , null, null, false);
+		            	for(GenericValue adjustemnt :adjustemntsList){
+		            		revenue = revenue.add(adjustemnt.getBigDecimal("amount"));
+		            	}
+	            	}catch (Exception e) {
+						// TODO: handle exception
+					}
+	            	
+	            	
+	            	adjustmentOrderList.add(orderItem.getString("orderId"));
+	            }
 	            totalRevenue = totalRevenue.add(revenue);
 	            totalPacket = totalPacket.add(packetQuantity);
 	            BigDecimal vatAmount=ZERO;
