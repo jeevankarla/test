@@ -249,7 +249,7 @@ under the License.
 													</#if>
 													<#if qty !=0>
 														<fo:table-cell>		
-															<fo:block text-align="right">${qty?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
+															<fo:block text-align="right">${qty?if_exists}/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</fo:block>																									
 														</fo:table-cell>
 													<#else>
 														<fo:table-cell>		
@@ -270,7 +270,7 @@ under the License.
 														</#if>
 														<#if byProdQty !=0>
 															<fo:table-cell>		
-																<fo:block text-align="right">${(byProdQty)?if_exists}<#if boothDetails.getValue().get("productsCrateMap").get(product)?has_content>/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</#if></fo:block>																									
+																<fo:block text-align="right">${(byProdQty)?if_exists}/${boothDetails.getValue().get("productsCrateMap").get(product).get("crates")}(${boothDetails.getValue().get("productsCrateMap").get(product).get("loosePkts")})</fo:block>																									
 															</fo:table-cell>
 														<#else>
 															<fo:table-cell>		
@@ -291,7 +291,7 @@ under the License.
 							</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="5pt" text-align="right"><#if (boothDetails.getValue().get("subsidy"))?has_content>${boothDetails.getValue().get("subsidy")?if_exists}</#if></fo:block>
+								<fo:block font-size="5pt" text-align="right"><#if (boothDetails.getValue().get("subsidy"))?has_content && (boothDetails.getValue().get("subsidy")>0)>${boothDetails.getValue().get("subsidy")?if_exists}<#else>-</#if></fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="6pt" text-align="right">${boothDetails.getValue().get("vatAmount")?if_exists?string("#0.00")}</fo:block>
@@ -476,7 +476,7 @@ under the License.
 								</fo:table>
 							</fo:block>
 						</fo:table-cell>
-						<fo:table-cell><fo:block>${(routesMap.getValue().get("routeTotalSubsidy"))?if_exists?string("#0.00")}</fo:block></fo:table-cell>
+						<fo:table-cell><fo:block><#if routesMap.getValue().get("routeTotalSubsidy")?has_content && (routesMap.getValue().get("routeTotalSubsidy")>0)>${(routesMap.getValue().get("routeTotalSubsidy"))?if_exists}<#else>-</#if></fo:block></fo:table-cell>
 						<fo:table-cell><fo:block font-size="6pt" text-align="right" >${(routesMap.getValue().get("routeVatAmount"))?if_exists?string("#0.00")}</fo:block></fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="right">${(routesMap.getValue().get("routeAmount"))?if_exists?string("#0.00")}</fo:block>
@@ -678,7 +678,7 @@ under the License.
 							</fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
-							<fo:block font-size="6pt"><#if routesMap?has_content && (((routesMap.getValue()).get("routeTotalSubsidy"))>0)>${(routesMap.getValue().get("routeTotalSubsidy"))?if_exists}(1)<#else>-</#if></fo:block>
+							<fo:block font-size="6pt"><#if ((routesMap.getValue().get("routeEmpPcks"))>0)>${(routesMap.getValue().get("routeEmpPcks"))?if_exists}(1)<#else>-</#if></fo:block>
 						</fo:table-cell>
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="right">Loose</fo:block>
