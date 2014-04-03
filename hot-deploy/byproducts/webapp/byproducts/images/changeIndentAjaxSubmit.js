@@ -203,7 +203,7 @@ function prepareAjaxDataString(){
 		else{
 			sequenceNum = jQuery("#tempRouteId").val();
 		}
-		 
+		sequenceNum = sequenceNum.toUpperCase();
 		var qty = parseFloat(changeItem["cQuantity"]);
 		if( typeof changeItem["cProductId"] != "undefined"   && changeItem["cProductId"] != "" && !isNaN(qty)){				
 			
