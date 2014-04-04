@@ -4628,7 +4628,7 @@ public class ByProductServices {
  					Debug.logError("Error in creating Facility Custom Billing: "+facilityId+ "\t"+e.toString(),module);
  					return ServiceUtil.returnError(e.getMessage());
  				}
-			return result;
+ 				return result;
 	    }
 	    public static Map<String, Object> createOrUpdateFacilityRate(DispatchContext ctx,Map<String, Object> context) {
 	        Map<String, Object> finalResult = FastMap.newInstance();
@@ -4747,7 +4747,7 @@ public class ByProductServices {
 		                    return ServiceUtil.returnError("Error getting Custom Time Period"+facilityId);
 		              }
 			    	  customTimePeriodId=(String)resultMap.get("customTimePeriodId");
-				    	  Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","COM_CANCELLED","userLogin", userLogin));   
+				    	  Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));   
 				    	  List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
 				    	  if (UtilValidate.isEmpty(periodBillingList)) {
 				    		  GenericValue newEntity = delegator.makeValue("PeriodBilling");
@@ -4760,61 +4760,63 @@ public class ByProductServices {
 						         }catch(GenericEntityException e) {
 						            Debug.logError(e, module);
 						            return ServiceUtil.returnError("Failed to create a new Period Billing " + e);            
-						         }
+						       }
+						         facilityList= (List)ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
+						    	   for(GenericValue eachFacility: facilityList){
+						    		  String invoiceId ="";
+						    		  partyId = eachFacility.getString("ownerPartyId");
+							    	  facilityId = eachFacility.getString("facilityId");
+						    	     Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
+										inputRateAmt.put("rateCurrencyUomId", "INR");
+										inputRateAmt.put("facilityId", facilityId);
+										inputRateAmt.put("fromDate",dayStartThruDate);
+										inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
+										Map<String, Object> facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+										BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
+										if(rateAmount.intValue()<=0){
+											continue;
+										}
+										Map<String, Object> createInvoiceMap = FastMap.newInstance();
+							            createInvoiceMap.put("partyId", partyId);
+							            createInvoiceMap.put("facilityId", facilityId);
+							            createInvoiceMap.put("partyIdFrom", partyIdFrom);
+							            createInvoiceMap.put("invoiceDate", dueDate);
+						                createInvoiceMap.put("dueDate", dueDate);
+							            createInvoiceMap.put("invoiceTypeId", "SHOPEE_RENT");
+							            createInvoiceMap.put("statusId", "INVOICE_IN_PROCESS");
+							            createInvoiceMap.put("userLogin", userLogin);
+							         
+							            Map<String, Object> createInvoiceResult = null;
+							            try {
+							                createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceMap);
+							                if(ServiceUtil.isError(createInvoiceResult)){
+							                	Debug.logError("Error in creating invoice for dealer:"+facilityId, module);
+							                    return ServiceUtil.returnError("Error in creating invoice for dealer:"+facilityId);
+							                }
+							                invoiceId = (String)createInvoiceResult.get("invoiceId");
+							            } catch (GenericServiceException e) {
+							                return ServiceUtil.returnError("Error creating invoice");
+							            }
+								    	  String refNum = "SHP_RTLR_"+periodBillingId;
+								    	  GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+								    	  invoice.set("referenceNumber",refNum);
+								    	  invoice.set("periodBillingId",periodBillingId);
+								    	  invoice.store();
+							            Map<String, Object> resMap = FastMap.newInstance();
+							            //to do tax calculation based on the configuration
+							            BigDecimal salesTaxrateAmount=rateAmount.divide(new BigDecimal(12.36), rounding);
+							            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SHOPEE_RENT",
+							                           "amount", rateAmount, "userLogin", userLogin));
+							            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SERTAX_SALE",
+						                           "amount", salesTaxrateAmount, "userLogin", userLogin));
+						                if (ServiceUtil.isError(resMap)) {
+						                	Debug.logError("Error creating Invoice item for Shopee Rent", module);	
+						                    return ServiceUtil.returnError("Error creating Invoice item for Shopee Rent "+facilityId);
+						                }
+									}  
+						         
 			              }
-		    	  	   facilityList= (List)ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
-			    	   for(GenericValue eachFacility: facilityList){
-			    		  String invoiceId ="";
-			    		  partyId = eachFacility.getString("ownerPartyId");
-				    	  facilityId = eachFacility.getString("facilityId");
-			    	     Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
-							inputRateAmt.put("rateCurrencyUomId", "INR");
-							inputRateAmt.put("facilityId", facilityId);
-							inputRateAmt.put("fromDate",dayStartThruDate);
-							inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
-							Map<String, Object> facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
-							BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
-							if(rateAmount.intValue()<=0){
-								continue;
-							}
-							Map<String, Object> createInvoiceMap = FastMap.newInstance();
-				            createInvoiceMap.put("partyId", partyId);
-				            createInvoiceMap.put("facilityId", facilityId);
-				            createInvoiceMap.put("partyIdFrom", partyIdFrom);
-				            createInvoiceMap.put("invoiceDate", dueDate);
-			                createInvoiceMap.put("dueDate", dueDate);
-				            createInvoiceMap.put("invoiceTypeId", "SHOPEE_RENT");
-				            createInvoiceMap.put("statusId", "INVOICE_IN_PROCESS");
-				            createInvoiceMap.put("userLogin", userLogin);
-				         
-				            Map<String, Object> createInvoiceResult = null;
-				            try {
-				                createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceMap);
-				                if(ServiceUtil.isError(createInvoiceResult)){
-				                	Debug.logError("Error in creating invoice for dealer:"+facilityId, module);
-				                    return ServiceUtil.returnError("Error in creating invoice for dealer:"+facilityId);
-				                }
-				                invoiceId = (String)createInvoiceResult.get("invoiceId");
-				            } catch (GenericServiceException e) {
-				                return ServiceUtil.returnError("Error creating invoice");
-				            }
-					    	  String refNum = "SHP_RTLR_"+periodBillingId;
-					    	  GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
-					    	  invoice.set("referenceNumber",refNum);
-					    	  invoice.set("periodBillingId",periodBillingId);
-					    	  invoice.store();
-				            Map<String, Object> resMap = FastMap.newInstance();
-				            //to do tax calculation based on the configuration
-				            BigDecimal salesTaxrateAmount=rateAmount.divide(new BigDecimal(12.36), rounding);
-				            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SHOPEE_RENT",
-				                           "amount", rateAmount, "userLogin", userLogin));
-				            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SERTAX_SALE",
-			                           "amount", salesTaxrateAmount, "userLogin", userLogin));
-			                if (ServiceUtil.isError(resMap)) {
-			                	Debug.logError("Error creating Invoice item for Shopee Rent", module);	
-			                    return ServiceUtil.returnError("Error creating Invoice item for Shopee Rent "+facilityId);
-			                }
-						}
+		    	  	   
 		       
 			  }catch (Exception e) {
 				  Debug.logError(e, "Error creating Invoice for Shopee Rent", module);		  
@@ -4848,7 +4850,7 @@ public class ByProductServices {
 	                    return ServiceUtil.returnError("Error getting Custom Time Period");
 	              }
 		    	  customTimePeriodId=(String)resultMap.get("customTimePeriodId");
-			    	  Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","COM_CANCELLED","userLogin", userLogin));   
+			    	  Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));   
 			    	  List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
 			    	  if (UtilValidate.isEmpty(periodBillingList)) {
 		                	Debug.logError("Error getting PeriodBilling", module);	
@@ -4937,7 +4939,7 @@ public class ByProductServices {
 			try{
 				  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
 		    	  conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, billingTypeId));
-		    	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,statusId));
+		    	  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,statusId));
 		    	  EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		    	  List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", condExpr, null, null, null, false);
 		    	  if(UtilValidate.isNotEmpty(periodBillingList)){

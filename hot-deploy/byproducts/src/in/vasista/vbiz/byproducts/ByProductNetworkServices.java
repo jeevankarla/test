@@ -5091,7 +5091,7 @@ public class ByProductNetworkServices {
 			if(UtilValidate.isNotEmpty(thruDate)){
 				exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));	
 			}
-			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, obInvoiceType));		
+			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList(obInvoiceType, "SHOPEE_RENT")));		
 			List invoiceStatusList = UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF");		
 			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,invoiceStatusList));
 			
@@ -5118,6 +5118,7 @@ public class ByProductNetworkServices {
 			result.put("invoiceList", tempObInvoiceList);
 			result.put("invoiceIds", EntityUtil.getFieldListFromEntityList(pendingOBInvoiceList, "invoiceId", true));	   
 			return result;
+			
 		    
 	    }
 	    

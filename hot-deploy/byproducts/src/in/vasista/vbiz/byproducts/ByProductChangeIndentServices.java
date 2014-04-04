@@ -642,7 +642,7 @@ public class ByProductChangeIndentServices {
   				  
   			  }
   			  
-  			  /*if(UtilValidate.isNotEmpty(activeProdList)){
+  			  if(UtilValidate.isNotEmpty(activeProdList)){
   				  List<GenericValue> subscriptionProdClose = EntityUtil.filterByCondition(subscriptionProdList, EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, UtilMisc.toList(activeProdList)));
   				  for(int j=0;j<subscriptionProdClose.size();j++){
   					  GenericValue subcProdClose = (GenericValue)subscriptionProdClose.get(j);
@@ -667,7 +667,7 @@ public class ByProductChangeIndentServices {
   		  			  }
   				  }
   				  
-  			  }*/
+  			  }
   			  
   		  }catch (Exception e) {
   			  Debug.logError(e, "Problem updating subscription for booth " + boothId, module);		  
