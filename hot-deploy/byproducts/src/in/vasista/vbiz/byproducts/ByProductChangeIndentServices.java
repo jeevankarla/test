@@ -111,10 +111,26 @@ public class ByProductChangeIndentServices {
                  //effectiveDate = UtilDateTime.nowTimestamp();
     		  }
     	  }
+    	  
+    	  List routeIdValidateList = FastList.newInstance();
+  	      if(UtilValidate.isNotEmpty(subscriptionTypeId)){
+  	    	  try{
+  	    		  Map resultCtx = dispatcher.runSync("getRoutesByAMPM", UtilMisc.toMap("supplyType", subscriptionTypeId, "userLogin", userLogin));
+    	    	  if(ServiceUtil.isError(resultCtx)){
+    	    		  request.setAttribute("_ERROR_MESSAGE_","Error in service getRoutesByAMPM");
+    	    		  return "error";
+    	    	  }
+    	    	  routeIdValidateList = (List)resultCtx.get("routeIdsList");
+  	    	  }catch(GenericServiceException e){
+  	    		request.setAttribute("_ERROR_MESSAGE_","Error in calling service getRoutesByAMPM");
+	    		  return "error";
+  	    	  }
+  	      }
+  	      
     	  if (boothId == "") {
     			request.setAttribute("_ERROR_MESSAGE_","Booth Id is empty");
     			return "error";
-    		}
+    	  }
         // Get the parameters as a MAP, remove the productId and quantity params.
     	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
     	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
@@ -159,6 +175,7 @@ public class ByProductChangeIndentServices {
     			  return "error";     		
     		  }
     		  subscription = EntityUtil.getFirst(subscriptionList);
+    	  
     	  }  catch (GenericEntityException e) {
     		  Debug.logError(e, "Problem getting Booth subscription", module);
     		  request.setAttribute("_ERROR_MESSAGE_", "Problem getting Booth subscription");
@@ -180,6 +197,10 @@ public class ByProductChangeIndentServices {
     		  }
     		  if (paramMap.containsKey("sequenceNum" + thisSuffix)) {
     			  sequenceNum = (String) paramMap.get("sequenceNum" + thisSuffix);
+    			  if(!routeIdValidateList.contains(sequenceNum)){
+    				  request.setAttribute("_ERROR_MESSAGE_", sequenceNum+" is not a valid route");
+        			  return "error";
+    			  }
     		  }	
     		  else {
     			  request.setAttribute("_ERROR_MESSAGE_", "Missing sequence number");
@@ -211,38 +232,91 @@ public class ByProductChangeIndentServices {
     		       
     	  }//end row count for loop
     	  
-    	 Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
-    	 processChangeIndentHelperCtx.put("subscriptionId", subscription.getString("subscriptionId"));
-    	 processChangeIndentHelperCtx.put("boothId", boothId);
-    	 processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
-    	 processChangeIndentHelperCtx.put("effectiveDate", effectiveDate);
-    	 processChangeIndentHelperCtx.put("productQtyList", productQtyList);
-    	 processChangeIndentHelperCtx.put("productSubscriptionTypeId", productSubscriptionTypeId);
-    	 String indentChanged = "";
-    	 try{
-    		 if(UtilValidate.isEmpty(routeChangeFlag)){
-    			result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
-    		 }
-    		 else{
-    			 if(routeChangeFlag.equals("routeChange")){
-    				result = dispatcher.runSync("processChangeRouteIndentHelper",processChangeIndentHelperCtx);
-    			 }
-    		 }
-  		 if (ServiceUtil.isError(result)) {
-  			String errMsg =  ServiceUtil.getErrorMessage(result);
-  			Debug.logError(errMsg , module);
-  			request.setAttribute("_ERROR_MESSAGE_",errMsg);
-  			return "error";
-  		 }
-  		 indentChanged = (String)result.get("indentChangeFlag");
-  		 
-    	 }catch (Exception e) {
-    			  Debug.logError(e, "Problem updating subscription for booth " + boothId, module);     
-    			  request.setAttribute("_ERROR_MESSAGE_", "Problem updating subscription for booth " + boothId);
-    			  return "error";			  
-    		  }	 
-    	  request.setAttribute("indentChangeFlag", indentChanged);
-    	  return "success";     
+    	  if(UtilValidate.isNotEmpty(routeChangeFlag) && routeChangeFlag.equals("Y")){
+    		  try{
+        		  String dateFmt = UtilDateTime.toDateString(effectiveDate, "dd MMMMM, yyyy");
+        		  Map ctxMap = FastMap.newInstance();
+        		  ctxMap.put("boothId", boothId);
+        		  ctxMap.put("supplyDate", dateFmt);
+        		  ctxMap.put("subscriptionTypeId", subscriptionTypeId);
+        		  ctxMap.put("productSubscriptionTypeId", productSubscriptionTypeId);
+        		  ctxMap.put("screenFlag", "indentAlt");
+        		  ctxMap.put("userLogin", userLogin);
+        		  Map ctxResultMap = dispatcher.runSync("getBoothChandentIndent",ctxMap);
+        		  if(ServiceUtil.isError(ctxResultMap)){
+        			  Debug.logError("Error fetching indents from service getBoothChangeIndent", module);
+        			  request.setAttribute("_ERROR_MESSAGE_", "Error fetching indents getBoothChangeIndent");
+        			  return "error";
+        		  }
+        		  
+        		  List<Map> indentProdList = (List)ctxResultMap.get("changeIndentProductList");
+        		         		  
+        		  List tempProductList = FastList.newInstance();
+        		  
+        		  
+        		  if(UtilValidate.isNotEmpty(indentProdList)){
+        			 
+        			  for(Map eachEntry: indentProdList){
+          	        	Map tempChangeProdMap = FastMap.newInstance();
+          	        	tempChangeProdMap.put("productId", (String)eachEntry.get("cProductId"));
+          	        	tempChangeProdMap.put("quantity", BigDecimal.ZERO);
+          	        	tempChangeProdMap.put("sequenceNum", (String)eachEntry.get("seqRouteId"));
+          	        	tempProductList.add(tempChangeProdMap);
+        			  }
+        			  
+        			  Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
+          	       	 processChangeIndentHelperCtx.put("subscriptionId", subscription.getString("subscriptionId"));
+          	       	 processChangeIndentHelperCtx.put("boothId", boothId);
+          	       	 processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
+          	       	 processChangeIndentHelperCtx.put("effectiveDate", effectiveDate);
+          	       	 processChangeIndentHelperCtx.put("productQtyList", tempProductList);
+          	       	 processChangeIndentHelperCtx.put("productSubscriptionTypeId", productSubscriptionTypeId);
+          	       	 String indentChanged = "";
+          	   		 
+          	       	 result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
+          	   		 
+               		 if (ServiceUtil.isError(result)) {
+               			String errMsg =  ServiceUtil.getErrorMessage(result);
+               			Debug.logError(errMsg , module);
+               			request.setAttribute("_ERROR_MESSAGE_",errMsg);
+               			return "error";
+               		 }
+        		  }
+        		  
+        	  }catch(GenericServiceException e){
+        		  Debug.logError(e, "Error calling service getBoothChandentIndent ", module);
+    			  request.setAttribute("_ERROR_MESSAGE_", "Error calling service getBoothChandentIndent ");
+    			  return "error";
+        	  }
+    	  }
+		  
+    	  try{
+    		
+     		 Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
+			 processChangeIndentHelperCtx.put("subscriptionId", subscription.getString("subscriptionId"));
+			 processChangeIndentHelperCtx.put("boothId", boothId);
+			 processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
+			 processChangeIndentHelperCtx.put("effectiveDate", effectiveDate);
+			 processChangeIndentHelperCtx.put("productQtyList", productQtyList);
+			 processChangeIndentHelperCtx.put("productSubscriptionTypeId", productSubscriptionTypeId);
+			 String indentChanged = "";
+			 
+			 result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
+
+			 if (ServiceUtil.isError(result)) {
+				String errMsg =  ServiceUtil.getErrorMessage(result);
+				Debug.logError(errMsg , module);
+				request.setAttribute("_ERROR_MESSAGE_",errMsg);
+				return "error";
+			 }
+			 indentChanged = (String)result.get("indentChangeFlag");
+			 request.setAttribute("indentChangeFlag", indentChanged);
+		 }catch (Exception e) {
+				  Debug.logError(e, "Problem updating subscription for booth " + boothId, module);     
+				  request.setAttribute("_ERROR_MESSAGE_", "Problem updating subscription for booth " + boothId);
+				  return "error";			  
+		 }
+	     return "success";     
       }
           
       public static Map<String ,Object>  processChangeIndentHelper(DispatchContext dctx, Map<String, ? extends Object> context){
@@ -283,11 +357,10 @@ public class ByProductChangeIndentServices {
   	      if(UtilValidate.isNotEmpty(routeChangeFlag) && routeChangeFlag.equalsIgnoreCase("Y")){
   	    	  routeChange = true;
   	      }
-  	     
   	      List<String> contIndentProductList = EntityUtil.getFieldListFromEntityList(ProductWorker.getProductsByCategory(delegator ,"CONTINUES_INDENT" ,UtilDateTime.getDayStart(effectiveDate)), "productId", true);
   	      List<String> dayIndentProductList = EntityUtil.getFieldListFromEntityList(ProductWorker.getProductsByCategory(delegator ,"DAILY_INDENT" ,UtilDateTime.getDayStart(effectiveDate)), "productId", true);
-    		 
   	      
+	  	    
     		/*List<GenericValue> crateIndentProducts = ProductWorker.getProductsByCategory(delegator ,"CRATE_INDENT" ,UtilDateTime.getDayStart(effectiveDate));
     		List<GenericValue> packetIndentProducts = ProductWorker.getProductsByCategory(delegator ,"PACKET_INDENT" ,UtilDateTime.getDayStart(effectiveDate));
     		List<String> crateIndentProductList = EntityUtil.getFieldListFromEntityList( crateIndentProducts, "productId", true);
@@ -350,6 +423,7 @@ public class ByProductChangeIndentServices {
   					  }
   	    		  
   				  }*/
+  				  
   				  conditionList.clear();
   				  conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
   				  conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));
@@ -476,7 +550,6 @@ public class ByProductChangeIndentServices {
   					  if(productsList.contains(productId)){
   						  activeProdList.add(productId);
   					  }
-  					  
   					  GenericValue subscriptionProduct = EntityUtil.getFirst(subscriptionProductsList);
   					  Timestamp extSubsDate = (Timestamp)subscriptionProduct.get("fromDate");
   					  if(extSubsDate.compareTo(UtilDateTime.getDayStart(effectiveDate)) != 0){
@@ -507,7 +580,7 @@ public class ByProductChangeIndentServices {
   					  }
   					  else{
   						  int removed = delegator.removeValue(subscriptionProduct);
-  						  Debug.log("removed todays subscription"+subscriptionProduct);
+  						  Debug.log("removed todays subscription "+subscriptionProduct);
   					  }
   					  if(quantity.compareTo(BigDecimal.ZERO)>0 && createFlag){
   						  indentChanged = true;
@@ -528,7 +601,7 @@ public class ByProductChangeIndentServices {
   						  else{
   							  // for now populate thruDate
   							  //createNewSubscProduct.put("thruDate", null);  
-  							createNewSubscProduct.put("thruDate", UtilDateTime.getDayEnd(effectiveDate));
+  							  createNewSubscProduct.put("thruDate", UtilDateTime.getDayEnd(effectiveDate));
   						  }
   						  				  
   						  if(((productSubscriptionTypeId.equals("SPECIAL_ORDER")) || (productSubscriptionTypeId.equals("CASH_FS") || dayIndentProductList.contains(productId)))&&!productSubscriptionTypeId.equals("EMP_SUBSIDY")){
@@ -542,7 +615,8 @@ public class ByProductChangeIndentServices {
   						  createNewSubscProduct.put("createdByUserLogin",userLogin.get("userLoginId"));
   						  createNewSubscProduct.put("createdDate",nowTimeStamp);   
   						  createNewSubscProduct.put("lastModifiedByUserLogin",userLogin.get("userLoginId"));
-  						  createNewSubscProduct.put("lastModifiedDate",nowTimeStamp); 
+  						  createNewSubscProduct.put("lastModifiedDate",nowTimeStamp);
+  						  Debug.log("createNewSubscProduct #########################"+createNewSubscProduct);
   						  result = dispatcher.runSync("createSubscriptionProduct",createNewSubscProduct);
   						  if (ServiceUtil.isError(result)) {
   							String errMsg =  ServiceUtil.getErrorMessage(result);
@@ -561,13 +635,14 @@ public class ByProductChangeIndentServices {
   						  EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(nextEffDay))));
   				  EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
   				  List<GenericValue> removeSubscriptionProdList = delegator.findList("SubscriptionProduct", cond, null, null, null, false);
+  				  Debug.log("removeSubscriptionProdList"+removeSubscriptionProdList);
   				  if(UtilValidate.isNotEmpty(removeSubscriptionProdList)){
   					  int removedNxtDaySubs = delegator.removeAll(removeSubscriptionProdList);
-  					  Debug.log("removed next day subscriptions #####################"+removedNxtDaySubs);
   				  }
   				  
   			  }
-  			  if(UtilValidate.isNotEmpty(activeProdList)){
+  			  
+  			  /*if(UtilValidate.isNotEmpty(activeProdList)){
   				  List<GenericValue> subscriptionProdClose = EntityUtil.filterByCondition(subscriptionProdList, EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, UtilMisc.toList(activeProdList)));
   				  for(int j=0;j<subscriptionProdClose.size();j++){
   					  GenericValue subcProdClose = (GenericValue)subscriptionProdClose.get(j);
@@ -580,6 +655,7 @@ public class ByProductChangeIndentServices {
   					  updateSubscriptionClose.put("sequenceNum",subcProdClose.getString("sequenceNum"));
   					  updateSubscriptionClose.put("fromDate", subcProdClose.getTimestamp("fromDate"));
   					  updateSubscriptionClose.put("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(effectiveDate, -1)));
+  					Debug.log("updateSubscriptionClose #############"+updateSubscriptionClose);
   		  			  if (!productSubscriptionTypeId.equals("SPECIAL_ORDER") || !productSubscriptionTypeId.equals("CASH_FS")	) {
   		  				  // don't close out existing subscription (except for special orders)
   		  				  result = dispatcher.runSync("updateSubscriptionProduct",updateSubscriptionClose);
@@ -591,7 +667,7 @@ public class ByProductChangeIndentServices {
   		  			  }
   				  }
   				  
-  			  }
+  			  }*/
   			  
   		  }catch (Exception e) {
   			  Debug.logError(e, "Problem updating subscription for booth " + boothId, module);		  
@@ -616,7 +692,6 @@ public class ByProductChangeIndentServices {
 	      String shipmentTypeId = (String)context.get("shipmentTypeId");
 	      Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");	      
 	      List<Map> productQtyList = (List)context.get("productQtyList");
-	      
 	      Map inputMap = FastMap.newInstance();
 	      inputMap.put("subscriptionId", subscriptionId);
 	      inputMap.put("productSubscriptionTypeId", productSubscriptionTypeId);
@@ -637,13 +712,12 @@ public class ByProductChangeIndentServices {
 	    	  String defaultRouteId = (String)boothDetails.get("routeId");
 	    	  List<GenericValue> productCategoryList = FastList.newInstance();
 	    	  List prodCatCondition = UtilMisc.toList(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, "CONTINUES_INDENT"));
-	    	  prodCatCondition.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, "MILK"));
+	    	  /*prodCatCondition.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, "MILK"));*/
 	    	  EntityCondition prodCatCond = EntityCondition.makeCondition(prodCatCondition, EntityOperator.AND);
 	    	  productCategoryList = delegator.findList("ProductAndCategoryMember", prodCatCond, null, null, null, false);
 	    	  productCategoryList = EntityUtil.filterByDate(productCategoryList, effectiveDate);
 	    	  List initProductList = EntityUtil.getFieldListFromEntityList(productCategoryList, "productId", true);
 	    	  List<Map> initProductQtyList = FastList.newInstance();
-	    	  
 	    	  for(int i=0; i< productQtyList.size() ; i++){
 				  Map productQtyMap = productQtyList.get(i);
 				  String productId = (String)productQtyMap.get("productId");
@@ -659,7 +733,7 @@ public class ByProductChangeIndentServices {
 	    		  inputInitMap.put("boothId", boothId);
 	    		  inputInitMap.put("shipmentTypeId", shipmentTypeId);
 	    		  inputInitMap.put("userLogin", userLogin);
-	    		  inputInitMap.put("routeChangeFlag", "Y");
+	    		  /*inputInitMap.put("routeChangeFlag", "Y");*/
 	    		  inputInitMap.put("effectiveDate", (Timestamp)UtilDateTime.addDaysToTimestamp(effectiveDate, 1));
 	    		  inputInitMap.put("productQtyList", initProductQtyList);
 			      Map resultInit = dispatcher.runSync("processChangeIndentHelper",inputInitMap);

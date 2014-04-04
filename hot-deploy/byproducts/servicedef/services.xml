@@ -26,6 +26,15 @@
         <attribute name="returnCrQuantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="returnCnQuantity" type="BigDecimal" mode="IN" optional="false"/>
     </service>
+    
+    <service name="getRoutesByAMPM" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getRoutesByAMPM">
+        <description>
+            Get Routes by AM and PM
+        </description>
+        <attribute name="supplyType" type="String" mode="IN" optional="true"/>
+        <attribute name="routeIdsList" type="List" mode="OUT" optional="true"/>
+    </service>
     <service name="createInvoiceForAllOrders" engine="java"
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForAllOrders">
         <description>

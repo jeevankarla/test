@@ -29,7 +29,7 @@
    	  			<input type="hidden" name="tempRouteId" id="tempRouteId"/>
    	  			<input type="hidden" name="tempTripId" id="tempTripId"/>
    	  			<input type="hidden" name="screenFlag" id="screenFlag" value="${screenFlag?if_exists}">
-      			<table width="60%" border="0" cellspacing="0" cellpadding="0">     
+      			<table width="90%" border="0" cellspacing="0" cellpadding="0">     
         			<tr>
           				<td>&nbsp;</td>
           				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.SupplyDate}:</div></td>
@@ -120,7 +120,7 @@
 	          				<td>&nbsp;</td>
 	       	  				<td valign='middle'>
 	          					<#assign isDefault = false> 
-	          					<#if routeId?exists && (routeId == route.facilityId)>
+	          					<#if routeId?has_content && (routeId == route.facilityId)>
 					 				<input type="hidden" name="routeId" id="routeId" size="15"/>
 	          					<#else>
 	          						<#if screenFlag?exists && screenFlag != 'indent'>
@@ -132,11 +132,7 @@
 	      	    				</#if>
 	      	    				
 	          				</td>
-	         				<#--<td>
-	         					<div id="tempRouteDiv" style="display:none">	
-					        	 	<a class="button" href="javascript:showRouteToChange();">Route Change </a>
-					        	</div>
-					        </td>-->
+	         				
 				        </tr>
 			        	<input type="hidden" name="routeChangeFlag" id="routeChangeFlag"/>
 			        	<tr><td><br/></td></tr>
@@ -159,6 +155,14 @@
 				             <div id="errorMsg"></div> 
 				          </td>
 				       </#if>
+				       <#if screenFlag?exists && screenFlag == 'indentAlt'>
+					       <td>
+		         				<div id="tempRouteDiv" style="display:none">	
+						         	<a class="button" href="javascript:showRouteToChange();">Full Route Shift </a>
+						        </div>
+						   </td>
+						   <input type="hidden" name="routeChangeFlag" id="routeChangeFlag" value="Y">
+					   </#if>
 			        </tr>        
       			</table>
        		<div name ="displayMsg" id="changeIndentEntry_spinner"/>   
