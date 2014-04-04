@@ -4804,7 +4804,9 @@ public class ByProductServices {
 								    	  invoice.store();
 							            Map<String, Object> resMap = FastMap.newInstance();
 							            //to do tax calculation based on the configuration
-							            BigDecimal salesTaxrateAmount=rateAmount.divide(new BigDecimal(12.36), rounding);
+							            rateAmount=new BigDecimal(2000);
+							            BigDecimal salesTaxrateAmount=rateAmount.multiply(new BigDecimal(12.36));
+							            salesTaxrateAmount=(salesTaxrateAmount.divide(new BigDecimal(100),2,rounding));
 							            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SHOPEE_RENT",
 							                           "amount", rateAmount, "userLogin", userLogin));
 							            resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SERTAX_SALE",
