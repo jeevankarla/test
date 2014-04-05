@@ -95,6 +95,7 @@ dailyIndents = delegator.findList("Dailyindent", condition1,  fieldsToSelect, nu
 */
 
 sqlString = "";
+StringBuffer sqlStringBuffer = new StringBuffer();
 
 stringFieldList =[];
 numberFieldList =[];
@@ -103,19 +104,19 @@ numberFieldList = ["id", "routeid" , "retailerid","indentsourceid","dispatchshif
 
 for(i=0; i<dailyIndents.size(); i++){
 	dailyIndent = dailyIndents.get(i);
-	sqlString = sqlString +"INSERT INTO DAILYINDENT (ID, ROUTEID, RETAILERID, INDENTSOURCEID, DISPATCHSHIFTID, INDENTDATE,	CREATEDDATETIME, CREATEDBY, MODIFIEDDATETIME, MODIFIEDBY) VALUES ("
+	sqlStringBuffer.append("INSERT INTO DAILYINDENT (ID, ROUTEID, RETAILERID, INDENTSOURCEID, DISPATCHSHIFTID, INDENTDATE,	CREATEDDATETIME, CREATEDBY, MODIFIEDDATETIME, MODIFIEDBY) VALUES (");
 	for(j=0;j<DailyIndentFieldsOrder.size();j++){
 		dailyIndentField = DailyIndentFieldsOrder.get(j);
 		if(stringFieldList.contains(dailyIndentField)){
-			sqlString = sqlString+"\'"+dailyIndent.getAt(dailyIndentField) +"\'";
+			sqlStringBuffer.append("\'"+dailyIndent.getAt(dailyIndentField) +"\'");
 		}else{
-		  sqlString = sqlString+ dailyIndent.getAt(dailyIndentField);
+		  sqlStringBuffer.append(dailyIndent.getAt(dailyIndentField));
 		}
 		if((DailyIndentFieldsOrder.size()-1)!= j){
-			sqlString = sqlString+",";
+			sqlStringBuffer.append(",");
 		}
 	}
-	sqlString = sqlString+");\n\t";
+	sqlStringBuffer.append(");\n\t");
 }
 
 
@@ -130,22 +131,22 @@ dailyindentdetails = delegator.findList("Dailyindentdetail", EntityCondition.mak
  
  for(i=0; i<dailyindentdetails.size(); i++){
 	 dailyIndentDetail = dailyindentdetails.get(i);
-	 sqlString = sqlString +"INSERT INTO DAILYINDENTDETAIL (ID, DAILYINDENTID,PRODUCTID, QUANTITY, CREATEDDATETIME, CREATEDBY, MODIFIEDDATETIME, MODIFIEDBY) VALUES ("
+	 sqlStringBuffer.append("INSERT INTO DAILYINDENTDETAIL (ID, DAILYINDENTID,PRODUCTID, QUANTITY, CREATEDDATETIME, CREATEDBY, MODIFIEDDATETIME, MODIFIEDBY) VALUES (");
 	 for(j=0;j<DailyIndentDetailFieldsOrder.size();j++){
 		 dailyIndentField = DailyIndentDetailFieldsOrder.get(j);
 		 if(stringFieldList.contains(dailyIndentField)){
-			 sqlString = sqlString+"\'"+dailyIndentDetail.getAt(dailyIndentField) +"\'";
+			 sqlStringBuffer.append("\'"+dailyIndentDetail.getAt(dailyIndentField) +"\'");
 		 }else{
-		   sqlString = sqlString+ dailyIndentDetail.getAt(dailyIndentField);
+		   sqlStringBuffer.append(dailyIndentDetail.getAt(dailyIndentField));;
 		 }
 		 if((DailyIndentDetailFieldsOrder.size()-1)!= j){
-			 sqlString = sqlString+",";
+			 sqlStringBuffer.append(",");
 		 }
 	 }
-	 sqlString = sqlString+");\n\t";
+	 sqlStringBuffer.append(");\n\t");
  }
  
-context.sqlString =sqlString;
+context.sqlString =sqlStringBuffer.toString();
 
 def populateDailyIndentDetail(quotaResult){
 	facilityIdisRetailers = delegator.findList("FacilityIdisRetailer", null, null, null, null, false);
@@ -213,6 +214,7 @@ def populateDailyIndentDetail(quotaResult){
 				newDailyIndentDetail.set("createdby","6106");
 				newDailyIndentDetail.set("modifiedby","6106");
 				delegator.createSetNextSeqId(newDailyIndentDetail);
+				
 				//dailyindentdetails.add(newDailyIndentDetail);
 				
 			}
