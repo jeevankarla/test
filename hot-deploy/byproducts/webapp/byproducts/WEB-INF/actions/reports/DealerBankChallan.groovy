@@ -92,6 +92,27 @@ Map boothWiseSaleMap= FastMap.newInstance();
 
 List amShipmentIds = ByProductNetworkServices.getDayShipmentIds(delegator ,dayBegin,dayEnd,"AM",null);
 List pmShipmentIds = ByProductNetworkServices.getDayShipmentIds(delegator ,dayBegin,dayEnd,"PM",null);
+
+totalShipmentIds = [];
+totalShipmentIds.addAll(amShipmentIds);
+totalShipmentIds.addAll(pmShipmentIds);
+
+orderHeader = delegator.findList("OrderHeader", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, totalShipmentIds), ["originFacilityId", "shipmentId"] as Set, null, null, false);
+
+orderHeaderAM = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("shipmentId", EntityOperator.IN, amShipmentIds));
+orderHeaderPM = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("shipmentId", EntityOperator.IN, pmShipmentIds));
+challanSerialNumMap = [:];
+
+orderHeaderAM.each{eachItem ->
+	challanSerialNumMap.put(eachItem.originFacilityId, eachItem.originFacilityId+"-"+eachItem.shipmentId);
+}
+orderHeaderPM.each{eachEntry ->
+	if(!challanSerialNumMap.get(eachEntry.originFacilityId)){
+		challanSerialNumMap.put(eachEntry.originFacilityId, eachItem.originFacilityId+"-"+eachEntry.shipmentId);
+	}
+}
+context.challanSerialNumMap = challanSerialNumMap;
+
 amBoothTotals=[:];
 pmBoothTotals=[:];
 if(UtilValidate.isNotEmpty(amShipmentIds)){

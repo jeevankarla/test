@@ -68,19 +68,20 @@ under the License.
                             			<fo:table-body>
 			                            	<fo:table-row>
 			                              		<fo:table-cell>
-											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;    KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
+											        <fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-077&#160;    KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 			                                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 											        <fo:block font-family="Courier,monospace" >------------------------------------------------------------------------------</fo:block>
-											        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; &#160;     BILL OF SALE</fo:block>
+											        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; &#160;     TAX INVOICE</fo:block>
 			                              		</fo:table-cell>
 			                            	</fo:table-row>
 			                            	<fo:table-row>
 			                              		<fo:table-cell>
-			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">TIN NO:  29710050983</fo:block>
+			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">TIN NO: ${tinNumber?if_exists}</fo:block>
 			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">BILL NO: ${orderDetail.orderHeader.orderId}</fo:block>
 			                              		</fo:table-cell>
 			                              		<fo:table-cell>
 							                        <fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">Supply Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDetail.orderHeader.estimatedDeliveryDate?if_exists, "dd-MMM-yyyy")}</fo:block>
+							                        <fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">PO No: <#if partyPONumMap?has_content && (partyPONumMap.get(facility.facilityId))?exists>${partyPONumMap.get(facility.facilityId)}</#if></fo:block>
 							          			</fo:table-cell>  
 			                            	</fo:table-row>
 			                            	<fo:table-row>
@@ -282,9 +283,18 @@ under the License.
 			                      </fo:table-cell>
 			                    </fo:table-row>
 			                    <fo:table-row>
-			                      <fo:table-cell text-align="right" number-columns-spanned="3">
+			                      <fo:table-cell text-align="right">
 			                      <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			                      <fo:block font-size="4pt" text-align="right" keep-together="always">RECEIVER'S SIGNATORY</fo:block>
+			                      </fo:table-cell>
+			                      <fo:table-cell text-align="right" number-columns-spanned="2">
+			                      <fo:block font-size="4pt" text-align="center" keep-together="always">sd/-</fo:block>
 			                      <fo:block font-size="4pt" text-align="right" keep-together="always">AUTHORISED SIGNATORY</fo:block>
+			                      </fo:table-cell>
+			                    </fo:table-row>
+			                    <fo:table-row>
+			                      <fo:table-cell text-align="right" number-columns-spanned="5">
+			                      <fo:block font-size="4pt" text-align="left" keep-together="always">**This is a computer generated invoice, hence no signature is required</fo:block>
 			                      </fo:table-cell>
 			                    </fo:table-row>
 			          	         <fo:table-row>

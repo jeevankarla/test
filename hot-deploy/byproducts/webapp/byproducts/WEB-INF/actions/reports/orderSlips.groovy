@@ -83,6 +83,17 @@ if(parameters.estimatedShipDate){
 
 context.put("estimatedDeliveryDateTime", estimatedDeliveryDateTime);
 
+partyPONumMap = [:];
+
+partyIdentification = delegator.findList("PartyIdentification", EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PO_NUMBER"), null, null, null, false);
+
+partyIdentification.each{eachPO ->
+	partyPONumMap.put(eachPO.partyId, eachPO.idValue);
+}
+context.partyPONumMap = partyPONumMap;
+
+
+
 facilityList=[];
 if(parameters.facilityId){
 	requestedFacilityId = parameters.facilityId;
@@ -173,7 +184,6 @@ if(parameters.invoiceId){
 		
 	
 	context.facilityRouteMap=facilityRouteMap;
-	context.tinNumber="29710050983";
 	return "success";
 	
 	

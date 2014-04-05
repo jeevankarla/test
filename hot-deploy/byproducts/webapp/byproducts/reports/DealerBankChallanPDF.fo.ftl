@@ -8,7 +8,7 @@ permissions and limitations under the License. -->
 
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
-            margin-top="0.2in" margin-bottom=".2in" margin-left=".3in" margin-right=".3in">
+            margin-top="0.3in" margin-bottom=".2in" margin-left=".3in" margin-right=".3in">
         <fo:region-body margin-top=".6in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -30,7 +30,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
         <#list routeWiseList as routeBoothsMap>
 		 <fo:page-sequence master-reference="main">
 		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
-		<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-015 </fo:block>
+		<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-103 </fo:block>
 			 <#assign routeId = routeBoothsMap.getKey()>
 		        <#assign  boothWiseSaleList=routeBoothsMap.getValue().entrySet()>
 		          <#assign noOfbooths=0>
@@ -58,9 +58,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 					  <fo:block> ${uiLabelMap.CommonPage}<fo:page-number/></fo:block>
 					  </#if>
 					<fo:table table-layout="fixed" width="100%" space-before="0.2in">
-						<fo:table-column column-width="40%" />
-						<fo:table-column column-width="5%" />
-						<fo:table-column column-width="57%" />
+						<fo:table-column column-width="28%" />
+						<fo:table-column column-width="4%" />
+						<fo:table-column column-width="65%" />
 						<fo:table-body>
 							<fo:table-row>
 								<fo:table-cell >
@@ -80,30 +80,38 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																<fo:table-body>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> CASH PAYMENT	</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">CASH PAYMENT</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">&#160;          PAN:${panIdDetails.idValue?if_exists}</fo:block>
+																			<fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">PAN: &#160;${panIdDetails.idValue?if_exists}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell number-columns-spanned="2">
-																			<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> PayableDate: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd-MMM-yyyy")}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">PayableDate: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd-MMM-yyyy")}</fo:block>
+																		</fo:table-cell>
+																	</fo:table-row>
+																	<fo:table-row number-columns-spanned="2">
+																		<fo:table-cell>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">A/C NO :&#160;${accNumber?if_exists}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  A/C NO :${accNumber?if_exists}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">Bank Name :&#160;${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(bankName?if_exists)),30)}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  RETAILER NAME:${facility.facilityName}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  RETAILER NAME:&#160;${facility.facilityName}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  RETAILER CODE:${facilityId}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  RETAILER CODE:&#160;${facilityId}</fo:block>
+																		</fo:table-cell>
+																		<fo:table-cell>
+																			<fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">SERIAL No :&#160;<#if challanSerialNumMap?has_content>${challanSerialNumMap.get(facilityId)?if_exists}</#if></fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																</fo:table-body>
@@ -116,13 +124,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 													<fo:table-cell>
 														<fo:block font-size="10pt">
 															<fo:table table-layout="fixed" width="100%" space-before="0.2in">
-																<fo:table-column column-width="170pt" />
-																<fo:table-column column-width="80pt" />
-																<fo:table-column column-width="60pt" />
+																<fo:table-column column-width="130pt" />
+																<fo:table-column column-width="55pt" />
+																<fo:table-column column-width="55pt" />
 																<fo:table-body>
 																 <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __</fo:block>
 																		</fo:table-cell>
 															      </fo:table-row>
 																  <fo:table-row >
@@ -138,7 +146,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																 </fo:table-row>
 																  <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __</fo:block>
 																		</fo:table-cell>
 															      </fo:table-row>
 															     
@@ -177,7 +185,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 					        							
 					        							      <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __</fo:block>
 																		</fo:table-cell>
 															   </fo:table-row>
 					        							      <fo:table-row >
@@ -188,12 +196,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																			<fo:block text-align="center" font-size="8pt">&#160;</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
-																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0")}</fo:block>
+																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0.00")}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	 <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __</fo:block>
 																		</fo:table-cell>
 															      </fo:table-row>
 																	<fo:table-row>
@@ -251,25 +259,25 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 									<fo:block text-align="center" font-size="10pt">|</fo:block><#-- line ss-->
 									<fo:block text-align="center" font-size="10pt">|</fo:block><#-- line ss-->
 									
-									
-									
 					        	</fo:table-cell>	   
 					        	<fo:table-cell > <#--BankCopy started-->
 									<fo:block>
-									<fo:block text-align="left" >&#160;&#160;</fo:block>
+									<fo:block text-align="left" >&#160;</fo:block>
 										<fo:table>
-											<fo:table-column column-width="320pt" />
-											<fo:table-column column-width="110pt" />
+											<fo:table-column column-width="280pt" />
+											<fo:table-column column-width="150pt" />
 											<fo:table-body>
 
 												<fo:table-row>
 													<fo:table-cell>
 														<fo:block font-size="10pt">
-									                     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="8pt" keep-together="always">&#160; &#160; &#160; &#160;MOTHER DAIRY,KMF UNIT,BANGALORE-560065.      BANK COPY</fo:block>
+														<fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="8pt" keep-together="always">BANK COPY</fo:block>
+									                     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="8pt" keep-together="always">&#160; &#160; &#160; &#160;MOTHER DAIRY,KMF UNIT,BANGALORE-560065.</fo:block>
 															<fo:table>
-																<fo:table-column column-width="170pt" />
-																<fo:table-column column-width="170pt" />
+																<fo:table-column column-width="140pt" />
+																<fo:table-column column-width="140pt" />
 																<fo:table-body>
+																	
 																	<fo:table-row>
 																		<fo:table-cell number-columns-spanned="2">
 																			<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="11pt" keep-together="always"> CASH PAYMENT CHALLAN	</fo:block>
@@ -277,36 +285,36 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">PAN: &#160;${panIdDetails.idValue?if_exists}</fo:block>
+																		</fo:table-cell>
+																		<fo:table-cell>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> PayableDate: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd-MMM-yyyy")}</fo:block>
+																		</fo:table-cell>
+																	</fo:table-row>
+																	<fo:table-row>
+																		<fo:table-cell>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">A/C NO: &#160;${accNumber?if_exists}</fo:block>
+																		</fo:table-cell>
+																		<fo:table-cell>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">SERIAL NO: &#160;<#if challanSerialNumMap?has_content>${challanSerialNumMap.get(facilityId)?if_exists}</#if> </fo:block>
+																		</fo:table-cell>
+																	</fo:table-row>
+																	<fo:table-row>
+																		<fo:table-cell>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">Bank Name: &#160;${bankName?if_exists}</fo:block>
+																		</fo:table-cell>
+																		<fo:table-cell>
 																			<fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">&#160;</fo:block>
 																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> PayableDate: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd-MMM-yyyy")}</fo:block>
-																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> A/C NO :${accNumber?if_exists} &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Bank Name:  ${bankName?if_exists}</fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">&#160;        PAN:${panIdDetails.idValue?if_exists}</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">SERIAL NO:</fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">&#160;</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell number-columns-spanned="2">
 																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" font-weight="bold"  keep-together="always">--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- </fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always"> RETAILER NAME:${facility.facilityName}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">RETAILER NAME: &#160;${facility.facilityName}</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
 																				<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>
@@ -314,38 +322,31 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always"> RETAILER CODE:${facilityId}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">RETAILER CODE: &#160;${facilityId}</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always"> ROUTE NO:${routeId}</fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>
+																			<fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">ROUTE NO: ${routeId?if_exists}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																</fo:table-body>
 															</fo:table>
 														</fo:block>
 													</fo:table-cell>
+													<fo:table-cell/>
 												</fo:table-row>
 
 												<fo:table-row >
 													<fo:table-cell>
 														<fo:block font-size="10pt">
 															<fo:table>
-																<fo:table-column column-width="150pt" />
-																<fo:table-column column-width="65pt" />
-																<fo:table-column column-width="40pt" />
-																<fo:table-column column-width="65pt" />
+																<fo:table-column column-width="130pt" />
+																<fo:table-column column-width="55pt" />
+																<fo:table-column column-width="25pt" />
+																<fo:table-column column-width="55pt" />
 																<fo:table-body>
 																 <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ </fo:block>
+																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
 																		</fo:table-cell>
 															      </fo:table-row>
 																	<fo:table-row >
@@ -364,7 +365,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																	</fo:table-row>
 																	 <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ </fo:block>
+																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
 																		</fo:table-cell>
 															      </fo:table-row>
 																
@@ -406,131 +407,123 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																	</fo:table-cell>
 						        							</fo:table-row>
 					        							</#if>
-					        							 <fo:table-row>
-																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ </fo:block>
-																		</fo:table-cell>
+					        							<fo:table-row>
+															<fo:table-cell  number-columns-spanned="3">
+																<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+															</fo:table-cell>
 														</fo:table-row>
 					        							<fo:table-row >
-																		<fo:table-cell>
-																			<fo:block text-align="center" font-size="8pt">Total</fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="center" font-size="8pt"></fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="center" font-size="8pt"></fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0")}</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-															 <fo:table-row>
-																		<fo:table-cell  number-columns-spanned="3">
-																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ </fo:block>
-																		</fo:table-cell>
-															  </fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell number-columns-spanned="4">
-																		<fo:block text-align="left" wrap-option="wrap" font-size="8pt"> TOTAL AMT TO BE PAID:  ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalValue?string("#0")), "%rupees-and-paise", locale).toUpperCase()} ONLY</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	 <fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" keep-together="always"> &#160;</fo:block>
-																		</fo:table-cell>
-																   </fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="center" font-size="10pt">Retailer's Signature</fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="center" font-size="10pt">Cashier</fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="center" font-size="10pt"></fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="center" font-size="10pt">Manager</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																</fo:table-body>
-															</fo:table>
-														</fo:block>
-													</fo:table-cell>
-													<fo:table-cell> <#-- denaminations cell started -->
-        									          <fo:block font-size="10pt">
-															<fo:table>
-																<fo:table-column column-width="105pt" />
-																<fo:table-body>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160;   DENOMINATIONS</fo:block>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160;</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160; 1000 X&#160;&#160; = </fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160; 500 X&#160;&#160;&#160; =</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160; 100 X&#160;&#160;&#160; =</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160; 50 X&#160;&#160;&#160;&#160; =</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160; 20 X&#160;&#160;&#160;&#160; =</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160; 10 X&#160;&#160;&#160;&#160; =</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160;  5 X&#160;&#160;&#160;&#160;&#160; =</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160;  2   X&#160;&#160;&#160;&#160;&#160; =</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																	<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt">&#160;&#160;  1   X&#160;&#160;&#160;&#160;&#160; =</fo:block>
-																		</fo:table-cell>
-																	</fo:table-row>
-																</fo:table-body>
-															</fo:table>
-														</fo:block>
-													</fo:table-cell>
-												</fo:table-row>
-											</fo:table-body>
-										</fo:table>
-									</fo:block>
-								</fo:table-cell>
-							</fo:table-row>
-							<fo:table-row>
-							<fo:table-cell number-columns-spanned="3">
-								<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="normal" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+															<fo:table-cell>
+																<fo:block text-align="center" font-size="8pt">Total</fo:block>
+															</fo:table-cell>
+															<fo:table-cell>
+																<fo:block text-align="center" font-size="8pt"></fo:block>
+															</fo:table-cell>
+															<fo:table-cell>
+																<fo:block text-align="center" font-size="8pt"></fo:block>
+															</fo:table-cell>
+															<fo:table-cell>
+																<fo:block text-align="right" font-size="8pt">${totalValue?string("#0.00")}</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														 <fo:table-row>
+															<fo:table-cell  number-columns-spanned="3">
+																<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+															</fo:table-cell>
+														  </fo:table-row>
+														  <fo:table-row>
+														      <fo:table-cell number-columns-spanned="4">
+																	<fo:block text-align="left" wrap-option="wrap" font-size="8pt"> TOTAL AMT TO BE PAID:  ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalValue?string("#0")), "%rupees-and-paise", locale).toUpperCase()} ONLY</fo:block>
+																</fo:table-cell>
+														  </fo:table-row>
+														  <fo:table-row>
+														  		<fo:table-cell>
+																	<fo:block text-align="left" white-space-collapse="false" keep-together="always"> &#160;</fo:block>
+																</fo:table-cell>
+														  </fo:table-row>
+														  <fo:table-row>
+															<fo:table-cell number-columns-spanned="4">
+																<fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;&#160;&#160;&#160;&#160;Retailer's Signature&#160;&#160;&#160;&#160;Cashier&#160;&#160;&#160;&#160;Manager</fo:block>
+															</fo:table-cell>
+														  </fo:table-row>
+													</fo:table-body>
+												</fo:table>
+											</fo:block>
+										</fo:table-cell>
+										<#-- denaminations cell started -->
+										<fo:table-cell> 
+								          <fo:block font-size="10pt">
+												<fo:table>
+													<fo:table-column column-width="130pt" />
+													<fo:table-body>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160;   DENOMINATIONS</fo:block>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160;</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160; 1000 X&#160;&#160; = </fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160; 500 X&#160;&#160;&#160; =</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160; 100 X&#160;&#160;&#160; =</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160; 50 X&#160;&#160;&#160;&#160; =</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160; 20 X&#160;&#160;&#160;&#160; =</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160; 10 X&#160;&#160;&#160;&#160; =</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160;  5 X&#160;&#160;&#160;&#160;&#160; =</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160;  2   X&#160;&#160;&#160;&#160;&#160; =</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+														<fo:table-row>
+															<fo:table-cell>
+																<fo:block text-align="left" font-size="8pt">&#160;&#160;  1   X&#160;&#160;&#160;&#160;&#160; =</fo:block>
+															</fo:table-cell>
+														</fo:table-row>
+													</fo:table-body>
+												</fo:table>
+											</fo:block>
+										</fo:table-cell>
+										</fo:table-row>
+									</fo:table-body>
+								</fo:table>
+								</fo:block>
 							</fo:table-cell>
-						 </fo:table-row>
-						</fo:table-body>
-					</fo:table>
+						</fo:table-row>
+						<fo:table-row>
+						<fo:table-cell number-columns-spanned="3">
+							<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="normal" keep-together="always"> __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+						</fo:table-cell>
+					 </fo:table-row>
+					</fo:table-body>
+				</fo:table>
 				</fo:block>
 		        </#list>
 		         </fo:flow>
