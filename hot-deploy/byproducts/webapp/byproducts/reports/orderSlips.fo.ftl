@@ -30,6 +30,7 @@ under the License.
     <#assign fssaiNumber="">
     <#if OrderDetailsList?has_content>
     	<#assign temp = 0/>
+    	${setRequestAttribute("OUTPUT_FILENAME", "invoiceSlip.txt")}
     <fo:page-sequence master-reference="main">
         <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         
