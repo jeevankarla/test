@@ -41,7 +41,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 		    		</#if>
 		    		 <#assign noOfbooths=noOfbooths+1>	
         	          <#assign facilityId = boothSaleMap.getKey()>
-        	           <#assign accNumber =  facilityBankMap.get(facilityId)?if_exists>
+        	           <#assign finDetail =  facilityBankMap.get(facilityId)?if_exists>
+        	         	<#assign accNumber = finDetail.get('accountCode')?if_exists>
+        	         	<#assign bankName = finDetail.get('bankName')?if_exists>
         	         
         	          <#assign facility = delegator.findOne("Facility", {"facilityId" :facilityId}, true)>
         	           <#assign boothSaleDetails = boothSaleMap.getValue()>
@@ -283,7 +285,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> A/C NO :${accNumber?if_exists}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always"> A/C NO :${accNumber?if_exists} &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Bank Name:  ${bankName?if_exists}</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
 																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">&#160;        PAN:${panIdDetails.idValue?if_exists}</fo:block>
