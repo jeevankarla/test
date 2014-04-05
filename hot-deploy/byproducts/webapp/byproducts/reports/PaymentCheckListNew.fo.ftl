@@ -32,6 +32,8 @@ under the License.
         <#assign totalPaymentAmont = 0>     
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
+        	
+        		<fo:block text-align="center" keep-together="always">VST_ASCII-015</fo:block>
         		<fo:block text-align="left" white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/>                 MOTHER DAIRY</fo:block>
         		<fo:block text-align="center" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")}  UserLogin:${userLogin.get("userLoginId")}</fo:block>	 	 	  
         		<fo:block text-align="center" keep-together="always">   Payments CheckList</fo:block>
@@ -134,7 +136,7 @@ under the License.
 	                            </fo:table-cell> -->
 	                            <fo:table-cell >
 	                            	<#assign totalPaymentAmont =(totalPaymentAmont+checkListReport.amount) >
-	                            	<fo:block text-align="right"><@ofbizCurrency amount=checkListReport.amount isoCode=defaultOrganizationPartyCurrencyUomId/></fo:block>	                               
+	                            	<fo:block text-align="right">${checkListReport.amount}</fo:block>	                               
 	                            </fo:table-cell> 
 	                             <#assign sno= sno+1>  	  	                            	                            
 	                        </fo:table-row>
