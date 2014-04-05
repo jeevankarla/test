@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.accounting.invoice.*;
 
 dctx = dispatcher.getDispatchContext();
 routeIdsList =[];
@@ -43,6 +44,31 @@ if(parameters.supplyDate){
 estimatedDeliveryDateTime=UtilDateTime.nowTimestamp();
 }
 context.put("estimatedDeliveryDate", estimatedDeliveryDateTime);
+
+rentInvoicesMap = [:];
+int day=UtilDateTime.getDayOfMonth(estimatedDeliveryDateTime,TimeZone.getDefault(),Locale.getDefault());
+if(day==5){
+	dayStart = UtilDateTime.getDayStart(estimatedDeliveryDateTime);
+	dayEnd = UtilDateTime.getDayEnd(estimatedDeliveryDateTime);
+	condList = [];
+	condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SHOPEE_RENT"));
+	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+	condList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
+	condList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	invoices = delegator.findList("Invoice", cond, null, null, null, false);
+	
+	invoices.each{ eachInvoice ->
+		facilityId = eachInvoice.facilityId
+		invoiceAmount = InvoiceWorker.getInvoiceTotal(eachInvoice);
+		if(invoiceAmount>0){
+			rentInvoicesMap.put(facilityId, invoiceAmount);
+		}
+	}
+	context.rentInvoiceAmt =  rentInvoicesMap;
+	
+}
+
 productNames = [:];
 
 shipments = [];
@@ -53,8 +79,10 @@ if(parameters.routeId !="All-Routes"){
 }
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS ,"ROUTE"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-routeList = delegator.findList("Facility",condition,null,null,null,false);
-
+//routeList = delegator.findList("Facility",condition,null,null,null,false);
+routeIdsList = (ByProductNetworkServices.getRoutesByAMPM(dctx ,UtilMisc.toMap("supplyType" ,"AM"))).get("routeIdsList");
+//Debug.log("routeIdsList==============="+routeIdsList);
+routeList = delegator.findList("Facility",EntityCondition.makeCondition("facilityId", EntityOperator.IN ,routeIdsList),null,null,null,false);
 
 dayBegin = UtilDateTime.getDayStart(estimatedDeliveryDateTime);
 context.putAt("dayBegin", dayBegin);
@@ -98,6 +126,10 @@ for(int i=0; i< routeList.size();i++){
 	boothsList.each{ boothObj ->
 		boothId=boothObj.facilityId;
 		paymentMethodId=partyProfileFacilityMap.get(boothId);
+		rentAmt = 0;
+		if(rentInvoicesMap && rentInvoicesMap.get(boothId)){
+			rentAmt = rentInvoicesMap.get(boothId);
+		}
 		boothAmPmMap=[:];
 		amBoothTotalMap=[:];
 		pmBoothTotalMap=[:];
@@ -117,6 +149,7 @@ for(int i=0; i< routeList.size();i++){
 			}else{
 			amDetailsMap["saleVal"]=0;
 			}
+			
 			boothAmPmMap["AM"]=amDetailsMap;
 		//pm starts here
 			pmDetailsMap=[:];
@@ -141,6 +174,7 @@ for(int i=0; i< routeList.size();i++){
 			}
 			
 		}
+		boothAmPmMap["rentVal"] = rentAmt;
 	}
 	if(UtilValidate.isNotEmpty(boothSaleMap)){
 		routeWiseMap[routeId]=boothSaleMap;
@@ -149,4 +183,3 @@ for(int i=0; i< routeList.size();i++){
 
 context.put("routeWiseMap",routeWiseMap);
 context.put("facilityBankMap",facilityBankMap);
-//context.putAt("routeWiseTotalCrates", routeWiseTotalCrates);

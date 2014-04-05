@@ -48,11 +48,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
         	                    
         	           <#assign amSaleDetails =boothSaleDetails.get("AM")>
         	           <#assign pmSaleDetails = boothSaleDetails.get("PM")>
-        	            <#assign totalValue= amSaleDetails.get("saleVal")+pmSaleDetails.get("saleVal")>
+        	           <#assign rentAmount = boothSaleDetails.get("rentVal")>
+        	            <#assign totalValue= amSaleDetails.get("saleVal")+pmSaleDetails.get("saleVal")+rentAmount>
 					<#--<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" >-</fo:block> -->
 					<fo:block>
 					<#if (noOfbooths==1) >
-					  <fo:block> ${uiLabelMap.CommonPage} <fo:page-number/></fo:block>
+					  <fo:block> ${uiLabelMap.CommonPage}<fo:page-number/></fo:block>
 					  </#if>
 					<fo:table table-layout="fixed" width="100%" space-before="0.2in">
 						<fo:table-column column-width="40%" />
@@ -143,18 +144,35 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 					        						
 										        		 <#list boothAmPmList as boothAmPmMap>
 										        		 <#assign innerMapDetails=boothAmPmMap.getValue()>
-					        							<fo:table-row>
-																		<fo:table-cell>
-																			<fo:block text-align="left" font-size="8pt"><#if boothAmPmMap.getKey()=="AM">NET VALUE OF MILK &amp; MILK<#else>PRODUCTS SOLD ON.....</#if></fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																		   <fo:block text-align="left" font-size="8pt">${innerMapDetails.get("date")}</fo:block>
-																		</fo:table-cell>
-																		<fo:table-cell>
-																			<fo:block text-align="right" font-size="8pt">${innerMapDetails.get("saleVal")?string("#0.00")}</fo:block>
-																		</fo:table-cell>
-														</fo:table-row>
-					        							</#list>
+						        								<#if boothAmPmMap?exists && (boothAmPmMap.getKey()=="AM" || boothAmPmMap.getKey()=="PM")>
+						        									<fo:table-row>
+						        								
+																			<fo:table-cell>
+																				<fo:block text-align="left" font-size="8pt"><#if boothAmPmMap.getKey()=="AM">NET VALUE OF MILK &amp; MILK<#else>PRODUCTS SOLD ON.....</#if></fo:block>
+																			</fo:table-cell>
+																			<fo:table-cell>
+																			   <fo:block text-align="left" font-size="8pt">${innerMapDetails.get("date")?if_exists}</fo:block>
+																			</fo:table-cell>
+																			<fo:table-cell>
+																				<fo:block text-align="right" font-size="8pt">${innerMapDetails.get("saleVal")?string("#0.00")}</fo:block>
+																			</fo:table-cell>
+																	</fo:table-row>
+																</#if>
+						        						</#list>
+					        							<#if rentAmount?exists && (rentAmount >0)>
+						        							<fo:table-row>
+						        									<fo:table-cell>
+																		<fo:block text-align="left" font-size="8pt">SHOPPEE RENT </fo:block>
+																	</fo:table-cell>
+																	<fo:table-cell>
+																		<fo:block text-align="left" font-size="8pt"></fo:block>
+																	</fo:table-cell>
+						        									<fo:table-cell>
+																		<fo:block text-align="right" font-size="8pt">${rentAmount?if_exists?string("#0.00")}</fo:block>
+																	</fo:table-cell>
+						        							</fo:table-row>
+					        							</#if>
+					        							
 					        							      <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
 																			<fo:block text-align="left" white-space-collapse="false" font-size="8pt" keep-together="always">__ __ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
@@ -168,7 +186,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																			<fo:block text-align="center" font-size="8pt">&#160;</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
-																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0.00")}</fo:block>
+																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0")}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	 <fo:table-row>
@@ -352,7 +370,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 					        						
 										        		 <#list boothAmPmList as boothAmPmMap>
 										        		 <#assign innerMapDetails=boothAmPmMap.getValue()>
-					        							<fo:table-row>
+					        								<#if boothAmPmMap?exists && (boothAmPmMap.getKey()=="AM" || boothAmPmMap.getKey()=="PM")>
+					        									<fo:table-row>
+					        								
 																		<fo:table-cell>
 																			<fo:block text-align="left" font-size="8pt"><#if boothAmPmMap.getKey()=="AM">NET VALUE OF MILK &amp; MILK<#else>PRODUCTS SOLD ON.....</#if></fo:block>
 																		</fo:table-cell>
@@ -366,7 +386,24 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																			<fo:block text-align="right" font-size="8pt">${innerMapDetails.get("saleVal")?string("#0.00")}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
+																</#if>	
 					        							</#list>
+					        							<#if rentAmount?exists && (rentAmount >0)>
+						        							<fo:table-row>
+						        									<fo:table-cell>
+																		<fo:block text-align="left" font-size="8pt">SHOPPEE RENT </fo:block>
+																	</fo:table-cell>
+																	<fo:table-cell>
+																		<fo:block text-align="left" font-size="8pt"></fo:block>
+																	</fo:table-cell>
+																	<fo:table-cell>
+																		<fo:block text-align="left" font-size="8pt"></fo:block>
+																	</fo:table-cell>
+						        									<fo:table-cell>
+																		<fo:block text-align="right" font-size="8pt">${rentAmount?if_exists?string("#0.00")}</fo:block>
+																	</fo:table-cell>
+						        							</fo:table-row>
+					        							</#if>
 					        							 <fo:table-row>
 																		<fo:table-cell  number-columns-spanned="3">
 																			<fo:block text-align="left" font-size="8pt" white-space-collapse="false" keep-together="always">__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ </fo:block>
@@ -383,7 +420,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																			<fo:block text-align="center" font-size="8pt"></fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
-																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0.00")}</fo:block>
+																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0")}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 															 <fo:table-row>

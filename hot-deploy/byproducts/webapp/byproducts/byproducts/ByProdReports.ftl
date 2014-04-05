@@ -193,7 +193,7 @@ function makeDatePicker(fromDateId ,thruDateId){
       			<#-->
       			<td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="bankChallanSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td> -->
       			<td width="33%">Route 
-				<select name="routeId" class='h4'>
+				<select name="routeId" class='h4'><option value='All-Routes'>All-Routes</option>
 					<#list routesList as route>    
   	    				<option value='${route}'>${route}</option>
 					</#list>  

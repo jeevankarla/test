@@ -75,8 +75,8 @@ under the License.
 			                            	</fo:table-row>
 			                            	<fo:table-row>
 			                              		<fo:table-cell>
-			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">TIN NO: ${tinNumber}</fo:block>
-			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">BILL NO.</fo:block>
+			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">TIN NO:  29710050983</fo:block>
+			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">BILL NO: ${orderDetail.orderHeader.orderId}</fo:block>
 			                              		</fo:table-cell>
 			                              		<fo:table-cell>
 							                        <fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">Supply Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDetail.orderHeader.estimatedDeliveryDate?if_exists, "dd-MMM-yyyy")}</fo:block>
