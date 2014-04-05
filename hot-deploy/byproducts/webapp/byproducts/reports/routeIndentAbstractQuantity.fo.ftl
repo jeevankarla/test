@@ -30,7 +30,7 @@ under the License.
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
-${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
+${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 <#assign lineNumber = 5>
 <#assign numberOfLines = 60>
 <#assign facilityNumberInPage = 0>
@@ -51,8 +51,86 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
                 <fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">CODE   CODE     NAME                                                         </fo:block>
             	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			    </fo:static-content>
-			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">	
-
+	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">	
+	 <fo:block  font-size="8pt">  &#160;     &#160;   &#160;  &#160;    &#160;  </fo:block>
+     <fo:block  font-size="8pt">  &#160;     &#160;   &#160;  &#160;    &#160; Grand Total </fo:block>
+     <fo:block  font-size="8pt">
+       <fo:table  table-layout="fixed">                
+	        <fo:table-column column-width="33pt"/>
+	  		<fo:table-column column-width="55pt"/>
+	  		<fo:table-column column-width="180pt"/>
+	   	    <fo:table-column column-width="85pt"/>
+	   	    <fo:table-column column-width="70pt"/>
+	   	    <fo:table-column column-width="60pt"/>
+	        <fo:table-body>
+	            <#list prodIdsSeqList as productId>
+	            		 <#assign  productEntryMap=GrandTotalProdMap.get(productId)?if_exists>
+	            			<#if productEntryMap?has_content>
+	  								<#assign product = delegator.findOne("Product", {"productId" : productId}, true)>
+							          <fo:table-row >  
+							            <fo:table-cell>
+				                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
+			                             </fo:table-cell>    
+	                        		     <fo:table-cell>
+	                            			<fo:block  text-align="left" font-size="8pt" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("brandName")))),7)}</fo:block>
+	                        			 </fo:table-cell>
+	                        	         <fo:table-cell>
+	                            	        <fo:block  text-align="left" font-size="8pt"  keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("productName")))),37)}</fo:block>
+	                        	          </fo:table-cell>	
+		                                  <fo:table-cell>
+	                            	         <fo:block   font-size="8pt" text-align="right">${productEntryMap.get("qty")}</fo:block>
+	                        	         </fo:table-cell>
+	                        	          <#assign crateVal = productEntryMap.get("crates")?if_exists>
+			                            	<#if crateVal?has_content>
+				                      		<fo:table-cell>
+	                                	         <fo:block  text-align="right">${productEntryMap.get("crates")?if_exists}</fo:block>
+	                            	         </fo:table-cell>
+	                            	         <#else>
+	                            	         <fo:table-cell>
+	                                	         <fo:block  text-align="right">-</fo:block>
+	                            	         </fo:table-cell>
+			                            	</#if>
+			                            	 <#assign cansVal = productEntryMap.get("cans")?if_exists>
+			                            	<#if cansVal?has_content>
+				                      		<fo:table-cell>
+	                                	         <fo:block  text-align="right">${productEntryMap.get("cans")?if_exists}</fo:block>
+	                            	         </fo:table-cell>
+			                            	</#if>
+	                     	         </fo:table-row>
+	                     	         </#if>
+	                     	         </#list>
+	                     	         <fo:table-row >  
+							             <fo:table-cell>
+				                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
+			                             </fo:table-cell>                  
+	                            	     </fo:table-row >  
+	                     	          <fo:table-row >  
+							             <fo:table-cell>
+				                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
+			                             </fo:table-cell>                  
+	                        		     <fo:table-cell>
+	                            			<fo:block  text-align="left" keep-together="always"></fo:block>
+	                        			 </fo:table-cell>
+	                        	         <fo:table-cell>
+	                            	        <fo:block  text-align="left" keep-together="always">Total Crates&amp;Cans--></fo:block>
+	                        	          </fo:table-cell>	
+		                                  <fo:table-cell>
+	                            	         <fo:block  text-align="right"></fo:block>
+	                        	         </fo:table-cell>
+				                      		<fo:table-cell>
+	                                	         <fo:block  text-align="right">${totalCrates?if_exists}</fo:block>
+	                            	         </fo:table-cell>
+				                      		<fo:table-cell>
+	                                	         <fo:block  text-align="right">${totalCans?if_exists}</fo:block>
+	                            	         </fo:table-cell>
+	                            	     </fo:table-row >  
+	                     	         
+	          </fo:table-body>
+	          </fo:table> 
+	           </fo:block>
+	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
+             <fo:block  font-size="8pt" break-after="page"> </fo:block>
+			<#-- eachRoute TotalStarts Here-->
            <#assign routeIndentList=routeWiseIndentMap.entrySet()>
 				<#list routeIndentList as routeIndent>
            			<#assign facilityGrandTotal = (Static["java.math.BigDecimal"].ZERO)>
@@ -101,20 +179,20 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 							                                  <fo:table-cell>
 					                                	         <fo:block  text-align="right">${productEntryMap.get("qty")}</fo:block>
 					                            	         </fo:table-cell>
-					                            	         <#assign crateMap = productEntryMap.get("crateMap")?if_exists>
-								                            	<#if crateMap?has_content>
+					                            	          <#assign crateVal = productEntryMap.get("crates")?if_exists>
+								                            	<#if crateVal?has_content>
 									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${crateMap.get("crates")}+${crateMap.get("loosePkts")}</fo:block>
+						                                	         <fo:block  text-align="right">${productEntryMap.get("crates")?if_exists}</fo:block>
 						                            	         </fo:table-cell>
 						                            	         <#else>
 						                            	         <fo:table-cell>
 						                                	         <fo:block  text-align="right">-</fo:block>
 						                            	         </fo:table-cell>
 								                            	</#if>
-								                            	 <#assign cansMap = productEntryMap.get("cansMap")?if_exists>
-								                            	<#if cansMap?has_content>
+								                            	 <#assign cansVal = productEntryMap.get("cans")?if_exists>
+								                            	<#if cansVal?has_content>
 									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${cansMap.get("cans")}</fo:block>
+						                                	         <fo:block  text-align="right">${productEntryMap.get("cans")?if_exists}</fo:block>
 						                            	         </fo:table-cell>
 								                            	</#if>
 					                         	         </fo:table-row>
@@ -126,26 +204,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 		              							          <fo:table-cell>
 					                         	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
 					                         	         </fo:table-cell>
-					                         	         </fo:table-row>
-					                         	          <fo:table-row >  
-		              							             <fo:table-cell>
-                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
-                        		                             </fo:table-cell>                  
-					                            		     <fo:table-cell>
-					                                			<fo:block  text-align="left" keep-together="always">&#160;</fo:block>
-					                            			 </fo:table-cell>
-					                            	         <fo:table-cell>
-					                                	        <fo:block  text-align="right" keep-together="always">FulCrates:${productEntryTotMap.get("rtCrates")}</fo:block>
-					                            	          </fo:table-cell>	
-							                                  <fo:table-cell>
-					                                	         <fo:block  text-align="right">LooseCrates:</fo:block>
-					                            	         </fo:table-cell>
-									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="">${productEntryTotMap.get("rtLooseCrates")}(${productEntryTotMap.get("rtExcessPkts")})</fo:block>
-						                            	         </fo:table-cell>
-									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">&#160;</fo:block>
-						                            	         </fo:table-cell>
 					                         	         </fo:table-row>
 		              							          <fo:table-row >  
 		              							             <fo:table-cell>
@@ -161,7 +219,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 					                                	         <fo:block  text-align="right">${productEntryTotMap.get("routeTotQty")}</fo:block>
 					                            	         </fo:table-cell>
 									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${(productEntryTotMap.get("rtCrates"))+(productEntryTotMap.get("rtLooseCrates"))}</fo:block>
+						                                	         <fo:block  text-align="right">${productEntryTotMap.get("rtCrates")}</fo:block>
 						                            	         </fo:table-cell>
 									                      		<fo:table-cell>
 						                                	         <fo:block  text-align="right">${productEntryTotMap.get("rtCans")}</fo:block>
@@ -174,101 +232,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 												                <fo:block  text-align="right" keep-together="always"></fo:block> 
 														    </fo:table-cell>
 												</fo:table-row>
-	                      				 		<#-- 
-	                      				 		<fo:table >
-	                                              <fo:table-column column-width="380pt"/>
-	                                                <fo:table-body> 
-												       <fo:table-row >  
-												            <fo:table-cell>
-												                <fo:block  text-align="right" keep-together="always">${totalcrates}</fo:block> 
-														    </fo:table-cell>
-													   </fo:table-row>
-												    </fo:table-body>
-										        </fo:table>  -->             				 		                    
  				            </#if>
 	                     </fo:table-body>
                       </fo:table>
                  <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block> 
        </fo:block>
    </#list> 
-     <fo:block  font-size="8pt">  &#160;     &#160;   &#160;  &#160;    &#160;  </fo:block>
-     <fo:block  font-size="8pt">  &#160;     &#160;   &#160;  &#160;    &#160; Grand Total </fo:block>
-   <fo:block  font-size="8pt">
-       <fo:table  table-layout="fixed">                
-				                <fo:table-column column-width="33pt"/>
- 						  		<fo:table-column column-width="55pt"/>
- 						  		<fo:table-column column-width="180pt"/>
- 						   	    <fo:table-column column-width="85pt"/>
- 						   	    <fo:table-column column-width="70pt"/>
- 						   	    <fo:table-column column-width="60pt"/>
-				                <fo:table-body>
-				                
-				                    <#list prodIdsSeqList as productId>
-	                                		 <#assign  productEntryMap=GrandTotalProdMap.get(productId)?if_exists>
-	                                			<#if productEntryMap?has_content>
-	                      								<#assign product = delegator.findOne("Product", {"productId" : productId}, true)>
-		              							          <fo:table-row >  
-		              							            <fo:table-cell>
-                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
-                        		                             </fo:table-cell>    
-					                            		     <fo:table-cell>
-					                                			<fo:block  text-align="left" font-size="8pt" keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("brandName")))),7)}</fo:block>
-					                            			 </fo:table-cell>
-					                            	         <fo:table-cell>
-					                                	        <fo:block  text-align="left" font-size="8pt"  keep-together="always">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString((product.get("productName")))),37)}</fo:block>
-					                            	          </fo:table-cell>	
-							                                  <fo:table-cell>
-					                                	         <fo:block   font-size="8pt" text-align="right">${productEntryMap.get("qty")}</fo:block>
-					                            	         </fo:table-cell>
-					                            	         <#assign crateMap = productEntryMap.get("crateMap")?if_exists>
-								                            	<#if crateMap?has_content>
-									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${crateMap.get("crates")}+${crateMap.get("loosePkts")}</fo:block>
-						                            	         </fo:table-cell>
-						                            	         <#else>
-						                            	         <fo:table-cell>
-						                                	         <fo:block  text-align="right">-</fo:block>
-						                            	         </fo:table-cell>
-								                            	</#if>
-								                            	 <#assign cansMap = productEntryMap.get("cansMap")?if_exists>
-								                            	<#if cansMap?has_content>
-									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${cansMap.get("cans")}</fo:block>
-						                            	         </fo:table-cell>
-								                            	</#if>
-					                         	         </fo:table-row>
-					                         	         </#if>
-					                         	         </#list>
-					                         	         <fo:table-row >  
-		              							             <fo:table-cell>
-                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
-                        		                             </fo:table-cell>                  
-						                            	     </fo:table-row >  
-					                         	          <fo:table-row >  
-		              							             <fo:table-cell>
-                        			                            <fo:block text-align="left" keep-together="always">&#160;</fo:block>
-                        		                             </fo:table-cell>                  
-					                            		     <fo:table-cell>
-					                                			<fo:block  text-align="left" keep-together="always"></fo:block>
-					                            			 </fo:table-cell>
-					                            	         <fo:table-cell>
-					                                	        <fo:block  text-align="left" keep-together="always">Total FullCrates--></fo:block>
-					                            	          </fo:table-cell>	
-							                                  <fo:table-cell>
-					                                	         <fo:block  text-align="right"></fo:block>
-					                            	         </fo:table-cell>
-									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${totalCrates?if_exists}</fo:block>
-						                            	         </fo:table-cell>
-									                      		<fo:table-cell>
-						                                	         <fo:block  text-align="right">${totalCans?if_exists}</fo:block>
-						                            	         </fo:table-cell>
-						                            	     </fo:table-row >  
-					                         	         
-				                  </fo:table-body>
-				                  </fo:table> 
-				                   </fo:block>
-				                    <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
   </fo:flow>						        	
 </fo:page-sequence>
  <#else>

@@ -55,6 +55,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("CLRFromDateId","thuDateId");
 		makeDatePicker("DBCFromDateId","thuDateId");
 		makeDatePicker("exportDate","");
+		makeDatePicker("RouteIndentAbstDate","");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -115,8 +116,9 @@ function makeDatePicker(fromDateId ,thruDateId){
         <tr>
         	<form id="IndentAbstractReport" name="IndentAbstractReport" method="post"  target="_blank" action="<@ofbizUrl>IndentAbstractReport</@ofbizUrl>">	
       			<td width="34%">RouteWise Indent Abstract Report </td>
-      			 <td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="rtIndentSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>
-      			<td width="33%">Route 
+      			<td width="30%">Date<input  type="text" size="18pt" id="RouteIndentAbstDate" readonly  name="supplyDate"/></td>
+      			<#-- <td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="rtIndentSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>-->
+      			<td width="36%">Route 
 				 <select name="routeId" class='h4'>
 				<option value='All-Routes'>All</option>
 					<#list routesList as route>    
@@ -293,7 +295,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 			             </td>
 			           </form>
 			        </tr>
-			         <#-- 
+			        
 			        <tr class="alternate-row">
 			      	   <form id="RetailerLedgerAbstract" name="RetailerLedgerAbstract" method="post" action="<@ofbizUrl>RetailerLedgerAbstract.pdf</@ofbizUrl>" target="_blank">        
 			             <td>Retailer Ledger Abstract(Incl Products)</td>
@@ -308,7 +310,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 			           </form>
 			        </tr> 
 			        
-			       
+			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	
 		      			<td>Party Ledger</td>

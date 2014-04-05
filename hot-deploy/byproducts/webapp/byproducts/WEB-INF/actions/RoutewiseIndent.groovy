@@ -63,11 +63,11 @@ if (UtilValidate.isEmpty(effectiveDateStr)) {
 	effectiveDate = UtilDateTime.nowTimestamp();
 }
 else{
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
 	try {
-		effectiveDate = UtilDateTime.toTimestamp(dateFormat.parse(effectiveDateStr));
+		effectiveDate = new java.sql.Timestamp(dateFormat.parse(effectiveDateStr+" 00:00:00").getTime());
 	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
+		Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
 	}
 }
 dayBegin = UtilDateTime.getDayStart(effectiveDate);
@@ -178,19 +178,14 @@ for(i=0; i<routesList.size(); i++){
 				int crateDivisior=(piecesPerCrate.get(productId)).intValue();
 			   tempCrates = (qty/(crateDivisior)).intValue();
 			   tempExcess=((qty.intValue())%(crateDivisior.intValue()));
-			   crateMap=[:];
-			   cratesMap =[:];
-			   cratesMap["crates"]=tempCrates;
-			   cratesMap["loosePkts"]=tempExcess;
-			   rtCrates = rtCrates+tempCrates;
-			   totalCrates+=tempCrates;
-			   rtExcessPkts = rtExcessPkts+tempExcess;
-			   prodMap["crateMap"]=cratesMap;
 			   if(tempExcess>0){
-			   rtLooseCrates=rtLooseCrates+1;
+			   tempCrates=tempCrates+1;
 			   }
+			   prodMap["crates"]=tempCrates;
+			   totalCrates+=tempCrates;
+			   rtCrates = rtCrates+tempCrates;
+			   
 		   }
-			
 		}
 		tempCan=0;
 		if(canProductsIdsList.contains(productId)){
@@ -198,11 +193,12 @@ for(i=0; i<routesList.size(); i++){
 				int canDivisior=(piecesPerCan.get(productId)).intValue();
 			   tempCan = (qty/(canDivisior)).intValue();
 			   tempCanExcess=((qty.intValue())%(canDivisior.intValue()));
-			   cansMap=[:];
-			   cansMap["cans"]=tempCan;
-			   rtCans = rtCans+tempCan;
+			   if(tempCanExcess>0){
+				   tempCan=tempCan+1;
+				   }
 			   totalCans+=tempCan;
-			   prodMap["cansMap"]=cansMap;
+			   rtCans = rtCans+tempCan;
+			   prodMap["cans"]=tempCan;
 		   }
 			
 		}
@@ -216,19 +212,15 @@ for(i=0; i<routesList.size(); i++){
 		tempQty=tempQty+qty;
 		newProdMap=[:];
 		newProdMap["qty"]=tempQty;
-		oldCrateMap=tempPrdMap.get("crateMap");
-			if(UtilValidate.isNotEmpty(oldCrateMap)){
-			oldCrate=oldCrateMap.get("crates");
-			oldExcess=oldCrateMap.get("loosePkts");
-			oldCrateMap["crates"]=oldCrate+tempCrates;
-			oldCrateMap["loosePkts"]=oldExcess+tempExcess;
-			newProdMap["crateMap"]=oldCrateMap;
+		oldCrates=tempPrdMap.get("crates");
+			if(UtilValidate.isNotEmpty(oldCrates)){
+				oldCrates=oldCrates+tempCrates;
+			newProdMap["crates"]=oldCrates;
 			}
-			
-		oldCansMap=tempPrdMap.get("cansMap");
-			if(UtilValidate.isNotEmpty(oldCansMap)){
-			oldCansMap["cans"]=oldCansMap["cans"]+tempCan;
-			newProdMap["cansMap"]=oldCansMap;
+	      oldCans=tempPrdMap.get("cans");
+			if(UtilValidate.isNotEmpty(oldCans)){
+			oldCans=oldCans+tempCan;
+			newProdMap["cans"]=oldCans;
 			}
 			grandProdTotal[productId]=newProdMap;
 		}
@@ -236,8 +228,6 @@ for(i=0; i<routesList.size(); i++){
 	allProdTotal=[:];
 	allProdTotal["routeTotQty"]=routeTotQty;
 	allProdTotal["rtCrates"]=rtCrates;
-	allProdTotal["rtExcessPkts"]=rtExcessPkts;
-	allProdTotal["rtLooseCrates"]=rtLooseCrates;
 	allProdTotal["rtCans"]=rtCans;
 	
 	productFinalMap["Total"]=allProdTotal;
