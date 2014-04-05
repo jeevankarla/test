@@ -305,8 +305,9 @@ under the License.
 			         	        </#if>
 			                  </fo:table-body>
 			                </fo:table>
-			            </fo:block>    
+			            </fo:block>
 			         	<fo:block linefeed-treatment="preserve">-------------------cut here-------------------</fo:block>
+			         	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
        				<#if temp ==2>
        					<fo:block page-break-after="always"></fo:block>
        					<#assign temp=0>
