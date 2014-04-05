@@ -166,9 +166,12 @@ for(int i=0; i< routeList.size();i++){
 			boothSaleMap[boothId]=boothAmPmMap;
 			finAcccountRes=ByProductNetworkServices.getFacilityFinAccountInfo(dctx,[facilityId:boothId]);
 			if(UtilValidate.isNotEmpty(finAcccountRes.get("accountInfo"))){
-			accountInfo=finAcccountRes.get("accountInfo");
-			if(UtilValidate.isNotEmpty(accountInfo.finAccountCode)){
-				facilityBankMap[boothId]=accountInfo.finAccountCode;
+				accountInfo=finAcccountRes.get("accountInfo");
+				if(UtilValidate.isNotEmpty(accountInfo.finAccountCode)){
+					tempMap = [:];
+					tempMap.put("accountCode", accountInfo.finAccountCode);
+					tempMap.put("bankName", accountInfo.finAccountName);
+					facilityBankMap[boothId]=tempMap;
 				}
 				
 			}
