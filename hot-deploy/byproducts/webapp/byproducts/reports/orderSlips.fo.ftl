@@ -20,7 +20,7 @@ under the License.
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="12in" page-width="10in">
-        margin-top="0.5in" margin-bottom=".4in" margin-left=".3in" margin-right=".2in">
+        margin-top="0.7in" margin-bottom=".2in" margin-left=".3in" margin-right=".2in">
           <fo:region-body margin-top="1in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
