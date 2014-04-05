@@ -642,7 +642,7 @@
 						<platform-specific>
 							<xsl-fo>
 								<html-template
-									location="component://byproducts/webapp/byproducts/reports/routeIndentAbstractQuantity.fo.ftl" />
+									location="component://byproducts/webapp/byproducts/reports/RetailerLedgerAbstrct.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
