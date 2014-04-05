@@ -54,6 +54,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
@@ -98,7 +99,11 @@ public class ByProductChangeIndentServices {
     	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
     	  GenericValue subscription = null;
     	  GenericValue facility = null;
-    	  List custTimePeriodList = FastList.newInstance();  	 
+    	  List custTimePeriodList = FastList.newInstance();
+    	  List genRouteIds = FastList.newInstance();
+    	  try {
+              // make sure this is in a transaction
+              boolean beganTransaction = TransactionUtil.begin();
     	  if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
     		  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
     		  try {
@@ -118,6 +123,7 @@ public class ByProductChangeIndentServices {
   	    		  Map resultCtx = dispatcher.runSync("getRoutesByAMPM", UtilMisc.toMap("supplyType", subscriptionTypeId, "userLogin", userLogin));
     	    	  if(ServiceUtil.isError(resultCtx)){
     	    		  request.setAttribute("_ERROR_MESSAGE_","Error in service getRoutesByAMPM");
+    	    		  TransactionUtil.rollback(beganTransaction, ServiceUtil.getErrorMessage(resultCtx),null);
     	    		  return "error";
     	    	  }
     	    	  routeIdValidateList = (List)resultCtx.get("routeIdsList");
@@ -175,6 +181,11 @@ public class ByProductChangeIndentServices {
     			  return "error";     		
     		  }
     		  subscription = EntityUtil.getFirst(subscriptionList);
+    		  List genShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId);
+ 	  		 
+        	  if(UtilValidate.isNotEmpty(genShipmentIds)){
+        		  genRouteIds = EntityUtil.getFieldListFromEntityList(delegator.findList("Shipment", EntityCondition.makeCondition("shipmentId",EntityOperator.IN , genShipmentIds),  null, null, null, false),"routeId" ,false);
+      		  }
     	  
     	  }  catch (GenericEntityException e) {
     		  Debug.logError(e, "Problem getting Booth subscription", module);
@@ -229,7 +240,12 @@ public class ByProductChangeIndentServices {
     		  productQtyMap.put("quantity", quantity);
     		  productQtyMap.put("sequenceNum", sequenceNum);
     		  productQtyList.add(productQtyMap);
-    		       
+    		  if(genRouteIds.contains(sequenceNum)){
+    			  String errMsg="Trucksheet already generated for the route :"+ sequenceNum;
+	    			Debug.logError(errMsg , module);
+	      			request.setAttribute("_ERROR_MESSAGE_",errMsg);
+	      			return "error";
+	    	  }     
     	  }//end row count for loop
     	  
     	  if(UtilValidate.isNotEmpty(routeChangeFlag) && routeChangeFlag.equals("Y")){
@@ -246,6 +262,7 @@ public class ByProductChangeIndentServices {
         		  if(ServiceUtil.isError(ctxResultMap)){
         			  Debug.logError("Error fetching indents from service getBoothChangeIndent", module);
         			  request.setAttribute("_ERROR_MESSAGE_", "Error fetching indents getBoothChangeIndent");
+        			  TransactionUtil.rollback(beganTransaction, ServiceUtil.getErrorMessage(ctxResultMap),null);
         			  return "error";
         		  }
         		  
@@ -279,13 +296,16 @@ public class ByProductChangeIndentServices {
                			String errMsg =  ServiceUtil.getErrorMessage(result);
                			Debug.logError(errMsg , module);
                			request.setAttribute("_ERROR_MESSAGE_",errMsg);
+               		 TransactionUtil.rollback(beganTransaction, ServiceUtil.getErrorMessage(result),null);
                			return "error";
                		 }
         		  }
         		  
         	  }catch(GenericServiceException e){
+        		  
         		  Debug.logError(e, "Error calling service getBoothChandentIndent ", module);
     			  request.setAttribute("_ERROR_MESSAGE_", "Error calling service getBoothChandentIndent ");
+    			  TransactionUtil.rollback(beganTransaction,null,e);
     			  return "error";
         	  }
     	  }
@@ -307,15 +327,24 @@ public class ByProductChangeIndentServices {
 				String errMsg =  ServiceUtil.getErrorMessage(result);
 				Debug.logError(errMsg , module);
 				request.setAttribute("_ERROR_MESSAGE_",errMsg);
+				TransactionUtil.rollback(beganTransaction, ServiceUtil.getErrorMessage(result),null);
 				return "error";
 			 }
 			 indentChanged = (String)result.get("indentChangeFlag");
 			 request.setAttribute("indentChangeFlag", indentChanged);
+			 TransactionUtil.commit(beganTransaction);
 		 }catch (Exception e) {
 				  Debug.logError(e, "Problem updating subscription for booth " + boothId, module);     
 				  request.setAttribute("_ERROR_MESSAGE_", "Problem updating subscription for booth " + boothId);
+				  TransactionUtil.rollback(beganTransaction, null,e);
 				  return "error";			  
 		 }
+		 
+     }catch (Exception e) {
+			  Debug.logError(e, "Problem updating subscription for booth " + boothId, module);     
+			  request.setAttribute("_ERROR_MESSAGE_", "Problem updating subscription for booth " + boothId);
+			  return "error";			  
+	 } 
 	     return "success";     
       }
           

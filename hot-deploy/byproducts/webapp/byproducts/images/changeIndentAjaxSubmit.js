@@ -199,8 +199,7 @@ function prepareAjaxDataString(){
 		var sequenceNum;
 		if(screenFlag == 'indentAlt'){
 			sequenceNum = changeItem["seqRouteId"];
-		}
-		else{
+		}else{
 			sequenceNum = jQuery("#tempRouteId").val();
 		}
 		sequenceNum = sequenceNum.toUpperCase();

@@ -827,8 +827,14 @@ function updateGrid(){
 				if(selectionValue =="" || selectionValue == "undefined"){
 					routesList =  ${StringUtil.wrapString(routesJSON)}
 				}
+				if(screenFlag == 'indentAlt'){
+            	   $("#boothId").focus();
+               }else{
+               	$("#routeId").focus();
+               }
 								
 			}
+			gridHideCall();
 	}
 	function setSupplyDate(selection){
 		var type = selection.value;

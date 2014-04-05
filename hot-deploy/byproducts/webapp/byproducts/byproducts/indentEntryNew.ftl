@@ -60,7 +60,7 @@
 	       				<#else>
 	          				<td valign='middle'>
 	          				<#assign isDefault = false> 
-	          				<select name="subscriptionTypeId" class='h2' id="subscriptionTypeId" onchange="<#if screenFlag?exists && screenFlag == 'indent'>javascript:setRouteDropDown(this);<#else>javascript:setSupplyDate(this);</#if>" >
+	          				<select name="subscriptionTypeId" class='h2' id="subscriptionTypeId" onchange="<#if screenFlag?exists && screenFlag == 'indent'>javascript:setRouteDropDown(this);<#else>javascript:setSupplyDate(this);</#if>javascript:updateGrid1([]);" >
 	                			<#list subscriptionTypeList as subType>
 	                	    		<#if subscriptionTypeId?exists && (subscriptionTypeId == subType.subscriptionTypeId)>
 	      								<option  value="${subscriptionTypeId}">${subType.description}</option>
@@ -134,7 +134,6 @@
 	          				</td>
 	         				
 				        </tr>
-			        	<input type="hidden" name="routeChangeFlag" id="routeChangeFlag"/>
 			        	<tr><td><br/></td></tr>
 			        </#if>	           
 			        <tr>
@@ -163,8 +162,8 @@
 						   </td>
 						   <input type="hidden" name="routeChangeFlag" id="routeChangeFlag" value="Y">
 					   </#if>
-			        </tr>        
-      			</table>
+			        </tr>
+			       </table>
        		<div name ="displayMsg" id="changeIndentEntry_spinner"/>   
 		</form>
 		<br/>

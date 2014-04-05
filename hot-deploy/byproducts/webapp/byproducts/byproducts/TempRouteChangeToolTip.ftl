@@ -30,12 +30,12 @@
 			},
 			position: {
 				my: 'center', at: 'center', // Center it...
-				target: $(window) // ... in the window
+				target: $('#tempRouteDiv') // ... in the window
 			},
 			show: {
 				ready: true, // Show it straight away
 				modal: {
-					on: true, // Make it modal (darken the rest of the page)...
+					on: false, // Make it modal (darken the rest of the page)...
 					blur: false // ... but don't close the tooltip when clicked
 				}
 			},
@@ -45,7 +45,9 @@
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
 					populateTempRouteField();
+					
 					$('button', api.elements.content).click(api.hide);
+					
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
 				hide: function(event, api) { api.destroy(); }
@@ -63,12 +65,15 @@
 		
 	}
 	function populateTempRouteField(){
-		var availableTags = ${StringUtil.wrapString(routesJSON)};
-		$('#newTempRouteId').keypress(function (e) { 
-			$("#newTempRouteId").autocomplete({					
-				source:  availableTags
-			});
-		});
+	     $('#fromRouteId').focus();
+		 $('#fromRouteId').focus(function (e) {    	 	
+			$("#fromRouteId").autocomplete({ source: routesList });	
+	 }); 
+	 
+	 
+     $('#toRouteId').focus(function (e) {    	 	
+			$("#toRouteId").autocomplete({ source: routesList });	
+	 }); 
 	}
 	function datepick()
 	{		
@@ -85,12 +90,17 @@
 		  	
 	}
 	function appendTempRouteToForm(){
-		var tempRouteId = $("#newTempRouteId").val();
-		var tempTripId = $("#tempTripId").val();
-		$("#tempRouteId").val(tempRouteId);
-		$("#tripId").val(tempTripId);
-		$("#routeChangeFlag").val("routeChange");
-		$('input[name=changeSave]').click();	
+		var fromRouteId = $("#fromRouteId").val();
+		var toRouteId = $("#toRouteId").val();
+		//alert(fromRouteId);
+		for (i = 0; i < data.length; i++) {
+		        if(data[i]["seqRouteId"] == fromRouteId && toRouteId !=""){
+		            data[i]["seqRouteId"] =toRouteId;
+		            _grid.updateRow(i);
+		        }
+		}
+		$('button').click();
+		return false;	
 	}
 	//handle cancel event
 	function cancelForm(){		 
@@ -102,13 +112,16 @@
 		message += "<form action='' method='post' onsubmit='return appendTempRouteToForm();'><table cellspacing=10 cellpadding=10>" ; 		
 		
 			//message += "<br/><br/>";
-			message += "<tr class='h3'><td align='left' class='h3' width='40%'>Temp Route:</td><td align='right' width='60%'><input class='h3' type='text' id='newTempRouteId' name='newTempRouteId' size='13'/><span class='tooltipbold' id='tempRouteTooltip'></span></td></tr>"+
-				"<tr class='h3'><td align='left' class='h3' width='40%'>Trip:</td><td><select name='tempTripId' class='h2' id='tempTripId'>"+
-					"<#list prodSubTrips as eachTrip><option value='${eachTrip.enumId}'>${eachTrip.description}</option></#list></select></td><tr/>"+
-						"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='routeChange' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+			message +="<tr class='h3'><td align='left' class='h3' width='40%'>From Route:</td><td align='right' width='60%'><input class='h3' type='text' id='fromRouteId' name='fromRouteId' size='13' onblur='this.value=this.value.toUpperCase()'/><span class='tooltipbold' id='fromRouteTooltip'></span></td></tr>"+ 
+						"<tr class='h3'><td align='left' class='h3' width='40%'>To Route:</td><td align='right' width='60%'><input class='h3' type='text' id='toRouteId' name='toRouteId' size='13' onblur='this.value=this.value.toUpperCase()'/><span class='tooltipbold' id='toRouteTooltip'></span></td></tr>"+
+						"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.Shift}' id='routeChange' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		message += "</table></form>";				
-		var title = "<h2><center>Temporary Route Change</center></h2>";
+		var title = "<h2><center>Full Route Shift</center></h2>";
 		Alert(message, title);
 	};
 	
+	
+	 // route auto Complete
+	 
+    
 </script>
