@@ -108,7 +108,7 @@ orderHeaderAM.each{eachItem ->
 }
 orderHeaderPM.each{eachEntry ->
 	if(!challanSerialNumMap.get(eachEntry.originFacilityId)){
-		challanSerialNumMap.put(eachEntry.originFacilityId, eachItem.originFacilityId+"-"+eachEntry.shipmentId);
+		challanSerialNumMap.put(eachEntry.originFacilityId, eachEntry.originFacilityId+"-"+eachEntry.shipmentId);
 	}
 }
 context.challanSerialNumMap = challanSerialNumMap;
