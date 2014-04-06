@@ -901,10 +901,11 @@ public class ByProductNetworkServices {
 	    			}
 	    			routeId = (String)boothDetails.get("routeId");
 	    		}
-	    		List prevshipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId, routeId);
+	    		/*List prevshipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId, routeId);
 	    		if(UtilValidate.isNotEmpty(prevshipmentIds)){
 	    			return ServiceUtil.returnError("Trucksheet already generated for the route :"+ routeId); 
-	    		}
+	    		}*/
+	    		List genRouteIds = ByProductNetworkServices.getShipedRouteIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId,null);
 	    		 if(!isEnableProductSubscription){
 	    			if(UtilValidate.isEmpty(facility.getString("categoryTypeEnum"))){
 	    				productSubscriptionTypeId = "CASH";
@@ -966,7 +967,7 @@ public class ByProductNetworkServices {
 	    		if(UtilValidate.isNotEmpty(screenFlag) && !screenFlag.equals("indentAlt")){
 	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		}else{
-	    			/*conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));*/
+	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.NOT_IN, genRouteIds));
 	    		}
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		EntityCondition cond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -2709,6 +2710,23 @@ public class ByProductNetworkServices {
 			}		
 			return shipmentIds;
 		}
+		
+      public static List getShipedRouteIdsByAMPM(Delegator delegator,String estimatedDeliveryDateString,String subscriptionType, String routeId){
+			
+			List routeIds = FastList.newInstance();
+			
+			List shipmentIds = getShipmentIdsByAMPM(delegator , estimatedDeliveryDateString,subscriptionType, routeId);
+			if(UtilValidate.isNotEmpty(shipmentIds)){
+				try {
+					routeIds = EntityUtil.getFieldListFromEntityList(delegator.findList("Shipment", EntityCondition.makeCondition("shipmentId",EntityOperator.IN , shipmentIds),  null, null, null, false),"routeId" ,false);
+				} catch (Exception e) {
+					Debug.logError(e, "error getting shipment Id's: " + routeId, module);		   
+				}
+				
+    		 }
+			return routeIds;
+		}
+		
 		public static List getShipmentIds(Delegator delegator,String estimatedDeliveryDateString,String shipmentTypeId){
 			//TO DO:for now getting one shipment id  we need to get pm and am shipment id irrespective of Shipment type Id
 			return getShipmentIds(delegator,estimatedDeliveryDateString,shipmentTypeId, null); 

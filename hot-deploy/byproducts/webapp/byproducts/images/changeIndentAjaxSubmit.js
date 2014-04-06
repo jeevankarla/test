@@ -58,7 +58,15 @@ $(function() {
             	 var changeFlag = result["indentChangeFlag"];
           	   
                if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-            	   alert(result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"]);
+            	   $('div#changeIndentEntry_spinner').html('');
+					 $("div#errorMsg").fadeIn();
+					msg = result["_ERROR_MESSAGE_"];
+					if(result["_ERROR_MESSAGE_LIST_"] != undefined){
+						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
+					}
+					alert(msg);
+					  $('div#errorMsg').html('<span style="color:red; font-size:14pt; font-stlye:bold">"'+msg+'"</span>');
+          	         $('div#errorMsg').delay(7000).fadeOut('slow');
                }else{
             	
             	   $("div#changeIndentEntry_spinner").fadeIn();

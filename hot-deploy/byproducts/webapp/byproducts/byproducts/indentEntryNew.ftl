@@ -74,12 +74,7 @@
 	          				</td>
 	       				</#if>   
         			</tr>
-        			<#if enableLmsPmSales?exists && enableLmsPmSales>        
-	        			<tr><td><br/></td></tr>             
-	        			<tr></tr>
-	    			<#else>
-	    				<input type="hidden" name="subscriptionTypeId" id="subscriptionTypeId" value="AM"/> 
-	    			</#if>    
+        			   
         			<tr><td><br/></td></tr>
         			<input type="hidden" name="productSubscriptionTypeId" id="productSubscriptionTypeId" value="CASH"/>             
        				<#--<tr>

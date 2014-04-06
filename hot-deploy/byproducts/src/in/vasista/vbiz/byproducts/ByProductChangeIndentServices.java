@@ -166,7 +166,6 @@ public class ByProductChangeIndentServices {
     		  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
 	  		  if(subscriptionTypeId.equals("AM")){
 	            	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId) ,EntityOperator.OR ,EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, null)));
-	            	
 	          }else{
 	            	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
 	          }
@@ -181,11 +180,7 @@ public class ByProductChangeIndentServices {
     			  return "error";     		
     		  }
     		  subscription = EntityUtil.getFirst(subscriptionList);
-    		  List genShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId);
- 	  		 
-        	  if(UtilValidate.isNotEmpty(genShipmentIds)){
-        		  genRouteIds = EntityUtil.getFieldListFromEntityList(delegator.findList("Shipment", EntityCondition.makeCondition("shipmentId",EntityOperator.IN , genShipmentIds),  null, null, null, false),"routeId" ,false);
-      		  }
+    		  genRouteIds = ByProductNetworkServices.getShipedRouteIdsByAMPM(delegator , UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId,null);
     	  
     	  }  catch (GenericEntityException e) {
     		  Debug.logError(e, "Problem getting Booth subscription", module);
