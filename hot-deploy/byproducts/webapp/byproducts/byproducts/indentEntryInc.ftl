@@ -101,6 +101,7 @@ function updateGrid(){
 				success:function(result){
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 						$('div#changeIndentEntry_spinner').html('');
+						 $("div#errorMsg").fadeIn();
 						msg = result["_ERROR_MESSAGE_"]+result["_ERROR_MESSAGE_LIST_"];
 						  $('div#errorMsg').html('<span style="color:red; font-size:10pt; font-stlye:bold">"'+msg+'"</span>');
                 	   $('div#errorMsg').delay(7000).fadeOut('slow');
