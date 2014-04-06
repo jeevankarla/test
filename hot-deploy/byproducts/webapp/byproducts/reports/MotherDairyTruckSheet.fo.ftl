@@ -687,7 +687,7 @@ under the License.
 						<fo:table-cell>
 							<fo:block font-size="6pt" text-align="left">Crates:</fo:block>
 						</fo:table-cell>
-						<#if (routesMap.getValue().get("routeTotalSubsidy") > 0)>
+						<#if (routesMap.getValue().get("routeEmpPcks") > 0)>
 							<#assign looseCrats = looseCrats+1>
 						</#if>
 						
