@@ -132,7 +132,7 @@ if(parameters.invoiceId){
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	fieldsToSelect = ["orderId"] as Set;
-	orderListRes = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, ["parentFacilityId","originFacilityId"], null, false);
+	orderListRes = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, ["routeId","originFacilityId"], null, false);
 	orderList = EntityUtil.getFieldListFromEntityList(orderListRes, "orderId", true);
 	facilityList = EntityUtil.getFieldListFromEntityList(orderListRes, "originFacilityId", true);
 }

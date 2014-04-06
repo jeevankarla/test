@@ -93,6 +93,7 @@ Map boothWiseSaleMap= FastMap.newInstance();
 List amShipmentIds = ByProductNetworkServices.getDayShipmentIds(delegator ,dayBegin,dayEnd,"AM",null);
 List pmShipmentIds = ByProductNetworkServices.getDayShipmentIds(delegator ,dayBegin,dayEnd,"PM",null);
 
+/* for challan number*/
 totalShipmentIds = [];
 totalShipmentIds.addAll(amShipmentIds);
 totalShipmentIds.addAll(pmShipmentIds);
@@ -113,6 +114,7 @@ orderHeaderPM.each{eachEntry ->
 }
 context.challanSerialNumMap = challanSerialNumMap;
 
+/*end challan number*/
 amBoothTotals=[:];
 pmBoothTotals=[:];
 if(UtilValidate.isNotEmpty(amShipmentIds)){
@@ -204,6 +206,21 @@ for(int i=0; i< routeList.size();i++){
 		routeWiseMap[routeId]=boothSaleMap;
 	}
 }
+filterRouteIdsList = [];
+if(parameters.routeId =="All-Routes"){
+	filterRouteIdsList = (ByProductNetworkServices.getRoutesByAMPM(dctx ,UtilMisc.toMap("supplyType" ,"AM"))).get("routeIdsList");
+}
+else{
+	filterRouteIdsList.add(parameters.routeId);
+}
+filteredRouteWiseMap = [:];
+Iterator routeMapIter = routeWiseMap.entrySet().iterator();
+while (routeMapIter.hasNext()) {
+	Map.Entry entry = routeMapIter.next();
+	if(filterRouteIdsList.contains(entry.getKey())){
+		filteredRouteWiseMap.put(entry.getKey(), entry.getValue());
+	}
+}
 
-context.put("routeWiseMap",routeWiseMap);
+context.put("routeWiseMap",filteredRouteWiseMap);
 context.put("facilityBankMap",facilityBankMap);

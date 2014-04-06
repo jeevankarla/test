@@ -321,18 +321,18 @@
       <!--   <menu-item name="TransporterDue" title="${uiLabelMap.TransporterDue}">
             <link target="FindTransporterDue"/>
         </menu-item> -->
-        <menu-item name="Returns" title="${uiLabelMap.Returns}">
+        <!--<menu-item name="Returns" title="${uiLabelMap.Returns}">
             <link target="FindReturns"/>
         </menu-item>  
       
-         <menu-item name="EmployeeSearch" title="Employee Subsidy Milk">
+         --><menu-item name="EmployeeSearch" title="Employee Subsidy Milk">
             <link target="EmployeeSearch">
             </link>
         </menu-item>
-        <menu-item name="ReturnCrates" title="Return Crates">
+        <!--<menu-item name="ReturnCrates" title="Return Crates">
             <link target="ReturnCrates"/>
         </menu-item>
-        <!-- <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
+        --><!-- <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
             <link target="CreditInstitutionBilling"/>
         </menu-item> -->
         

@@ -196,7 +196,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																			<fo:block text-align="center" font-size="8pt">&#160;</fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
-																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0.00")}</fo:block>
+																			<fo:block text-align="right" font-size="8pt">${totalValue?string("#0")}</fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	 <fo:table-row>
@@ -423,7 +423,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																<fo:block text-align="center" font-size="8pt"></fo:block>
 															</fo:table-cell>
 															<fo:table-cell>
-																<fo:block text-align="right" font-size="8pt">${totalValue?string("#0.00")}</fo:block>
+																<fo:block text-align="right" font-size="8pt">${totalValue?string("#0")}</fo:block>
 															</fo:table-cell>
 														</fo:table-row>
 														 <fo:table-row>
@@ -519,7 +519,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 						</fo:table-row>
 						<fo:table-row>
 						<fo:table-cell number-columns-spanned="3">
-							<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="normal" keep-together="always"> __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
+							<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="normal" keep-together="always">__ __ __ __ __ __  __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __</fo:block>
 						</fo:table-cell>
 					 </fo:table-row>
 					</fo:table-body>

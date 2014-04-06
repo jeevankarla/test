@@ -16,7 +16,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
@@ -39,9 +41,6 @@ context.put("estimatedDeliveryDate", estimatedDeliveryDateTime);
 productNames = [:];
 paymentMethodTypeList = [];
 paymentMethodTypeMap = [:];
-shopeeRentAmount = [:];
-//shopeeRentAmount = ByProductNetworkServices.getShopeeRentAmount(dispatcher.getDispatchContext(), [estimatedDeliveryDate :estimatedDeliveryDateTime]);
-context.shopeeRentAmount = shopeeRentAmount;
 allProductsList = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",estimatedDeliveryDateTime));
 
 allProductsList.each{ eachProd ->
@@ -66,7 +65,7 @@ canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "produ
 shipments = [];
 if(parameters.shipmentId){
 	if(parameters.shipmentId == "allRoutes"){
-		shipments = delegator.findByAnd("Shipment", [estimatedShipDate : estimatedDeliveryDateTime , shipmentTypeId : parameters.shipmentTypeId ],["routeId"]);
+		shipments = delegator.findByAnd("Shipment", [estimatedShipDate : estimatedDeliveryDateTime , shipmentTypeId : parameters.shipmentTypeId, statusId: "GENERATED"],["routeId"]);
 		shipmentIds.addAll(EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false));
 		routeIdsList.addAll(EntityUtil.getFieldListFromEntityList(shipments, "routeId", false))
 	}else{
@@ -379,3 +378,4 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 context.routeShipmentMap = routeShipmentMap;
 context.put("routeWiseMap",routeWiseMap);
 context.putAt("routeWiseTotalCrates", routeWiseTotalCrates);
+Debug.log("#########################"+routeWiseMap);
