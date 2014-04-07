@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="16in"
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
                       margin-right=".2in" margin-left=".2in" >
                 <fo:region-body margin-top="1in"/>
                 <fo:region-before extent="1in"/>
@@ -31,155 +31,146 @@ under the License.
          ${setRequestAttribute("indent_collection", "indentCollection.txt")}       
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
+        	<fo:block font-size="10pt">VST_ASCII-015</fo:block> 
         		<fo:block text-align="left" white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/>                 </fo:block>
         		<fo:block text-align="center" keep-together="always" white-space-collapse="false">   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 			    <fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
         	</fo:static-content>
-            <fo:flow flow-name="xsl-region-body"  font-size="10pt" font-family="Helvetica">
+            <fo:flow flow-name="xsl-region-body"  font-size="7pt" font-family="Courier,monospace">
             <fo:block text-align="left" keep-together="always"  font-size="11pt" white-space-collapse="false">&#160;          RouteCode:${parameters.routeId}                                 DAILY INDENTS FOR __________________________________                                        SupplyDate: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy")}</fo:block>
-             <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
             	 <fo:block font-family="Courier,monospace" >                
+                <fo:block font-size="7pt">|----------|--------------------------|---------|--------|---------|---------|---------|---------|--------|--------|--------|--------|---------|--------|-------|-------|---------|---------|-------|-------|-------|-------|-------|--------|-------|-------|-------|</fo:block>
                 <fo:table  border-style="dotted">
-                    <fo:table-column column-width="50pt"/>
-                    <fo:table-column column-width="70pt"/>  
+                    <fo:table-column column-width="45pt"/>
+                    <fo:table-column column-width="115pt"/>  
                     <fo:table-column column-width="40pt"/>
                     <fo:table-column column-width="40pt"/>
                     <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
+                     <fo:table-column column-width="37pt"/>
+                    <fo:table-column column-width="47pt"/>
+                    <fo:table-column column-width="42pt"/> 
+                     <fo:table-column column-width="37pt"/>
                     <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="37pt"/> 
+                     <fo:table-column column-width="37pt"/>
+                    <fo:table-column column-width="42pt"/>
+                    <fo:table-column column-width="40pt"/> 
+                     <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="30pt"/>
                     <fo:table-column column-width="40pt"/> 
                      <fo:table-column column-width="40pt"/>
                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="30pt"/> 
+                     <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="33pt"/>
+                    <fo:table-column column-width="45pt"/> 
+                     <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="30pt"/> 
+                     <fo:table-column column-width="30pt"/>
                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>    
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>      
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>                     
-                           
 		          	<fo:table-header  border-style="dotted">
-		            			<fo:table-cell padding="3pt"  border-style="dotted"><fo:block text-align="center" >CODE</fo:block></fo:table-cell>		                    	                  
-		            			<fo:table-cell padding="3pt"  border-style="dotted"><fo:block text-align="center" >NAME</fo:block></fo:table-cell>
-		            			
+		            			<fo:table-cell padding="3pt"  border-style="dotted"><fo:block text-align="left" >|CODE   </fo:block><fo:block text-align="left" >| </fo:block></fo:table-cell>		                    	                  
+		            			<fo:table-cell padding="3pt"  border-style="dotted"><fo:block text-align="left">|    NAME   </fo:block><fo:block text-align="left" >| </fo:block></fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >TMS 1</fo:block>
-		            			<fo:block text-align="center" >Ltr</fo:block>
+		            			<fo:block text-align="left" >| TMS 1</fo:block>
+		            			<fo:block text-align="left" >|  Ltr</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >TMS </fo:block>
-		            			<fo:block text-align="center" >500</fo:block>
+		            			<fo:block text-align="left" >|  TMS  </fo:block>
+		            			<fo:block text-align="left" >|  500  </fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >TMS 6</fo:block>
-		            			<fo:block text-align="center" >Ltr</fo:block>
+		            			<fo:block text-align="left" >| TMS 6</fo:block>
+		            			<fo:block text-align="left" >| Ltr </fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >SBM 1</fo:block>
-		            			<fo:block text-align="center" >Ltr</fo:block>
+		            			<fo:block text-align="left" >| SBM 1</fo:block>
+		            			<fo:block text-align="left" >| Ltr</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >SBM</fo:block>
-		            			<fo:block text-align="center" >500</fo:block>
+		            			<fo:block text-align="left" >| SBM</fo:block>
+		            			<fo:block text-align="left" >| 500</fo:block>
 		            			</fo:table-cell>	
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >DTMS 1</fo:block>
-		            			<fo:block text-align="center" >Ltr</fo:block>
+		            			<fo:block text-align="left" >|DTMS 1</fo:block>
+		            			<fo:block text-align="left" >| Ltr</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >DTMS</fo:block>
-		            			<fo:block text-align="center" >500</fo:block>
+		            			<fo:block text-align="left" >| DTMS</fo:block>
+		            			<fo:block text-align="left" >| 500</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >DTMS</fo:block>
-		            			<fo:block text-align="center" >250</fo:block>
+		            			<fo:block text-align="left" >| DTMS</fo:block>
+		            			<fo:block text-align="left" >| 250</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >HCM</fo:block>
-		            			<fo:block text-align="center" >500</fo:block>
+		            			<fo:block text-align="left" >| HCM</fo:block>
+		            			<fo:block text-align="left" >| 500</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >HCM</fo:block>
-		            			<fo:block text-align="center" >250</fo:block>
+		            			<fo:block text-align="left" >| HCM</fo:block>
+		            			<fo:block text-align="left" >| 250</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >FCSM</fo:block>
-		            			<fo:block text-align="center" >500</fo:block>
+		            			<fo:block text-align="left" >| FCSM</fo:block>
+		            			<fo:block text-align="left" >| 500</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >NSM</fo:block>
-		            			<fo:block text-align="center" >1000</fo:block>
+		            			<fo:block text-align="left" >| NSM</fo:block>
+		            			<fo:block text-align="left" >| 1000</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >NSM</fo:block>
-		            			<fo:block text-align="center" >500</fo:block>
+		            			<fo:block text-align="left" >| NSM</fo:block>
+		            			<fo:block text-align="left" >| 500</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >NSM</fo:block>
-		            			<fo:block text-align="center" >500</fo:block>
+		            			<fo:block text-align="left" >| NSM</fo:block>
+		            			<fo:block text-align="left" >| 250</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >CRD 2</fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >| CRD 2</fo:block>
+		            			<fo:block text-align="left" >|  </fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >CRD 5</fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >| CRD 5</fo:block>
+		            			<fo:block text-align="left" >| </fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >MBM</fo:block>
-		            			<fo:block text-align="center" >200</fo:block>
+		            			<fo:block text-align="left" >| MBM</fo:block>
+		            			<fo:block text-align="left" >| 200</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >MBM</fo:block>
-		            			<fo:block text-align="center" >200</fo:block>
+		            			<fo:block text-align="left" >| SL</fo:block>
+		            			<fo:block text-align="left" >| 200</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >SL</fo:block>
-		            			<fo:block text-align="center" >200</fo:block>
+		            			<fo:block text-align="left" >| SLM</fo:block>
+		            			<fo:block text-align="left" >| 200</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >SLM</fo:block>
-		            			<fo:block text-align="center" >200</fo:block>
+		            			<fo:block text-align="left" >|G2SP</fo:block>
+		            			<fo:block text-align="left" >|200</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >G2SP</fo:block>
-		            			<fo:block text-align="center" >200</fo:block>
+		            			<fo:block text-align="left" >|G5ML</fo:block>
+		            			<fo:block text-align="left" >| </fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >G5ML</fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|SLIM</fo:block>
+		            			<fo:block text-align="left" >| </fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >SLIM</fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >| GL</fo:block>
+		            			<fo:block text-align="left" >| 200</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >GL</fo:block>
-		            			<fo:block text-align="center" >200</fo:block>
+		            			<fo:block text-align="left" >| GL</fo:block>
+		            			<fo:block text-align="left" >| 500</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" >GL</fo:block>
-		            			<fo:block text-align="center" >500</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			
 		            			<#-- 
@@ -190,112 +181,154 @@ under the License.
                     <fo:table-body>                    	
 	                        <fo:table-row >
 	                        	<fo:table-cell  >	
-	                            	<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>                               
+	                            	 <fo:block font-size="7pt">|----------|--------------------------|---------|--------|---------|---------|---------|---------|--------|--------|--------|--------|---------|--------|-------|-------|---------|---------|-------|-------|-------|-------|-------|--------|-------|-------|-------|</fo:block>                               
 	                            </fo:table-cell>	
 	                        </fo:table-row>
+	                        </fo:table-body>
+                </fo:table>
+                 <fo:table>
+                 <fo:table-column column-width="45pt"/>
+                    <fo:table-column column-width="112pt"/>  
+                    <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="42pt"/> 
+                     <fo:table-column column-width="42pt"/>
+                    <fo:table-column column-width="42pt"/>
+                    <fo:table-column column-width="42pt"/> 
+                     <fo:table-column column-width="37pt"/>
+                    <fo:table-column column-width="37pt"/>
+                    <fo:table-column column-width="37pt"/> 
+                     <fo:table-column column-width="39pt"/>
+                    <fo:table-column column-width="42pt"/>
+                    <fo:table-column column-width="40pt"/> 
+                     <fo:table-column column-width="32pt"/>
+                    <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="42pt"/> 
+                     <fo:table-column column-width="42pt"/>
+                    <fo:table-column column-width="33pt"/>
+                    <fo:table-column column-width="32pt"/> 
+                     <fo:table-column column-width="33pt"/>
+                    <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="35pt"/> 
+                     <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="33pt"/>
+                    <fo:table-column column-width="35pt"/> 
+                     <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="40pt"/>
+                 <fo:table-body>
                     <#list  boothList as booth>
                     <fo:table-row>
-                    <fo:table-cell padding="3pt" border-style="dotted" ><fo:block text-align="left" >${booth.get("code")}</fo:block></fo:table-cell>		                    	                  
-		            			<fo:table-cell  border-style="dotted"  ><fo:block text-align="left" >${booth.get("name")}</fo:block></fo:table-cell>
+                    <fo:table-cell border-style="dotted" ><fo:block text-align="left" >| ${booth.get("code")}</fo:block><fo:block text-align="left" >| </fo:block></fo:table-cell>		                    	                  
+		            			<fo:table-cell  border-style="dotted"  ><fo:block text-align="left" >|${booth.get("name")}</fo:block><fo:block text-align="left" >| </fo:block></fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" > </fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >| </fo:block>
+		            			<fo:block text-align="left" >| </fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>	
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="center" ></fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
+		            			<fo:table-cell padding="3pt"  border-style="dotted">
+		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|</fo:block>
+		            			</fo:table-cell>
+                    </fo:table-row>
+                    <fo:table-row>
+                    <fo:table-cell>	
+	                            	 <fo:block font-size="7pt">|----------|--------------------------|---------|--------|---------|---------|---------|---------|--------|--------|--------|--------|---------|--------|-------|-------|---------|---------|-------|-------|-------|-------|-------|--------|-------|-------|-------|</fo:block>                               
+	                </fo:table-cell>
                     </fo:table-row>
                     </#list>
                     </fo:table-body>
