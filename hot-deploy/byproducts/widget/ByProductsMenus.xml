@@ -68,8 +68,7 @@
             </condition>
 			<link target="TransporterMargins"></link>
         </menu-item> 
-   
- 
+		
        <!--  <menu-item name="config" title="Config">
         	<condition>
 				<or>
@@ -407,7 +406,7 @@
 					<if-has-permission permission="BYPRODREPORTS"  action="_VIEW"/>
 				</or>  
         	 </condition>        
-            <link target="reports">
+            <link target="DailyReports">
                 <parameter param-name="facilityId" from-field="ctxFacilityId"/>
             </link>
         </menu-item> 
@@ -526,6 +525,26 @@
         		<parameter param-name="screenFlag" value="indentAlt"/>
         		<parameter param-name="tabButtonItem2" value="indentAlt"/>
         		<parameter param-name="tabButtonItem" value="ChangeIndentInit"/>    	
+            </link>
+        </menu-item> 
+    </menu>
+   <menu name="ReportsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="DailyReports" title="${uiLabelMap.DailyReports}">
+            <link target="DailyReports">
+            	<parameter param-name="tabButtonItem2" value="DailyReports"/>
+            	<parameter param-name="tabButtonItem" value="reports"/> 
+            </link>
+       </menu-item>
+       <menu-item name="MonthlyReports" title="Monthly Reports">
+            <link target="MonthlyReports">
+        		<parameter param-name="tabButtonItem2" value="MonthlyReports"/>
+        		<parameter param-name="tabButtonItem" value="reports"/>    	
+            </link>
+        </menu-item>
+        <menu-item name="MiscReports" title="Misc Reports">
+            <link target="MiscReports">
+        		<parameter param-name="tabButtonItem2" value="MiscReports"/>
+        		<parameter param-name="tabButtonItem" value="reports"/>    	
             </link>
         </menu-item> 
     </menu>
