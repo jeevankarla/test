@@ -24,7 +24,13 @@
             </condition>        
         	<link target="FindFacility"/>
         </menu-item>
-        <menu-item name="Product" title="Product">              
+        <menu-item name="Product" title="Product">       
+            <condition>
+        		<and>
+        			<not><if-empty field="ctxFacilityId"/></not>
+        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		</and>        		
+        	</condition>          
             <link target="FindByProduct">               
             </link>
         </menu-item>
@@ -89,7 +95,6 @@
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
             	</or>            
             </condition>       
         	<link target="dispatchReconciliation"/>
@@ -270,7 +275,6 @@
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
 					<if-has-permission permission="INDENT"  action="_ADMIN"/>
-            		<if-has-permission permission="CHARTS"  action="_ADMIN"/>
             	</or>            
             </condition>          
             <link target="QuotaListing">
@@ -286,7 +290,13 @@
        	    <link target="GatePassShipment">
             </link>
        </menu-item>
-      <menu-item name="AdhocSale" title="Adhoc Sale">  
+      <menu-item name="AdhocSale" title="Adhoc Sale"> 
+        <condition>
+        	<and>
+        		<not><if-empty field="ctxFacilityId"/></not>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        	</and>        		
+        </condition>  
       	 <link target="AdhocSale">    
          </link>
         </menu-item>
@@ -312,6 +322,12 @@
             </link>
        </menu-item>       
         <menu-item name="AbsenteeList" title="${uiLabelMap.AbsenteeOverride}">
+	        <condition>
+	        	<and>
+	        		<not><if-empty field="ctxFacilityId"/></not>
+	        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+	        	</and>        		
+	        </condition>         
             <link target="AbsenteeList">
             	<parameter param-name="shipListType" value="absenteeList"/>
             </link>
@@ -325,7 +341,14 @@
             <link target="FindReturns"/>
         </menu-item>  
       
-         --><menu-item name="EmployeeSearch" title="Employee Subsidy Milk">
+         -->
+         <menu-item name="EmployeeSearch" title="Employee Subsidy Milk">
+            <condition>
+        		<and>
+        			<not><if-empty field="ctxFacilityId"/></not>
+        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		</and>        		
+        	</condition>   
             <link target="EmployeeSearch">
             </link>
         </menu-item>
@@ -337,6 +360,12 @@
         </menu-item> -->
         
         <menu-item name="InstBillingPeriodSearch" title="Cr. Inst. Billing Config">
+        	<condition>
+        		<and>
+        			<not><if-empty field="ctxFacilityId"/></not>
+        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		</and>        		
+        	</condition>         
             <link target="InstBillingPeriodSearch"/>
         </menu-item>
     	<menu-item name="Payments" title="${uiLabelMap.DuesPayment}"> 
@@ -364,10 +393,22 @@
             <link target="FindPastBoothPayments"/>        
        </menu-item>
        <menu-item name="facilityCustomTimePeriod" title="Cr. Inst. Billing">
+        	<condition>
+        		<and>
+        			<not><if-empty field="ctxFacilityId"/></not>
+        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		</and>        		
+        	</condition>        
             <link target="facilityCustomTimePeriod">
             </link>
         </menu-item>
         <menu-item name="FacilityRate" title="Shopee Rent">
+        	<condition>
+        		<and>
+        			<not><if-empty field="ctxFacilityId"/></not>
+        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		</and>        		
+        	</condition>         
             <link target="FacilityRate">
             </link>
         </menu-item>
