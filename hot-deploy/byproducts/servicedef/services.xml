@@ -201,10 +201,21 @@
         <attribute name="liters" type="Double" mode="IN" optional="false"/>
     </service>
         
-    <service name="sendLVDSms" engine="java"
+    <!--<service name="sendLVDSms" engine="java"
         location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="sendLVDSms">
         <description>Send sales summary sms</description>                                             
     </service>
+    -->
+    
+    <service name="sendSMSNotification" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductReportServices" invoke="sendSMSNotification">
+        <description>Send sales summary sms</description>
+        
+        <attribute name="supplyDate" type="String" mode="IN" optional="true"/>
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>
+                                                     
+    </service>
+    
     
     <service name="createInvoiceAndSettlePayments" engine="simple"
             location="component://byproducts/script/ByProductServices.xml" invoke="createInvoiceAndSettlePayments" auth="true">

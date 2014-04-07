@@ -57,7 +57,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("exportDate","");
 		makeDatePicker("RouteIndentAbstDate","");
 		makeDatePicker("bsFromDateId","fromDateId");
-		
+		makeDatePicker("smsNotify","");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 
@@ -244,7 +244,26 @@ function makeDatePicker(fromDateId ,thruDateId){
       </table>
 	 </div>
     </div>
+     <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h2><center>Notification </center></h2>
+    </div>
+    <div class="screenlet-body">
     
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
+       <tr>
+      		<form id="sendSMSNotify" name="sendSMSNotify" method="post" action="<@ofbizUrl>sendSMSNotification</@ofbizUrl>">	
+      			<td width="34%">Product Sale Notification SMS</td>
+      			<td width="30%">Date<input  type="text" size="18pt" id="smsNotify" readOnly  name="supplyDate"/></td>
+      			<td width="33%"><select name="subscriptionTypeId" id="subscriptionTypeId" class='h4'>
+					<option value='AM'>AM</option><option value='PM'>PM</option></select>
+					<input type="submit" value="Send SMS" class="buttontext"/></td>		
+      		</form>
+      	</tr>	
+      </table>
+	 </div>
+    </div>
+   
 </div><!-- left half Div End -->
 
 

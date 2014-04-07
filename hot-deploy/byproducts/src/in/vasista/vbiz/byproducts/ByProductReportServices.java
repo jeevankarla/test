@@ -65,8 +65,8 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.base.util.UtilMisc;
-
-
+import org.ofbiz.product.product.ProductWorker;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 public class ByProductReportServices {
 	
 	public static final String module = ByProductReportServices.class.getName();
@@ -1100,175 +1100,122 @@ public class ByProductReportServices {
 		    LocalDispatcher dispatcher = dctx.getDispatcher();
 		    Map<String, Object> result = FastMap.newInstance();
 		    Locale locale = (Locale) context.get("locale");
+		    GenericValue userLogin = (GenericValue) context.get("userLogin");
 		    
-	        List<String> facilityList = (List<String>) context.get("facilityList");
-	        List<String> productList = (List<String>) context.get("productList");
-	        GenericValue userLogin = (GenericValue) context.get("userLogin");
-	        Timestamp fromDate = UtilDateTime.getDayStart( (Timestamp)(context.get("fromDate")), TimeZone.getDefault(), locale); 
-	        Timestamp thruDate = UtilDateTime.getDayEnd( (Timestamp)(context.get("thruDate")), TimeZone.getDefault(), locale); 
+	        Timestamp salesDate = (Timestamp) context.get("salesDate");
+	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+	        Timestamp fromDate = UtilDateTime.getDayStart(salesDate); 
+	        Timestamp thruDate = UtilDateTime.getDayEnd(salesDate); 
+	        Map categoryTotals = FastMap.newInstance(); 
 	        if (UtilValidate.isEmpty(fromDate)) {
 	        	fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), TimeZone.getDefault(), locale);  	
 	        }        
 	        if (UtilValidate.isEmpty(thruDate)) {
 	        	thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp(), TimeZone.getDefault(), locale);          	
 	        } 
-	       // List shipmentList=   NetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(fromDate, "yyyy-MM-dd HH:mm:ss"),null);
-	       // List shipmentList = ByProductNetworkServices.getByProdShipmentIdsByType(delegator, fromDate, thruDate, "BYPRODUCTS");
-	    	List shipmentList =ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, thruDate);
-	    	/*String productStoreId = (String) ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-	        if(UtilValidate.isEmpty(productList)){
-	        	productList = (List) ByProductServices.getProdStoreProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("productStoreId", productStoreId)).get("productIdsList");
-	        }*/
-	       
-	        List conditionList= FastList.newInstance(); 
-			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentList));
-			conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productList));
-			conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-			conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
-			conditionList.add(EntityCondition.makeCondition("salesChannelEnumId", EntityOperator.EQUALS, "BYPROD_SALES_CHANNEL"));
-			if(UtilValidate.isNotEmpty(facilityList)){
-				conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityList));
-			}
-	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-			
-	    	List <GenericValue> boothOrderItemsList = null;
-	    	
-	    	List condList = FastList.newInstance(); 
-			
-	    	/*if(UtilValidate.isNotEmpty(facilityList)){
-	    		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityList));
-			}
-	    	condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentList));
-	    	condList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productList));
-	    	condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.NOT_EQUAL, "REPLACEMENT_BYPROD"));
-	    	condList.add(EntityCondition.makeCondition("quantityAccepted", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
-	    	condList.add(EntityCondition.makeCondition("isCancelled", EntityOperator.EQUALS, null));
-			EntityCondition shipReceiptCondition = EntityCondition.makeCondition(condList,EntityOperator.AND);*/
-			
-			List <GenericValue> shipmentReceiptList = null;
-		
-	    	try{
-	    		boothOrderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition,  null, null, null, false);
-	    		//shipmentReceiptList = delegator.findList("ShipmentReceiptAndItem", shipReceiptCondition, UtilMisc.toSet("facilityId", "productId", "quantityAccepted", "productSubscriptionTypeId"), UtilMisc.toList("productId"), null, false);
-	    	}catch (GenericEntityException e) {
-	    		Debug.logError("Unable to get records from OrderHeaderItemProductShipmentAndFacility"+e, module);
-	    		return ServiceUtil.returnError("Unable to get records from OrderHeaderItemProductShipmentAndFacility "); 
-			}
-	    	List ordersBooth = EntityUtil.getFieldListFromEntityList(boothOrderItemsList, "originFacilityId", true);
-	    	//List receiptsBooth = EntityUtil.getFieldListFromEntityList(shipmentReceiptList, "facilityId",true);
-	    	
-	    	List boothList = FastList.newInstance();
-	    	
-	    	List tempBoothList = FastList.newInstance();
-	    	//tempBoothList.addAll(receiptsBooth);
-	    	tempBoothList.addAll(ordersBooth);
-	    	for(int i=0;i<tempBoothList.size();i++){
- 				String booth = (String)tempBoothList.get(i);
- 				booth = booth.toUpperCase();
- 				if(!boothList.contains(booth)){
- 					boothList.add(booth);
- 				}
- 			}
-	    	
-	    	Map facilityPriceMap = FastMap.newInstance();
-	    	Map classificationMap = FastMap.newInstance();
-	    	if(UtilValidate.isNotEmpty(boothList)){
-	    		
-	    		for(int i=0; i<boothList.size(); i++){
-	    			
-	    			String boothId = (String) boothList.get(i);
-	    			String classifyGroupId = "";
-	    			GenericValue facilityParty;
-					try {
-						facilityParty = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
-						
-						if(UtilValidate.isNotEmpty(facilityParty)){
-		    				String partyId = facilityParty.getString("ownerPartyId");
-		    				List<GenericValue> partyClassificationGroup = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), null, null, null, false);
-		    				partyClassificationGroup = EntityUtil.filterByDate(partyClassificationGroup, fromDate);
-		    				
-		    				if(UtilValidate.isNotEmpty(partyClassificationGroup)){
-		    					classifyGroupId = (String) EntityUtil.getFirst(partyClassificationGroup).get("partyClassificationGroupId");
-		    				}
-		    			}
-					} catch (GenericEntityException e) {
-						Debug.logError("Unable to get records from Facility"+e, module);
-			    		return ServiceUtil.returnError("Unable to get records from Facility"); 
-					}
-	    			
-					if(UtilValidate.isNotEmpty(classificationMap.get(classifyGroupId))){
-	    				Map tempMap = FastMap.newInstance();
-	    				tempMap = (Map) classificationMap.get(classifyGroupId);
-	    				facilityPriceMap.put(boothId, tempMap);
-	    			}else{
-	    				Map productsPrice = (Map) ByProductReportServices.getByProductPricesForFacility(dctx, UtilMisc.toMap("facilityId", boothId, "priceDate", fromDate)).get("productsPrice");
-	    				facilityPriceMap.put(boothId, productsPrice);
-	    				classificationMap.put(classifyGroupId, productsPrice);
-	    			}
-	    		}
-	    	}
-	    	
-	    	BigDecimal totalQty = BigDecimal.ZERO;
-			BigDecimal totalValue = BigDecimal.ZERO;
-			BigDecimal totalQtyInc = BigDecimal.ZERO;
-			
-			for(int i=0; i<shipmentReceiptList.size(); i++){
-	    		
-	    		GenericValue boothReceiptItem = (GenericValue) shipmentReceiptList.get(i);
-	    		BigDecimal price = BigDecimal.ZERO;
-	    		String productId = (String) boothReceiptItem.get("productId");
-	    		BigDecimal quantity =(BigDecimal) boothReceiptItem.get("quantityAccepted");
-	    		String facilityId = (String) boothReceiptItem.get("facilityId");
-	    		BigDecimal quantityIncluded = BigDecimal.ZERO;
-	    		
-	    		try {
-					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId) ,false);
-					quantityIncluded = (BigDecimal) product.get("quantityIncluded");
-					
-				} catch (GenericEntityException e) {
-					Debug.logError("Unable to get records from Product"+e, module);
-		    		return ServiceUtil.returnError("Unable to get records from Product "); 
-				}
-	    		
-	    		if(UtilValidate.isNotEmpty(facilityPriceMap.get(facilityId))){
-		    		Map pricesMap = (Map)facilityPriceMap.get(facilityId);
-		    		Map prodPriceMap = (Map)pricesMap.get(productId);
-		    		price = (BigDecimal)prodPriceMap.get("totalAmount");
-	    		}
-	    		BigDecimal boothReceiptItemIncQty = quantityIncluded.multiply(quantity);
-	    		BigDecimal eachProductValue = price.multiply(quantity);
-	    		totalQty = totalQty.add(quantity);
-	    		totalValue = totalValue.add(eachProductValue);
-	    		totalQtyInc = totalQtyInc.add(boothReceiptItemIncQty);
-	    	}
-	    	for(int i=0; i<boothOrderItemsList.size(); i++){
-	    		
-	    		GenericValue boothOrderItem = (GenericValue) boothOrderItemsList.get(i);
-	    		BigDecimal price = BigDecimal.ZERO;
-	    		String productId = (String) boothOrderItem.get("productId");
-	    		BigDecimal quantity =(BigDecimal) boothOrderItem.get("quantity");
-	    		String facilityId = (String) boothOrderItem.get("originFacilityId");
-	    		BigDecimal quantityIncluded = (BigDecimal) boothOrderItem.get("quantityIncluded");
-	    		
-	    		if(UtilValidate.isNotEmpty(facilityPriceMap.get(facilityId))){
-		    		Map pricesMap = (Map)facilityPriceMap.get(facilityId);
-		    		Map prodPriceMap = (Map)pricesMap.get(productId);
-		    		price = (BigDecimal)prodPriceMap.get("totalAmount");
-		    		/*price = (BigDecimal)pricesMap.get(productId);*/
-	    		}
-	    		BigDecimal boothOrderItemIncQty = quantityIncluded.multiply(quantity);
-	    		BigDecimal eachProductValue = price.multiply(quantity);
-	    		totalQty = totalQty.add(quantity);
-	    		totalValue = totalValue.add(eachProductValue);
-	    		totalQtyInc = totalQtyInc.add(boothOrderItemIncQty);
-	    	}
-	    	
-	    	result.put("totalQty", totalQty);
-	    	result.put("totalValue", totalValue);
-	    	result.put("totalQtyInc", totalQtyInc);
-	        return result;
+	        List<GenericValue> indentProducts = ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
+	        List indentProductIds = EntityUtil.getFieldListFromEntityList(indentProducts, "productId", true); 
+	        
+	        String dateStr = UtilDateTime.toDateString(fromDate, "yyyy-MM-dd HH:mm:ss");
+	        List shipmentIds =  ByProductNetworkServices.getShipmentIdsByAMPM(delegator,dateStr,subscriptionTypeId);
+	        
+	        Map resultCtx = (Map)ByProductNetworkServices.getPeriodTotals(dctx, UtilMisc.toMap("userLogin", userLogin, "shipmentIds", shipmentIds, "fromDate", fromDate, "thruDate", thruDate));
+ 	    	if(ServiceUtil.isError(resultCtx)){
+ 	    		Debug.logError("Error in service getPeriodTotals ", module);    			
+	            return ServiceUtil.returnError("Error in service getPeriodTotals");
+ 	    	}
+ 	    	BigDecimal totalSale = (BigDecimal)resultCtx.get("totalRevenue");
+ 	    	Map productTotals = (Map)resultCtx.get("productTotals");
+ 	    	List<GenericValue> products = FastList.newInstance();
+ 	    	try{
+ 	    		
+ 	    		products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, indentProductIds), null, null, null, false);
+ 	    	}catch(GenericEntityException e){
+ 	    		Debug.logError("Error in fetching Products", module);    			
+	            return ServiceUtil.returnError("Error in fetching Products");
+ 	    	}
+ 	    	Map productCategoryMap = FastMap.newInstance();
+ 	    	Map productQtyIncMap = FastMap.newInstance();
+ 	    	String productId = "";
+ 	    	String primaryProductCategoryId = "";
+ 	    	BigDecimal quantityIncluded = BigDecimal.ZERO;
+ 	    	for(GenericValue product : products){
+ 	    		productId = product.getString("productId");
+ 	    		primaryProductCategoryId = product.getString("primaryProductCategoryId");
+ 	    		quantityIncluded = product.getBigDecimal("quantityIncluded");
+
+ 	    		productQtyIncMap.put(productId, quantityIncluded);
+ 	    		
+ 	    		if(primaryProductCategoryId.equalsIgnoreCase("Milk")){
+ 	    			if(UtilValidate.isNotEmpty(productCategoryMap.get(primaryProductCategoryId))){
+ 	    				List getProdList = (List)productCategoryMap.get(primaryProductCategoryId);
+ 	    				getProdList.add(productId);
+ 	    				productCategoryMap.put(primaryProductCategoryId, getProdList);
+ 	    			}else{
+ 	    				List tempList = FastList.newInstance();
+ 	    				tempList.add(productId);
+ 	    				productCategoryMap.put(primaryProductCategoryId, tempList);
+ 	    			}
+ 	    		}
+ 	    		else if(primaryProductCategoryId.equalsIgnoreCase("Curd")){
+ 	    			if(UtilValidate.isNotEmpty(productCategoryMap.get(primaryProductCategoryId))){
+ 	    				List getProdList = (List)productCategoryMap.get(primaryProductCategoryId);
+ 	    				getProdList.add(productId);
+ 	    				productCategoryMap.put(primaryProductCategoryId, getProdList);
+ 	    			}else{
+ 	    				List tempList = FastList.newInstance();
+ 	    				tempList.add(productId);
+ 	    				productCategoryMap.put(primaryProductCategoryId, tempList);
+ 	    			}
+ 	    		}
+ 	    		else{
+ 	    			if(UtilValidate.isNotEmpty(productCategoryMap.get("OTHER"))){
+ 	    				List getProdList = (List)productCategoryMap.get("OTHER");
+ 	    				getProdList.add(productId);
+ 	    				productCategoryMap.put("OTHER", getProdList);
+ 	    			}else{
+ 	    				List tempList = FastList.newInstance();
+ 	    				tempList.add(productId);
+ 	    				productCategoryMap.put("OTHER", tempList);
+ 	    			}
+ 	    		}
+ 	    	}
+ 	    	
+ 	    	List milkProducts = (List)productCategoryMap.get("Milk");
+ 	    	List curdProducts = (List)productCategoryMap.get("Curd");
+ 	    	List otherProducts = (List)productCategoryMap.get("OTHER");
+ 	    	BigDecimal milkTotalLtr = BigDecimal.ZERO;
+ 	    	BigDecimal curdTotalLtr = BigDecimal.ZERO;
+ 	    	BigDecimal otherTotals = BigDecimal.ZERO;
+ 	    	Iterator prodIter = productTotals.entrySet().iterator();
+        	while(prodIter.hasNext()) {
+        		Map.Entry entry = (Entry)prodIter.next();
+                String prodId = (String)entry.getKey();
+                Map prodTotals = (Map)entry.getValue();
+                BigDecimal totalQty = BigDecimal.ZERO;
+                if(UtilValidate.isNotEmpty(prodTotals)){
+                	totalQty = (BigDecimal)prodTotals.get("total");
+                	if(UtilValidate.isNotEmpty(milkProducts) && milkProducts.contains(prodId)){
+                		milkTotalLtr= milkTotalLtr.add(totalQty);
+                	}
+                	if(UtilValidate.isNotEmpty(curdProducts) && curdProducts.contains(prodId)){
+                		curdTotalLtr= curdTotalLtr.add(totalQty);
+                	}
+                	if(UtilValidate.isNotEmpty(otherProducts) && otherProducts.contains(prodId)){
+                		otherTotals= otherTotals.add(totalQty);
+                	}
+                }
+        	}
+        	categoryTotals.put("Milk", milkTotalLtr);
+        	categoryTotals.put("Curd", curdTotalLtr);
+        	categoryTotals.put("Other", otherTotals);
+        	
+        	result.put("categoryTotals", categoryTotals);
+        	result.put("totalRevenue", totalSale);
+ 	    	return result;
 	    }
-	  public static Map<String, Object>  sendLVDSms(DispatchContext dctx, Map<String, Object> context)  {
+	 
+	  	/*public static Map<String, Object>  sendLVDSms(DispatchContext dctx, Map<String, Object> context)  {
 	        LocalDispatcher dispatcher = dctx.getDispatcher();	
 	        Delegator delegator = dctx.getDelegator();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");		
@@ -1313,7 +1260,68 @@ public class ByProductReportServices {
 				return ServiceUtil.returnError(e.getMessage());			
 			} 
 	        return ServiceUtil.returnSuccess("Sms successfully sent!");		
-		}
+		}*/
+	  	
+	  	public static Map<String, Object>  sendSMSNotification(DispatchContext dctx, Map<String, Object> context)  {
+	        LocalDispatcher dispatcher = dctx.getDispatcher();	
+	        Delegator delegator = dctx.getDelegator();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+	        String supplyDate = (String) context.get("supplyDate");
+	        Timestamp smsDate = null;
+	        if(UtilValidate.isEmpty(supplyDate)){
+	        	smsDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+	        }
+	        if (UtilValidate.isNotEmpty(supplyDate)) { 
+    			SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+    			try {
+    				smsDate = new java.sql.Timestamp(sdf.parse(supplyDate).getTime());
+    			} catch (ParseException e) {
+    				Debug.logError("Cannot parse date string: "+supplyDate, module);
+	    			return ServiceUtil.returnError("Cannot parse date string"); 
+    			} catch (NullPointerException e) {
+    				Debug.logError("Cannot parse date string: "+supplyDate, module);
+	    			return ServiceUtil.returnError("Cannot parse date string"); 
+    			}
+    		}
+	        
+	        
+	        String dateStr = UtilDateTime.toDateString(smsDate, "yyyy-MM-dd HH:mm:ss");
+	        List shipmentIds =  ByProductNetworkServices.getShipmentIdsByAMPM(delegator,dateStr,subscriptionTypeId);
+	        String displayDate = UtilDateTime.toDateString(smsDate, "dd MMM, yyyy");
+	        if(UtilValidate.isEmpty(shipmentIds)){
+	        	Debug.logError("No shipments found", module);
+	    		return ServiceUtil.returnError("No shipments found");
+	        }
+			Map<String, Object> todaysSalesTotals = getDayDespatchDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "salesDate", smsDate, "subscriptionTypeId", subscriptionTypeId));
+			
+			Map catTotals = (Map)todaysSalesTotals.get("categoryTotals");
+			BigDecimal milkTotal = BigDecimal.ZERO;
+			BigDecimal curdTotal = BigDecimal.ZERO;
+			BigDecimal otherTotal = BigDecimal.ZERO;
+			if(UtilValidate.isNotEmpty(catTotals)){
+				milkTotal = (BigDecimal)catTotals.get("Milk");
+				curdTotal = (BigDecimal)catTotals.get("Curd");
+				otherTotal = (BigDecimal)catTotals.get("Other");
+			}
+			milkTotal = milkTotal.setScale(0, rounding);
+			curdTotal = curdTotal.setScale(0, rounding);
+			otherTotal = otherTotal.setScale(0, rounding);
+			
+			try {
+				// Send SMS notification to list
+				String text = "[[TEST]] "+displayDate +" "+subscriptionTypeId+" Dispatch Totals --- MILK: "+milkTotal+" Ltrs; CURD: "+curdTotal+" Ltrs; OTHR: " +otherTotal+" Kgs. Message sent from Milkosoft.";
+				Debug.logInfo("Sms text: " + text, module);
+				Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
+					"text", text, "userLogin", userLogin);			
+				dispatcher.runAsync("sendSmsToContactListNoCommEvent", sendSmsContext);
+			}
+			catch (GenericServiceException e) {
+				Debug.logError(e, "Error calling sendSmsToContactListNoCommEvent service", module);
+				return ServiceUtil.returnError(e.getMessage());			
+			} 
+	        return ServiceUtil.returnSuccess("Sms successfully sent!");		
+		} 	
 	 
 	 public static Map<String, Object> getTotalSales(DispatchContext dctx, Map<String, ? extends Object> context ) {
 	    	

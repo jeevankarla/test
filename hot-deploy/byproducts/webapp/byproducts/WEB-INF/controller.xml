@@ -715,7 +715,13 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="BoothPaymentsCSV"/>    	
     </request-map>
-    
+     <request-map uri="sendSMSNotification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendSMSNotification"/>        
+        <response name="success" type="view" value="DailyReports"/>
+        <response name="error" type="view" value="DailyReports"/>        
+    </request-map>
+   
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
