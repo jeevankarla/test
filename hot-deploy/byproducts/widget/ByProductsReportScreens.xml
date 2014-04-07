@@ -758,5 +758,26 @@
 				</section>
 			</widgets>
 		</section>
-	</screen>		
+	</screen>	
+	<screen name="BoothWiseSalesCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="Payments" />
+				<set field="subTabButtonItem" value="FindPayments" />								
+			    
+				 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/BoothWiseSalesReport.groovy" />
+			</actions>
+			<widgets>	
+			<!--<platform-specific>
+				<xsl-fo>
+					<html-template	location="component://byproducts/webapp/byproducts/reports/boothWiseSalesReport.fo.ftl" />
+				</xsl-fo>
+			</platform-specific>	-->				
+	        	<container>	
+			       <include-form name="ListBoothWiseSalesCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+		    	</container>
+		    </widgets>								
+		</section>
+	</screen>
 </screens>        

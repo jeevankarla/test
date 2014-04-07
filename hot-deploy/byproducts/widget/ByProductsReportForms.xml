@@ -6,5 +6,60 @@
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="sNo" title="SL." ><display/></field>
     </form>
-        
+    <form name="ListBoothWiseSalesCSV" type="list" list-name="boothWiseSalesList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<field name="boothId" title="Retailer Id"><display/></field>
+    	<field use-when="${productTestMap.PCD1}  !=&quot;0&quot;" name="PCD1" title="${productNames.PCD1}"><display/></field> 
+    	<field use-when="${productTestMap.PCD15} !=&quot;0&quot;" name="PCD15"  title="${productNames.PCD15}"><display/></field> 
+    	<field use-when="${productTestMap.PCD19} !=&quot;0&quot;" name="PCD19"  title="${productNames.PCD19}"><display/></field> 
+    	<field use-when="${productTestMap.PCD2} !=&quot;0&quot;" name="PCD2"  title="${productNames.PCD2}"><display/></field> 
+    	<field use-when="${productTestMap.PCD21}!=&quot;0&quot;" name="PCD21" title="${productNames.PCD21}"><display/></field> 
+    	<field use-when="${productTestMap.PCD22}!=&quot;0&quot;" name="PCD22"  title="${productNames.PCD22}"><display/></field> 
+    	<field use-when="${productTestMap.PCD25} !=&quot;0&quot;" name="PCD25"  title="${productNames.PCD25}"><ignored/></field> 
+        <field use-when="${productTestMap.PCD26} !=&quot;0&quot;" name="PCD26"  title="${productNames.PCD26}"><display/></field> 
+        <field use-when="${productTestMap.PCD28} !=&quot;0&quot;" name="PCD28"  title="${productNames.PCD28}"><display/></field> 
+        <field use-when="${productTestMap.PCD287} !=&quot;0&quot;" name="PCD287"  title="${productNames.PCD287}"><display/></field> 
+        <field use-when="${productTestMap.PCD29}  !=&quot;0&quot;" name="PCD29"  title="${productNames.PCD29}"><display/></field> 
+        <field use-when="${productTestMap.PCD297} !=&quot;0&quot;" name="PCD297"  title="${productNames.PCD297}"><display/></field> 
+    	<field use-when="${productTestMap.PCD30} !=&quot;0&quot;" name="PCD30" title="${productNames.PCD30}"><display/></field> 
+    	<field use-when="${productTestMap.PCD309} !=&quot;0&quot;" name="PCD309" title="${productNames.PCD309}"><display/></field> 
+    	<field use-when="${productTestMap.PCD336} !=&quot;0&quot;" name="PCD336" title="${productNames.PCD336}"><display/></field>
+    	<field use-when="${productTestMap.PCD349}!=&quot;0&quot;" name="PCD349" title="${productNames.PCD349}"><display/></field>
+    	<field use-when="${productTestMap.PCD36}!=&quot;0&quot;" name="PCD36" title="${productNames.PCD36}"><display/></field> 
+    	<field use-when="${productTestMap.PCD365}!=&quot;0&quot;" name="PCD365" title="${productNames.PCD365}"><display/></field>
+    	<field use-when="${productTestMap.PCD366}!=&quot;0&quot;" name="PCD366" title="${productNames.PCD366}"><display/></field>
+    	<field use-when="${productTestMap.PCD37}!=&quot;0&quot;" name="PCD37" title="${productNames.PCD37}"><display/></field>
+    	<field use-when="${productTestMap.PCD373}!=&quot;0&quot;" name="PCD373" title="${productNames.PCD373}"><display/></field> 
+    	<field use-when="${productTestMap.PCD374}!=&quot;0&quot;" name="PCD374" title="${productNames.PCD374}"><display/></field> 
+    	<field use-when="${productTestMap.PCD40}!=&quot;0&quot;" name="PCD40" title="${productNames.PCD40}"><display/></field>
+    	<field use-when="${productTestMap.PCD405}!=&quot;0&quot;" name="PCD405" title="${productNames.PCD405}"><display/></field>
+    	<field use-when="${productTestMap.PCD413}!=&quot;0&quot;" name="PCD413" title="${productNames.PCD413}"><display/></field> 
+    	<field use-when="${productTestMap.PCD42}!=&quot;0&quot;" name="PCD42" title="${productNames.PCD42}"><display/></field>
+    	<field use-when="${productTestMap.PCD437}!=&quot;0&quot;" name="PCD437" title="${productNames.PCD437}"><display/></field> 
+    	<field use-when="${productTestMap.PCD438}!=&quot;0&quot;" name="PCD438" title="${productNames.PCD438}"><display/></field> 
+    	<field use-when="${productTestMap.PCD439}!=&quot;0&quot;" name="PCD439" title="${productNames.PCD439}"><display/></field> 
+    	<field use-when="${productTestMap.PCD44}!=&quot;0&quot;" name="PCD44" title="${productNames.PCD44}"><display/></field>
+    	<field use-when="${productTestMap.PCD440}!=&quot;0&quot;" name="PCD440" title="${productNames.PCD440}"><display/></field>
+    	<field use-when="${productTestMap.PCD443}!=&quot;0&quot;" name="PCD443" title="${productNames.PCD443}"><display/></field>
+    	<field use-when="${productTestMap.PCD447}!=&quot;0&quot;" name="PCD447" title="${productNames.PCD447}"><display/></field> 
+    	<field use-when="${productTestMap.PCD449}!=&quot;0&quot;" name="PCD449" title="${productNames.PCD449}"><display/></field> 
+    	<field use-when="${productTestMap.PCD450}!=&quot;0&quot;" name="PCD450" title="${productNames.PCD450}"><display/></field>
+    	<field use-when="${productTestMap.PCD453}!=&quot;0&quot;" name="PCD453" title="${productNames.PCD453}"><display/></field>
+    	<field use-when="${productTestMap.PCD46}!=&quot;0&quot;" name="PCD46" title="${productNames.PCD46}"><display/></field>
+    	<field use-when="${productTestMap.PCD465}!=&quot;0&quot;" name="PCD465" title="${productNames.PCD465}"><display/></field>
+    	<field use-when="${productTestMap.PCD467}!=&quot;0&quot;" name="PCD467" title="${productNames.PCD467}"><display/></field> 
+    	<field use-when="${productTestMap.PCD47}!=&quot;0&quot;" name="PCD47" title="${productNames.PCD47}"><display/></field> 
+    	<field use-when="${productTestMap.PCD470}!=&quot;0&quot;" name="PCD470" title="${productNames.PCD470}"><display/></field> 
+    	<field use-when="${productTestMap.PCD471}!=&quot;0&quot;" name="PCD471" title="${productNames.PCD471}"><display/></field> 
+    	<field use-when="${productTestMap.PCD472}!=&quot;0&quot;" name="PCD472" title="${productNames.PCD472}"><display/></field> 
+    	<field use-when="${productTestMap.PCD473}!=&quot;0&quot;" name="PCD473" title="${productNames.PCD473}"><display/></field> 
+    	<field use-when="${productTestMap.PCD486}!=&quot;0&quot;" name="PCD486" title="${productNames.PCD486}"><display/></field>
+    	<field use-when="${productTestMap.PCD487}!=&quot;0&quot;" name="PCD487" title="${productNames.PCD487}"><display/></field>
+    	<field use-when="${productTestMap.PCD488}!=&quot;0&quot;" name="PCD488" title="${productNames.PCD488}"><display/></field>
+    	<field use-when="${productTestMap.PCD49}!=&quot;0&quot;" name="PCD49" title="${productNames.PCD49}"><display/></field>
+    	<field use-when="${productTestMap.PCD55}!=&quot;0&quot;" name="PCD55" title="${productNames.PCD55}"><display/></field> 
+    	<field use-when="${productTestMap.PCD59}!=&quot;0&quot;" name="PCD59" title="${productNames.PCD59}"><display/></field>
+    	<field use-when="${productTestMap.PCD66}!=&quot;0&quot;" name="PCD66" title="${productNames.PCD66}"><display/></field>
+    	<field name="qty" title="Total"><display/></field>
+    </form>
 </forms>

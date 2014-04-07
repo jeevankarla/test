@@ -358,6 +358,11 @@
         <response name="success" type="view" value="PrintPaymentRecieptPDF"/>
     </request-map>
     
+     <request-map uri="boothWiseSales.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BoothWiseSalesCSV"/>
+    </request-map>
+   
     <!--Ajax Requests  -->
     <request-map uri="getBoothOwnerContactInfo">
         <security auth="true" https="true"/>    
@@ -751,7 +756,8 @@
     <view-map name="SpecialOrderSuppliedDetailsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#SpecialOrderSuppliedDetailsPDF" content-type="application/pdf"/>
     <view-map name="BankRemittanceStatementTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#BankRemittanceStatementTXT" content-type="text/plain"/>
     <view-map name="ByProdReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#ByProdReports"/>
-   
+    <view-map name="BoothWiseSalesCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothWiseSalesCSV" content-type="text/csv"/>
+    
     <view-map name="InstBillOfSaleReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InstBillOfSaleReportTXT" content-type="text/plain"/>
     <view-map name="EnclosureOfTaxInvoiceReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#EnclosureOfTaxInvoiceReportTXT" content-type="text/plain"/>
  	<view-map name="TaxInvoiceReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TaxInvoiceReportTXT" content-type="application/pdf"/>

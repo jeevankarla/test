@@ -56,6 +56,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("DBCFromDateId","thuDateId");
 		makeDatePicker("exportDate","");
 		makeDatePicker("RouteIndentAbstDate","");
+		makeDatePicker("bsFromDateId","fromDateId");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -175,8 +176,16 @@ function makeDatePicker(fromDateId ,thruDateId){
       			<td width="33%">Remit Dt<@htmlTemplate.renderDateTimeField name="remittanceDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="9" maxlength="22" id="remittanceDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>       			
       			<td width="33%">Pmt Dt<@htmlTemplate.renderDateTimeField name="paymentDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="9" maxlength="22" id="paymentDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><input type="submit" value="Download" class="buttontext"/></td>
       		</form>
-      	</tr>	
-      	<tr>
+      	</tr>
+      	 <tr>
+            <form id="BoothWiseSales" name="BoothWiseSales" method="post" action="<@ofbizUrl>boothWiseSales.csv</@ofbizUrl>" target="_blank">	
+      			<td width="34%">Booth Wise Sales</td>
+      			<td width="33%">From<input  type="text" size="18pt" id="bsFromDateId" readonly  name="bsFromDate"/>
+      			<td width="33%">Thru<input  type="text" size="18pt" id="bsThruDateId" readonly  name="bsThruDate"/>
+      		    <input type="submit" value="Download" class="buttontext"/></td>
+      	  </form>
+         </tr> 	
+       <tr>
       		<form id="indentVsDispatchReport" name="indentVsDispatchReport" method="post" action="<@ofbizUrl>IndentVsDispatchReport.pdf</@ofbizUrl>" target="_blank">	
       			<td width="34%">Indent vs Despatch</td>
       			<td width="33%">From<@htmlTemplate.renderDateTimeField name="indentDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="indentDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>       			
