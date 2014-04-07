@@ -63,8 +63,9 @@ function makeDatePicker(fromDateId ,thruDateId){
 
 </script>
 	<div >
-
+<#if screenFlag?exists && screenFlag.equals("MiscReports")>
 <div class="screenlet">
+        
     		<div class="screenlet-title-bar">
       			<h3>Export</h3>
     		</div>
@@ -94,6 +95,8 @@ function makeDatePicker(fromDateId ,thruDateId){
     </div>
 </div>
 </div>
+</#if>
+<#if screenFlag?exists && screenFlag.equals("DailyReports")>
 <div class="lefthalf">
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -150,7 +153,7 @@ function makeDatePicker(fromDateId ,thruDateId){
       		</form>
       	</tr>
       
-      	<tr>
+      <!--	<tr>
       	   <form id="DeliveryNoteCumGatePassReport" name="DeliveryNoteCumGatePassReport" method="post" action="<@ofbizUrl>deliveryNoteCumGatePassReport.txt</@ofbizUrl>" target="_blank">	
       		  <td width="33%">Delivery Note-Cum GatePass</td>
       		  <td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="deliveryNoteGatePassSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><input type="hidden" name="shipmentTypeId" value="BYPRODUCTS"></td>
@@ -162,7 +165,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 				</select>
 				<input type="submit" value="Download" class="buttontext"/></td>
       	   </form>
-      	</tr>
+      	</tr> -->
       	<tr  class="alternate-row">
       		<form id="routeChequeValue" name="routeChequeValue" method="post" action="<@ofbizUrl>routeChequeValue.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Route Abstract for Cheque &amp; Value</td>
@@ -197,7 +200,7 @@ function makeDatePicker(fromDateId ,thruDateId){
       			<td> <a href="<@ofbizUrl>sendLVDSms</@ofbizUrl>" class="buttontext">Send</a></td></#if>
       	</tr> 
       	 <tr>
-        	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallanPDF</@ofbizUrl>">	
+        	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallan.txt</@ofbizUrl>">	
       			<td width="34%">Dealer BankChallan Report </td>
       			<td width="33%">
       			Date<input  type="text" size="18pt" id="DBCFromDateId" readonly  name="supplyDate"/>
@@ -245,10 +248,10 @@ function makeDatePicker(fromDateId ,thruDateId){
 </div><!-- left half Div End -->
 
 
+</#if>
 
-
-
-<div class="righthalf">
+<#if screenFlag?exists && screenFlag.equals("MonthlyReports")>
+<div class="lefthalf">
 
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -412,4 +415,4 @@ function makeDatePicker(fromDateId ,thruDateId){
 	</div>
 </div>
 </div>
-
+</#if>

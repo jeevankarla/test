@@ -1,7 +1,184 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-
+     <screen name="DailyReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/> 
+                <set field="tabButtonItem2" value="DailyReports"/>          
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+                <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
+                	<condition-list combine="and">
+                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
+                		<!-- <condition-expr field-name="enumId" operator="equals" value="SO_INST"/>
+                		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/> -->                 	 
+                	</condition-list>
+                </entity-condition>
+                 <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+					<condition-list combine="or">
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHALLAN_PAYIN"/>
+                	</condition-list>
+                 	<order-by field-name="-description"/>
+           		</entity-condition>
+                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   
+                 <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+                 </entity-one>
+                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/> 
+                <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+                  <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
+                    </condition-list>                    
+                </entity-condition>
+               <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+                
+                <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/>
+                <set field="screenFlag" value="DailyReports"/>
+            </actions>
+            <widgets>
+                
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body"> 
+                            <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ReportsSubTabBar"/> 
+   							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ByProdReports.ftl"></html-template></html></platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MonthlyReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/>   
+                <set field="tabButtonItem2" value="MonthlyReports"/>         
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+                <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
+                	<condition-list combine="and">
+                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
+                		<!-- <condition-expr field-name="enumId" operator="equals" value="SO_INST"/>
+                		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/> -->                 	 
+                	</condition-list>
+                </entity-condition>
+                 <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+					<condition-list combine="or">
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHALLAN_PAYIN"/>
+                	</condition-list>
+                 	<order-by field-name="-description"/>
+           		</entity-condition>
+                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   
+                 <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+                 </entity-one>
+                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/> 
+                <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+                  <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
+                    </condition-list>                    
+                </entity-condition>
+               <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+                
+                <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/>
+                <set field="screenFlag" value="MonthlyReports"/>
+            </actions>
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+                    		<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ReportsSubTabBar"/>
+   							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ByProdReports.ftl"></html-template></html></platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MiscReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/>
+               <set field="tabButtonItem2" value="MiscReports"/>          
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+                <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
+                	<condition-list combine="and">
+                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
+                		<!-- <condition-expr field-name="enumId" operator="equals" value="SO_INST"/>
+                		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/> -->                 	 
+                	</condition-list>
+                </entity-condition>
+                 <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+					<condition-list combine="or">
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
+                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHALLAN_PAYIN"/>
+                	</condition-list>
+                 	<order-by field-name="-description"/>
+           		</entity-condition>
+                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   
+                 <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+                 </entity-one>
+                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/> 
+                <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+                  <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
+                    </condition-list>                    
+                </entity-condition>
+               <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+                
+                <set field="routesList" value="${groovy:import org.ofbiz.base.util.*; return in.vasista.vbiz.byproducts.ByProductNetworkServices.getRoutes(dispatcher.getDispatchContext(),UtilMisc.toMap()).get(&quot;routesList&quot;);}" type="List"/>
+                <set field="screenFlag" value="MiscReports"/>
+            </actions>
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                            <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ReportsSubTabBar"/> 
+   							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ByProdReports.ftl"></html-template></html></platform-specific>
+                	</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 	<screen name="DeliveryNoteCumGatePassReportTXT">
 		<section>
 			<actions>
@@ -557,7 +734,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="DealerBankChallanPDF">
+	<screen name="DealerBankChallanTXT">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>

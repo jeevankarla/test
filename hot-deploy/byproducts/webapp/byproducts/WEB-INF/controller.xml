@@ -34,12 +34,7 @@
     </request-map>
     
     
-    <request-map uri="sendLVDSms">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="sendLVDSms"/>        
-        <response name="success" type="view" value="ByProdReports"/>
-        <response name="error" type="view" value="ByProdReports"/>        
-    </request-map>
+    
     <request-map uri="updateCrateQtyConfig">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateCrateQtyConfig"/>        
@@ -216,11 +211,11 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
-    <request-map uri="byProdReports">
+    <!-- <request-map uri="byProdReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ByProdReports"/>
     </request-map>
-    
+     -->
     <request-map uri="LookupByProductCategory">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="LookupByProductCategory"/>
@@ -455,10 +450,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LMSChartsDayCashReceivablesInternal"/>
     </request-map> 
-     <request-map uri="reports">
+    <request-map uri="DailyReports">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="Reports"/>
-    </request-map> 
+        <response name="success" type="view" value="DailyReports"/>
+    </request-map>
+    <request-map uri="MonthlyReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MonthlyReports"/>
+    </request-map>
+    <request-map uri="MiscReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MiscReports"/>
+    </request-map>
     <request-map uri="truckSheetReport.txt">
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="TruckSheetTXT"/>
@@ -673,9 +676,9 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="PartywiseBalanceAbstractPDF"/>
     </request-map>
-      <request-map uri="DealerBankChallanPDF">
+      <request-map uri="DealerBankChallan.txt">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="DealerBankChallanPDF"/>
+    	<response name="success" type="view" value="DealerBankChallanTXT"/>
     </request-map>
      <request-map uri="IndentManualCollection">
     	<security https="true" auth="true"/>
@@ -755,7 +758,7 @@
     <view-map name="ChannelWiseDespatchTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ChannelWiseDespatchTXT" content-type="text/plain"/>
     <view-map name="SpecialOrderSuppliedDetailsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#SpecialOrderSuppliedDetailsPDF" content-type="application/pdf"/>
     <view-map name="BankRemittanceStatementTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#BankRemittanceStatementTXT" content-type="text/plain"/>
-    <view-map name="ByProdReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#ByProdReports"/>
+    <!-- <view-map name="ByProdReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#ByProdReports"/> -->
     <view-map name="BoothWiseSalesCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothWiseSalesCSV" content-type="text/csv"/>
     
     <view-map name="InstBillOfSaleReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InstBillOfSaleReportTXT" content-type="text/plain"/>
@@ -781,7 +784,10 @@
     <view-map name="FindDealerPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindDealerPayments"/>
 	<view-map name="QuotaListing" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindFacilityQuotaListing"/>
 	<view-map name="ChannelWiseSalesChart" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ChannelWiseSalesChart"/>
-	<view-map name="Reports" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#Reports"/>
+	<view-map name="DailyReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyReports"/>
+	<view-map name="MonthlyReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyReports"/>
+	<view-map name="MiscReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#MiscReports"/>
+	
 	<view-map name="TruckSheetTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetTXT" content-type="text/plain"/>
 	<view-map name="IndentExportOracleTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentExportOracleTXT" content-type="text/plain"/>
 	<view-map name="RouteQuantityAbstractTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RouteQuantityAbstractTXT" content-type="text/plain"/> 	
@@ -796,7 +802,7 @@
 	<view-map name="InstBillingPeriodSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InstBillingPeriodSearch"/>
 	<view-map name="createInstBillingConfig" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createInstBillingConfig"/>
 	<view-map name="PartywiseBalanceAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PartywiseBalanceAbstractPDF" content-type="application/pdf"/>
-	<view-map name="DealerBankChallanPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanPDF" content-type="text/plain"  />
+	<view-map name="DealerBankChallanTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanTXT" content-type="text/plain"  />
 	<view-map name="IndentManualCollection" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentManualCollection" content-type="text/plain"/>
 	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>
 	<view-map name="RetailerLedgerAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerLedgerAbstractPDF" content-type="application/pdf"/>

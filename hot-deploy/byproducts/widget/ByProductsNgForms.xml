@@ -62,11 +62,16 @@
               	  <parameter param-name="reportTypeFlag" value="trucksheet"/>   
             </hyperlink>
         </field> -->
-        <field name="abstractReport" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="routeAbstract">
+       <!--  <field name="abstractReport" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="routeAbstract">
             <hyperlink target="RouteAbstractReport.txt" description="Route Abstract Report" target-window="_blank" >
                 <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
                	  <parameter param-name="estimatedShipDate" from-field="estimatedShipDate"/>
                	  <parameter param-name="reportTypeFlag" value="abstract"/>                                                   
+            </hyperlink>
+        </field> -->
+         <field name="bankChallan" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="bankChallan">
+            <hyperlink target="DealerBankChallan.txt" description="BankChallan" target-window="_blank" >
+               	  <parameter param-name="supplyDate"  value="${groovy: return org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate,&quot;MMMM dd, yyyy&quot;)}"/>
             </hyperlink>
         </field>
         <field name="InvoiceSlips" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name = "invoiceSlips">

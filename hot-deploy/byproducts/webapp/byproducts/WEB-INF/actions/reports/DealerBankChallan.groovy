@@ -74,14 +74,22 @@ productNames = [:];
 shipments = [];
 routeIds=[];
 conditionList=[];
+Debug.log("parameters.shipmentId==="+parameters.shipmentId);
+if(parameters.shipmentId){
+	
+    if(parameters.shipmentId != "allRoutes"){
+		shipment =delegator.findOne("Shipment",[shipmentId : parameters.shipmentId], false);
+		parameters.routeId = shipment.routeId;
+	}else{
+	    parameters.routeId = "All-Routes";
+	}
+}
 if(parameters.routeId !="All-Routes"){
 	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , parameters.routeId));
 }
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS ,"ROUTE"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-//routeList = delegator.findList("Facility",condition,null,null,null,false);
 routeIdsList = (ByProductNetworkServices.getRoutesByAMPM(dctx ,UtilMisc.toMap("supplyType" ,"AM"))).get("routeIdsList");
-//Debug.log("routeIdsList==============="+routeIdsList);
 routeList = delegator.findList("Facility",EntityCondition.makeCondition("facilityId", EntityOperator.IN ,routeIdsList),null,null,null,false);
 
 dayBegin = UtilDateTime.getDayStart(estimatedDeliveryDateTime);
