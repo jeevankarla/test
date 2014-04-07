@@ -967,7 +967,10 @@ public class ByProductNetworkServices {
 	    		if(UtilValidate.isNotEmpty(screenFlag) && !screenFlag.equals("indentAlt")){
 	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		}else{
-	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.NOT_IN, genRouteIds));
+	    			if(UtilValidate.isNotEmpty(genRouteIds)){
+	    				conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.NOT_IN, genRouteIds));
+	    			}
+	    			
 	    		}
 	    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 	    		EntityCondition cond= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -987,6 +990,7 @@ public class ByProductNetworkServices {
 	    			List<GenericValue> prodSubList = EntityUtil.filterByCondition(tempSubProdList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	    			subProdList.addAll(prodSubList);
 	    		}
+	    		subProdList = EntityUtil.orderBy(subProdList, UtilMisc.toList("-sequenceNum"));
 	    		String qtyCategory = "";
 	    		for(GenericValue product : subProdList){
 	    			Map changeQuantityMap =FastMap.newInstance();
