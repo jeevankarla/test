@@ -957,4 +957,26 @@
 		    </widgets>								
 		</section>
 	</screen>
+	<screen name="EmployeeReportCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="Payments" />
+				<set field="subTabButtonItem" value="FindPayments" />								
+			   	<set field="parameters.hideSearch" value="Y"/>
+		        <set field="parameters.noConditionFind" value="N"/>
+    	        <set field="parameters.roleTypeId" value="EMPSUBISDY_ROLE"/>
+				<service service-name="performFind" result-map="result" >
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="FacilityParty"/>
+	            </service> 
+	            <set field="listIt" from-field="{result.listIt}"/>
+			</actions>
+			<widgets>						
+	        	<container>	
+			       <include-form name="EmployeeReportForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml" />
+		    	</container>
+		    </widgets>								
+		</section>
+	</screen> 
 </screens>        

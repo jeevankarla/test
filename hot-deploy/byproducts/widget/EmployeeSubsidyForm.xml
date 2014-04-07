@@ -21,8 +21,27 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service> 
         </actions>
-    	<field name="facilityId" title="Retailer Id"><display/></field>    	
-        <field name="partyId" title="Employee Id" ><display/></field>
+        
+         <row-actions>
+        	<entity-one entity-name="Person">
+        		<field-map field-name="partyId" from-field="partyId"/>
+        		<select-field field-name="firstName"/>
+        		<select-field field-name="lastName"/>
+        	</entity-one>
+        	<entity-one entity-name="Facility">
+        		<field-map field-name="facilityId" from-field="facilityId"/>
+        		<select-field field-name="facilityName"/>
+        	</entity-one>
+        	<set field="facilityName" from-field="facilityName"/>
+        </row-actions>
+       
+    	<field name="firstName" title="Employee Name" ><display description="${firstName},${lastName}" ></display></field> 
+        <field name="partyId" title="Employee Code" ><display/></field>
+        <field name="facilityId" title="Retailer Code"><display/></field>   	
+        <field name="facilityName" title="Retailer Name">
+        <display description="${facilityName}" ></display>
+      </field>  
+        
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
     	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
     </form>
@@ -46,5 +65,37 @@
                 <parameter param-name="facilityId" />
             </hyperlink>
         </field>
+    </form>
+     <form name="EmployeeReportForm" type="list" list-name="listIt" odd-row-style="alternate-row" 
+      default-entity-name="FacilityParty"   paginate="false" default-table-style="basic-table hover-bar" >
+    	<actions>    	
+    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FacilityParty"/>
+            </service> 
+        </actions>
+         <row-actions>
+        	<entity-one entity-name="Person">
+        		<field-map field-name="partyId" from-field="partyId"/>
+        		<select-field field-name="firstName"/>
+        		<select-field field-name="lastName"/>
+        	</entity-one>
+        	<entity-one entity-name="Facility">
+        		<field-map field-name="facilityId" from-field="facilityId"/>
+        		<select-field field-name="facilityName"/>
+        	</entity-one>
+        	<set field="facilityName" from-field="facilityName"/>
+        	<set field="UnitName" default-value="" />
+        	<set field="UnitCode" default-value=""/>
+        </row-actions>
+       
+    	<field name="firstName" title="Employee Name" ><display description="${firstName},${lastName}" ></display></field> 
+        <field name="partyId" title="Employee Code" ><display/></field>
+        <field name="facilityId" title="Retailer Code"><display/></field>   	
+        <field name="facilityName" title="Retailer Name">
+        <display description="${facilityName}" ></display>
+      </field>  
+        <field name="UnitName" title="Union / Unit Name"><display/></field>
+    	<field name="UnitCode" title="Union / Unit Code"><display/></field>
     </form>
 </forms>

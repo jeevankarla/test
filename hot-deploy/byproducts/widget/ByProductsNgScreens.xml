@@ -72,6 +72,10 @@
                         			<include-form name="CreateEmployeeSubsidyForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml"/>
                         		</screenlet>
                         		<screenlet title="Employee Search Result">
+	                        		<link target="employeeReport.csv" text="Export As CSV" style="buttontext create">
+										<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+										<parameter param-name="partyId" from-field="parameters.partyId"/>
+					  	        	</link>
                         			<include-form name="EmployeeSearchResultForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml"/>
                         		</screenlet>
                             </widgets>

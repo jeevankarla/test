@@ -715,6 +715,10 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="BoothPaymentsCSV"/>    	
     </request-map>
+    <request-map uri="employeeReport.csv">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="EmployeeReportCSV"/>    	
+    </request-map>
      <request-map uri="sendSMSNotification">
         <security https="true" auth="true"/>
         <event type="service" invoke="sendSMSNotification"/>        
@@ -813,6 +817,8 @@
 	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>
 	<view-map name="RetailerLedgerAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerLedgerAbstractPDF" content-type="application/pdf"/>
 	 <view-map name="BoothPaymentsCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothPaymentsCSV"  content-type="text/csv"/>
+	<view-map name="EmployeeReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#EmployeeReportCSV"  content-type="text/csv"/>
+	 
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>
