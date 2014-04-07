@@ -34,7 +34,9 @@
     <SecurityPermission description="Byproducts Component Truck Sheet Permission." permissionId="BYPRODUCTS_TRCKSHEET"/>
     <SecurityPermission description="Byproducts Component Truck Sheet Correction Permission." permissionId="BYPRODUCTS_TRSHEETCR"/>
     <SecurityPermission description="Byproducts Component Delivery Schedule Correction Permission." permissionId="BYPRODUCTS_DSCORRECTION"/>
+
     <SecurityPermission description="Byproducts Component Reports Permission." permissionId="BYPRODUCTS_REPORTS"/>
+    <SecurityPermission description="Byproducts Component Reports Permission." permissionId="BYPRODREPORTS_VIEW"/>
     
     <!-- Indent Admin Group -->
     
@@ -42,8 +44,7 @@
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCOUNTING_READ"/>
-    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCTG_PREF_VIEW"/>
-    
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCTG_PREF_VIEW"/>   
      <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ACCTG_ATX_CREATE"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="CARDSALE_ADMIN"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="CATALOG_CREATE"/>
@@ -63,14 +64,16 @@
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="ORDERMGR_VIEW"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="PARTYMGR_ADMIN"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="SENDSMS_VIEW"/>
-    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
-    
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="SUBSCRIPTION_ADMIN"/>   
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_INDENT"/>
-   <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_PAYMENT"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_PAYMENT"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_STOREG"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_TRCKSHEET"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_TRSHEETCR"/>
     <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODUCTS_REPORTS"/>
+    <SecurityGroupPermission groupId="BYPROD_INDENT_ADMIN" permissionId="BYPRODREPORTS_VIEW"/>
+    
+    
     <!--  Parlour Sales Group-->
     
     <SecurityGroup description="ByProducts Parlour Sales admin group" groupId="BYPROD_PSALE_ADMIN"/>
@@ -133,7 +136,6 @@
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="PARTYMGR_ADMIN"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="SENDSMS_VIEW"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="SUBSCRIPTION_ADMIN"/>
-    
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_INDENT"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_PSALES"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ADMIN" permissionId="BYPRODUCTS_PAYMENT"/>
@@ -157,5 +159,26 @@
     <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="ACCOUNTING_VIEW"/>
     <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission groupId="CASHCOUNTER_WING" permissionId="PARTYMGR_VIEW"/>
+    
+            <SecurityGroup description="Byproduct user of myportal, Limited access to the Byproduct component" groupId="MYPORTAL_BYPRODUCTS"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_BYPRODUCTS" permissionId="MYPORTAL_BYPRODUCTS"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_BYPRODUCTS" permissionId="FACILITY_VIEW"/>
+	 	  <SecurityGroupPermission groupId="MYPORTAL_BYPRODUCTS" permissionId="BYPRODUCTS_VIEW"/>	 	
+	 	 <SecurityGroupPermission groupId="MYPORTAL_BYPRODUCTS" permissionId="MYPORTALBASE_ADMIN"/>
+    
+    <SecurityGroup description="Byproducts manager group" groupId="BYPRODUCTS_MGR"/>    
+    <SecurityGroupPermission groupId="BYPRODUCTS_MGR" permissionId="CHARTS_ADMIN"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_MGR" permissionId="ORDERMGR_VIEW"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_MGR" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_MGR" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_MGR" permissionId="BYPRODREPORTS_VIEW"/>
+    
+    
+    <SecurityGroup description="Byproducts Analytics group" groupId="BYPRODUCTS_ANLYTCS"/>    
+    <SecurityGroupPermission groupId="BYPRODUCTS_ANLYTCS" permissionId="CHARTS_ADMIN"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_ANLYTCS" permissionId="ORDERMGR_VIEW"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_ANLYTCS" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_ANLYTCS" permissionId="CATALOG_VIEW"/>
+	  
     
 </entity-engine-xml>
