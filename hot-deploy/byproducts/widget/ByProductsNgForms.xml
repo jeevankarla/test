@@ -112,7 +112,7 @@
                 <parameter param-name="reportTypeFlag" value="crInstDeliveryChalan"/>                                                           
             </hyperlink>
         </field> -->
-        <field name="cancelShipment" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_ADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
+        <field name="cancelShipment" widget-style="buttontext" event="onclick" action="javascript:setCancelDomObj(this);" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;FACILITY&quot;, &quot;_TRUCKSHEETCANCEL&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target-type="plain" target="javascript:showCancelTruckSheetGenerate('${estimatedShipDate}','${scheduleDate}' ,'${shipmentTypeId}', '${shipmentRouteList}');" description="${uiLabelMap.CommonCancel}">
             </hyperlink>
         </field>
