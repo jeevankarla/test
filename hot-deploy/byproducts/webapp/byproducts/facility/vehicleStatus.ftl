@@ -122,6 +122,7 @@
     </div>
 	</div>           
     </section>
+    <#--
             <h3>CrateReturns</h3>
             <section>
              <div class="lefthalf">
@@ -185,10 +186,10 @@
 		      	</table>
 			  </form>
 				<br/>
-		    	</div><!--screenletBody close -->
-		  </div><!--screenlet close -->
-		</div><!--left half close -->
-                        </section>
+		    	</div>
+		  </div>
+		</div>
+         </section> -->
 
                         <h3>Finalize</h3>
                         <section>
