@@ -361,6 +361,11 @@ under the License.
     <ReturnReason sequenceId="04" returnReasonId="RTN_DIG_FILL_FAIL" description="Digital Fulfillment Failed"/>
     <ReturnReason sequenceId="05" returnReasonId="RTN_COD_REJECT" description="COD Payment Rejected"/>
     <ReturnReason sequenceId="06" returnReasonId="RTN_SIZE_EXCHANGE" description="Size Exchange"/>
+     <ReturnReason sequenceId="07" returnReasonId="RTN_DAIRY_FAULT" description="Dairy fault"/>
+     <ReturnReason sequenceId="08" returnReasonId="RTN_CNTR_FAULT" description="contractor fault"/>
+    <ReturnReason sequenceId="09" returnReasonId="RTN_INDNT_FAULT" description="indenting fault"/>
+    <ReturnReason sequenceId="10" returnReasonId="RTN_TRSPT_FAULT" description="Transporter fault"/>
+    
     <!-- Return Types -->
     <ReturnType sequenceId="01" returnTypeId="RTN_CREDIT" description="Store Credit"/>
     <ReturnType sequenceId="02" returnTypeId="RTN_REFUND" description="Refund"/>
