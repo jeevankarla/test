@@ -3175,7 +3175,7 @@ public class ByProductServices {
 			    		  String returnReasonId = (String)productQtyMap.get("returnReasonId");
 			    		  GenericValue returnItem = delegator.makeValue("ReturnItem");
 			    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
-			    		  if(UtilValidate.isNotEmpty(returnReasonId) && ("returnReasonId")){
+			    		  if(UtilValidate.isNotEmpty(returnReasonId)){
 			    			  returnItem.put("returnReasonId", returnReasonId);
 			    		  }
 			    		  returnItem.put("statusId", "RETURN_ACCEPTED");
