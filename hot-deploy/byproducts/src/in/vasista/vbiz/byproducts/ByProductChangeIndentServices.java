@@ -604,7 +604,7 @@ public class ByProductChangeIndentServices {
   					  }
   					  else{
   						  int removed = delegator.removeValue(subscriptionProduct);
-  						  Debug.log("removed todays subscription "+subscriptionProduct);
+  						  //Debug.log("removed todays subscription "+subscriptionProduct);
   					  }
   					  if(quantity.compareTo(BigDecimal.ZERO)>0 && createFlag){
   						  indentChanged = true;
@@ -640,7 +640,7 @@ public class ByProductChangeIndentServices {
   						  createNewSubscProduct.put("createdDate",nowTimeStamp);   
   						  createNewSubscProduct.put("lastModifiedByUserLogin",userLogin.get("userLoginId"));
   						  createNewSubscProduct.put("lastModifiedDate",nowTimeStamp);
-  						  Debug.log("createNewSubscProduct #########################"+createNewSubscProduct);
+  						 // Debug.log("createNewSubscProduct #########################"+createNewSubscProduct);
   						  result = dispatcher.runSync("createSubscriptionProduct",createNewSubscProduct);
   						  if (ServiceUtil.isError(result)) {
   							String errMsg =  ServiceUtil.getErrorMessage(result);
@@ -659,7 +659,7 @@ public class ByProductChangeIndentServices {
   						  EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(nextEffDay))));
   				  EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
   				  List<GenericValue> removeSubscriptionProdList = delegator.findList("SubscriptionProduct", cond, null, null, null, false);
-  				  Debug.log("removeSubscriptionProdList"+removeSubscriptionProdList);
+  				  //Debug.log("removeSubscriptionProdList"+removeSubscriptionProdList);
   				  if(UtilValidate.isNotEmpty(removeSubscriptionProdList)){
   					  int removedNxtDaySubs = delegator.removeAll(removeSubscriptionProdList);
   				  }
@@ -679,7 +679,7 @@ public class ByProductChangeIndentServices {
   					  updateSubscriptionClose.put("sequenceNum",subcProdClose.getString("sequenceNum"));
   					  updateSubscriptionClose.put("fromDate", subcProdClose.getTimestamp("fromDate"));
   					  updateSubscriptionClose.put("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(effectiveDate, -1)));
-  					Debug.log("updateSubscriptionClose #############"+updateSubscriptionClose);
+  					//Debug.log("updateSubscriptionClose #############"+updateSubscriptionClose);
   		  			  if (!productSubscriptionTypeId.equals("SPECIAL_ORDER") || !productSubscriptionTypeId.equals("CASH_FS")	) {
   		  				  // don't close out existing subscription (except for special orders)
   		  				  result = dispatcher.runSync("updateSubscriptionProduct",updateSubscriptionClose);
