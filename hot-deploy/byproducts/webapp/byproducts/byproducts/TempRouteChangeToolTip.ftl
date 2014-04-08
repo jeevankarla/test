@@ -45,7 +45,7 @@
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
 					populateTempRouteField();
-					
+					 $("#fromRouteId").val(data[0]["seqRouteId"]); 
 					$('button', api.elements.content).click(api.hide);
 					
 				},
@@ -92,13 +92,30 @@
 	function appendTempRouteToForm(){
 		var fromRouteId = $("#fromRouteId").val();
 		var toRouteId = $("#toRouteId").val();
-		//alert(fromRouteId);
 		for (i = 0; i < data.length; i++) {
+		        var rowData = data[i];
 		        if(data[i]["seqRouteId"] == fromRouteId && toRouteId !=""){
 		            data[i]["seqRouteId"] =toRouteId;
-		            _grid.updateRow(i);
-		        }
+		            for (j = 0; j < data.length; j++) {
+				       if((i !=j)&& (data[j]["seqRouteId"] == rowData["seqRouteId"]) && (data[j]["cProductName"] == rowData["cProductName"])){
+			            data[j]["cQuantity"] =  data[j]["cQuantity"]+data[i]["cQuantity"] ;
+			            data[j]["quantity"] =  data[j]["quantity"]+data[i]["quantity"] ;
+			            _grid.updateRow(j);
+			            _grid.invalidateRow(i);
+			            _grid.updateRowCount();
+			            data.splice(i, 1);
+			          } 
+			          
+		          }
+		           _grid.setData(data);
+			       _grid.render();    
+			       _grid.updateRowCount();  
+		          _grid.updateRow(i);
+		     }
+		        
+		       
 		}
+		$(_grid.getCellNode(0,1)).click();
 		$('button').click();
 		return false;	
 	}
