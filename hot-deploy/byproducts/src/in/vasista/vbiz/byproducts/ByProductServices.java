@@ -2862,7 +2862,8 @@ public class ByProductServices {
 	  	  String effectiveDateStr = (String) request.getParameter("effectiveDate");
 	  	  String productId = null;
 	  	  String quantityStr = null;
-	  	  String sequenceNum = null;	  
+	  	  String sequenceNum = null;
+	  	  String returnReasonId = null;
 	  	  Timestamp effectiveDate=null;
 	  	  BigDecimal quantity = BigDecimal.ZERO;
 	  	  List conditionList =FastList.newInstance();
@@ -2983,6 +2984,9 @@ public class ByProductServices {
 	  			  request.setAttribute("_ERROR_MESSAGE_", "Empty product quantity");
 	  			  return "error";	
 	  		  }
+	  		  if (paramMap.containsKey("reasonId" + thisSuffix)) {
+	  			returnReasonId = (String) paramMap.get("reasonId" + thisSuffix);
+	  		  }
 	  		  try {
 	  			  quantity = new BigDecimal(quantityStr);
 	  		  } catch (Exception e) {
@@ -2993,6 +2997,9 @@ public class ByProductServices {
 	  		  
 	  		  productQtyMap.put("productId", productId);
 	  		  productQtyMap.put("quantity", quantity);
+	  		  productQtyMap.put("returnReasonId", returnReasonId);
+	  		
+	  		  
 	  		  productQtyList.add(productQtyMap);
 	  	  }//end row count for loop
 	  	  
@@ -3097,9 +3104,13 @@ public class ByProductServices {
 			    		  Map productQtyMap = productQtyList.get(i);
 			    		  String productId = (String)productQtyMap.get("productId");
 			    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
+			    		   String returnReasonId=(String)productQtyMap.get("returnReasonId");
 			    		  
 			    		  GenericValue returnItem = delegator.makeValue("ReturnItem");
 			    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
+			    		  if(UtilValidate.isNotEmpty(returnReasonId)){
+			    			  returnItem.put("returnReasonId", returnReasonId);
+			    		  }
 			    		  returnItem.put("statusId", "RETURN_ACCEPTED");
 			    		  returnItem.put("returnId", returnId);
 			    		  returnItem.put("productId", productId);
@@ -3161,9 +3172,12 @@ public class ByProductServices {
 			    		  Map productQtyMap = productQtyList.get(i);
 			    		  String productId = (String)productQtyMap.get("productId");
 			    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
-			    		  
+			    		  String returnReasonId = (String)productQtyMap.get("returnReasonId");
 			    		  GenericValue returnItem = delegator.makeValue("ReturnItem");
 			    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
+			    		  if(UtilValidate.isNotEmpty(returnReasonId) && ("returnReasonId")){
+			    			  returnItem.put("returnReasonId", returnReasonId);
+			    		  }
 			    		  returnItem.put("statusId", "RETURN_ACCEPTED");
 			    		  returnItem.put("returnId", returnId);
 			    		  returnItem.put("productId", productId);
