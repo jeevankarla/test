@@ -1999,6 +1999,7 @@ public class ByProductNetworkServices {
     			return ServiceUtil.returnError("Return type is empty");
     		}
 	        Map returnItemsMap = FastMap.newInstance();
+	        Map returnItemsReasonMap = FastMap.newInstance();
 
 	    	try{
 	    		
@@ -2011,9 +2012,10 @@ public class ByProductNetworkServices {
     			
     			if(UtilValidate.isNotEmpty(returnHeader)){
     				String returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("returnId");
-    				List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), UtilMisc.toSet("productId","returnQuantity"), null, null, false);
+    				List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), UtilMisc.toSet("productId","returnQuantity","returnReasonId"), null, null, false);
     				for(GenericValue returnItem : returnItems){
     					returnItemsMap.put(returnItem.getString("productId"), returnItem.getBigDecimal("returnQuantity"));
+    					returnItemsReasonMap.put(returnItem.getString("productId"), returnItem.getString("returnReasonId"));
     				}
     			}
     			/*if(UtilValidate.isNotEmpty(returnHeader)){
@@ -2059,6 +2061,13 @@ public class ByProductNetworkServices {
 		        	tempMap.put("returnQuantity", "");
 		        	if(UtilValidate.isNotEmpty(returnItemsMap) && UtilValidate.isNotEmpty(returnItemsMap.get(productId))){
 		        		tempMap.put("returnQuantity", (BigDecimal)returnItemsMap.get(productId));
+		        		
+		        	}
+		        	if(UtilValidate.isNotEmpty(returnItemsReasonMap) && UtilValidate.isNotEmpty(returnItemsReasonMap.get(productId))){
+		        		GenericValue returnReason = delegator.findOne("ReturnReason", UtilMisc.toMap("returnReasonId",returnItemsReasonMap.get(productId)) , false);
+		        		tempMap.put("reasonId", (String)returnReason.getString("description"));
+		        		tempMap.put("returnReasonId", (String)returnReason.getString("returnReasonId"));
+		        		
 		        	}
 		        	orderReturnList.add(tempMap);
 				}
