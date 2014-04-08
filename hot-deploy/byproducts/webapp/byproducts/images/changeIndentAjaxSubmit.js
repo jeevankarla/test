@@ -73,10 +73,9 @@ $(function() {
             	   $('div#changeIndentEntry_spinner').html();
             	   $('div#changeIndentEntry_spinner').addClass("messageStr");
             	   if(changeFlag == "Changed"){
-                	   $('div#changeIndentEntry_spinner').html('<span style="color:green; font-size:10pt; font-stlye:bold">Entry added succesfully for Dealer : "'+$("#boothTooltip").text()+'"</span>');
-                	   $('div#changeIndentEntry_spinner').delay(7000).fadeOut('slow');
-            	   }
-            	   else{
+                	   $('div#changeIndentEntry_spinner').html('<span style="color:green; font-size:12pt; font-stlye:bold">Entry added succesfully for Dealer : "'+$("#boothTooltip").text()+'"</span>');
+                	   $('div#changeIndentEntry_spinner').delay(9000).fadeOut('slow');
+            	   }else{
             		   $('div#changeIndentEntry_spinner').delay(20).fadeOut('slow');
             	   }
 
