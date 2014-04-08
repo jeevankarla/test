@@ -244,6 +244,7 @@ function makeDatePicker(fromDateId ,thruDateId){
       </table>
 	 </div>
     </div>
+    <#if security.hasEntityPermission("SENDLVDSMS", "_VIEW", session)>
      <div class="screenlet">
     <div class="screenlet-title-bar">
       <h2><center>Notification </center></h2>
@@ -263,6 +264,7 @@ function makeDatePicker(fromDateId ,thruDateId){
       </table>
 	 </div>
     </div>
+    </#if>
    
 </div><!-- left half Div End -->
 
