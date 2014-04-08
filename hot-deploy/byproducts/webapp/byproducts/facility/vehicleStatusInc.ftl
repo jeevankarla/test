@@ -138,6 +138,9 @@ function updateGrid(){
 	var productLabelIdMap = ${StringUtil.wrapString(productLabelIdJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var returnData = ${StringUtil.wrapString(dataJSON)!'[]'};
+	var returnReasonTags = ${StringUtil.wrapString(returnReasonJSON)!'[]'};
+	var returnReasonIdsMap=${StringUtil.wrapString(returnReasonIdsJSON)!'[]'};
+	
 	//var uomMap = ${StringUtil.wrapString(uomMapJSON)!'{}'};
 	var productQtyInc = ${StringUtil.wrapString(productQtyIncJSON)!'{}'};
 	
@@ -217,6 +220,23 @@ function updateGrid(){
         return formatValue;
     }
 	
+	function reasonValidator(value,item) {
+     var invalidReasonCheck = 0;
+	  for (var rowCount=0; rowCount < returnReasonTags.length; ++rowCount)
+	  {  
+		if (value == returnReasonTags[rowCount]["label"]) {
+			invalidReasonCheck = 1;
+		}
+		if (item != null && item != undefined ) {
+      	item['returnReasonId'] =returnReasonIdsMap[value];
+	    }   
+	  }
+	   if(invalidReasonCheck == 0){
+      	return {valid: false, msg: "Invalid Reason " + value};
+      }
+      
+     return {valid: true, msg: null};
+    }
 	
 	
 	function quantityValidator(value ,item) {
@@ -248,7 +268,8 @@ function updateGrid(){
 		var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:150, minWidth:150, cssClass:"readOnlyColumnTextClass", availableTags: availableTags, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"cQuantity", name:"Order Qty", field:"cQuantity", width:80, minWidth:80, cssClass:"readOnlyColumnClass", sortable:false},
-            {id:"returnQuantity", name:"Return Qty", field:"returnQuantity", width:100, minWidth:100, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, }
+            {id:"returnQuantity", name:"Return Qty", field:"returnQuantity", width:100, minWidth:100, cssClass:"cell-title",editor:FloatCellEditor, sortable:false,},
+            {id:"reasonId", name:"Reason Id", field:"reasonId", width:140, minWidth:140, cssClass:"cell-title", availableTags: returnReasonTags, validator:reasonValidator, editor: AutoCompleteEditor, sortable:false, align:"right"},
 		];
 		//var enableNewRow = ($('[name=boothId]').val() != null);
 		var options = {
