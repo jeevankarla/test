@@ -99,7 +99,7 @@
     <request-map uri="createReturnCrate">
     	<security https="true" auth="true"/> 
     	<event type="service" invoke="createReturnCrate" path=""/>   	
-    	<response name="success" type="request" value="json"/>    	
+    	<response name="success" type="view" value="ReturnCrates"/>    	
     </request-map>
     
     <request-map uri="FindReturns">
@@ -617,8 +617,8 @@
     	<event type="service" invoke="createPaymentForBooth"/>   	
     	<response name="success" type="view" value="FindPastBoothPayments"/>
     	<response name="error" type="view" value="FindPastBoothPayments"/>       	
-    </request-map>
-        <request-map uri="createPaymentForBooth">
+    </request-map> 
+     <request-map uri="createPaymentForBooth">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createPaymentForBooth"/>   	
     	<response name="success" type="view" value="FindBoothPayments"/>

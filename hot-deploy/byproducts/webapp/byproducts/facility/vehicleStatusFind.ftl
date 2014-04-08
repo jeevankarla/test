@@ -1,4 +1,5 @@
-<link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
+<#--
+<link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" /> -->	
 
 
 
@@ -6,12 +7,12 @@
 <div class="screenlet">
 	 <div class="screenlet-title-bar">
     <ul>
-      <li class="h3">VehicleStatus Find</li>    
+       <li class="h3">${formHeading?if_exists}</li> 
     </ul>
     <br class="clear"/>
   </div>
     <div class="screenlet-body">
-<form method="post" name="VehicleStatusForm" action="VehicleStatus">	 
+<form method="post" name="VehicleStatusForm" action="${actionUrl?if_exists}">	 
       <table width="60%" border="0" cellspacing="0" cellpadding="0">    
         <tr>
           <td>&nbsp;<input type="hidden" name="hideSearch"  value="N"/></td>

@@ -339,10 +339,11 @@
             <link target="EmployeeSearch">
             </link>
         </menu-item>
-        <!--<menu-item name="ReturnCrates" title="Return Crates">
+        <menu-item name="ReturnCrates" title="Return Crates">
             <link target="ReturnCrates"/>
         </menu-item>
-        --><!-- <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
+        
+        <!-- <menu-item name="CreditInstitutionBilling" title="Cr. Inst. Billing">
             <link target="CreditInstitutionBilling"/>
         </menu-item> -->
         

@@ -134,30 +134,47 @@
         </section>
     </screen>
     <screen name="ReturnCrates">
-        <section>
-            <actions>
-            	<set field="tabButtonItem" value="ReturnCrates"/>
-            	<entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+      <section>
+			<actions>
+                <set field="titleProperty" value="Crates Return"/>	            
+               <set field="tabButtonItem" value="ReturnCrates"/>     
+               <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+               <set field="actionUrl" value="ReturnCrates"/>
+               <set field="formHeading" value="Find RouteVehicle Crates"/>
+                      
+                <set field="layoutSettings.javaScripts[]" value="/byproducts/images/date.js" global="true"/>   
+                <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   
+                 <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+                 </entity-one>
+                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/> 
+                <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+                  <entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
                 	<condition-list>
-                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
-                    </condition-list>
-                    <order-by field-name="sequenceId"/>
-                </entity-condition>	
-            </actions>
-            <widgets>
-                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
-                      <decorator-section name="body">
-                      	<section>
-                        	<widgets>
-                        		 <screenlet title="Return Crates">
-                        			<include-form name="returnCrates" location="component://byproducts/widget/ByProductsNgForms.xml"/>
-                        		</screenlet>
-                            </widgets>
-                    	</section>
-                    </decorator-section>                                       
-                </decorator-screen>
-            </widgets>
-        </section>
+                    	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
+                    </condition-list>                    
+                </entity-condition>
+               <set field="enableLmsPmSales" value="${groovy:session.getAttribute(&quot;enableLmsPmSales&quot;)}"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+			   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/VehicleStatus.groovy" />		
+			</actions>
+			<widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">  
+ 							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/facility/vehicleStatusFind.ftl"></html-template></html></platform-specific>
+						<screenlet title="List RouteVehicle Crates">				
+						<include-form name="ListVehicleCratesReturn" location="component://byproducts/widget/ByProductsNgForms.xml" />
+						</screenlet>		
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
     </screen>
     <screen name="CreditInstitutionBilling">
         <section>
@@ -1993,7 +2010,9 @@
                <set field="tabButtonItem" value="VehicleStatus"/>     
                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>  
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/> 
+                <set field="actionUrl" value="VehicleStatus"/>
+               <set field="formHeading" value="Find VehicleStatus"/> 
                       
                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/date.js" global="true"/>   
                 <set field="layoutSettings.javaScripts[]" value="/byproducts/images/autoCompleteFacility.js" global="true"/>   
