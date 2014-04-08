@@ -7,8 +7,7 @@ $(document).ready(function() {
             transitionEffect: "slideLeft",
             onStepChanging: function (event, currentIndex, newIndex)
             {  
-            if(currentIndex==0){
-            	//var result=getRouteAndShipmentVehicle();
+            /*if(currentIndex==0){
             	callIssuanceTotal();
             }
             if(currentIndex==1||newIndex==2){
@@ -29,7 +28,7 @@ $(document).ready(function() {
 	                    return false;
 		             }
            	    submitReturnCrate();
-             }
+             }*/
                 return true;
             },
             onFinishing: function (event, currentIndex)
@@ -319,6 +318,9 @@ function prepareAjaxDataString(){
 		if( typeof changeItem["cProductId"] != "undefined"   && changeItem["cProductId"] != "" && !isNaN(qty)){				
 			  querystring += "productId_o_" + rowCount + "=" + changeItem["cProductId"] + "&";
 			  querystring +=  "quantity_o_" + rowCount + "=" + qty + "&";
+			  if(screenFlag == "returns" &&  typeof changeItem["returnReasonId"] != "undefined"){
+				  querystring +=  "reasonId_o_" + rowCount + "=" + changeItem["returnReasonId"] + "&";
+				}
 			  rowCount++; 
 		}
 	}	 
