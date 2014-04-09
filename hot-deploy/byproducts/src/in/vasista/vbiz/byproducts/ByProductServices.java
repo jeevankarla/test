@@ -1232,7 +1232,7 @@ public class ByProductServices {
 			 Debug.logError(e, module);             
 		}		
 		
-        if(!enableCancelAfterShipDate && nowDate.after(dayBegin)){        	
+        if(!enableCancelAfterShipDate && nowDate.after(UtilDateTime.addDaysToTimestamp(dayBegin, 1))){        	
         	Debug.logError("Truck sheet cancel not allowed after shipment date", module);
     		return ServiceUtil.returnError("Truck sheet cancel not allowed after Shipment date"); 
         }
