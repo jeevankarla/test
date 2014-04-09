@@ -340,6 +340,12 @@
             </link>
         </menu-item>
         <menu-item name="ReturnCrates" title="Return Crates">
+            <condition>
+        	   <or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+					<if-has-permission permission="BYPROD_"  action="_CRATERETURN"/>
+				</or>  
+        	 </condition>
             <link target="ReturnCrates"/>
         </menu-item>
         
