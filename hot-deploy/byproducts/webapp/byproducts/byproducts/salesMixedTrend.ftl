@@ -38,17 +38,7 @@ $(document).ready(function(){
 		}
 	});
 	
-    $('#loader').hide();
-	jQuery.ajaxSetup({
-  		beforeSend: function() {
-     		$('#loader').show();
-     		$('#result').hide();
-  		},
-  		complete: function(){
-     		$('#loader').hide();
-     		$('#result').show();     
-  		}
-	});
+
 
 	$( "#fromDate" ).datepicker({
 			dateFormat:'MM d, yy',
@@ -73,6 +63,8 @@ $(document).ready(function(){
 		$('#ui-datepicker-div').css('clip', 'auto');
 
 	// fetch the charts for today
+	  	    $('#loader').show();
+     		$('#result').hide(); 
 	        $.get(  
             "${ajaxUrl}",  
             { fromDate: $("#fromDate").val()},  
@@ -81,9 +73,9 @@ $(document).ready(function(){
 				var reponse = jQuery(responseText);
        			var reponseScript = reponse.filter("script");
        			// flot does not work well with hidden elements, so we unhide here itself       			
+       			jQuery.each(reponseScript, function(idx, val) { eval(val.text); } );  
        			$('#loader').hide();
-     			$('#result').show(); 
-       			jQuery.each(reponseScript, function(idx, val) { eval(val.text); } );                
+     			$('#result').show();               
             },  
             "html"  
         );  
@@ -102,10 +94,10 @@ $(document).ready(function(){
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
        			var reponseScript = reponse.filter("script");
-       			// flot does not work well with hidden elements, so we unhide here itself
+       			// flot does not work well with hidden elements, so we unhide here itself     			
+       			jQuery.each(reponseScript, function(idx, val) { eval(val.text); } );       
        			$('#loader').hide();
-     			$('#result').show();        			
-       			jQuery.each(reponseScript, function(idx, val) { eval(val.text); } );                
+     			$('#result').show();            
             },  
             "html"  
         );  
