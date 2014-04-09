@@ -2,7 +2,7 @@ $(document).ready(function() {
 	//callig to grid Hide
 	gridHideCall();
 	 setRouteDropDownByValue($("#subscriptionTypeId").val());
-	$( "#effectiveDate" ).datepicker({
+	/*$( "#effectiveDate" ).datepicker({
 		dateFormat:'d MM, yy',
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -12,7 +12,7 @@ $(document).ready(function() {
 			$( "#effectiveDate" ).datepicker("option", selectedDate );
 		}
 	});
-	$('#ui-datepicker-div').css('clip', 'auto');
+	$('#ui-datepicker-div').css('clip', 'auto');*/
 	
 	$("input").keypress(function(e){
 	  if (e.which == $.ui.keyCode.ENTER) {
@@ -26,7 +26,7 @@ $(document).ready(function() {
       }		
 	  		
 	});
-	
+ setDateRange();
 	 	
 });
 

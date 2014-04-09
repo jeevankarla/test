@@ -55,6 +55,32 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/validate/jquery.validate.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
+screenFlag = '${screenFlag}';
+function setDateRange(){
+<#if screenFlag?exists && screenFlag == 'DSCorrection'>
+	    	$("#effectiveDate" ).datepicker({
+			dateFormat:'d MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				$( "#effectiveDate" ).datepicker("option", selectedDate );
+			}
+		});
+		$('#ui-datepicker-div').css('clip', 'auto');
+		<#else>
+		 $( "#effectiveDate" ).datepicker({
+			dateFormat:'d MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			minDate: 0,
+			maxDate:1,
+			onSelect: function( selectedDate ) {
+				$( "#effectiveDate" ).datepicker("option", selectedDate );
+			}
+	  });
+	$('#ui-datepicker-div').css('clip', 'auto');
+</#if>
+}
 function cleanUpGrid(value){
 	$('[name=boothId]').val(value);
 	$('[name=tempRouteId]').val('');
@@ -70,7 +96,7 @@ function cleanUpGrid(value){
 }
 
 function updateGrid(){
- 	screenFlag = '${screenFlag}';
+ 	
 	if(!$('[name=boothId]').val()){
 		return;
 	}
