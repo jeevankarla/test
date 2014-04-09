@@ -281,6 +281,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ChannelWiseSalesChart"/>
     </request-map>
+    <request-map uri="ChannelWiseSalesChartInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ChannelWiseSalesChartInternal"/>
+    </request-map>    
     <request-map uri="VehicleStatus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="VehicleStatus"/>
@@ -617,8 +621,8 @@
     	<event type="service" invoke="createPaymentForBooth"/>   	
     	<response name="success" type="view" value="FindPastBoothPayments"/>
     	<response name="error" type="view" value="FindPastBoothPayments"/>       	
-    </request-map> 
-     <request-map uri="createPaymentForBooth">
+    </request-map>
+        <request-map uri="createPaymentForBooth">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createPaymentForBooth"/>   	
     	<response name="success" type="view" value="FindBoothPayments"/>
@@ -793,7 +797,9 @@
     <view-map name="ChangeIndentRouteInit" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ChangeIndentRouteInit"/>
     <view-map name="FindDealerPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindDealerPayments"/>
 	<view-map name="QuotaListing" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindFacilityQuotaListing"/>
-	<view-map name="ChannelWiseSalesChart" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ChannelWiseSalesChart"/>
+	<view-map name="ChannelWiseSalesChart" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ChannelWiseSalesChartNew"/>
+	<view-map name="ChannelWiseSalesChartInternal" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ChannelWiseSalesChartNewInternal"/>
+
 	<view-map name="DailyReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyReports"/>
 	<view-map name="MonthlyReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyReports"/>
 	<view-map name="MiscReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#MiscReports"/>

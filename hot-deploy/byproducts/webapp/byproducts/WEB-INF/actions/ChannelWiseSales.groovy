@@ -135,6 +135,12 @@ context.putAt("salesDate", fromDate);
 productList = ByProductNetworkServices.getByProductProducts(dctx, context);
 //conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(productList, "productId", true)));
 
+
+Debug.log("conditionList=" + conditionList, "");
+
+
+
+
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
 dctx = dispatcher.getDispatchContext();

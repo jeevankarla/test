@@ -901,6 +901,70 @@
             </widgets>
         </section>
     </screen> 
+	 <screen name="ChannelWiseSalesChart">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>
+ 				<set field="tabButtonItem2" value="channelSalesChart" />                                           
+                <set field="headerItem" value="charts"/>
+				<!-- <set field="ajaxUrl" value="ProductWiseSalesVolumeTotalsInternal" type="String"/>    -->
+				<set field="chartType" value="SalesMix"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/ChannelWiseSales.groovy"/>                             
+            </actions>            
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">     
+                        <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>                                                        
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/salesMixedTrend.ftl"/></html>
+                        	</platform-specific>   
+                            <platform-specific> 
+                				<html><html-template location="component://byproducts/webapp/byproducts/byproducts/channelWiseSalesCharts.ftl"/></html>
+                			</platform-specific>  
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>     
+    
+    
+	 <screen name="ChannelWiseSalesChartNew">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>
+ 				<set field="tabButtonItem2" value="channelSalesChart" />                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="ChannelWiseSalesChartInternal" type="String"/>
+            </actions>            
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">     
+                        <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>                                                        
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/salesMixedTrend.ftl"/></html>
+                        	</platform-specific>   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+	 <screen name="ChannelWiseSalesChartNewInternal">
+        <section>
+            <actions>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/ChannelWiseSales.groovy"/>  
+				<set field="chartType" value="SalesMix"/>                           
+            </actions>            
+            <widgets>
+                        	<platform-specific> 
+                            	<html><html-template location="component://byproducts/webapp/byproducts/byproducts/channelWiseSalesCharts.ftl"/></html>
+                        	</platform-specific>   
+            </widgets>
+        </section>
+    </screen>        
+    
      <screen name="DailySalesRevenueTrend">
         <section>
             <actions>
