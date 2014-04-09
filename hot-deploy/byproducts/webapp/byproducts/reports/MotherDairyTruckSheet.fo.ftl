@@ -44,7 +44,7 @@ under the License.
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                                       UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-069<fo:inline text-decoration="underline">&#160;                                                                GATEPASS CUM DISTRIBUTION ROUTESHEET : SACHETS</fo:inline>VST_ASCII-027VST_ASCII-070</fo:block>
 			<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : routesMap.getKey()}, true)>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=================================================================================================================================================================================================================================</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">==================================================================================================================================================================================================================</fo:block>
 			 <fo:block>
 			            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
 			             <fo:table-column column-width="260pt"/>
@@ -72,20 +72,20 @@ under the License.
 			                     </fo:table-body>
 			                    </fo:table>
 			              </fo:block>         
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">=================================================================================================================================================================================================================================</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">==================================================================================================================================================================================================================</fo:block>
 			<#assign contractorName= (routesMap.getValue().get("contractorName"))>	
 			<#assign lmsProdList = (routesMap.getValue().get("lmsProdList"))>
 			<#assign byProdList = (routesMap.getValue().get("byProdList"))>
 			<#assign totalCrate = 0>
 			<fo:block font-size="6pt">
 				<fo:table>
-					<fo:table-column column-width="78pt"/>
+					<fo:table-column column-width="70pt"/>
 					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="25pt"/>
 					<fo:table-column column-width="37pt"/>
-					<fo:table-column column-width="50pt"/>
-					<fo:table-column column-width="50pt"/>
-					<fo:table-column column-width="55pt"/>
+					<fo:table-column column-width="42pt"/>
+					<#--<fo:table-column column-width="50pt"/>-->
+					<fo:table-column column-width="25pt"/>
 					<fo:table-body>
 					<#-- 
 						<fo:table-row>
@@ -110,13 +110,13 @@ under the License.
 								<fo:block font-size="6pt" text-align="right">VAT</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="6pt" text-align="right">NET Receivable</fo:block>
+								<fo:block font-size="6pt" text-align="right">NET Amount</fo:block>
 							</fo:table-cell>
-							<fo:table-cell>
+							<#--<fo:table-cell>
 								<fo:block font-size="6pt" text-align="right">ShopeeRent</fo:block>
-							</fo:table-cell>
+							</fo:table-cell>-->
 							<fo:table-cell>
-								<fo:block font-size="6pt" text-align="right">PaymentType</fo:block>
+								<fo:block font-size="6pt" text-align="center">P-Type</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
@@ -190,7 +190,7 @@ under the License.
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 		</fo:static-content>
 		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace" font-size="6pt">
     		<#assign boothDetailList = routesMap.getValue().get("boothWiseMap").entrySet()>
@@ -203,13 +203,13 @@ under the License.
     		</#if>
     		<fo:block font-size="6pt">
 				<fo:table>
-				<fo:table-column column-width="78pt"/>
+				<fo:table-column column-width="70pt"/>
 					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="25pt"/>
 					<fo:table-column column-width="37pt"/>
-					<fo:table-column column-width="50pt"/>
-					<fo:table-column column-width="50pt"/>
-					<fo:table-column column-width="55pt"/>
+					<fo:table-column column-width="45pt"/>
+					<#--<fo:table-column column-width="50pt"/>-->
+					<fo:table-column column-width="25pt"/>
 				<fo:table-body>
 						<fo:table-row>
 						
@@ -299,9 +299,9 @@ under the License.
 							<fo:table-cell>
 								<fo:block font-size="6pt" text-align="right">${boothDetails.getValue().get("amount")?if_exists?string("#0.00")}</fo:block>
 							</fo:table-cell>
-							<fo:table-cell>
+							<#--<fo:table-cell>
 								<fo:block font-size="5pt" text-align="center"><#if shopeeRentAmount?has_content && (shopeeRentAmount.get('amountMap'))?has_content && (shopeeRentAmount.get('amountMap')).get(boothDetails.getKey())?has_content>${shopeeRentAmount.get('amountMap').get(boothDetails.getKey()).get("rentAmount")?string("#0.00")?if_exists}+${shopeeRentAmount.get('amountMap').get(boothDetails.getKey()).get("tax")?string("#0.00")?if_exists}</#if></fo:block>
-							</fo:table-cell>
+							</fo:table-cell>-->
 							<fo:table-cell>
 								<fo:block font-size="5pt" text-align="center">${boothDetails.getValue().get("paymentMode")?if_exists}</fo:block>
 							</fo:table-cell>
@@ -309,18 +309,18 @@ under the License.
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 		</#list>
 		<#assign routeTotals = (routesMap.getValue().get("routeWiseTotals"))>
 		<fo:block font-size="6pt">
 			<fo:table>
-				<fo:table-column column-width="78pt"/>
+				<fo:table-column column-width="70pt"/>
 					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="25pt"/>
 					<fo:table-column column-width="37pt"/>
-					<fo:table-column column-width="50pt"/>
-					<fo:table-column column-width="50pt"/>
-					<fo:table-column column-width="55pt"/>
+					<fo:table-column column-width="45pt"/>
+					<#--<fo:table-column column-width="50pt"/>-->
+					<fo:table-column column-width="25pt"/>
 				<fo:table-body>
 				<fo:table-row>
 					<fo:table-cell>
@@ -491,7 +491,7 @@ under the License.
 					</fo:table-row>	
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -588,12 +588,12 @@ under the License.
 								<#assign totalCrate  = fullCrate>
 						</fo:table-cell>
 						
-						<fo:table-cell>
-						</fo:table-cell>
+						<#--<fo:table-cell>
+						</fo:table-cell>-->
 					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -702,7 +702,7 @@ under the License.
 					</fo:table-row>	
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
 					<fo:table-row>
@@ -776,6 +776,7 @@ under the License.
     	</fo:flow>
 	</fo:page-sequence>	
 	</#list>
+	
 <#else>	
 	<fo:page-sequence master-reference="main">
     	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">

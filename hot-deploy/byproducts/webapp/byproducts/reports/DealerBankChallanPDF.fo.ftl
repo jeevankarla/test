@@ -30,7 +30,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
         <#list routeWiseList as routeBoothsMap>
 		 <fo:page-sequence master-reference="main">
 		<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
-		<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-027VST_ASCII-103 </fo:block>
+		<fo:block text-align="left" keep-together="always" white-space-collapse="false">VST_ASCII-018VST_ASCII-027VST_ASCII-103</fo:block>
 			 <#assign routeId = routeBoothsMap.getKey()>
 		        <#assign  boothWiseSaleList=routeBoothsMap.getValue().entrySet()>
 		          <#assign noOfbooths=0>
