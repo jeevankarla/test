@@ -57,6 +57,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("exportDate","");
 		makeDatePicker("RouteIndentAbstDate","");
 		makeDatePicker("bsFromDateId","fromDateId");
+		makeDatePicker("bsThruDateId","thuDateId");
 		makeDatePicker("smsNotify","");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
