@@ -992,20 +992,21 @@
  				                                                                                
                 <set field="headerItem" value="charts"/>
                 <set field="parlourComparison" value="true"></set>
-               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/FieldStaffComparison.groovy"/>                                                 
+             <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/FieldStaffComparison.groovy"/>  -->                                                
             </actions>            
             <widgets>
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                     <decorator-section name="body">
                    	 <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="AnalyticsTabBar"/>
-                        <container>
+                   	     <label text="Coming Soon....." ></label>
+                        <!-- <container>
                         	<platform-specific> 
                             	<html><html-template location="component://byproducts/webapp/byproducts/reports/fieldStaffComparisonSelection.ftl"/></html>
                         	</platform-specific>                         
                         	<platform-specific> 
                             	<html><html-template location="component://byproducts/webapp/byproducts/reports/fieldStaffComparison.ftl"/></html>
                         	</platform-specific>                        
-                        </container>                      
+                        </container>        -->               
                     </decorator-section>
                 </decorator-screen>
             </widgets>
