@@ -1817,6 +1817,16 @@ public class ByProductNetworkServices {
 	    		Map priceResultMap = getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
 	    		prodPriceMap = (Map)priceResultMap.get("priceMap");
 	    		result.put("productPrice", prodPriceMap);
+	    		
+	    		Map inputCtx = FastMap.newInstance();
+	    		inputCtx.put("userLogin", userLogin);
+	    		inputCtx.put("supplyDate",dayBegin);
+	    		inputCtx.put("facilityId",boothId);
+	    		Map qtyResultMap = getFacilityIndentQtyCategories(dctx, inputCtx);
+	    		prodIndentQtyCat = (Map)qtyResultMap.get("indentQtyCategory");
+	    		qtyInPieces = (Map)qtyResultMap.get("qtyInPieces");
+	    		result.put("prodIndentQtyCat", prodIndentQtyCat);
+	    		result.put("qtyInPieces", qtyInPieces);
 	    	
 	    	}catch (Exception e) {
 	    		Debug.logError(e, e.getMessage());

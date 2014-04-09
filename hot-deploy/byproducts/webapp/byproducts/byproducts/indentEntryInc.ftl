@@ -141,15 +141,16 @@ function updateGrid(){
 					    $('div#changeIndentEntry_spinner').html('');
 						var changeIndentProductList = result["changeIndentProductList"];
 						//var tripId = result["tripId"];
+							prodIndentQtyCat = result["prodIndentQtyCat"];
+							priceTags = result["productPrice"];
+							qtyInPieces = result["qtyInPieces"];
 						if(screenFlag != 'DSCorrection'){
 							var categoryTot = result["categoryTotals"];
 							var tempRouteId = result["tempRouteId"];
 							permanentRouteId = result["routeId"];
 							//var  tripNo = tripId.charAt(tripId.length-1);
 							var routeCrateTotal = result["routeCrateTotal"];
-							prodIndentQtyCat = result["prodIndentQtyCat"];
-							priceTags = result["productPrice"];
-							qtyInPieces = result["qtyInPieces"];
+						
 							routeTotals = result["routeTotalsList"];
 							if(routeCapacity != undefined){
 								if(routeCapacity < routeCrateTotal){
