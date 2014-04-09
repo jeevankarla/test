@@ -129,12 +129,12 @@ $(document).ready(function(){
 				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="byproductsAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
 				<td width="10%"><span class='h3'>By Product Category: </span></td>
 				<td align="left" width="10%">
-					<select name="productCategoryId" class='h4'><option value='allProducts'>All Products</option>
+					<select name="productCategoryId" class='h4'><option value='allProducts'>All Categories</option>
   	    				<option value='Butter'>Butter</option>
   	    				<option value='Curd'>Curd</option>
   	    				<option value='Ghee'>Ghee</option>
   	    				<option value='Milk'>Milk</option>
-  	    				<option value='Other Products'>Other Products</option>
+  	    				<option value='Other Products'>Other</option>
 				</select>
 				</td>
 				

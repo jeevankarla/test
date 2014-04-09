@@ -50,9 +50,9 @@
 		var data = [
         <#if channelReportList?exists> 
 	        <#list channelReportList as channelReport>				
-				{id:"${channelReport.name}" , name:"${channelReport.name}", revenue:"${channelReport.revenue?string("##0.00")}"},
+				{id:"${channelReport.name}" , name:"${channelReport.name}", revenue:"${channelReport.revenue?string("#0")}"},
 			</#list>
-			{id:"Total" , name:"Total", revenue:"${totalRevenue?string("##0.00")}" }			
+			{id:"Total" , name:"Total", revenue:"${totalRevenue?string("#0")}" }			
 		</#if>		
 		];
 		var dataView;
@@ -103,9 +103,9 @@
 		var data = [
         <#if productReportList?exists> 
 	        <#list productReportList as prodReport>	
-	        	{id:"${prodReport.name}" , name:"${prodReport.name}", quantity:"${prodReport.quantity}" , revenue:"${prodReport.revenue?string("##0.00")}"} ,
+	        	{id:"${prodReport.name}" , name:"${prodReport.name}", quantity:"${prodReport.quantity?string("#0")}" , revenue:"${prodReport.revenue?string("#0")}"} ,
 			</#list>
-			{id:"Total" , name:"Total", quantity:"" ,revenue:"${totalRevenue?string("##0.00")}"}
+			{id:"Total" , name:"Total", quantity:"" ,revenue:"${totalRevenue?string("#0")}"}
 		</#if>		
 		];
 		var dataView;
@@ -158,9 +158,9 @@
 		var data = [
         <#if productCatReportList?exists> 
 	        <#list productCatReportList as productCatReport>	
-	        	{id:"${productCatReport.name}" , name:"${productCatReport.name}", quantity:"${productCatReport.quantity}" , revenue:"${productCatReport.revenue?string("##0.00")}"} ,
+	        	{id:"${productCatReport.name}" , name:"${productCatReport.name}", quantity:"${productCatReport.quantity?string("#0")}" , revenue:"${productCatReport.revenue?string("#0")}"} ,
 			</#list>
-			{id:"Total" , name:"Total", quantity:"" ,revenue:"${totalRevenue?string("##0.00")}"}
+			{id:"Total" , name:"Total", quantity:"" ,revenue:"${totalRevenue?string("#0")}"}
 		</#if>		
 		];
 		var dataView;
@@ -214,9 +214,9 @@
 		var data = [
         <#if regionReportList?exists> 
 	        <#list regionReportList as regionReport>	
-	        	{id:"${regionReport.name}" , name:"${regionReport.name}", revenue:"${regionReport.revenue?string("##0.00")}"} ,
+	        	{id:"${regionReport.name}" , name:"${regionReport.name}", revenue:"${regionReport.revenue?string("#0")}"} ,
 			</#list>
-			{id:"Total" , name:"Total" ,revenue:"${totalRevenue?string("##0.00")}"}
+			{id:"Total" , name:"Total" ,revenue:"${totalRevenue?string("#0")}"}
 		</#if>		
 		];
 		var dataView;
