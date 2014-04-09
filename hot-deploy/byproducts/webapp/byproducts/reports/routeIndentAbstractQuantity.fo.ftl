@@ -131,6 +131,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 	         <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
              <fo:block  font-size="8pt" break-after="page"> </fo:block>
 			<#-- eachRoute TotalStarts Here-->
+			<#if !(parameters.summeryOnly?exists)>
            <#assign routeIndentList=routeWiseIndentMap.entrySet()>
 				<#list routeIndentList as routeIndent>
            			<#assign facilityGrandTotal = (Static["java.math.BigDecimal"].ZERO)>
@@ -238,6 +239,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
                  <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block> 
        </fo:block>
    </#list> 
+   </#if>
   </fo:flow>						        	
 </fo:page-sequence>
  <#else>

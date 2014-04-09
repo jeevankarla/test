@@ -118,11 +118,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 					<input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr> 
-        <tr>
+        <tr class="alternate-row">
         	<form id="IndentAbstractReport" name="IndentAbstractReport" method="post"  target="_blank" action="<@ofbizUrl>IndentAbstractReport</@ofbizUrl>">	
       			<td width="34%">RouteWise Indent Abstract Report </td>
-      			<td width="30%">Date<input  type="text" size="18pt" id="RouteIndentAbstDate" readonly  name="supplyDate"/></td>
-      			<#-- <td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="rtIndentSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>-->
+      			<td width="30%">Date<input  type="text" size="18pt" id="RouteIndentAbstDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      			<input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br>
+      			</td>			
       			<td width="36%">Route 
 				 <select name="routeId" class='h4'>
 				<option value='All-Routes'>All</option>
