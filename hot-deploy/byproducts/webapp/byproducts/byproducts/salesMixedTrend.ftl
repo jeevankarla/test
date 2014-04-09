@@ -97,7 +97,7 @@ $(document).ready(function(){
             "${ajaxUrl}",  
             { fromDate: $("#fromDate").val() ,thruDate: $("#thruDate").val() ,
               facilityId : $("input[name=facilityId]").val(), productId : $("input[name=productId]").val(),
-              productCategoryId : $("input[name=productCategoryId]").val()},  
+              productCategoryId : $("select[name=productCategoryId]").val()},  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -128,7 +128,15 @@ $(document).ready(function(){
 				<td width="10%"><span class='h3'>By Product Code: </span></td>
 				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="byproductsAnalysis" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
 				<td width="10%"><span class='h3'>By Product Category: </span></td>
-				<td align="left" width="10%"><@htmlTemplate.lookupField value="${productCategoryId?if_exists}" formName="byproductsAnalysis" name="productCategoryId" id="productCategoryId" fieldFormName="LookupByProductCategory"/></td>
+				<td align="left" width="10%">
+					<select name="productCategoryId" class='h4'><option value='allProducts'>All Products</option>
+  	    				<option value='Butter'>Butter</option>
+  	    				<option value='Curd'>Curd</option>
+  	    				<option value='Ghee'>Ghee</option>
+  	    				<option value='Milk'>Milk</option>
+  	    				<option value='Other Products'>Other Products</option>
+				</select>
+				</td>
 				
 			</tr>
         	<tr>

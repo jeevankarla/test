@@ -35,7 +35,6 @@ import java.math.RoundingMode;
 import javolution.util.FastList;
 import in.vasista.vbiz.byproducts.ByProductReportServices;
 
-
 rounding = RoundingMode.HALF_UP;
 
 fromDate = parameters.fromDate;
@@ -70,7 +69,12 @@ try {
 	context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
-
+filterProductSale = [];
+prodCategory = parameters.productCategoryId;
+if(parameters.productCategoryId != 'allProducts' && parameters.productCategoryId){
+	catProd = delegator.findList("Product", EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, parameters.productCategoryId), ["productId"] as Set, null, null, false);
+	filterProductSale = EntityUtil.getFieldListFromEntityList(catProd, "productId", true);
+}
 dailySalesRevenueTrend = context.dailySalesRevenueTrend;
 if(dailySalesRevenueTrend){
 	try {
@@ -120,26 +124,23 @@ if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, boothsList));
 	context.facilityId = parameters.facilityId;
 }
-if(UtilValidate.isNotEmpty(parameters.productCategoryId)){
+/*if(UtilValidate.isNotEmpty(parameters.productCategoryId)){
 	Map result = ByProductReportServices.getCategoryProducts(dctx, UtilMisc.toMap("productCategoryId", parameters.productCategoryId));
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, result.productIdsList));
 	context.productCategoryId = parameters.productCategoryId;
-}
+}*/
 if(UtilValidate.isNotEmpty(parameters.productId)){
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
 	context.productId = parameters.productId;
+}
+if(UtilValidate.isNotEmpty(filterProductSale)){
+	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, filterProductSale));
 }
 conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED")));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_IN, UtilMisc.toList("BYPROD_GIFT","REPLACEMENT_BYPROD")));
 context.putAt("salesDate", fromDate);
 productList = ByProductNetworkServices.getByProductProducts(dctx, context);
 //conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(productList, "productId", true)));
-
-
-Debug.log("conditionList=" + conditionList, "");
-
-
-
 
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
