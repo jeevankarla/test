@@ -537,18 +537,36 @@
     </menu>
    <menu name="ReportsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="DailyReports" title="${uiLabelMap.DailyReports}">
+             <condition>
+				<or>
+					<if-has-permission permission="BYPRODUCTS"  action="_ADMIN"/>
+					<if-has-permission permission="BYPRODUCTS"  action="_DAILREPOR"/>
+				</or>
+            </condition>
             <link target="DailyReports">
             	<parameter param-name="tabButtonItem2" value="DailyReports"/>
             	<parameter param-name="tabButtonItem" value="reports"/> 
             </link>
        </menu-item>
        <menu-item name="MonthlyReports" title="Monthly Reports">
+           <condition>
+				<or>
+					<if-has-permission permission="BYPRODUCTS"  action="_ADMIN"/>
+					<if-has-permission permission="BYPRODUCTS"  action="_MNTHREPOR"/>
+				</or>
+            </condition>
             <link target="MonthlyReports">
         		<parameter param-name="tabButtonItem2" value="MonthlyReports"/>
         		<parameter param-name="tabButtonItem" value="reports"/>    	
             </link>
         </menu-item>
         <menu-item name="MiscReports" title="Misc Reports">
+             <condition>
+				<or>
+					<if-has-permission permission="BYPRODUCTS"  action="_ADMIN"/>
+					<if-has-permission permission="BYPRODUCTS"  action="_MISCREPOR"/>
+				</or>
+            </condition>
             <link target="MiscReports">
         		<parameter param-name="tabButtonItem2" value="MiscReports"/>
         		<parameter param-name="tabButtonItem" value="reports"/>    	

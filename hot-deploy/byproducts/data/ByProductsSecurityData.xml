@@ -14,6 +14,14 @@
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="BYPRODUCTS_ADMIN"/>
     
     
+    <SecurityPermission description="Special Permission to show and generate trucksheet in the menu." permissionId="TRUCKSHEET_ADMIN"/>
+    <SecurityPermission description="Special Permission to cancel trucksheet in the menu." permissionId="FACILITY_TRUCKSHEETCANCEL"/>
+    
+      <SecurityGroup description="All trucksheet permissions like create,cancel " groupId="TRUCKSHEETADMIN"/>    
+    <SecurityGroupPermission groupId="TRUCKSHEETADMIN" permissionId="TRUCKSHEET_ADMIN"/>
+    <SecurityGroupPermission groupId="TRUCKSHEETADMIN" permissionId="FACILITY_TRUCKSHEETCANCEL"/>
+    
+   
 	<!-- LVD SMS     -->
     <SecurityGroup groupId="SENDLVDSMS" description="SEND LVD SMS GROUP" lastUpdatedStamp="2013-04-13 19:01:57.0" lastUpdatedTxStamp="2013-04-13 19:01:57.0" createdStamp="2013-04-13 19:01:57.0" createdTxStamp="2013-04-13 19:01:57.0"/>
 	<SecurityPermission permissionId="SENDLVDSMS_VIEW" description="Special permission to show and send LVD SMS Report." lastUpdatedStamp="2013-04-13 18:59:55.0" lastUpdatedTxStamp="2013-04-13 18:59:55.0" createdStamp="2013-04-13 18:59:55.0" createdTxStamp="2013-04-13 18:59:55.0"/>
@@ -179,6 +187,25 @@
 	<SecurityGroupPermission groupId="BYPRODUCTS_ANLYTCS" permissionId="ORDERMGR_VIEW"/>
 	<SecurityGroupPermission groupId="BYPRODUCTS_ANLYTCS" permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_ANLYTCS" permissionId="CATALOG_VIEW"/>
-	  
+	  <!--  -->
+	   
+    
+     <SecurityPermission description="Special Permission to View Route Marketing Dispatch Reports" permissionId="BYPRODUCTS_ACTGRPRT"/>
+     <SecurityPermission description="Special Permission to View  Route Marketing Accounting Reports" permissionId="BYPRODUCTS_DISREPORT"/>
+    
+    <SecurityPermission description="Special Permission to View  Daily Reports Tab" permissionId="BYPRODUCTS_DAILREPOR"/>
+    <SecurityPermission description="Special Permission to View  Monthly Reports Tab" permissionId="BYPRODUCTS_MNTHREPOR"/>
+    <SecurityPermission description="Special Permission to View  Misc Reports Tab" permissionId="BYPRODUCTS_MISCREPOR"/>
+    <SecurityPermission description="Special Permission to View  Misc Reports Tab" permissionId="BYPRODUCTS_MKTREPOR"/>
+    
+    <SecurityGroup description="Byproducts Dispatch group" groupId="BYPRODUCTS_DISPAMGR"/>    
+    
+	<SecurityGroupPermission groupId="BYPRODUCTS_DISPAMGR" permissionId="ORDERMGR_VIEW"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_DISPAMGR" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_DISPAMGR" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_DISPAMGR" permissionId="BYPRODREPORTS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_DISPAMGR" permissionId="BYPRODUCTS_DAILREPOR"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_DISPAMGR" permissionId="BYPRODUCTS_DISREPORT"/>
+   
     
 </entity-engine-xml>
