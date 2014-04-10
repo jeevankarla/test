@@ -698,18 +698,26 @@ public class ByProductNetworkServices {
 		    conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"FIELD_STAFF"));
 		    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
 		    try {
-		    	facilityPartyList =delegator.findList("FacilityParty", condition, null , null, null, false);
+		    	facilityPartyList =delegator.findList("FacilityFacilityPartyAndPerson", condition, null , null, null, false);
 		    	facilityPartyList = EntityUtil.filterByDate(facilityPartyList, saleDate);
 		    	for(GenericValue facilityParty : facilityPartyList){
-		    		facilityFieldStaffMap.put(facilityParty.getString("facilityId"), facilityParty.getString("partyId"));
-		    		if(UtilValidate.isNotEmpty(fieldStaffAndFacility.get(facilityParty.getString("partyId")))){
-		    			List facilityList = fieldStaffAndFacility.get(facilityParty.getString("partyId"));
-		    			facilityList.add(facilityParty.getString("facilityId"));
-		    			fieldStaffAndFacility.put(facilityParty.getString("partyId"), facilityList);
-		    			
-		    		}else{
-		    			fieldStaffAndFacility.put(facilityParty.getString("partyId"), UtilMisc.toList(facilityParty.getString("facilityId")));
+		    		List tempFacilityList = FastList.newInstance();
+		    		if(facilityParty.getString("facilityTypeId").equals("ROUTE")){
+		    			tempFacilityList = getBoothList(delegator, facilityParty.getString("facilityId"));
 		    		}
+		    		tempFacilityList.add(facilityParty.getString("facilityId"));
+		    		for(int i=0;i< tempFacilityList.size();i++ ){
+		    			String tempFacilityId = (String)tempFacilityList.get(i);
+		    			facilityFieldStaffMap.put(tempFacilityId, facilityParty.getString("partyId"));
+			    		if(UtilValidate.isNotEmpty(fieldStaffAndFacility.get(facilityParty.getString("partyId")))){
+			    			List facilityList = fieldStaffAndFacility.get(facilityParty.getString("partyId"));
+			    			facilityList.add(tempFacilityId);
+			    			fieldStaffAndFacility.put(facilityParty.getString("partyId"), facilityList);
+			    		}else{
+			    			fieldStaffAndFacility.put(facilityParty.getString("partyId"), UtilMisc.toList(tempFacilityId));
+			    		}
+		    		}
+		    		
 		    	}
 		    	
 			}catch (Exception e) {

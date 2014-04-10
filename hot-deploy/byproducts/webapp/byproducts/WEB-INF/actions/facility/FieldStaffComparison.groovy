@@ -51,8 +51,7 @@ try {
 	if (parameters.thruDate) {
 		context.toDate = parameters.thruDate;
 		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.thruDate).getTime()));
-	}
-	else {
+	}else {
 		context.toDate = UtilDateTime.nowDate();
 		thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 	}
@@ -62,17 +61,20 @@ try {
 	return;
 }
 
-
 dctx = dispatcher.getDispatchContext();
 conditionList = [];
 conditionList.clear();
-shipments = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, thruDate);
+shipments = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate);
+JSONArray fieldStaffDataListJSON = new JSONArray();
+JSONArray labelsJSON = new JSONArray();
+if(UtilValidate.isNotEmpty(shipments)){
 facilityFieldStaff = (ByProductNetworkServices.getFacilityFieldStaff(dctx, context));
 facilityFieldStaffMap = facilityFieldStaff.getAt("facilityFieldStaffMap");
 fieldStaffAndFacility = facilityFieldStaff.getAt("fieldStaffAndFacility");
 /*shipments = ByProductNetworkServices.getByProdShipmentIdsByType(delegator, fromDate, thruDate, "BYPRODUCTS_PRSALE");*/
 /*conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO , fromDate));
 conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO , thruDate));*/
+
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
 if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, parameters.facilityId));
@@ -95,23 +97,24 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
 SortedMap fieldStaffMap = new TreeMap();
 
-
 orderItemList.each{eachItem ->
 	fieldStaffId = facilityFieldStaffMap.get(eachItem.getAt("originFacilityId").trim().toUpperCase());
-	quantity = eachItem.getAt("quantity");
-	unitPrice = eachItem.getAt("unitPrice");
-	amount = quantity * unitPrice;
-	if(fieldStaffMap.containsKey(fieldStaffId)){
-		totalAmount = amount + fieldStaffMap.get(fieldStaffId);
-		fieldStaffMap.put(fieldStaffId, totalAmount);
-	}else{
-		fieldStaffMap.put(fieldStaffId, amount);
+	if(UtilValidate.isNotEmpty(fieldStaffId)){
+		quantity = eachItem.getAt("quantity");
+		unitPrice = eachItem.getAt("unitPrice");
+		amount = quantity * unitPrice;
+		if(fieldStaffMap.containsKey(fieldStaffId)){
+			totalAmount = amount + fieldStaffMap.get(fieldStaffId);
+			fieldStaffMap.put(fieldStaffId, totalAmount);
+		}else{
+			fieldStaffMap.put(fieldStaffId, amount);
+		}
 	}
+	
 }
 
 
-JSONArray fieldStaffDataListJSON = new JSONArray();
-JSONArray labelsJSON = new JSONArray();
+
 int i = 1;
 Iterator mapIter = fieldStaffMap.entrySet().iterator();
 while (mapIter.hasNext()) {
@@ -128,6 +131,8 @@ while (mapIter.hasNext()) {
 	labelsList.add(label);
 	labelsJSON.add(labelsList);
 	++i;
+}
+
 }
 //Debug.logInfo("parlourDataListJSON="+ parlourDataListJSON, "");
 //Debug.logInfo("labelsJSON="+ labelsJSON, "");

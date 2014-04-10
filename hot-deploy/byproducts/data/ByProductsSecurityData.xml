@@ -17,7 +17,7 @@
     <SecurityPermission description="Special Permission to show and generate trucksheet in the menu." permissionId="TRUCKSHEET_ADMIN"/>
     <SecurityPermission description="Special Permission to cancel trucksheet in the menu." permissionId="FACILITY_TRUCKSHEETCANCEL"/>
     
-      <SecurityGroup description="All trucksheet permissions like create,cancel " groupId="TRUCKSHEETADMIN"/>    
+    <SecurityGroup description="All trucksheet permissions like create,cancel " groupId="TRUCKSHEETADMIN"/>    
     <SecurityGroupPermission groupId="TRUCKSHEETADMIN" permissionId="TRUCKSHEET_ADMIN"/>
     <SecurityGroupPermission groupId="TRUCKSHEETADMIN" permissionId="FACILITY_TRUCKSHEETCANCEL"/>
     
@@ -207,5 +207,17 @@
     <SecurityGroupPermission groupId="BYPRODUCTS_DISPAMGR" permissionId="BYPRODUCTS_DAILREPOR"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_DISPAMGR" permissionId="BYPRODUCTS_DISREPORT"/>
    
+   <SecurityGroup description="Byproducts Reports Admin group" groupId="BYPRODUCTS_REPADMIN"/>    
+    
+	<SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="BYPRODUCTS_DAILREPOR"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="BYPRODUCTS_MNTHREPOR"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="BYPRODUCTS_MKTREPOR"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="BYPRODUCTS_MISCREPOR"/>
+   <SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="BYPRODUCTS_ACTGRPRT"/>
+   <SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="BYPRODUCTS_DISREPORT"/>
+   
+    
     
 </entity-engine-xml>
