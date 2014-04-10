@@ -46,7 +46,15 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.js</@ofbizContentUrl>"></script>
 
 <script type="application/javascript">   
-
+function timeConverter(timestamp){
+ 	var a = new Date(timestamp);
+ 	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var time = month + ' ' + date+', '+year;
+    return time;
+ }
 
 $(document).ready(function(){  
 	
@@ -101,11 +109,10 @@ $(document).ready(function(){
                 previousPoint = item.dataIndex;
                 
                 $("#tooltip").remove();
-                var x = item.datapoint[0].toFixed(2),
+                var x = item.datapoint[0],
                     y = item.datapoint[1].toFixed(2);
                 
-                showTooltip(item.pageX, item.pageY,
-                            y + " Lakhs ")
+                showTooltip(item.pageX, item.pageY, timeConverter(x)+ "<br>" + y + " Lakhs ")
             }
         }
         else {
