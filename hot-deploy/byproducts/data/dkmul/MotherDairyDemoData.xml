@@ -42,8 +42,8 @@ SECTION" subtitle="DISPATCH SECTION" title="DISPATCH SECTION" usePrimaryEmailUse
 
 <PaymentMethodType description="Credit Note" paymentMethodTypeId="CREDITNOTE_PAYIN"/>
 
-<Enumeration enumId="MILK_PROCUREMENT" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Invoice and Payment Sms  Configurations"/>
-<TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="MILK_PROCUREMENT" description="MOTHER DAIRY., BENGALURU"/>
+<Enumeration enumId="LMS" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Facility Inventory Configurations"/>
+<TenantConfiguration propertyName="reportHeaderLable" propertyValue="Y" propertyTypeEnumId="LMS" description="KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD."/>
 
 
 <PeriodType description="Institutions Billing Period" periodTypeId="INST_BILL_PERIOD"/>

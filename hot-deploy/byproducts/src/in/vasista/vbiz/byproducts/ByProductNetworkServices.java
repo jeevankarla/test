@@ -730,6 +730,7 @@ public class ByProductNetworkServices {
 	
 	 public static Map<String, Object> getProductPricesByDate(Delegator delegator, LocalDispatcher dispatcher, Map<String, ? extends Object> context) {
 	        Map<String, Object> result = FastMap.newInstance();
+	   	   DispatchContext dctx =  dispatcher.getDispatchContext();
 	        Map<String, Object> priceByDateMap = FastMap.newInstance();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");          
 	        String productStoreId = (String) context.get("productStoreId");
@@ -749,7 +750,7 @@ public class ByProductNetworkServices {
 	        if (UtilValidate.isEmpty(productPriceTypeId)) {
 	        	productPriceTypeId = "DEFAULT_PRICE";
 	        }
-	        
+	       
 	       /* if(UtilValidate.isEmpty(facilityCategory)){
 	        	facilityCategory ="DEFAULT";
 	        }*/
@@ -758,8 +759,12 @@ public class ByProductNetworkServices {
 	        if (UtilValidate.isEmpty(currencyDefaultUomId)) {
 	            currencyDefaultUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "INR");
 	        }
-	        
-	        List<GenericValue> indentProductList=ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
+	        List<GenericValue> indentProductList=FastList.newInstance();
+	        if(context.get("productsList") != null){
+	        	indentProductList=(List<GenericValue>)context.get("productsList");
+	        }else{
+	         indentProductList=ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
+	        }
 
 	        List productIdsList=EntityUtil.getFieldListFromEntityList(indentProductList, "productId", false);
 
@@ -6452,9 +6457,77 @@ public class ByProductNetworkServices {
 			}
 			return result;
 		}
-		
-		
-		
+		   public static Map<String, Object> createAdhocSalePayment(DispatchContext dctx, Map<String, ? extends Object> context){
+		        Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();
+		        String facilityId = (String) context.get("facilityId");
+		        String invoiceId = (String) context.get("invoiceId");
+		        String orderId = (String) context.get("orderId");
+		        BigDecimal paymentAmount = ProductEvents.parseBigDecimalForEntity((String) context.get("amount"));
+		        Locale locale = (Locale) context.get("locale");     
+		        String paymentMethodType = (String) context.get("paymentMethodTypeId");
+		        Map<String, Object> result = ServiceUtil.returnSuccess();
+		        boolean useFifo = Boolean.FALSE;       
+		        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
+		        	useFifo = (Boolean)context.get("useFifo");
+		        }
+		        String paymentType = "SALES_PAYIN";
+		        String partyIdTo ="Company";
+		        String partyIdFrom ="";
+		        String paymentId = "";
+		        boolean roundingAdjustmentFlag =Boolean.TRUE;
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        List exprListForParameters = FastList.newInstance();
+		        List boothOrdersList = FastList.newInstance();
+		        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+		      
+		        Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+		        
+		        try {
+		        	GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId",facilityId), true);
+		    		if(UtilValidate.isEmpty(facility)){
+		    			Debug.logError("Booth doesn't exists with Id: "+facilityId, module);
+		    			return ServiceUtil.returnError("Booth doesn't exists with Id: "+facilityId);    				
+		    		}
+		    		if(UtilValidate.isNotEmpty(facility)){
+		    			partyIdFrom=facility.getString("ownerPartyId");
+		    		}
+		        Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
+		        
+		        paymentCtx.put("paymentMethodTypeId", "CASH_PAYIN");
+	            paymentCtx.put("organizationPartyId", partyIdTo);
+	            paymentCtx.put("partyId", partyIdFrom);
+	            paymentCtx.put("facilityId", facilityId);
+	            /*if (!UtilValidate.isEmpty(paymentLocationId) ) {
+	                paymentCtx.put("paymentLocationId", paymentLocationId);                        	
+	            }   */         
+	          /*  if (!UtilValidate.isEmpty(paymentRefNum) ) {
+	                paymentCtx.put("paymentRefNum", paymentRefNum);                        	
+	            }*/
+	           // paymentCtx.put("issuingAuthority", issuingAuthority);  
+	           // paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
+	            paymentCtx.put("instrumentDate", instrumentDate);
+	            
+	            paymentCtx.put("statusId", "PMNT_RECEIVED");
+	            paymentCtx.put("isEnableAcctg", "N");
+	            paymentCtx.put("amount", paymentAmount);
+	            paymentCtx.put("userLogin", userLogin); 
+	            paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
+	    		
+	            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+	            if (ServiceUtil.isError(paymentResult)) {
+	            	Debug.logError(paymentResult.toString(), module);
+	                return ServiceUtil.returnError(null, null, null, paymentResult);
+	            }
+	            paymentId = (String)paymentResult.get("paymentId");
+	            }catch (Exception e) {
+	            Debug.logError(e, e.toString(), module);
+	            return ServiceUtil.returnError(e.toString());
+		        }
+	             result = ServiceUtil.returnSuccess("Payment successfully done for Party "+facilityId+" ..!");
+	            return result; 
+		   }
+		 
 }
 	
 	

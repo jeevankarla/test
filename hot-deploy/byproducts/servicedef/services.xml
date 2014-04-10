@@ -500,6 +500,16 @@
         <attribute name="boothIds" type="List" mode="IN" optional="false"/>
         <attribute type="List" mode="OUT" name="paymentIds" optional="true"/>
     </service> 
+     <service name="createAdhocSalePayment" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createAdhocSalePayment">
+        <description> create Cash Payment For AdhocSale Booth</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="amount" mode="IN" type="String" optional="false"/>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/> 
+         <attribute name="invoiceId" mode="IN" type="String" optional="false"/> 
+         <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/> 
+    </service>
+    
     <service name="absenteeOverrideForBooth" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="absenteeOverrideForBooth" auth="true">
         <attribute name="facilityId" mode="IN" type="String" optional="false"/>
