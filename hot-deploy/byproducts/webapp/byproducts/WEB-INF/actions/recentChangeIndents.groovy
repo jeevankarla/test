@@ -1,6 +1,7 @@
 import java.util.*;
 
 import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -25,6 +26,7 @@ SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, locale);
 dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp(), timeZone, locale);
 SubProdList = [];
+conditionList = [];
 boothId = null;
 if(("newIndent".equals(changeFlag)) ){
     subscriptionId = null;
@@ -45,7 +47,7 @@ if(("newIndent".equals(changeFlag)) ){
 		modTime = lastIndent.lastUpdatedStamp;
 		modificationTime = dateFormat.format(modTime);
 	}	
-	conditionList = [];
+	
 	if(subscriptionId){		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
@@ -68,9 +70,9 @@ if(("newIndent".equals(changeFlag)) ){
 	
 }
 
-if(("supplDeliverySchedule".equals(changeFlag)) ){
+if(("AdhocSaleNew".equals(changeFlag)) ){
 	
-	List shipmentIds = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"BYPRODUCTS_SUPPL");
+	List shipmentIds = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT");
 	
 	List exprList = [];
 	
@@ -148,19 +150,9 @@ routes.each{eachItem ->
 context.routeJSON = routeJSON;
 //context.productIdLabelJSON = productIdLabelJSON;
 
-/*prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
-JSONArray productItemsJSON = new JSONArray();
-JSONObject productIdLabelsJSON = new JSONObject();
-JSONObject productLabelIdJSON = new JSONObject();
-context.productList = prodList;
-prodList.each{ eachItem ->
-	JSONObject newObj = new JSONObject();
-	newObj.put("value",eachItem.productId);
-	newObj.put("label", eachItem.description );
-	productItemsJSON.add(newObj);
-	productIdLabelsJSON.put(eachItem.productId, eachItem.description)
-	productLabelIdJSON.putAt(eachItem.description, eachItem.productId);
-}
-context.productItemsJSON = productItemsJSON;
-context.productIdLabelJSON = productIdLabelsJSON;
-context.productLabelIdJSON = productLabelIdJSON;*/
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.IN,UtilMisc.toList("Milk","Milk powder","Curd","Ghee","Butter","Chocolate","INDENT","Sweets","Flavoured Milk")));
+condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+productCategory = delegator.findList("ProductCategory", condition, UtilMisc.toSet("productCategoryId"), null, null, false);
+productCategoryIds = EntityUtil.getFieldListFromEntityList(productCategory, "productCategoryId", true);
+context.productCategoryIds=productCategoryIds;

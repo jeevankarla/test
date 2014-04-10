@@ -527,6 +527,12 @@
         <response name="success" type="view" value="FindAdhocSalesOrder"/>
          <response name="failed" type="view" value="FindAdhocSalesOrder"/>
    </request-map>
+   <request-map uri="createAdhocSalePayment">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createAdhocSalePayment"/>   	
+    	<response name="success" type="view" value="FindAdhocSalesOrder"/>
+    	<response name="error" type="view" value="FindAdhocSalesOrder"/>       	
+    </request-map>
    <request-map uri="createInstBillingConfig">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="createInstBillingConfig"/>
@@ -628,6 +634,7 @@
     	<response name="success" type="view" value="FindBoothPayments"/>
     	<response name="error" type="view" value="FindBoothPayments"/>       	
     </request-map>
+    
     <request-map uri="FindFacility">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacility"/>

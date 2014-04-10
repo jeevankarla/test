@@ -583,8 +583,9 @@
        	<field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>       
     </form>
 	<form name="FindAdhocSalesOrder" title="" type="single" target="FindAdhocSalesOrder" header-row-style="header-row" default-table-style="basic-table">
+         <field name="originFacilityId" title="Booth Code"><text-find/></field>
+          <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
-        <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderType"><hidden value="SALES_ORDER"/></field>
         <field name="salesChannelEnumId"><hidden value="RM_DIRECT_CHANNEL"/></field>
         <field name="productSubscriptionTypeId" title="Supply Type">
@@ -602,7 +603,6 @@
         		</entity-options>
         	</drop-down> -->
         </field>
-        <field name="originFacilityId" title="Booth Code"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form> 
@@ -616,13 +616,19 @@
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            
         </actions>
         <row-actions>
             <entity-and entity-name="OrderItemBilling" list="invoices">
                 <field-map field-name="orderId"/>
             </entity-and>
             <set field="invoiceId" from-field="invoices[0].invoiceId"/>  
-            <set field="invTotal" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)}"></set>         
+            <set field="invTotal" value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)}"></set>  
+           
+              <entity-and entity-name="PaymentApplication" list="paymentApplications">
+                <field-map field-name="invoiceId"/>
+            </entity-and>
+           <set field="paymentApplicationId" from-field="paymentApplications[0].paymentApplicationId"/>
         </row-actions>
         <field name="originFacilityId" title="Party Code"><display></display></field>
         <field name="orderId" title="Order Id"><display/></field>
@@ -642,6 +648,17 @@
                   <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
+         <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null" name="PayAmount" widget-style="buttontext"  >
+            <hyperlink target="createAdhocSalePayment" description="Pay Order" target-window="_blank" >
+             <parameter param-name="estimatedDeliveryDate"/>
+                <parameter param-name="orderId"/>
+                  <parameter param-name="invoiceId"/>
+                   <parameter param-name="amount" value="${invTotal}"/>
+                <parameter param-name="statusId"/>
+                <parameter param-name="facilityId"  from-field="originFacilityId"/>
+                  <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
        <!--  <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="EditOrder" widget-style="buttontext" >
             <hyperlink target="AdhocOrderCorrection" description="Edit Order" target-window="_blank">
              <parameter param-name="estimatedDeliveryDate"/>
@@ -938,9 +955,8 @@
         </field>
     </form>
      <form name="ListVehicleCratesReturn" type="list" list-name="routeVehicleCratesList"  paginate="false"  id="VehicleStatusListId"  
-    		 header-row-style="header-row-2"  default-table-style="basic-table hover-bar" separate-columns="true" target="createReturnCrate"  use-row-submit="true"  default-sort-field-desc-style="">
+    		 header-row-style="header-row-2"  default-table-style="basic-table hover-bar"  separate-columns="true" target="createReturnCrate"  use-row-submit="true" >
          <row-actions>
-         
             <entity-condition entity-name="VehicleTrip" list="vehicleTripsList">
     			<condition-list combine="and">
                 		<condition-expr field-name="vehicleId" operator="equals" value="${vehicleId}"/>
@@ -963,10 +979,10 @@
         </field>
         <field name="shipmentId"><hidden/></field>
         <field name="cratesSent" title="Crates Sent"><display></display></field>
-        <field name="returnCrQuantity" title="Crates Received"><text default-value="${cratesReceived}" client-autocomplete-field="true" size="10"/></field>
         <field name="cansSent" title="Cans Sent"><display></display></field>
-          <field name="returnCnQuantity" title="Cans Received"><text default-value="${cansReceived}" client-autocomplete-field="true" size="9"/></field>
-          <field name="UpdateCrates"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"     widget-style="buttontext"> 
+        <field name="returnCrQuantity" title="Crates Received"><text default-value="${cratesReceived}"  size="10"/></field>
+        <field name="returnCnQuantity" title="Cans Received"><text default-value="${cansReceived}"  size="9"/></field>
+        <field name="UpdateCrates"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"     widget-style="buttontext"> 
            <submit button-type="button" />
         </field>
        

@@ -64,7 +64,7 @@
 		var amount = $("#amount").val();
 		var totAmt = $("#totAmt").val();
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
-		{
+		{ 
 			var productId = data[rowCount]["productId"];
 			var prodId = productId.toUpperCase();
 			var qty = parseFloat(data[rowCount]["quantity"]);
@@ -122,38 +122,13 @@
     function productFormatter(row, cell, value, columnDef, dataContext) {   
         return productIdLabelMap[value];
     }
-   /* 
-    function productValidator(value) {
 
-      var currProdCnt = 1;
-	  for (var rowCount=0; rowCount < data.length; ++rowCount)
-	  {  
-		if (value == data[rowCount]["productId"]) {
-			++currProdCnt;
-		}
-	  }
-	  var invalidProdCheck = 0;
-	  for (var rowCount=0; rowCount < availableTags.length; ++rowCount)
-	  {  
-		if (value == availableTags[rowCount]["value"]) {
-			invalidProdCheck = 1;
-		}
-	  }
-      if (currProdCnt > 1) {
-        return {valid: false, msg: "Duplicate Product " + value};      				
-      }
-      if(invalidProdCheck == 0){
-      	return {valid: false, msg: "Invalid Product " + value};
-      }
-      return {valid: true, msg: null};
-    }    
-*/
    function productValidator(value,item) {
       var currProdCnt = 1;
 	  for (var rowCount=0; rowCount < data.length; ++rowCount)
 	  { 
 	  	 
-		if (data[rowCount]['productId'] != null && data[rowCount]['productId'] != undefined && value == data[rowCount]['productId']) {
+		if (data[rowCount]['cProductName'] != null && data[rowCount]['cProductName'] != undefined && value == data[rowCount]['cProductName']) {
 			++currProdCnt;
 		}
 	  }
@@ -177,24 +152,49 @@
 	  }      
       return {valid: true, msg: null};
     }
+    
+    //quantity validator
+	function quantityFormatter(row, cell, value, columnDef, dataContext) { 
+		if(value == null){
+			return "";
+		}
+        return  value;
+    }
+	
+	function rateFormatter(row, cell, value, columnDef, dataContext) { 
+		var formatValue = parseFloat(value).toFixed(2);
+        return formatValue;
+    }
+	
+	
+	
+	function quantityValidator(value ,item) {
+		var quarterVal = value*4;
+		var floorValue = Math.floor(quarterVal);
+		var remainder = quarterVal - floorValue;
+		var remainderVal =  Math.floor(value) - value;
+	     if(remainder !=0 ){
+			return {valid: false, msg: "packets should not be in decimals " + value};
+		}
+      return {valid: true, msg: null};
+    }
 	var mainGrid;		
 	function setupGrid1() {
 
 		var grid;
+		
 		var columns = [
-			{id:"product", name:"Product Code", field:"productId", validator: productValidator, width:200, minWidth:200, cssClass:"cell-title", availableTags: availableTags, formatter: productFormatter, editor: AutoCompleteEditor, sortable:false},
-			{id:"Qty", name:"<#if screenFlag?exists && screenFlag == "DSCorrection">Correction(Qty)<#else>Quantity</#if>", field:"quantity", width:100, minWidth:100, cssClass:"cell-title", editor:FloatCellEditor, sortable:false},
-			{id:"amount", name:"Amount", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, focusable :false}	
-			<#-- {id:"LastQty", name:"<#if screenFlag?exists && screenFlag == "DSCorrection">Original Order(Qty)<#else>Last Qty</#if>", field:"lastQuantity", width:90, minWidth:90, cssClass:"readOnlyColumnClass", sortable:false , focusable :false ,toolTip:"<#if screenFlag?exists && screenFlag == "DSCorrection">Original Order(Qty)[${lastIndentDate?if_exists}]<#else>Last Indent(Qty)[${lastIndentDate?if_exists}]</#if>" }-->
+				{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
+			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
+			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
 		];
 		
-		var options = {
+			var options = {
 			editable: true,		
-			forceFitColumns: false,
-			<#if partyCode?exists>
-    			enableAddRow: true,	
-    		</#if>		
+			forceFitColumns: false,			
 			enableCellNavigation: true,
+			enableAddRow: true,
 			asyncEditorLoading: false,			
 			autoEdit: true,
             secondaryHeaderRowHeight: 25
@@ -206,7 +206,89 @@
 		var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
 		
 		// wire up model events to drive the grid
+        if (data.length > 0) {			
+			$(grid.getCellNode(0, 1)).click();
+		}else{
+			$(grid.getCellNode(0,0)).click();
+		}
+         grid.onKeyDown.subscribe(function(e) {
+			var cellNav = 2;
+			var cell = grid.getCellFromEvent(e);		
+			if(e.which == $.ui.keyCode.UP && cell.row == 0){
+				grid.getEditController().commitCurrentEdit();	
+				$(grid.getCellNode(cell.row+1, 0)).click();
+				e.stopPropagation();
+			}
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == data.length && cell.cell == cellNav){
+				grid.getEditController().commitCurrentEdit();	
+				$(grid.getCellNode(0, 2)).click();
+				e.stopPropagation();
+			}else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.ENTER) && cell.row == (data.length-1) && cell.cell == cellNav){
+				grid.getEditController().commitCurrentEdit();
+				grid.gotoCell(data.length, 0, true);
+				$(grid.getCellNode(data.length, 0)).edit();
+				
+				e.stopPropagation();
+			}
+			
+			else if((e.which == $.ui.keyCode.DOWN || e.which == $.ui.keyCode.RIGHT) && cell 
+				&& cell.row == data.length && cell.cell == cellNav){
+  				grid.getEditController().commitCurrentEdit();	
+				$(grid.getCellNode(cell.row, 0)).click();
+				e.stopPropagation();
+			
+			}else if (e.which == $.ui.keyCode.RIGHT &&
+				cell && (cell.cell == cellNav) && 
+				cell.row != data.length) {
+				grid.getEditController().commitCurrentEdit();	
+				$(grid.getCellNode(cell.row+1, 0)).click();
+				e.stopPropagation();	
+			}
+			else if (e.which == $.ui.keyCode.LEFT &&
+				cell && (cell.cell == 0) && 
+				cell.row != data.length) {
+				grid.getEditController().commitCurrentEdit();	
+				$(grid.getCellNode(cell.row, cellNav)).click();
+				e.stopPropagation();	
+			}else if (e.which == $.ui.keyCode.ENTER) {
+        	  /*	if (cell && cell.cell == 0) {
+					grid.getEditController().commitCurrentEdit();	
+					if (cell.row == 0) {
+						grid.navigateRight();    
+						grid.navigateUp(); 
+					} else {
+        				$(grid.getCellNode(cell.row - 1, cellNav)).click();
+        			}
+        			e.stopPropagation();	
+        			return false;
+        		}  */
+        		grid.getEditController().commitCurrentEdit();
+				if(cell.cell == 1 || cell.cell == 2){
+					jQuery("#changeSave").click();
+				}
+            	e.stopPropagation();
+            	e.preventDefault();        	
+            }else if (e.keyCode == 27) {
+             //here ESC to Save grid
+        		if (cell && cell.cell == 0) {
+        			$(grid.getCellNode(cell.row - 1, cellNav)).click();
+        			return false;
+        		}  
+        		grid.getEditController().commitCurrentEdit();
+				   
+            	e.stopPropagation();
+            	e.preventDefault();        	
+            }
+            
+            else {
+            	return false;
+            }
+        });
+         
+         
 
+
+/*
 		grid.onKeyDown.subscribe(function(e) {		
 			var cell = grid.getCellFromEvent(e);			
 			if (e.which == $.ui.keyCode.RIGHT &&
@@ -224,12 +306,11 @@
             else {
             	return false;
             }
-        });
+        }); */
        
     	  grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
-      		var productLabel = item['productId']; 
-      		productLabelIdMap[productLabel]
+      		var productLabel = item['cProductName']; 
       		item['productId'] = productLabelIdMap[productLabel];     		 		
       		grid.invalidateRow(data.length);
       		data.push(item);
@@ -237,36 +318,62 @@
       		grid.render();
     	});
         grid.onCellChange.subscribe(function(e,args) {
-        	if (args.cell == 0 || args.cell == 1) {		
-				var qty = parseFloat(data[args.row]["quantity"]);
+        	if (args.cell == 0 || args.cell == 1) {
 				var prod = data[args.row]["productId"];
+				var qty = parseFloat(data[args.row]["quantity"]);
 				var price = parseFloat(priceTags[prod]);
 				if(isNaN(price)){
-					data[args.row]["amount"] = 0;
+					price = 0;
 				}
-				else{
-					var roundedAmount = Math.round((qty*price) * 100) / 100
-					data[args.row]["amount"] = (roundedAmount);
+				if(isNaN(qty)){
+					qty = 0;
 				}
+				
+				var roundedAmount;
+					roundedAmount = Math.round(qty*price);
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				data[args.row]["unitPrice"] = price;
+				data[args.row]["amount"] = roundedAmount;
 				grid.updateRow(args.row);
 				var totalAmount = 0;
 				for (i = 0; i < data.length; i++) {
 					totalAmount += data[i]["amount"];
 				}
 				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
-				
+			
 				if(amt > 0 ){
-					var dispText = "<b> [Total: Rs" +  amt + "]</b>";
+					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
 				}
 				else{
-					var dispText = "<b> [Total: Rs 0 ]</b>";
+					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
 				}
 				jQuery("#totalAmount").html(dispText);
-				jQuery("#amount").val(amt);
-				jQuery("#totAmt").val(amt);
+			}
+		}); 
+		
+		grid.onActiveCellChanged.subscribe(function(e,args) {
+        	if (args.cell == 1 && data[args.row] != null) {
+				var prod = data[args.row]["productId"];
 			}
 			
-		}); 
+		});
+		
+		grid.onValidationError.subscribe(function(e, args) {
+        var validationResult = args.validationResults;
+        var activeCellNode = args.cellNode;
+        var editor = args.editor;
+        var errorMessage = validationResult.msg;
+        var valid_result = validationResult.valid;
+        
+        if (!valid_result) {
+           $(activeCellNode).attr("tittle", errorMessage);
+            }else {
+           $(activeCellNode).attr("tittle", "");
+        }
+
+    });
 		updateProductTotalAmount();
 		function updateProductTotalAmount() {
 			for(var i=0;i<data.length;i++){

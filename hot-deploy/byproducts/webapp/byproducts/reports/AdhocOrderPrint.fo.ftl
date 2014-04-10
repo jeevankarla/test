@@ -35,7 +35,7 @@ under the License.
 		        <fo:page-sequence master-reference="main">		        	
 		        	<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 		        	      <fo:block  border-style="solid" font-family="Courier,monospace">
-		        	             <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "MILK_PROCUREMENT","propertyName" : "reportHeaderLable"}, true)>
+		        	             <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "LMS","propertyName" : "reportHeaderLable"}, true)>
 		        	            <fo:block text-align="center" border-style="solid">
 		        	            <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="9pt" keep-together="always">&#160;                                                      &#160;                                           </fo:block>
 							    <fo:block text-align="center" font-family="Helvetica" white-space-collapse="false" font-size="10pt" keep-together="always">${reportHeader.description}</fo:block>

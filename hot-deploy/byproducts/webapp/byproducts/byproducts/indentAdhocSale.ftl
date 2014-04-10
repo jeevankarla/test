@@ -70,6 +70,41 @@ $(document).ready(function(){
 	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
       <table width="100%" border="0" cellspacing="0" cellpadding="0">     
         <tr>
+          <td>&nbsp;</td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Products Type:</div></td>
+          <td>&nbsp;</td>
+       <#if productCatageoryId?exists && booth?exists>
+	  	  <input type="hidden" name="productCatageoryId" id="productCatageoryId" value="${parameters.productCatageoryId}"/>   	   	   	   
+          <td valign='middle'>
+            <div class='tabletext h2'>
+               	${productCatageoryId}             
+            </div>
+          </td>       
+       <#else>
+          <td valign='middle'>
+          	<#assign isDefault = false> 
+      		<select name="productCatageoryId" class='h2'>
+      		<option  value="" >Milk&Products</option>      			     			
+                <#list productCategoryIds as prodCategory>
+                	<#if !productCatageoryId?exists>    
+	                  	<#assign isDefault = false>                
+	                    <#if prodCategory == "INDENT">
+	                      <#assign isDefault = true>
+	                    </#if> 
+                    </#if>
+                    <#if productCatageoryId?exists && (productCatageoryId == prodCategory)>
+      					<option  value="${productCatageoryId}" selected="selected">${prodCategory}</option>
+      					<#else>
+      						<option value='${prodCategory}'<#if isDefault> selected="selected"</#if>>
+                    			${prodCategory}
+                  		</option>
+      				</#if>
+      			</#list>            
+			</select>
+          </td>
+       </#if>  
+       </tr>    
+        <tr>
           <td>&nbsp;<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
            <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/> 
            </td>
@@ -188,6 +223,7 @@ $(document).ready(function(){
 </form>
     </div>
 </div>
+<#--
  	<div class="screenlet">
     <div class="screenlet-body">
  		<div class="grid-header" style="width:100%">
@@ -195,7 +231,7 @@ $(document).ready(function(){
 		</div>    
 		<div>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<#--<tr><td><br/></td></tr>
+				<tr><td><br/></td></tr>
 		        <tr>
 		        	<td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Bank Name: </div></td>
           			<td>&nbsp;</td>
@@ -219,12 +255,12 @@ $(document).ready(function(){
              			<input class='h3' type="text" size="25" maxlength="25" name="chequeDate" id="chequeDate"/>          
           			</td>
  		       </tr>
- 		       <tr><td><br/></td></tr>-->
+ 		       <tr><td><br/></td></tr>
  		       <tr>
 		        	<td align='left' valign='middle' nowrap="nowrap"><div  class='h3'>Amount: </div></td>
           			<td>&nbsp;</td>
 		         	<td valign='middle'> 
-             			<input class='h3' type="text" size="25" maxlength="25" name="amount" id="amount" /><#--<span class="tooltip">Input Payment details and press Enter</span>-->
+             			<input class='h3' type="text" size="25" maxlength="25" name="amount" id="amount" />
              			<input class='h3' type="hidden" name="totAmt" id="totAmt" />         
           			</td>
  		       </tr>
@@ -233,7 +269,7 @@ $(document).ready(function(){
 		</div>		
     </div>
 	</div>
- 				
+ 			-->	
 <div class="screenlet">
     <div class="screenlet-body">
  		<div class="grid-header" style="width:100%">

@@ -176,9 +176,23 @@ if(lastIndentDate){
 	lastIndentDate = UtilDateTime.toDateString(lastIndentDate, "MMMM dd, yyyy");
 }
 context.lastIndentDate = lastIndentDate;
-//prodList = ProductWorker.getProductsByCategory(delegator ,"LMS" ,null);
+prodList=[];
 
+if(UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
+	prodList= ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
+}else if(UtilValidate.isNotEmpty(productCatageoryId)){
+exprList.clear();
+exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
+exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
+exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, productCatageoryId));
+exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+		 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
+  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+}
+else{
 prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
+}
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
 JSONObject productLabelIdJSON=new JSONObject();
@@ -191,13 +205,10 @@ prodList.each{eachItem ->
 	productIdLabelJSON.put(eachItem.productId, eachItem.brandName+" [ "+eachItem.description +"]");
 	productLabelIdJSON.put(eachItem.brandName+" [ "+eachItem.description+"]", eachItem.productId);
 }
-
 productPrices = [];
 Map prodPriceMap =[:];
 if(boothId){
 	productStoreId = ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-	
-	
 	Map inputProductRate = FastMap.newInstance();
 	inputProductRate.put("productStoreId", productStoreId);
 	inputProductRate.put("fromDate",effDateDayBegin);
@@ -205,45 +216,9 @@ if(boothId){
 	inputProductRate.put("partyId",partyId);
 	inputProductRate.put("facilityCategory",facilityParty.categoryTypeEnum);
 	inputProductRate.put("userLogin",userLogin);
+	inputProductRate.put("productsList",prodList);
 	Map priceResultMap =ByProductNetworkServices.getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
 	prodPriceMap = (Map)priceResultMap.get("priceMap");
-	//result.put("productPrice", prodPriceMap);
-	
-	
-	
-	/*inMap = [:];
-	inMap.productStoreId = productStoreId;
-	result = ByProductServices.getProdStoreProducts(dctx, inMap)
-	productsList = result.productIdsList;
-	
-	productsList.each{ eachProd ->
-		prodPrice = [:];
-		priceContext = [:];
-		priceResult = [:];
-		Map<String, Object> priceResult;
-		priceContext.put("userLogin", userLogin);
-		priceContext.put("productStoreId", productStoreId);
-		priceContext.put("productId", eachProd);
-		priceContext.put("priceDate", effDateDayBegin);
-		priceContext.put("facilityId", boothId);
-		priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);
-		if(!ServiceUtil.isError(priceResult)){
-			if (priceResult) {
-				unitCost = (BigDecimal)priceResult.get("basicPrice");
-				taxList = priceResult.get("taxList");
-				totalAmount = BigDecimal.ZERO;
-				if(taxList){
-					taxList.each{eachItem ->
-						taxAmount = (BigDecimal)eachItem.get("amount");
-						totalAmount = totalAmount.add(taxAmount);
-					}
-				}
-				prodPrice.productId = eachProd;
-				prodPrice.unitCost = (unitCost.add(totalAmount));
-				productPrices.add(prodPrice);
-			}
-		}
-	}*/
 }
 JSONObject productCostJSON = new JSONObject();
 productCostJSON=prodPriceMap;

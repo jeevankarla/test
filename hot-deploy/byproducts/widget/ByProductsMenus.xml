@@ -280,7 +280,6 @@
       <menu-item name="AdhocSale" title="Adhoc Sale"> 
         <condition>
         	<and>
-        		<not><if-empty field="ctxFacilityId"/></not>
         		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
         	</and>        		
         </condition>  
@@ -355,7 +354,6 @@
         <menu-item name="InstBillingPeriodSearch" title="Cr. Inst. Billing Config">
         	<condition>
         		<and>
-        			<not><if-empty field="ctxFacilityId"/></not>
         			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
         		</and>        		
         	</condition>         
