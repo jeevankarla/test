@@ -123,9 +123,11 @@ $(document).ready(function(){
 				<td align="left" width="10%">
 					<select name="productCategoryId" class='h4'><option value='allProducts'>All Categories</option>
   	    				<option value='Butter'>Butter</option>
+  	    				<option value='ButterMilk'>Butter Milk</option>
   	    				<option value='Curd'>Curd</option>
   	    				<option value='Ghee'>Ghee</option>
   	    				<option value='Milk'>Milk</option>
+  	    				<option value='Paneer'>Paneer</option>
   	    				<option value='Other Products'>Other</option>
 					</select>
 				</td>

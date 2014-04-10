@@ -1191,53 +1191,6 @@ public class ByProductReportServices {
  	    	return result;
 	    }
 	 
-	  	/*public static Map<String, Object>  sendLVDSms(DispatchContext dctx, Map<String, Object> context)  {
-	        LocalDispatcher dispatcher = dctx.getDispatcher();	
-	        Delegator delegator = dctx.getDelegator();
-	        GenericValue userLogin = (GenericValue) context.get("userLogin");		
-			Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-			Map<String, Object> todaysSalesTotals = getDayDespatchDetails(dctx, UtilMisc.toMap("userLogin", userLogin));
-			BigDecimal dayDespatchTotal = (BigDecimal)todaysSalesTotals.get("totalValue");
-			List lastParlourSales = FastList.newInstance();
-			Timestamp lastParlourSaleDate = null;
-			BigDecimal saleTotalValue = BigDecimal.ZERO;
-			List orderList = FastList.newInstance();
-			List conditionList = FastList.newInstance();
-	    	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
-	    	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
-    		conditionList.add(EntityCondition.makeCondition("salesChannelEnumId", EntityOperator.EQUALS, "PARLOR_SALES_CHANNEL"));
-        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	    	try{
-	    		 lastParlourSales = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, UtilMisc.toSet("estimatedDeliveryDate"), UtilMisc.toList("-estimatedDeliveryDate"), null, false);
-	    		 if(UtilValidate.isNotEmpty(lastParlourSales)){
-	    			 GenericValue lastSale = (GenericValue)EntityUtil.getFirst(lastParlourSales);
-	    			 lastParlourSaleDate = (Timestamp)lastSale.get("estimatedDeliveryDate");
-	    			 saleTotalValue = (BigDecimal)getTotalSales(dctx, UtilMisc.toMap("fromDate", lastParlourSaleDate,"thruDate", lastParlourSaleDate,"userLogin",userLogin)).get("totalValue");
-	    		 }
-	    	}
-	    	catch(GenericEntityException e){
-	    		Debug.logError("Unable to get records from OrderHeaderItemProductShipmentAndFacility"+e, module);
-	    		return ServiceUtil.returnError("Unable to get records from OrderHeaderItemProductShipmentAndFacility ");
-	    	}
-			
-			dayDespatchTotal = dayDespatchTotal.setScale(0, rounding);
-			saleTotalValue = saleTotalValue.setScale(0, rounding);
-			try {
-				// Send SMS notification to list
-				String text = "Today's (" + UtilDateTime.toDateString(nowTimestamp, "dd/MM/yyyy") + ") Last Vehicle Despatch (LVD) completed at "+UtilDateTime.toDateString(nowTimestamp, "hh:mm a") +". Despatched Value: Rs. " +dayDespatchTotal+ 				
-				". Last ("+UtilDateTime.toDateString(lastParlourSaleDate, "dd/MM/yyyy")+ ") Sale Value: Rs. "+saleTotalValue+". Message sent from Milkosoft.";
-				Debug.logInfo("Sms text: " + text, module);
-				Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
-					"text", text, "userLogin", userLogin);			
-				dispatcher.runAsync("sendSmsToContactListNoCommEvent", sendSmsContext);
-			}
-			catch (GenericServiceException e) {
-				Debug.logError(e, "Error calling sendSmsToContactListNoCommEvent service", module);
-				return ServiceUtil.returnError(e.getMessage());			
-			} 
-	        return ServiceUtil.returnSuccess("Sms successfully sent!");		
-		}*/
-	  	
 	  	public static Map<String, Object>  sendSMSNotification(DispatchContext dctx, Map<String, Object> context)  {
 	        LocalDispatcher dispatcher = dctx.getDispatcher();	
 	        Delegator delegator = dctx.getDelegator();
@@ -1282,6 +1235,8 @@ public class ByProductReportServices {
 			BigDecimal curdTotal = BigDecimal.ZERO;
 			BigDecimal butterTotal = BigDecimal.ZERO;
 			BigDecimal gheeTotal = BigDecimal.ZERO;
+			BigDecimal butterMilkTotal = BigDecimal.ZERO;
+			BigDecimal paneerTotal = BigDecimal.ZERO;
 			BigDecimal otherTotal = BigDecimal.ZERO;
 			
 			Iterator categoryIter = catTotals.entrySet().iterator();
@@ -1300,6 +1255,12 @@ public class ByProductReportServices {
                 else if(categoryId.equalsIgnoreCase("Ghee")){
                 	gheeTotal = (BigDecimal)catTotals.get(categoryId);
                 }
+                else if(categoryId.equalsIgnoreCase("ButterMilk")){
+                	butterMilkTotal = (BigDecimal)catTotals.get(categoryId);
+                }
+                else if(categoryId.equalsIgnoreCase("Paneer")){
+                	paneerTotal = (BigDecimal)catTotals.get(categoryId);
+                }
                 else{
                 	otherTotal = otherTotal.add((BigDecimal)catTotals.get(categoryId));
                 }
@@ -1309,14 +1270,16 @@ public class ByProductReportServices {
 			curdTotal = curdTotal.setScale(0, rounding);
 			gheeTotal = gheeTotal.setScale(0, rounding);
 			butterTotal = butterTotal.setScale(0, rounding);
+			paneerTotal = paneerTotal.setScale(0, rounding);
+			butterMilkTotal = butterMilkTotal.setScale(0, rounding);
 			otherTotal = otherTotal.setScale(0, rounding);
 			String subTypeText = "AM";
 			if(subscriptionTypeId.equals("PM")){
-				subTypeText = "(AM+PM)";
+				subTypeText = "AM+PM";
 			}
 			try {
 				// Send SMS notification to list
-				String text = "[TEST] "+displayDate +" "+subTypeText+" Dispatch Totals --- MILK: "+milkTotal+" Ltrs; CURD: "+curdTotal+" Ltrs; GHEE: "+gheeTotal+" Kgs; BUTTER: "+butterTotal+" Kgs; OTHR: " +otherTotal+" Kgs. From Milkosoft.";
+				String text = displayDate +" ("+subTypeText+") Dispatch Totals -- MILK: "+milkTotal+" Ltrs; CURD: "+curdTotal+" Ltrs; GHEE: "+gheeTotal+" Kgs; BTR: "+butterTotal+" Kgs; PNR: "+paneerTotal+" Kgs; MBM: "+butterMilkTotal+" Ltrs; OTH: " +otherTotal+" Kgs. From Milkosoft.";
 				Debug.logInfo("Sms text: " + text, module);
 				Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
 					"text", text, "userLogin", userLogin);			
