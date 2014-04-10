@@ -18,8 +18,15 @@
           <td>&nbsp;<input type="hidden" name="hideSearch"  value="N"/></td>
           <td align='right' valign='middle' nowrap="nowrap"><div class='h3'>${uiLabelMap.SupplyDate}:</div></td>
           <td>&nbsp;</td>
-          <td valign='middle'>
-           <div class='h3'><input type="text" id="date" name="supplyDate" value="${defaultEffectiveDate?if_exists}"/></div></td>
+          <#if supplyDate?exists && supplyDate?has_content>  
+          <td valign='middle'> 
+	  	  <div class='h3'>         
+            		<input class='h2' type="text" name="supplyDate" id="date" value="${supplyDate?if_exists}"/> </div> </td>
+       	  <#else> 
+          <td valign='middle'> 
+          	<div class='h3'>         
+            		<input class='h2' type="text" name="supplyDate" id="date" value="${defaultEffectiveDate?if_exists}"/> </div> </td>
+       	</#if>
         </tr> 
         <tr><td><br/></td></tr>    
         <tr>

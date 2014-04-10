@@ -100,7 +100,7 @@ shipmentTypeId="";
 		}
 		/*conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));*/
 		EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		List<GenericValue> shipmentList = delegator.findList("Shipment", cond, null, null, null, false);
+		List<GenericValue> shipmentList = delegator.findList("Shipment", cond, null,UtilMisc.toList("routeId"), null, false);
 		shipmentIds.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
 		routeIdsList.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "routeId", false))
 		conditionList.clear();
@@ -108,7 +108,7 @@ shipmentTypeId="";
 		/*conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, routeId));*/
 		//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("RETURN_CANCELLED")));
 		EntityCondition vhCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		List<GenericValue> vehicleTrpList = delegator.findList("VehicleTrip", vhCondition, null, null, null, false);
+		List<GenericValue> vehicleTrpList = delegator.findList("VehicleTrip", vhCondition, null, UtilMisc.toList("originFacilityId"), null, false);
 		List<GenericValue> vehicleTripStatusList=FastList.newInstance();
 		List routeVehicleCratesList=FastList.newInstance();
 		if(UtilValidate.isNotEmpty(vehicleTrpList)){
@@ -125,7 +125,7 @@ shipmentTypeId="";
 				 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, routeId));
 				 }*/
 				EntityCondition vhTripCondi = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				List<GenericValue> tempVehicleTripStatusList = delegator.findList("VehicleTripStatus", vhTripCondi, null, UtilMisc.toList("-estimatedStartDate"), null, false);
+				List<GenericValue> tempVehicleTripStatusList = delegator.findList("VehicleTripStatus", vhTripCondi, null, UtilMisc.toList("-estimatedStartDate","facilityId"), null, false);
 				if(UtilValidate.isNotEmpty(tempVehicleTripStatusList)){
 					GenericValue vehicleTripStatus=EntityUtil.getFirst(tempVehicleTripStatusList);
 					vehicleTripStatusList.add(vehicleTripStatus);//only needs to get one valid status for each shipment which is recent one
