@@ -332,7 +332,6 @@
          <menu-item name="EmployeeSearch" title="Employee Subsidy Milk">
             <condition>
         		<and>
-        			<not><if-empty field="ctxFacilityId"/></not>
         			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
         		</and>        		
         	</condition>   
