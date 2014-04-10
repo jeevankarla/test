@@ -246,6 +246,12 @@ public class ByProductServices {
 		     Debug.logImportant("stopShipList ======"+stopList, "");
 		     stopShipList = UtilMisc.toList(stopShipSet);
 		 } 
+		//add inactive list to stop shiplist
+		List boothInActiveList = (List) (ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator ,null ,estimatedDeliveryDate)).get("boothInActiveList");
+		if(UtilValidate.isNotEmpty(boothInActiveList)){
+			stopShipList.addAll(EntityUtil.getFieldListFromEntityList(boothInActiveList, "facilityId", true));
+		}
+		Debug.logImportant("stopShipList ======"+stopShipList, "");
 		List creditInstList= (List)ByProductNetworkServices.getAllBooths(delegator, "CR_INST").get("boothsList");
 		List<GenericValue> facilityCustomTimePeriod = FastList.newInstance();
 		
@@ -2488,7 +2494,7 @@ public class ByProductServices {
 			  			  return "error";
 		  	          }
 		  	          paymentId = (String) resultMap.get("paymentId");
-		  	          Debug.log("payment created for facility =="+facilityId+"-->"+paymentId);
+		  	          //Debug.log("payment created for facility =="+facilityId+"-->"+paymentId);
 		  		  }
 		  	 }//end of loop
 		  	 GenericValue routeFacility = delegator.findOne("Facility", UtilMisc.toMap("facilityId",partyCode),false);
@@ -2507,7 +2513,7 @@ public class ByProductServices {
 				  		  return "error";
 			  	        }
 			  	        invoiceId = (String) result.get("invoiceId");
-			  	        Debug.log("short payment invoice =="+partyCode+"-->"+invoiceId);
+			  	        //Debug.log("short payment invoice =="+partyCode+"-->"+invoiceId);
 		  			 }
 		  			 
 		  			 if(paidAmount.compareTo(dealerGrandPayment)>0){
@@ -2522,7 +2528,7 @@ public class ByProductServices {
 				  		  return "error";
 			  	        }
 			  	        paymentId = (String) result.get("paymentId");
-			  	        Debug.log("transporter payment =="+partyCode+"-->"+paymentId);
+			  	       // Debug.log("transporter payment =="+partyCode+"-->"+paymentId);
 			  	        
 		  			 }
 		  		 }
@@ -3194,7 +3200,7 @@ public class ByProductServices {
 			    		  String prodId = (String)productQtyMap.get("productId");
 			    		  BigDecimal qty = (BigDecimal)productQtyMap.get("quantity");
 			    		  
-			    		  Debug.log("calculating return items prices for product : "+prodId);
+			    		  //Debug.log("calculating return items prices for product : "+prodId);
 	    				  Map<String, Object> priceContext = FastMap.newInstance();
 		                  priceContext.put("userLogin", userLogin);   
 		                  priceContext.put("productStoreId", productStoreId);                    
@@ -3208,14 +3214,14 @@ public class ByProductServices {
 		                       return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
 		                  }  
 		                  BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
-		                  Debug.log("calculated return items prices for product : "+totalPrice.intValue());
+		                  //Debug.log("calculated return items prices for product : "+totalPrice.intValue());
 		                  totalPrice = totalPrice.multiply(qty);
 		                  totalReturnAmount = totalReturnAmount.add(totalPrice);
-		                  Debug.log("calculated return items prices for product : "+totalReturnAmount.intValue());
+		                  //Debug.log("calculated return items prices for product : "+totalReturnAmount.intValue());
 	    			  }
 	    			  Timestamp dayBegin = UtilDateTime.getDayStart(effectiveDate);
 	    			  Timestamp dayEnd = UtilDateTime.getDayEnd(effectiveDate);
-	    			  Debug.log("calculated return items prices : "+totalReturnAmount);
+	    			  //Debug.log("calculated return items prices : "+totalReturnAmount);
 	    			  List condList = FastList.newInstance();
 	    			  condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
 	    			  condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
@@ -3641,7 +3647,7 @@ public class ByProductServices {
                 priceContext.put("facilityId", orderHeader.getString("originFacilityId")); 
                 priceContext.put("priceDate", orderHeader.getTimestamp("estimatedDeliveryDate"));
                 
-                Debug.log("priceContext==================="+priceContext);
+                //Debug.log("priceContext==================="+priceContext);
                 Map priceResult = calculateByProductsPrice(delegator, dispatcher, priceContext);            			
                 if (ServiceUtil.isError(priceResult)) {
                     Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
@@ -3797,7 +3803,7 @@ public class ByProductServices {
 				   	        	 }
 				   	         }
 				   	     }
-			   	         Debug.log("temp facId changeIndentProductList"+changeIndentProductList);
+			   	        // Debug.log("temp facId changeIndentProductList"+changeIndentProductList);
 				   	     if(prvQty.intValue()>0){
 				   	    	
 		   		        	 Map<String, Object> input = FastMap.newInstance();
@@ -3836,7 +3842,7 @@ public class ByProductServices {
 							return ServiceUtil.returnError("Error in getting subscriptionId  : "+tempFacId);
 				 
 				   	     }
-				   	     Debug.log("temp facId end subscriptionId"+subscriptionId);
+				   	    // Debug.log("temp facId end subscriptionId"+subscriptionId);
 		   		         
 		   	             Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
 					  	 processChangeIndentHelperCtx.put("subscriptionId", subscriptionId);
@@ -3905,7 +3911,7 @@ public class ByProductServices {
 	   	     EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	   	     List<GenericValue> subscription = delegator.findList("Subscription", cond, UtilMisc.toSet("subscriptionId"), null, null ,false);
 		    	subscription = EntityUtil.filterByDate(subscription, fromDate); 
-		    	Debug.log("subscription"+subscription);
+		    	//Debug.log("subscription"+subscription);
 	   	     if(UtilValidate.isNotEmpty(subscription)){
 		   	    	 subscriptionId = (EntityUtil.getFirst(subscription)).getString("subscriptionId");
 		   	     }else{
@@ -4923,7 +4929,7 @@ public class ByProductServices {
 	 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
 	 			  EntityCondition CustCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	 			  custTimePeriodList = delegator.findList("CustomTimePeriod", CustCondition, null, null, null,false); 
-	 			  Debug.log("customTimePeriodId"+custTimePeriodList);
+	 			 // Debug.log("customTimePeriodId"+custTimePeriodList);
 	 			 if(UtilValidate.isNotEmpty(custTimePeriodList)){
 	 			      customTimePeriodId=((GenericValue)EntityUtil.getFirst(custTimePeriodList)).getString("customTimePeriodId");
 	 			      Debug.log("customTimePeriodId"+customTimePeriodId);

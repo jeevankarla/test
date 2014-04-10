@@ -20,6 +20,7 @@
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.base.util.*;
+
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import java.math.RoundingMode;
@@ -27,6 +28,9 @@ import org.ofbiz.service.ServiceUtil;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
+
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.Delegator;
@@ -67,7 +71,12 @@ context.hideSearch = hideSearch;
 
 dayBegin = UtilDateTime.getDayStart(supplyDate);
 dayEnd = UtilDateTime.getDayEnd(supplyDate);
+List boothInActiveList = (List) (ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator ,null ,supplyDate)).get("boothInActiveList");
 
+stopShipList =[];
+if(UtilValidate.isNotEmpty(boothInActiveList)){
+	stopShipList.addAll(EntityUtil.getFieldListFromEntityList(boothInActiveList, "facilityId", true));
+}
 boothsResultMap = [:];
 routeMap = [:];
 tripMap = [:];
@@ -79,7 +88,7 @@ if(hideSearch == "N") {
 	exprList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 	exprList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd),
 				   EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
-	if(facilityId){
+	if(facilityId ){
 		exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	}
 	if(productId){
@@ -120,6 +129,8 @@ if(hideSearch == "N") {
 	
 	condition = EntityCondition.makeCondition(exprList, EntityOperator.AND); 
 	quotaSubProdList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, ["sequenceNum", "tripNum", "facilityId"], null, false);
+	// filter out inactive facilities
+	quotaSubProdList = EntityUtil.filterByCondition(quotaSubProdList, EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN ,stopShipList));
 	prodList = EntityUtil.getFieldListFromEntityList(quotaSubProdList,"productId",true);
 	facilityList = EntityUtil.getFieldListFromEntityList(quotaSubProdList, "facilityId", true);
 	routeList = EntityUtil.getFieldListFromEntityList(quotaSubProdList, "sequenceNum", true);

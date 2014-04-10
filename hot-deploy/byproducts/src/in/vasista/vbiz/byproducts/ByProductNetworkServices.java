@@ -2517,6 +2517,17 @@ public class ByProductNetworkServices {
 			return result;
 		}
 		
+		public static Map<String, Object> getAllActiveOrInactiveBooths(Delegator delegator,String categoryTypeEnum, Timestamp dateMoment){
+		    Map<String, Object> result = FastMap.newInstance(); 
+		    List<GenericValue> boothsList =   (List<GenericValue>)getAllBooths(delegator, categoryTypeEnum).get("boothsDetailsList");
+		    List<GenericValue> boothActiveList = EntityUtil.filterByDate(boothsList, dateMoment, "openedDate", "closedDate", Boolean.FALSE);
+		    boothsList.removeAll(boothActiveList);
+		   // List<GenericValue> boothInActiveList = 
+		    result.put("boothActiveList", boothActiveList);
+		    result.put("boothInActiveList", boothsList);
+		    return result;
+		}
+		
 		// This will return the list of boothIds for the given zone and (optional) booth category type
 		public static List getZoneBooths(Delegator delegator,String zoneId, String boothCategory){
 	    	List<String> boothIds = FastList.newInstance();  

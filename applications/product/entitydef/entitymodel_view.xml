@@ -272,6 +272,7 @@ under the License.
 	    <member-entity entity-alias="P" entity-name="Person"/>    
 		<alias-all entity-alias="FP" />    
 	    <alias entity-alias="FA" name="facilityName"/>
+	     <alias entity-alias="FA" name="facilityTypeId"/>
 	    <alias entity-alias="FA" name="parentFacilityId"/>
       	<alias entity-alias="P" name="firstName" />
       	<alias entity-alias="P" name="lastName" />
