@@ -89,7 +89,7 @@ $(document).ready(function(){
             "${ajaxUrl}",  
             { fromDate: $("#fromDate").val() ,thruDate: $("#thruDate").val() ,
               facilityId : $("input[name=facilityId]").val(), productId : $("input[name=productId]").val(),
-              productCategoryId : $("select[name=productCategoryId]").val()},  
+              productCategoryId : $("select[name=productCategoryId]").val(), subscriptionTypeId : $("select[name=subscriptionTypeId]").val()},  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -127,15 +127,22 @@ $(document).ready(function(){
   	    				<option value='Ghee'>Ghee</option>
   	    				<option value='Milk'>Milk</option>
   	    				<option value='Other Products'>Other</option>
-				</select>
+					</select>
 				</td>
-				
 			</tr>
         	<tr>
         		<td align="right" width="10%"><span class='h3'>From: </span></td>
             	<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate"/></td>
 				<td width="2%"><span class='h3'>To: </span></td>
 				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate"/></td>
+				<td align="right" width="10%"><span class='h3'>Shift: </span></td>
+				<td align="left" width="10%">
+					<select name="subscriptionTypeId" class='h4'><option value='All'>ALL</option>
+  	    				<option value='AM'>AM</option>
+  	    				<option value='PM'>PM</option>
+					</select>
+				</td>
+				
 				<td><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>
 			</tr>
     	</table> 

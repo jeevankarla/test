@@ -135,12 +135,29 @@ $(document).ready(function(){
             	<td width="20%"><input class='h2' type="text" id="fromDate" name="fromDate"/></td>
 				<td width="2%"><span class='h3'>To: </span></td>
 				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate"/></td>
+				<td width="10%"><span class='h3'>By Product Category: </span></td>
+				<td align="left" width="10%">
+					<select name="productCategoryId" class='h4'><option value='allProducts'>All Categories</option>
+  	    				<option value='Butter'>Butter</option>
+  	    				<option value='Curd'>Curd</option>
+  	    				<option value='Ghee'>Ghee</option>
+  	    				<option value='Milk'>Milk</option>
+  	    				<option value='Other Products'>Other</option>
+					</select>
+				</td>
 			</tr>
 			<tr>
         		<td align="left" width="10%"><span class='h3'>By Party/Route Code: </span></td>
             	<td align="left" width="15%"><@htmlTemplate.lookupField value="${facilityId?if_exists}" formName="daySalesRevenueTrend" name="facilityId" id="facilityId" fieldFormName="LookupFacility"/></td>
 				<td width="10%"><span class='h3'>By Product Code: </span></td>
 				<td align="left" width="15%"><@htmlTemplate.lookupField value="${productId?if_exists}" formName="daySalesRevenueTrend" name="productId" id="productId" fieldFormName="LookupProduct"/></td>
+				<td width="2%"><span class='h3'>Shift: </span></td>
+				<td align="left" width="10%">
+					<select name="subscriptionTypeId" class='h4'><option value='All'>ALL</option>
+  	    				<option value='AM'>AM</option>
+  	    				<option value='PM'>PM</option>
+					</select>
+				</td>
 				<td><input type="submit" value="Submit" id="button1" class="smallSubmit"/></td>				
 			</tr>        	
     	</table> 
