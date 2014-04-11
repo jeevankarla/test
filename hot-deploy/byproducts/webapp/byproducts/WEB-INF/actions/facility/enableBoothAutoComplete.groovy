@@ -31,6 +31,7 @@ JSONObject supplyRouteItemsJSON = new JSONObject();
 JSONArray routesJSON = new JSONArray();
 Set routesSet = new HashSet();
 conditionList = [];
+Am_RoutesIds=[];
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.IN ,UtilMisc.toList("ROUTE","BOOTH")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 routesFacilitiesList = delegator.findList("Facility",condition,null,null,null,false);
@@ -95,7 +96,6 @@ if(tempRoute){
 	JSONObject facilityItemsJSON = new JSONObject();
 	JSONArray boothsJSON = new JSONArray();
 	Set boothsSet = new HashSet();
-	
 	routesList.each{route ->
 		boothsList = ByProductNetworkServices.getRouteBooths(delegator , UtilMisc.toMap("routeId",route.facilityId)).get("boothsList");
 		boothsList = EntityUtil.filterByDate(boothsList, nowTimestamp, "openedDate", "closedDate", true);
@@ -122,11 +122,15 @@ if(tempRoute){
 		}
 		routeId = route.facilityId;
 		facilityItemsJSON.put(routeId, boothItemsJSON);
+		//using for Indent ManualCollection report
+		if(UtilValidate.isEmpty(parameters.routeId)&& (Am_RoutesIds.contains(routeId))){
 		routeCollectionMap.put(routeId, routeBoothsList);
+		}else if(Am_RoutesIds.contains(routeId) &&(parameters.routeId==routeId)){
+		routeCollectionMap.put(parameters.routeId, routeBoothsList);
+		}
 	}
 	context.facilityItemsJSON = facilityItemsJSON;
 	context.boothsJSON = boothsJSON;
 	context.routeCollectionMap = routeCollectionMap;
 }
-
 context.routesJSON = routesJSON;

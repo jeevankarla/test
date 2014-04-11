@@ -113,6 +113,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	      			
 	      			<td width="33%">Route 
 					<select name="routeId" class='h4'>
+					<option value=''>All</option>
 						<#list routesList as route>    
 	  	    				<option value='${route}'>${route}</option>
 						</#list>  
