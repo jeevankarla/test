@@ -22,13 +22,15 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
-                      margin-right=".2in" margin-left=".2in" >
+                      margin-right=".2in" margin-left="1in" >
                 <fo:region-body margin-top="1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-         ${setRequestAttribute("indent_collection", "indentCollection.txt")}       
+         ${setRequestAttribute("indent_collection", "indentCollection.txt")} 
+           <#assign routesList = routeCollectionMap.entrySet()>
+         <#list routesList as routeBooths>      
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block font-size="10pt">VST_ASCII-015</fo:block> 
@@ -37,38 +39,37 @@ under the License.
 			    <fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
         	</fo:static-content>
             <fo:flow flow-name="xsl-region-body"  font-size="7pt" font-family="Courier,monospace">
-            <fo:block text-align="left" keep-together="always"  font-size="11pt" white-space-collapse="false">&#160;          RouteCode:${parameters.routeId}                                 DAILY INDENTS FOR __________________________________                                        SupplyDate: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy")}</fo:block>
+            <fo:block text-align="left" keep-together="always"  font-size="11pt" white-space-collapse="false">&#160;          RouteCode:${routeBooths.getKey()}                            DAILY INDENTS FOR __________________________________                 SupplyDate: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy")}</fo:block>
             	 <fo:block font-family="Courier,monospace" >                
-                <fo:block font-size="7pt">|----------|--------------------------|---------|--------|---------|---------|---------|---------|--------|--------|--------|--------|---------|--------|-------|-------|---------|---------|-------|-------|-------|-------|-------|--------|-------|-------|-------|</fo:block>
+                <fo:block font-size="7pt">|----------|-----------------|---------|-------|---------|---------|-------|---------|--------|--------|-------|-------|--------|--------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|</fo:block> 
                 <fo:table  border-style="dotted">
                     <fo:table-column column-width="45pt"/>
-                    <fo:table-column column-width="115pt"/>  
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="37pt"/>
-                    <fo:table-column column-width="47pt"/>
-                    <fo:table-column column-width="42pt"/> 
-                     <fo:table-column column-width="37pt"/>
-                    <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="75pt"/>  
+                    <fo:table-column column-width="37pt"/>
+                    <fo:table-column column-width="33pt"/>
                     <fo:table-column column-width="37pt"/> 
                      <fo:table-column column-width="37pt"/>
-                    <fo:table-column column-width="42pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="30pt"/>
                     <fo:table-column column-width="30pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="30pt"/> 
-                     <fo:table-column column-width="30pt"/>
-                    <fo:table-column column-width="33pt"/>
-                    <fo:table-column column-width="45pt"/> 
+                    <fo:table-column column-width="37pt"/> 
                      <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="37pt"/>
+                    <fo:table-column column-width="37pt"/> 
+                     <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="35pt"/> 
+                     <fo:table-column column-width="30pt"/>
                     <fo:table-column column-width="30pt"/>
                     <fo:table-column column-width="30pt"/> 
                      <fo:table-column column-width="30pt"/>
-                    <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="28pt"/> 
+                     <fo:table-column column-width="28pt"/>
+                    <fo:table-column column-width="28pt"/>
+                    <fo:table-column column-width="30pt"/> 
+                     <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="30pt"/> 
+                     <fo:table-column column-width="30pt"/>
 		          	<fo:table-header  border-style="dotted">
 		            			<fo:table-cell padding="3pt"  border-style="dotted"><fo:block text-align="left" >|CODE   </fo:block><fo:block text-align="left" >| </fo:block></fo:table-cell>		                    	                  
 		            			<fo:table-cell padding="3pt"  border-style="dotted"><fo:block text-align="left">|    NAME   </fo:block><fo:block text-align="left" >| </fo:block></fo:table-cell>
@@ -129,12 +130,12 @@ under the License.
 		            			<fo:block text-align="left" >| 250</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="left" >| CRD 2</fo:block>
-		            			<fo:block text-align="left" >|  </fo:block>
+		            			<fo:block text-align="left" >| CRD</fo:block>
+		            			<fo:block text-align="left" >|  2</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="left" >| CRD 5</fo:block>
-		            			<fo:block text-align="left" >| </fo:block>
+		            			<fo:block text-align="left" >| CRD</fo:block>
+		            			<fo:block text-align="left" >| 5</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
 		            			<fo:block text-align="left" >| MBM</fo:block>
@@ -177,56 +178,57 @@ under the License.
 		            			TMS 1 L	TMS 500	TMS 6 Ltr	SBM 1 Ltr	SBM 500	DTMS 1 Itr	DTMS 500	DTMS 250	HCM 500	HCM 250	FCSM 500	NSM 1000	NSM 500	NSM 250	CRD 2	CRD 5	MBM 200	SL 200	SLM 200	G2SP	G5ML	SLIM	GL 200	GL 500
 		            				 -->                   	                  		            
 				    </fo:table-header>		
-				   <#assign boothList= routeCollectionMap.get(parameters.routeId?if_exists)>        
+				   <#assign boothList= routeBooths.getValue()>        
                     <fo:table-body>                    	
 	                        <fo:table-row >
 	                        	<fo:table-cell  >	
-	                            	 <fo:block font-size="7pt">|----------|--------------------------|---------|--------|---------|---------|---------|---------|--------|--------|--------|--------|---------|--------|-------|-------|---------|---------|-------|-------|-------|-------|-------|--------|-------|-------|-------|</fo:block>                               
+	                            	    <fo:block font-size="7pt">|----------|-----------------|---------|-------|---------|---------|-------|---------|--------|--------|-------|-------|--------|--------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|</fo:block>                              
 	                            </fo:table-cell>	
 	                        </fo:table-row>
 	                        </fo:table-body>
                 </fo:table>
                  <fo:table>
-                 <fo:table-column column-width="45pt"/>
-                    <fo:table-column column-width="112pt"/>  
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="40pt"/>
-                    <fo:table-column column-width="42pt"/> 
-                     <fo:table-column column-width="42pt"/>
-                    <fo:table-column column-width="42pt"/>
-                    <fo:table-column column-width="42pt"/> 
-                     <fo:table-column column-width="37pt"/>
+                  <fo:table-column column-width="45pt"/>
+                    <fo:table-column column-width="75pt"/>  
                     <fo:table-column column-width="37pt"/>
-                    <fo:table-column column-width="37pt"/> 
-                     <fo:table-column column-width="39pt"/>
-                    <fo:table-column column-width="42pt"/>
-                    <fo:table-column column-width="40pt"/> 
-                     <fo:table-column column-width="32pt"/>
-                    <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="37pt"/>
                     <fo:table-column column-width="42pt"/> 
                      <fo:table-column column-width="42pt"/>
                     <fo:table-column column-width="33pt"/>
-                    <fo:table-column column-width="32pt"/> 
+                    <fo:table-column column-width="42pt"/> 
+                     <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="37pt"/>
+                    <fo:table-column column-width="33pt"/> 
+                     <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="38pt"/> 
+                     <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="33pt"/>
+                    <fo:table-column column-width="33pt"/> 
                      <fo:table-column column-width="33pt"/>
                     <fo:table-column column-width="35pt"/>
-                    <fo:table-column column-width="35pt"/> 
-                     <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="33pt"/> 
+                     <fo:table-column column-width="33pt"/>
+                    <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="33pt"/> 
+                     <fo:table-column column-width="33pt"/>
                     <fo:table-column column-width="33pt"/>
                     <fo:table-column column-width="35pt"/> 
-                     <fo:table-column column-width="35pt"/>
-                    <fo:table-column column-width="40pt"/>
+                     <fo:table-column column-width="33pt"/>
+                     <fo:table-column column-width="33pt"/>  
                  <fo:table-body>
                     <#list  boothList as booth>
                     <fo:table-row>
                     <fo:table-cell border-style="dotted" ><fo:block text-align="left" >| ${booth.get("code")}</fo:block><fo:block text-align="left" >| </fo:block></fo:table-cell>		                    	                  
-		            			<fo:table-cell  border-style="dotted"  ><fo:block text-align="left" >|${booth.get("name")}</fo:block><fo:block text-align="left" >| </fo:block></fo:table-cell>
-		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="left" >|</fo:block>
-		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:table-cell  border-style="dotted"  ><fo:block text-align="left" >|${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(booth.get("name")?if_exists)),20)}</fo:block><fo:block text-align="left" >| </fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="left" >|</fo:block>
-		            			<fo:block text-align="left" >|</fo:block>
+		            			<fo:block text-align="left" >|&#160;</fo:block>
+		            			<fo:block text-align="left" >|&#160;</fo:block>
+		            			</fo:table-cell>
+		            			<fo:table-cell padding="3pt"  border-style="dotted">
+		            			<fo:block text-align="left" >&#160;|&#160;</fo:block>
+		            			<fo:block text-align="left" >&#160;|&#160;</fo:block>
 		            			</fo:table-cell>
 		            			<fo:table-cell padding="3pt"  border-style="dotted">
 		            			<fo:block text-align="left" >| </fo:block>
@@ -320,14 +322,11 @@ under the License.
 		            			<fo:block text-align="left" >|</fo:block>
 		            			<fo:block text-align="left" >|</fo:block>
 		            			</fo:table-cell>
-		            			<fo:table-cell padding="3pt"  border-style="dotted">
-		            			<fo:block text-align="left" >|</fo:block>
-		            			<fo:block text-align="left" >|</fo:block>
-		            			</fo:table-cell>
+		            			
                     </fo:table-row>
                     <fo:table-row>
                     <fo:table-cell>	
-	                            	 <fo:block font-size="7pt">|----------|--------------------------|---------|--------|---------|---------|---------|---------|--------|--------|--------|--------|---------|--------|-------|-------|---------|---------|-------|-------|-------|-------|-------|--------|-------|-------|-------|</fo:block>                               
+                        	   <fo:block font-size="7pt">|----------|-----------------|---------|-------|---------|---------|-------|---------|--------|--------|-------|-------|--------|--------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|</fo:block>                               
 	                </fo:table-cell>
                     </fo:table-row>
                     </#list>
@@ -336,5 +335,6 @@ under the License.
                  </fo:block>
            </fo:flow>
         </fo:page-sequence>
+         </#list>
      </fo:root>
 </#escape>
