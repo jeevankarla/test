@@ -833,14 +833,16 @@ function updateGrid(){
 			
 				
 				
-			function setRouteBoothsDropDown(selection){	
-				if(typeof selection.value == "undefined"){
-				   selection.value = $("#routeId").val();
-				}
-				boothsList = routeBoothsData[selection.value];
-				if(selection.value =="" || typeof selection.value == "undefined"){
-					boothsList =  ${StringUtil.wrapString(boothsJSON)}
-				}	
+			function setRouteBoothsDropDown(selection){
+			  <#if screenFlag?exists && screenFlag != 'DSCorrection'>
+					if(typeof selection.value == "undefined"){
+					   selection.value = $("#routeId").val();
+					}
+					boothsList = routeBoothsData[selection.value];
+					if(selection.value =="" || typeof selection.value == "undefined"){
+						boothsList =  ${StringUtil.wrapString(boothsJSON)}
+					}
+			   </#if>
 			}
 			<#if subscriptionTypeId?exists && subscriptionTypeId?has_content> 
 				routesList =  supplyRouteList["${subscriptionTypeId}"]; 
