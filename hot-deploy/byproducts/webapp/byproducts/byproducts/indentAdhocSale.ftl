@@ -121,10 +121,29 @@ $(document).ready(function(){
             		<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		</td>
        	</#if>
         </tr>
+         <tr><td><br/></td></tr>    
+          <tr>
+          <td>&nbsp;</td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Vehicle Id:</div></td>
+          <td>&nbsp;</td>
+       <#if vehicleId?exists && vehicleId?has_content>  
+	  	  <input type="hidden" name="?if_exists" id="?if_exists" value="${vehicleId?if_exists}"/>  
+          <td valign='middle'>
+            <div class='tabletext h2'>
+               	${vehicleId?if_exists}              
+            </div>
+          </td>       
+       <#else>               
+          <td valign='middle'>
+          <input type="text" name="vehicleId" id="vehicleId" />    
+             <span class="tooltip">Fill if Vehicle Number exists</span>       
+          </td>
+       </#if>
+        </tr> 
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Customer Id:</div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Retailer Id:</div></td>
           <td>&nbsp;</td>
        <#if booth?exists && booth?has_content>  
 	  	  <input type="hidden" name="boothId" id="boothId" value="${booth.facilityId.toUpperCase()}"/>  
@@ -141,7 +160,7 @@ $(document).ready(function(){
           </td>
        </#if>
         </tr> 
-        <tr><td><br/></td></tr>     
+         <tr><td><br/></td></tr>     
            <tr>
           <td>&nbsp;</td>
           <td align='left' valign='middle' nowrap="nowrap" ><div class='h2'>Name :</div></td>
@@ -219,6 +238,7 @@ $(document).ready(function(){
 	<input type="hidden" name="subscriptionTypeId" id="subscriptionTypeId" value="${parameters.subscriptionTypeId?if_exists}"/>
 	<input type="hidden" name="destinationFacilityId" id="destinationFacilityId" value="${parameters.destinationFacilityId?if_exists}"/>
 	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
+	<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
 	<br>
 </form>
     </div>

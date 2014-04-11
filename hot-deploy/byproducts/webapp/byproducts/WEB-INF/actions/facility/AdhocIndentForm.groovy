@@ -222,9 +222,20 @@ if(boothId){
 }
 JSONObject productCostJSON = new JSONObject();
 productCostJSON=prodPriceMap;
-/*prodPriceMap.each{eachProdPrice ->
-	productCostJSON.put(eachProdPrice.productId,eachProdPrice.unitCost);
-}*/
+
+JSONObject prodIndentQtyCat = new JSONObject();
+JSONObject qtyInPieces = new JSONObject();
+
+inputCtx = [:];
+inputCtx.put("userLogin", userLogin);
+inputCtx.put("supplyDate",effDateDayBegin);
+inputCtx.put("facilityId",boothId);
+Map qtyResultMap =ByProductNetworkServices.getFacilityIndentQtyCategories(dispatcher.getDispatchContext(), inputCtx);
+prodIndentQtyCat = qtyResultMap.get("indentQtyCategory");
+qtyInPieces = qtyResultMap.get("qtyInPieces");
+context.prodIndentQtyCat = prodIndentQtyCat;
+context.qtyInPieces = qtyInPieces;
+
 context.productItemsJSON = productItemsJSON;
 context.productIdLabelJSON = productIdLabelJSON;
 context.productCostJSON = productCostJSON;

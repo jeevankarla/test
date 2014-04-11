@@ -3968,6 +3968,7 @@ public class ByProductServices {
 	 	  List invoices = FastList.newInstance(); 
 	 	  //String chequeDate = (String) request.getParameter("chequeDate");
 	 	  String routeId = (String) request.getParameter("routeId");
+	 	 String vehicleId = (String) request.getParameter("vehicleId");
 	 	  String effectiveDateStr = (String) request.getParameter("effectiveDate");
 	 	  String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
 	 	  String shipmentTypeId = (String) request.getParameter("shipmentTypeId");
@@ -4095,6 +4096,7 @@ public class ByProductServices {
 	   	   newDirShip.set("shipmentTypeId", shipmentTypeId);
 	   	   newDirShip.set("statusId", "GENERATED");
 	   	   newDirShip.set("originFacilityId", boothId);
+	   	   newDirShip.set("vehicleId", vehicleId);
 	   	   newDirShip.set("routeId", routeId);
 	   	   newDirShip.set("createdDate", nowTimeStamp);
 	   	   newDirShip.set("createdByUserLogin", userLogin.get("userLoginId"));

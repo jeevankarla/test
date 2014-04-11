@@ -44,6 +44,8 @@
 	var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};	
 	var routeAutoJson = ${StringUtil.wrapString(routesJSON)!'[]'};
+	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};
+	var qtyInPieces=${StringUtil.wrapString(qtyInPieces)!'[]'};
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
 			return {valid:false, msg:"This is a required field"};
@@ -184,8 +186,9 @@
 		var grid;
 		
 		var columns = [
-				{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
+			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			{id:"crQuantity", name:"Qty(Cr/Can)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
 		];
@@ -322,13 +325,23 @@
 				var prod = data[args.row]["productId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var price = parseFloat(priceTags[prod]);
+				var indentCat = prodIndentQtyCat[prod];
+				var qtyInBulk = qtyInPieces[prod];
 				if(isNaN(price)){
 					price = 0;
 				}
 				if(isNaN(qty)){
 					qty = 0;
 				}
-				
+				if(indentCat == null && indentCat == undefined){
+					data[args.row]["crQuantity"] = "";
+				}
+				else{
+					if(!isNaN(qty) && qtyInBulk != 0){
+						data[args.row]["crQuantity"] = parseFloat(Math.round((qty/qtyInBulk)*100)/100);
+					}
+					
+				}
 				var roundedAmount;
 					roundedAmount = Math.round(qty*price);
 				if(isNaN(roundedAmount)){
@@ -351,6 +364,57 @@
 				}
 				jQuery("#totalAmount").html(dispText);
 			}
+			
+				if (args.cell == 2) {
+				var prod = data[args.row]["productId"];
+				var qty = parseFloat(data[args.row]["crQuantity"]);
+				var indentCat = prodIndentQtyCat[prod];
+				var qtyInBulk = qtyInPieces[prod];
+				var price = parseFloat(priceTags[prod]);
+				var qtyPieces;
+				if(indentCat == null && indentCat == undefined){
+					data[args.row]["quantity"] = qty;
+				}
+				else{
+					if(!isNaN(qty)){
+						data[args.row]["quantity"] = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
+						qtyPieces = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
+					}
+					
+				}
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(qtyPieces)){
+					qtyPieces = 0;
+				}
+				
+				
+				var roundedAmount = Math.round(qtyPieces*price);
+				
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				data[args.row]["unitPrice"] = price;
+				data[args.row]["amount"] = roundedAmount;
+				grid.updateRow(args.row);
+				
+				var totalAmount = 0;
+				for (i = 0; i < data.length; i++) {
+					totalAmount += data[i]["amount"];
+				}
+				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
+			
+				if(amt > 0 ){
+					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+				}
+				else{
+					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+				}
+				jQuery("#totalAmount").html(dispText);
+			}
+			
+		
 		}); 
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {

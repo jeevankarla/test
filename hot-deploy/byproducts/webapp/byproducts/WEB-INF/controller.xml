@@ -412,6 +412,10 @@
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="InvoiceTXT"/>
     </request-map>
+     <request-map uri="orderSlip.txt">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="orderSlipTXT"/>
+    </request-map>
      <request-map uri="MLDGenerateTruckSheet.txt">
      	<security https="true" auth="true"/>
         <response name="success" type="view" value="MLDGenerateTruckSheetTXT"/>
@@ -527,6 +531,11 @@
         <response name="success" type="view" value="FindAdhocSalesOrder"/>
          <response name="failed" type="view" value="FindAdhocSalesOrder"/>
    </request-map>
+    <request-map uri="AdhocTruckSheetReport.txt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdhocTruckSheetReportTXT"/>
+   </request-map>
+   
    <request-map uri="createAdhocSalePayment">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createAdhocSalePayment"/>   	
@@ -796,8 +805,8 @@
 
     <view-map name="MilkDeliveryScheduleReport" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#MilkDeliveryScheduleReport" content-type="text/plain"/> 
     <view-map name="RouteAbstractReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetReportTXT" content-type="text/plain"/>
-   <!--  <view-map name="InvoiceTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#InvoiceTXT" content-type="text/plain"/> -->
-   <view-map name="InvoiceTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#orderSlipTXT" content-type="text/plain"/>
+    <view-map name="InvoiceTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#InvoiceTXT" content-type="text/plain"/><!-- for AdhocSale We are Using Invoice -->
+   <view-map name="orderSlipTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#orderSlipTXT" content-type="text/plain"/> 
     
      <view-map name="MLDGenerateTruckSheetTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetReportTXT" content-type="text/plain"/>
     <view-map name="ChangeIndentInit" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ChangeIndentInit"/>
@@ -856,6 +865,8 @@
     <view-map name="FindAdhocSalesOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindAdhocSalesOrder"/>
     <view-map name="AdhocOrderCorrection" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AdhocOrderCorrection"/>
     <view-map name="printAdhocOrderPDF" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#printAdhocOrderPDF" content-type="application/pdf"/>
+     <view-map name="AdhocTruckSheetReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#AdhocTruckSheetReportTXT"  content-type="text/plain" />
+ 
  <!-- Transporter views -->
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>

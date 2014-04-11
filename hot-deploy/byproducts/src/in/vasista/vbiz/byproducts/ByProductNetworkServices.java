@@ -4413,7 +4413,8 @@ public class ByProductNetworkServices {
 	    				}
 	    			}
 				}
-				//handle dayWise Totals			 			
+				//handle dayWise Totals	if empty ignore this type of totals	
+				if(UtilValidate.isNotEmpty(dayShipmentMap)){
 				String currentSaleDate = dayShipmentMap.get(orderItem.getString("shipmentId"));
 				if (dayWiseTotals.get(currentSaleDate) == null) {
 					Map<String, Object> newMap = FastMap.newInstance();
@@ -4572,6 +4573,7 @@ public class ByProductNetworkServices {
 	    				}
 	    			}
 				}	
+	    	}
 				/*// Handle zone totals
 				String zoneName = (String)zone.get("name");
 				String zoneId = (String)zone.get("zoneId");

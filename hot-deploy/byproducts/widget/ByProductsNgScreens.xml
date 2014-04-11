@@ -1572,6 +1572,7 @@
                  <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
                   <set field="priceTypeId" from-field="parameters.priceTypeId"/>
                     <set field="productCatageoryId" from-field="parameters.productCatageoryId"/>
+                     <set field="vehicleId" from-field="parameters.vehicleId"/>
                 <!-- <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getNextDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />  -->              

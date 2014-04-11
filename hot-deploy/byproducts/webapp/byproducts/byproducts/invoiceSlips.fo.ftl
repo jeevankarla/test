@@ -19,8 +19,8 @@ under the License.
 <#escape x as x?xml>
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
-      <fo:simple-page-master master-name="main" page-height="11in" page-width="7in">
-        margin-top="1in" margin-bottom=".5in" margin-left=".1in" margin-right=".1in">
+      <fo:simple-page-master master-name="main" page-height="12in" page-width="10in">
+        margin-top="1in" margin-bottom=".5in" margin-left=".3in" margin-right=".3in">
           <fo:region-body margin-top="1in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
