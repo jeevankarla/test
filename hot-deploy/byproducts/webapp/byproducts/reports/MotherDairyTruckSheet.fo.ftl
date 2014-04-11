@@ -196,11 +196,11 @@ under the License.
     		<#assign boothDetailList = routesMap.getValue().get("boothWiseMap").entrySet()>
     		<#assign noOfbooths=0>
     		<#list boothDetailList as boothDetails>    	
-    		<#assign noOfbooths=noOfbooths+1>	
-    		<#if (noOfbooths==11) >
+    		<#if (noOfbooths==10) >
     			<fo:block  break-after="page"></fo:block>
     			<#assign noOfbooths=0>
     		</#if>
+    		<#assign noOfbooths=noOfbooths+1>
     		<fo:block font-size="6pt">
 				<fo:table>
 				<fo:table-column column-width="70pt"/>
@@ -312,6 +312,9 @@ under the License.
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 		</#list>
 		<#assign routeTotals = (routesMap.getValue().get("routeWiseTotals"))>
+		<#if (boothDetailList.size()%10 == 0) >
+    		<fo:block  break-after="page"></fo:block>
+   		</#if>
 		<fo:block font-size="6pt">
 			<fo:table>
 				<fo:table-column column-width="70pt"/>
