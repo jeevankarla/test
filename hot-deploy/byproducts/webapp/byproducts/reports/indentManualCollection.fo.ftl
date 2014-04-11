@@ -39,7 +39,7 @@ under the License.
 			    <fo:block text-align="center" keep-together="always" white-space-collapse="false">          UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
         	</fo:static-content>
             <fo:flow flow-name="xsl-region-body"  font-size="7pt" font-family="Courier,monospace">
-            <fo:block text-align="left" keep-together="always"  font-size="11pt" white-space-collapse="false">&#160;          RouteCode:${routeBooths.getKey()}                            DAILY INDENTS FOR __________________________________                 SupplyDate: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy")}</fo:block>
+            <fo:block text-align="left" keep-together="always"  font-size="11pt" white-space-collapse="false">&#160;          RouteCode:${routeBooths.getKey()}                            DAILY INDENTS FOR __________________________________                 SupplyDate:<#if parameters.supplyDate?has_content>${parameters.supplyDate}<#else>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy")}</#if></fo:block>
             	 <fo:block font-family="Courier,monospace" >                
                 <fo:block font-size="7pt">|----------|-----------------|---------|-------|---------|---------|-------|---------|--------|--------|-------|-------|--------|--------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|</fo:block> 
                 <fo:table  border-style="dotted">

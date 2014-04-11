@@ -55,6 +55,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("CLRFromDateId","thuDateId");
 		makeDatePicker("DBCFromDateId","thuDateId");
 		makeDatePicker("exportDate","");
+		makeDatePicker("NIMCDate","");
 		makeDatePicker("RouteIndentAbstDate","");
 		makeDatePicker("bsFromDateId","fromDateId");
 		makeDatePicker("bsThruDateId","thuDateId");
@@ -110,7 +111,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	       <tr>
 	        	<form id="nextDayIndentCollection" name="nextDayIndentCollection" method="post"  target="_blank" action="<@ofbizUrl>IndentManualCollection</@ofbizUrl>">	
 	      			<td width="34%">NextDay Manual Indent Collection </td>
-	      			
+	      			<td width="33%">Date<input  type="text" size="18pt" id="NIMCDate" readonly  name="supplyDate"/>
 	      			<td width="33%">Route 
 					<select name="routeId" class='h4'>
 					<option value=''>All</option>
