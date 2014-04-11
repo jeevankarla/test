@@ -3050,7 +3050,12 @@ under the License.
                 <decorator-screen name="CommonFacilityDecorator" location="component://product/widget/facility/CommonScreens.xml">
                     <decorator-section name="body">
                     	 <include-menu location="component://product/widget/facility/FacilityMenus.xml" name="EditFacilitySubTabBar"/>
-                            <include-form name="FacilityRouteUpdate" location="component://product/widget/facility/FacilityForms.xml"/>
+                    	   <screenlet title="${uiLabelMap.ListRoutes}"> 
+                    	          <include-form name="ListFacilityRoutes" location="component://product/widget/facility/FacilityForms.xml"/>                    
+                    	   </screenlet>
+                    	   <screenlet title="${uiLabelMap.UpdateRoute}"> 
+                    	         <include-form name="FacilityRouteUpdate" location="component://product/widget/facility/FacilityForms.xml"/>                    
+                    	   </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

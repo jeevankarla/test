@@ -148,6 +148,10 @@ public class LmsServices {
 		String facilityId = (String) context.get("facilityId");
 		String routeId = (String) context.get("routeId");
 		String fDate = (String) context.get("fromDate");
+		String actionFlag = (String) context.get("actionFlag");
+		if(UtilValidate.isEmpty(actionFlag)){
+			actionFlag ="create";
+		}
 		Timestamp fromDate = null;
 		if(UtilValidate.isNotEmpty(fDate)){
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -167,31 +171,24 @@ public class LmsServices {
 		}
 		Timestamp nowDate = UtilDateTime.nowTimestamp();
 		Map<String, Object> resultMap = FastMap.newInstance();
-		boolean createFlag = true;
 		try {
 				List conditionList = UtilMisc.toList(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+				conditionList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, routeId));
 				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
 				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(fromDate))));
 		        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		        List<GenericValue> facilityGroups = delegator.findList("FacilityGroupMember", condition, null, null, null, false);
 		        facilityGroups = EntityUtil.filterByDate(facilityGroups, fromDate);
-		        if(UtilValidate.isNotEmpty(facilityGroups)){
+		        if(UtilValidate.isNotEmpty(facilityGroups) && actionFlag.equals("update")){
 		        	GenericValue facilityGroup = facilityGroups.get(0);
+		        	facilityGroup.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(nowDate, -1)));
+	        		facilityGroup.store();
 		        	Timestamp froDate = facilityGroup.getTimestamp("fromDate");
-		        	if(!(facilityGroup.getString("facilityGroupId")).equals(routeId)){
-		        		if(froDate.compareTo(fromDate) == 0){
-		        			facilityGroup.set("facilityGroupId", routeId);
-			        		facilityGroup.store();
-			        		createFlag = false;
-		        		}
-		        		else{
-		        			facilityGroup.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(nowDate, -1)));
-			        		facilityGroup.store();
-			        		createFlag = true;
-		        		}
-			        }
-		        }
-		        if(createFlag){
+		        }else if(UtilValidate.isNotEmpty(facilityGroups) && actionFlag.equals("delete")){
+		        	GenericValue facilityGroup = facilityGroups.get(0);
+		        	facilityGroup.remove();
+		        	
+		        }else{
 		        	Map tempMap = FastMap.newInstance();
 		        	tempMap.put("facilityId", facilityId);
 		        	tempMap.put("facilityGroupId", routeId);
@@ -203,6 +200,7 @@ public class LmsServices {
 	                    return resultMap;
 		        	}
 		        }
+		        
 		        
 		}catch (Exception e) {
 			Debug.logError(e, e.getMessage());

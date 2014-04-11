@@ -1757,6 +1757,7 @@ under the License.
         <description>Populate and Update Facility-Route-Party</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="routeId" type="String" mode="IN" optional="false"/>
+        <attribute name="actionFlag" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createFacilityPaymentDefault" engine="java"

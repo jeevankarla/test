@@ -104,12 +104,13 @@ under the License.
     </form>
 	 <form name="FacilityPartyRoles" type="list" paginate-target="EditFacilityParties" title="" list-name="facilityParties"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="facilityId" title="Facility Id"><display/></field>
         <row-actions>
             <service service-name="getPartyTelephone" result-map="telephone">
                 <field-map field-name="partyId" value="${partyId}"/>
             </service>
         </row-actions>
+        <field name="facilityId" title="Facility Id"><display/></field>
+        
         <field name="partyId">
             <display-entity description="${groupName} ${firstName} ${lastName}" entity-name="PartyNameView">
             <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyId}]">
@@ -2086,7 +2087,6 @@ under the License.
 		<field name="facilityId" title="Facility Id"><display/></field>
     	<field name="routeId" title="Route Id" >
             <drop-down allow-empty="false">
-                <option key="allRoutes" description="All-Routes"/>
                  <list-options list-name="routeIdsList" key-name="facilityId" description="${facilityId}"/>
             </drop-down>
         </field>
@@ -2095,6 +2095,37 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="ListFacilityRoutes" odd-row-style="alternate-row" header-row-style="header-row" type="list" target="updateFacilityRoute"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="facilityRouteList"> 
+    	<actions>
+			<entity-condition entity-name="FacilityGroupAndMemberAndFacility" list="facilityRouteList">
+			   <condition-list combine="and">
+			       <condition-expr field-name="facilityId" from-field="facilityId"/>
+    			  <condition-expr field-name="facilityGroupTypeId"  value="RT_BOOTH_GROUP"/>
+			   </condition-list>
+    		</entity-condition>
+		</actions>
+		<row-actions>
+		    <set field="routeId" from-field="ownerFacilityId"/>
+		</row-actions>
+		<field name="actionFlag"><hidden value="update"/></field>
+		<field name="facilityId" title="Facility Id"><display/></field>
+    	<field name="routeId" title="Route Id"><display description="${ownerFacilityId}"/></field>
+        <field name="fromDate" title="From Date"><display/></field>
+        <field name="thruDate" title="Thru Date"><date-time type="timestamp"/></field>
+        <field name="deleteLink" title="Delete" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="updateFacilityRoute">
+                <parameter param-name="facilityId"/>
+                <parameter param-name="routeId"/>
+                <parameter param-name="actionFlag" value="delete"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field>
+        <field name="submitButton" title="Update" separate-column="true">
+            <submit button-type="button"/>
+        </field>
+    </form>
+      
     <form name="FacilityPaymentDefault" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="createFacilityPaymentDefault"
     	default-table-style="basic-table hover-bar" separate-columns="true"> 
 		<field name="facilityId" title="Facility Id"><display/></field>
