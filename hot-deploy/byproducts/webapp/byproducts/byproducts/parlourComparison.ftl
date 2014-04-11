@@ -10,10 +10,11 @@
 
 
 $(document).ready(function(){
+		var labels = ${StringUtil.wrapString(labelsJSON)};
 		jQuery.plot($("#graph"), [{data: ${StringUtil.wrapString(parlourDataListJSON)},
 			points: { show: false },
 									bars: {show: true,
-                   						   	barWidth: 0.1,
+                   						   	barWidth: 0.7,
                    							points: { show: false }, 
                    							align: 'center'}}],
 				{ 
@@ -29,7 +30,7 @@ $(document).ready(function(){
      				xaxis: {
          				min: 0,
          				max : ${parlourDataListJSON.size()} + 1,
-         				ticks:${StringUtil.wrapString(labelsJSON)},
+         				ticks:labels,
          				rotateTicks: 140
      				},                   	         		             		            		
 				});
@@ -57,9 +58,9 @@ $(document).ready(function(){
                 previousPoint = item.dataIndex;
                 
                 $("#tooltip").remove();
-                var x = item.datapoint[0].toFixed(2),
+                var x = item.datapoint[0],
                     y = item.datapoint[1].toFixed(2);
-                var content ="<br> Rs. "+y; 
+                var content = labels[x-1][1] + " <br> Rs. "+y; 
                 showTooltip(item.pageX, item.pageY,
                             content);
             }
@@ -75,7 +76,7 @@ $(document).ready(function(){
 	<style type="text/css">
 		div.graph
 		{
-			width: 1500px;
+			width: 2500px;
 			height: 500px;
 		}
 	</style>
