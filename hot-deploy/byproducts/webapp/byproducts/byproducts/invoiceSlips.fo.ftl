@@ -72,14 +72,14 @@ under the License.
 											        <fo:block font-family="Courier,monospace" >----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 											        <#if reportTitle?has_content>
 											        <#assign reportVal = reportTitle.get(invoice.invoiceId)>
-											        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; <#if reportVal?exists && reportVal == "TAX">&#160;       TAX INVOICE<#else>&#160;       BILL OF SALE</#if></fo:block>
+											        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; <#if reportVal?exists && reportVal == "TAX">&#160;       TAX INVOICE<#else>&#160;       BILL OF SALE</#if>- CASH SALE</fo:block>
 											        </#if>                 						
 			                              		</fo:table-cell>
 			                            	</fo:table-row>
 			                            	<fo:table-row>
 			                              		<fo:table-cell>
 			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">TIN NO: ${tinNumber}</fo:block>
-			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">BILL NO.</fo:block>
+			        					  			<fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">BILL NO.${(parameters.shipmentId)?if_exists}</fo:block>
 			                              		</fo:table-cell>
 			                              		<fo:table-cell>
 							                        <fo:block font-size="4pt" text-align="left" keep-together="always" white-space-collapse="false">Supply Date:${invoiceDetail.dueDate?if_exists}</fo:block>
@@ -97,7 +97,7 @@ under the License.
 							                 <fo:table-row>
 							                    <fo:table-cell>
 							                      	 <fo:block font-size="4pt"  white-space-collapse="false">To</fo:block>
-							                         <fo:block font-size="4pt"  white-space-collapse="false" keep-together="always">Booth: ${invoice.facilityId} [ ${facilityName} ], Route:${(parameters.routeId)?if_exists}</fo:block>
+							                         <fo:block font-size="4pt"  white-space-collapse="false" keep-together="always">Retailer/Party Name : ${invoice.facilityId} [ ${facilityName} ]</fo:block>
 							                      	 <fo:block font-size="4pt"  white-space-collapse="false">Buyer's TIN:</fo:block>
 							                     </fo:table-cell>    
 							                 </fo:table-row>
@@ -323,10 +323,34 @@ under the License.
 			                      </#if>
 			                      </fo:table-cell>
 			                    </fo:table-row>
-			                    <fo:table-row>
+			                     <fo:table-row>
 			                      <fo:table-cell text-align="right" number-columns-spanned="3">
 			                      <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-			                      <fo:block font-size="4pt" text-align="right" keep-together="always">AUTHORISED SIGNATORY</fo:block>
+			                      <fo:block font-size="4pt" text-align="right" keep-together="always"> sd/-</fo:block>
+			                      </fo:table-cell>
+			                    </fo:table-row>
+			                     <fo:table-row>
+			                      <fo:table-cell text-align="right" >
+			                      <fo:block >&#160;</fo:block>
+			                      </fo:table-cell>
+			                    </fo:table-row>
+			                    <fo:table-row>
+			                     <fo:table-cell text-align="left" number-columns-spanned="2">
+			                      <fo:block font-size="4pt" text-align="left" keep-together="always">RECEIVER'S SIGNATORY</fo:block>
+			                      </fo:table-cell>
+			                      <fo:table-cell text-align="left" number-columns-spanned="4">
+			                      <fo:block font-size="4pt" text-align="left" keep-together="always">AUTHORISED SIGNATORY </fo:block>
+			                      </fo:table-cell>
+			                        <fo:table-cell text-align="left" >
+			                      <fo:block font-size="4pt" text-align="right" keep-together="always"></fo:block>
+			                      </fo:table-cell>
+			                    </fo:table-row>
+			                      <fo:table-row>
+			                      <fo:table-cell text-align="right" number-columns-spanned="3">
+			                      <fo:block font-size="4pt" text-align="left" keep-together="always">Declaration : We declare that this invoice shows the actual price of the goods</fo:block>
+			                      <fo:block font-size="4pt" text-align="left" keep-together="always">described shows the actual price of the goods described and the  particulars </fo:block>
+			                      <fo:block font-size="4pt" text-align="left" keep-together="always">are true and correct.</fo:block>
+			                      <fo:block font-size="4pt" text-align="left" keep-together="always">**This is a computer generated invoice, hence no signature is required</fo:block>
 			                      </fo:table-cell>
 			                    </fo:table-row>
 			          	         <fo:table-row>
