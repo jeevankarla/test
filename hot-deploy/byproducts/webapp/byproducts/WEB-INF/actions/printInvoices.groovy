@@ -53,9 +53,9 @@ invoiceIds.each { invoiceId ->
 			  vatPercent = invoiceItem.vatPercent;
 		  }
 		  productId = invoiceItem.productId;
-		  if(vatAmount){
+		 // if(vatAmount){
 			  reportFlag = "TAX";
-		  }
+		 // }
 		  invoiceItemMap.put("vatAmount", vatAmount);
 		  invoiceItemMap.put("vatPercent", vatPercent);
 		  invoiceItemMap.put("productId", productId);
