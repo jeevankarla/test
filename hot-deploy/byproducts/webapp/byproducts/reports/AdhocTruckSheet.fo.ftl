@@ -360,34 +360,18 @@ under the License.
 														<fo:block text-align="right">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(productNames.get(product)?if_exists)),8)} </fo:block>
 												</fo:table-cell>
 											</#list>
-											<#-- 
-											<fo:table-cell>
-												<fo:block text-align="left"  font-size="6pt">Crates</fo:block>
-											</fo:table-cell>
-											<fo:table-cell>
-												<fo:block  text-align="center" font-size="6pt">Cans</fo:block>
-											</fo:table-cell> -->
 										</fo:table-row>	
 								</fo:table-body>
 							</fo:table>
 						</fo:block>
 					</fo:table-cell>
-				
 					</fo:table-row>	
 					<#--
-					<fo:table-row>
-							<fo:table-cell>
-							<fo:block font-size="6pt" keep-together="always">&#160;</fo:block>
-							
-								<fo:block font-size="6pt" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-							
-							</fo:table-cell>
-					</fo:table-row>	-->
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block>VST_ASCII-027VST_ASCII-069</fo:block>
 						</fo:table-cell>
-					</fo:table-row>
+					</fo:table-row> -->
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block font-size="6pt" keep-together="always">&#160;</fo:block>
@@ -401,9 +385,6 @@ under the License.
 								<#list byProdList as product>
 									<fo:table-column column-width="47pt"/>
 								</#list>
-								<#-- 
-								<fo:table-column column-width="35pt"/>
-								<fo:table-column column-width="35pt"/> -->
 									<fo:table-body>
 										<fo:table-row>
 											<#assign columnCounter = 0>
@@ -449,13 +430,6 @@ under the License.
 													</fo:table-cell>
 												</#if>
 											</#list>
-											<#-- 
-												<fo:table-cell>
-													<fo:block font-size="6pt">${(routesMap.getValue().get("rtCrates"))?if_exists}+${(routesMap.getValue().get("rtExcessPkts"))?if_exists}</fo:block>
-												</fo:table-cell>
-												<fo:table-cell>
-													<fo:block  text-align="center" font-size="6pt">${(routesMap.getValue().get("rtCans"))?if_exists}</fo:block>
-												</fo:table-cell> -->
 										</fo:table-row>
 									</fo:table-body>
 								</fo:table>
@@ -467,17 +441,22 @@ under the License.
 						</fo:table-cell>
 						<fo:table-cell><fo:block></fo:block></fo:table-cell>
 					</fo:table-row>
-					
+					<fo:table-row>
+						<fo:table-cell>
+							<fo:block>VST_ASCII-027VST_ASCII-070</fo:block>
+						</fo:table-cell>
+					</fo:table-row>	
+				    <fo:table-row>
+						<fo:table-cell>
+							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+						</fo:table-cell>
+					</fo:table-row>
+					<#--
 					<fo:table-row>
 						<fo:table-cell>
 							<fo:block></fo:block>
 						</fo:table-cell>
 					</fo:table-row>	
-					<fo:table-row>
-						<fo:table-cell>
-							<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-						</fo:table-cell>
-					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell >
 							<fo:block font-size="6pt" keep-together="always">Crates</fo:block>
@@ -493,13 +472,13 @@ under the License.
 							    </#list>
 							     
 								<fo:table-column column-width="35pt"/>
-								<#-- <fo:table-column column-width="35pt"/> -->
+								
 									<fo:table-body>
 									<fo:table-row>
 										<#assign columnCounter =0>
 												<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
-												<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
+												<#if (columnCounter > 11) > 
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -523,7 +502,7 @@ under the License.
 												</#list>
 												<#list byProdList as product>
 													<#assign columnCounter = columnCounter+1>
-													<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
+													<#if (columnCounter > 11) > 
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -566,8 +545,7 @@ under the License.
 								<#assign totalCrate  = fullCrate>
 						</fo:table-cell>
 						
-						<#--<fo:table-cell>
-						</fo:table-cell>-->
+					
 					</fo:table-row>
 					<fo:table-row>
 						<fo:table-cell>
@@ -589,7 +567,7 @@ under the License.
 							    </#list>
 							      
 								<fo:table-column column-width="35pt"/>
-								<#-- <fo:table-column column-width="35pt"/> -->
+								
 									<fo:table-body>
 									<fo:table-row>
 										<#assign looseCrats = 0>
@@ -597,7 +575,7 @@ under the License.
 											<#list lmsProdList as product>
 												<#assign columnCounter = columnCounter+1>
 												
-												<#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
+												<#if (columnCounter > 11) > 
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -623,7 +601,7 @@ under the License.
 											</#list>
 											<#list byProdList as product>
 											<#assign columnCounter = columnCounter+1>
-											    <#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
+											    <#if (columnCounter > 11) > 
 														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
@@ -646,10 +624,6 @@ under the License.
 													</fo:table-cell>
 												</#if>
 											</#list>
-											
-								           	<#-- <fo:table-cell>
-												<fo:block font-size="6pt"></fo:block>
-											</fo:table-cell> -->
 									</fo:table-row>
 									</fo:table-body>
 								</fo:table>
@@ -704,7 +678,7 @@ under the License.
 							<fo:block>VST_ASCII-027VST_ASCII-070</fo:block>
 						</fo:table-cell>
 					</fo:table-row>
-					
+					-->
 					</fo:table-body>
 				</fo:table>
 			</fo:block>

@@ -22,7 +22,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
-                      margin-right=".2in" margin-left="1in" >
+                      margin-top="0.2in" margin-bottom=".3in" margin-left=".3in" margin-right=".3in">
                 <fo:region-body margin-top="1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -32,7 +32,7 @@ under the License.
            <#assign routesList = routeCollectionMap.entrySet()>
          <#list routesList as routeBooths>      
         <fo:page-sequence master-reference="main">
-        	<fo:static-content flow-name="xsl-region-before">
+        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" >
         	<fo:block font-size="10pt">VST_ASCII-015</fo:block> 
         		<fo:block text-align="left" white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/>                 </fo:block>
         		<fo:block text-align="center" keep-together="always" white-space-collapse="false">   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
