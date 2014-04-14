@@ -26,13 +26,14 @@ effectiveDate = null;
 effectiveDateStr = parameters.supplyDate;
 
 if (UtilValidate.isNotEmpty(effectiveDateStr)) {
-	
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 	try {
-		effectiveDate = UtilDateTime.toTimestamp(dateFormat.parse(effectiveDateStr));
-	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
-	}
+		effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+	   }catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: "+effectiveDateStr, "");
+	   }
+}else{
+effectiveDate=UtilDateTime.nowTimestamp();
 }
 dayBegin = UtilDateTime.getDayStart(effectiveDate);
 
@@ -66,6 +67,7 @@ amProductTotals=[:];
 pmProductTotals=[:];
 if(UtilValidate.isNotEmpty(amShipmentIds)){
 	amDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+	//Debug.log("==amDayTotals==="+amDayTotals);
 	if(UtilValidate.isNotEmpty(amDayTotals)){
 		amProductTotals=amDayTotals.get("productTotals");
 	}
@@ -76,7 +78,6 @@ if(UtilValidate.isNotEmpty(pmShipmentIds)){
 		pmProductTotals=pmDayTotals.get("productTotals");
 	}
 }
-
 totLmsQty=0;
 
 if(UtilValidate.isNotEmpty(shipmentIds)){
@@ -141,7 +142,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 	routeIdsList.each{ routeId ->
 		/*lmsProductList =[];
 		byProdList =[];*/
-		boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
+		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , routeId));
 		conList=[];
 		conList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,routeId));
 		cond = EntityCondition.makeCondition(conList,EntityOperator.AND);
@@ -150,15 +151,17 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		totPmLmsQty=0;
 		facilityGroupMemberList.each{ facilityGroup->
 			if("AM_RT_GROUP".equals(facilityGroup.facilityGroupId)){
-				if(UtilValidate.isNotEmpty(boothsList)){
-					if(UtilValidate.isNotEmpty(amShipmentIds)){
-						amRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
+				shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"AM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
+				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
+				//if(UtilValidate.isNotEmpty(boothsList)){
+					if(UtilValidate.isNotEmpty(shipmentIds)){
+						amRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd]);
 						routeAmount=0;
 						routeTotQty=0;
 						if(UtilValidate.isNotEmpty(amRouteTotals)){
 							routeProdTotals = amRouteTotals.get("productTotals");
 							routeAmount= amRouteTotals.get("totalRevenue");
-							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: effectiveDateStr , facilityId:routeId]);
+							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss") , facilityId:routeId]);
 							reciepts = 0;
 							if(UtilValidate.isNotEmpty(routePaidDetails)){
 								reciepts = routePaidDetails.get("invoicesTotalAmount");
@@ -196,27 +199,28 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							}
 						}
 					}
-				}
+				//}
 				
 			}
 			if("PM_RT_GROUP".equals(facilityGroup.facilityGroupId)){
-				if(UtilValidate.isNotEmpty(boothsList)){
-					if(UtilValidate.isNotEmpty(pmShipmentIds)){
-						pmRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, facilityIds:boothsList,fromDate:dayBegin, thruDate:dayEnd]);
+				shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"PM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
+				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
+					if(UtilValidate.isNotEmpty(shipmentIds)){
+						pmRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd]);
 						routeAmount=0;
 						routeTotQty=0;
 						if(UtilValidate.isNotEmpty(pmRouteTotals)){
 							routeProdTotals = pmRouteTotals.get("productTotals");
+							
 							routeAmount= pmRouteTotals.get("totalRevenue");
 							routeTotQty= pmRouteTotals.get("totalQuantity");
-							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: effectiveDateStr , facilityId:routeId]);
+							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss") , facilityId:routeId]);
 							reciepts = 0;
-							if(UtilValidate.isNotEmpty(routePaidDetails)){
+							if(UtilValidate.isNotEmpty(routePaidDetails.get("invoicesTotalAmount"))){
 								reciepts = routePaidDetails.get("invoicesTotalAmount");
 							}
 							
 							//populating route wise pm lms product totals
-							
 							Iterator mapRouteIter = routeProdTotals.entrySet().iterator();
 							while (mapRouteIter.hasNext()) {
 								Map.Entry entry = mapRouteIter.next();
@@ -232,7 +236,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 									}
 								}
 							}
-							
+						
 							pmTotalAmount=pmTotalAmount+routeAmount;
 							pmTotalQty=pmTotalQty+totPmLmsQty;
 							pmTotalReceipts=pmTotalReceipts+reciepts;
@@ -248,7 +252,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							}
 						}
 					}
-				}
+				//}
 				
 			}
 		}		
@@ -271,6 +275,11 @@ if(UtilValidate.isNotEmpty(pmProductTotals)){
 	tempPmMap.put("reciepts", pmTotalReceipts);
 	pmRouteWiseMap.put("pmGrandTotals", tempPmMap);
 }
+//grandTotal logic is here
+context.putAt("routeTotQty", amTotalQty+pmTotalQty);
+context.putAt("routeAmount", amTotalAmount+pmTotalAmount);
+context.putAt("reciepts", amTotalReceipts+pmTotalReceipts);
+//grandTotal end here
 context.putAt("amRouteWiseMap", amRouteWiseMap);
 context.putAt("pmRouteWiseMap", pmRouteWiseMap);
 finalRouteWiseMap.putAll(amRouteWiseMap);
