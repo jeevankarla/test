@@ -2299,7 +2299,7 @@ under the License.
                 <set field="acctgTransEntries[]" from-field="debitEntryWithDiffAmount" type="Object"/>
             </if-compare>
             <!-- Set header fields (AcctgTrans) -->
-          <!--   <set field="createAcctgTransAndEntriesInMap.roleTypeId" from-field="roleTypeId"/>
+            <set field="createAcctgTransAndEntriesInMap.roleTypeId" from-field="roleTypeId"/>
             <set field="createAcctgTransAndEntriesInMap.glFiscalTypeId" value="ACTUAL"/>
             <set field="createAcctgTransAndEntriesInMap.acctgTransTypeId" value="OUTGOING_PAYMENT"/>
             <set field="createAcctgTransAndEntriesInMap.partyId" from-field="partyId"/>
@@ -2307,7 +2307,7 @@ under the License.
             <set field="createAcctgTransAndEntriesInMap.acctgTransEntries" from-field="acctgTransEntries"/>
             <call-service service-name="createAcctgTransAndEntries" in-map-name="createAcctgTransAndEntriesInMap">
                 <result-to-field result-name="acctgTransId"/>
-            </call-service> -->
+            </call-service>
             <field-to-result field="acctgTransId" result-name="acctgTransId"/>
             <!-- Now create accounting transactions for the payment applications -->
             <entity-and entity-name="PaymentApplication" list="paymentApplications">
@@ -2336,7 +2336,7 @@ under the License.
                 	<add-error><fail-property resource="AccountingErrorUiLabels" property="AccountingFinAccountStatusNotValidError"/></add-error>
             </if-compare>
             <check-errors/>           	 
-                <set-service-fields service-name="createFinAccountTrans" map="payment" to-map="createFinAccountTransMap"/>
+               <!--  <set-service-fields service-name="createFinAccountTrans" map="payment" to-map="createFinAccountTransMap"/>
                 <set field="createFinAccountTransMap.finAccountId" from-field="paymentMethod.finAccountId"/>
                 <set field="createFinAccountTransMap.paymentId" from-field="payment.paymentId"/>
                 <set field="createFinAccountTransMap.statusId" value="FINACT_TRNS_CREATED"/>
@@ -2347,7 +2347,12 @@ under the License.
                 </call-service>
                 <set field="updatePaymentCtx.paymentId" from-field="payment.paymentId"/>
                 <set field="updatePaymentCtx.finAccountTransId" from-field="finAccountTransId"/>
-                <call-service service-name="updatePayment" in-map-name="updatePaymentCtx"/>           	 
+                <call-service service-name="updatePayment" in-map-name="updatePaymentCtx"/>   --> 
+                 <set field="depositWithdrawPaymentCtx.finAccountId" from-field="paymentMethod.finAccountId"/>
+                <set field="depositWithdrawPaymentCtx.paymentIds" from-field="payment.paymentId"/>
+                <call-service service-name="depositWithdrawPayments" in-map-name="depositWithdrawPaymentCtx">
+                    <result-to-field result-name="finAccountTransId"/>
+                </call-service>        	 
         	</if-not-empty>
         </if-compare>
     </simple-method>
