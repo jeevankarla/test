@@ -79,13 +79,13 @@ under the License.
 			<#assign totalCrate = 0>
 			<fo:block font-size="6pt">
 				<fo:table>
-					<fo:table-column column-width="70pt"/>
+					<fo:table-column column-width="65pt"/>
 					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="25pt"/>
-					<fo:table-column column-width="37pt"/>
-					<fo:table-column column-width="42pt"/>
+					<fo:table-column column-width="32pt"/>
+					<fo:table-column column-width="45pt"/>
 					<#--<fo:table-column column-width="50pt"/>-->
-					<fo:table-column column-width="25pt"/>
+					<fo:table-column column-width="30pt"/>
 					<fo:table-body>
 					<#-- 
 						<fo:table-row>
@@ -98,7 +98,7 @@ under the License.
 						</fo:table-row> -->
 						<fo:table-row>
 							<fo:table-cell>
-								<fo:block font-size="6pt" keep-together="always" white-space-collapse="false">Code-Dealer Name</fo:block>
+								<fo:block font-size="6pt" keep-together="always" white-space-collapse="false">Code-Retailer Name</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="6pt" keep-together="always" white-space-collapse="false">------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -107,7 +107,7 @@ under the License.
 								<fo:block font-size="6pt" text-align="right">Subsidy</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block font-size="6pt" text-align="right">VAT</fo:block>
+								<fo:block font-size="6pt" text-align="center">VAT</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block font-size="6pt" text-align="right">NET Amount</fo:block>
@@ -116,7 +116,7 @@ under the License.
 								<fo:block font-size="6pt" text-align="right">ShopeeRent</fo:block>
 							</fo:table-cell>-->
 							<fo:table-cell>
-								<fo:block font-size="6pt" text-align="center">P-Type</fo:block>
+								<fo:block font-size="6pt" text-align="center">Mode</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
@@ -196,20 +196,20 @@ under the License.
     		<#assign boothDetailList = routesMap.getValue().get("boothWiseMap").entrySet()>
     		<#assign noOfbooths=0>
     		<#list boothDetailList as boothDetails>    	
-    		<#assign noOfbooths=noOfbooths+1>	
-    		<#if (noOfbooths==11) >
+    		<#if (noOfbooths==10) >
     			<fo:block  break-after="page"></fo:block>
     			<#assign noOfbooths=0>
     		</#if>
+    		<#assign noOfbooths=noOfbooths+1>
     		<fo:block font-size="6pt">
 				<fo:table>
-				<fo:table-column column-width="70pt"/>
+				<fo:table-column column-width="65pt"/>
 					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="25pt"/>
-					<fo:table-column column-width="37pt"/>
+					<fo:table-column column-width="32pt"/>
 					<fo:table-column column-width="45pt"/>
 					<#--<fo:table-column column-width="50pt"/>-->
-					<fo:table-column column-width="25pt"/>
+					<fo:table-column column-width="30pt"/>
 				<fo:table-body>
 						<fo:table-row>
 						
@@ -303,7 +303,7 @@ under the License.
 								<fo:block font-size="5pt" text-align="center"><#if shopeeRentAmount?has_content && (shopeeRentAmount.get('amountMap'))?has_content && (shopeeRentAmount.get('amountMap')).get(boothDetails.getKey())?has_content>${shopeeRentAmount.get('amountMap').get(boothDetails.getKey()).get("rentAmount")?string("#0.00")?if_exists}+${shopeeRentAmount.get('amountMap').get(boothDetails.getKey()).get("tax")?string("#0.00")?if_exists}</#if></fo:block>
 							</fo:table-cell>-->
 							<fo:table-cell>
-								<fo:block font-size="5pt" text-align="center">${boothDetails.getValue().get("paymentMode")?if_exists}</fo:block>
+								<fo:block font-size="5pt" text-align="left">&#160;${boothDetails.getValue().get("paymentMode")?if_exists}</fo:block>
 							</fo:table-cell>
 						</fo:table-row>	
 					</fo:table-body>
@@ -311,16 +311,21 @@ under the License.
 			</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 		</#list>
+		boothDetailList
+		<#if (boothDetailList.size()%10==0) >
+    		<fo:block  break-after="page"></fo:block>
+    	</#if>
+    		
 		<#assign routeTotals = (routesMap.getValue().get("routeWiseTotals"))>
 		<fo:block font-size="6pt">
 			<fo:table>
-				<fo:table-column column-width="70pt"/>
+				<fo:table-column column-width="65pt"/>
 					<fo:table-column column-width="530pt"/>
 					<fo:table-column column-width="25pt"/>
-					<fo:table-column column-width="37pt"/>
+					<fo:table-column column-width="32pt"/>
 					<fo:table-column column-width="45pt"/>
 					<#--<fo:table-column column-width="50pt"/>-->
-					<fo:table-column column-width="25pt"/>
+					<fo:table-column column-width="30pt"/>
 				<fo:table-body>
 				<fo:table-row>
 					<fo:table-cell>
