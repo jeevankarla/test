@@ -6531,6 +6531,7 @@ public class ByProductNetworkServices {
 	            paymentCtx.put("organizationPartyId", partyIdTo);
 	            paymentCtx.put("partyId", partyIdFrom);
 	            paymentCtx.put("facilityId", facilityId);
+	            paymentCtx.put("paymentPurposeType", "ROUTE_MKTG");
 	            /*if (!UtilValidate.isEmpty(paymentLocationId) ) {
 	                paymentCtx.put("paymentLocationId", paymentLocationId);                        	
 	            }   */         
