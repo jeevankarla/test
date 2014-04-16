@@ -124,7 +124,7 @@ $(document).ready(function(){
          <tr><td><br/></td></tr>    
           <tr>
           <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Vehicle Id:</div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Vehicle Number:</div></td>
           <td>&nbsp;</td>
        <#if vehicleId?exists && vehicleId?has_content>  
 	  	  <input type="hidden" name="?if_exists" id="?if_exists" value="${vehicleId?if_exists}"/>  
@@ -160,7 +160,8 @@ $(document).ready(function(){
           </td>
        </#if>
         </tr> 
-         <tr><td><br/></td></tr>     
+         <tr><td><br/></td></tr>    
+         <#-- 
            <tr>
           <td>&nbsp;</td>
           <td align='left' valign='middle' nowrap="nowrap" ><div class='h2'>Name :</div></td>
@@ -174,7 +175,7 @@ $(document).ready(function(){
           </td>       
        <#else>               
           <td valign='middle'>          
-             <input  type="text" size="25" maxlength="25" name="name" id="name" value=""  />  <em></em>          
+             <input  type="text" size="25" maxlength="25" readonly name="name" id="name" value=""  />  <em></em>          
           </td>
        </#if>
         </tr>     
@@ -190,7 +191,7 @@ $(document).ready(function(){
 	          </td>       
 	       <#else>               
 	          <td valign='middle'>          
-	             <input class='h2' type="text" size="25" maxlength="25" name="address1" id="address1" value=""  />   <em></em>            
+	             <input class='h2' type="text" size="25" readonly maxlength="25" name="address1" id="address1" value=""  />   <em></em>            
 	          </td>
 	       </#if>
         </tr>
@@ -206,7 +207,7 @@ $(document).ready(function(){
 	          </td>       
 	       <#else>               
 	          <td valign='middle'>          
-	             <input class='h2' type="text" size="25" maxlength="25" name="address2" id="address2" value="" removeClass="required" />            
+	             <input class='h2' type="text" size="25" readonly maxlength="25" name="address2" id="address2" value="" removeClass="required" />            
 	          </td>
 	       </#if>
         </tr>        
@@ -225,10 +226,10 @@ $(document).ready(function(){
 	             <input class='h2' type="text" size="12" maxlength="12" name="contactNumber" id="contactNumber" value=""/> &nbsp;  &nbsp; &nbsp;${uiLabelMap.Pin}: &nbsp; <input class='h2' type="text" size="8" maxlength="8" name="pinNumber" id="pinNumber" value=""  /> <em></em> <span class="tooltip"> Press Enter to Save</span>          
 	          </td>
 	       </#if>
-        </tr>                                 
+        </tr>   -->                              
       </table>
       <div id="sOFieldsDiv" >
-      </div>
+      </div> 
 </form>
 <br/>
 <form method="post" id="indententry" action="<@ofbizUrl>IndentEntryInit</@ofbizUrl>">  
@@ -307,6 +308,7 @@ $(document).ready(function(){
 			<label>Indent Entry </label><span id="totalAmount"></span>
 		</div>
 			<div id="myGrid1" style="width:100%;height:350px;"></div>
+			  
 			<#assign formAction =''>			
 		    <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 		 		<#assign formAction='processAdhocSale'>
@@ -317,7 +319,7 @@ $(document).ready(function(){
 			</#if>				
 			
 	<#if booth?exists>
-	<div align="center"><span class="tooltip">** Check Payment Entry Before Submit **</span></div>				
+ <#--	<div align="center"><span class="tooltip">** Check Payment Entry Before Submit **</span></div>		-->		
     <div align="center">
     	<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
     	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -348,8 +348,7 @@ under the License.
 			                      <fo:table-row>
 			                      <fo:table-cell text-align="right" number-columns-spanned="3">
 			                      <fo:block font-size="4pt" text-align="left" keep-together="always">Declaration : We declare that this invoice shows the actual price of the goods</fo:block>
-			                      <fo:block font-size="4pt" text-align="left" keep-together="always">described shows the actual price of the goods described and the  particulars </fo:block>
-			                      <fo:block font-size="4pt" text-align="left" keep-together="always">are true and correct.</fo:block>
+			                      <fo:block font-size="4pt" text-align="left" keep-together="always">described and the  particulars are true and correct.</fo:block>
 			                      <fo:block font-size="4pt" text-align="left" keep-together="always">**This is a computer generated invoice, hence no signature is required</fo:block>
 			                      </fo:table-cell>
 			                    </fo:table-row>

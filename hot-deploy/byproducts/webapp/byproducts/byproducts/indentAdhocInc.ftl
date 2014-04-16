@@ -188,7 +188,8 @@
 		var columns = [
 			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
-			{id:"crQuantity", name:"Qty(Cr/Can)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
+			<#--
+			{id:"crQuantity", name:"Qty(Cr/Can)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter}, -->
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
 		];
@@ -325,14 +326,15 @@
 				var prod = data[args.row]["productId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var price = parseFloat(priceTags[prod]);
-				var indentCat = prodIndentQtyCat[prod];
-				var qtyInBulk = qtyInPieces[prod];
+				//var indentCat = prodIndentQtyCat[prod];
+				//var qtyInBulk = qtyInPieces[prod];
 				if(isNaN(price)){
 					price = 0;
 				}
 				if(isNaN(qty)){
 					qty = 0;
 				}
+				/*
 				if(indentCat == null && indentCat == undefined){
 					data[args.row]["crQuantity"] = "";
 				}
@@ -341,7 +343,7 @@
 						data[args.row]["crQuantity"] = parseFloat(Math.round((qty/qtyInBulk)*100)/100);
 					}
 					
-				}
+				}*/
 				var roundedAmount;
 					roundedAmount = Math.round(qty*price);
 				if(isNaN(roundedAmount)){
@@ -483,7 +485,7 @@
 		];
 
 		var columns = [
-			{id:"boothId", name:"Party Code", field:"boothId", width:100, minWidth:100, cssClass:"cell-title", sortable:false},
+			{id:"boothId", name:"RetailerCode[Name]", field:"boothId", width:180, minWidth:120, cssClass:"cell-title", sortable:false},
         	<#if prodList?exists>
 				<#list prodList as product>				
 					{id:"${product.productId}", name:"${product.productName?if_exists}", field:"${product.productId}", width:75, minWidth:75, editor:FloatCellEditor}<#if product_has_next>,</#if>
@@ -526,8 +528,11 @@
 	
 	
 	jQuery(function(){
-		
-		setupGrid1();
+	     // only setupGrid when BoothId exists
+	     var boothId=$('[name=boothId]').val();
+		 if(boothId){
+		 setupGrid1();
+	     }
 		setupGrid2();		
         jQuery(".grid-header .ui-icon")
             .addClass("ui-state-default ui-corner-all")
@@ -611,9 +616,9 @@
 	  			}
 			});		  		
    		// lets get address and phone number for SO Depo
-   		 $('#boothId').keyup(function (e) {	
+   		/* $('#boothId').keyup(function (e) {	
 	    			getSoFacilityDetails();  			
-		});   			 
+		});   */			 
 		
 		
 	});	

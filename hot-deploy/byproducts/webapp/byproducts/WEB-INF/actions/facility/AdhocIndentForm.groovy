@@ -226,7 +226,8 @@ productCostJSON=prodPriceMap;
 JSONObject prodIndentQtyCat = new JSONObject();
 JSONObject qtyInPieces = new JSONObject();
 
-inputCtx = [:];
+//for now no Crates in in AdhocSale
+/*inputCtx = [:];
 inputCtx.put("userLogin", userLogin);
 inputCtx.put("supplyDate",effDateDayBegin);
 inputCtx.put("facilityId",boothId);
@@ -234,7 +235,7 @@ Map qtyResultMap =ByProductNetworkServices.getFacilityIndentQtyCategories(dispat
 prodIndentQtyCat = qtyResultMap.get("indentQtyCategory");
 qtyInPieces = qtyResultMap.get("qtyInPieces");
 context.prodIndentQtyCat = prodIndentQtyCat;
-context.qtyInPieces = qtyInPieces;
+context.qtyInPieces = qtyInPieces;*/
 
 context.productItemsJSON = productItemsJSON;
 context.productIdLabelJSON = productIdLabelJSON;
