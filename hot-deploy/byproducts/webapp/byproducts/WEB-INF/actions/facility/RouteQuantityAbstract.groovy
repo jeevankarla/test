@@ -62,9 +62,41 @@ dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 List shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 amShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"AM");
 pmShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"PM");
+//getADHOC shipments 
+List adhocShipments  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
+if(UtilValidate.isNotEmpty(adhocShipments)){
+	shipmentIds.addAll(adhocShipments);
+}
 
 amProductTotals=[:];
 pmProductTotals=[:];
+
+adhocBoothPaymentMap=[:];
+adhocPaidAmount=0;
+adhocSalePaidDetails = ByProductNetworkServices.getAdhocSalePayments( dctx , [estimatedShipDate: dayBegin]);
+if(UtilValidate.isNotEmpty(adhocSalePaidDetails)){
+	adhocBoothPaymentMap=adhocSalePaidDetails.get("adhocBoothPaidMap");
+	adhocPaidAmount=adhocSalePaidDetails.get("totalPaidAmount");
+}
+context.putAt("adhocBoothPaymentMap", adhocBoothPaymentMap);
+//boothsList = EntityUtil.getFieldListFromEntityList(orderHeader, "originFacilityId", true);
+adhocBoothTotalsMap=[:];
+if(UtilValidate.isNotEmpty(adhocShipments)){
+	adhocDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:adhocShipments, fromDate:dayBegin, thruDate:dayEnd]);
+	if(UtilValidate.isNotEmpty(adhocDayTotals)){
+		adhocProductTotals=adhocDayTotals.get("productTotals");
+		adhocBoothTotalsMap=adhocDayTotals.get("boothTotals");
+		if(UtilValidate.isNotEmpty(adhocBoothTotalsMap)){
+			adhocTotalSaleMap=[:];
+			adhocTotalSaleMap["productTotals"]=adhocDayTotals.get("productTotals");
+			adhocTotalSaleMap["totalRevenue"]=adhocDayTotals.get("totalRevenue");
+			adhocTotalSaleMap["adhocPaidAmount"]=adhocPaidAmount;
+			adhocBoothTotalsMap.putAt("Total", adhocTotalSaleMap);
+		}
+	}
+}
+context.putAt("adhocBoothTotals", adhocBoothTotalsMap);
+
 if(UtilValidate.isNotEmpty(amShipmentIds)){
 	amDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
 	//Debug.log("==amDayTotals==="+amDayTotals);
@@ -72,6 +104,7 @@ if(UtilValidate.isNotEmpty(amShipmentIds)){
 		amProductTotals=amDayTotals.get("productTotals");
 	}
 }
+
 if(UtilValidate.isNotEmpty(pmShipmentIds)){
 	pmDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
 	if(UtilValidate.isNotEmpty(pmDayTotals)){
@@ -79,11 +112,13 @@ if(UtilValidate.isNotEmpty(pmShipmentIds)){
 	}
 }
 totLmsQty=0;
+grandTotalRevenue=0;
 
 if(UtilValidate.isNotEmpty(shipmentIds)){
 	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		prodTotals = dayTotals.get("productTotals");
+		grandTotalRevenue=dayTotals.get("totalRevenue");
 		if(UtilValidate.isNotEmpty(prodTotals)){
 			context.putAt("grandProdTotals", prodTotals);
 			Iterator mapIter = prodTotals.entrySet().iterator();		
@@ -277,8 +312,9 @@ if(UtilValidate.isNotEmpty(pmProductTotals)){
 }
 //grandTotal logic is here
 context.putAt("routeTotQty", amTotalQty+pmTotalQty);
-context.putAt("routeAmount", amTotalAmount+pmTotalAmount);
-context.putAt("reciepts", amTotalReceipts+pmTotalReceipts);
+//context.putAt("routeAmount", amTotalAmount+pmTotalAmount);
+context.putAt("routeAmount",grandTotalRevenue);
+context.putAt("reciepts", amTotalReceipts+pmTotalReceipts+adhocPaidAmount);
 //grandTotal end here
 context.putAt("amRouteWiseMap", amRouteWiseMap);
 context.putAt("pmRouteWiseMap", pmRouteWiseMap);

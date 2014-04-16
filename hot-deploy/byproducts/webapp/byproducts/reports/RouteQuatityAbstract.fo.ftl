@@ -30,7 +30,7 @@ under the License.
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>	
-<#if routeWiseMap?has_content> 
+<#if routeWiseMap?has_content || adhocBoothTotals?has_content> 
 <#if !(parameters.summeryOnly?exists)>		
 	<fo:page-sequence master-reference="main" force-page-count="no-force" font-size="6pt">					
 		<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace" >
@@ -48,7 +48,7 @@ under the License.
 							<fo:table-cell><fo:block keep-together="always">Route Name</fo:block></fo:table-cell>
 							<fo:table-cell>
 									<#-- <fo:block text-align="left" keep-together="always" white-space-collapse="false">N A N D I N I    M I L K    A N D    M I L K    P R O D U C T S                                                                                     Receivable    cash Amt.   Cheque Amt.  Balance</fo:block> -->
-									 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;    &#160;  &#160;    &#160;  &#160;  &#160;  &#160;    &#160;              							                                                        &#160;    Receivable    cash-Amt.   Cheque-Amt.   Balance</fo:block> 
+									 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;    &#160;  &#160;    &#160;  &#160;  &#160;  &#160;    &#160;              							                                                        &#160;    Receivable    Paid-Amt.     Balance</fo:block> 
 									<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------VST_ASCII-027VST_ASCII-069</fo:block>
 									<fo:block >
 										<fo:table>
@@ -211,7 +211,7 @@ under the License.
 													<fo:table-cell>
 														<fo:block text-align="center">${routesMap.getValue().get("reciepts")?if_exists?string("#0.00")}</fo:block>
 													</fo:table-cell>
-													<fo:table-cell/>
+													<#--<fo:table-cell/> -->
 													<fo:table-cell>
 														<fo:block text-align="center">${(routesMap.getValue().get("routeAmount")-routesMap.getValue().get("reciepts"))?if_exists?string("#0.00")} VST_ASCII-027VST_ASCII-070</fo:block>
 													</fo:table-cell>
@@ -342,7 +342,7 @@ under the License.
 													<fo:table-cell>
 														<fo:block text-align="center">${pmRoutesMap.getValue().get("reciepts")?if_exists?string("#0.00")}</fo:block>
 													</fo:table-cell>
-													<fo:table-cell/>
+												<#--<fo:table-cell/> -->
 													<fo:table-cell>
 														<fo:block text-align="center">${(pmRoutesMap.getValue().get("routeAmount")-pmRoutesMap.getValue().get("reciepts"))?if_exists?string("#0.00")} VST_ASCII-027VST_ASCII-070</fo:block>
 													</fo:table-cell>
@@ -357,6 +357,151 @@ under the License.
 				</fo:block>
 				<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			</#list> 
+			<#--Adhoc TotalsStrts here -->
+			<#assign adhocBoothTotalsList = adhocBoothTotals.entrySet()>
+			<#if adhocBoothTotals?has_content>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------Counter Sale **RetailerWise**------</fo:block>
+			</#if>
+			<#assign noOfBooths=0>	
+			<#list adhocBoothTotalsList as adhocBoothMap>			
+				<#assign adhocBoothProdTotals = adhocBoothMap.getValue().get("productTotals")>
+				<#assign noOfBooths=noOfBooths+1>	
+    		   <#if (noOfBooths==7) >
+    			<fo:block  break-after="page"></fo:block>
+    			<#assign noOfBooths=0>
+    		  </#if>
+			 <fo:block>
+				<fo:table>
+				    <fo:table-column column-width="40pt"/>
+					<fo:table-column column-width="630pt"/>						
+					<fo:table-column column-width="40pt"/>
+					<fo:table-body>
+						<fo:table-row>
+							<fo:table-cell>
+							<#if adhocBoothMap.getKey()!="Total">
+									<fo:block text-align="center"  font-size="3pt" keep-together="always">RetailerId:${adhocBoothMap.getKey()}</fo:block>
+							<#else>
+							<fo:block text-align="center"  font-size="3pt" keep-together="always">CounterSale Total:</fo:block>
+							</#if>
+							</fo:table-cell>
+							<fo:table-cell>
+									<fo:block >
+										<fo:table>
+											<#list lmsProductList as product>
+												<fo:table-column column-width="50pt"/>
+											</#list>	
+											<#list byProdList as byProd>
+												<fo:table-column column-width="50pt"/>
+											</#list>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-column column-width="50pt"/>
+											<fo:table-body>		
+											<fo:table-row>
+											<#assign columnCounter = 0>
+											<#list lmsProductList as product>
+												<#assign columnCounter = columnCounter+1>
+												 <#if (columnCounter > 15) > 
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+												</#if>
+												<#assign qty=0>
+												<#if adhocBoothProdTotals.get(product)?has_content>
+															<#assign qty= adhocBoothProdTotals.get(product).get("packetQuantity")>
+												</#if>
+												<#if qty !=0>
+													<fo:table-cell>		
+														<fo:block text-align="right">${qty?if_exists}</fo:block>																									
+													</fo:table-cell>
+												<#else>
+													<fo:table-cell>		
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													</fo:table-cell>
+												</#if>
+											</#list>
+											<#list byProdList as product>
+											<#assign columnCounter = columnCounter+1>
+											   <#if (columnCounter > 15) >
+														<#assign columnCounter =1>
+														</fo:table-row>	
+														<fo:table-row>
+												</#if>
+												<#assign byProdQty=0>
+												<#if adhocBoothProdTotals.get(product)?has_content>
+													<#assign byProdQty= adhocBoothProdTotals.get(product).get("packetQuantity")>
+												</#if>
+												<#if byProdQty !=0>
+													<fo:table-cell>		
+														<fo:block text-align="right">${byProdQty?if_exists}</fo:block>																									
+													</fo:table-cell>
+												<#else>
+													<fo:table-cell>		
+														<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+													</fo:table-cell>
+												</#if>
+											</#list>
+										</fo:table-row>
+												<fo:table-row>							
+													<fo:table-cell/>
+													<fo:table-cell/>
+													<fo:table-cell/>
+													<fo:table-cell/>
+													<fo:table-cell/>
+													<fo:table-cell/>
+													<fo:table-cell/>
+													<fo:table-cell/>
+													<#--
+													<fo:table-cell>
+														<fo:block text-align="center">${pmRoutesMap.getValue().get("routeTotQty")?if_exists}</fo:block>
+													</fo:table-cell> -->
+													<fo:table-cell>
+														<fo:block text-align="center">${adhocBoothMap.getValue().get("totalRevenue")?if_exists?string("#0.00")}</fo:block>
+													</fo:table-cell>
+													<#assign adhocPaidAmnt=0>
+														<#if adhocBoothPaymentMap.get(adhocBoothMap.getKey())?has_content>
+														<#assign adhocPaidAmnt=adhocBoothPaymentMap.get(adhocBoothMap.getKey())>
+														</#if>
+													<#if adhocBoothMap.getKey()!="Total">
+													<fo:table-cell>
+														<fo:block text-align="center">${adhocPaidAmnt?string("#0.00")}</fo:block>
+													</fo:table-cell>
+													<#else>
+							                         <fo:table-cell>
+														<fo:block text-align="center">${adhocBoothMap.getValue().get("adhocPaidAmount")?if_exists?string("#0.00")}</fo:block>
+													</fo:table-cell>
+							                       </#if>
+													<fo:table-cell/>
+													<fo:table-cell>
+														<fo:block text-align="center"></fo:block>
+													</fo:table-cell> 
+												</fo:table-row>										
+											</fo:table-body>
+										</fo:table>
+									</fo:block>
+								</fo:table-cell>
+							</fo:table-row>						
+						</fo:table-body>
+					</fo:table>
+				</fo:block>
+				<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			</#list>
+			
 			<#assign grandProdTotals = grandProdTotals>
 			<#if grandProdTotals?has_content>
 			<fo:block>
@@ -461,7 +606,7 @@ under the License.
 													<fo:table-cell>
 														<fo:block text-align="center">${(reciepts)?if_exists?string("#0.00")}</fo:block>
 													</fo:table-cell>
-													<fo:table-cell/>
+													<#--<fo:table-cell/> -->
 													<fo:table-cell>
 														<fo:block text-align="center">${((routeAmount)-(reciepts))?if_exists?string("#0.00")} VST_ASCII-027VST_ASCII-070</fo:block>
 													</fo:table-cell>
@@ -497,7 +642,7 @@ under the License.
 							<fo:table-cell><fo:block keep-together="always">Route Name</fo:block></fo:table-cell>
 							<fo:table-cell>
 									<#-- <fo:block text-align="left" keep-together="always" white-space-collapse="false">N A N D I N I    M I L K    A N D    M I L K    P R O D U C T S                                                                                     Receivable    cash Amt.   Cheque Amt.  Balance</fo:block> -->
-									 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;    &#160;  &#160;    &#160;  &#160;  &#160;  &#160;    &#160;              							                                                        &#160;    Receivable    cash-Amt.   Cheque-Amt.   Balance</fo:block> 
+									 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;    &#160;  &#160;    &#160;  &#160;  &#160;  &#160;    &#160;              							                                                        &#160;    Receivable    Paid-Amt.     Balance</fo:block> 
 									<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------VST_ASCII-027VST_ASCII-069</fo:block>
 									<fo:block >
 										<fo:table>
@@ -649,7 +794,7 @@ under the License.
 													<fo:table-cell>
 														<fo:block text-align="center">${routesMap.getValue().get("reciepts")?if_exists?string("#0.00")}</fo:block>
 													</fo:table-cell>
-													<fo:table-cell/>
+													<#--<fo:table-cell/> -->
 													<fo:table-cell>
 														<fo:block text-align="center">${(routesMap.getValue().get("routeAmount")-routesMap.getValue().get("reciepts"))?if_exists?string("#0.00")} VST_ASCII-027VST_ASCII-070</fo:block>
 													</fo:table-cell>
@@ -762,7 +907,7 @@ under the License.
 													<fo:table-cell>
 														<fo:block text-align="center">${pmRoutesMap.getValue().get("reciepts")?if_exists?string("#0.00")}</fo:block>
 													</fo:table-cell>
-													<fo:table-cell/>
+													<#--<fo:table-cell/> -->
 													<fo:table-cell>
 														<fo:block text-align="center">${(pmRoutesMap.getValue().get("routeAmount")-pmRoutesMap.getValue().get("reciepts"))?if_exists?string("#0.00")} VST_ASCII-027VST_ASCII-070</fo:block>
 													</fo:table-cell>
@@ -780,6 +925,127 @@ under the License.
 				            </fo:table-row>	
 							 </#if>
 			                 </#list>
+			                 
+			                 <#--Adhoc TotalsStrts here -->
+							<#assign adhocBoothTotalsList = adhocBoothTotals.entrySet()>
+							<#assign noOfBooths=0>	
+							<#list adhocBoothTotalsList as adhocBoothMap>		
+							<#if adhocBoothMap.getKey()=="Total">	
+								<#assign adhocBoothProdTotals = adhocBoothMap.getValue().get("productTotals")>
+										<fo:table-row>
+											<fo:table-cell>
+											<fo:block text-align="center"  font-size="3pt" keep-together="always">CounterSale Total</fo:block>
+											</fo:table-cell>
+											<fo:table-cell>
+													<fo:block >
+														<fo:table>
+															<#list lmsProductList as product>
+																<fo:table-column column-width="50pt"/>
+															</#list>	
+															<#list byProdList as byProd>
+																<fo:table-column column-width="50pt"/>
+															</#list>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-column column-width="50pt"/>
+															<fo:table-body>		
+															<fo:table-row>
+															<#assign columnCounter = 0>
+															<#list lmsProductList as product>
+																<#assign columnCounter = columnCounter+1>
+																 <#if (columnCounter > 15) > 
+																		<#assign columnCounter =1>
+																		</fo:table-row>	
+																		<fo:table-row>
+																</#if>
+																<#assign qty=0>
+																<#if adhocBoothProdTotals.get(product)?has_content>
+																			<#assign qty= adhocBoothProdTotals.get(product).get("packetQuantity")>
+																</#if>
+																<#if qty !=0>
+																	<fo:table-cell>		
+																		<fo:block text-align="right">${qty?if_exists}</fo:block>																									
+																	</fo:table-cell>
+																<#else>
+																	<fo:table-cell>		
+																		<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+																	</fo:table-cell>
+																</#if>
+															</#list>
+															<#list byProdList as product>
+															<#assign columnCounter = columnCounter+1>
+															   <#if (columnCounter > 15) >
+																		<#assign columnCounter =1>
+																		</fo:table-row>	
+																		<fo:table-row>
+																</#if>
+																<#assign byProdQty=0>
+																<#if adhocBoothProdTotals.get(product)?has_content>
+																	<#assign byProdQty= adhocBoothProdTotals.get(product).get("packetQuantity")>
+																</#if>
+																<#if byProdQty !=0>
+																	<fo:table-cell>		
+																		<fo:block text-align="right">${byProdQty?if_exists}</fo:block>																									
+																	</fo:table-cell>
+																<#else>
+																	<fo:table-cell>		
+																		<fo:block text-align="right" linefeed-treatment="preserve">-</fo:block>																									
+																	</fo:table-cell>
+																</#if>
+															</#list>
+														</fo:table-row>
+																<fo:table-row>							
+																	<fo:table-cell/>
+																	<fo:table-cell/>
+																	<fo:table-cell/>
+																	<fo:table-cell/>
+																	<fo:table-cell/>
+																	<fo:table-cell/>
+																	<fo:table-cell/>
+																	<fo:table-cell/>
+																	<#--
+																	<fo:table-cell>
+																		<fo:block text-align="center">${pmRoutesMap.getValue().get("routeTotQty")?if_exists}</fo:block>
+																	</fo:table-cell> -->
+																	<fo:table-cell>
+																		<fo:block text-align="center">${adhocBoothMap.getValue().get("totalRevenue")?if_exists?string("#0.00")}</fo:block>
+																	</fo:table-cell>
+																	<fo:table-cell>
+																		<fo:block text-align="center">${adhocBoothMap.getValue().get("adhocPaidAmount")?if_exists?string("#0.00")}</fo:block>
+																	</fo:table-cell>
+																	<#--<fo:table-cell/> -->
+																	<fo:table-cell>
+																		<fo:block text-align="center"></fo:block>
+																	</fo:table-cell> 
+																</fo:table-row>										
+															</fo:table-body>
+														</fo:table>
+													</fo:block>
+												</fo:table-cell>
+											</fo:table-row>						
+									<fo:table-row>
+									<fo:table-cell>
+									<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+									</fo:table-cell>
+						            </fo:table-row>		
+							</#if>
+							</#list>
+			
 				            <#assign grandProdTotals = grandProdTotals>
 			                <#if grandProdTotals?has_content>
 				            <fo:table-row>
@@ -872,7 +1138,7 @@ under the License.
 													<fo:table-cell>
 														<fo:block text-align="center">${(reciepts)?if_exists?string("#0.00")}</fo:block>
 													</fo:table-cell>
-													<fo:table-cell/>
+													<#--<fo:table-cell/> -->
 													<fo:table-cell>
 														<fo:block text-align="center">${((routeAmount)-(reciepts))?if_exists?string("#0.00")} VST_ASCII-027VST_ASCII-070</fo:block>
 													</fo:table-cell>
