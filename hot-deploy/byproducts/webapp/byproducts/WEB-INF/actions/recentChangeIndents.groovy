@@ -110,11 +110,13 @@ if(("AdhocSaleNew".equals(changeFlag)) ){
 
 SubProdList.each{ eachItem ->
 	productMap = [:];
+	prodDetails = delegator.findOne("Product", UtilMisc.toMap("productId", eachItem.productId),false);
 	productMap.productId = eachItem.productId;
-	productMap.productName = eachItem.productId;
+	productMap.productName = prodDetails.brandName;
 	prodList.add(productMap);
 	lastChangeSubProdMap[eachItem.productId] = eachItem.quantity;
-	lastChangeSubProdMap["boothId"] = boothId;
+	facilityParty = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId),false);
+	lastChangeSubProdMap["boothId"] = boothId+" ["+facilityParty.facilityName+" ]";
 	lastChangeSubProdMap["modifiedBy"] = modifiedBy;
 	lastChangeSubProdMap["modificationTime"] = modificationTime;//dateFormat.format(eachItem.changeDatetime);
 }

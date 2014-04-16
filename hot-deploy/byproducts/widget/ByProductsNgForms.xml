@@ -629,13 +629,18 @@
                 <field-map field-name="invoiceId"/>
             </entity-and>
            <set field="paymentApplicationId" from-field="paymentApplications[0].paymentApplicationId"/>
+           
+           <entity-one entity-name="Invoice" value-field="invoice">
+        		<field-map field-name="invoiceId" from-field="invoiceId" />
+        	</entity-one>
+        	<set field="invStatusId" from-field="invoice.statusId"/>
         </row-actions>
-        <field name="originFacilityId" title="Party Code"><display></display></field>
-        <field name="orderId" title="Order Id"><display/></field>
+        <field name="originFacilityId" title="Retailer Code"><display></display></field>
+        <!-- <field name="orderId" title="Order Id"><display/></field> -->
          <field name="shipmentId" ><hidden></hidden></field>
         <field name="invoiceId" title="Invoice Id" widget-style="buttontext"><hyperlink target="invoiceOverview" target-window="_blank" description="${invoiceId}"> <parameter param-name="invoiceId"/></hyperlink>        </field>
         <field name="invTotal" title="Invoice Amt (Rs)"><display/></field>
-        <field name="statusId" title="Status Id" ><display-entity key-field-name="statusId" description="${description}" entity-name="StatusItem"/></field>
+        <field name="invStatusId" title="Status Id" ><display-entity key-field-name="statusId" description="${description}" entity-name="StatusItem"/></field>
         <field name="estimatedDeliveryDate" title="Delivery Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedDeliveryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="createdBy" title="Created By"><display/></field>
         <field name="lastUpdatedStamp" title="Last Update"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(lastUpdatedStamp, &quot;dd/MM/yyyy HH:mm:ss&quot;);}" /></field>
@@ -683,7 +688,7 @@
                   <parameter param-name="shipmentId"/>
             </hyperlink>
         </field> -->
-        <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" name="cancelOrder" widget-style="buttontext">
+        <field use-when="statusId.equals(&quot;ORDER_APPROVED&quot;) &amp;&amp; paymentApplicationId==null" name="cancelOrder" widget-style="buttontext">
             <hyperlink target="cancelAdhocSalesOrder" description="Cancel Order">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId"/>
