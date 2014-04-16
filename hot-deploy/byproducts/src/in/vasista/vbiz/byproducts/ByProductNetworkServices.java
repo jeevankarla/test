@@ -3114,6 +3114,11 @@ public class ByProductNetworkServices {
 	        	findByInstrumentDate = (Boolean)context.get("findByInstrumentDate");
 	        }
 	        
+	        boolean excludeAdhocPayments= Boolean.TRUE;//always excluding if externally not set
+	        if(context.get("excludeAdhocPayments") != null){
+	        	excludeAdhocPayments = (Boolean)context.get("excludeAdhocPayments");
+	        }
+	        
 	        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
 	        List paymentIds = (List) context.get("paymentIds");
 	        boolean onlyCurrentDues= Boolean.FALSE;
@@ -3203,6 +3208,15 @@ public class ByProductNetworkServices {
 			if (!UtilValidate.isEmpty(paymentIds)) {
 				exprList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds));
 			}
+			if (excludeAdhocPayments) {
+				//get AdhocSale Payments to exclude them
+				Map adhocSaleDetails = getAdhocSalePayments(dctx , UtilMisc.toMap("estimatedShipDate",dayBegin));
+				if(UtilValidate.isNotEmpty(adhocSaleDetails.get("paymentIds"))){
+					List adhocPaymentIds=(List)adhocSaleDetails.get("paymentIds");
+				exprList.add(EntityCondition.makeCondition("paymentId", EntityOperator.NOT_IN, adhocPaymentIds));
+				}
+			}
+			
 			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 			List paymentsList = FastList.newInstance();
 			//order by condition will change basing on requirement;
@@ -4174,7 +4188,6 @@ public class ByProductNetworkServices {
 	        	if(!UtilValidate.isEmpty(shipmentIds)){        		
 	        		orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
 	        	}
-
 	    	} catch (GenericEntityException e) {
 	            Debug.logError(e, module);
 	        }
@@ -4187,7 +4200,6 @@ public class ByProductNetworkServices {
 	    	
 	    	Map<String, Object> boothZoneMap = FastMap.newInstance();
 	    	boothZoneMap = getAllBoothsZonesMap(delegator); 
-
 	//Debug.logInfo("boothZoneMap=" + boothZoneMap, module);
 	    	Map<String, Object> boothTotals = new TreeMap<String, Object>();
 	    	//Map<String, Object> zoneTotals = new TreeMap<String, Object>();
@@ -4416,6 +4428,14 @@ public class ByProductNetworkServices {
 				//handle dayWise Totals	if empty ignore this type of totals	
 				if(UtilValidate.isNotEmpty(dayShipmentMap)){
 				String currentSaleDate = dayShipmentMap.get(orderItem.getString("shipmentId"));
+				if(UtilValidate.isEmpty(currentSaleDate)){
+					try{
+					GenericValue shipment =delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", orderItem.getString("shipmentId")),false);
+					currentSaleDate=UtilDateTime.toDateString(shipment.getTimestamp("estimatedShipDate") ,"yyyy-MM-dd");
+					} catch (GenericEntityException e) {
+			            Debug.logError(e, module);
+			        }
+				}
 				if (dayWiseTotals.get(currentSaleDate) == null) {
 					Map<String, Object> newMap = FastMap.newInstance();
 					newMap.put("total", quantity);
@@ -4760,9 +4780,9 @@ public class ByProductNetworkServices {
 					BigDecimal runningVatRevenue = (BigDecimal)supplyTypeMap.get("vatRevenue");
 					runningVatRevenue = runningVatRevenue.add(vatRevenue);
 					supplyTypeMap.put("vatRevenue", runningVatRevenue); 
+					supplyTypeTotals.put(prodSubscriptionTypeId, supplyTypeMap);
 				}
 			}
-	    	  	
 			totalQuantity = totalQuantity.setScale(decimals, rounding);  
 			totalRevenue = totalRevenue.setScale(decimals, rounding);
 			totalPacket = totalPacket.setScale(decimals, rounding);
@@ -6538,6 +6558,49 @@ public class ByProductNetworkServices {
 	            return ServiceUtil.returnError(e.toString());
 		        }
 	             result = ServiceUtil.returnSuccess("Payment successfully done for Party "+facilityId+" ..!");
+	            return result; 
+		   }
+		   
+		   public static Map<String, Object> getAdhocSalePayments(DispatchContext dctx, Map<String, ? extends Object> context){
+		        Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();
+		        Timestamp estimatedShipDate = (Timestamp) context.get("estimatedShipDate");
+		        
+		        List adhocShipmentIds  =getShipmentIds(delegator , UtilDateTime.toDateString(estimatedShipDate, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
+		        Map adhocBoothPaymentMap=FastMap.newInstance();
+		        BigDecimal totalPaidAmount=BigDecimal.ZERO;
+		        List paymentIds=FastList.newInstance();
+		        try {
+		        List<GenericValue> orderHeaderFacInvList = delegator.findList("OrderHeaderFacAndItemBillingInv", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, adhocShipmentIds), UtilMisc.toSet("originFacilityId","invoiceId"), null, null, false);
+		        if (!UtilValidate.isEmpty(orderHeaderFacInvList)) {
+					List invoiceIds = EntityUtil.getFieldListFromEntityList(orderHeaderFacInvList, "invoiceId", false);
+					List facilityIds = EntityUtil.getFieldListFromEntityList(orderHeaderFacInvList, "originFacilityId", false);
+					 List<GenericValue> paymentAppList = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), UtilMisc.toSet("paymentId"), null, null, false);
+					  paymentIds = EntityUtil.getFieldListFromEntityList(paymentAppList, "paymentId", false);
+					 
+					 List<GenericValue> paymentsList = delegator.findList("PaymentAndFacility", EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds), null, null, null, false);
+									
+						for (int i = 0; i < paymentsList.size(); i++) {				
+							GenericValue boothPayment = (GenericValue)paymentsList.get(i);
+							String facilityId=boothPayment.getString("facilityId");
+							if(adhocBoothPaymentMap.get(facilityId)==null){
+								adhocBoothPaymentMap.put(facilityId,boothPayment.getBigDecimal("amount"));
+								totalPaidAmount=totalPaidAmount.add(boothPayment.getBigDecimal("amount"));
+							}else{					
+								BigDecimal amount =(BigDecimal)adhocBoothPaymentMap.get(facilityId);
+								adhocBoothPaymentMap.put(facilityId,amount.add(boothPayment.getBigDecimal("amount")));
+								totalPaidAmount=totalPaidAmount.add(boothPayment.getBigDecimal("amount"));
+							}
+					}
+		        }
+	            }catch (Exception e) {
+	            Debug.logError(e, e.toString(), module);
+	            return ServiceUtil.returnError(e.toString());
+		        }
+	            Map<String, Object> result = FastMap.newInstance();        
+		        result.put("paymentIds", paymentIds);
+		        result.put("adhocBoothPaidMap", adhocBoothPaymentMap);
+		        result.put("totalPaidAmount", totalPaidAmount);
 	            return result; 
 		   }
 		 
