@@ -125,6 +125,7 @@
    
     <EnumerationType enumTypeId="PAYMENT_PURPOSE" hasTable="N" description="Payment Purpose Type" />
 	<Enumeration enumId="BYPROD_PAYMENT" enumTypeId="PAYMENT_PURPOSE" enumCode="BYPROD_PAYMENT" description="ByProducts Payment Purpose" />
+	<Enumeration enumId="ROUTE_MKTG" enumTypeId="PAYMENT_PURPOSE" enumCode="ROUTE_MKTG" description="RouteMarketing Payment Purpose" />
 	
 	<Enumeration enumId="INV_CHECK" enumTypeId="TENANTCONF_TYPE" description="Inventory Check" lastUpdatedStamp="2013-03-09 20:57:52.0" lastUpdatedTxStamp="2013-03-09 20:57:52.0" createdStamp="2013-03-09 20:57:52.0" createdTxStamp="2013-03-09 20:57:52.0"/>
 	<TenantConfiguration propertyName="enableInvCheck" propertyTypeEnumId="INV_CHECK" propertyValue="Y" description="Enable Inventory Check for Parlour Sales" lastUpdatedStamp="2013-03-09 20:59:27.0" lastUpdatedTxStamp="2013-03-09 20:59:27.0" createdStamp="2013-03-09 20:59:27.0" createdTxStamp="2013-03-09 20:59:27.0"/>
