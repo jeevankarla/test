@@ -6576,14 +6576,15 @@ public class ByProductNetworkServices {
 		        if (!UtilValidate.isEmpty(orderHeaderFacInvList)) {
 					List invoiceIds = EntityUtil.getFieldListFromEntityList(orderHeaderFacInvList, "invoiceId", false);
 					List facilityIds = EntityUtil.getFieldListFromEntityList(orderHeaderFacInvList, "originFacilityId", false);
-					 List<GenericValue> paymentAppList = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), UtilMisc.toSet("paymentId"), null, null, false);
+					 List<GenericValue> paymentAppList = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds), UtilMisc.toSet("paymentId","facilityId","amount"), null, null, false);
 					  paymentIds = EntityUtil.getFieldListFromEntityList(paymentAppList, "paymentId", false);
 					 
-					 List<GenericValue> paymentsList = delegator.findList("PaymentAndFacility", EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds), null, null, null, false);
+					 //List<GenericValue> paymentsList = delegator.findList("PaymentAndFacility", EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds), null, null, null, false);
 									
-						for (int i = 0; i < paymentsList.size(); i++) {				
-							GenericValue boothPayment = (GenericValue)paymentsList.get(i);
+						for (int i = 0; i < paymentAppList.size(); i++) {				
+							GenericValue boothPayment = (GenericValue)paymentAppList.get(i);
 							String facilityId=boothPayment.getString("facilityId");
+							if(facilityId!=null){
 							if(adhocBoothPaymentMap.get(facilityId)==null){
 								adhocBoothPaymentMap.put(facilityId,boothPayment.getBigDecimal("amount"));
 								totalPaidAmount=totalPaidAmount.add(boothPayment.getBigDecimal("amount"));
@@ -6592,6 +6593,7 @@ public class ByProductNetworkServices {
 								adhocBoothPaymentMap.put(facilityId,amount.add(boothPayment.getBigDecimal("amount")));
 								totalPaidAmount=totalPaidAmount.add(boothPayment.getBigDecimal("amount"));
 							}
+						}
 					}
 		        }
 	            }catch (Exception e) {
