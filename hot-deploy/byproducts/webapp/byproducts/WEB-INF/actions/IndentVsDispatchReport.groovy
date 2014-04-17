@@ -21,16 +21,17 @@
 	import org.ofbiz.base.util.UtilNumber;
 
 	import in.vasista.vbiz.byproducts.ByProductNetworkServices;
-	import in.vasista.vbiz.byproducts.ByProductServices;
+import in.vasista.vbiz.byproducts.ByProductServices;
 	
 	dctx = dispatcher.getDispatchContext();
 	context.put("dctx",dctx);
 	
 	effectiveDate = null;
 	thruEffectiveDate = null;
+	conditionList=[];
+	if(reportTypeFlag=="IndentVsDispatchReportPDF"){
 	effectiveDateStr = parameters.indentDate;
 	thruEffectiveDateStr = parameters.indentThruDate;
-	
 	if (UtilValidate.isEmpty(effectiveDateStr)) {
 		effectiveDate = UtilDateTime.nowTimestamp();
 	}
@@ -72,7 +73,7 @@
 	
 	productStoreId = ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
 	productList = ByProductServices.getProdStoreProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("productStoreId", productStoreId)).get("productIdsList");
-	conditionList=[];
+	
 	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.IN, ["AM","PM"]));
 	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDateEnd));
@@ -88,7 +89,7 @@
 	orderCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	fieldsToSelect = ["productId","originFacilityId", "quantity","unitPrice","shipmentId","categoryTypeEnum"] as Set;
 	
-	boothOrderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", orderCondition, fieldsToSelect , ["productId"], null, false);
+	boothOrderCorrectedItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", orderCondition, fieldsToSelect , ["productId"], null, false);
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentList));
 	conditionList.add(EntityCondition.makeCondition("isCancelled", EntityOperator.EQUALS, null));
@@ -106,7 +107,7 @@
 		
 		productId = productList.get(i);
 		List prodIndentList = EntityUtil.filterByAnd(indentList, UtilMisc.toMap("productId", productId));
-		List prodOrderItemsList = EntityUtil.filterByAnd(boothOrderItemsList, UtilMisc.toMap("productId", productId));
+		List prodOrderItemsList = EntityUtil.filterByAnd(boothOrderCorrectedItemsList, UtilMisc.toMap("productId", productId));
 		//List prodReceiptList = EntityUtil.filterByAnd(shipmentReceiptList, UtilMisc.toMap("productId", productId));
 		
 		for(j = 0; j < prodIndentList.size(); j++){
@@ -135,5 +136,125 @@
 		prodIndentAndDispatchMap.put(productId, tempIndentAndDispatchMap);
 		
 	}
-	
 	context.put("prodIndentAndDispatchMap", prodIndentAndDispatchMap);
+	}
+	
+	routeProdDispatchAndDeliveredMap = [:];
+	if(reportTypeFlag=="TruckSheetCorrectionsReport"){
+		effectiveDate = null;
+		effectiveDateStr = parameters.supplyDate;
+		if (UtilValidate.isEmpty(effectiveDateStr)) {
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
+		else{
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				effectiveDate = new java.sql.Timestamp(dateFormat.parse(effectiveDateStr+" 00:00:00").getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
+			}
+		}
+		dayBegin = UtilDateTime.getDayStart(effectiveDate);
+		dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+		List shipmentIds=[];
+		amShipmentIds=[];
+		pmShipmentIds=[];
+		boothOrderCorrectedItemsList=[];
+		boothOrderApprovedItemsList=[];
+		
+		List truckSheetCorrectionList=[];
+		if(UtilValidate.isEmpty(parameters.subscriptionTypeId)){
+			 shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+			}else if(parameters.subscriptionTypeId=="AM"){
+			amShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"AM");
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, amShipmentIds));
+			conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_CANCELLED"));
+		/*	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));*/
+			orderCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			 fieldsToSelect = ["productId","originFacilityId","parentFacilityId","quantity","unitPrice","shipmentId","categoryTypeEnum","shipmentTypeId","changeByUserLoginId","changeDatetime"] as Set;
+			boothOrderCorrectedItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", orderCondition, fieldsToSelect , ["changeDatetime"], null, false);
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, amShipmentIds));
+			conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+			conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
+			orderCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			 fieldsToSelect = ["productId","originFacilityId","parentFacilityId","quantity","unitPrice","shipmentId","categoryTypeEnum","shipmentTypeId","changeByUserLoginId","changeDatetime"] as Set;
+			boothOrderApprovedItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", orderCondition, fieldsToSelect , ["productId"], null, false);
+			
+			}else if(parameters.subscriptionTypeId=="PM"){
+		     pmShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"PM");
+			 conditionList.clear();
+			 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, pmShipmentIds));
+			 conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_CANCELLED"));
+			/* conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));*/
+			 orderCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			 fieldsToSelect = ["productId","originFacilityId","parentFacilityId","quantity","unitPrice","shipmentId","categoryTypeEnum","shipmentTypeId","changeByUserLoginId","changeDatetime"] as Set;
+			 boothOrderCorrectedItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", orderCondition, fieldsToSelect , ["productId"], null, false);
+			
+			 conditionList.clear();
+			 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, pmShipmentIds));
+			 conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+			 conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
+			 orderCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			  fieldsToSelect = ["productId","originFacilityId","parentFacilityId","quantity","unitPrice","shipmentId","categoryTypeEnum","shipmentTypeId","changeByUserLoginId","changeDatetime"] as Set;
+			 boothOrderApprovedItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", orderCondition, fieldsToSelect , ["productId"], null, false);
+			
+			 
+			 }
+		
+			dispacthedBoothList= EntityUtil.getFieldListFromEntityList(boothOrderCorrectedItemsList, "originFacilityId", false);
+			Set correctedShipmentSet=new HashSet(EntityUtil.getFieldListFromEntityList(boothOrderCorrectedItemsList, "shipmentId", false));
+			List correctedShipmentList=[];
+			correctedShipmentList.addAll(correctedShipmentSet);
+			Debug.log("===correctedShipmentList===="+correctedShipmentList);
+			for(int i=0; i< correctedShipmentList.size();i++){
+	                  curntShipmentId=correctedShipmentList.get(i);
+					  routeId="";
+					  GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId",curntShipmentId), false);
+					  if(UtilValidate.isNotEmpty(shipment)){
+						  routeId=shipment.routeId;
+					  }
+					  List shipmentCanceldOrdrList = EntityUtil.filterByAnd(boothOrderCorrectedItemsList, UtilMisc.toMap("shipmentId", curntShipmentId));
+					  Set correctedFacilitySet=new HashSet(EntityUtil.getFieldListFromEntityList(shipmentCanceldOrdrList, "originFacilityId", false));
+					  correctedFacilitySet.each{boothId->
+						  List boothCanceldOrdrList = EntityUtil.filterByAnd(boothOrderCorrectedItemsList, UtilMisc.toMap("originFacilityId", boothId));
+						  List boothApprovedOrdrList = EntityUtil.filterByAnd(boothOrderApprovedItemsList, UtilMisc.toMap("originFacilityId", boothId));
+						  boothCanceldOrdrList.each{ boothOrdrCanceldItem->
+							  boothProdDispacthCorrctdMap = [:];
+							  boothProdDispacthCorrctdMap["Date"]=dayBegin;
+							  boothProdDispacthCorrctdMap["RouteId"]=routeId;
+							  boothProdDispacthCorrctdMap["boothId"]=boothId;
+						     productId=boothOrdrCanceldItem.productId;
+						     boothProdDispacthCorrctdMap["productId"]=productId;
+						  orginalQuantity=boothOrdrCanceldItem.quantity;
+						  boothProdDispacthCorrctdMap["orginalQuantity"]=orginalQuantity;
+						  revisedQuantity=0;
+						  userLoginId="";
+						  changedDate="";
+						  List boothApprovedItemList = EntityUtil.filterByAnd(boothApprovedOrdrList, UtilMisc.toMap("productId", productId));
+						  if(UtilValidate.isNotEmpty(boothApprovedItemList)){
+							  orderItem=boothApprovedItemList.get(0);
+							  revisedQuantity=orderItem.quantity;
+							  userLoginId=orderItem.changeByUserLoginId;
+							  changedDate=orderItem.changeDatetime;
+						  }
+						  boothProdDispacthCorrctdMap["revisedQuantity"]=revisedQuantity;
+						  boothProdDispacthCorrctdMap["userLoginId"]=userLoginId;
+						  boothProdDispacthCorrctdMap["changedDate"]=changedDate;
+						  truckSheetCorrectionList.add(boothProdDispacthCorrctdMap);
+						  }
+					  }
+					 
+			}
+			//routeProdDispatchAndDeliveredMap.put(curntRouteId,tempRouteDispatchAndDeliveredMap);
+			
+			context.put("truckSheetCorrectionList", truckSheetCorrectionList);
+	}
+	
+	
+			
+			
+	
+	

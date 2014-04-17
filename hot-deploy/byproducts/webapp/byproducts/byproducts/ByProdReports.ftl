@@ -58,6 +58,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("NIMCDate","");
 		makeDatePicker("rtSupplyDate","");
 		makeDatePicker("RouteIndentAbstDate","");
+		makeDatePicker("RouteTrCorrDate","");
 		makeDatePicker("bsFromDateId","fromDateId");
 		makeDatePicker("bsThruDateId","thuDateId");
 		makeDatePicker("smsNotify","");
@@ -167,6 +168,27 @@ function makeDatePicker(fromDateId ,thruDateId){
       			<td width="33%">Thru<@htmlTemplate.renderDateTimeField name="indentThruDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="indentThruDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><input type="submit" value="Download" class="buttontext"/></td>
       		</form>
       	</tr> 
+      	 <tr class="alternate-row">
+        	<form id="TruckSheetCorrectionsReport" name="TruckSheetCorrectionsReport" method="post"  target="_blank" action="<@ofbizUrl>TruckSheetCorrectionsReport</@ofbizUrl>">	
+      			<td width="34%">TruckSheet Corrections Report </td>
+      			<td width="30%">Date<input  type="text" size="18pt" id="RouteTrCorrDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      			<#--><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br> -->
+      			</td>			
+      			<td width="36%">Route 
+				 <select name="routeId" class='h4'>
+				<option value='All-Routes'>All</option>
+					<#list routesList as route>    
+  	    				<option value='${route}'>${route}</option>
+					</#list> 
+					</select>
+					Type 
+					<select name='subscriptionTypeId' class='h4'>
+					<option value='AM'>AM</option>
+					<option value='PM'>PM</option>
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+        </tr>
       	
       	 <tr>
         	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallan.txt</@ofbizUrl>">	

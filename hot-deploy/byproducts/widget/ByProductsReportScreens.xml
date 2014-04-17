@@ -497,6 +497,7 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				 <set field="reportTypeFlag" value="IndentVsDispatchReportPDF"/>
 				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/IndentVsDispatchReport.groovy" />
 			</actions>
 			<widgets>
@@ -506,6 +507,30 @@
 							<xsl-fo>
 								<html-template
 									location="component://byproducts/webapp/byproducts/byproducts/IndentVsDispatchReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="TruckSheetCorrectionsReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				 <set field="reportTypeFlag" value="TruckSheetCorrectionsReport"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/IndentVsDispatchReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/TruckSheetCorrectionsReport.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
