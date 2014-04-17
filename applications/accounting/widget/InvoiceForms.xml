@@ -415,7 +415,7 @@ under the License.
     </form>
 
    <form name="EditInvoiceItems" type="list"  list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItem" title="Edit Invoice Items" paginate-target="listInvoiceItems"
-       odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+       odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
        <row-actions>
            <set field="total" value="${bsh:
                import java.math.BigDecimal;
@@ -438,9 +438,9 @@ under the License.
                <list-options list-name="invoiceItemTypes" key-name="invoiceItemTypeId" description="${description}"/>
            </drop-down>
        </field>
-<field name="invoiceItemTypeId" use-when="!hasArInvoiceEditPermission"><display/></field>
-      <!--  <field name="productId"><lookup target-form-name="LookupProduct" size="20"/></field>
-       -->  <field name="description" use-when="hasArInvoiceEditPermission"><text size="30"/></field>
+	<field name="invoiceItemTypeId" use-when="!hasArInvoiceEditPermission"><display/></field>
+       <field name="productId"><lookup target-form-name="LookupProduct" size="10"/></field>
+        <field name="description" use-when="hasArInvoiceEditPermission"><text size="30"/></field>
        <field name="description" use-when="!hasArInvoiceEditPermission"><display/></field>
        <!-- <field name="overrideGlAccountId">
            <drop-down allow-empty="true">
@@ -448,7 +448,7 @@ under the License.
            </drop-down>
        </field> -->
        <field name="amount" title="${uiLabelMap.AccountingUnitPrice}" use-when="hasArInvoiceEditPermission"><text size="7"/></field>
-<field name="amount" title="${uiLabelMap.AccountingUnitPrice}" use-when="!hasArInvoiceEditPermission"><display/></field>
+      <field name="amount" title="${uiLabelMap.AccountingUnitPrice}" use-when="!hasArInvoiceEditPermission"><display/></field>
        <field name="total" widget-area-style="align-text"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence display -->
        <field name="uomId"><hidden/></field>
        <field name="taxableFlag"><hidden/></field>
@@ -476,10 +476,11 @@ under the License.
                 <list-options list-name="glAccountOrganizationAndClassList" key-name="glAccountId" description="${glAccountId} ${accountName}"/>
             </drop-down>
         </field> -->
-       <!--  <field position="2" name="inventoryItemId"><text/></field>
         <field position="1" name="productId">
             <lookup target-form-name="LookupProduct"/>
         </field>
+       <!--  <field position="2" name="inventoryItemId"><text/></field>
+        
         <field position="2" name="productFeatureId">
             <lookup target-form-name="LookupProductFeature"/>
         </field>
