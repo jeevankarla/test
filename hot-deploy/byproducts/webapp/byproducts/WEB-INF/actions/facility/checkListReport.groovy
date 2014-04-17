@@ -200,7 +200,7 @@ if(("changeindent".equals(checkListType))){
 			lastChangeSubProdMap["supplyType"] = supplyTypeMap[checkListItemProd.productSubscriptionTypeId];
 			lastChangeSubProdMap["lastModifiedBy"] = checkListItemProd.lastModifiedByUserLogin;
 			lastChangeSubProdMap["lastModifiedDate"] = UtilDateTime.toDateString(checkListItemProd.lastModifiedDate, "HH:mm:ss");
-			lastChangeSubProdMap["routeId"] = checkListItemProd.parentFacilityId;
+			lastChangeSubProdMap["routeId"] = checkListItemProd.sequenceNum;
 		}
 		if ((tempOrderId != checkListItemProd.subscriptionId) || (tempSupplyType != checkListItemProd.productSubscriptionTypeId) || (tempSequenceNum != checkListItemProd.sequenceNum))  {
 			tempOrderId = checkListItemProd.subscriptionId;
@@ -215,7 +215,7 @@ if(("changeindent".equals(checkListType))){
 			lastChangeSubProdMap["supplyType"] = supplyTypeMap[checkListItemProd.productSubscriptionTypeId];
 			lastChangeSubProdMap["lastModifiedBy"] = checkListItemProd.lastModifiedByUserLogin;
 			lastChangeSubProdMap["lastModifiedDate"] = UtilDateTime.toDateString(checkListItemProd.lastModifiedDate, "HH:mm:ss");
-			lastChangeSubProdMap["routeId"] = checkListItemProd.parentFacilityId;
+			lastChangeSubProdMap["routeId"] = checkListItemProd.sequenceNum;
 		}
 			
 		     lastChangeSubProdMap[checkListItemProd.productId] = (checkListItemProd.quantity).intValue();
