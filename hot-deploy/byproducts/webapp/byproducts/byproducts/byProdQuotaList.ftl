@@ -39,7 +39,7 @@
 		
 	function setupGrid() {
 		var grid;
-		var data = ${StringUtil.wrapString(dataJSON)!'[]'};
+		var data = ${StringUtil.wrapString(newDataJSON)!'[]'};
 
 		var columns = [
 			{id:"boothId", name:"DealerCode[Name]", field:"boothId", width:130, minWidth:130, cssClass:"cell-DealerTitle", sortable:false},
@@ -115,7 +115,7 @@
 
 
  	<div class="grid-header" style="width:100%">
-		<label>Indent History <#if hideSearch != 'Y'> for ${supplyDate} [Total Indents: ${indentCount}] </#if></label>
+		<label>Indent History <#if hideSearch != 'Y'> for ${supplyDate} [Total Indents: ${newIndentCount}] </#if></label>
 	</div>
 	<div id="myGrid" style="width:100%;height:500px"></div>
 

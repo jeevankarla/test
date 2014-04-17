@@ -81,6 +81,7 @@ boothsResultMap = [:];
 routeMap = [:];
 tripMap = [:];
 BoothRouteWiseMap= [:]
+boothFinalList = [];
 if(hideSearch == "N") {
 	facilityId = parameters.facilityId;
 	productId = parameters.productId;
@@ -220,10 +221,60 @@ if(hideSearch == "N") {
 	}
 	boothsResultMap["Total"] = [:];
 	boothsResultMap["Total"].putAll(totalsMap);
+	
+	// for separate routes for same booth
+	
+	finalTotalsMap =[:];
+	finalTotalsMap.putAll(prodQuantityInitMap);
+	for(int j=0; j < routeList.size();j++){
+		route = routeList.get(j);
+		routeProductList = EntityUtil.filterByCondition(quotaSubProdList, EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS ,route));
+		routeBooths = EntityUtil.getFieldListFromEntityList(routeProductList, "facilityId", true);
+		for(int k=0; k < routeBooths.size();k++){
+			routeBoothId = routeBooths.get(k);
+			routeBoothProductList = EntityUtil.filterByCondition(routeProductList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS ,routeBoothId));
+			routeBoothTotalsMap = [:];
+			routeBoothTotalsMap.putAll(prodQuantityInitMap);
+			tempBoothQty = [:];
+			tempBoothQty.putAll(prodQuantityInitMap);
+			for(int l=0; l < routeBoothProductList.size();l++){
+				routesList = [];
+				tripsList = [];
+				quotaSubProd = routeBoothProductList.get(l);
+				boothId = quotaSubProd.facilityId;
+				routeId = quotaSubProd.sequenceNum;
+				tripId = quotaSubProd.tripNum;
+				tempQuantity = (quotaSubProd.quantity).setScale(1,rounding);
+				quantity = tempQuantity;
+				if(l==0){
+					routeBoothTotalsMap["boothId"] = quotaSubProd.facilityId;
+					routeBoothTotalsMap["createdUser"] = quotaSubProd.lastModifiedByUserLogin;
+					routeBoothTotalsMap["entryDate"] = quotaSubProd.lastModifiedDate;
+					routeBoothTotalsMap["routeId"] = quotaSubProd.sequenceNum;
+					routeBoothTotalsMap["tripId"] = quotaSubProd.tripNum;
+				}
+				finalTotalsMap[quotaSubProd.productId] += quantity;
+				tempBoothQty[quotaSubProd.productId] = quantity;
+				routeBoothTotalsMap[quotaSubProd.productId] = quantity;
+			}
+			routeBoothTotalsMap["prodQty"] = tempBoothQty;
+			boothFinalList.add(routeBoothTotalsMap);
+		}
+	}
+	boothFinalTotalsMap = [:];
+	boothFinalTotalsMap["prodQty"] = finalTotalsMap;
+	boothFinalTotalsMap["createdUser"] = "";
+	boothFinalTotalsMap["boothId"] = "Total";
+	boothFinalTotalsMap["routeId"] = "";
+	boothFinalTotalsMap["entryDate"] = "";
+	boothFinalTotalsMap["tripId"] = "";
+	boothFinalTotalsMap["id"] = "Total";
+	boothFinalList.add(boothFinalTotalsMap);
 }
 context.boothsResultMap = boothsResultMap;
 context.BoothRouteWiseMap = BoothRouteWiseMap;
 context.indentCount = boothsResultMap.size() - 1;
+context.newIndentCount = boothFinalList.size() - 1;
 
 JSONArray dataJSONList= new JSONArray();
 Iterator mapIter = boothsResultMap.entrySet().iterator();
@@ -275,7 +326,32 @@ while (mapIter.hasNext()) {
 	dataJSONList.add(newObj);
 }
 context.dataJSON = dataJSONList.toString();
+
+// for separate routes for same booth
+
+JSONArray newDataJSONList= new JSONArray();
+boothFinalList.eachWithIndex {eachItem, idx ->
+	createdUser = eachItem.get("createdUser");
+	prodQty = eachItem.get("prodQty");
+	JSONObject newObj = new JSONObject(prodQty);
+	newObj.put("id",idx+1);
+	newObj.put("routeId",eachItem.routeId);
+	newObj.put("tripId",eachItem.tripId);
+	newObj.put("createdUser",createdUser);
+	newObj.put("boothId",eachItem.boothId);
+	if(eachItem.routeId != ""){
+		boothName = facilityMap.get(eachItem.boothId);
+		newObj.put("boothId",eachItem.boothId+" ["+boothName+"]");
+		entryDate = UtilDateTime.toDateString(eachItem.entryDate, "dd/MM/yyyy");
+		newObj.put("entryDate",entryDate);
+	}
+	newDataJSONList.add(newObj);
+}
+context.newDataJSON = newDataJSONList.toString();
 result.boothsResultMap = boothsResultMap;
 result.productList = context.productList;
 result.BoothRouteWiseMap = context.BoothRouteWiseMap;
 return result;
+
+
+
