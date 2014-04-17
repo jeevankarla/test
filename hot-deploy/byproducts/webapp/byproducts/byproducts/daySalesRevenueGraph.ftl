@@ -165,6 +165,7 @@ $(document).ready(function(){
 					<select name="subscriptionTypeId" class='h4'><option value='All'>ALL</option>
   	    				<option value='AM'>AM</option>
   	    				<option value='PM'>PM</option>
+  	    				<option value='ADHOC'>COUNTER SALE</option>
 					</select>
 				</td>
 				<td><input type="submit" value="Submit" id="button1" class="smallSubmit"/></td>				

@@ -2994,8 +2994,40 @@ public class ByProductNetworkServices {
 				shipments = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false);	
 			}
 			return shipments;
-		} 
-	 
+		}
+		
+		public static List getShipmentIdsByType(Delegator delegator,Timestamp fromDate,Timestamp thruDate ,String shipmentTypeId){
+			
+			List conditionList= FastList.newInstance(); 
+			List<GenericValue> shipmentList =FastList.newInstance();
+			List shipments = FastList.newInstance();
+			Timestamp dayBegin = null;
+			Timestamp dayEnd = null;
+			dayBegin = fromDate;
+			dayEnd = thruDate;
+			if(UtilValidate.isEmpty(fromDate)){
+				dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+			}
+			if(UtilValidate.isEmpty(thruDate)){
+				dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+			}
+			if(UtilValidate.isNotEmpty(shipmentTypeId)){
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS,shipmentTypeId));
+			}
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+			try {
+				shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
+			}catch (Exception e) {
+				Debug.logError(e, "Exception while getting shipment ids ", module);		   
+			}
+			if(UtilValidate.isNotEmpty(shipmentList)){
+				shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
+			}		
+			return shipments;
+		}
 	    
 	    /**
 	     * Get all routes

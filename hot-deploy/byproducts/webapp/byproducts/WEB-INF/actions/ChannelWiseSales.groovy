@@ -78,7 +78,13 @@ if(subscriptionTypeId && subscriptionTypeId != "All"){
 	condList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	condList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
-	condList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, subscriptionTypeId+"_SHIPMENT"));
+	
+	if(subscriptionTypeId != "ADHOC"){
+		condList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, subscriptionTypeId+"_SHIPMENT"));
+	}
+	else{
+		condList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "RM_DIRECT_SHIPMENT"));
+	}
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	shipments = delegator.findList("Shipment", cond, ["shipmentId"] as Set, null, null, false);
 	shipmentIds = EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", true);
@@ -101,7 +107,7 @@ if(dailySalesRevenueTrend){
 		}
 		else {
 			froDate = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp());
-			context.froDate = froDate
+			context.froDate = froDate;
 			fromDate = froDate;
 		}
 		if (parameters.thruDate) {
@@ -123,6 +129,10 @@ dctx = dispatcher.getDispatchContext();
 conditionList = [];
 conditionList.clear();
 shipments = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, thruDate);
+addShipments = ByProductNetworkServices.getShipmentIdsByType(delegator, fromDate, thruDate, "RM_DIRECT_SHIPMENT");
+if(addShipments){
+	shipments.addAll(addShipments);
+}
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
 List boothsList = FastList.newInstance();
 if(UtilValidate.isNotEmpty(parameters.facilityId)){
