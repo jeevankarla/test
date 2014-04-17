@@ -351,6 +351,7 @@ public class ByProductChangeIndentServices {
   	      String productSubscriptionTypeId = (String)context.get("productSubscriptionTypeId");
   	      String subscriptionId = (String)context.get("subscriptionId");
   	      String boothId = (String)context.get("boothId");
+  	      String secaCall = (String)context.get("enableSECA");
   	      String shipmentTypeId = (String)context.get("shipmentTypeId");
   	      Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");	      
   	      List<Map> productQtyList = (List)context.get("productQtyList");
@@ -405,28 +406,26 @@ public class ByProductChangeIndentServices {
 	      		}
     		}
     		List<GenericValue> subscriptionProdList =FastList.newInstance();
-    		List conditionList = UtilMisc.toList(
-  				  EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
-  		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
-  		  /*conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));*/  		  
-  		if(productSubscriptionTypeId.equals("CARD")){
-  			conditionList.add(EntityCondition.makeCondition( EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, null),EntityOperator.OR ,EntityCondition.makeCondition("customTimePeriodId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(custTimePeriodList,"customTimePeriodId" ,false)) ) );
-  			 //conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.NOT_EQUAL, UtilDateTime.getNextDayStart(nowTimeStamp)));
-  		}else{
-  			/*conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));*/
-  		}
-  		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-  		boolean indentChanged = false;  
-  		try {
-  			List<GenericValue> products = delegator.findList("Product", null, UtilMisc.toSet("productId", "quantityIncluded"), null, null, true);
-  			  
-  			subscriptionProdList = delegator.findList("SubscriptionProduct", condition, null, null, null, false);
-  			subscriptionProdList = EntityUtil.filterByDate(subscriptionProdList, effectiveDate);
-  			
-  			List productsList = EntityUtil.getFieldListFromEntityList(subscriptionProdList, "productId", true);
-  			List activeProdList = FastList.newInstance();
-  			List<GenericValue> subscriptionProductsList =FastList.newInstance();
-  			  for(int i=0; i< productQtyList.size() ; i++){
+    		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+  		  	/*conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));*/  		  
+    		if(productSubscriptionTypeId.equals("CARD")){
+    			conditionList.add(EntityCondition.makeCondition( EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, null),EntityOperator.OR ,EntityCondition.makeCondition("customTimePeriodId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(custTimePeriodList,"customTimePeriodId" ,false)) ) );
+    			//conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.NOT_EQUAL, UtilDateTime.getNextDayStart(nowTimeStamp)));
+    		}else{
+    			/*conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));*/
+    		}
+    		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    		boolean indentChanged = false;  
+    		try {
+	  			List<GenericValue> products = delegator.findList("Product", null, UtilMisc.toSet("productId", "quantityIncluded"), null, null, true);
+	  			  
+	  			subscriptionProdList = delegator.findList("SubscriptionProduct", condition, null, null, null, false);
+	  			subscriptionProdList = EntityUtil.filterByDate(subscriptionProdList, effectiveDate);
+	  			List productsList = EntityUtil.getFieldListFromEntityList(subscriptionProdList, "productId", true);
+	  			List activeProdList = FastList.newInstance();
+	  			List<GenericValue> subscriptionProductsList =FastList.newInstance();
+	  			for(int i=0; i< productQtyList.size() ; i++){
   				  Map productQtyMap = productQtyList.get(i);
   				  String productId = (String)productQtyMap.get("productId");
   				  String sequenceNum = (String)productQtyMap.get("sequenceNum");
@@ -450,8 +449,11 @@ public class ByProductChangeIndentServices {
   				  
   				  conditionList.clear();
   				  conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-  				  conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));
+  				  if(!productSubscriptionTypeId.equals("EMP_SUBSIDY")){
+  					  conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));
+				  }
   				  EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+  				  
   				  subscriptionProductsList = EntityUtil.filterByCondition(subscriptionProdList, cond);
   				  /*List conditionList = UtilMisc.toList(
   					  EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
@@ -483,8 +485,13 @@ public class ByProductChangeIndentServices {
   					 // for now populate thruDate
   					  //createNewSubscriptionProduct.put("thruDate", null);	
   					  createNewSubscriptionProduct.put("thruDate",  UtilDateTime.getDayEnd(effectiveDate));
+  					  
   					  if(((productSubscriptionTypeId.equals("SPECIAL_ORDER")) || (productSubscriptionTypeId.equals("CASH_FS") || dayIndentProductList.contains(productId)))&&!productSubscriptionTypeId.equals("EMP_SUBSIDY")){
   						  createNewSubscriptionProduct.put("thruDate",  UtilDateTime.getDayEnd(effectiveDate)); 
+  					  }
+  					//for employee route shift thruDate is null later remove below condition
+  					  if(productSubscriptionTypeId.equals("EMP_SUBSIDY")){
+  						createNewSubscriptionProduct.put("thruDate",  null);
   					  }
   					  if(productSubscriptionTypeId.equals("CARD")){ 
   						  createNewSubscriptionProduct.put("sequenceNum", null);	
@@ -496,7 +503,6 @@ public class ByProductChangeIndentServices {
   					  createNewSubscriptionProduct.put("lastModifiedByUserLogin",userLogin.get("userLoginId"));
   					  createNewSubscriptionProduct.put("lastModifiedDate",nowTimeStamp); 
   					  result = dispatcher.runSync("createSubscriptionProduct",createNewSubscriptionProduct);
-  					  
   					  if (ServiceUtil.isError(result)) {
   						String errMsg =  ServiceUtil.getErrorMessage(result);
   						Debug.logError(errMsg , module);					
@@ -532,10 +538,10 @@ public class ByProductChangeIndentServices {
   					  BigDecimal newQuantity=quantity;  				  
   					  createSubscriptionProduct.put("quantity", newQuantity);
   					  createSubscriptionProduct.put("crateQuantity", crateQuantity);
-  	  			  createSubscriptionProduct.put("fromDate", UtilDateTime.getDayStart(effectiveDate));
-  	  			  createSubscriptionProduct.put("thruDate", UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(EntityUtil.getFirst(custTimePeriodList).getDate("thruDate"))));
-  				  createSubscriptionProduct.put("customTimePeriodId", EntityUtil.getFirst(custTimePeriodList).getString("customTimePeriodId"));	  			   			  
-  	  			  result.clear();
+  					  createSubscriptionProduct.put("fromDate", UtilDateTime.getDayStart(effectiveDate));
+  					  createSubscriptionProduct.put("thruDate", UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(EntityUtil.getFirst(custTimePeriodList).getDate("thruDate"))));
+  					  createSubscriptionProduct.put("customTimePeriodId", EntityUtil.getFirst(custTimePeriodList).getString("customTimePeriodId"));	  			   			  
+  					  result.clear();
   	  			  //to check whether  change indent entered  for the next day
   	  			  List checkSubscriptionProductList = delegator.findByAnd("SubscriptionProduct", 
   	  					  UtilMisc.toMap("subscriptionId",createSubscriptionProduct.get("subscriptionId"),"productId",createSubscriptionProduct.get("productId"),
@@ -578,7 +584,7 @@ public class ByProductChangeIndentServices {
   					  Timestamp extSubsDate = (Timestamp)subscriptionProduct.get("fromDate");
   					  if(extSubsDate.compareTo(UtilDateTime.getDayStart(effectiveDate)) != 0){
   						  BigDecimal preQty = subscriptionProduct.getBigDecimal("quantity");
-  						  if(preQty.compareTo(quantity)!= 0){
+  						  if(preQty.compareTo(quantity)!= 0 || productSubscriptionTypeId.equalsIgnoreCase("EMP_SUBSIDY")){
   							  Map updateSubscriptionProduct = FastMap.newInstance();
   				  			  updateSubscriptionProduct.put("userLogin",userLogin);
   				  			  updateSubscriptionProduct.put("facilityId", boothId);
@@ -599,7 +605,7 @@ public class ByProductChangeIndentServices {
   				  			  }
   						  }
   						  else{
-  							  createFlag = false;
+  								createFlag = false;
   						  }
   					  }
   					  else{
@@ -640,7 +646,6 @@ public class ByProductChangeIndentServices {
   						  createNewSubscProduct.put("createdDate",nowTimeStamp);   
   						  createNewSubscProduct.put("lastModifiedByUserLogin",userLogin.get("userLoginId"));
   						  createNewSubscProduct.put("lastModifiedDate",nowTimeStamp);
-  						 // Debug.log("createNewSubscProduct #########################"+createNewSubscProduct);
   						  result = dispatcher.runSync("createSubscriptionProduct",createNewSubscProduct);
   						  if (ServiceUtil.isError(result)) {
   							String errMsg =  ServiceUtil.getErrorMessage(result);
@@ -650,9 +655,11 @@ public class ByProductChangeIndentServices {
   					  }
   				  }
   			  }//end of product Qty List
+  			  List condList = FastList.newInstance();
   			  if(routeChange){
   				  Timestamp nextEffDay = UtilDateTime.addDaysToTimestamp(effectiveDate, 1);
-  				  List condList = UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+  				  condList.clear();
+  				  condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
   				  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
   				  condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(nextEffDay)));
   				  condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
@@ -663,9 +670,11 @@ public class ByProductChangeIndentServices {
   				  if(UtilValidate.isNotEmpty(removeSubscriptionProdList)){
   					  int removedNxtDaySubs = delegator.removeAll(removeSubscriptionProdList);
   				  }
-  				  
   			  }
-  			  
+  			  result.put("subscriptionId", subscriptionId);
+  			  result.put("supplyDate", effectiveDate);
+  			  result.put("enableSECA", secaCall);
+  			  result.put("shipmentTypeId", shipmentTypeId);
   			  /*if(UtilValidate.isNotEmpty(activeProdList)){
   				  List<GenericValue> subscriptionProdClose = EntityUtil.filterByCondition(subscriptionProdList, EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, UtilMisc.toList(activeProdList)));
   				  for(int j=0;j<subscriptionProdClose.size();j++){
@@ -704,7 +713,127 @@ public class ByProductChangeIndentServices {
   		  result.put("indentChangeFlag", change);
   		return result;  
       }
-
+      public static Map<String ,Object>  routeShiftEmpSubsidy(DispatchContext dctx, Map<String, ? extends Object> context){
+  		  Delegator delegator = dctx.getDelegator();
+  	      LocalDispatcher dispatcher = dctx.getDispatcher();       
+  	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	      Map<String, Object> result = ServiceUtil.returnSuccess();
+  	      String subscriptionId = (String)context.get("subscriptionId");
+  	      String shipmentTypeId = (String)context.get("shipmentTypeId");
+  	      Timestamp effectiveDate = (Timestamp)context.get("supplyDate");
+  	      List condList = FastList.newInstance();
+  	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+  	      String subsidyProduct = "15";
+  	      try{
+  	    	  
+  	    	  Boolean enableSubsidyRouteShift = Boolean.FALSE;
+  	    	  GenericValue tenantConfigEnableSubsidyShift = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableSubsidyRouteShift"), false);
+  	    	  if (UtilValidate.isNotEmpty(tenantConfigEnableSubsidyShift) && (tenantConfigEnableSubsidyShift.getString("propertyValue")).equals("Y")) {
+  	    		enableSubsidyRouteShift = Boolean.TRUE;
+  	    	  }
+  	    	  if(enableSubsidyRouteShift){
+	  	    	  condList.clear();
+	  	  		  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+	  	  		  condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, subsidyProduct));
+	  	  		  condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "EMP_SUBSIDY"));
+	  	  		  EntityCondition subsidyCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	  	  		  List<GenericValue> subsidyList = delegator.findList("SubscriptionProduct", subsidyCond, null, null, null, false);
+	  	  		  subsidyList = EntityUtil.filterByDate(subsidyList, effectiveDate);
+	  	  		   BigDecimal actualSubsidyQty = BigDecimal.ZERO;
+	  	  		  if(UtilValidate.isNotEmpty(subsidyList)){
+	  	  			  actualSubsidyQty = ((GenericValue)EntityUtil.getFirst(subsidyList)).getBigDecimal("quantity");
+	  	  		  }
+	    	    	  
+	  	  		  condList.clear();
+	  	  		  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+	  	  		  condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, subsidyProduct));
+	  	  		  condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, "AM"));
+	  	  		  condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.NOT_EQUAL, "EMP_SUBSIDY"));
+	  	  		  condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+	  	  		  condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+	  	  				  EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate))));
+	  	  		  EntityCondition shiftCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	  	  		  List<GenericValue> tmsShiftList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", shiftCond, null, null, null, false);
+	  	  		  if(UtilValidate.isNotEmpty(tmsShiftList)){
+		  			  List<String> tmsRouteList = EntityUtil.getFieldListFromEntityList(tmsShiftList, "sequenceNum", true);
+		  			  GenericValue empSubscription = EntityUtil.getFirst(tmsShiftList);
+		  			  String boothId = empSubscription.getString("facilityId");
+		  			  String subscriptionTypeId = empSubscription.getString("subscriptionTypeId");
+		  			  if(UtilValidate.isNotEmpty(tmsRouteList) && tmsRouteList.size()==1){
+		  				  
+		  				  String tmsInRoute = (String)tmsRouteList.get(0);
+		  				  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "userLogin", userLogin))).get("boothDetails");
+		  				  String defaultRouteId = (String)boothDetails.get("routeId");
+		  				  boolean subsidyShift = false;
+		  				  
+		  				  if(UtilValidate.isNotEmpty(defaultRouteId) && !defaultRouteId.equalsIgnoreCase(tmsInRoute)){
+		  					  subsidyShift = true;
+		  				  }
+		  				  Debug.log("subsidyShift ######################"+subsidyShift);
+		  				  if(subsidyShift){
+		  					  
+		  					  List productQtyList = FastList.newInstance();
+		  					  Map productQtyMap = FastMap.newInstance();
+		  					  productQtyMap.put("productId", subsidyProduct);
+		  		    		  productQtyMap.put("quantity", actualSubsidyQty);
+		  		    		  productQtyMap.put("sequenceNum", tmsInRoute);
+		  		    		  productQtyList.add(productQtyMap);
+		  		    		  
+			  					Map inputMap = FastMap.newInstance();
+			  					inputMap.put("subscriptionId", subscriptionId);
+			  					inputMap.put("productSubscriptionTypeId", "EMP_SUBSIDY");
+			  					inputMap.put("boothId", boothId);
+			  					inputMap.put("shipmentTypeId", shipmentTypeId);
+			  					inputMap.put("effectiveDate", effectiveDate);
+			  					inputMap.put("routeChangeFlag", "Y");
+			  					inputMap.put("enableSECA", "Y");
+			  					inputMap.put("productQtyList", productQtyList);
+			  					inputMap.put("userLogin", userLogin);
+			  					Map resultCtx = dispatcher.runSync("processChangeIndentHelper",inputMap);
+			  					if (ServiceUtil.isError(resultCtx)) {
+			  						Debug.logError("Error in service processChangeIndentHelper", module);
+			  						return ServiceUtil.returnError("Error in service processChangeIndentHelper");
+			  					}
+		  					  
+			  					List tempList = FastList.newInstance();
+			  					Map prodQtyMap = FastMap.newInstance();
+			  					prodQtyMap.put("productId", subsidyProduct);
+			  					prodQtyMap.put("quantity", actualSubsidyQty);
+			  					prodQtyMap.put("sequenceNum", defaultRouteId);
+			  					tempList.add(prodQtyMap);
+			  		    		  
+			  					
+			  					Timestamp nxtDay = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(effectiveDate, 1));  
+			  					inputMap = FastMap.newInstance();
+			  					inputMap.put("subscriptionId", subscriptionId);
+			  					inputMap.put("productSubscriptionTypeId", "EMP_SUBSIDY");
+			  					inputMap.put("boothId", boothId);
+			  					inputMap.put("shipmentTypeId", shipmentTypeId);
+			  					inputMap.put("effectiveDate", nxtDay);
+			  					inputMap.put("enableSECA", "Y");
+			  					//inputMap.put("routeChangeFlag", "Y");
+			  					inputMap.put("productQtyList", tempList);
+			  					inputMap.put("userLogin", userLogin);
+			  					resultCtx = dispatcher.runSync("processChangeIndentHelper",inputMap);
+			  					if (ServiceUtil.isError(resultCtx)) {
+			  						Debug.logError("Error in service processChangeIndentHelper, while adjusting subsidy to next day permanent route", module);
+			  						return ServiceUtil.returnError("Error in service processChangeIndentHelper, while adjusting subsidy to next day permanent route");
+			  					}
+		  					  
+		  					  
+		  				  }
+		  			  }
+	  	  		  }
+  	    	  
+	  		 }
+  	      }catch (Exception e) {
+  			  Debug.logError(e, "Problem changing employee subsidy route", module);		  
+  			  return ServiceUtil.returnError("Problem changing employee subsidy route");			  
+  		  }
+  	      return result;
+      }
+      
+      
       public static Map<String ,Object>  processChangeRouteIndentHelper(DispatchContext dctx, Map<String, ? extends Object> context){
 		  Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();       

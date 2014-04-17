@@ -12,4 +12,5 @@
     
     <Enumeration description="Credit Institution Billing" enumCode="CREDIT INST BILLING" enumId="CR_INST_BILLING" enumTypeId="PERIOD_BILLING"/> 
     <TenantConfiguration description="enable Stop Ship List" propertyName="enableStopShip" propertyTypeEnumId="LMS" propertyValue="Y"/> 
+    <TenantConfiguration description="Enable Employee Subsidy Shift" propertyName="enableSubsidyRouteShift" propertyTypeEnumId="LMS" propertyValue="N"/>
 </entity-engine-xml>

@@ -26,6 +26,13 @@
         <attribute name="returnCrQuantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="returnCnQuantity" type="BigDecimal" mode="IN" optional="false"/>
     </service>
+    <service name="routeShiftEmpSubsidy" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="routeShiftEmpSubsidy">
+        <description>Shift employee subsidy to temp route</description>
+        <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
+        <attribute name="supplyDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+    </service>
     
     <service name="getRoutesByAMPM" engine="java"
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getRoutesByAMPM">
@@ -472,7 +479,10 @@
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
         <attribute name="routeChangeFlag" type="String" mode="IN" optional="true"/>
+        <attribute name="enableSECA" type="String" mode="INOUT" optional="true"/>
+        <attribute name="shipmentTypeId" type="String" mode="OUT" optional="true"/>
         <attribute name="subscriptionId" type="String" mode="OUT" optional="true"/>
+        <attribute name="supplyDate" type="Timestamp" mode="OUT" optional="true"/>
         <attribute name="indentChangeFlag" type="String" mode="OUT" optional="true"/>
     </service>
     
