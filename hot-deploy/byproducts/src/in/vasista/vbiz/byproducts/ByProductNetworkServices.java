@@ -3271,6 +3271,7 @@ public class ByProductNetworkServices {
 						}
 						tempPayment.put("paymentDate",  boothPayment.getTimestamp("paymentDate"));
 						tempPayment.put("paymentId",  boothPayment.getString("paymentId"));
+						tempPayment.put("paymentLocation",  boothPayment.getString("paymentLocation"));
 						tempPayment.put("paymentMethodTypeId", boothPayment.getString("paymentMethodTypeId"));				
 						tempPayment.put("amount",BigDecimal.ZERO);
 						tempPayment.put("userId", boothPayment.getString("createdByUserLogin"));			

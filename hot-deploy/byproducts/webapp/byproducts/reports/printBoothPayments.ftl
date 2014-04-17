@@ -112,6 +112,7 @@ under the License.
           <td>Payment Time</td>
           <td>${uiLabelMap.OrderFacilityBooth}</td>
           <td>${uiLabelMap.Route}</td>
+          <td>${uiLabelMap.paymentLocation}</td>
           <td>${uiLabelMap.Amount}</td>
           <td>PaymentMethod Type</td>
           <td>${uiLabelMap.PrintReceipt}</td>          
@@ -127,6 +128,9 @@ under the License.
               <td>${(payment.facilityId)?if_exists}</td>             
               <td>               
                 ${(payment.routeId)?if_exists}
+              </td>
+               <td>               
+                ${(payment.paymentLocation)?if_exists}
               </td>
               <td><@ofbizCurrency amount=payment.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td>  
