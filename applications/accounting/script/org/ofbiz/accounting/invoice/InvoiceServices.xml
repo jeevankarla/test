@@ -674,6 +674,7 @@ under the License.
                                 <set field="newp.paymentMethodTypeId" value="COMPANY_CHECK"/>
                                 <set field="newp.paymentTypeId" value="PAYROL_PAYMENT"/>
                                 <set field="newp.statusId" value="PMNT_NOT_PAID"/>
+                                <set field="newp.isEnableAcctg" from-field="invoice.isEnableAcctg"/>
                                 <set field="newp.currencyUomId" from-field="invoice.currencyUomId"/>
                                 <call-class-method class-name="org.ofbiz.accounting.invoice.InvoiceWorker" method-name="getInvoiceTotal" ret-field="newp.amount">
                                     <field field="invoice" type="GenericValue"/>

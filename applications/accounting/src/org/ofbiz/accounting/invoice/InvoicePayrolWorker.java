@@ -553,7 +553,8 @@ Debug.logInfo("==========>lossOfPayDays=" + context.get("lossOfPayDays"), module
         input.put("dueDate", context.get("dueDate"));  
         Map inputTP = UtilMisc.toMap("invoiceTypeId", context.get("invoiceTypeId"));        		
         inputTP.put("statusId", context.get("statusId"));	
-        inputTP.put("timePeriodId", timePeriodId);	        
+        inputTP.put("timePeriodId", timePeriodId);
+        Boolean enablePayrollInvAcctg = Boolean.TRUE;
 		try {   
 			serviceResults = fetchPayrolBoundary(dctx, context);
 	        if (ServiceUtil.isError(serviceResults)) {
@@ -568,6 +569,16 @@ Debug.logInfo("==========>lossOfPayDays=" + context.get("lossOfPayDays"), module
 	        input.put("description", "Payroll [" + sd.format(UtilDateTime.toCalendar(timePeriodStart).getTime()) 
 	        		+ " - " + sd.format(UtilDateTime.toCalendar(timePeriodEnd).getTime()) + "]");	
 	        boolean isGroup = true;
+	        
+	        // check Accounting tenant configration for payroll invoice here
+	        GenericValue tenantConfigEnablePayrollInvAcctg = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","ACCOUNT_INVOICE", "propertyName","enablePayrollInvAcctg"), true);
+			 if (UtilValidate.isNotEmpty(tenantConfigEnablePayrollInvAcctg) && (tenantConfigEnablePayrollInvAcctg.getString("propertyValue")).equals("N")) {
+				 enablePayrollInvAcctg = Boolean.FALSE;
+			 }
+			 if(!enablePayrollInvAcctg){
+				 input.put("isEnableAcctg", "N");
+			  }
+			 
             GenericValue partyFromRole = delegator.findByPrimaryKeyCache("PartyRole", UtilMisc.toMap("partyId", partyIdFrom, "roleTypeId", "INTERNAL_ORGANIZATIO"));
             if (UtilValidate.isEmpty(partyFromRole)) {
                 isGroup = false;

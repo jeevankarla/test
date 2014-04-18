@@ -700,4 +700,8 @@
     <InvoiceItemAssocType description="Advance Invoice" invoiceItemAssocTypeId="ADVANCE" parentTypeId="" hasTable="N"/>
     <InvoiceItemAssocType description="Advance Invoice Setoff" invoiceItemAssocTypeId="INV_ITEM_SETOFF" parentTypeId="ADVANCE" hasTable="N"/>
      
+     
+    <Enumeration enumId="ACCOUNT_INVOICE" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Invoice Accounting Configurations"/>
+    <TenantConfiguration propertyName="enablePayrollInvAcctg" propertyValue="Y" propertyTypeEnumId="ACCOUNT_INVOICE" description="Enable invoice level accounting for Payroll"/>
+     
 </entity-engine-xml>
