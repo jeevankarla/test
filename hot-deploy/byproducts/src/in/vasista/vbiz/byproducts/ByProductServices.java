@@ -2829,6 +2829,9 @@ public class ByProductServices {
 				  String productId = (String)productQtyMap.get("productId");
 				  String sequenceNum = (String)productQtyMap.get("sequenceNum");
 				  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
+				  if(quantity.compareTo(BigDecimal.ZERO) == 0){
+					  continue;
+				  }
 				  GenericValue subscriptionFacilityProduct = delegator.makeValue("SubscriptionFacilityAndSubscriptionProduct");
 		 		  subscriptionFacilityProduct.set("facilityId", boothId);
 		 		 // subscriptionFacilityProduct.set("subscriptionId", "100000");
@@ -2842,6 +2845,12 @@ public class ByProductServices {
 			  }
 			 
 			 //
+			  if(subscriptionProductsList.size() ==0 ){
+				  result = ServiceUtil.returnSuccess();
+				  result.put("indentChangeFlag", change);
+				  return result;
+				  
+			  }
 			  processCorrectionCtx.put("subscriptionProductsList", subscriptionProductsList);
 				result = createSalesOrderSubscriptionProductType(dctx, processCorrectionCtx);
 				
