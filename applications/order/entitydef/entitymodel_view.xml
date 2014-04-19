@@ -1954,5 +1954,38 @@ under the License.
 	    <relation type="one-nofk" rel-entity-name="Invoice">
 	        <key-map field-name="invoiceId"/>
 	    </relation>   	    
-  </view-entity>  
+  </view-entity>
+  <view-entity entity-name="ReturnHeaderItemsAndShipment"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Return Header and Return Items and Shipment View Entity">
+      <member-entity entity-alias="RH" entity-name="ReturnHeader"/>
+      <member-entity entity-alias="RI" entity-name="ReturnItem"/> 
+       <member-entity entity-alias="SH" entity-name="Shipment"/>    
+      <alias entity-alias="RH" name="returnId"/>
+      <alias entity-alias="RH" name="entryDate"/>
+      <alias entity-alias="RH" name="orderStatusId" field="statusId"/>
+      <alias entity-alias="RH" name="returnHeaderTypeId"/>
+      <alias entity-alias="RH" name="originFacilityId"/>
+      <alias entity-alias="RH" name="shipmentId"/>
+      <alias entity-alias="RI" name="returnItemSeqId"/>
+      <alias entity-alias="RI" name="productId"/>
+      <alias entity-alias="RI" name="returnQuantity"/>
+      <alias entity-alias="RI" name="returnPrice"/>
+      <alias entity-alias="RI" name="description"/>
+      <alias entity-alias="RI" name="returnStatusId" field="statusId"/>
+      <alias entity-alias="RI" name="returnItemTypeId"/>
+      <alias entity-alias="RI" name="returnReasonId"/>
+      <alias entity-alias="SH" name="estimatedShipDate"/>
+      <alias entity-alias="SH" name="shipmentTypeId"/>
+      <alias entity-alias="SH" name="routeId"/>
+      <alias entity-alias="SH" name="shipmentStatusId" field="statusId"/>
+      <view-link entity-alias="RH" rel-entity-alias="RI" rel-optional="true">
+        <key-map field-name="returnId" />
+      </view-link>
+      <view-link entity-alias="RH" rel-entity-alias="SH" >
+	      <key-map field-name="shipmentId"/>      
+	    </view-link>
+       
+	 </view-entity>    
 </entitymodel>

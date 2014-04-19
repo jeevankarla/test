@@ -61,6 +61,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("RouteTrCorrDate","");
 		makeDatePicker("bsFromDateId","fromDateId");
 		makeDatePicker("bsThruDateId","thuDateId");
+		makeDatePicker("prodReturnDateId","thuDateId");
 		makeDatePicker("smsNotify","");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -190,6 +191,19 @@ function makeDatePicker(fromDateId ,thruDateId){
 					<input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>
+        <tr>
+      		<form id="ProductReturnsReport" name="ProductReturnsReport" method="post" action="<@ofbizUrl>productReturnsReport.txt</@ofbizUrl>" target="_blank">	
+      			<td width="34%">Product Returns Report</td>
+      			<td width="33%">Date<input  type="text" size="18pt" id="prodReturnDateId" readonly  name="prodReturnDate"/>
+      			<td width="33%">Type 
+					<select name='subscriptionTypeId' class='h4'>
+					<option value='ALL'>All</option>
+					<option value='AM'>AM</option>
+					<option value='PM'>PM</option>
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="submit" value="Download" class="buttontext"/></td>       			
+      		</form>
+      	</tr> 
       	
       	 <tr>
         	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallan.txt</@ofbizUrl>">	
@@ -224,7 +238,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					</select>
 					Type 
 					<select name='subscriptionTypeId' class='h4'>
-					<option value=''>All</option>
+					<option value='ALL'>All</option>
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
 					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -272,7 +286,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 						</select>
 					<input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
-        </tr> 
+        </tr>
      </#if>
       	
          
