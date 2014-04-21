@@ -168,14 +168,14 @@ function makeDatePicker(fromDateId ,thruDateId){
       			
       	  </form>
          </tr> 	
-          <tr>
+         <!-- <tr>
             <form id="CategoryWiseSales" name="CategoryWiseSales" method="post" action="<@ofbizUrl>categoryWiseSales.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Category Wise Sales</td>
       			<td width="33%">From<input  type="text" size="18pt" id="cwsFromDateId" readonly  name="cwsFromDate"/>
       			<td width="33%">Thru<input  type="text" size="18pt" id="cwsThruDateId" readonly  name="cwsThruDate"/>
       		    <input type="submit" value="Download" class="buttontext"/></td>
       	  </form>
-         </tr> 	
+         </tr> 	-->
        <tr>
       		<form id="indentVsDispatchReport" name="indentVsDispatchReport" method="post" action="<@ofbizUrl>IndentVsDispatchReport.pdf</@ofbizUrl>" target="_blank">	
       			<td width="34%">Indent vs Despatch</td>
