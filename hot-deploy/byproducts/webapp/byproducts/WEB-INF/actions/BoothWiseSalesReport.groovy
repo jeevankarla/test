@@ -24,10 +24,12 @@
 	dctx = dispatcher.getDispatchContext();
 	context.put("dctx",dctx);
 	
-	fromDate = null;
-	thruDate = null;
+	Timestamp fromDate = null;
+	Timestamp thruDate = null;
+	subscriptionTypeId=null;
 	fromDateStr = parameters.bsFromDate;
 	thruDateStr = parameters.bsThruDate;
+	subscriptionTypeId=parameters.subscriptionTypeId;
 	Map boothTotals = [:];
 	if (UtilValidate.isEmpty(parameters.bsFromDate)) {
 		fromDate = UtilDateTime.nowTimestamp();
@@ -55,7 +57,13 @@
 	thruDate = UtilDateTime.getDayEnd(thruDate, timeZone, locale);
 	Set productSet = new HashSet();
 	productNames = [:];
-	List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,fromDate,thruDate);
+	List shipmentIds=[];
+	if(UtilValidate.isNotEmpty(subscriptionTypeId)){
+	    shipmentIds =ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,subscriptionTypeId);
+	}else if(UtilValidate.isNotEmpty(subscriptionTypeId) && !subscriptionTypeId.equals("ALL")){
+	    shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,fromDate,thruDate);
+	}
+	
 	categoryProductIds = ProductWorker.getProductsByCategory(delegator ,"INDENT" ,fromDate);
 	for(GenericValue product : categoryProductIds) {
 		pdId= "PCD"+product.getString("productId");

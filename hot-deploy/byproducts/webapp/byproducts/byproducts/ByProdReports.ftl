@@ -159,6 +159,20 @@ function makeDatePicker(fromDateId ,thruDateId){
       			<td width="34%">Booth Wise Sales</td>
       			<td width="33%">From<input  type="text" size="18pt" id="bsFromDateId" readonly  name="bsFromDate"/>
       			<td width="33%">Thru<input  type="text" size="18pt" id="bsThruDateId" readonly  name="bsThruDate"/>
+      			Type 
+					<select name='subscriptionTypeId' class='h4'>
+					<option value='AM'>AM</option>
+					<option value='PM'>PM</option>
+					</select>
+				    <input type="submit" value="Download" class="buttontext"/></td> 
+      			
+      	  </form>
+         </tr> 	
+          <tr>
+            <form id="CategoryWiseSales" name="CategoryWiseSales" method="post" action="<@ofbizUrl>categoryWiseSales.txt</@ofbizUrl>" target="_blank">	
+      			<td width="34%">Category Wise Sales</td>
+      			<td width="33%">From<input  type="text" size="18pt" id="cwsFromDateId" readonly  name="cwsFromDate"/>
+      			<td width="33%">Thru<input  type="text" size="18pt" id="cwsThruDateId" readonly  name="cwsThruDate"/>
       		    <input type="submit" value="Download" class="buttontext"/></td>
       	  </form>
          </tr> 	
