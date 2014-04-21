@@ -33,6 +33,13 @@
         <response name="success" type="request" value="json"/>
     </request-map>
     
+    <request-map uri="cancelBoothPayment">
+     	 <security https="true" auth="true"/>     	
+        <event type="service" invoke="voidPayment"/>
+        <response name="success" type="request" value="FindPaymentByMethod"/>
+        <response name="error" type="request" value="FindPaymentByMethod"/>
+    </request-map>
+    
     
     
     <request-map uri="updateCrateQtyConfig">
@@ -85,6 +92,25 @@
     	<security https="true" auth="true"/>  
     	<event type="service"  path="" invoke="processCancelInstitutionBilling"/>   	
     	<response name="success" type="view" value="facilityCustomTimePeriod"/>    	
+    </request-map>
+    
+    <request-map uri="IndentAdjustmentEntryInit">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="IndentAdjustmentEntryInit"/>
+    </request-map>
+    <request-map uri="IndentAdjustEntryNew">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="IndentAdjustEntryNew"/>
+        <response name="error" type="view" value="IndentAdjustmentEntryInit"/>
+    </request-map>
+    
+    <request-map uri="processIndentEntryUpdate">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="subscriptionindentcorrection" global-transaction="true"/>
+        <response name="success" type="request-redirect-noparam" value="IndentAdjustmentEntryInit">
+        	<redirect-parameter name="supplyDate"/>
+        </response>
+        <response name="error" type="view" value="IndentAdjustmentEntryInit"/>
     </request-map>
     
     <request-map uri="ReturnCrates">
@@ -425,6 +451,10 @@
      	<security https="true" auth="true"/>
         <response name="success" type="view" value="MLDGenerateTruckSheetTXT"/>
     </request-map> 
+    <request-map uri="TruckSheetDetailReport.csv">
+     	<security https="true" auth="true"/>
+        <response name="success" type="view" value="TruckSheetDetailReport"/>
+    </request-map> 
     
      <request-map uri="ChangeIndentInit">
      	<security https="true" auth="true"/>
@@ -580,6 +610,7 @@
     </request-map>
     
     
+    
     <!--  margin requests -->
     <request-map uri="TransporterMargins">
         <security https="true" auth="true"/>
@@ -622,7 +653,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CheckListReportsPDF"/>
     </request-map>
-    
+    <request-map uri="FindPaymentByMethod">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindPaymentByMethod"/>    	
+    </request-map>
     <request-map uri="FindBoothPayments">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindBoothPayments"/>    	
@@ -637,6 +671,19 @@
         <response name="success" type="request" value="PrintBoothPayments"/>
         <response name="error" type="request" value="FindBoothPayments"/>
     </request-map>
+    <request-map uri="makeMassPayments">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="makeMassPayments" global-transaction="true"/>
+     	<response name="success" type="request-redirect-noparam" value="FindPaymentByMethod">
+        	<redirect-parameter name="paymentMethodTypeId"/>
+        	<redirect-parameter name="subTabItem"/>
+        </response>     	
+        <response name="error" type="request-redirect-noparam" value="FindPaymentByMethod">
+        	<redirect-parameter name="paymentMethodTypeId"/>
+        	<redirect-parameter name="subTabItem"/>
+        </response>
+    </request-map>
+    
      <request-map uri="PrintBoothPayments">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="PrintBoothPayments"/>    	
@@ -647,12 +694,25 @@
     	<response name="success" type="view" value="FindPastBoothPayments"/>
     	<response name="error" type="view" value="FindPastBoothPayments"/>       	
     </request-map>
-        <request-map uri="createPaymentForBooth">
+    <request-map uri="createPaymentForBooth">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createPaymentForBooth"/>   	
     	<response name="success" type="view" value="FindBoothPayments"/>
     	<response name="error" type="view" value="FindBoothPayments"/>       	
     </request-map>
+    <request-map uri="createChequePayment">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createChequePayment"/>   	
+    	<response name="success" type="view" value="FindPaymentByMethod">
+    		<redirect-parameter name="paymentMethodTypeId"/>
+        	<redirect-parameter name="subTabItem"/>
+    	</response>
+    	<response name="error" type="view" value="FindPaymentByMethod">
+    		<redirect-parameter name="paymentMethodTypeId"/>
+        	<redirect-parameter name="subTabItem"/>
+    	</response>       	
+    </request-map>
+    
     
     <request-map uri="FindFacility">
         <security https="true" auth="true"/>
@@ -801,7 +861,9 @@
     <!-- <view-map name="ByProdReports" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#ByProdReports"/> -->
     <view-map name="BoothWiseSalesCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothWiseSalesCSV" content-type="text/csv"/>
     <view-map name="TruckSheetCorrectionsReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetCorrectionsReport" content-type="application/pdf"/>
+    <view-map name="BoothWiseSalesCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothWiseSalesCSV" content-type="text/csv"/>
     <view-map name="ProductReturnsReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ProductReturnsReportTXT" content-type="text/plain"/>
+    <view-map name="TruckSheetDetailReport" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetDetailReportCSV" content-type="text/csv"/>
     
     <view-map name="InstBillOfSaleReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InstBillOfSaleReportTXT" content-type="text/plain"/>
     <view-map name="EnclosureOfTaxInvoiceReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#EnclosureOfTaxInvoiceReportTXT" content-type="text/plain"/>
@@ -877,8 +939,10 @@
     <view-map name="FindAdhocSalesOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindAdhocSalesOrder"/>
     <view-map name="AdhocOrderCorrection" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#AdhocOrderCorrection"/>
     <view-map name="printAdhocOrderPDF" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#printAdhocOrderPDF" content-type="application/pdf"/>
-     <view-map name="AdhocTruckSheetReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#AdhocTruckSheetReportTXT"  content-type="text/plain" />
- 
+    <view-map name="AdhocTruckSheetReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#AdhocTruckSheetReportTXT"  content-type="text/plain" />
+    <view-map name="IndentAdjustmentEntryInit" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IndentAdjustmentEntryInit"/>
+	<view-map name="IndentAdjustEntryNew" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IndentAdjustEntryNew"/>
+    
  <!-- Transporter views -->
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
@@ -888,7 +952,6 @@
  <view-map name="facilityCustomTimePeriod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#facilityCustomTimePeriod"/>
  <view-map name="FacilityRateSearchForm" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FacilityRateSearchForm"/>
  <view-map name="createFacilityRate" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createFacilityRate"/>
- 
-
- 
+ <!-- Payment views -->
+ <view-map name="FindPaymentByMethod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentByMethod"/>	
 </site-conf>

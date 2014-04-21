@@ -62,4 +62,21 @@
     	<field use-when="${productTestMap.PCD66}!=&quot;0&quot;" name="PCD66" title="${productNames.PCD66}"><display/></field>
     	<field name="qty" title="Total"><display/></field>
     </form>
+    
+    <form name="ListTrucksheetDetailCSV" type="list" list-name="trucksheetDetailList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<field name="routeId" title="Route"><display/></field>
+    	<field name="facilityId" title="Retailer Code"><display/></field> 
+    	<field name="productId" title="Product Code"><display/></field> 
+    	<field name="dispatchQty" title="Despatch Quantity"><display/></field> 
+    	<field name="subsidyQty" title="Subsidy Quantity"><display/></field> 
+    	<field name="receivedQty" title="Received Quantity"><display/></field> 
+    	<field name="returnedQty" title="Returned Quantity"><display/></field> 
+    	<field name="amount" title="amount"><display/></field> 
+        <field name="vatPercent" title="Tax Percent"><display/></field> 
+        <field name="unitPrice" title="Unit Price"><display/></field> 
+        <field name="subAmount" title="Sub Amount"><display/></field> 
+    </form>
+    
+    
 </forms>

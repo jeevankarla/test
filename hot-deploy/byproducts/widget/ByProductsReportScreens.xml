@@ -1005,6 +1005,20 @@
 		    </widgets>								
 		</section>
 	</screen>
+	<screen name="TruckSheetDetailReportCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/TrucksheetDetailReport.groovy" />
+			</actions>
+			<widgets>	
+	        	<container>	
+			       <include-form name="ListTrucksheetDetailCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+		    	</container>
+		    </widgets>								
+		</section>
+	</screen>
+	
 	<screen name="EmployeeReportCSV">
 		<section>
 			<actions>

@@ -59,6 +59,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("rtSupplyDate","");
 		makeDatePicker("RouteIndentAbstDate","");
 		makeDatePicker("RouteTrCorrDate","");
+		makeDatePicker("RouteTrDetDate","");
 		makeDatePicker("bsFromDateId","fromDateId");
 		makeDatePicker("bsThruDateId","thuDateId");
 		makeDatePicker("prodReturnDateId","thuDateId");
@@ -196,6 +197,23 @@ function makeDatePicker(fromDateId ,thruDateId){
   	    				<option value='${route}'>${route}</option>
 					</#list> 
 					</select>
+					Type 
+					<select name='subscriptionTypeId' class='h4'>
+					<option value='ALL'>All</option>
+					<option value='AM'>AM</option>
+					<option value='PM'>PM</option>
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+        </tr>
+        <tr>
+        	<form id="TruckSheetDetailReport" name="TruckSheetDetailReport" method="post"  target="_blank" action="<@ofbizUrl>TruckSheetDetailReport.csv</@ofbizUrl>">	
+      			<td width="34%">TruckSheet Detail Report </td>
+      			<td width="30%">Date<input  type="text" size="18pt" id="RouteTrDetDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      			<#--><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br> -->
+      			</td>			
+      			<td width="36%">Route 
+				 
 					Type 
 					<select name='subscriptionTypeId' class='h4'>
 					<option value='ALL'>All</option>
