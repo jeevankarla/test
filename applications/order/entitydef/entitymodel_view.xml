@@ -1968,6 +1968,7 @@ under the License.
       <alias entity-alias="RH" name="returnHeaderTypeId"/>
       <alias entity-alias="RH" name="originFacilityId"/>
       <alias entity-alias="RH" name="shipmentId"/>
+      <alias entity-alias="RH" name="createdBy"/>
       <alias entity-alias="RI" name="returnItemSeqId"/>
       <alias entity-alias="RI" name="productId"/>
       <alias entity-alias="RI" name="returnQuantity"/>

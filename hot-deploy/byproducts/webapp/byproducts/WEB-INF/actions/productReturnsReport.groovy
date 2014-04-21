@@ -73,7 +73,7 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 			productId = returnItem.productId;
 			returnQuantiy = returnItem.returnQuantity;
 			returnReasonId = returnItem.returnReasonId;
-			userLogin = context.get("userLogin");
+			userLogin = returnItem.createdBy; 
 			productReturnMap["date"]=dayBegin;
 			productReturnMap["boothId"]=boothId;
 			productReturnMap["routeId"]=routeId;
@@ -81,9 +81,7 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 			productReturnMap["productId"]=productId;
 			productReturnMap["returnQuantity"]=returnQuantiy;
 			productReturnMap["returnReasonId"]=returnReasonId;
-			if(UtilValidate.isNotEmpty(userLogin)){
-				productReturnMap["userLoginId"]= userLogin.userLoginId;
-			}
+			productReturnMap["userLoginId"]= userLogin;
 		returnProductList.add(productReturnMap);
 	}
 }
