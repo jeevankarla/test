@@ -1213,7 +1213,7 @@ nextProd:
    			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, dayBegin)));
    	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
    	try{
-   		productList =delegator.findList("ProductAndCategoryMember", discontinuationDateCondition,null, null, null, false);
+   		productList =delegator.findList("ProductAndCategoryMember", discontinuationDateCondition,null, null, null, true);
    	}catch (GenericEntityException e) {
 			// TODO: handle exception
    		Debug.logError(e, module);
