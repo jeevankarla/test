@@ -252,7 +252,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					</select>
 					Type 
 					<select name='subscriptionTypeId' class='h4'>
-					<option value='ALL'>All</option>
+					<option value=''>All</option>
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
 					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
