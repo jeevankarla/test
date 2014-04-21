@@ -48,7 +48,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                	    <fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="60pt"/> 		
             		<fo:table-column column-width="70pt"/>
-            		<fo:table-column column-width="170pt"/>
+            		<fo:table-column column-width="150pt"/>
             		<fo:table-column column-width="57pt"/>
             		<fo:table-column column-width="56pt"/>
                     <fo:table-body>
@@ -73,8 +73,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right" white-space-collapse="false">${returnItem.get("returnQuantity")?if_exists}</fo:block>  
 	                       			</fo:table-cell>
+	                       			<#assign returnReason = delegator.findOne("ReturnReason", {"returnReasonId" : returnItem.get("returnReasonId")}, true)?if_exists/>
 	                       			<fo:table-cell>
-	                            		<fo:block  text-align="right" white-space-collapse="false">${returnItem.get("returnReasonId")?if_exists}</fo:block>  
+	                            		<fo:block  text-align="right" white-space-collapse="false">${returnReason.description?if_exists}</fo:block>  
 	                       			</fo:table-cell>
 	                        		<fo:table-cell>
 	                            		<fo:block  text-align="right" white-space-collapse="false">${returnItem.get("userLoginId")?if_exists}</fo:block>  
