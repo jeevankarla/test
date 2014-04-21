@@ -55,6 +55,7 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/validate/jquery.validate.js</@ofbizContentUrl>"></script>
 <script type="application/javascript">
+
 screenFlag = '${screenFlag}';
 function setDateRange(){
 <#if screenFlag?exists && screenFlag == 'DSCorrection'>
@@ -114,9 +115,10 @@ function updateGrid(){
 						"screenFlag":screenFlag,
 						"routeId" : $('[name=routeId]').val()							
 					};
-	 $('div#changeIndentEntry_spinner').removeClass("errorMessage");
-    	   $('div#changeIndentEntry_spinner')
-    		  .html('<img src="/images/ajax-loader64.gif">');				
+	 $('div#changeIndentEntry_message').removeClass("errorMessage");
+     $('div#changeIndentEntry_message').html('');
+	 $('div#changeIndentEntry_spinner').show();
+	 			
 
 		$.ajax({
 				 type: "POST",
@@ -126,19 +128,18 @@ function updateGrid(){
 	            
 				success:function(result){
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
-						$('div#changeIndentEntry_spinner').html('');
-						 $("div#errorMsg").fadeIn();
+					    $('div#changeIndentEntry_spinner').hide();
+						 $("div#changeIndentEntry_message").fadeIn();
 						msg = result["_ERROR_MESSAGE_"];
 						if(result["_ERROR_MESSAGE_LIST_"] =! undefined){
 							msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 						}
-						  $('div#errorMsg').html('<span style="color:red; font-size:10pt; font-stlye:bold">"'+msg+'"</span>');
-                	   $('div#errorMsg').delay(7000).fadeOut('slow');
-						//$('div#errorMsg').html('<label>'+msg +'</label>');
+						  $('div#changeIndentEntry_message').html('<span style="color:red; font-size:10pt; font-stlye:bold">"'+msg+'"</span>');
+                	   $('div#changeIndentEntry_message').delay(7000).fadeOut('slow');
 						gridHideCall();
 					}else{
-					
-					    $('div#changeIndentEntry_spinner').html('');
+					    $('div#changeIndentEntry_spinner').hide();
+					    
 						var changeIndentProductList = result["changeIndentProductList"];
 						//var tripId = result["tripId"];
 							prodIndentQtyCat = result["prodIndentQtyCat"];
@@ -806,11 +807,13 @@ function updateGrid(){
            
     }
     function gridHideCall() {
-              $('#myGrid1').hide();
+           $('#myGrid1Hdr').hide();
+           $('#myGrid1').hide();
            $('#GridSaveId').hide();
     }
      function gridShowCall() {
-            $('#myGrid1').show();
+           $('#myGrid1Hdr').show();
+           $('#myGrid1').show();
            $('#GridSaveId').show();
     }
      $('#routeId').keypress(function (e) {
@@ -886,4 +889,8 @@ function updateGrid(){
 			//$("#effectiveDate").val($.datepicker.formatDate('dd MM, yy', date));
 		}
 	}
+$(document).ready(function(){	
+	$('div#changeIndentEntry_spinner').hide();
+	});
+	
 </script>			

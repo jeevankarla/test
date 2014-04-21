@@ -37,9 +37,8 @@ $(function() {
     	   }}).form()) return;
     	   _grid.getEditController().commitCurrentEdit();
     	   $('input[name=changeSave]').attr('disabled','disabled');
-    	   $('div#changeIndentEntry_spinner').removeClass("errorMessage");
-    	   $('div#changeIndentEntry_spinner')
-    		  .html('<img src="/images/ajax-loader64.gif">');
+    	   $('div#changeIndentEntry_message').removeClass("errorMessage");
+    	   $('div#changeIndentEntry_spinner').show();
     	   	var screenFlag = $("#screenFlag").val();
     	   	var action;
     	   	if(screenFlag == 'DSCorrection'){
@@ -58,25 +57,27 @@ $(function() {
             	 var changeFlag = result["indentChangeFlag"];
           	   
                if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
-            	   $('div#changeIndentEntry_spinner').html('');
-					 $("div#errorMsg").fadeIn();
+            	   $('div#changeIndentEntry_message').html('');
+					 $("div#changeIndentEntry_message").fadeIn();
 					msg = result["_ERROR_MESSAGE_"];
 					if(result["_ERROR_MESSAGE_LIST_"] != undefined){
 						msg =msg+result["_ERROR_MESSAGE_LIST_"] ;
 					}
 					alert(msg);
-					  $('div#errorMsg').html('<span style="color:red; font-size:14pt; font-stlye:bold">"'+msg+'"</span>');
-          	         $('div#errorMsg').delay(7000).fadeOut('slow');
+					  $('div#changeIndentEntry_message').html('<span style="color:red; font-size:14pt; font-stlye:bold">"'+msg+'"</span>');
+          	         $('div#changeIndentEntry_message').delay(7000).fadeOut('slow');
+              	   $('div#changeIndentEntry_spinner').hide();
+
                }else{
-            	
-            	   $("div#changeIndentEntry_spinner").fadeIn();
-            	   $('div#changeIndentEntry_spinner').html();
-            	   $('div#changeIndentEntry_spinner').addClass("messageStr");
+            	   $('div#changeIndentEntry_spinner').hide();
+            	   $("div#changeIndentEntry_message").fadeIn();
+            	   $('div#changeIndentEntry_message').html();
+            	   $('div#changeIndentEntry_message').addClass("messageStr");
             	   if(changeFlag == "Changed"){
-                	   $('div#changeIndentEntry_spinner').html('<span style="color:green; font-size:12pt; font-stlye:bold">Entry added succesfully for Dealer : "'+$("#boothTooltip").text()+'"</span>');
-                	   $('div#changeIndentEntry_spinner').delay(9000).fadeOut('slow');
+                	   $('div#changeIndentEntry_message').html('<span style="color:green; font-size:12pt; font-stlye:bold">Entry added succesfully for Dealer : "'+$("#boothTooltip").text()+'"</span>');
+                	   $('div#changeIndentEntry_message').delay(9000).fadeOut('slow');
             	   }else{
-            		   $('div#changeIndentEntry_spinner').delay(20).fadeOut('slow');
+            		   $('div#changeIndentEntry_message').delay(20).fadeOut('slow');
             	   }
 
 

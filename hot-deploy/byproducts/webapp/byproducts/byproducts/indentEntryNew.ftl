@@ -159,7 +159,7 @@
 					   </#if>
 			        </tr>
 			       </table>
-       		<div name ="displayMsg" id="changeIndentEntry_spinner"/>   
+       		<div name ="displayMsg" id="changeIndentEntry_spinner2"/>   
 		</form>
 		<br/>
     	</div>
@@ -177,12 +177,16 @@
     </#if>
 </div>
 </div>
+<div id="changeIndentEntry_spinner" > 
+      <p align="center" style="font-size: large;">
+        <img src="<@ofbizContentUrl>/images/ajax-loader64.gif</@ofbizContentUrl>">
+      </p>
+</div>	
 <div class="righthalf" style="width:65%">
 <div class="screenlet"  id="GridDiv">
-    <div class="screenlet-body">
+    <div id="myGrid1Container" class="screenlet-body">    
     <div>
- 		<div class="grid-header" style="width:100%">
- 			 
+ 		<div id="myGrid1Hdr" class="grid-header" style="width:100%">			 
 			<label>
 				<#if screenFlag?exists && screenFlag != 'DSCorrection'> 
 				Change Indent &nbsp;&nbsp;&nbsp;&nbsp;
@@ -201,11 +205,11 @@
     		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     		<input type="button" style="padding:.3em" id="changeCancel" value="Cancel"/>   	
     	</div>    
-	</div>
+	</div>  
+</div>	
+<div name ="displayMsg" id="changeIndentEntry_message"/> 
 </div>     
-</div><!--  div full close -->
- 	
-
 </div>
+</div><!--  div full close -->
 
   
