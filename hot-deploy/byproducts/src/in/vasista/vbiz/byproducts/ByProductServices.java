@@ -78,7 +78,8 @@ public class ByProductServices {
     private static String obInvoiceType = "OBINVOICE_IN";
     public static final String resource_error = "OrderErrorUiLabels";
     static {
-        decimals = 2;//UtilNumber.getBigDecimalScale("order.decimals");
+       decimals = 2;
+    	//decimals = UtilNumber.getBigDecimalScale("order.decimals");
         rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 	
         // set zero to the proper scale
@@ -2195,8 +2196,9 @@ public class ByProductServices {
 			
 			
 		    // lets look for party specific discount rates if any and adjust the discount
-		    
+			
 	        BigDecimal basicPrice = resultPrice.getBigDecimal("price").subtract(discountAmount);
+	       // basicPrice = basicPrice.setScale( decimals,rounding);
 			List<GenericValue> taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, prodPriceType);
 			List taxDetailList = FastList.newInstance();
 			BigDecimal totalExciseDuty = BigDecimal.ZERO;
@@ -2214,6 +2216,7 @@ public class ByProductServices {
 					percentage = (BigDecimal) taxItem.get("sourcePercentage");
 					if(UtilValidate.isNotEmpty(percentage) && UtilValidate.isNotEmpty(basicPrice)){
 						amount = (basicPrice.multiply(percentage)).divide(new BigDecimal(100));
+						//amount = (basicPrice.multiply(percentage)).divide(new BigDecimal(100) , decimals,rounding);
 					}
 				}
 				
