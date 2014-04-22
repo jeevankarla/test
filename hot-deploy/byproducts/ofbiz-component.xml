@@ -27,12 +27,12 @@
     <service-resource type="model" loader="main" location="servicedef/services_salesHistory.xml"/> 
     <service-resource type="model" loader="main" location="servicedef/services_transporter.xml"/>  
     
-    <!--
+    
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
-    <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
-    -->
+    <!--<service-resource type="group" loader="main" location="servicedef/groups.xml"/>
+    
 
-    <test-suite loader="main" location="testdef/ByProductsTests.xml"/>
+    --><test-suite loader="main" location="testdef/ByProductsTests.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="byproducts"
