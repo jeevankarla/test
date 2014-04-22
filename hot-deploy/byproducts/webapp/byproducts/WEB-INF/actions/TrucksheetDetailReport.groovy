@@ -57,13 +57,13 @@
 	products.each{prodItem ->
 		productName.put(prodItem.productId, prodItem.brandName);
 	}
-	
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIdList));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
 	returnCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	returnsList = delegator.findList("ReturnHeader", returnCondition, null , null, null, false);
-	
+	boothReturnMap = [:];
+
 	returnIdsList = EntityUtil.getFieldListFromEntityList(returnsList, "returnId", true);
 	
 	returnShipments = EntityUtil.getFieldListFromEntityList(returnsList, "shipmentId", true);
@@ -77,75 +77,84 @@
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIdList));
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
 	orderCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", orderCondition, null , null, null, false);
+	orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", orderCondition, null , ["routeId"], null, false);
 	
 	routeIdsList = EntityUtil.getFieldListFromEntityList(orderItemsList, "routeId", true);
 	trucksheetDetailList = [];
 	routeIdsList.each{eachRouteId ->
-		returnFlag = false;
-		
 		routeOrderItems = EntityUtil.filterByCondition(orderItemsList, EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, eachRouteId));
 		boothIdsList = EntityUtil.getFieldListFromEntityList(routeOrderItems, "originFacilityId", true);
 		boothIdsList.each{ eachBoothId ->
-			
+			String returnId = "";
+			returnFlag = false;
 			if(returnRoutes.contains(eachRouteId) && returnFacility.contains(eachBoothId)){
 				returnFlag = true;
 			}
+			if(returnFlag){
+				retExpr = [];
+				retExpr.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, eachBoothId));
+				retExpr.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, tempShipId));
+				cond = EntityCondition.makeCondition(retExpr, EntityOperator.AND);
+				returnDetail = EntityUtil.filterByCondition(returnsList, cond);
+				
+				if(returnDetail){
+					returnId = (EntityUtil.getFirst(returnDetail)).get("returnId");
+				}
+				
+			}
 			boothOrderItems = EntityUtil.filterByCondition(routeOrderItems, EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, eachBoothId));
+			tempShipId = (EntityUtil.getFirst(boothOrderItems)).get("shipmentId");
 			productIdsList = EntityUtil.getFieldListFromEntityList(boothOrderItems, "productId", true);
 			productIdsList.each{prodId ->
 				tempMap = [:];
-				returnProducts = [];
-				if(returnFlag){
-					returnProducts = EntityUtil.filterByCondition(returnItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
-				}
-				
 				prodOrderItems = EntityUtil.filterByCondition(boothOrderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
 				tempMap.routeId = eachRouteId;
 				tempMap.facilityId = eachBoothId;
 				tempMap.productId = productName.get(prodId);
+				index = 0;
+				tempMap.subsidyQty = 0;
+				tempMap.subAmount = 0;
+				tempMap.dispatchQty = 0;
+				tempMap.amount = 0;
+				tempMap.returnedQty = 0;
+				tempMap.receivedQty = 0;
+				tempMap.unitPrice = 0;
 				prodOrderItems.each{ eachItem->
 					unitListPrice = eachItem.unitListPrice;
 					tempMap.vatPercent = eachItem.vatPercent;
-					flag = 0;
 					if(eachItem.productSubscriptionTypeId == "EMP_SUBSIDY"){
 						tempMap.subsidyQty = eachItem.quantity;
-						tempMap.subamount = eachItem.quantity*unitListPrice;
-						flag = 1;
+						tempMap.subAmount = eachItem.quantity*unitListPrice;
 					}
 					else{
 						tempMap.dispatchQty = eachItem.quantity;
 						tempMap.amount = eachItem.quantity*unitListPrice;
-						if(flag == 0){
-							tempMap.subsidyQty = 0;
-							tempMap.subamount = 0;
+						tempMap.unitPrice = unitListPrice;
+					}
+					index++;
+					returnQty = 0
+					if(returnId && prodOrderItems.size() == index){
+						exprCond = [];
+						exprCond.add(EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId));
+						exprCond.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+						cond1 = EntityCondition.makeCondition(exprCond, EntityOperator.AND);
+						returnItem = EntityUtil.filterByCondition(returnItems, cond1);
+						if(returnItem){
+							retItem = EntityUtil.getFirst(returnItem);
+							returnQty = retItem.returnQuantity;
+							tempMap.returnedQty = returnQty;
+							tempMap.receivedQty = tempMap.dispatchQty+tempMap.subsidyQty - returnQty;
+							tempMap.amount = tempMap.amount-(returnQty*unitListPrice);
 						}
 					}
-					if(returnProducts){
-						returnQty = (EntityUtil.getFirst(returnProducts)).get("returnQuantity");
-						tempMap.returnedQty = returnQty;
-						tempMap.receivedQty = eachItem.quantity - returnQty;
-						tempMap.amount = eachItem.quantity*unitListPrice - returnQty*unitListPrice;
-						
-					}
-					else{
-						tempMap.returnedQty = 0;
-						tempMap.receivedQty = eachItem.quantity;
-					}
-					tempMap.unitPrice = unitListPrice;
+					tempMap.receivedQty = tempMap.dispatchQty+tempMap.subsidyQty-returnQty;
+					
 				}
 				trucksheetDetailList.add(tempMap);
 			}
 		}
 	}
-	/*returnsList.each{ eachReturnHeader ->
-		returnId = eachReturnHeader.returnId;
-		shipId = eachReturnHeader.shipmentId;
-		facilityId = eachReturnHeader.originFacilityId;
-		routeId = returnShipmentMap.get(shipId)
-		trucksheetDetailList
-	}*/
-	context.trucksheetDetailList = trucksheetDetailList;
 	
+	context.trucksheetDetailList = trucksheetDetailList;
 	
 	
