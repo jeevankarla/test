@@ -1784,6 +1784,7 @@ public class ByProductNetworkServices {
 	    	    conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS , "ORDER_APPROVED"));
 	    	    conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId));
 	    	    conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS , boothId));
+	    	    conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS , productSubscriptionTypeId));
 	    	    EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	    	    List<GenericValue> orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null, null, null, false);
 	    	    if(UtilValidate.isEmpty(orderItems)){

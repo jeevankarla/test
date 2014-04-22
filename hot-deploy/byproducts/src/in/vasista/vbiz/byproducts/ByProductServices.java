@@ -2656,6 +2656,7 @@ public class ByProductServices {
 	    		
   		  conditionList.clear();
   		  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, boothId));
+  		  conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
   		  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
   		  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
   		  EntityCondition orderCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
