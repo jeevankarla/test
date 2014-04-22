@@ -252,7 +252,7 @@ public class ByProductServices {
 			stopShipList.addAll(EntityUtil.getFieldListFromEntityList(boothInActiveList, "facilityId", true));
 		}
 		Debug.logImportant("stopShipList ======"+stopShipList, "");
-		List creditInstList= (List)ByProductNetworkServices.getAllBooths(delegator, "CR_INST").get("boothsList");
+		List creditInstList = (List)ByProductNetworkServices.getAllBooths(delegator, "CR_INST").get("boothsList");
 		List<GenericValue> facilityCustomTimePeriod = FastList.newInstance();
 		
 		
@@ -272,8 +272,7 @@ public class ByProductServices {
 					exclInvoiceFacilityIdsList.add(facId);
 				}
 			}
-		}
-		else{
+		}else{
 			exclInvoiceFacilityIdsList.addAll(creditInstList);
 		}
 		//checking for one route  or all routes
@@ -2800,19 +2799,25 @@ public class ByProductServices {
 		  }
 		  if(orderChangeFlag){
 		   	  change = "Changed";
-		   	  String invoiceId = (EntityUtil.getFirst(orderInv)).getString("invoiceId");
+		   	String invoiceId = null;
+		   	  if(UtilValidate.isNotEmpty(orderInv)){
+		   		invoiceId = (EntityUtil.getFirst(orderInv)).getString("invoiceId");
+		   	  }
+		   	  
 			  try{
 				  result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
 				  if (ServiceUtil.isError(result)) {
 					  Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
 			 		  return ServiceUtil.returnError("Problem cancelling orders in Correction");
 				  } 			
-				  
-				  result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", UtilMisc.toList(invoiceId), "statusId", "INVOICE_CANCELLED", "userLogin", userLogin));
-			   	  if (ServiceUtil.isError(result)) {
-			   		  Debug.logError("Problem cancelling invoice in Correction", module);	 		  		  
-			   		  return ServiceUtil.returnError("Problem cancelling invoice in Correction");
-				  }	        	  
+				  if(UtilValidate.isNotEmpty(invoiceId)){
+					  result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", UtilMisc.toList(invoiceId), "statusId", "INVOICE_CANCELLED", "userLogin", userLogin));
+				   	  if (ServiceUtil.isError(result)) {
+				   		  Debug.logError("Problem cancelling invoice in Correction", module);	 		  		  
+				   		  return ServiceUtil.returnError("Problem cancelling invoice in Correction");
+					  }	 
+				  }
+				        	  
 			  }catch (GenericServiceException e) {
 				  Debug.logError(e, e.toString(), module);
 				  return ServiceUtil.returnError("Problem cancelling orders and invoice in Correction");
@@ -2852,6 +2857,23 @@ public class ByProductServices {
 				  
 			  }
 			  processCorrectionCtx.put("subscriptionProductsList", subscriptionProductsList);
+			  if(UtilValidate.isNotEmpty(facility.get("categoryTypeEnum")) && "CR_INST".equals(facility.get("categoryTypeEnum"))){
+				  List dailyBillingFacility = FastList.newInstance();
+				  List excludeInvoiceForFacilityIds = FastList.newInstance();
+					try{
+						List<GenericValue> facilityCustomTimePeriod = delegator.findList("FacilityCustomBilling", EntityCondition.makeCondition(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "INST_DAILY_BILL"),EntityOperator.AND,EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facility.getString("facilityId"))), null, null, null, false);
+						facilityCustomTimePeriod = EntityUtil.filterByDate(facilityCustomTimePeriod, orderHeader.getTimestamp("estimatedDeliveryDate"));
+						dailyBillingFacility = EntityUtil.getFieldListFromEntityList(facilityCustomTimePeriod, "facilityId", true);
+						if(UtilValidate.isEmpty(dailyBillingFacility)){
+							excludeInvoiceForFacilityIds.add(facility.getString("facilityId"));
+						}
+						
+					}catch(GenericEntityException e){
+						Debug.logError(e, "Error fetching daily billing credit institutions", module);			
+						return ServiceUtil.returnError("Error fetching daily billing credit institutions" + e);
+					}
+					  processCorrectionCtx.put("excludeInvoiceForFacilityIds", excludeInvoiceForFacilityIds);
+			  }
 				result = createSalesOrderSubscriptionProductType(dctx, processCorrectionCtx);
 				
 				orderId = (String) result.get("orderId");
