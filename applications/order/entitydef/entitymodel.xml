@@ -2522,6 +2522,8 @@ under the License.
         <field name="receivedQuantity" type="fixed-point" enable-audit-log="true"><description>actually received from the customer</description></field>
         <field name="returnPrice" type="currency-amount" enable-audit-log="true"></field>
         <field name="returnItemResponseId" type="id"></field>
+        <field name="vatPercent" type="fixed-point"></field>
+        <field name="vatAmount" type="currency-precise" ></field>
         <prim-key field="returnId"/>
         <prim-key field="returnItemSeqId"/>
         <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="ReturnHeader">

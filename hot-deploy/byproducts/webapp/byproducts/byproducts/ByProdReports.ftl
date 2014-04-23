@@ -63,6 +63,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("bsFromDateId","fromDateId");
 		makeDatePicker("bsThruDateId","thuDateId");
 		makeDatePicker("prodReturnDateId","thuDateId");
+		makeDatePicker("saleFromDateId","fromDateId");
+		makeDatePicker("saleThruDateId","thuDateId");
 		makeDatePicker("smsNotify","");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -236,7 +238,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 				<input type="submit" value="Download" class="buttontext"/></td>       			
       		</form>
       	</tr> 
-      	
+      	<tr>
+      		<form id="SalesReport" name="SalesReport" method="post" action="<@ofbizUrl>salesReport.txt</@ofbizUrl>" target="_blank">	
+      			<td width="34%">Sales Report</td>
+      			<td width="33%">From<input  type="text" size="18pt" id="saleFromDateId" readonly  name="saleFromDate"/>
+      			<td width="33%">Thru<input  type="text" size="18pt" id="saleThruDateId" readonly  name="saleThruDate"/>
+				<input type="submit" value="Download" class="buttontext"/></td>       			
+      		</form>
+      	</tr>
       	 <tr>
         	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallan.txt</@ofbizUrl>">	
       			<td width="34%">Dealer BankChallan Report </td>

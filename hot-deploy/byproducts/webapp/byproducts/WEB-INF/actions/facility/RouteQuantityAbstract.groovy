@@ -19,23 +19,63 @@ import javax.swing.text.html.parser.Entity;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.product.product.ProductWorker;
 
+routeIdsList = [];
 dctx = dispatcher.getDispatchContext();
-routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
 
 effectiveDate = null;
-effectiveDateStr = parameters.supplyDate;
+thruEffectiveDate = null;
 
-if (UtilValidate.isNotEmpty(effectiveDateStr)) {
-	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
-	try {
-		effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
-	   }catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: "+effectiveDateStr, "");
-	   }
-}else{
-effectiveDate=UtilDateTime.nowTimestamp();
+if (UtilValidate.isNotEmpty(reportTypeFlag)) {
+	if(reportTypeFlag=="routeQuantityAbstractReport"){
+		effectiveDateStr = parameters.supplyDate;
+		if (UtilValidate.isNotEmpty(effectiveDateStr)) {
+			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+			   }catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+effectiveDateStr, "");
+			   }
+		}else{
+			effectiveDate=UtilDateTime.nowTimestamp();
+		}
+		routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
+	}
 }
 dayBegin = UtilDateTime.getDayStart(effectiveDate);
+dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+// for sales Report
+if (UtilValidate.isNotEmpty(reportTypeFlag)) {
+	if(reportTypeFlag=="salesReport"){
+		effectiveDateStr = parameters.saleFromDate;
+		thruEffectiveDateStr = parameters.saleThruDate;
+		if (UtilValidate.isEmpty(effectiveDateStr)) {
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
+		else{
+			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
+			}
+		}
+		if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
+			thruEffectiveDate = UtilDateTime.nowTimestamp();
+		}
+		else{
+			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruEffectiveDateStr+" 00:00:00").getTime());
+			}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
+			}
+		}
+	}
+}
+
+dayBegin = UtilDateTime.getDayStart(effectiveDate);
+dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
+
 
 productNames = [:];
 allProductsList = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",effectiveDate));
@@ -56,10 +96,14 @@ byProductsList=  EntityUtil.filterByCondition(allProductsList, EntityCondition.m
 lmsProductsIdsList=EntityUtil.getFieldListFromEntityList(lmsProductsList, "productId", false);
 byProductsIdsList=EntityUtil.getFieldListFromEntityList(byProductsList, "productId", false);
 
-
 context.putAt("dayBegin", dayBegin);
-dayEnd = UtilDateTime.getDayEnd(effectiveDate);
-List shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+
+shipmentIds = [];
+if(thruEffectiveDate){
+	shipmentIds = ByProductNetworkServices.getShipmentIds(delegator,dayBegin,dayEnd);
+}else{
+	shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+}
 amShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"AM");
 pmShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"PM");
 //getADHOC shipments 

@@ -1977,6 +1977,7 @@ under the License.
       <alias entity-alias="RI" name="returnStatusId" field="statusId"/>
       <alias entity-alias="RI" name="returnItemTypeId"/>
       <alias entity-alias="RI" name="returnReasonId"/>
+      <alias entity-alias="RI" name="returnPrice"/>
       <alias entity-alias="SH" name="estimatedShipDate"/>
       <alias entity-alias="SH" name="shipmentTypeId"/>
       <alias entity-alias="SH" name="routeId"/>

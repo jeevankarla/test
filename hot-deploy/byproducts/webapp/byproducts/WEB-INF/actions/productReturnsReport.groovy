@@ -22,22 +22,64 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 effectiveDate = null;
-effectiveDateStr = parameters.prodReturnDate;
-if (UtilValidate.isEmpty(effectiveDateStr)) {
-	effectiveDate = UtilDateTime.nowTimestamp();
-}
-else{
-	SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
-	try {
-		effectiveDate = new java.sql.Timestamp(dateFormat.parse(effectiveDateStr+" 00:00:00").getTime());
-	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
+thruEffectiveDate = null;
+
+if (UtilValidate.isNotEmpty(reportTypeFlag)) {
+	if(reportTypeFlag=="productReturnsReport"){
+		effectiveDateStr = parameters.prodReturnDate;
+		if (UtilValidate.isEmpty(effectiveDateStr)) {
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
+		else{
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				effectiveDate = new java.sql.Timestamp(dateFormat.parse(effectiveDateStr+" 00:00:00").getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
+			}
+		}
 	}
 }
-context.put("effectiveDateStr",effectiveDateStr);
 dayBegin = UtilDateTime.getDayStart(effectiveDate);
 dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 
+// for sales Report
+if (UtilValidate.isNotEmpty(reportTypeFlag)) {
+	if(reportTypeFlag=="salesReport"){
+		effectiveDateStr = parameters.saleFromDate;
+		thruEffectiveDateStr = parameters.saleThruDate;
+		if (UtilValidate.isEmpty(effectiveDateStr)) {
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
+		else{
+			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
+			}
+		}
+		if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
+			thruEffectiveDate = UtilDateTime.nowTimestamp();
+		}
+		else{
+			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruEffectiveDateStr+" 00:00:00").getTime());
+			}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
+			}
+		}
+	}
+}
+
+dayBegin = UtilDateTime.getDayStart(effectiveDate);
+dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
+
+context.put("effectiveDateStr",effectiveDateStr);
+if(thruEffectiveDate){
+	context.put("thruEffectiveDateStr",thruEffectiveDateStr);
+}
 returnProductList = [];
 date = "";
 boothId = "";
@@ -46,18 +88,24 @@ shipmentTypeId = "";
 productId = "";
 returnQuantity = "";
 returnReasonId = "";
+returnPrice = "";
 
 shipmentIds=[];
 shipmentIdList = [];
 
-if(parameters.subscriptionTypeId == "ALL"){
-		shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
-		shipmentIdList.addAll(shipmentIds);
+if(thruEffectiveDate){
+	shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,dayBegin,dayEnd);
+	shipmentIdList.addAll(shipmentIds);
 }else{
-	   shipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),parameters.subscriptionTypeId);
-	   shipmentIdList.addAll(shipmentIds);
+	if(parameters.subscriptionTypeId == "ALL"){
+			shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+			shipmentIdList.addAll(shipmentIds);
+	}else{
+		   shipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),parameters.subscriptionTypeId);
+		   shipmentIdList.addAll(shipmentIds);
+	}
 }
-
+saleProductReturnMap=[:];
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIdList));
 conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
@@ -71,19 +119,26 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 			routeId = returnItem.routeId;
 			shipmentTypeId = returnItem.shipmentTypeId;
 			productId = returnItem.productId;
-			returnQuantiy = returnItem.returnQuantity;
+			returnQuantity = returnItem.returnQuantity;
 			returnReasonId = returnItem.returnReasonId;
-			userLogin = returnItem.createdBy; 
+			userLogin = returnItem.createdBy;
+			returnPrice = returnItem.returnPrice; 
 			productReturnMap["date"]=dayBegin;
 			productReturnMap["boothId"]=boothId;
 			productReturnMap["routeId"]=routeId;
 			productReturnMap["shipmentTypeId"]=shipmentTypeId;
 			productReturnMap["productId"]=productId;
-			productReturnMap["returnQuantity"]=returnQuantiy;
+			productReturnMap["returnQuantity"]=returnQuantity;
 			productReturnMap["returnReasonId"]=returnReasonId;
 			productReturnMap["userLoginId"]= userLogin;
+			//for sales report
+			saleProductPriceMap = [:];
+			saleProductPriceMap["returnQuantity"] = returnQuantity;
+			saleProductPriceMap["returnPrice"] = returnPrice;
+			saleProductReturnMap[productId] = saleProductPriceMap;
 		returnProductList.add(productReturnMap);
 	}
 }
 returnProductList = UtilMisc.sortMaps(returnProductList, UtilMisc.toList("routeId"));
+context.put("saleProductReturnMap",saleProductReturnMap);
 context.put("returnProductList",returnProductList);
