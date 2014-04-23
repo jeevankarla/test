@@ -385,7 +385,6 @@ public class UtilAccounting {
         if(UtilValidate.isEmpty(paymentId)){
         	paymentId = (String)context.get("paymentId");
        }
-        Debug.log("===invoiceId=="+invoiceId +"===paymentId=="+paymentId);
         Boolean conditionReply = Boolean.TRUE;
         
         Boolean invConditionReply = Boolean.TRUE;

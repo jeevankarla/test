@@ -4606,6 +4606,7 @@
 		<field name="rateAmount" type="fixed-point" />
 		<field name="lmsProductPriceTypeId" type="id" />
 		<field name="byprodProductPriceTypeId" type="id" />
+		<field name="priceActionTypeId" type="id" />
 		<prim-key field="rateTypeId" />
 		<prim-key field="rateCurrencyUomId" />
 		<prim-key field="periodTypeId" />
@@ -4641,6 +4642,10 @@
 		<relation type="one" fk-name="RATE_AMOUNT_PT"
 			rel-entity-name="PeriodType">
 			<key-map field-name="periodTypeId" />
+		</relation>
+	   <relation type="one" fk-name="RATE_AMOUNT_PATY"
+			rel-entity-name="ProductPriceActionType">
+			<key-map field-name="priceActionTypeId"  rel-field-name="productPriceActionTypeId"/>
 		</relation>
 	</entity>
 
