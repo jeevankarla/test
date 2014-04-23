@@ -64,7 +64,10 @@
         </menu-item>           
         <menu-item name="TransporterMargins" title="MarginReports">
             <condition>
+                <or>
 					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
+					 <if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
+				</or>	 
             </condition>
 			<link target="TransporterMargins"></link>
         </menu-item> 
