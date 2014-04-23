@@ -253,7 +253,7 @@ public class ByProductServices {
 			stopShipList.addAll(EntityUtil.getFieldListFromEntityList(boothInActiveList, "facilityId", true));
 		}
 		Debug.logImportant("stopShipList ======"+stopShipList, "");
-		List creditInstList = (List)ByProductNetworkServices.getAllBooths(delegator, "CR_INST").get("boothsList");
+		List creditInstList= (List)ByProductNetworkServices.getAllBooths(delegator, "CR_INST").get("boothsList");
 		List<GenericValue> facilityCustomTimePeriod = FastList.newInstance();
 		
 		
@@ -2565,6 +2565,199 @@ public class ByProductServices {
 	  	  return "success";     
 	}
 	
+	public static String makeMassPayments(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  	  Locale locale = UtilHttp.getLocale(request);
+	  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	  	  HttpSession session = request.getSession();
+	  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+	      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
+	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	  	  
+	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  	  if (rowCount < 1) {
+	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+	  		  return "error";
+	  	  }
+	  	  boolean beganTransaction = false;
+	  	  try{
+	  		  
+	  		  beganTransaction = TransactionUtil.begin(7200);
+		  	  for (int i = 0; i < rowCount; i++){
+		  		  Map paymentMap = FastMap.newInstance();
+		  		  String facilityId = "";
+		  		  String paymentMethodTypeId = "";
+		  		  String amountStr = "";
+		  		  String subTabItem = "";
+		  		  String issuingAuthority = "";
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  BigDecimal amount = BigDecimal.ZERO;
+		  		  
+		  		  BigDecimal pastAmount = BigDecimal.ZERO;
+		  		  if (paramMap.containsKey("facilityId" + thisSuffix)) {
+		  			  facilityId = (String) paramMap.get("facilityId" + thisSuffix);
+		  		  }
+		  		  
+		  		  if (paramMap.containsKey("paymentMethodTypeId" + thisSuffix)) {
+		  			paymentMethodTypeId = (String) paramMap.get("paymentMethodTypeId"+thisSuffix);
+		  			request.setAttribute("paymentMethodTypeId", paymentMethodTypeId);
+		  		  }
+		  		  if (paramMap.containsKey("amount" + thisSuffix)) {
+		  			amountStr = (String) paramMap.get("amount"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("subTabItem" + thisSuffix)) {
+		  			subTabItem = (String) paramMap.get("subTabItem"+thisSuffix);
+		  			request.setAttribute("subTabItem", subTabItem);
+		  		  }
+		  		  
+		  		  if(paymentMethodTypeId.equals("CHALLAN_PAYIN")){
+		  			  Map resultCtx = dispatcher.runSync("getFacilityFinAccountInfo", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
+			  			if(ServiceUtil.isError(resultCtx)){
+		   					Debug.logError("Problems in service getFacilityFinAccountInfo", module);
+				  			request.setAttribute("_ERROR_MESSAGE_", "Error in service getFacilityFinAccountInfo");
+				  			TransactionUtil.rollback();
+				  			return "error";
+		   				}
+			  			Map accountDetail = (Map)resultCtx.get("accountInfo");
+			  			Debug.log("##### facilityId ############"+facilityId+"\t #####"+accountDetail);
+			  			if(UtilValidate.isNotEmpty(accountDetail)){
+			  				issuingAuthority = (String)accountDetail.get("finAccountName");
+			  			}
+			  			Debug.log("##### issuingAuthority ############"+issuingAuthority);
+		  		  }
+		  		  
+		  		  if(UtilValidate.isNotEmpty(amountStr)){
+		  			  try {
+			  			  amount = new BigDecimal(amountStr);
+			  		  } catch (Exception e) {
+			  			  Debug.logError(e, "Problems parsing amount string: " + amountStr, module);
+			  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + amountStr);
+			  			  TransactionUtil.rollback();
+			  			  return "error";
+			  		  }
+		  		  }
+		  		  Map paymentInputMap = FastMap.newInstance();
+		  		  paymentInputMap.put("userLogin", userLogin);
+		  		  paymentInputMap.put("facilityId",facilityId);
+		  		  paymentInputMap.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
+		  		  paymentInputMap.put("paymentMethodTypeId",paymentMethodTypeId);
+		  		  paymentInputMap.put("paymentPurposeType","ROUTE_MKTG");
+		  		  paymentInputMap.put("issuingAuthority", issuingAuthority);
+		  		  paymentInputMap.put("amount",amount.toString());
+		  		  paymentInputMap.put("useFifo",true);
+		  		  if(amount.compareTo(BigDecimal.ZERO) > 0){
+	       				Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentInputMap);
+	       				if(ServiceUtil.isError(paymentResult)){
+	       					Debug.logError("Problems in service createPaymentForBooth", module);
+				  			request.setAttribute("_ERROR_MESSAGE_", "Error in service createPaymentForBooth");
+				  			TransactionUtil.rollback();
+				  			return "error";
+	       				}
+		  		  }
+		  		 
+		  	 }//end of loop
+		  	 
+	  	  } catch (GenericEntityException e) {
+	  		  try {
+	  			  // only rollback the transaction if we started one...
+	  			  TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  		  } catch (GenericEntityException e2) {
+	  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		  }
+	  		  Debug.logError("An entity engine error occurred while fetching data", module);
+	  	  }
+	  	  catch (GenericServiceException e) {
+	  		  try {
+	  			  // only rollback the transaction if we started one...
+	  			  TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+	  		  } catch (GenericEntityException e2) {
+	  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		  }
+	  		  Debug.logError("An entity engine error occurred while calling services", module);
+	  	  }
+	  	  finally {
+	  		  // only commit the transaction if we started one... this will throw an exception if it fails
+	  		  try {
+	  			  TransactionUtil.commit(beganTransaction);
+	  		  } catch (GenericEntityException e) {
+	  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		  }
+	  	  }
+	  	  
+	  	  request.setAttribute("_EVENT_MESSAGE_", "Successfully made payment entries ");
+	  	  return "success";     
+	}
+	public static Map<String, Object> createChequePayment(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String facilityId = (String) context.get("facilityId");
+        String supplyDate = (String) context.get("supplyDate");
+        String subTabItem = (String) context.get("subTabItem");
+        Locale locale = (Locale) context.get("locale");  
+        Map result = ServiceUtil.returnSuccess();
+        String paymentMethodType = (String) context.get("paymentMethodTypeId");
+        String paymentLocationId = (String) context.get("paymentLocationId");                
+        String paymentRefNum = (String) context.get("paymentRefNum");
+        String paymentPurposeType = (String) context.get("paymentPurposeType");
+        String issuingAuthority = (String) context.get("issuingAuthority");
+        String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
+        String instrumentDate = (String) context.get("instrumentDate");
+        String amountStr = (String) context.get("amount");
+        BigDecimal amount = BigDecimal.ZERO;
+        boolean useFifo = Boolean.FALSE;       
+        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
+        	useFifo = (Boolean)context.get("useFifo");
+        }
+        result.put("paymentMethodTypeId",paymentMethodType);
+		result.put("subTabItem", subTabItem);
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+		if(UtilValidate.isNotEmpty(amountStr)){
+			try {
+	  			  amount = new BigDecimal(amountStr);
+	  		} catch (Exception e) {
+	  			  Debug.logError(e, "Problems parsing amount string: " + amountStr, module);
+	  			  return ServiceUtil.returnError("Problems parsing amount string: " + amountStr);
+	  		}
+		}
+        try {
+        	Map<String, Object> paymentCtx = FastMap.newInstance();
+        	
+        	paymentCtx.put("userLogin", userLogin);
+        	paymentCtx.put("facilityId",facilityId);
+        	paymentCtx.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
+        	paymentCtx.put("paymentMethodTypeId",paymentMethodType);
+        	paymentCtx.put("paymentPurposeType","ROUTE_MKTG");
+        	paymentCtx.put("issuingAuthority", issuingAuthority);
+        	paymentCtx.put("amount",amount.toString());
+        	paymentCtx.put("useFifo",true);
+        	paymentCtx.put("paymentRefNum", paymentRefNum);
+        	paymentCtx.put("issuingAuthority", issuingAuthority);  
+            paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
+            paymentCtx.put("instrumentDate", instrumentDate);
+            paymentCtx.put("paymentPurposeType", paymentPurposeType);
+            
+	  		if(amount.compareTo(BigDecimal.ZERO) > 0){
+     				Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
+     				if(ServiceUtil.isError(paymentResult)){
+     					Debug.logError("Problems in service createPaymentForBooth", module);
+     					return ServiceUtil.returnError("Problems in service createPaymentForBooth");
+     				}
+	  		}
+        }catch (Exception e) {
+			  Debug.logError(e, e.toString(), module);
+		      return ServiceUtil.returnError(e.toString());
+		} 
+  		result = ServiceUtil.returnSuccess("Payment successfully done.");
+  		result.put("paymentMethodTypeId",paymentMethodType);
+		result.put("subTabItem", subTabItem);
+        return result;
+    }  
+	
+	
 	public static String processDSCorrectionMIS(HttpServletRequest request, HttpServletResponse response) {
   	  Delegator delegator = (Delegator) request.getAttribute("delegator");
   	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -2815,11 +3008,11 @@ public class ByProductServices {
 			 		  return ServiceUtil.returnError("Problem cancelling orders in Correction");
 				  } 			
 				  if(UtilValidate.isNotEmpty(invoiceId)){
-					  result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", UtilMisc.toList(invoiceId), "statusId", "INVOICE_CANCELLED", "userLogin", userLogin));
-				   	  if (ServiceUtil.isError(result)) {
-				   		  Debug.logError("Problem cancelling invoice in Correction", module);	 		  		  
-				   		  return ServiceUtil.returnError("Problem cancelling invoice in Correction");
-					  }	 
+				  result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", UtilMisc.toList(invoiceId), "statusId", "INVOICE_CANCELLED", "userLogin", userLogin));
+			   	  if (ServiceUtil.isError(result)) {
+			   		  Debug.logError("Problem cancelling invoice in Correction", module);	 		  		  
+			   		  return ServiceUtil.returnError("Problem cancelling invoice in Correction");
+				  }	        	  
 				  }
 				        	  
 			  }catch (GenericServiceException e) {

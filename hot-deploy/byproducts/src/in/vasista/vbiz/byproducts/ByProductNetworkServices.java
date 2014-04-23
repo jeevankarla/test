@@ -5446,6 +5446,7 @@ public class ByProductNetworkServices {
 	        String paymentMethodType = (String) context.get("paymentMethodTypeId");
 	        String paymentLocationId = (String) context.get("paymentLocationId");                
 	        String paymentRefNum = (String) context.get("paymentRefNum");
+	        String paymentPurposeType = (String) context.get("paymentPurposeType");
             String issuingAuthority = (String) context.get("issuingAuthority");
             String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
             String instrumentDateStr = (String) context.get("instrumentDate");
@@ -5612,7 +5613,7 @@ public class ByProductNetworkServices {
 	            paymentCtx.put("issuingAuthority", issuingAuthority);  
 	            paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
 	            paymentCtx.put("instrumentDate", instrumentDate);
-	            
+	            paymentCtx.put("paymentPurposeType", paymentPurposeType);
 	            paymentCtx.put("statusId", "PMNT_RECEIVED");
 	            paymentCtx.put("isEnableAcctg", "N");
 	            paymentCtx.put("amount", paymentAmount);

@@ -748,6 +748,124 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="IndentAdjustmentEntryInit">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Product Change"/>	
+               <set field="tabButtonItem" value="indentEntryInit"/>
+               <set field="tabButtonItem2" value="IndentAdjustment"/>
+               <set field="changeFlag" value="IndentAdjustment"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/dateFormatter.groovy"/>  
+               <set field="defaultEffectiveDateTime" value="${supDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+    		   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<!--<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentProductChange.groovy"/>
+            --></actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      <!--<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ByProductsIndentTabBar"/>
+                      	--><section>
+                        	<widgets>
+                            	<include-screen name="IndentAdjustEntryInitInner"/>                        
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>	
+	<screen name="IndentAdjustEntryInitInner">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Product Change"/>	
+               <set field="tabButtonItem" value="indentEntryInit"/> 
+               <set field="tabButtonItem2" value="IndentAdjustment"/>       
+                <set field="changeFlag" value="IndentAdjustment"/>         
+			   <set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+               <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+               <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="SUB_BY_PROD_TYPE"/>                    	
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                <entity-condition entity-name="Product" list="productList" use-cache="true">
+                </entity-condition>                
+                <!--<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentProductChange.groovy"/>
+                --><entity-condition entity-name="SubscriptionType" list="subscriptionTypeList" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="parentTypeId" value="LMS"/>                    	
+                    </condition-list>                    
+                </entity-condition>
+            </actions>
+            <widgets>	            
+               	<section>
+               		<!-- <condition>
+               			<or>
+          					<if-has-permission permission="INDENT" action="_ADMIN"/>
+          					<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+                   		</or>
+               		</condition> -->
+                 	<widgets>
+          					<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/IndentAdjustEntryNew.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen>
+    <screen name="IndentAdjustEntryNew">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Product Change"/>
+               <set field="tabButtonItem" value="indentEntryInit"/>	
+               <set field="tabButtonItem2" value="IndentAdjustment"/>        
+                <set field="changeFlag" value="IndentAdjustment"/>         
+               <set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>  
+               <set field="screenFlag" value="IndentAdjust"/> 
+               <set field="productId" from-field="parameters.productId"/>
+               <set field="routeId" from-field="parameters.routeId"/>
+                <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                    <condition-expr field-name="enumTypeId" value="SUB_BY_PROD_TYPE"/>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/IndentAdjustment.groovy"/>
+                <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentDSCorrection.groovy"/>   -->
+            </actions>
+            <widgets>
+                <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                      <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="IndentSubTabBar"/>
+                        <section>
+                    		<condition>
+                    			<and>
+                    				<!-- <or>
+          								<if-has-permission permission="INDENT" action="_ADMIN"/>
+          								<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+                   					</or> -->
+                   					<not><if-empty field="booth"/></not>
+                    			</and>
+                        		
+                    		</condition>
+                            	<widgets>
+	            						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/IndentAdjustEntryNew.ftl"/></html></platform-specific>
+                                </widgets>
+                            <fail-widgets>
+                                <include-screen name="IndentAdjustEntryInitInner"/>								                           
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
 	  <screen name="ChangeIndentInit">
         <section>
             <actions>
@@ -1071,7 +1189,7 @@
                         	<platform-specific> 
                             	<html><html-template location="component://byproducts/webapp/byproducts/reports/fieldStaffComparison.ftl"/></html>
                         	</platform-specific>                        
-                        </container>                      
+                        </container>                
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -1686,6 +1804,130 @@
                     </decorator-section>                                       
                 </decorator-screen>
 	        </widgets>								
+		</section>
+	</screen>
+	<screen name="FindPaymentByMethod">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="CustomPayments" />
+				<set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
+				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;dd MMMMM, yyyy&quot;);}" /> 				
+				<entity-condition entity-name="FacilityParty" list="facilityParty" filter-by-date="true">
+	    			<condition-list>
+	    				<condition-expr field-name="partyId" value="${userLogin.partyId}"/>
+	    				<condition-expr field-name="roleTypeId" value="FACILITY_CASHIER"/>
+	    			</condition-list>
+    			</entity-condition>
+    			<service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+                <set field="hasPaymentCancelPermission" from-field="permResult.hasPermission"/>	
+    			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>										
+    			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
+    			<set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId" default-value="${paymentMethodTypeId}"/>
+    			<set field="parameters.onlyCurrentDues" value="false"/>
+    			<entity-condition list="companyBankList" entity-name="FinAccount" distinct="true" >
+    				<condition-list combine="and">
+    					<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+    					<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+    				</condition-list>
+    				<select-field field-name="finAccountName"/>
+    				<order-by field-name="finAccountName"/>
+    			</entity-condition>
+    			<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getRetailerPayments.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="PaymentSubTabBar"/>
+						<section>
+							<condition>
+								<or>
+									<not><if-empty field="facilityParty"/></not>
+									<if-has-permission permission="FACILITY" action="_ADMIN"/>
+									<if-has-permission permission="CASH" action="_ADMIN"/>	
+								</or>		
+							</condition>
+							<widgets>
+								<section>
+									<condition>
+										<and>
+											<or>
+												<if-has-permission permission="CASH" action="_ADMIN"/>
+												<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+											</or>
+											<or>
+												<if-empty field="statusId"/>
+												<if-compare operator="equals" value="NOT_PAID" field="statusId"/>
+											</or>
+										</and>
+									</condition>
+									<widgets>
+									   <section>
+									        <widgets> 		
+										        <screenlet>
+										        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
+										        	<include-form name="FindPaymentsByMethod" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+									  	        <screenlet title="Retailers ${uiLabelMap.PaymentSearchResults} :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">				
+									  	        	<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>	
+									  	        	</link>
+									  	        	<platform-specific><html>
+												  		<html-template location="component://byproducts/webapp/byproducts/byproducts/DuePayment.ftl"/>
+												  		</html>
+												  	</platform-specific>	
+									  	        	<platform-specific>
+                                            			<html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchRetailerDues.ftl"/></html>
+                                        			</platform-specific>
+										        </screenlet>
+										     </widgets> 
+										 </section>
+									</widgets>
+									<fail-widgets>
+										<section>
+											<condition>
+												<and>
+													<or>
+														<if-has-permission permission="CASH" action="_ADMIN"/>
+														<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+													</or>
+													<if-compare operator="equals" value="PAID" field="statusId"/>
+												</and>
+											</condition>
+											<widgets>
+										        <screenlet title="Cash Payments">
+										        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
+										        	<include-form name="FindPaymentsByMethod" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+									  	        <screenlet title="Retailers ${uiLabelMap.PaymentSearchResults} :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
+									  	       		<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
+														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
+														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+														<parameter param-name="statusId" from-field="parameters.statusId"/>												
+									  	        	</link>	
+									  	        	<platform-specific>
+	                                     					<html><html-template location="component://byproducts/webapp/byproducts/reports/printBoothPayments.ftl"/></html>
+	                                				</platform-specific>
+										        </screenlet>								    
+											</widgets>
+										</section>
+									</fail-widgets>
+								</section>			
+							</widgets>
+						</section>									
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
 		</section>
 	</screen>
 	<screen name="FindBoothPayments">

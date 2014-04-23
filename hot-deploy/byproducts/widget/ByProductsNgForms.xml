@@ -698,6 +698,69 @@
             </hyperlink>
         </field> 
     </form>
+    <form name="FindPaymentsByMethod" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="FindPaymentByMethod"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<field name="hideSearch"><hidden value="N"/></field>
+    	<field name="onlyCurrentDues"><hidden value="false"/></field>
+    	<field name="subTabItem"><hidden value="${parameters.subTabItem}"/></field>   	   	
+    	<!--<field name="paymentDate" title="${uiLabelMap.SupplyDate}"><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}"/></field>
+    	<field name="displayDate" title="${uiLabelMap.SupplyDate}" widget-style="h3"><display default-value="${defaultEffectiveDate}"/></field>       
+        --><field name="facilityId" title="${uiLabelMap.BoothRoute}" required-field="true"><lookup target-form-name="LookupFacility"/></field>
+        <field name="paymentMethodTypeId"> <hidden value="${parameters.paymentMethodTypeId}"/></field>
+        <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHALLAN_PAYIN&quot;" name="finAccountName" title="Bank">
+        	<drop-down >
+        		<option key="AllBanks" description="All Banks"/>
+        		<list-options key-name="finAccountName" list-name="accountNameList" description="${finAccountName}"/>
+        	</drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
+            <drop-down allow-empty="false">
+            	<option key="NOT_PAID" description="Not Paid"/>
+            	<option key="PAID" description="Paid"/>                
+            </drop-down>
+        </field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="ListCashPayments" type="list" list-name="boothPaymentsList" target="createPastDuePaymentForBooth"  paginate-target="FindPastBoothPayments"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
+    	<actions>
+    		<entity-condition entity-name="FacilityParty" list="facilityParty" filter-by-date="true">
+    			<condition-list>
+    				<condition-expr field-name="partyId" value="${userLogin.partyId}"/>
+    				<condition-expr field-name="roleTypeId" value="FACILITY_CASHIER"/>
+    			</condition-list>
+    		</entity-condition>
+    		<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>
+    		<set field="defaultPaymentMethodId" value="CASH_${facilityParty[0].facilityId}_PAYIN"/>
+    	</actions>
+    	<row-actions>    		
+    		<set field="supplyDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;yyyy-MM-dd&quot;);}"/>
+    		<set field="paymentLocationId" value="${paymentLocationId}"/>
+    	</row-actions>    	
+    	<field name="supplyDate"><hidden value="${supplyDate}"/></field>
+    	<field name="statusId"><hidden value="PAID"/></field>
+    	<field name="hideSearch"><hidden value="N"/></field>
+    	<field name="useFifo"><hidden value="true"/></field>
+    	<field name="paymentLocationId"><hidden value="${paymentLocationId}"/></field>    	 	 	
+        <field name="facilityId" title="Retailer"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
+        <field name="routeId" title="${uiLabelMap.Route}" sort-field="true"><display description="${routeId}"/></field>
+        <field name="paymentMethodTypeDesc" title="PaymentMethod"><display/></field>
+        <field name="grandTotal" parameter-name="dueAmount" title="${uiLabelMap.ToDayDueAmount}"><display type="currency" currency="${currencyUomId}" description="${grandTotal}"/></field>
+        <field name="totalDueAmount" title="${uiLabelMap.TotalDueAmount}"><display type="currency" currency="${currencyUomId}" description="${totalDue}"/></field> 
+        <field name="viewButton" title=" " widget-style="buttontext"><hyperlink  target-type="plain" description="View Details"  target="javascript:showPaymentHistory('${facilityId}');"></hyperlink></field>
+       <!--  <field name="paymentMethodTypeId" required-field="true">
+    		<drop-down allow-empty="true" no-current-selected-key="${defaultPaymentMethodId}">
+         		<entity-options description="${description}" entity-name="PaymentMethodType">
+         		</entity-options>
+         	</drop-down>
+        </field>  
+       
+       <field name="amount" required-field="true"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.makePayment}" widget-style="smallSubmit"><submit/></field>     -->
+          <field name="makePayment" title="" widget-style="buttontext">
+        <hyperlink  target-type="plain" description="${uiLabelMap.makePayment}"  target="javascript:showPaymentEntryQTip('${facilityId}', 0);"></hyperlink>
+        </field>         	    	
+    </form>
     <form name="FindBoothPayments" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="FindBoothPayments"
     	default-table-style="basic-table hover-bar" separate-columns="true"> 
     	<field name="hideSearch"><hidden value="N"/></field>

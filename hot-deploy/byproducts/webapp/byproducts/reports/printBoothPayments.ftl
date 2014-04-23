@@ -109,13 +109,14 @@ under the License.
       <thead>
         <tr class="header-row-2">
           <td/>
+          <td>RetailerId</td>
+          <td>Retailer Name</td>
           <td>Payment Time</td>
-          <td>${uiLabelMap.OrderFacilityBooth}</td>
           <td>${uiLabelMap.Route}</td>
           <td>${uiLabelMap.paymentLocation}</td>
           <td>${uiLabelMap.Amount}</td>
           <td>PaymentMethod Type</td>
-          <td>${uiLabelMap.PrintReceipt}</td>          
+          <td>Cancel</td>          
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllFacilities" name="checkAllFacilities" onchange="javascript:togglePaymentId(this);" checked="true"/></td>
         </tr>
       </thead>
@@ -124,8 +125,10 @@ under the License.
         <#list boothPaymentsList as payment>          
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>> 
             	<td><input id="paymentId" type="hidden"  value="${payment.paymentId}"/></td>            
+              <td>${(payment.facilityId)?if_exists}</td>
+              <#assign facility = delegator.findOne("Facility", {"facilityId" : payment.facilityId}, false) />
+              <td>${(facility.facilityName)?if_exists}</td>
               <td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.paymentDate ,"dd/MM/yyyy HH:mm:ss")}</td> 
-              <td>${(payment.facilityId)?if_exists}</td>             
               <td>               
                 ${(payment.routeId)?if_exists}
               </td>
@@ -141,10 +144,10 @@ under the License.
               </td>
             <#--  <td><a class="buttontext" href="<@ofbizUrl>massPrintReceipt?paymentId=${payment.paymentId}</@ofbizUrl>">Print Receipt</a></td> 
               <td><a class="buttontext" href="javascript:setVoidPaymentParameters();">Cancel</a></td>   -->
-              <td><input id="submitButton" type="button"  onclick="javascript:setPrintPaymentParameters(this);" value="Print Receipt"/></td> 
               <td><#if hasPaymentCancelPermission>
-              			 <input id="submitButton" type="button"  onclick="javascript:setVoidPaymentParameters(this);" value="Cancel"/></td>   
-              	  </#if>                   
+              			 <input id="submitButton" type="button"  onclick="javascript:setVoidPaymentParameters(this);" value="Cancel"/> 
+              	  </#if>
+              </td>                     
               <td><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}"  checked="true"/></td>
             </tr>
             <#-- toggle the row color -->

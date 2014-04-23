@@ -13,6 +13,7 @@
 	 var booth;
 	 var dueAmount;
 	 var paymentMethod;
+	 var facilityName;
 	function dialogue(content, title) {
 		/* 
 		 * Since the dialogue isn't really a tooltip as such, we'll use a dummy
@@ -113,30 +114,30 @@
 		
 	}	
 	
-	function showPaymentEntry(boothId ,amount, paymentMethodType) {
+	function showPaymentEntry(boothId ,amount, paymentMethodType, boothName) {
 		var message = "";
 		booth = boothId;
 		dueAmount = amount;
+		facilityName = boothName;
 		paymentMethod = paymentMethodType;
-		message += "<html><head></head><body><form action='createPaymentForBooth' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+		alert("#####"+booth+"##"+dueAmount+"###"+paymentMethod+"###"+facilityName);
+		message += "<html><head></head><body><form action='createChequePayment' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
-			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' readOnly/></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentMethodTypeId' id='paymentMethodTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
-						"<#if paymentMethodList?has_content><#list paymentMethodList as eachMethodType><option value='${eachMethodType.paymentMethodTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
-						"</select></td></tr>"+
+			message += "<input type='hidden' name='paymentMethodTypeId' id='paymentMethodTypeId' value='${parameters.paymentMethodTypeId?if_exists}'><input type='hidden' name='paymentPurposeType' id='paymentPurposeType' value='ROUTE_MKTG'><input type='hidden' name='subTabItem' id='subTabItem' value='${parameters.subTabItem?if_exists}'>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Bank Branch:</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthorityBranch' name='issuingAuthorityBranch' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' id='effectiveDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Ref. No. :</td><td align='left' width='60%'><input class='h4' type='text' id='paymentRefNum' name='paymentRefNum' /></td></tr>" +
-				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount' readOnly/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Num :</td><td align='left' width='60%'><input class='h4' type='text' id='paymentRefNum' name='paymentRefNum' /></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='supplyDate' value='${paymentDate}'/></td></tr>"+
 				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 				 		
                 		
 					message +=	"</table></form></body></html>";
-		var title = "Dues Payment : "+boothId;
+		var title = "Dues Payment : "+facilityName +" [ "+booth+" ]";
 		Alert(message, title);
-		getFinaccountDetails(boothId);
+		getFinaccountDetails(booth);
 		
 	}
 	function getFinaccountDetails(facilityId){
@@ -166,13 +167,6 @@
 		}
 		jQuery("#facilityId").val(booth);
 		jQuery("#amount").val(dueAmount);
-		$element = $('select#paymentMethodTypeId');
-		$options = $element.find('option');
-		$wanted_element = $options.filter(function () {
-  			return $(this).val() == paymentMethod || $(this).text() == paymentMethod
-		});
-		$wanted_element.prop('selected', true);
-		$( "#paymentMethodTypeId" ).trigger( "onchange" );
 	}
 	
 </script>

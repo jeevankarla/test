@@ -494,6 +494,7 @@
         <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"/>             
         <attribute name="amount" mode="IN" type="String" optional="false"/>        
         <attribute name="paymentLocationId" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentPurposeType" mode="IN" type="String" optional="true"/>
         <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/>
         <attribute name="issuingAuthority" mode="IN" type="String" optional="true"/>
         <attribute name="issuingAuthorityBranch" mode="IN" type="String" optional="true"/>
@@ -503,6 +504,22 @@
         <attribute name="statusFlag" mode="OUT" type="String" optional="true"/>
         <attribute name="hideSearch" mode="OUT" type="String" optional="true"/>
         <attribute name="enablePaymentSms" mode="OUT" type="Boolean" optional="true"/>
+    </service>
+    <service name="createChequePayment" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createChequePayment">
+        <description> create Cash Payment For Booth</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
+        <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"/>             
+        <attribute name="amount" mode="IN" type="String" optional="false"/> 
+        <attribute name="subTabItem" mode="INOUT" type="String" optional="true"/>
+        <attribute name="paymentLocationId" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentPurposeType" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/>
+        <attribute name="issuingAuthority" mode="IN" type="String" optional="true"/>
+        <attribute name="issuingAuthorityBranch" mode="IN" type="String" optional="true"/>
+        <attribute name="instrumentDate" mode="IN" type="String" optional="true" />
+        <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
     </service>
      <service name="massMakeBoothPayments" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="massMakeBoothPayments">
