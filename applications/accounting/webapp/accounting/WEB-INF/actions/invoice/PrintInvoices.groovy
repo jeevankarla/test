@@ -19,21 +19,37 @@
 
 import java.text.DateFormat;
 import org.ofbiz.accounting.invoice.InvoiceWorker;
+import org.ofbiz.accounting.invoice.InvoicePayrolWorker;
 import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.base.util.UtilDateTime;
+import javolution.util.FastMap;
 
 invoiceDetailList = [];
+GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
+Map lossOfPay = FastMap.newInstance();
 invoiceIds.each { invoiceId ->
     invoicesMap = [:];
     invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
     invoicesMap.invoice = invoice;
-    
+	dctx = dispatcher.getDispatchContext();
+	context.dctx = dctx; 
     currency = parameters.currency;  // allow the display of the invoice in the original currency, the default is to display the invoice in the default currency
     BigDecimal conversionRate = new BigDecimal("1");
     ZERO = BigDecimal.ZERO;
     decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
-    
+	// This snippet was added for getting lossofPaydays 
+	if("PAYROL_INVOICE".equals(invoice.invoiceTypeId) && (customTimePeriod !=null)){
+		context.partyId = invoice.partyIdFrom;
+		context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+		context.timePeriodEnd= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+		lossOfPay=InvoicePayrolWorker.fetchLossOfPayDays( dctx,context);
+	}
+	invoicesMap.lossOfPayDays=lossOfPay.lossOfPayDays;
+	
+	
     if (invoice) {
         if (currency && !invoice.getString("currencyUomId").equals(currency)) {
             conversionRate = InvoiceWorker.getInvoiceCurrencyConversionRate(invoice);
@@ -49,8 +65,7 @@ invoiceIds.each { invoiceId ->
               invoiceItemsConv.add(invoiceItem);
           }
         }
-    
-        invoicesMap.invoiceItems = invoiceItemsConv;
+		invoicesMap.invoiceItems = invoiceItemsConv;
     
         invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
         invoiceNoTaxTotal = InvoiceWorker.getInvoiceNoTaxTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
@@ -77,7 +92,7 @@ invoiceIds.each { invoiceId ->
     	} else{
     		invoicesMap.dispalyParty= billingParty;; 
     	}
-
+		
         // This snippet was added for adding Tax ID in invoice header if needed 
         sendingTaxInfos = sendingParty.getRelated("PartyTaxAuthInfo");
         billingTaxInfos = billingParty.getRelated("PartyTaxAuthInfo");
