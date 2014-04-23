@@ -3351,7 +3351,7 @@ public class ByProductServices {
 		    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
 		    		   String returnReasonId=(String)productQtyMap.get("returnReasonId");
 		    		   List boothApprovedItemList = EntityUtil.filterByAnd(orderItemList, UtilMisc.toMap("productId", productId));
-		    		   BigDecimal totalPrice = BigDecimal.ZERO;
+		    		   /*BigDecimal totalPrice = BigDecimal.ZERO;
 		    		   BigDecimal vatPercent =BigDecimal.ZERO;
 		    		   BigDecimal vatAmount=BigDecimal.ZERO;
 			   			if(UtilValidate.isNotEmpty(boothApprovedItemList)){
@@ -3359,9 +3359,9 @@ public class ByProductServices {
 			   			    totalPrice = (BigDecimal)orderItem.getBigDecimal("unitListPrice");
 			   			     vatPercent=(BigDecimal)orderItem.getBigDecimal("vatPercent");
 			   			     vatAmount=(BigDecimal)orderItem.getBigDecimal("vatAmount");
-			   			}
-		    		   /* calculate price for return items and create payment(Credit note)*/
-	    				/*Map<String, Object> priceContext = FastMap.newInstance();
+			   			}*/
+		    		   //calculate price for return items and create payment(Credit note)
+	    				Map<String, Object> priceContext = FastMap.newInstance();
 	                    priceContext.put("userLogin", userLogin);   
 	                    priceContext.put("productStoreId", productStoreId);                    
 	                    priceContext.put("productId", productId);
@@ -3374,8 +3374,8 @@ public class ByProductServices {
 	                        Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
 	                		return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
 	                    }  
-	                    
-		    		  Debug.log("==taxPricelist===="+taxPricelist+"===totalPrice==="+totalPrice);*/
+	                    BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
+		    		  
 		    		  GenericValue returnItem = delegator.makeValue("ReturnItem");
 		    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
 		    		  if(UtilValidate.isNotEmpty(returnReasonId)){
@@ -3388,12 +3388,10 @@ public class ByProductServices {
 		    		  returnItem.put("returnTypeId", "RTN_REFUND");
 		    		  returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
 		    		  returnItem.put("returnPrice", totalPrice);
-		    		  returnItem.put("vatPercent", vatPercent);
-		    		  returnItem.put("vatAmount", vatAmount);
+		    		  /*returnItem.put("vatPercent", vatPercent);
+		    		  returnItem.put("vatAmount", vatAmount);*/
 		    		  delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
 		    		  delegator.create(returnItem);
-	                    totalPrice = totalPrice.multiply(quantity);
-	                    totalReturnAmount = totalReturnAmount.add(totalPrice);
 			  	  }
 		    	  if(totalReturnAmount.compareTo(BigDecimal.ZERO)>0){
 		    		  Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "SALES_PAYIN");        	
@@ -3422,7 +3420,7 @@ public class ByProductServices {
 	    		  if(UtilValidate.isNotEmpty(returnItems)){
 	    			  int removeReturnItems = delegator.removeAll(returnItems);
 	    		  }
-	    		  for(int i=0; i< productQtyList.size() ; i++){
+	    		  /*for(int i=0; i< productQtyList.size() ; i++){
 		    		  Map productQtyMap = productQtyList.get(i);
 		    		  String productId = (String)productQtyMap.get("productId");
 		    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
@@ -3456,13 +3454,14 @@ public class ByProductServices {
 		    		  delegator.create(returnItem);
 		    		  totalPrice = totalPrice.multiply(quantity);
 	                    totalReturnAmount = totalReturnAmount.add(totalPrice);
-	    		  }
+	    		  } */
 	    			  
-  			 /* BigDecimal totalReturnAmount = BigDecimal.ZERO;
+  			/* BigDecimal totalReturnAmount = BigDecimal.ZERO;*/
   			  for(int i=0; i< productQtyList.size() ; i++){
 		    		  Map productQtyMap = productQtyList.get(i);
 		    		  String prodId = (String)productQtyMap.get("productId");
 		    		  BigDecimal qty = (BigDecimal)productQtyMap.get("quantity");
+		    		  String returnReasonId = (String)productQtyMap.get("returnReasonId");
 		    		  
 		    		  //Debug.log("calculating return items prices for product : "+prodId);
   				  Map<String, Object> priceContext = FastMap.newInstance();
@@ -3479,10 +3478,24 @@ public class ByProductServices {
 	                  }  
 	                  BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
 	                  //Debug.log("calculated return items prices for product : "+totalPrice.intValue());
-	                  totalPrice = totalPrice.multiply(qty);
-	                  totalReturnAmount = totalReturnAmount.add(totalPrice);
 	                  //Debug.log("calculated return items prices for product : "+totalReturnAmount.intValue());
-  			  }*/
+	                  GenericValue returnItem = delegator.makeValue("ReturnItem");
+		    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
+		    		  if(UtilValidate.isNotEmpty(returnReasonId)){
+		    			  returnItem.put("returnReasonId", returnReasonId);
+		    		  }
+		    		  returnItem.put("statusId", "RETURN_ACCEPTED");
+		    		  returnItem.put("returnId", returnId);
+		    		  returnItem.put("productId", prodId);
+		    		  returnItem.put("returnQuantity", qty);
+		    		  returnItem.put("returnTypeId", "RTN_REFUND");
+		    		  returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
+		    		  returnItem.put("returnPrice", totalPrice);
+		    		  /*returnItem.put("vatPercent", vatPercent);
+		    		  returnItem.put("vatAmount", vatAmount);*/
+		    		  delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
+		    		  delegator.create(returnItem);
+  			  }
   			  Timestamp dayBegin = UtilDateTime.getDayStart(effectiveDate);
   			  Timestamp dayEnd = UtilDateTime.getDayEnd(effectiveDate);
   			  //Debug.log("calculated return items prices : "+totalReturnAmount);
@@ -3523,6 +3536,7 @@ public class ByProductServices {
 	              }
 	              String paymentId = (String)paymentResult.get("paymentId");
 	    	  }
+	    	
 		  }catch (Exception e) {
 			  Debug.logError(e, "Error creating Returns", module);		  
 			  return ServiceUtil.returnError("Error creating Returns");			  

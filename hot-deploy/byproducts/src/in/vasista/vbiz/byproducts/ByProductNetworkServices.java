@@ -6641,7 +6641,76 @@ public class ByProductNetworkServices {
 		        result.put("totalPaidAmount", totalPaidAmount);
 	            return result; 
 		   }
-		 
+		   public static Map<String, Object> getReturnItems(DispatchContext dctx, Map context) {
+				 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				 LocalDispatcher dispatcher = dctx.getDispatcher();
+				 GenericValue userLogin = (GenericValue) context.get("userLogin");
+				 Timestamp fromDate = (Timestamp) context.get("fromDate");
+			     Timestamp thruDate = (Timestamp) context.get("thruDate");
+			     String boothId = (String) context.get("boothId");
+				 Locale locale = (Locale) context.get("locale");
+				 List<String> shipmentIds =FastList.newInstance();
+				 Map<String, Object> result = ServiceUtil.returnSuccess();
+				 GenericValue dealer = null;
+				 GenericValue shipment = null;
+			  	 String ownerPartyId = "";
+			  	 String returnId = "";
+			  	 String productStoreId = "";
+			  	 Timestamp shipDate = null;
+				 	try{
+					  dealer = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
+			  		  if(UtilValidate.isEmpty(dealer)){
+			  			  Debug.logError("dealer does not exists with Id: " + boothId, module);		  
+			  			  return ServiceUtil.returnError("dealer does not exists with Id: " + boothId);
+			  		  }
+			  		  ownerPartyId = dealer.getString("ownerPartyId");
+			  		  productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
+			  		  shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate); 
+			  		  for(int i=0;i<shipmentIds.size();i++){
+			  			  String shipmentId = (String) shipmentIds.get(i);
+			  			  shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+				  		  if(UtilValidate.isEmpty(shipment)){
+				  			  Debug.logError("shipment does not exists with Id: " + shipmentId, module);		  
+				  			  return ServiceUtil.returnError("shipment does not exists with Id: " + shipmentId);
+				  		  }
+			  			  shipDate = shipment.getTimestamp("estimatedShipDate");
+				  		  if(UtilValidate.isNotEmpty(shipmentIds)){
+				        	  List conditionList = FastList.newInstance();
+					    	  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, boothId));
+					    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+					    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					    	  List<GenericValue> returnHeader = delegator.findList("ReturnHeader", condition, null, null, null, false);
+					    	  if(UtilValidate.isNotEmpty(returnHeader)){
+					    		  returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("returnId");
+					    	  }
+		    				  List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), UtilMisc.toSet("returnId","productId","returnQuantity","returnItemSeqId","returnReasonId"), null, null, false);
+		    				  
+		    				  for(GenericValue eachReturnItem : returnItems){
+			    				  Map<String, Object> priceContext = FastMap.newInstance();
+				                  priceContext.put("userLogin", userLogin);   
+				                  priceContext.put("productStoreId", productStoreId);                    
+				                  priceContext.put("productId", eachReturnItem.get("productId"));
+				                  priceContext.put("partyId", ownerPartyId);
+				                  priceContext.put("facilityId", boothId); 
+				                  priceContext.put("priceDate", shipDate);
+				                  Map priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);            			
+				                  if (ServiceUtil.isError(priceResult)) {
+				                       Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
+				                       return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
+				                  }  
+				                  BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
+				                  eachReturnItem.put("returnPrice", totalPrice);
+					    		  delegator.store(eachReturnItem);
+		    				  }	
+					      }
+			  		  }
+				}catch(Exception e){
+					Debug.logError(e, module);
+					Debug.logError(e, "Problem in updating ReturnItem", module);	 		  		  
+			  		return ServiceUtil.returnError("Problem in updating ReturnItem");
+				}
+				return result;
+			}
 }
 	
 	
