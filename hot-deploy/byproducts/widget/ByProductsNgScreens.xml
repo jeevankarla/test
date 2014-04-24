@@ -1850,7 +1850,7 @@
 									<not><if-empty field="facilityParty"/></not>
 									<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
 									<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
-									<if-has-permission permission="BYPRODUCTS" action="_CASH"/>	
+									<if-has-permission permission="BYPRODUCTS" action="_CHALLAN"/>	
 								</or>		
 							</condition>
 							<widgets>
@@ -1860,7 +1860,7 @@
 											<or>
 												<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
 												<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
-												<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+												<if-has-permission permission="BYPRODUCTS" action="_CHALLAN"/>
 											</or>
 											<or>
 												<if-empty field="statusId"/>
@@ -1902,7 +1902,7 @@
 													<or>
 														<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
 														<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
-														<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+														<if-has-permission permission="BYPRODUCTS" action="_CHALLAN"/>
 													</or>
 													<if-compare operator="equals" value="PAID" field="statusId"/>
 												</and>
