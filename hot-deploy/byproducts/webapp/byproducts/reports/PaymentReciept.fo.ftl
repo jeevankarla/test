@@ -36,7 +36,7 @@ under the License.
         	<fo:static-content flow-name="xsl-region-before">
         		<fo:block text-align="left" white-space-collapse="false" font-size="11pt" font-weight="bold" keep-together="always">MOTHERDAIRY</fo:block>
         		<fo:block text-align="center" white-space-collapse="false" font-size="11pt" font-weight="bold" keep-together="always">           </fo:block>
-        		<fo:block text-align="center" keep-together="always" font-size="10pt" >CASH BILL</fo:block>
+        		<fo:block text-align="center" keep-together="always" font-size="11pt" font-weight="bold">Route Marketing Payment</fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-size="10pt">Payment Location: ${printPaymentsList[0].paymentLocation?if_exists}                          Date: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>	 	 	  
         		<fo:block text-align="left" keep-together="always" font-size="10pt" white-space-collapse="false">Vendor/Cashier Name:  ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(vendorName?if_exists)),20)}</fo:block>
         		<fo:block text-align="left" keep-together="always" font-size="9.5pt" white-space-collapse="false">Route Id: ${printPaymentsList[0].parentFacilityId?if_exists}</fo:block>
@@ -54,7 +54,7 @@ under the License.
                     <fo:table-header>
 		            	<fo:table-cell>
 		            		<fo:block>------------------------------------------------------------------------------------</fo:block>
-		            		<fo:block  white-space-collapse="false" keep-together="always" font-weight="bold">SNO    Supply Date   Receipt No    Booth No     Amount(Rs)</fo:block>
+		            		<fo:block  white-space-collapse="false" keep-together="always" font-weight="bold">SNO    Supply Date   Receipt No    Retailer Id     Amount(Rs)</fo:block>
 		            		<fo:block>------------------------------------------------------------------------------------</fo:block>
 		            	</fo:table-cell>		                    	                  		            
 		           	</fo:table-header>		           
@@ -108,14 +108,7 @@ under the License.
          	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
          	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>         	
          	<fo:block text-align="center" font-weight="bold" font-size="10pt" text-indent="2in" white-space-collapse="false">
-				<#if printPaymentsList[0].paymentLocation?exists>         	
-         			<#if printPaymentsList[0].paymentLocation =="AXISHTOH_PAYIN" >
-         				Cashier
-         			<#else>
-         				<#assign zoneDetails = delegator.findOne("Facility", {"facilityId" : printPaymentsList[0].paymentLocation?if_exists}, true)>
-         				ZI ${zoneDetails.facilityName?if_exists}
-         		</#if>
-         		</#if>
+   				Cashier
          	</fo:block>
            </fo:flow>
         </fo:page-sequence>

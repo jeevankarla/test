@@ -113,7 +113,11 @@ if(parameters.finAccountCode != "AllBanks"){
 }
 
 context.putAt("accountNameList", accountNameList);
-if(hideSearch == "N"){
+stopListing = true;
+if(parameters.paymentMethodTypeId == "CASH_PAYIN"){
+	stopListing = false;
+}
+if(hideSearch == "N" || stopListing){
 	if (statusId == "PAID") {
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
 		boothTempPaymentsList = boothsPaymentsDetail["paymentsList"];
