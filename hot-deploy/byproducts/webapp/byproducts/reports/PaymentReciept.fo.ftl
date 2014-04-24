@@ -109,7 +109,7 @@ under the License.
          	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>         	
          	<fo:block text-align="center" font-weight="bold" font-size="10pt" text-indent="2in" white-space-collapse="false">
 				<#if printPaymentsList[0].paymentLocation?exists>         	
-         			<#if printPaymentsList[0].paymentLocation =="HO" || printPaymentsList[0].paymentMethodTypeId =="ESEVA_PAYIN" || printPaymentsList[0].paymentMethodTypeId =="APONLINE_PAYIN">
+         			<#if printPaymentsList[0].paymentLocation =="AXISHTOH_PAYIN" >
          				Cashier
          			<#else>
          				<#assign zoneDetails = delegator.findOne("Facility", {"facilityId" : printPaymentsList[0].paymentLocation?if_exists}, true)>
