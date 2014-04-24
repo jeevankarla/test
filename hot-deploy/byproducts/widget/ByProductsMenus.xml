@@ -510,7 +510,7 @@
             </condition>  
         	<link target="ChannelWiseSalesChart"/>
         </menu-item>
-        <menu-item name="salesRevenueTrend" title="Sales Trend">
+       <!--  <menu-item name="salesRevenueTrend" title="Sales Trend">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -518,7 +518,7 @@
             	</or>            
             </condition>  
         	<link target="DailySalesRevenueTrend"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="ShopeeDespatchChart" title="Shopee Trend">
         	<condition>
 				<or>
