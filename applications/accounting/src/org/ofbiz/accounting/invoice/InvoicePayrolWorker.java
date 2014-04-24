@@ -210,7 +210,7 @@ Debug.logInfo("====> invoiceItemTypeId=" + invoiceItemTypeId + ";partyId=" + par
         Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
         String proportionalFlagStr = (String)context.get("proportionalFlag");
         boolean propFlag = 
-        	(proportionalFlagStr != null && "N".equals(proportionalFlagStr))? false: true;
+        	(proportionalFlagStr != null && "Y".equals(proportionalFlagStr))? true: false;
         TimeDuration payrollPeriod = new TimeDuration(UtilDateTime.toCalendar(timePeriodStart),
         		UtilDateTime.toCalendar(timePeriodEnd));        
         TimeDuration period = payrollPeriod;
@@ -367,7 +367,9 @@ Debug.logInfo("====> invoiceItemTypeId=" + invoiceItemTypeId + ";partyId=" + par
             input.put("invoiceItemTypeId", "PAYROL_BEN_SALARY");              
             Timestamp from = row.getTimestamp("fromDate");
             Timestamp thru = row.getTimestamp("thruDate");
+            context.put("proportionalFlag", "Y");
             Map<String, Object> adjustment = adjustAmount(context,salaryStep.getBigDecimal("amount"), from, thru);			
+            context.put("proportionalFlag", null);
             input.put("quantity", adjustment.get("quantity"));
             input.put("amount", adjustment.get("amount"));
             serviceResults = dispatcher.runSync("createInvoiceItem", input);

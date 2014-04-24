@@ -56,7 +56,7 @@ under the License.
         <override name="invoiceMessage" allow-html="safe"/>       
     </service>
     <service name="createPayrolInvoice" engine="java" auth="true" invoke="createPayrolInvoice" 
-        location="org.ofbiz.accounting.invoice.InvoicePayrolWorker">
+        location="org.ofbiz.accounting.invoice.InvoicePayrolWorker" transaction-timeout="300">
         <description>Create payroll invoice</description>
         <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode = "IN" optional="false"/>
