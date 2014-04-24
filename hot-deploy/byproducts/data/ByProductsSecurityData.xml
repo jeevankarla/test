@@ -219,5 +219,19 @@
    <SecurityGroupPermission groupId="BYPRODUCTS_REPADMIN" permissionId="BYPRODUCTS_DISREPORT"/>
    
     
+    <SecurityGroup groupId="BYPRODUCTS_CSHENTRY" description="Route Marketing Cash Payment"/>
+    <SecurityGroup groupId="BYPRODUCTS_CHQENTRY" description="Route Marketing Cheque Payment"/>
+    <SecurityGroup groupId="BYPRODUCTS_CLNENTRY" description="Route Marketing Challan Payment"/>
+	<SecurityPermission permissionId="BYPRODUCTS_CASH" description="Special permission to show and collect cash payments" />
+	<SecurityPermission permissionId="BYPRODUCTS_CHEQUE" description="Special permission to show and collect cheque payments" />
+	<SecurityPermission permissionId="BYPRODUCTS_CHALLAN" description="Special permission to show and collect challan payments" />
+	<SecurityPermission permissionId="PAYMENTSTATUS_CANCEL" description="Special permission to cancel payment" />
+	
+	<SecurityGroupPermission groupId="BYPRODUCTS_CSHENTRY" permissionId="BYPRODUCTS_CASH"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_CSHENTRY" permissionId="PAYMENTSTATUS_CANCEL"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_CHQENTRY" permissionId="BYPRODUCTS_CHEQUE"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_CHQENTRY" permissionId="PAYMENTSTATUS_CANCEL"/>
+	<SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="BYPRODUCTS_CHALLAN"/>
+    <SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="PAYMENTSTATUS_CANCEL"/> 
     
 </entity-engine-xml>
