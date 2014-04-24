@@ -580,11 +580,20 @@
     <service name="getFacilityFinAccountInfo" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getFacilityFinAccountInfo" auth="true">
         <description>Get Special order Contact details.</description>
-        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountCode" type="String" mode="IN" optional="true"/>
         <attribute name="accountInfo" type="Map" optional="true" mode="OUT"/>
          <attribute name="accountNameList" type="List" optional="true" mode="OUT"/> 
          <attribute name="facilityIds" type="List" optional="true" mode="OUT"/>           
     </service>
+    <service name="cancelRetailerPayment" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelRetailerPayment" auth="true">
+        <description>cancel Retailer Payment</description>
+        <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="subTabItem" type="String" optional="true" mode="INOUT"/>
+    </service>
+    
      <service name="createInvoiceForShopeeRent" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForShopeeRent">
         <description>create Facility Rate</description>

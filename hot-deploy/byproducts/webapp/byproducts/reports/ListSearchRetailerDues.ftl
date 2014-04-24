@@ -104,6 +104,7 @@ under the License.
     	var facilities = jQuery("#listBooths :checkbox[name='boothIds']");
         var index = 0;
         var tabItemValue;
+        var methodTypeId;
         jQuery.each(facilities, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
@@ -114,15 +115,19 @@ under the License.
             	var methodType = $(payMethodObj).val();
             	var tabItemObj = $(domObj).find("#tabItem");
             	tabItemValue = $(tabItemObj).val();
+            	methodTypeId = methodType;
             	var appendStr = ""; 
             	appendStr += "<input type=hidden name=facilityId_o_"+index+" value="+boothId+" />";
             	appendStr += "<input type=hidden name=amount_o_"+index+" value="+amt+" />";
-            	appendStr += "<input type=hidden name=paymentMethodTypeId_o_"+index+" value="+methodType+" />";
-            	appendStr += "<input type=hidden name=subTabItem_o_"+index+" value="+tabItemValue+" />";
                 $("#paymentSubmitForm").append(appendStr);
             }
-            index = index+1
-        }); 
+            index = index+1;
+            
+        });
+        var appStr = "<input type=hidden name=paymentMethodTypeId value="+methodTypeId+" />";
+        $("#paymentSubmitForm").append(appStr);
+        appStr = "<input type=hidden name=subTabItem value="+tabItemValue+" />";
+        $("#paymentSubmitForm").append(appStr);
     	jQuery('#paymentSubmitForm').submit();
     }
     

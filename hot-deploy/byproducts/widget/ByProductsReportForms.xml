@@ -77,6 +77,18 @@
         <field name="unitPrice" title="Unit Price"><display/></field> 
         <field name="subAmount" title="Sub Amount"><display/></field> 
     </form>
-    
+    <form name="ListBoothPaymentsCSV" type="list" list-name="boothPaymentsCsvList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<!-- RECTDATE	TRSPTRID	ZONE	ROUTE	BOOTH	BNAME	ALLOTEE	CASHVALU -->   	
+    	<field name="userId" title="User Name"><display/></field>
+    	<field name="supplyDate" title="Date"><display/></field>
+    	<field name="facilityId" title="RetailerId"><display/></field>   	
+    	<!--<field name="zoneId" title="ZONE"><display/></field>
+    	--><field name="routeId" title="ROUTE"><display/></field>
+    	<!--<field name="boothName" title="BNAME"><display/></field>
+        <field name="vendorName" title="ALLOTEE"><display/></field>-->        
+        <field name="paymentMethodTypeId" title="PaymentMethodType"><display/></field>        
+        <field name="amount" title="AMOUNT"><display/></field>        
+     </form>
     
 </forms>

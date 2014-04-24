@@ -707,10 +707,10 @@
     	<field name="displayDate" title="${uiLabelMap.SupplyDate}" widget-style="h3"><display default-value="${defaultEffectiveDate}"/></field>       
         --><field name="facilityId" title="${uiLabelMap.BoothRoute}" required-field="true"><lookup target-form-name="LookupFacility"/></field>
         <field name="paymentMethodTypeId"> <hidden value="${parameters.paymentMethodTypeId}"/></field>
-        <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHALLAN_PAYIN&quot;" name="finAccountName" title="Bank">
+        <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHALLAN_PAYIN&quot;" name="finAccountCode" title="Bank">
         	<drop-down >
         		<option key="AllBanks" description="All Banks"/>
-        		<list-options key-name="finAccountName" list-name="accountNameList" description="${finAccountName}"/>
+        		<list-options key-name="finAccountEntry.finAccountCode" list-name="accountNameList" description="${finAccountEntry.finAccountName}" list-entry-name="finAccountEntry"/>
         	</drop-down>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">

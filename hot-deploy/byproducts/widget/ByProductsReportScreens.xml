@@ -939,7 +939,7 @@
 			</actions>
 			<widgets>						
 	        	<container>	
-			       <include-form name="ListBoothPaymentsCSV" location="component://product/widget/facility/FacilityForms.xml" />
+			       <include-form name="ListBoothPaymentsCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
 		    	</container>
 		    </widgets>								
 		</section>

@@ -71,13 +71,23 @@ under the License.
     function setVoidPaymentParameters(currentPayment){
     	jQuery(currentPayment).attr( "disabled", "disabled");
     	var currentEle = jQuery(currentPayment);
-    	formName=document.forms['cancelPayment'];    		
-		var hiddenpaymentId = document.createElement("input");
-	    hiddenpaymentId.setAttribute("type", "hidden");
-	    hiddenpaymentId.setAttribute("name", "paymentId");
-	    hiddenpaymentId.setAttribute("value", currentEle.parent().siblings(":nth-child(1)").children(":first-child").val());
-	    formName.appendChild(hiddenpaymentId);
-	    formName.submit();	
+    	
+    	formName=document.forms['cancelPayment'];
+    	var domObj = $(currentEle).parent().parent();
+        var rowObj = $(domObj).html();
+        var method = $(domObj).find("#paymentMethodTypeId");
+        var payment = $(domObj).find("#paymentId");
+        var tabItemObj = $(domObj).find("#tabItem");
+        var methodValue = $(method).val();
+        var payId = $(payment).val(); 
+        var tabValue = $(tabItemObj).val(); 
+        var appendStr = "<input type=hidden name=paymentMethodTypeId value="+methodValue+" />";  
+        $("#cancelPayment").append(appendStr);  
+        appendStr = "<input type=hidden name=subTabItem value="+tabValue+" />";
+        $("#cancelPayment").append(appendStr);  	    	
+    	appendStr = "<input type=hidden name=paymentId value="+payId+" />";    		
+	    $("#cancelPayment").append(appendStr); 
+	     $("#cancelPayment").submit();	
 	   
     
     }
@@ -122,8 +132,11 @@ under the License.
       </thead>
       <tbody>
         <#assign alt_row = false>
-        <#list boothPaymentsList as payment>          
-            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>> 
+        <#list boothPaymentsList as payment>
+        	       
+            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${payment.paymentMethodTypeId?if_exists}">   
+        		<input type="hidden" name="tabItem" id="tabItem" value="${parameters.subTabItem?if_exists}"> 
             	<td><input id="paymentId" type="hidden"  value="${payment.paymentId}"/></td>            
               <td>${(payment.facilityId)?if_exists}</td>
               <#assign facility = delegator.findOne("Facility", {"facilityId" : payment.facilityId}, false) />

@@ -9,6 +9,7 @@
           default-menu-item-name="FacilityProfile">
 		<actions> 
             <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/>
 		</actions>          
         <menu-item name="main" title="${uiLabelMap.ProductFacilityLocationNetwork}">
             <link target="mainNg">
@@ -362,16 +363,10 @@
         	</condition>         
             <link target="InstBillingPeriodSearch"/>
         </menu-item>
-    	<menu-item name="CustomPayments" title="Route Marketing Cash"> 
-       		<condition>
-                <or>
-					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-					<if-has-permission permission="CASH"  action="_ADMIN"/>
-				</or>
-            </condition>       
+    	<menu-item name="CustomPayments" title="Route Marketing Payment"> 
             <link target="FindPaymentByMethod">
-            	<parameter param-name="subTabItem" value="CashPayment"/>
-            	<parameter param-name="paymentMethodTypeId" value="CASH_PAYIN"/>
+            	<parameter param-name="subTabItem" value="${subTabItem}"/>
+            	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}"/>
             </link>	        
        </menu-item>
        
@@ -472,18 +467,33 @@
     <menu name="PaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
           <menu-item name="CashPayment" title="Cash">
+          	<condition>
+				<or>
+            		<if-has-permission permission="BYPRODUCTS"  action="_CASH"/>
+            	</or>            
+            </condition>
             <link target="FindPaymentByMethod">
             	<parameter param-name="subTabItem" value="CashPayment"/>
             	<parameter param-name="paymentMethodTypeId" value="CASH_PAYIN"/>
             </link>
           </menu-item>
           <menu-item name="ChequePayment" title="Cheque">
+            <condition>
+				<or>
+            		<if-has-permission permission="BYPRODUCTS"  action="_CHEQUE"/>
+            	</or>            
+            </condition>
             <link target="FindPaymentByMethod">
             	<parameter param-name="subTabItem" value="ChequePayment"/>
             	<parameter param-name="paymentMethodTypeId" value="CHEQUE_PAYIN"/>
             </link>            
           </menu-item>
           <menu-item name="ChallanPayment" title="Challan">
+            <condition>
+				<or>
+            		<if-has-permission permission="BYPRODUCTS"  action="_CHALLAN"/>
+            	</or>            
+            </condition>
             <link target="FindPaymentByMethod">
             	<parameter param-name="subTabItem" value="ChallanPayment"/>
             	<parameter param-name="paymentMethodTypeId" value="CHALLAN_PAYIN"/>

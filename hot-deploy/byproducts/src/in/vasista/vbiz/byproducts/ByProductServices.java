@@ -2586,7 +2586,11 @@ public class ByProductServices {
 	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
 	      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
 	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-	  	  
+	  	  String paymentMethodTypeId = (String)request.getParameter("paymentMethodTypeId");
+	  	  String subTabItem = (String)request.getParameter("subTabItem");
+	  	  request.setAttribute("paymentMethodTypeId", paymentMethodTypeId);
+	  	  request.setAttribute("subTabItem", subTabItem);
+	  		
 	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 	  	  if (rowCount < 1) {
 	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
@@ -2600,9 +2604,7 @@ public class ByProductServices {
 		  	  for (int i = 0; i < rowCount; i++){
 		  		  Map paymentMap = FastMap.newInstance();
 		  		  String facilityId = "";
-		  		  String paymentMethodTypeId = "";
 		  		  String amountStr = "";
-		  		  String subTabItem = "";
 		  		  String issuingAuthority = "";
 		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 		  		  BigDecimal amount = BigDecimal.ZERO;
@@ -2611,19 +2613,10 @@ public class ByProductServices {
 		  		  if (paramMap.containsKey("facilityId" + thisSuffix)) {
 		  			  facilityId = (String) paramMap.get("facilityId" + thisSuffix);
 		  		  }
-		  		  
-		  		  if (paramMap.containsKey("paymentMethodTypeId" + thisSuffix)) {
-		  			paymentMethodTypeId = (String) paramMap.get("paymentMethodTypeId"+thisSuffix);
-		  			request.setAttribute("paymentMethodTypeId", paymentMethodTypeId);
-		  		  }
 		  		  if (paramMap.containsKey("amount" + thisSuffix)) {
 		  			amountStr = (String) paramMap.get("amount"+thisSuffix);
 		  		  }
-		  		  if (paramMap.containsKey("subTabItem" + thisSuffix)) {
-		  			subTabItem = (String) paramMap.get("subTabItem"+thisSuffix);
-		  			request.setAttribute("subTabItem", subTabItem);
-		  		  }
-		  		  
+		  		 
 		  		  if(paymentMethodTypeId.equals("CHALLAN_PAYIN")){
 		  			  Map resultCtx = dispatcher.runSync("getFacilityFinAccountInfo", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
 			  			if(ServiceUtil.isError(resultCtx)){
@@ -2633,11 +2626,9 @@ public class ByProductServices {
 				  			return "error";
 		   				}
 			  			Map accountDetail = (Map)resultCtx.get("accountInfo");
-			  			Debug.log("##### facilityId ############"+facilityId+"\t #####"+accountDetail);
 			  			if(UtilValidate.isNotEmpty(accountDetail)){
 			  				issuingAuthority = (String)accountDetail.get("finAccountName");
 			  			}
-			  			Debug.log("##### issuingAuthority ############"+issuingAuthority);
 		  		  }
 		  		  
 		  		  if(UtilValidate.isNotEmpty(amountStr)){
@@ -2670,6 +2661,7 @@ public class ByProductServices {
 		  		  }
 		  		 
 		  	 }//end of loop
+		  	  
 		  	 
 	  	  } catch (GenericEntityException e) {
 	  		  try {
@@ -2701,6 +2693,35 @@ public class ByProductServices {
 	  	  request.setAttribute("_EVENT_MESSAGE_", "Successfully made payment entries ");
 	  	  return "success";     
 	}
+	
+	public static Map<String, Object> cancelRetailerPayment(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String paymentId = (String) context.get("paymentId");
+        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
+        String subTabItem = (String) context.get("subTabItem");
+        Locale locale = (Locale) context.get("locale");  
+        Map result = ServiceUtil.returnSuccess();
+        result.put("paymentMethodTypeId",paymentMethodTypeId);
+		result.put("subTabItem", subTabItem);
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        try {
+        	
+        	Map resultPayMap = dispatcher.runSync("voidPayment", UtilMisc.toMap("paymentId", paymentId, "userLogin", userLogin));
+			if (ServiceUtil.isError(resultPayMap)) {
+				Debug.logError("There was an error in cancelling payment: " + ServiceUtil.getErrorMessage(resultPayMap), module);
+                return ServiceUtil.returnError("There was an error in cancelling payment: " + ServiceUtil.getErrorMessage(resultPayMap));          	            
+            }
+        }catch (Exception e) {
+			  Debug.logError(e, e.toString(), module);
+		      return ServiceUtil.returnError(e.toString());
+		} 
+  		result = ServiceUtil.returnSuccess("Payment successfully cancelled.");
+  		result.put("paymentMethodTypeId",paymentMethodTypeId);
+		result.put("subTabItem", subTabItem);
+        return result;
+    }
+	
 	public static Map<String, Object> createChequePayment(DispatchContext dctx, Map<String, ? extends Object> context){
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();

@@ -6397,6 +6397,7 @@ public class ByProductNetworkServices {
 			GenericValue userLogin = (GenericValue) context.get("userLogin");
 			String facilityId = (String) context.get("facilityId");
 			String finAccountName = (String) context.get("finAccountName");
+			String finAccountCode = (String) context.get("finAccountCode");
 			Map accountInfo = FastMap.newInstance();
 			Map accountNameMap = FastMap.newInstance();
 			try{
@@ -6410,6 +6411,9 @@ public class ByProductNetworkServices {
 				}
 				if(UtilValidate.isNotEmpty(finAccountName)){
 					conditionList.add(EntityCondition.makeCondition("finAccountName", EntityOperator.EQUALS, finAccountName));
+				}
+				if(UtilValidate.isNotEmpty(finAccountCode)){
+					conditionList.add(EntityCondition.makeCondition("finAccountCode", EntityOperator.EQUALS, finAccountCode));
 				}
 				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 				facilityFinAccounts = delegator.findList("FacilityAndFinAccount", condition, null, null, null, false);

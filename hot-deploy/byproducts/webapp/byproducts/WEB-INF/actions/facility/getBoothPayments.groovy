@@ -109,8 +109,8 @@ if(hideSearch == "N"){
 		boothTempPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	}
 	accountNameFacilityIds = FastList.newInstance();
-if(parameters.finAccountName){
-	finaccountInfo = ByProductNetworkServices.getFacilityFinAccountInfo(dctx ,[userLogin: userLogin ,finAccountName:parameters.finAccountName]);
+if(parameters.finAccountCode){
+	finaccountInfo = ByProductNetworkServices.getFacilityFinAccountInfo(dctx ,[userLogin: userLogin ,finAccountName:parameters.finAccountCode]);
 	accountNameFacilityIds = finaccountInfo.get("facilityIds");
 }
 	

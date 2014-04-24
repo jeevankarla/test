@@ -3,6 +3,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javolution.util.FastList;
 import org.ofbiz.base.util.*;
@@ -12,6 +13,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
 
 dctx = dispatcher.getDispatchContext();
 Map boothsPaymentsDetail = [:];
@@ -50,7 +52,6 @@ if(parameters.paymentMethodTypeId){
 }else{
 	paymentMethodTypeId = context.paymentMethodTypeId;
 }
-
 Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
 
 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -82,15 +83,35 @@ if(statusId =="PAID"){
 if(parameters.paymentIds){
 	paymentIds = parameters.paymentIds;	
 }
-partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.toSet("defaultPayMeth"), null, null, false);
+partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.toSet("defaultPayMeth", "partyId"), null, null, false);
 paymentTypeParties = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "partyId", true);
 paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defaultPayMeth", true);
 paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, paymentTypes), null, null, null, false);
 context.paymentMethodType = paymentMethodType;
 
 boothPaymentsList=[];
-finaccountInfo = ByProductNetworkServices.getFacilityFinAccountInfo(dctx ,[userLogin: userLogin ]);
-accountNameList = finaccountInfo.get("accountNameList");
+condList = [];
+condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, "FNACT_ACTIVE"));
+condList.add(EntityCondition.makeCondition("finAccountTypeId" ,EntityOperator.EQUALS, "BANK_ACCOUNT"));
+condList.add(EntityCondition.makeCondition("ownerPartyId" ,EntityOperator.IN, paymentTypeParties));
+condList.add(EntityCondition.makeCondition("finAccountCode" ,EntityOperator.NOT_EQUAL, null));
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+accountList = delegator.findList("FinAccount", cond, ["finAccountCode", "finAccountName", "ownerPartyId"] as Set, null, null ,false);
+checkList = [];
+accountNameList = [];
+accountList.each{ eachAcc ->
+	accCode = eachAcc.finAccountCode;
+	if(!checkList.contains(accCode)){
+		checkList.add(accCode);
+		accountNameList.add(eachAcc);
+	}
+}
+accountNameFacilityIds = [];
+if(parameters.finAccountCode != "AllBanks"){
+	accountNameFacility = EntityUtil.filterByCondition(accountList, EntityCondition.makeCondition("finAccountCode", EntityOperator.EQUALS, parameters.finAccountCode));
+	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(accountNameFacility, "ownerPartyId", true);
+}
+
 context.putAt("accountNameList", accountNameList);
 if(hideSearch == "N"){
 	if (statusId == "PAID") {
@@ -102,12 +123,6 @@ if(hideSearch == "N"){
 		
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);
 		boothTempPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
-	}
-	accountNameFacilityIds = FastList.newInstance();
-	if(parameters.finAccountName && parameters.finAccountName != "AllBanks"){
-		
-		finaccountInfo = ByProductNetworkServices.getFacilityFinAccountInfo(dctx ,[userLogin: userLogin ,finAccountName:parameters.finAccountName]);
-		accountNameFacilityIds = finaccountInfo.get("facilityIds");
 	}
 	finalFilterList = [];
 	filterFacilityList.each{ eachBankFacilityId ->
@@ -124,7 +139,7 @@ if(hideSearch == "N"){
 		boothTempPaymentsList.each{boothPay ->
 			facilityId = boothPay.get("facilityId");
 			if(paymentMethodTypeId == "CHALLAN_PAYIN"){
-				if(!finalFilterList || (finalFilterList && finalFilterList.contains(facilityId))){
+				if(finalFilterList && finalFilterList.contains(facilityId)){
 					boothPaymentsInnerList.add(boothPay);
 					if (statusId != "PAID") {
 						invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");

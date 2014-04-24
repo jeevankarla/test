@@ -1814,7 +1814,7 @@
 				<set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
 				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
 			    <set field="defaultEffectiveDate" 
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(org.ofbiz.base.util.UtilDateTime.nowTimestamp(), &quot;dd MMMMM, yyyy&quot;);}" /> 				
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String" /> 				
 				<entity-condition entity-name="FacilityParty" list="facilityParty" filter-by-date="true">
 	    			<condition-list>
 	    				<condition-expr field-name="partyId" value="${userLogin.partyId}"/>
@@ -1824,20 +1824,21 @@
     			<service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
                 </service>
-                <set field="hasPaymentCancelPermission" from-field="permResult.hasPermission"/>	
+                <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
     			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>										
     			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
     			<set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId" default-value="${paymentMethodTypeId}"/>
     			<set field="parameters.onlyCurrentDues" value="false"/>
-    			<entity-condition list="companyBankList" entity-name="FinAccount" distinct="true" >
+    			<!--<entity-condition list="companyBankList" entity-name="FinAccount" distinct="true" >
     				<condition-list combine="and">
     					<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+    					<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
     					<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
     				</condition-list>
     				<select-field field-name="finAccountName"/>
     				<order-by field-name="finAccountName"/>
     			</entity-condition>
-    			<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getRetailerPayments.groovy" />
+    			--><script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getRetailerPayments.groovy" />
 			</actions>
 			<widgets>
 				<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -1847,8 +1848,9 @@
 							<condition>
 								<or>
 									<not><if-empty field="facilityParty"/></not>
-									<if-has-permission permission="FACILITY" action="_ADMIN"/>
-									<if-has-permission permission="CASH" action="_ADMIN"/>	
+									<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+									<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
+									<if-has-permission permission="BYPRODUCTS" action="_CASH"/>	
 								</or>		
 							</condition>
 							<widgets>
@@ -1856,8 +1858,9 @@
 									<condition>
 										<and>
 											<or>
-												<if-has-permission permission="CASH" action="_ADMIN"/>
-												<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+												<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+												<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
+												<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
 											</or>
 											<or>
 												<if-empty field="statusId"/>
@@ -1873,13 +1876,14 @@
 										        	<include-form name="FindPaymentsByMethod" location="component://byproducts/widget/ByProductsNgForms.xml" />
 										        </screenlet>
 									  	        <screenlet title="Retailers ${uiLabelMap.PaymentSearchResults} :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">				
-									  	        	<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	        	<!--<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
 									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
 														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
 														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
 														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
 														<parameter param-name="statusId" from-field="parameters.statusId"/>	
 									  	        	</link>
+									  	        	-->
 									  	        	<platform-specific><html>
 												  		<html-template location="component://byproducts/webapp/byproducts/byproducts/DuePayment.ftl"/>
 												  		</html>
@@ -1896,8 +1900,9 @@
 											<condition>
 												<and>
 													<or>
-														<if-has-permission permission="CASH" action="_ADMIN"/>
-														<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+														<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+														<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
+														<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
 													</or>
 													<if-compare operator="equals" value="PAID" field="statusId"/>
 												</and>
@@ -1908,13 +1913,14 @@
 										        	<include-form name="FindPaymentsByMethod" location="component://byproducts/widget/ByProductsNgForms.xml" />
 										        </screenlet>
 									  	        <screenlet title="Retailers ${uiLabelMap.PaymentSearchResults} :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
-									  	       		<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
+									  	       		<!--<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
 									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
 														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
 														<parameter param-name="facilityId" from-field="parameters.facilityId"/>
 														<parameter param-name="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
 														<parameter param-name="statusId" from-field="parameters.statusId"/>												
 									  	        	</link>	
+									  	        	-->
 									  	        	<platform-specific>
 	                                     					<html><html-template location="component://byproducts/webapp/byproducts/reports/printBoothPayments.ftl"/></html>
 	                                				</platform-specific>

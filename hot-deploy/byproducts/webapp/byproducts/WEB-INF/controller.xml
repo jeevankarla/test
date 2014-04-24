@@ -35,12 +35,12 @@
     
     <request-map uri="cancelBoothPayment">
      	 <security https="true" auth="true"/>     	
-        <event type="service" invoke="voidPayment"/>
+        <event type="service" invoke="cancelRetailerPayment"/>
         <response name="success" type="request" value="FindPaymentByMethod"/>
         <response name="error" type="request" value="FindPaymentByMethod"/>
     </request-map>
     
-    
+    voidPayment
     
     <request-map uri="updateCrateQtyConfig">
         <security https="true" auth="true"/>
