@@ -262,8 +262,8 @@ if(dailySalesRevenueTrend){
 	
 }else{
 	
-	productCatMap = ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","CONTINUES_INDENT","salesDate",thruDate ));
-	productCatMap.putAll(ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","DAILY_INDENT" ,"salesDate",thruDate)));
+	productCatMap = ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","CONTINUES_INDENT","salesDate",fromDate ));
+	productCatMap.putAll(ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","DAILY_INDENT" ,"salesDate",fromDate)));
 	if(orderItemList){
 		orderItemList.each{ eachItem ->	
 			boothRegionMap =[:];
