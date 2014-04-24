@@ -375,6 +375,7 @@
         <attribute name="productSubscriptionTypeId" mode="IN" type="String" optional="false"/>
         <attribute name="subscriptionTypeId" mode="IN" type="String" optional="false"/>      
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
+        <attribute name="isNoShipment" mode="IN" type="Boolean" optional="true"/>
         <attribute name="changeIndentProductList" mode="OUT" type="List" optional="true"/>
         <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
         <attribute name="boothName" mode="OUT" type="String" optional="true"/>

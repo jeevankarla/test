@@ -1700,6 +1700,7 @@ public class ByProductNetworkServices {
 	        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
 	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Boolean isNoShipment = (Boolean)context.get("isNoShipment");
 	        Map result = ServiceUtil.returnSuccess(); 
 	        Timestamp supplyDate = null;
 	        Timestamp dayBegin = null;
@@ -1752,13 +1753,14 @@ public class ByProductNetworkServices {
 	    		partyId = facility.getString("ownerPartyId");
 	    		facilityCategory = facility.getString("categoryTypeEnum");
 	    		//lets override productSubscriptionTypeId based on facility category
-	    		if(facility.getString("categoryTypeEnum").equals("SO_INST")){
-	    			productSubscriptionTypeId = "SPECIAL_ORDER";
-	    		}else if(facility.getString("categoryTypeEnum").equals("CR_INST")){
-	    			 productSubscriptionTypeId = "CREDIT";
-	    		}else{
-	    			  productSubscriptionTypeId = "CASH";
-	    		}
+	    			if(facility.getString("categoryTypeEnum").equals("SO_INST")){
+		    			productSubscriptionTypeId = "SPECIAL_ORDER";
+		    		}else if(facility.getString("categoryTypeEnum").equals("CR_INST")){
+		    			 productSubscriptionTypeId = "CREDIT";
+		    		}else{
+		    			  productSubscriptionTypeId = "CASH";
+		    		}
+	    		
 	    		BigDecimal securityDeposit = BigDecimal.ZERO;  
 	    		if(UtilValidate.isNotEmpty(facility.get("securityDeposit"))){
 	    			securityDeposit = facility.getBigDecimal("securityDeposit");
@@ -1788,8 +1790,11 @@ public class ByProductNetworkServices {
 	    	    EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	    	    List<GenericValue> orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null, null, null, false);
 	    	    if(UtilValidate.isEmpty(orderItems)){
-	    			Debug.logError("No orders found for the dealer "+boothId, module);    			
-	    			return ServiceUtil.returnError("No orders found for the dealer "+boothId); 
+	    			Debug.logError("No orders found for the dealer "+boothId +"===isNoShipment ===="+isNoShipment, module);
+	    			if(!(UtilValidate.isNotEmpty(isNoShipment) && isNoShipment)){
+	    				return ServiceUtil.returnError("No orders found for the dealer "+boothId); 
+	    			}
+	    			
 	    		}
 	    	    List productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 	    	    List<GenericValue> products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
@@ -6684,7 +6689,7 @@ public class ByProductNetworkServices {
 					    		  returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("returnId");
 					    	  }
 		    				  List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), UtilMisc.toSet("returnId","productId","returnQuantity","returnItemSeqId","returnReasonId"), null, null, false);
-		    				  
+		 
 		    				  for(GenericValue eachReturnItem : returnItems){
 			    				  Map<String, Object> priceContext = FastMap.newInstance();
 				                  priceContext.put("userLogin", userLogin);   

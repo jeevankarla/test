@@ -158,6 +158,15 @@
 						   <input type="hidden" name="routeChangeFlag" id="routeChangeFlag" value="Y">
 					   </#if>
 			        </tr>
+			        <#if screenFlag?exists && screenFlag == 'DSCorrection'>
+   	  			     <tr>
+          				<td>&nbsp;</td>
+	          			<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>No Shipment:</div></td>
+	          			<td>&nbsp;</td>
+	          			<td> <input type="checkbox" name ="isNoShipment"/></td>
+	          		 </tr>	
+   	  			      
+   	  			</#if>
 			       </table>
        		<div name ="displayMsg" id="changeIndentEntry_spinner2"/>   
 		</form>

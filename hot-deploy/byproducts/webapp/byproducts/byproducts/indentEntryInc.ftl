@@ -113,7 +113,10 @@ function updateGrid(){
 						"subscriptionTypeId": $('[name=subscriptionTypeId]').val(),
 						"productSubscriptionTypeId" : $('[name=productSubscriptionTypeId]').val(),
 						"screenFlag":screenFlag,
-						"routeId" : $('[name=routeId]').val()							
+						"routeId" : $('[name=routeId]').val()
+						 <#if screenFlag?exists && screenFlag == 'DSCorrection'>,
+						     "isNoShipment" : $('[name=isNoShipment]').is(':checked')
+						 </#if>							
 					};
 	 $('div#changeIndentEntry_message').removeClass("errorMessage");
      $('div#changeIndentEntry_message').html('');

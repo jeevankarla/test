@@ -2867,10 +2867,14 @@ public class ByProductServices {
   		  List<GenericValue> orderHeader = delegator.findList("OrderHeader", orderCond, null, null, null, false);
   		  if(UtilValidate.isEmpty(orderHeader)){
   			  Debug.logError("No Order found for dealer  "+boothId, module);
-  			  request.setAttribute("_ERROR_MESSAGE_", "No Order found for dealer  "+boothId);
-  			  return "error";     		
+  			//for now comment this 
+  			  //request.setAttribute("_ERROR_MESSAGE_", "No Order found for dealer  "+boothId);
+  			  //return "error";     		
+  		  }else{
+  			orderId = (EntityUtil.getFirst(orderHeader)).getString("orderId");
   		  }
-  		  orderId = (EntityUtil.getFirst(orderHeader)).getString("orderId");
+  		  
+  		  
   	  }  catch (GenericEntityException e) {
   		  Debug.logError(e, "Problem fetching data from Entity", module);
   		  request.setAttribute("_ERROR_MESSAGE_", "Problem fetching data from Entity");
@@ -2976,13 +2980,20 @@ public class ByProductServices {
 	      List<GenericValue> orderInv = FastList.newInstance();
 	      GenericValue facility = null;
 	      GenericValue orderHeader = null;
+	      GenericValue shipment = null;
 	      try{
+	    	  if(UtilValidate.isNotEmpty(orderId)){
+	    		  orderList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+			      orderInv = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("invoiceId"), null, null, false);
+			      orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			      
+	    	  }
 	    	  //productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-		      orderList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+		      /*orderList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 		      orderInv = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("invoiceId"), null, null, false);
-		   	  
+		   	  */
 		      facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
-		      orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+		      shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
 		      partyId = facility.getString("ownerPartyId");
 	      }catch(GenericEntityException e){
 	    	  Debug.logError(e, e.toString(), module);
@@ -3013,11 +3024,14 @@ public class ByProductServices {
 		   	  }
 		   	  
 			  try{
-				  result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
-				  if (ServiceUtil.isError(result)) {
-					  Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
-			 		  return ServiceUtil.returnError("Problem cancelling orders in Correction");
-				  } 			
+				  if(UtilValidate.isNotEmpty(orderId)){
+					  result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
+					  if (ServiceUtil.isError(result)) {
+						  Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
+				 		  return ServiceUtil.returnError("Problem cancelling orders in Correction");
+					  } 
+				  }
+				  			
 				  if(UtilValidate.isNotEmpty(invoiceId)){
 				  result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", UtilMisc.toList(invoiceId), "statusId", "INVOICE_CANCELLED", "userLogin", userLogin));
 			   	  if (ServiceUtil.isError(result)) {
@@ -3034,8 +3048,11 @@ public class ByProductServices {
 			  List<GenericValue> subscriptionProductsList =FastList.newInstance();
 			  Map processCorrectionCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 				  processCorrectionCtx.put("shipmentId", shipmentId);
-				  processCorrectionCtx.put("estimatedDeliveryDate", orderHeader.getTimestamp("estimatedDeliveryDate"));
-				  processCorrectionCtx.put("salesChannel", orderHeader.getString("salesChannelEnumId"));   
+				  processCorrectionCtx.put("estimatedDeliveryDate", shipment.getTimestamp("estimatedShipDate"));
+				  if(UtilValidate.isNotEmpty(orderHeader)){
+					  processCorrectionCtx.put("salesChannel", orderHeader.getString("salesChannelEnumId")); 
+				  }
+				     
 				  
 			  for(int i=0; i< productQtyList.size() ; i++){
 				  Map productQtyMap = productQtyList.get(i);
@@ -3047,10 +3064,9 @@ public class ByProductServices {
 				  }
 				  GenericValue subscriptionFacilityProduct = delegator.makeValue("SubscriptionFacilityAndSubscriptionProduct");
 		 		  subscriptionFacilityProduct.set("facilityId", boothId);
-		 		 // subscriptionFacilityProduct.set("subscriptionId", "100000");
 		 		  subscriptionFacilityProduct.set("categoryTypeEnum", facility.get("categoryTypeEnum"));
 		 		  subscriptionFacilityProduct.set("ownerPartyId", partyId);
-		 		  subscriptionFacilityProduct.set("productSubscriptionTypeId", orderHeader.getString("productSubscriptionTypeId"));
+		 		  subscriptionFacilityProduct.set("productSubscriptionTypeId", productSubscriptionTypeId);
 		 		  subscriptionFacilityProduct.set("productId", productId);
 		 		  subscriptionFacilityProduct.set("quantity", quantity);
 		 		 subscriptionProductsList.add(subscriptionFacilityProduct);
@@ -3375,7 +3391,7 @@ public class ByProductServices {
 	                		return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
 	                    }  
 	                    BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
-		    		  
+	                    
 		    		  GenericValue returnItem = delegator.makeValue("ReturnItem");
 		    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
 		    		  if(UtilValidate.isNotEmpty(returnReasonId)){
@@ -3536,7 +3552,6 @@ public class ByProductServices {
 	              }
 	              String paymentId = (String)paymentResult.get("paymentId");
 	    	  }
-	    	
 		  }catch (Exception e) {
 			  Debug.logError(e, "Error creating Returns", module);		  
 			  return ServiceUtil.returnError("Error creating Returns");			  
