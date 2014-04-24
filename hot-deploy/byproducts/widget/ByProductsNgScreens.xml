@@ -1828,7 +1828,7 @@
     			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>										
     			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
     			<set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId" default-value="${paymentMethodTypeId}"/>
-    			<set field="parameters.onlyCurrentDues" value="false"/>
+    			<set field="parameters.onlyCurrentDues" value="true"/>
     			<!--<entity-condition list="companyBankList" entity-name="FinAccount" distinct="true" >
     				<condition-list combine="and">
     					<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
@@ -1887,7 +1887,7 @@
 									  	        	<platform-specific><html>
 												  		<html-template location="component://byproducts/webapp/byproducts/byproducts/DuePayment.ftl"/>
 												  		</html>
-												  	</platform-specific>	
+												  	</platform-specific>
 									  	        	<platform-specific>
                                             			<html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchRetailerDues.ftl"/></html>
                                         			</platform-specific>

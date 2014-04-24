@@ -100,7 +100,7 @@ under the License.
     }
     
     function massPaymentSubmit(current){
-    	//jQuery(current).attr( "disabled", "disabled");
+    	jQuery(current).attr( "disabled", "disabled");
     	var facilities = jQuery("#listBooths :checkbox[name='boothIds']");
         var index = 0;
         var tabItemValue;
@@ -155,7 +155,6 @@ under the License.
           <td>${uiLabelMap.Route}</td>
             <td>PaymentMethodType</td>
           <td>Current Due</td>
-          <td>${uiLabelMap.TotalDue}</td>
           <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
           		<td>Payment Amount</td>
           		<td align="right">${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllFacilities" name="checkAllFacilities" onchange="javascript:toggleFacilityId(this);"/></td>
@@ -182,7 +181,6 @@ under the License.
                 ${(payment.paymentMethodTypeDesc)?if_exists}
               </td>
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=payment.totalDue isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
               		<td><input type="text" name="paymentAmount" id="paymentAmount"></td>
               		<td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:getBoothRunningTotal();"/></td>
