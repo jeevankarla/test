@@ -6650,29 +6650,23 @@ public class ByProductNetworkServices {
 		        result.put("totalPaidAmount", totalPaidAmount);
 	            return result; 
 		   }
-		   public static Map<String, Object> getReturnItems(DispatchContext dctx, Map context) {
+		   public static Map<String, Object> updateReturnsForPeriod(DispatchContext dctx, Map context) {
 				 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				 LocalDispatcher dispatcher = dctx.getDispatcher();
 				 GenericValue userLogin = (GenericValue) context.get("userLogin");
 				 Timestamp fromDate = (Timestamp) context.get("fromDate");
 			     Timestamp thruDate = (Timestamp) context.get("thruDate");
-			     String boothId = (String) context.get("boothId");
 				 Locale locale = (Locale) context.get("locale");
 				 List<String> shipmentIds =FastList.newInstance();
 				 Map<String, Object> result = ServiceUtil.returnSuccess();
 				 GenericValue dealer = null;
 				 GenericValue shipment = null;
+				 String boothId = "";
 			  	 String ownerPartyId = "";
 			  	 String returnId = "";
 			  	 String productStoreId = "";
 			  	 Timestamp shipDate = null;
 				 	try{
-					  dealer = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
-			  		  if(UtilValidate.isEmpty(dealer)){
-			  			  Debug.logError("dealer does not exists with Id: " + boothId, module);		  
-			  			  return ServiceUtil.returnError("dealer does not exists with Id: " + boothId);
-			  		  }
-			  		  ownerPartyId = dealer.getString("ownerPartyId");
 			  		  productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
 			  		  shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate); 
 			  		  for(int i=0;i<shipmentIds.size();i++){
@@ -6685,13 +6679,20 @@ public class ByProductNetworkServices {
 			  			  shipDate = shipment.getTimestamp("estimatedShipDate");
 				  		  if(UtilValidate.isNotEmpty(shipmentIds)){
 				        	  List conditionList = FastList.newInstance();
-					    	  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, boothId));
 					    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
 					    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 					    	  List<GenericValue> returnHeader = delegator.findList("ReturnHeader", condition, null, null, null, false);
 					    	  if(UtilValidate.isNotEmpty(returnHeader)){
 					    		  returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("returnId");
+					    		  boothId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("originFacilityId");
 					    	  }
+					    	  dealer = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
+					  		  if(UtilValidate.isEmpty(dealer)){
+					  			  Debug.logError("dealer does not exists with Id: " + boothId, module);		  
+					  			  return ServiceUtil.returnError("dealer does not exists with Id: " + boothId);
+					  		  }
+					  		  ownerPartyId = dealer.getString("ownerPartyId");
+					    	  
 		    				  List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), UtilMisc.toSet("returnId","productId","returnQuantity","returnItemSeqId","returnReasonId"), null, null, false);
 		 
 		    				  for(GenericValue eachReturnItem : returnItems){
@@ -6719,7 +6720,7 @@ public class ByProductNetworkServices {
 			  		return ServiceUtil.returnError("Problem in updating ReturnItem");
 				}
 				return result;
-			}
+		}
 }
 	
 	

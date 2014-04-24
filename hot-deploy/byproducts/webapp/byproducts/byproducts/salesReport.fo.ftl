@@ -35,9 +35,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
                     <fo:block text-align="left" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;        Sales  Report From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
-              		<fo:block font-size="8pt">---------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-              		<fo:block font-size="8pt">&#160;Product    								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TotalQuantity  					&#160;&#160;&#160;&#160;&#160;&#160;TotalPrice  			&#160;&#160;&#160;&#160;&#160;&#160; ReturnQuantity  			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; ReturnPrice  			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TotalReturnPrice &#160;&#160;&#160;&#160;NetTotal  </fo:block>
-            		<fo:block font-size="8pt">--------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block font-size="8pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block font-size="8pt">&#160;Product    								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TotalQuantity  					&#160;&#160;&#160;&#160;&#160;&#160;TotalPrice  			&#160;&#160;&#160;&#160;&#160;&#160; ReturnQuantity  			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TotalReturnPrice 				&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;	NetTotal  </fo:block>
+            		<fo:block font-size="8pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
@@ -85,9 +85,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                       			<#if returnQty?has_content>
 	                       				<#assign grandTotalRetrnPrice = grandTotalRetrnPrice+returnPrice?if_exists>
 	                       			</#if>
-	                       			<fo:table-cell>
+	                       			<#--<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnPrice?if_exists?string("#0.00")}<#else></#if></fo:block>  
-	                       			</fo:table-cell>
+	                       			</fo:table-cell>-->
 	                       			<#if returnQty?has_content>
                        					<#assign retrnQtyPrice = (returnQty*returnPrice)>
                        			    	<#assign grandTotalRetrnQtyPrice = grandTotalRetrnQtyPrice+retrnQtyPrice?if_exists>
@@ -108,7 +108,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                 			</#list>
                 			<fo:table-row>
 			                   <fo:table-cell>
-			                        	<fo:block font-size="8pt">-----------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			                        	<fo:block font-size="8pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			                   </fo:table-cell>
 			               </fo:table-row>
                 			<fo:table-row>
@@ -120,7 +120,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 					                     <fo:table-column column-width="95pt"/> 
 					               	     <fo:table-column column-width="85pt"/>
 					            		 <fo:table-column column-width="105pt"/> 		
-					            		 <fo:table-column column-width="130pt"/>
+					            		 <fo:table-column column-width="125pt"/>
 					            		 <fo:table-column column-width="93pt"/>
 					            		 <fo:table-column column-width="170pt"/>
 										 <fo:table-body>
@@ -137,9 +137,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 						                      <fo:table-cell>
 						                        	<fo:block text-align="center" white-space-collapse="false">${grandTotalRtrnQty?if_exists?string("#0.00")}</fo:block>
 						                      </fo:table-cell>
-						                      <fo:table-cell>
+						                      <#--<fo:table-cell>
 						                        	<fo:block text-align="right" white-space-collapse="false">${grandTotalRetrnPrice?if_exists?string("#0.00")}</fo:block>
-						                      </fo:table-cell>
+						                      </fo:table-cell>-->
 						                      <fo:table-cell>
 						                        	<fo:block text-align="right" white-space-collapse="false">${grandTotalRetrnQtyPrice?if_exists?string("#0.00")}</fo:block>
 						                      </fo:table-cell>
