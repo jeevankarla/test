@@ -90,7 +90,7 @@ byProdList=[];
 lmsProdSeqList=[];
 byProdSeqList=[];
 
-lmsProductsList=ProductWorker.getProductsByCategory(delegator ,"LMS" ,null);
+lmsProductsList=ProductWorker.getProductsByCategory(delegator ,"LMS" ,effectiveDate);
 byProductsList=  EntityUtil.filterByCondition(allProductsList, EntityCondition.makeCondition("productId",EntityOperator.NOT_IN , lmsProductsList.productId));
 
 lmsProductsIdsList=EntityUtil.getFieldListFromEntityList(lmsProductsList, "productId", false);

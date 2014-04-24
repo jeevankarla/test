@@ -95,7 +95,7 @@ public class ByProductNetworkServices {
          }
         Timestamp dayBegin =UtilDateTime.getDayStart(salesDate);
     	List<GenericValue> productList =FastList.newInstance();
-    	List condList =FastList.newInstance();
+    	/*List condList =FastList.newInstance();
     	condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, "MILK_MILKPRODUCTS"));
     	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
     			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, dayBegin)));
@@ -105,7 +105,8 @@ public class ByProductNetworkServices {
     	}catch (GenericEntityException e) {
 			// TODO: handle exception
     		Debug.logError(e, module);
-		} 
+		} */
+        productList = ProductWorker.getProductsByCategory(delegator ,"MILK_MILKPRODUCTS" ,dayBegin);
     	return productList;
 	}
 	 /*
@@ -143,11 +144,11 @@ public class ByProductNetworkServices {
 	  * 
 	  * 
 	  */
-	 public static Map getProductCategoryMap(Delegator delegator, String categoryId)  {
+	/* public static Map getProductCategoryMap(Delegator delegator, String categoryId)  {
 		 Map productCatMap = FastMap.newInstance();
 		 
     	 Timestamp salesDate = UtilDateTime.nowTimestamp();    	
-    	 Timestamp dayBegin =UtilDateTime.getDayStart(salesDate);
+    	 Timestamp dayBegin =UtilDateTime.getDayEnd(salesDate);
     	 List<GenericValue> productList =FastList.newInstance();
     	 try{
     		
@@ -167,7 +168,31 @@ public class ByProductNetworkServices {
     		Debug.logError(e, module);
     	 } 		 
 		 return productCatMap;
+	 }*/
+	 
+	 public static Map getProductCategoryMap(DispatchContext dctx, Map<String, ? extends  Object> context)  {
+		 Map productCatMap = FastMap.newInstance();
+		 Timestamp salesDate = UtilDateTime.nowTimestamp();    	
+         Delegator delegator = dctx.getDelegator();
+         LocalDispatcher dispatcher = dctx.getDispatcher();
+         String productCategoryId = (String) context.get("productCategoryId");
+         if(!UtilValidate.isEmpty(context.get("salesDate"))){
+        	salesDate =  (Timestamp) context.get("salesDate");  
+         }
+    	 Timestamp dayBegin =UtilDateTime.getDayStart(salesDate);
+    	 List<GenericValue> productList =FastList.newInstance();
+	 
+		 if (UtilValidate.isNotEmpty(productCategoryId)) {
+			 List condList =FastList.newInstance();
+			 productList = ProductWorker.getProductsByCategory(delegator ,productCategoryId ,dayBegin);
+			 for (int i = 0; i < productList.size(); ++i) {
+				 productCatMap.put(productList.get(i).get("productId"), productList.get(i));
+			 }
+		 }
+    	 		 
+		 return productCatMap;
 	 }
+		 
 	 public static Map getByProductFacilityCategoryAndClassification(Delegator delegator, Timestamp effectiveDate)  {
 		 
 		 Map facilityDetail = FastMap.newInstance();
