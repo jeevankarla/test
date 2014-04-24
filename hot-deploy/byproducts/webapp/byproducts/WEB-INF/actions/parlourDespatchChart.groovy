@@ -168,7 +168,7 @@ productRevenueMap = [:];
 productCatRevenueMap = [:];
 regionWiseSalesMap = [:];
 
-productCatMap = ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","BYPROD_CAT" ,"salesDate",thruDate));
+productCatMap = ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","BYPROD_CAT" ,"salesDate",fromDate));
 if(shipmentReceipts){
 	shipmentReceipts.each{eachItem ->
 		boothRegionMap = boothsRegionMap.get((eachItem.getAt("facilityId")));
