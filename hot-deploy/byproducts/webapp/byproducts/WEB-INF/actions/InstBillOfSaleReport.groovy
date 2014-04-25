@@ -52,8 +52,10 @@
 	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitListPrice"] as Set;
 	itemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
-	itemsListMap.put(eachFacilityId, itemsList);
-		context.itemsListMap=itemsListMap;
+		if (UtilValidate.isNotEmpty(invoiceList)) {
+		    itemsListMap.put(eachFacilityId, itemsList);
+			context.itemsListMap=itemsListMap;
+		}
 	}
 	periodBillingIds.each{eachperiodBillingId->
 		conditionList.clear();
@@ -63,9 +65,11 @@
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,eachperiodBillingId));
 		cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		invoiceList = delegator.findList("Invoice", cond, ["invoiceId","invoiceDate","facilityId","partyId"] as Set , ["-invoiceDate"], null, false);
-		invoice=EntityUtil.getFirst(invoiceList);
-		invoiceListMap.put(invoice.getString("facilityId"), invoice);
-		context.invoiceListMap=invoiceListMap;
+		if (UtilValidate.isNotEmpty(invoiceList)) {
+			invoice=EntityUtil.getFirst(invoiceList);
+			invoiceListMap.put(invoice.getString("facilityId"), invoice);
+			context.invoiceListMap=invoiceListMap;
+		}
 	}
 	
 	
