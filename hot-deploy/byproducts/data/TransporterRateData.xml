@@ -71,5 +71,11 @@
      <StatusValidChange condition="" statusId="CANCEL_INPROCESS" statusIdTo="COM_CANCELLED" transitionName=" canceld in process"/>
      <StatusValidChange condition="" statusId="CANCEL_INPROCESS" statusIdTo="CANCEL_FAILED" transitionName="cancel failed"/>
        <!-- end of  transporter margin related -->
-
+    <TenantConfiguration propertyName="setVehicleStatusFinal" propertyValue="N" propertyTypeEnumId="LMS" description="SetVehcileTripStatus to Final or Not"/>
+    
+    <CustomTimePeriod customTimePeriodId="MAR-1-31" periodTypeId="MARGIN_MONTH" periodNum="3" periodName="March(1-31)" fromDate="2014-03-01" thruDate="2014-03-31" isClosed="N"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="APR-1-31" periodTypeId="MARGIN_MONTH" periodNum="4" periodName="April(1-30)" fromDate="2014-04-01" thruDate="2014-04-30" isClosed="N"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="MAY-1-31" periodTypeId="MARGIN_MONTH" periodNum="5" periodName="May(1-31)" fromDate="2014-05-01" thruDate="2014-05-31" isClosed="N"  organizationPartyId="Company"/>
+    <CustomTimePeriod customTimePeriodId="JUNE-1-31" periodTypeId="MARGIN_MONTH" periodNum="6" periodName="June(1-30)" fromDate="2014-06-01" thruDate="2014-06-30" isClosed="N"  organizationPartyId="Company"/>
+    
  
