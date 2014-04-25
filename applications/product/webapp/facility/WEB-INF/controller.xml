@@ -1648,9 +1648,7 @@ under the License.
     <request-map uri="GenerateMarginReport.txt"><security https="true" auth="true"/>
         <response name="success" type="view" value="GenerateMarginReportTXT"/>
     </request-map>
-    <request-map uri="GenerateTrnsptMarginReport.txt"><security https="true" auth="true"/>
-        <response name="success" type="view" value="GenerateTrnsptMarginReportTXT"/>
-    </request-map>
+   
     <request-map uri="updateEsevaAponlineCollection">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEsevaAponlineCollection"/>        
@@ -2067,7 +2065,7 @@ under the License.
 	<view-map name="DistributorMarginReportTXT" type="screenfop" page="component://product/widget/facility/ReportScreens.xml#DistributorMarginReportTXT" content-type="text/plain"/>
 	<view-map name="SummaryReportMonthlyTXT" type="screenfop" page="component://product/widget/facility/ReportScreens.xml#SummaryReportMonthlyTXT" content-type="text/plain"/>
 	<view-map name="GenerateMarginReportTXT" type="screenfop" page="component://product/widget/facility/ReportScreens.xml#GenerateMarginReportTXT" content-type="text/plain"/>
-	<view-map name="GenerateTrnsptMarginReportTXT" type="screenfop" page="component://product/widget/facility/ReportScreens.xml#GenerateTrnsptMarginReportTXT" content-type="text/plain"/>
+	
     <view-map name="ECSReport" type="screen" page="component://product/widget/facility/ReportScreens.xml#ECSReport"/>
     <view-map name="VendorMarginChequesCSV" type="screencsv" page="component://product/widget/facility/ReportScreens.xml#VendorMarginChequesCSV" content-type="text/csv" encoding="none"/>
 	
