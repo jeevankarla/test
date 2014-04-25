@@ -5448,9 +5448,11 @@ public class ByProductNetworkServices {
 		                }
 		        		double formulaValue = (Double) incentivesResult.get("formulaResult");
 		        		rateAmount = new BigDecimal(formulaValue);
+		        		
 						
 					}else{
 						rateAmount = validFacilityRate.getBigDecimal("rateAmount");
+						uomId=validFacilityRate.getString("uomId");
 					}
 					
 				}
@@ -6744,6 +6746,42 @@ public class ByProductNetworkServices {
 					Debug.logError(e, "Problem in updating ReturnItem", module);	 		  		  
 			  		return ServiceUtil.returnError("Problem in updating ReturnItem");
 				}
+				return result;
+		}
+		   public static Map<String, Object> getFacilityPartyContractor(DispatchContext dctx, Map<String, ? extends  Object> context ){
+			    
+				Map<String, Object> result = FastMap.newInstance();
+				List conditionList= FastList.newInstance(); 
+				List<String> boothIds = FastList.newInstance(); 
+			    List<GenericValue> facilityPartyList = null;
+			    Timestamp saleDate = UtilDateTime.nowTimestamp();
+			    Delegator delegator = dctx.getDelegator();
+			    Map<String, String> facilityPartyMap = FastMap.newInstance();
+			    Map<String, List> fieldStaffAndFacility = FastMap.newInstance();
+			    if(UtilValidate.isNotEmpty(context.get("saleDate"))){
+			    	saleDate = (Timestamp)context.get("saleDate");
+			    }
+			    String roleTypeId=(String)context.get("roleTypeId");
+			    if(UtilValidate.isEmpty(roleTypeId)){
+			    	   conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"Contractor"));
+		  		  }
+			    if(UtilValidate.isNotEmpty(roleTypeId)){
+			    conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,roleTypeId));
+			    }
+			    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+			    try {
+			    	facilityPartyList =delegator.findList("FacilityFacilityPartyAndPerson", condition, null , null, null, false);
+			    	facilityPartyList = EntityUtil.filterByDate(facilityPartyList, saleDate);
+			    	for(GenericValue facilityParty : facilityPartyList){
+			    		List tempFacilityList = FastList.newInstance();
+			    		if(facilityParty.getString("facilityTypeId").equals("ROUTE")){
+			    			facilityPartyMap.put(facilityParty.getString("facilityId"), facilityParty.getString("partyId"));
+			    		}
+			    	}
+				}catch (Exception e) {
+					Debug.logError(e, "Exception while getting FaclityParty ", module);		   
+				}
+				result.put("facilityPartyMap", facilityPartyMap);
 				return result;
 		}
 }

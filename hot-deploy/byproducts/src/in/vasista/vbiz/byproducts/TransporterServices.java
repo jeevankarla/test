@@ -274,11 +274,14 @@ import java.text.SimpleDateFormat;
 							routeMarginMap.put("cashAmount", BigDecimal.ZERO);
 							routeMarginMap.put("commision", BigDecimal.ZERO);
 							
-							supplyDate = UtilDateTime.addDaysToTimestamp(monthBegin, k);	
-							List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,supplyDate,supplyDate);
-						
+							supplyDate = UtilDateTime.addDaysToTimestamp(monthBegin, k);
+							
+							List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,route);	//route Specific shipments.
+							//List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,supplyDate,supplyDate);
+							 //Debug.log("==shipmentIds==="+shipmentIds+"====supplyDate==="+supplyDate+"===routeId=="+route);
 							 String curntDay=UtilDateTime.toDateString(supplyDate ,"yyyy-MM-dd");
 							 Map curntDaySalesMap=(Map)dayWiseTotalsMap.get(curntDay);
+							 
 							 if(UtilValidate.isNotEmpty(curntDaySalesMap)){/*
 							
 							BigDecimal saleAmount = (BigDecimal)curntDaySalesMap.get("totalRevenue");
@@ -324,7 +327,11 @@ import java.text.SimpleDateFormat;
 							 if(UtilValidate.isNotEmpty(shipmentIds)){
 								 tripSize=new BigDecimal(shipmentIds.size());
 							 }
+							 if(UtilValidate.isEmpty(shipmentIds)){//filled with zero
+								 tripSize=new BigDecimal(shipmentIds.size());
+								}
 							 BigDecimal actualCommision = tripSize.multiply(narmalMargin);
+							 
 	                         if(uomId.equals("LEN_km")){
 	                      	   actualCommision = actualCommision.multiply(facilitySize);
 				    		}
@@ -1137,6 +1144,120 @@ import java.text.SimpleDateFormat;
 		        	sum = sum.add(i);
 		        return sum;
 		    }
+		    
+		    /*public static Map<String, Object> populateVehicleTripParty(DispatchContext ctx, Map<String, ? extends Object> context ) {
+		    	Delegator delegator = ctx.getDelegator();
+		    	Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+		        List<String> facilityIds = (List<String>) context.get("facilityIds");
+		        List<String> shipmentIds = (List<String>) context.get("shipmentIds");
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        Map<String, Object> vehicleTripResult = new HashMap<String, Object>();
+		        Map<String, Object> vehicleTripStatusResult = new HashMap<String, Object>();
+		        Map<String, Object> vehicleTripEntity = FastMap.newInstance(); 
+		        Map<String, Object> vehicleTripStatusEntity = FastMap.newInstance();
+		        
+		        List conditionList= FastList.newInstance(); 
+		        Timestamp fromDate = (Timestamp) context.get("fromDate");
+		        if (UtilValidate.isEmpty(fromDate)) {
+		            Debug.logError("fromDate cannot be empty", module);
+		            return ServiceUtil.returnError("fromDate cannot be empty");        	
+		        }        
+		        Timestamp thruDate = (Timestamp) context.get("thruDate");  
+		        if (UtilValidate.isEmpty(thruDate)) {
+		            Debug.logError("thruDate cannot be empty", module);
+		            return ServiceUtil.returnError("thruDate cannot be empty");        	
+		        }     
+		        if (UtilValidate.isEmpty(shipmentIds)){
+	        		shipmentIds = getShipmentIds(delegator, fromDate, thruDate);
+	           	}
+		    	Timestamp monthBegin = UtilDateTime.getDayStart(fromDate, timeZone, locale);
+				Timestamp monthEnd = UtilDateTime.getDayEnd(thruDate, timeZone, locale);
+				
+				int totalDays=UtilDateTime.getIntervalInDays(monthBegin,monthEnd);
+				Timestamp supplyDate = monthBegin;
+		        for (int k = 0; k <= (totalDays); k++) {
+					supplyDate = UtilDateTime.addDaysToTimestamp(monthBegin, k);
+					Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",supplyDate)).get("facilityPartyMap");
+					Debug.log("==facilityPartyRes==="+facilityPartyRes);
+					List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,null);	//get Day Shipments
+					 for (int i = 0; i <= (shipmentIds.size()); i++) {
+						  String shipmentId=shipmentIds.get(i);
+							conditionList.clear();
+							conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+							EntityCondition vhCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+							List<GenericValue> vehicleTrpList = delegator.findList("VehicleTrip", vhCondition, null, UtilMisc.toList("originFacilityId"), null, false);
+							if(UtilValidate.isEmpty(vehicleTrpList)){//if empty create vehicleTrip this time.
+								GenericValue shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
+								 String routeId = shipment.getString("routeId");
+					           	if (shipment == null) {
+					           		Debug.logError("Shipment does not exist " + shipmentId, module);
+					           		return ServiceUtil.returnError("Shipment does not exist " + shipmentId);                    	
+					           	}
+								Map vehicleCtx = UtilMisc.toMap("facilityId",routeId);
+						        vehicleCtx.put("supplyDate", supplyDate);
+						        Map vehicleRoleResult =  (Map) ByProductNetworkServices.getVehicleRole(dctx,vehicleCtx);
+						        if(UtilValidate.isNotEmpty(vehicleRoleResult.get("vehicleRole"))){
+						        	 GenericValue vehicleRole= (GenericValue) vehicleRoleResult.get("vehicleRole");
+									 vehicleId=vehicleRole.getString("vehicleId");
+							        if(UtilValidate.isNotEmpty(vehicleId)){
+							        	vehicleTripEntity.put("vehicleId", vehicleId);
+							        	vehicleTripStatusEntity.put("vehicleId", vehicleId);
+							        }
+							        vehicleTripEntity.put("originFacilityId", routeId);
+							        vehicleTripEntity.put("userLogin", userLogin);
+							        vehicleTripEntity.put("shipmentId", shipmentId);
+							        vehicleTripEntity.put("createdDate", nowTimeStamp);
+							        vehicleTripEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
+							        vehicleTripEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+							        try {
+							        	vehicleTripResult=dispatcher.runSync("createVehicleTrip", vehicleTripEntity);
+							            seqId =(String) vehicleTripResult.get("sequenceNum");
+							            if (ServiceUtil.isError(vehicleTripResult)){
+							  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripResult);
+							  		  		Debug.logError(errMsg , module);
+							  		  	    return ServiceUtil.returnError("createVehicleTrip service" + vehicleId);    
+							  		  	}
+							          
+							        } catch (GenericServiceException e) {
+							            Debug.logError(e, "Error calling createVehicleTrip service", module);
+							            return ServiceUtil.returnError(e.getMessage());
+							        } 
+							        vehicleTripStatusEntity.put("facilityId",routesList.get(i));
+							        vehicleTripStatusEntity.put("sequenceNum", seqId);
+							        vehicleTripStatusEntity.put("userLogin", userLogin);
+							        vehicleTripStatusEntity.put("statusId", "VEHICLE_OUT");
+							        vehicleTripStatusEntity.put("createdDate", nowTimeStamp);
+							        vehicleTripStatusEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
+							        vehicleTripStatusEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+							        try {
+							        	vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusEntity);
+							            if (ServiceUtil.isError(vehicleTripStatusResult)) {
+							  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
+							  		  		Debug.logError(errMsg , module);
+							  		  	    return ServiceUtil.returnError("createVehicleTripStatus service" + vehicleId);   
+							  		  	}
+							        }catch (GenericServiceException e) {
+							            Debug.logError(e, "Error calling createVehicleTripStatus service", module);
+							            return ServiceUtil.returnError(e.getMessage());
+							        }
+							      }
+							}else{
+								 GenericValue updateVehicleTrip=EntityUtil.getFirst(vehicleTrpList);
+								 String routeId=updateVehicleTrip.getString("originFacilityId");
+								 try{ updateVehicleTrip.set("partyId",facilityParty.get(routeId));
+									 updateVehicleTrip.set("lastUpdatedStamp", UtilDateTime.nowTimestamp());
+								      updateVehicleTrip.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+									   updateVehicleTrip.store(); 
+								    }catch(GenericEntityException e){
+								    	Debug.logError("Unable to set vehicleTrip  record in database"+e, module);
+										return ServiceUtil.returnError("Unable to set vehicleTrip   record in database "); 
+								    }
+								 
+							}
+							
+					 }
+		        }
+		    }*/
 	}
 
 
