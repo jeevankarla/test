@@ -40,7 +40,7 @@
         <response name="error" type="request" value="FindPaymentByMethod"/>
     </request-map>
     
-    voidPayment
+    
     
     <request-map uri="updateCrateQtyConfig">
         <security https="true" auth="true"/>
@@ -638,6 +638,9 @@
         <response name="failed" type="view" value="TransporterMargins"/>
         <response name="error" type="view" value="TransporterMargins"/>
     </request-map>
+     <request-map uri="GenerateTrnsptMarginReport.txt"><security https="true" auth="true"/>
+        <response name="success" type="view" value="GenerateTrnsptMarginReportTXT"/>
+    </request-map>
     <!-- migrated requests -->
     <request-map uri="processDispatchReconcilMISAjax">
         <security https="true" auth="true"/>
@@ -950,6 +953,7 @@
  <!-- Transporter views -->
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
+   <view-map name="GenerateTrnsptMarginReportTXT" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#GenerateTrnsptMarginReportTXT" content-type="text/plain"/>
 <!-- Transporter views -->
  <view-map name="FindPastBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPastBoothPayments"/>
  <view-map name="FindBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindBoothPayments"/>
