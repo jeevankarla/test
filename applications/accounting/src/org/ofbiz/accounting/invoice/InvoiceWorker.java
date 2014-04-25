@@ -969,7 +969,7 @@ Debug.logInfo("==========>ensureInvoiceAlreadyNotExists=" + infoMsg, module);
         return ServiceUtil.returnSuccess();
 	}		
 	
-	static Map<String, Object> fetchTimePeriodDetails(DispatchContext dctx, Map<String, Object> context) 
+	public static Map<String, Object> fetchTimePeriodDetails(DispatchContext dctx, Map<String, Object> context) 
 	throws GenericEntityException {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();

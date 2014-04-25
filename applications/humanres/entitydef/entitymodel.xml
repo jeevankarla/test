@@ -1283,5 +1283,50 @@ under the License.
         <key-map field-name="productPriceRuleId"/>
       </relation>
     </entity>
-    <!-- ==================time sheet=============================== -->
+    <!-- ==================payroll billing process=============================== -->
+    <entity entity-name="PayrollHeader" package-name="org.ofbiz.humanres"
+		title="Invoice Entity">
+		<field name="payrollHeaderId" type="id-ne"></field>
+		<field name="periodBillingId" type="id-ne"></field>
+		<field name="partyId" type="id"></field>
+		<field name="partyIdFrom" type="id"></field>
+		<field name="finAccountNumber" type="id"></field>
+		<prim-key field="payrollHeaderId" />
+		<relation type="one" fk-name="PH_PB" rel-entity-name="PeriodBilling">
+        	<key-map field-name="periodBillingId"/>
+        </relation>
+	    <relation type="one" fk-name="PH_PARTY_FRM" title="From"
+			rel-entity-name="Party">
+			<key-map field-name="partyIdFrom" rel-field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="PH_PARTY" rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+	  <index name="PH_PR_ID">
+        	<index-field name="partyId"/>
+      </index>
+      <index name="PH_PRF_ID">
+        	<index-field name="partyIdFrom"/>
+      </index>		
+	</entity>
+   <entity entity-name="PayrollHeaderItem" package-name="org.ofbiz.humanres"
+		title="Invoice Item Entity">
+		<field name="payrollHeaderId" type="id-ne"></field>
+		<field name="payrollItemSeqId" type="id-ne"></field>
+		<field name="payrollHeaderItemTypeId" type="id"></field>
+		<field name="amount" type="currency-precise"></field>
+		<field name="description" type="description"></field>
+		<field name="showInPaySlip" type="indicator" />
+		
+		<prim-key field="payrollHeaderId" />
+		<prim-key field="payrollItemSeqId" />
+		<relation type="one" fk-name="PAYH_IID"
+			rel-entity-name="PayrollHeader">
+			<key-map field-name="payrollHeaderId"/>
+		</relation>
+		<relation type="one" fk-name="PAYH_ITMITYP"
+			rel-entity-name="InvoiceItemType">
+			<key-map rel-field-name ="invoiceItemTypeId" field-name="payrollHeaderItemTypeId"/>
+		</relation>
+	</entity>
 </entitymodel>

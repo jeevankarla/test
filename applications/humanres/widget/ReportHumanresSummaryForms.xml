@@ -341,7 +341,6 @@
 		<field name="punchDate" title="Date" required-field="false" tooltip="Select date from calendar"><date-time type="date" ></date-time></field>
 		<field name="view" title="Download Csv" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-       
     <form name="AttendanceMonthlyReport" type="single" target="EmplMonthlyPunchReport.csv" header-row-style="header-row" default-table-style="basic-table">
         <field name="partyId" title="Organisation">
 			<drop-down allow-empty="false">
@@ -363,5 +362,47 @@
         </field>
         <field name="submitButton" title="Download Csv" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
+  <form name="createPayrollBilling" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="createPayrollBilling">
+       	<field name="partyId" title="Organization Party Id" parameter-name="orgPartyId">
+			<drop-down allow-empty="false">
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
+		</field>
+       	  <field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>   
+       <field name="submit" title="run"><submit/></field>
+    </form>
+   <form name="ListPayrollBilling" type="list"
+		list-name="periodBillingList" odd-row-style="alternate-row"
+		default-table-style="basic-table hover-bar">
+		<actions>
+		    <entity-and entity-name="PeriodBilling" list="periodBillingList">
+		         <field-map field-name="billingTypeId" value="PAYROLL_BILL"/>
+		         <order-by field-name="-createdDate"/>
+		    </entity-and>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>	
+		</actions>
+		<field name="periodBillingId">
+			<display description="${periodBillingId}" />
+		</field>
+		<field name="customTimePeriodId">
+			<display/>
+		</field>
+		<field name="statusId">
+			<display/>
+		</field>
+	</form>  
 </forms>
         

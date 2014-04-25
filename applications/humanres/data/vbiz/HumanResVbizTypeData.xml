@@ -122,4 +122,7 @@
     <Enumeration description="Factory gate" enumCode="Factory gate" enumId="GATE" sequenceId="03" enumTypeId="RECR_DIRECT_TYPE"/>
     
        
+     <EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Payroll Period Billing" enumCode="PAYROLL_BILL" enumId="PAYROLL_BILL" sequenceId="01" enumTypeId="PBILLING_TYPE"/>  
+       
 </entity-engine-xml>

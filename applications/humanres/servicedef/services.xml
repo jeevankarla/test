@@ -1173,4 +1173,19 @@ under the License.emplpunch
     </service>         
 	
 	<!--====================Time & Attendance Services===================================-->
+	<service name="createPayrollBilling"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createPayrollBilling" auth="true">
+        <description>Create an ProductPriceRule</description>
+        <attribute name="orgPartyId" mode="IN" type="String"></attribute>
+        <attribute name="customTimePeriodId" mode="IN" type="String"></attribute>
+        <attribute name="periodBillingId" mode="OUT" type="String"></attribute>
+    </service>
+    <service name="generatePayrollBilling"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="generatePayrollBilling" auth="true">
+        <description>Create an ProductPriceRule</description>
+        <attribute name="partyId" mode="IN" type="String"></attribute>
+        <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
+        <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
+    </service>
+   
 </services>
