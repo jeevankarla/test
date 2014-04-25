@@ -2633,6 +2633,7 @@ under the License.
             default-resource-name="OrderEntityLabels"
             title="Return Reason Entity">
         <field name="returnReasonId" type="id-ne"></field>
+        <field name="parentReasonId" type="id-ne"></field>
         <field name="description" type="description"></field>
         <field name="sequenceId" type="id"></field>
         <prim-key field="returnReasonId"/>

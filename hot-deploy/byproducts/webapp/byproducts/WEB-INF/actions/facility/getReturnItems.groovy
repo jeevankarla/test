@@ -70,8 +70,8 @@ if(returnId){
 }
 JSONArray returnReasonJSON = new JSONArray();
 JSONObject returnReasonIdsJSON = new JSONObject();
-resonListIds=UtilMisc.toList("RTN_CNTR_FAULT","RTN_DAIRY_FAULT","RTN_INDNT_FAULT","RTN_TRSPT_FAULT")
-returnResonList = delegator.findList("ReturnReason", EntityCondition.makeCondition("returnReasonId", EntityOperator.IN, resonListIds), null, null, null, false);
+//resonListIds=UtilMisc.toList("RTN_CNTR_FAULT","RTN_DAIRY_FAULT","RTN_INDNT_FAULT","RTN_TRSPT_FAULT")
+returnResonList = delegator.findList("ReturnReason", EntityCondition.makeCondition("parentReasonId", EntityOperator.EQUALS, "PROD_RTN_FAULT"), null, null, null, false);
 returnResonList.each{eachReason->
 	JSONObject newReasonObj = new JSONObject();
 	newReasonObj.put("value",eachReason.returnReasonId);
