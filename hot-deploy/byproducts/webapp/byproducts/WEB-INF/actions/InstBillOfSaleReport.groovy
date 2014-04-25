@@ -52,7 +52,7 @@
 	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitListPrice"] as Set;
 	itemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
-		if (UtilValidate.isNotEmpty(invoiceList)) {
+		if (UtilValidate.isNotEmpty(itemsList)) {
 		    itemsListMap.put(eachFacilityId, itemsList);
 			context.itemsListMap=itemsListMap;
 		}
