@@ -2590,7 +2590,7 @@ public class ByProductServices {
 	  	  String subTabItem = (String)request.getParameter("subTabItem");
 	  	  request.setAttribute("paymentMethodTypeId", paymentMethodTypeId);
 	  	  request.setAttribute("subTabItem", subTabItem);
-	  		
+	  	  List paymentIds = FastList.newInstance();	
 	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 	  	  if (rowCount < 1) {
 	  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
@@ -2601,11 +2601,13 @@ public class ByProductServices {
 	  	  try{
 	  		  
 	  		  beganTransaction = TransactionUtil.begin(7200);
+	  		  List exprListForParameters = FastList.newInstance();
 		  	  for (int i = 0; i < rowCount; i++){
 		  		  Map paymentMap = FastMap.newInstance();
 		  		  String facilityId = "";
 		  		  String amountStr = "";
 		  		  String issuingAuthority = "";
+		  		  String paymentLocationId = "";
 		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 		  		  BigDecimal amount = BigDecimal.ZERO;
 		  		  
@@ -2616,7 +2618,22 @@ public class ByProductServices {
 		  		  if (paramMap.containsKey("amount" + thisSuffix)) {
 		  			amountStr = (String) paramMap.get("amount"+thisSuffix);
 		  		  }
-		  		 
+
+		  		  exprListForParameters.clear();
+		  		  exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,userLogin.getString("partyId")));
+		  		  exprListForParameters.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "FACILITY_CASHIER"));
+		  		  EntityCondition	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);    		
+		  		  List<GenericValue>  faclityPartyList = delegator.findList("FacilityParty", paramCond, null, null, null, false);	    		
+		  		  if(UtilValidate.isEmpty(faclityPartyList)){
+	    			
+		  			Debug.logError("you Don't have permission to create payment, Facility Cashier role missing", module);
+		  			request.setAttribute("_ERROR_MESSAGE_", "you Don't have permission to create payment, Facility Cashier role missing");
+		  			TransactionUtil.rollback();
+		  			return "error";
+		  		  }
+		  		  faclityPartyList = EntityUtil.filterByDate(faclityPartyList);
+		  		  paymentLocationId = (EntityUtil.getFirst(faclityPartyList)).getString("facilityId");
+					
 		  		  if(paymentMethodTypeId.equals("CHALLAN_PAYIN")){
 		  			  Map resultCtx = dispatcher.runSync("getFacilityFinAccountInfo", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
 			  			if(ServiceUtil.isError(resultCtx)){
@@ -2647,6 +2664,7 @@ public class ByProductServices {
 		  		  paymentInputMap.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
 		  		  paymentInputMap.put("paymentMethodTypeId",paymentMethodTypeId);
 		  		  paymentInputMap.put("paymentPurposeType","ROUTE_MKTG");
+		  		  paymentInputMap.put("paymentLocationId", paymentLocationId);
 		  		  paymentInputMap.put("issuingAuthority", issuingAuthority);
 		  		  paymentInputMap.put("amount",amount.toString());
 		  		  paymentInputMap.put("useFifo",true);
@@ -2658,9 +2676,20 @@ public class ByProductServices {
 				  			TransactionUtil.rollback();
 				  			return "error";
 	       				}
+	       				paymentIds.add(paymentResult.get("paymentId"));
 		  		  }
 		  		 
 		  	 }//end of loop
+		  	 
+		  	 if(UtilValidate.isNotEmpty(paymentIds) && paymentIds.size() > 1){
+	    			Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", UtilMisc.toMap("paymentIds", paymentIds, "paymentGroupTypeId", "ROUTE_BATCH_PAYMENT", "userLogin", userLogin));
+		    		if(ServiceUtil.isError(resultCtx)){
+		    			Debug.logError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx), module);
+		    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating payment group");
+			  			TransactionUtil.rollback();
+			  			return "error";
+		    		}
+	    	 } 
 		  	  
 		  	 
 	  	  } catch (GenericEntityException e) {
