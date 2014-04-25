@@ -36,7 +36,11 @@ under the License.
             	var amountObj = $(domObj).find("#currDue");
             	var currValue = $(amountObj).val();
             	var paymentObj = $(domObj).find("#paymentAmount");
-            	$(paymentObj).val(currValue);
+            	var checkEntry = $(paymentObj).val();
+            	if(checkEntry == null || checkEntry == undefined || checkEntry == ""){
+            		$(paymentObj).val(currValue);
+            	}
+            	
             }
         });
         var unCheckedBoothIds = jQuery("input[name='boothIds']:unchecked");
