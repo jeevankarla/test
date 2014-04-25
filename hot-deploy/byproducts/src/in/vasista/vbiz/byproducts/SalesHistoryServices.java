@@ -184,6 +184,7 @@ public class SalesHistoryServices {
 									facilityCommission.put("periodBillingId", periodBillingId );
 									facilityCommission.put("commissionDate", dateValue);
 									facilityCommission.put("facilityId", facilityId); 
+									facilityCommission.put("partyId", dayRouteEntryMap.get("partyId")); 
 									facilityCommission.put("totalQty", dayTotQty);									
 									facilityCommission.put("totalAmount", commision);
 									facilityCommission.put("dues", dayRouteEntryMap.get("dueAmount"));

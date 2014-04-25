@@ -42,6 +42,8 @@
 	import org.ofbiz.service.LocalDispatcher;
 	import org.ofbiz.service.ModelService;
 	import org.ofbiz.service.ServiceUtil;
+	import java.util.TimeZone;
+	import java.util.Locale;
 	
 	import org.ofbiz.network.LmsServices;
 
@@ -157,6 +159,7 @@ import java.text.SimpleDateFormat;
 			TimeZone timeZone = TimeZone.getDefault();
 			List masterList = FastList.newInstance();
 			Locale locale = Locale.getDefault();
+			List conditionList= FastList.newInstance(); 
 			GenericValue userLogin = (GenericValue) context.get("userLogin");
 			String customTimePeriodId = (String) context.get("customTimePeriodId");
 			String periodBillingId = (String) context.get("periodBillingId");
@@ -207,6 +210,13 @@ import java.text.SimpleDateFormat;
 				Map routes = ByProductNetworkServices.getRoutes(dctx , UtilMisc.toMap("facilityTypeId", "ROUTE"));		
 				List routesList = (List) routes.get("routesList");
 				Map transporterMap =FastMap.newInstance();
+				Map<String, Object> populateTripRes=populateVehicleTripParty(dctx , UtilMisc.toMap("fromDate", monthBegin,"thruDate",monthEnd,"userLogin",userLogin));
+				if (ServiceUtil.isError(populateTripRes)) {
+		    		generationFailed = true;
+	                Debug.logWarning("There was an error while populating vehicleTripUpdate: " + ServiceUtil.getErrorMessage(populateTripRes), module);
+	        		return ServiceUtil.returnError("There was an error while populating vehicleTripUpdate: " + ServiceUtil.getErrorMessage(populateTripRes));          	            
+	            } 
+				Debug.log("=====populateTripRes====AfterServiceRun==="+populateTripRes);
 				try {
 					for (int i = 0; i < routesList.size(); i++) {
 						String route = (String) routesList.get(i);
@@ -264,10 +274,10 @@ import java.text.SimpleDateFormat;
 						//getting
 					/*	Map dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), UtilMisc.toMap("facilityIds",boothsList,"fromDate",monthBegin, "thruDate",monthEnd));
 						dayWiseTotalsMap=(Map)dayTotals.get("dayWiseTotals");*/
-						
 						Timestamp supplyDate = monthBegin;
 				        for (int k = 0; k <= (totalDays); k++) {
 							Map routeMarginMap = FastMap.newInstance();
+							routeMarginMap.put("partyId","");
 							routeMarginMap.put("quantity",BigDecimal.ZERO );
 							routeMarginMap.put("saleAmount", BigDecimal.ZERO);
 							routeMarginMap.put("cashQty",BigDecimal.ZERO );
@@ -277,13 +287,16 @@ import java.text.SimpleDateFormat;
 							supplyDate = UtilDateTime.addDaysToTimestamp(monthBegin, k);
 							
 							List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,route);	//route Specific shipments.
+							conditionList.clear();
+							conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+							EntityCondition vhCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+							List<GenericValue> vehicleTrpList = delegator.findList("VehicleTrip", vhCondition, null, UtilMisc.toList("originFacilityId"), null, false);
+							 GenericValue vehicleTrip=EntityUtil.getFirst(vehicleTrpList);
 							//List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,supplyDate,supplyDate);
-							 //Debug.log("==shipmentIds==="+shipmentIds+"====supplyDate==="+supplyDate+"===routeId=="+route);
 							 String curntDay=UtilDateTime.toDateString(supplyDate ,"yyyy-MM-dd");
 							 Map curntDaySalesMap=(Map)dayWiseTotalsMap.get(curntDay);
 							 
 							 if(UtilValidate.isNotEmpty(curntDaySalesMap)){/*
-							
 							BigDecimal saleAmount = (BigDecimal)curntDaySalesMap.get("totalRevenue");
 							BigDecimal totalQty=(BigDecimal)curntDaySalesMap.get("total");
 							
@@ -307,7 +320,6 @@ import java.text.SimpleDateFormat;
 							routeMarginMap.put("quantity",totalQty );
 							routeMarginMap.put("saleAmount", saleAmount);					
 							*/}	
-								
 							  narmalMargin = monthBeginMargin;
 				    			//normal Margin for Each Day if monthStart and MonthEnd is Different
 				    			if(monthBeginMargin.compareTo(monthEndMargin) != 0){
@@ -323,15 +335,17 @@ import java.text.SimpleDateFormat;
 						    			 uomId=(String)facilityRateResult.get("uomId");
 						    		}	
 				    			}
-							 
 							 if(UtilValidate.isNotEmpty(shipmentIds)){
 								 tripSize=new BigDecimal(shipmentIds.size());
+							 }
+							 if(UtilValidate.isNotEmpty(vehicleTrpList)){
+								 tripSize=new BigDecimal(vehicleTrpList.size());
+								 routeMarginMap.put("partyId",vehicleTrip.getString("partyId"));
 							 }
 							 if(UtilValidate.isEmpty(shipmentIds)){//filled with zero
 								 tripSize=new BigDecimal(shipmentIds.size());
 								}
 							 BigDecimal actualCommision = tripSize.multiply(narmalMargin);
-							 
 	                         if(uomId.equals("LEN_km")){
 	                      	   actualCommision = actualCommision.multiply(facilitySize);
 				    		}
@@ -340,7 +354,6 @@ import java.text.SimpleDateFormat;
 	  			    		}*/
 							Timestamp lastDay = UtilDateTime.getDayEnd(supplyDate, timeZone, locale);
 							routeMarginMap.put("dueAmount", BigDecimal.ZERO);
-							
 							routeMarginMap.put("commision",actualCommision);
 							
 							int Days=UtilDateTime.getIntervalInDays(lastDay,monthEnd);
@@ -359,7 +372,6 @@ import java.text.SimpleDateFormat;
 						transporterMap.put(route, dayTotalsMap);
 					}
 					masterList.add(transporterMap);
-					//Debug.log("====masterList======="+masterList);
 					result =SalesHistoryServices.populateFacilityCommissiions(dctx, context, masterList,periodBillingId);	
 					if (ServiceUtil.isError(result)) {
 			    		generationFailed = true;
@@ -372,24 +384,25 @@ import java.text.SimpleDateFormat;
 					periodBilling.store();	
 					
 					Map transporterTradeResultMap=getTransporterTotalsForPeriodBilling(dctx, UtilMisc.toMap("periodBillingId",(Object)periodBillingId));
-					Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("routeTradingMap");
+					//Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("routeTradingMap");
+					Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
+					
 					if(UtilValidate.isNotEmpty(totalRouteTradingTotalMap)){
 					Iterator routeMarginsIter = totalRouteTradingTotalMap.entrySet().iterator();
 					
 					while (routeMarginsIter.hasNext()) {
 						Map.Entry routeEntry = (Entry) routeMarginsIter.next();	
 						String invoiceId="";
-						String facilityId = (String) routeEntry.getKey();	
+						//String facilityId = (String) routeEntry.getKey();	
+						String partyIdTo = (String) routeEntry.getKey();	
 						Map routeValues = (Map) routeEntry.getValue();
 						BigDecimal totalMargin = (BigDecimal) routeValues.get("totalMargin");
-						
 						BigDecimal quantity = BigDecimal.ONE;
+						Debug.log("===partyIdTo==="+partyIdTo+"=====");
+						/*GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId) ,false);
+						String partyIdTo = facilityDetail.getString("ownerPartyId");*/
 						
-						GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId) ,false);
-						
-						String partyIdTo = facilityDetail.getString("ownerPartyId");
-						
-						 if (UtilValidate.isEmpty(invoiceId)) {
+						 if (UtilValidate.isEmpty(invoiceId)&& UtilValidate.isNotEmpty(partyIdTo)) {
 				                Map<String, Object> createInvoiceContext = FastMap.newInstance();
 				                createInvoiceContext.put("partyId", partyIdTo);
 				                createInvoiceContext.put("partyIdFrom", "Company");
@@ -423,12 +436,13 @@ import java.text.SimpleDateFormat;
 				                    	generationFailed = true;
 				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
 				                    }
-				                    BigDecimal tdsMargin= totalMargin.divide(new BigDecimal(10));//for tax
+				                    //for TDS Commission.
+				                   /* BigDecimal tdsMargin= totalMargin.divide(new BigDecimal(10));//for tax
 				                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "TDS_194H","quantity",quantity,"amount", tdsMargin,"userLogin", userLogin));
 				                    if (ServiceUtil.isError(result)) {
 				                    	generationFailed = true;
 				    	                Debug.logWarning("There was an error while creating  the TDS InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
-				                    }
+				                    }*/
 				            }
 						
 					}//end of while
@@ -1088,7 +1102,9 @@ import java.text.SimpleDateFormat;
 				String periodBillingId = (String) context.get("periodBillingId");
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				Map<String, Object> routeTradingMap = new HashMap<String, Object>();
+				Map<String, Object> partyTradingMap = new HashMap<String, Object>();
 	        	String routeId = null;
+	        	String partyId = "";
 				if(!UtilValidate.isEmpty(periodBillingId)){
 					conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
 		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -1103,6 +1119,7 @@ import java.text.SimpleDateFormat;
 	                			BigDecimal totalMarginAmount = BigDecimal.ZERO; 
 	                			BigDecimal totalDueAmount = BigDecimal.ZERO;
 	                			routeId = (String)eachRoute.get("facilityId");
+	                			partyId = (String)eachRoute.get("partyId");
 	                			if(!UtilValidate.isEmpty(eachRoute.get("totalAmount"))){
 	                				totalMargin = (BigDecimal)eachRoute.get("totalAmount");
 	                			}    
@@ -1126,6 +1143,24 @@ import java.text.SimpleDateFormat;
 	                				marginDuesMap.put("totalDue", totalDue);
 	                				routeTradingMap.put(routeId, marginDuesMap);
 	                			}
+	                			//populating partyCommission Map
+	                			if(partyTradingMap.containsKey(partyId)){
+	                				BigDecimal margin = BigDecimal.ZERO; 
+	                				BigDecimal due = BigDecimal.ZERO;
+	                				marginDuesMap = (Map)partyTradingMap.get(partyId);
+	                				margin = (BigDecimal)marginDuesMap.get("totalMargin");
+	                				due = (BigDecimal)marginDuesMap.get("totalDue");
+	                				totalMarginAmount = margin.add(totalMargin);
+	                				totalDueAmount = due.add(totalDue);
+	                				marginDuesMap.put("totalMargin",totalMarginAmount); 
+	                				marginDuesMap.put("totalDue",totalDueAmount);
+	                				partyTradingMap.put(partyId,marginDuesMap);              				
+	                			}else{
+	                				marginDuesMap.put("totalMargin",totalMargin); 
+	                				marginDuesMap.put("totalDue", totalDue);
+	                				partyTradingMap.put(partyId, marginDuesMap);
+	                			}
+	                			
 	                		}
 	                	}
 		        	}catch(GenericEntityException e){
@@ -1133,6 +1168,7 @@ import java.text.SimpleDateFormat;
 		        	}
 				}			
 				result.put("routeTradingMap",routeTradingMap);
+				result.put("partyTradingMap",partyTradingMap);
 	        	return result;
 			}
 		    
@@ -1145,17 +1181,20 @@ import java.text.SimpleDateFormat;
 		        return sum;
 		    }
 		    
-		    /*public static Map<String, Object> populateVehicleTripParty(DispatchContext ctx, Map<String, ? extends Object> context ) {
+		    public static Map<String, Object> populateVehicleTripParty(DispatchContext ctx, Map<String, ? extends Object> context ) {
 		    	Delegator delegator = ctx.getDelegator();
+		    	LocalDispatcher dispatcher = ctx.getDispatcher();
 		    	Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
 		        List<String> facilityIds = (List<String>) context.get("facilityIds");
-		        List<String> shipmentIds = (List<String>) context.get("shipmentIds");
+		        List<String> shipmentIds = FastList.newInstance();
 		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		    	TimeZone timeZone = TimeZone.getDefault();
+		    	Locale locale = Locale.getDefault();
 		        Map<String, Object> vehicleTripResult = new HashMap<String, Object>();
 		        Map<String, Object> vehicleTripStatusResult = new HashMap<String, Object>();
 		        Map<String, Object> vehicleTripEntity = FastMap.newInstance(); 
 		        Map<String, Object> vehicleTripStatusEntity = FastMap.newInstance();
-		        
+		        Map<String, Object> result = FastMap.newInstance(); 
 		        List conditionList= FastList.newInstance(); 
 		        Timestamp fromDate = (Timestamp) context.get("fromDate");
 		        if (UtilValidate.isEmpty(fromDate)) {
@@ -1167,9 +1206,14 @@ import java.text.SimpleDateFormat;
 		            Debug.logError("thruDate cannot be empty", module);
 		            return ServiceUtil.returnError("thruDate cannot be empty");        	
 		        }     
-		        if (UtilValidate.isEmpty(shipmentIds)){
-	        		shipmentIds = getShipmentIds(delegator, fromDate, thruDate);
-	           	}
+		        String  seqId="";
+		        Debug.log("=====FromDate=="+fromDate+"=====thruDate===="+thruDate);
+		        boolean setVehicleStatusFinal = Boolean.FALSE;
+				try{  //getting configuration for vehcileStsus Set
+					 GenericValue tenantConfigVehicleStatusSet = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","setVehicleStatusFinal"), true);
+					 if (UtilValidate.isNotEmpty(tenantConfigVehicleStatusSet) && (tenantConfigVehicleStatusSet.getString("propertyValue")).equals("Y")) {
+						 setVehicleStatusFinal = Boolean.TRUE;
+					 	} 
 		    	Timestamp monthBegin = UtilDateTime.getDayStart(fromDate, timeZone, locale);
 				Timestamp monthEnd = UtilDateTime.getDayEnd(thruDate, timeZone, locale);
 				
@@ -1177,10 +1221,9 @@ import java.text.SimpleDateFormat;
 				Timestamp supplyDate = monthBegin;
 		        for (int k = 0; k <= (totalDays); k++) {
 					supplyDate = UtilDateTime.addDaysToTimestamp(monthBegin, k);
-					Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",supplyDate)).get("facilityPartyMap");
-					Debug.log("==facilityPartyRes==="+facilityPartyRes);
-					List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,null);	//get Day Shipments
-					 for (int i = 0; i <= (shipmentIds.size()); i++) {
+					Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(ctx, UtilMisc.toMap("saleDate",supplyDate)).get("facilityPartyMap");
+					 shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,null);	//get Day Shipments
+					 for (int i = 0; i <(shipmentIds.size()); i++) {
 						  String shipmentId=shipmentIds.get(i);
 							conditionList.clear();
 							conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -1195,15 +1238,16 @@ import java.text.SimpleDateFormat;
 					           	}
 								Map vehicleCtx = UtilMisc.toMap("facilityId",routeId);
 						        vehicleCtx.put("supplyDate", supplyDate);
-						        Map vehicleRoleResult =  (Map) ByProductNetworkServices.getVehicleRole(dctx,vehicleCtx);
+						        Map vehicleRoleResult =  (Map) ByProductNetworkServices.getVehicleRole(ctx,vehicleCtx);
 						        if(UtilValidate.isNotEmpty(vehicleRoleResult.get("vehicleRole"))){
 						        	 GenericValue vehicleRole= (GenericValue) vehicleRoleResult.get("vehicleRole");
-									 vehicleId=vehicleRole.getString("vehicleId");
+									String  vehicleId=vehicleRole.getString("vehicleId");
 							        if(UtilValidate.isNotEmpty(vehicleId)){
 							        	vehicleTripEntity.put("vehicleId", vehicleId);
 							        	vehicleTripStatusEntity.put("vehicleId", vehicleId);
 							        }
 							        vehicleTripEntity.put("originFacilityId", routeId);
+							        vehicleTripEntity.put("partyId", facilityParty.get(routeId));
 							        vehicleTripEntity.put("userLogin", userLogin);
 							        vehicleTripEntity.put("shipmentId", shipmentId);
 							        vehicleTripEntity.put("createdDate", nowTimeStamp);
@@ -1222,10 +1266,13 @@ import java.text.SimpleDateFormat;
 							            Debug.logError(e, "Error calling createVehicleTrip service", module);
 							            return ServiceUtil.returnError(e.getMessage());
 							        } 
-							        vehicleTripStatusEntity.put("facilityId",routesList.get(i));
+							        vehicleTripStatusEntity.put("facilityId",routeId);
 							        vehicleTripStatusEntity.put("sequenceNum", seqId);
 							        vehicleTripStatusEntity.put("userLogin", userLogin);
 							        vehicleTripStatusEntity.put("statusId", "VEHICLE_OUT");
+							        if(setVehicleStatusFinal){//if configuration set StatusFinal Y then stsus is Returned
+							        	 vehicleTripStatusEntity.put("statusId", "VEHICLE_RETURNED");
+							        }
 							        vehicleTripStatusEntity.put("createdDate", nowTimeStamp);
 							        vehicleTripStatusEntity.put("createdByUserLogin", userLogin.get("userLoginId"));
 							        vehicleTripStatusEntity.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
@@ -1257,7 +1304,13 @@ import java.text.SimpleDateFormat;
 							
 					 }
 		        }
-		    }*/
+				}catch (GenericEntityException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+				}	
+				result = ServiceUtil.returnSuccess("Service For UpdateVehicleStatus Runs Sucessfully");	        
+		        return result;
+		      }
 	}
 
 

@@ -23,5 +23,11 @@
         <description>Cancel Transporter Margin Invoice.</description>        
         <attribute name="periodBillingId" type="String" mode="IN" optional="false"/>               
     </service>
+     <service name="populateVehicleTripParty" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="populateVehicleTripParty">
+        <description>Update Vehcile Party and If exists,otherWise will create new one</description>        
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>   
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>                
+    </service>
     
     </services>

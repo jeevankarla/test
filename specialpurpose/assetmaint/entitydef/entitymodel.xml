@@ -241,6 +241,7 @@
 		<field name="sequenceNum" type="id-ne"></field>
 		<field name="originFacilityId" type="id-ne"></field>
 		<field name="shipmentId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
 		<field name="estimatedStartDate" type="date-time"></field>
 		<field name="estimatedEndDate" type="date-time"></field>
 		<field name="createdByUserLogin" type="id-vlong"></field>
@@ -257,6 +258,9 @@
 		</relation>
 		<relation type="one" fk-name="VEHR_SHPT" rel-entity-name="Shipment">
 			<key-map field-name="shipmentId" />
+		</relation>
+		<relation type="one" fk-name="VEHR_PARTY" rel-entity-name="Party">
+			<key-map field-name="partyId" />
 		</relation>
 	</entity>
 	<entity entity-name="VehicleTripStatus" package-name="org.ofbiz.assetmaint.vehicle "
