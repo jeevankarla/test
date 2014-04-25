@@ -2421,4 +2421,18 @@
             </widgets>
         </section>         
 	</screen>	 
+	<screen name="CategoryWiseSalesTXT">
+		<section>
+			<actions>
+				 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/CategoryWiseSalesReport.groovy" />
+			</actions>
+			<widgets>	
+			<platform-specific>
+				<xsl-fo>
+					<html-template	location="component://byproducts/webapp/byproducts/reports/boothWiseSalesReport.fo.ftl" />
+				</xsl-fo>
+			</platform-specific>			
+		    </widgets>								
+		</section>
+	</screen>
 </screens>

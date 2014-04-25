@@ -506,8 +506,15 @@ under the License.
             </link>
         </menu-item>
     </menu>
-   
-    <menu name="FindLocationsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="FacilityFixedDepositDtls">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="EditFixedDepositDetails">
+                <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+     <menu name="FindLocationsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditFacility" selected-menuitem-context-field-name="subTabButtonItem">
           <menu-item name="createnewlocation" title="${uiLabelMap.CreateNewLocation}">
             <link target="FacilityProfile"/>
@@ -700,7 +707,14 @@ under the License.
             <link target="EditFacilityPaymentDefault">
             	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
             </link>
-          </menu-item>          
+          </menu-item>
+          <menu-item name="EditFixedDepositDetails" title="Fixed Deposit">
+            <link target="EditFixedDepositDetails">
+            	<parameter param-name="facilityId" from-field="ctxFacilityId"/>    
+            </link>
+          </menu-item>   
+                  
+             
         <!--   <menu-item name="viewOwnerProfile" title="Owner Profile">
             <link target="viewprofile">
             	 <parameter param-name="partyId" from-field="ctxFacility.ownerPartyId"/>

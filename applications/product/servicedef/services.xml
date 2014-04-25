@@ -1666,6 +1666,7 @@ under the License.
         <description>Create A Booth</description>
         <auto-attributes entity-name="Facility" mode="IN" optional="true">
             <exclude field-name="facilityId"/>
+            <exclude field-name="openedDate"/>
         </auto-attributes>
         <auto-attributes entity-name="Person" mode="IN" optional="true">
             <exclude field-name="partyId"/>
@@ -1686,6 +1687,23 @@ under the License.
             <exclude field-name="partyId"/>
         </auto-attributes>
         <attribute name="facilityId" mode="INOUT" type="String"></attribute>
+        <attribute name="marginOnMilk" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="marginOnProduct" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="openedDate" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="fdrNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="bankName" type="String" mode="IN" optional="true"/>
+        <attribute name="branchName" type="String" mode="IN" optional="true"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="fDateStr" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="tDateStr" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="finAccountCode" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountName" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountBranch" type="String" mode="IN" optional="true"/>
+        <attribute name="ifscCode" type="String" mode="IN" optional="true"/>
+        <attribute name="fDate" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createRoute"  engine="java"  auth="true"
                 location="org.ofbiz.network.LmsServices" invoke="createRoute">
@@ -1773,4 +1791,60 @@ under the License.
         <attribute name="ifscCode" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="String" mode="IN" optional="true"/>
     </service> 
+    <service name="createFixedDepositDetails" engine="java"
+            location="org.ofbiz.network.LmsServices" invoke="createorUpdateFixedDeposit" auth="true">
+        <description>Fixed Deposit Amount</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="fdrNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="bankName" type="String" mode="IN" optional="false"/>
+        <attribute name="branchName" type="String" mode="IN" optional="true"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="String" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="String" mode="IN" optional="true"/>
+        <attribute name="actionFlag" type="String" mode="IN" optional="true"/>
+    </service> 
+    <service name="updateFixedDeposit" engine="java"
+            location="org.ofbiz.network.LmsServices" invoke="createorUpdateFixedDeposit" auth="true">
+        <description>Fixed Deposit Amount</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="fdrNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="bankName" type="String" mode="IN" optional="true"/>
+        <attribute name="branchName" type="String" mode="IN" optional="true"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="String" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="String" mode="IN" optional="true"/>
+        <attribute name="actionFlag" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBooth"  engine="java"  auth="true"
+                location="org.ofbiz.network.LmsServices" invoke="updateBooth">
+        <description>Create A Booth</description>
+        <auto-attributes entity-name="Facility" mode="IN" optional="true">
+            <exclude field-name="facilityId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="Person" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="PostalAddress" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="TelecomNumber" mode="IN" optional="true">
+            <exclude field-name="contactMechId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="Subscription" mode="IN" optional="true">
+            <exclude field-name="subscriptionId"/>
+        </auto-attributes> 
+        <auto-attributes entity-name="PartyContactMechPurpose" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes> 
+        <auto-attributes entity-name="PartyGroup" mode="IN" optional="true">
+            <exclude field-name="partyId"/>
+        </auto-attributes>
+        <attribute name="facilityId" mode="IN" type="String"></attribute>
+        <attribute name="marginOnMilk" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="marginOnProduct" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="contactMechId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="contactMechId" mode="IN" type="String" optional="true"></attribute>
+        </service> 
 </services>

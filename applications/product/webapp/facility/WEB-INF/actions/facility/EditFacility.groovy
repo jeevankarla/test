@@ -17,10 +17,15 @@
  * under the License.
  */
 
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
 
+import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+userLogin= context.userLogin;
 facilityId = parameters.facilityId;
 if (!facilityId && request.getAttribute("facilityId")) {
   facilityId = request.getAttribute("facilityId");
@@ -37,17 +42,33 @@ context.facility = facility;
 context.facilityType = facilityType;
 context.facilityId = facilityId;
 if (facility && facility.ownerPartyId) {
-partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: facility.ownerPartyId, userLogin: userLogin]);
+partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: facility.ownerPartyId, userLogin: userLogin,contactMechPurposeTypeId:"PHONE_HOME"]);
 context.contactNumber = partyTelephone.contactNumber;
-context.contactMechId = partyTelephone.contactMechId;
-}
+partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: facility.ownerPartyId, userLogin: userLogin,contactMechPurposeTypeId:"PRIMARY_PHONE"]);
+context.mobileNumber = partyTelephone.contactNumber;
+partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId: facility.ownerPartyId, userLogin: userLogin]);
+context.partyPostalAddress = partyPostalAddress;
+context.address1 = partyPostalAddress.address1;
+context.address2 = partyPostalAddress.address2;
+context.city = partyPostalAddress.city;
+context.postalCode = partyPostalAddress.postalCode;
 
+email= dispatcher.runSync("getPartyEmail", [partyId: facility.ownerPartyId, userLogin: userLogin,contactMechPurposeTypeId:"PRIMARY_EMAIL"]);
+context.emailAddress = email.emailAddress;
+}
 //Facility types
 facilityTypes = delegator.findList("FacilityType", null, null, null, null, false);
 if (facilityTypes) {
   context.facilityTypes = facilityTypes;
 }
-
+conditionList=[];
+conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS,"CR_INST_MRGN"));
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, facility.ownerPartyId,));
+condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+fieldsToSelect = ["byprodProductPriceTypeId","lmsProductPriceTypeId","fromDate"] as Set;
+rateAmountList = delegator.findList("RateAmount", condition1, fieldsToSelect , ["-fromDate"], null, false);
+GenericValue rateAmountTypes= EntityUtil.getFirst(rateAmountList);
+context.rateAmountTypes = rateAmountTypes;
 // all possible inventory item types
 context.inventoryItemTypes = delegator.findList("InventoryItemType", null, null, ['description'], null, true);
 

@@ -60,7 +60,7 @@ under the License.
         <field name="description"><display/></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="FacilitySearchResults"/>
     </form>
-	<form name="ViewFacilityProfile" type="single" default-map-name="lookupFacility">   
+	<form name="ViewFacilityProfile" type="single" default-map-name="">   
 		<actions>
 			<set field="routeDetails" value="${groovy:import org.ofbiz.base.util.*; return (org.ofbiz.network.NetworkServices.getBoothRoute(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;boothId&quot;,facilityId))).get(&quot;boothDetails&quot;);}" type="Object"/>
 			<set  field="routeId" value="${groovy: routeDetails.get(&quot;routeId&quot;)}"/>
@@ -70,10 +70,19 @@ under the License.
         <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}"><display description="${facility.categoryTypeEnum}"/></field>
         <field name="ownerPartyId" title="Owner"><display description="${facility.ownerPartyId}"/></field>  
         <field name="routeId" title="${uiLabelMap.Route}" sort-field="true"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
-        <field name="contactNumber" title="Mobile Number"><display/></field>     
+        <field name="address1" title="${uiLabelMap.CommonAddress1}"><display/></field>
+        <field name="address2" title="${uiLabelMap.CommonAddress2}"><display/></field>
+        <field name="city" title="${uiLabelMap.CommonCity}"><display/></field>
+        <field name="postalCode" title="Pin" ><display/></field>
+        <field name="contactNumber" title="Phone Number"><display/></field>
+        <field name="mobileNumber" title="${uiLabelMap.Mobile}"><display/></field>
+        <field name="emailAddress" title="${uiLabelMap.Email}"><display/></field>
         <field name="facilityName" title="Name"><display description="${facility.facilityName}"/></field>
         <field name="sequenceNum" title="sequence"><display description="${facility.sequenceNum}"/></field>
         <field name="description"><display description="${facility.description}"/></field>
+        <field name="openedDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(facility.openedDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="closedDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(facility.closedDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="securityDeposit"><display description="${facility.securityDeposit}"/></field>
     </form>
     <form name="FacilityFinAccount" type="list" list-name="finAccountList" 
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -2135,11 +2144,59 @@ under the License.
          		</entity-options>
          	</drop-down>
          </field>
+        <field name="actionFlag"><hidden value="update"/></field>
         <field name="finAccountCode" title="Bank AccNo"><text/></field>
         <field name="finAccountName" title="Bank Name"><text/></field>
         <field name="finAccountBranch" title="Branch Name"><text/></field>
         <field name="ifscCode" title="IFSC CODE"><text/></field>
         <field name="fromDate" title="From Date"><date-time type="timestamp"/></field>
+        <field name="submitButton" title="Update" separate-column="true">
+            <submit button-type="button"/>
+        </field>
+    </form>
+     <form name="FacilityFixedDepositDtls" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="createFixedDepositDetails"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<field name="actionFlag"><hidden value="update"/></field>
+		<field name="facilityId" title="Facility Id"><display/></field>
+		<field name="fdrNumber" title="Date of FDR"> <text/></field>
+        <field name="bankName" title="Bank Name"><text/></field>
+        <field name="branchName" title="Branch Name"><text/></field>
+        <field name="amount" title="Acrrued balance in the deposit"><text/></field>
+        <field name="fromDate" title="Date of opening of the deposit"><date-time type="timestamp"/></field>
+        <field name="thruDate" title="Date of closure of the deposit"><date-time type="timestamp"/></field>
+        <field name="submitButton" title="Update" separate-column="true">
+            <submit button-type="button"/>
+        </field>
+    </form>
+     <form name="ListFacilityDepositAmount" odd-row-style="alternate-row" header-row-style="header-row" type="list" target="updateFixedDeposit"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="facilityDepositList"> 
+    	<actions>
+			<entity-condition entity-name="FacilityFixedDeposit" list="facilityDepositList">
+			   <condition-list combine="and">
+			       <condition-expr field-name="facilityId" from-field="facilityId"/>
+			   </condition-list>
+    		</entity-condition>
+		</actions>
+		<row-actions>
+		    <set field="facilityId" from-field="facilityId"/>
+		</row-actions>
+		<field name="actionFlag"><hidden value="update"/></field>
+		<field name="facilityId" title="Facility Id"><display/></field>
+    	<field name="fdrNumber" title="Date of FDR"><display/></field>
+        <field name="bankName" title="Bank Name"><display/></field>
+        <field name="branchName" title="Branch Name"><display/></field>
+        <field name="amount" title="Amount"><text size="10"/></field>
+        <field name="fromDate" title="From Date"><display size="10" type="date"/></field>
+        <field name="thruDate" title="Thru Date"><date-time type="timestamp" /></field>
+        <!--<field name="deleteLink" title="Delete" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="updateFixedDeposit">
+                <parameter param-name="facilityId"/>
+                <parameter param-name="fdrNumber"/>
+                <parameter param-name="bankName"/>
+                <parameter param-name="actionFlag" value="delete"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field>-->
         <field name="submitButton" title="Update" separate-column="true">
             <submit button-type="button"/>
         </field>

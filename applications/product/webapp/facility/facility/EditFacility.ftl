@@ -21,13 +21,25 @@ under the License.
       function setClosedDateNull(){      
       	$('#closedDate').val('');      
       } 
-       
+      function hideorshow(){
+	    var categoryTypeEnum =$( "#categoryTypeEnum option:selected" ).val();
+		if(categoryTypeEnum == "CR_INST"){
+		    jQuery("#marginOnMilk").parent().parent().show();
+			jQuery("#marginOnProduct").parent().parent().show();
+		}else{
+			jQuery("#marginOnMilk").parent().parent().hide();
+			jQuery("#marginOnProduct").parent().parent().hide();
+		}
+	}
+	  $(document).ready(function(){
+	   hideorshow();
+	}); 
 </script>
 
 <#if facility?exists && facilityId?has_content>
   <#assign ownerPartyName = (delegator.findOne("PartyNameView", {"partyId" : facility.ownerPartyId}, true))?if_exists />
 
-  <form action="<@ofbizUrl>UpdateFacility</@ofbizUrl>" name="EditFacilityForm" method="post">
+  <form action="<@ofbizUrl>UpdateBooth</@ofbizUrl>" name="EditFacilityForm" method="post">
   <input type="hidden" name="facilityId" value="${facilityId?if_exists}" />
   <input type='hidden' name='contactMechId' value='${contactMechId?if_exists}' />
   
@@ -62,7 +74,7 @@ under the License.
           <td class="label">${uiLabelMap.ProductFacilityCategoryType}</td>
           <td>
             <#assign enumerations = delegator.findByAnd("Enumeration", Static["org.ofbiz.base.util.UtilMisc"].toMap("enumTypeId", "BOOTH_CAT_TYPE"))>
-            <select name="categoryTypeEnum">
+            <select name="categoryTypeEnum" id="categoryTypeEnum" onchange="javascript:hideorshow();">
                 <#assign categoryTypeEnum = facility.categoryTypeEnum?if_exists>
         		<option selected="selected" value='${categoryTypeEnum?if_exists}'>${categoryTypeEnum?if_exists}</option>
         		<option value=""></option>                
@@ -87,9 +99,33 @@ under the License.
     </td>
   </tr>
   <tr>
-    <td class="label">Mobile Number</td>
-    <td><input type="text" name="contactNumber" value="${contactNumber?if_exists}" size="10" maxlength="10" /></td>
+    <td class="label">Address1</td>
+    <td><input type="text" name="address1" value="${partyPostalAddress.address1?if_exists}" maxlength="30" /></td>
   </tr>  
+   <tr>
+    <td class="label">Address2</td>
+    <td><input type="text" name="address2" value="${partyPostalAddress.address2?if_exists}"  maxlength="30" /></td>
+  </tr>  
+   <tr>
+    <td class="label">City</td>
+    <td><input type="text" name="city" value="${partyPostalAddress.city?if_exists}" maxlength="10" /></td>
+  </tr> 
+   <tr>
+    <td class="label">PostalCode</td>
+    <td><input type="text" name="postalCode" value="${partyPostalAddress.postalCode?if_exists}" maxlength="10" /></td>
+  </tr>  
+  <tr>
+    <td class="label">Phone Number</td>
+    <td><input type="text" name="contactNumber" value="${contactNumber?if_exists}"  maxlength="10" /></td>
+  </tr>  
+  <tr>
+    <td class="label">Mobile Number</td>
+    <td><input type="text" name="mobileNumber" value="${mobileNumber?if_exists}"  maxlength="10" /></td>
+  </tr>  
+   <tr>
+    <td class="label">Email</td>
+    <td><input type="text" name="emailAddress" value="${emailAddress?if_exists}" maxlength="30" /></td>
+  </tr> 
 <#if (enableInventory?if_exists && enableInventory)>    
   <tr>
     <td class="label">${uiLabelMap.ProductFacilityDefaultWeightUnit}</td>
@@ -156,10 +192,43 @@ under the License.
   </tr>  
   <tr>
     <td class="label">${uiLabelMap.Description}</td>
-    <td ><input type="text" name="description" value="${facility.description?if_exists}" size="60" maxlength="250" /></td>
+    <td ><input type="text" name="description" value="${facility.description?if_exists}" size="30" maxlength="250" /></td>
   </tr>
   <tr>
+    <td class="label">Security Deposit</td>
+    <td ><input type="text" name="securityDeposit" value="${facility.securityDeposit?if_exists}" size="10" maxlength="250" /></td>
+  </tr>
+  <tr>
+    <td class="label">Margin Allowed On Milk</td>
+    <td > 
+          <select name="marginOnMilk" id="marginOnMilk" >
+          <#if rateAmountTypes != null && rateAmountTypes?has_content>
+              <option value="${rateAmountTypes.lmsProductPriceTypeId?if_exists}" selected>${rateAmountTypes.lmsProductPriceTypeId?if_exists}</option>
+            </#if> 
+        	<option value="DEFAULT_PRICE">DEFAULT_PRICE</option> 
+        	<option value="MRP_PRICE">MRP_PRICE</option>            
+          </select>   
+  </td>
+  </tr>
+  <tr>
+    <td class="label">Margin Allowed On Product</td>
+    <td > 
+          <select name="marginOnProduct" id="marginOnProduct" >
+            <#if rateAmountTypes != null && rateAmountTypes?has_content >
+            <option value="${rateAmountTypes.byprodProductPriceTypeId?if_exists}" selected>${rateAmountTypes.byprodProductPriceTypeId?if_exists}</option>
+            </#if>
+        	<option value="DEFAULT_PRICE">DEFAULT_PRICE</option> 
+        	<option value="MRP_PRICE" >MRP_PRICE</option>            
+          </select>   
+  </td>
+  </tr>
    <tr>
+   <tr>
+       <td class="label">Date of Commissioning</td>
+       <td>	 
+         <@htmlTemplate.renderDateTimeField name="openedDate" event="" action="" value="${facility.openedDate?if_exists}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="20" maxlength="20" id="openedDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+       </td>      
+  </tr>
     <td class="label">${uiLabelMap.ClosedDate}</td>
        <td>	
          <@htmlTemplate.renderDateTimeField name="closedDate" event="" action="" value="${facility.closedDate?if_exists}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="20" maxlength="20" id="closedDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
@@ -168,6 +237,7 @@ under the License.
        </#if>
        </td>      
   </tr>
+  <tr>
     <td class="label">${uiLabelMap.UseEcs}</td>
        <td>
           <select name="useEcs" >

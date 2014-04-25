@@ -122,6 +122,13 @@ under the License.
         <response name="success" type="view" value="EditFacility"/>
         <response name="error" type="view" value="EditFacility"/>
     </request-map>
+    <request-map uri="UpdateBooth">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBooth"/>
+         <response name="success" type="request-redirect" value="FacilityOverView">
+            <redirect-parameter name="facilityId"/>
+        </response>
+    </request-map>
     <request-map uri="CreateRoute">
         <security https="true" auth="true"/>
         <event type="service" invoke="createRoute"/>
@@ -711,6 +718,14 @@ under the License.
         <response name="success" type="view" value="EditFacilityPaymentDefault"/>
         <response name="error" type="view" value="EditFacilityPaymentDefault"/>
     </request-map>
+     <request-map uri="createFixedDepositDetails">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFixedDepositDetails"/>
+        <response name="success" type="view" value="EditFixedDepositDetails"/>
+        <response name="error" type="view" value="EditFixedDepositDetails"/>
+    </request-map>
+     
+      
      <request-map uri="updateFacilityRoute">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFacilityRoute"/>
@@ -1213,6 +1228,10 @@ under the License.
     <request-map uri="EditFacilityPaymentDefault">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityPaymentDefault"/>
+    </request-map>
+     <request-map uri="EditFixedDepositDetails">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedDepositDetails"/>
     </request-map>
     <request-map uri="createFacilityContent">
         <security auth="true" https="true"/>
@@ -2028,7 +2047,8 @@ under the License.
     <view-map name="EditFacilityRoute" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityRoute"/>
     <view-map name="EditFacilityPaymentDefault" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityPaymentDefault"/>
     <view-map name="EditFacilityGeoPoint" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFacilityGeoPoint"/>
-
+    <view-map name="EditFixedDepositDetails" type="screen" page="component://product/widget/facility/FacilityScreens.xml#EditFixedDepositDetails"/>
+ 
     <view-map name="FindShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#FindShipment"/>
     <view-map name="ViewShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#ViewShipment"/>
     <view-map name="EditShipment" type="screen" page="component://product/widget/facility/ShipmentScreens.xml#EditShipment"/>

@@ -354,9 +354,9 @@
                                                <label style="h1">New Booth</label>
                                                <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
                                
-                                               <include-form name="EditBoothForm" location="component://product/widget/facility/FacilityForms.xml"/>
-                                               <!-- <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
- -->                                       </widgets>
+                                               <!--<include-form name="EditBoothForm" location="component://product/widget/facility/FacilityForms.xml"/>-->
+                                               <platform-specific><html><html-template location="component://product/webapp/facility/facility/CreateFacility.ftl"/></html></platform-specific>
+                                      </widgets>
                                        </section> 
                                        <section>
                                            <condition>
