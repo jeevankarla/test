@@ -236,6 +236,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="getRetailerFullDues">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/" invoke="retailerPastDues.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     
     <!-- <request-map uri="byProdReports">
         <security https="true" auth="true"/>

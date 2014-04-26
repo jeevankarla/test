@@ -12,7 +12,8 @@
 								}
 					 };
 */								 
-	var boothsData = ${StringUtil.wrapString(boothsDuesDaywiseJSON)}							 
+	var boothsData;			
+	var boothId;			 
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
 	 * We'll use this method to create both our prompt and confirm dialogues
@@ -45,6 +46,7 @@
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
+				   $('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
 					$('button', api.elements.content).click(api.hide);
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
@@ -52,33 +54,70 @@
 			}
 		});
 	}
- 
+	
 	function Alert(message, title)
 	{
 		// Content will consist of the message and an ok button
-		var message = $('<p />', { html: message }),
-			ok = $('<button />', { text: 'Ok', 'class': 'full' });
- 
-		dialogue( message.add(ok), title );
+		
+		dialogue( message, title );
 	}
 	
-	function showPaymentHistory(boothId) {
-		//alert("boothId=" + boothId);
+	function showPaymentHistory() {
 		
-		var boothMap = boothsData[boothId];
-		var boothPayments = boothMap["boothDuesList"];
 		var message = "";
-		message += "<table cellspacing=10 cellpadding=10>" ; 		
-		for (i = 0; i < boothPayments.length; ++i) {
-			//message += boothPayments[i].supplyDate + " ";
-			//message += boothPayments[i].amount + " ";	
-			//message += "<br/><br/>";	
-			message += "<tr><td align='left'>" + boothPayments[i].supplyDate + "</td><td align='right'>" +
-				boothPayments[i].amount + "</td></tr>";
+		var title = "";
+		if(boothsData != undefined){
+			
+			message += "<table cellspacing=10 cellpadding=10>" ;
+		
+			var boothMap = boothsData[boothId];
+			var boothPayments = boothMap["boothDuesList"];
+		 		
+			for (i = 0; i < boothPayments.length; ++i) {
+				message += "<tr><td align='left'>" + boothPayments[i].supplyDate + "</td><td align='right'>" +
+					boothPayments[i].amount + "</td></tr>";
+				
+					
+			}
+			message += "<tr class='h3'><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();' class='submit'>Close</button></span></td></tr>";
+			title = "Dues for Booth " + boothId + "<br /> [Total: " + boothMap["totalAmount"] + "]";
+			message += "</table>";
+			Alert(message, title);
 		}
-		message += "<tr class='h3'><td class='h3' align='center'><span align='center'><button value='${uiLabelMap.CommonOk}' onclick='return cancelForm();' class='submit'>Close</button></span></td></tr>";
-		message += "</table>";	
-		var title = "Dues for Booth " + boothId + "<br /> [Total: " + boothMap["totalAmount"] + "]";
-		Alert(message, title);
+		
 	};
+	
+	function showSpinner() {
+		
+		var message = "";
+		var title = "";
+		message += "<div align='center' name ='displayMsg' id='pastDues_spinner'/><button onclick='return cancelForm();' class='submit'/>";
+		Alert(message, title);
+		
+	};
+	function cancelShowSpinner(){
+		$('button').click();
+		return false;
+	}
+	
+	function showRetailerDueHistory(retailerId) {
+		boothId = retailerId;
+		var dataJson = {"boothId": boothId};
+		showSpinner();
+		jQuery.ajax({
+                url: 'getRetailerFullDues',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in getting past dues");
+					}else{
+					    boothsData = result["boothsDuesDaywiseJSON"];
+					    cancelShowSpinner();
+					  	showPaymentHistory(boothId);
+               		}
+               	}							
+		});
+	}	
 </script>

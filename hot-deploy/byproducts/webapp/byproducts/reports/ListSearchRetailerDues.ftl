@@ -157,8 +157,9 @@ under the License.
           <td>Retailer Code</td>
           <td>Retailer Name</td>
           <td>${uiLabelMap.Route}</td>
-            <td>PaymentMethodType</td>
-          <td>Current Due</td>
+          <td>PaymentMethodType</td>
+          <td>Todays Due</td>
+          <td>Full Dues</td>
           <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
           		<td>Payment Amount</td>
           		<td align="right">${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllFacilities" name="checkAllFacilities" onchange="javascript:toggleFacilityId(this);"/></td>
@@ -185,6 +186,7 @@ under the License.
                 ${(payment.paymentMethodTypeDesc)?if_exists}
               </td>
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
+              <td><input type="button" name="viewDues" id="pastDues" value="View Details" onclick="javascript:showRetailerDueHistory('${payment.facilityId}');"/></td>
               <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
               		<td><input type="text" name="paymentAmount" id="paymentAmount"></td>
               		<td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:getBoothRunningTotal();"/></td>

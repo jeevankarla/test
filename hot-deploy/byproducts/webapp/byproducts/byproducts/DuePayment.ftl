@@ -42,6 +42,7 @@
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
 					populateAccountDetails();
+					$('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
 					$('button', api.elements.content).click(api.hide);
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!

@@ -1884,11 +1884,12 @@
 														<parameter param-name="statusId" from-field="parameters.statusId"/>	
 									  	        	</link>
 									  	        	-->
+									  	        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>
 									  	        	<platform-specific><html>
 												  		<html-template location="component://byproducts/webapp/byproducts/byproducts/DuePayment.ftl"/>
 												  		</html>
 												  	</platform-specific>
-									  	        	<platform-specific>
+												  	<platform-specific>
                                             			<html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchRetailerDues.ftl"/></html>
                                         			</platform-specific>
 										        </screenlet>
