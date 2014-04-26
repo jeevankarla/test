@@ -342,7 +342,7 @@ under the License.
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
                     <entity-constraint name="isClosed" operator="equals" value="N" />                    
-                    <entity-constraint name="thruDate" operator="less" env-name="nowDate" />                    
+                    <!-- <entity-constraint name="thruDate" operator="less" env-name="nowDate" />  -->                   
                     <entity-order-by field-name="-thruDate"/>
                 </entity-options>
             </drop-down>
