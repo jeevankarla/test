@@ -704,4 +704,9 @@
     <Enumeration enumId="ACCOUNT_INVOICE" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Invoice Accounting Configurations"/>
     <TenantConfiguration propertyName="enablePayrollInvAcctg" propertyValue="Y" propertyTypeEnumId="ACCOUNT_INVOICE" description="Enable invoice level accounting for Payroll"/>
      
+      <PaymentMethodType description="Bank Payments" paymentMethodTypeId="BANK"  />
+      <PaymentMethodType description="Cash Payments" paymentMethodTypeId="CASH"  />
+      <PaymentMethodType description="Company Check" paymentMethodTypeId="COMPANY_CHECK" defaultGlAccountId="" parentTypeId="BANK" />
+      <PaymentMethodType description="Cash Receipt" paymentMethodTypeId="CASH_PAYIN" defaultGlAccountId="" parentTypeId="CASH"/>
+    
 </entity-engine-xml>

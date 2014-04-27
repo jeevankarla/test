@@ -1315,6 +1315,7 @@
 		<field name="dueDate" type="date-time"></field>
 		<field name="paidDate" type="date-time"></field>
 		<field name="periodBillingId" type="id"></field>
+		<field name="prefPaymentMethodTypeId" type="id"></field>
 		<field name="invoiceMessage" type="long-varchar"></field>
 		<field name="referenceNumber" type="short-varchar"></field> <!-- used to record things like the vendor's invoice number -->
 		<field name="description" type="description"></field>
@@ -1323,6 +1324,9 @@
 		<field name="createdByUserLogin" type="id-vlong"></field>
 		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
 		<prim-key field="invoiceId" />
+		<relation type="one" fk-name="INVOICE_PMPRF_PMTP" rel-entity-name="PaymentMethodType">
+        <key-map  rel-field-name="prefPaymentMethodTypeId" field-name="paymentMethodTypeId"/>
+        </relation>
 		<relation type="one" fk-name="INVOICE_INVTYP"
 			rel-entity-name="InvoiceType">
 			<key-map field-name="invoiceTypeId" />
@@ -3577,6 +3581,7 @@
 		<field name="paymentMethodTypeId" type="id-ne"></field>
 		<field name="description" type="description"></field>
 		<field name="defaultGlAccountId" type="id"></field>
+		<field name="parentTypeId" type="id-ne"></field>
 		<prim-key field="paymentMethodTypeId" />
 		<relation type="one" fk-name="PAYMENT_MTP_DGLAC" title="Default"
 			rel-entity-name="GlAccount">
@@ -4824,6 +4829,7 @@
       <field name="periodBillingId" type="id-ne"></field>
       <field name="commissionDate" type="date-time"></field>
       <field name="facilityId" type="id"></field>
+      <field name="partyId" type="id"></field>
       <field name="totalQty" type="fixed-point"/>
       <field name="cardQty" type="fixed-point"/>
       <field name="cashQty" type="fixed-point"/> 
@@ -4845,7 +4851,10 @@
       </relation>        
       <relation type="one" fk-name="FC_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
-      </relation>    
+      </relation>   
+      <relation type="many" fk-name="FC_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>   
     </entity>
     <view-entity entity-name="FacilityAndCommission" package-name="org.ofbiz.product.facility" title="Facility and Facility Commission View Entity">
         <member-entity entity-alias="FC" entity-name="FacilityCommission"/>

@@ -232,7 +232,9 @@ under the License.
         <attribute name="issuingAuthorityBranch" type="String" mode="IN" optional="true"/>
         <attribute name="instrumentDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="isEnableAcctg" type="String" mode="IN" optional="true"/>  
-        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>      
+        <attribute name="comments" type="String" mode="IN" optional="true"/>    
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>  
+          
     </service>
     <service name="settleInvoiceAndPayments" engine="java"
             location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="settleInvoiceAndPayments" auth="true">
@@ -304,5 +306,20 @@ under the License.
         <description>calculate un applied invoice total for selected payment</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>       
         <attribute name="unAppliedAmountTotal" type="BigDecimal" mode="OUT" optional="false"/>
+    </service>
+    
+     <service name="createVoucherPayment" engine="java"
+      location="org.ofbiz.accounting.payment.PaymentWorker"  invoke="createVoucherPayment">
+        <description> create Voucher Payment From AR or AP Invoices</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="true"/>
+        <attribute name="partyIdFrom" mode="IN" type="String" optional="false"/>
+        <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
+        <attribute name="amount" mode="IN" type="String" optional="false"/>
+        <attribute name="orderId" mode="IN" type="String" optional="true"/> 
+         <attribute name="invoiceId" mode="IN" type="String" optional="false"/> 
+         <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/> 
+         <attribute name="paymentTypeId" mode="IN" type="String" optional="true"/> 
+         <attribute name="comments" mode="IN" type="String" optional="true"/> 
+         
     </service>
 </services>

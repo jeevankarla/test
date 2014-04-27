@@ -3951,6 +3951,7 @@ public class InvoiceServices {
         String statusId = (String) context.get("statusId");
         String partyId =(String) context.get("partyId");
         String facilityId =(String) context.get("facilityId");
+        String comments=(String) context.get("comments");
         Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
         List invoiceIds =(List) context.get("invoices");
         String paymentId = "";
@@ -3990,6 +3991,7 @@ public class InvoiceServices {
             paymentCtx.put("statusId", statusId);            
             paymentCtx.put("amount", paymentAmount);
             paymentCtx.put("userLogin", userLogin);
+            paymentCtx.put("comments", comments);
             paymentCtx.put("facilityId", facilityId);
             paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
             paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));

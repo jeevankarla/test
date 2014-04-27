@@ -2440,6 +2440,13 @@
         <value xml:lang="th">ใบเสร็จรับเงินการสั่งซื้อใหม่</value>
         <value xml:lang="zh">新建购货发票</value>
     </property>
+    <property key="AccountingCreateNewCashPurchaseInvoice">
+        <value xml:lang="en">New Cash Purchase Invoice</value>
+    </property>
+     <property key="AccountingCreateNewBankPurchaseInvoice">
+        <value xml:lang="en">New Bank Purchase Invoice</value>
+    </property>
+    
     <property key="AccountingCreateNewSalesInvoice">
         <value xml:lang="de">Neue Verkaufsrechnung</value>
         <value xml:lang="en">New Sales Invoice</value>
@@ -2450,6 +2457,12 @@
         <value xml:lang="ru">Новая расходная накладная</value>
         <value xml:lang="th">ใบกำกับสินค้าใหม่</value>
         <value xml:lang="zh">新建销售发票</value>
+    </property>
+    <property key="AccountingCreateNewCashSalesInvoice">
+        <value xml:lang="en">New Cash Sales Invoice</value>
+    </property>
+     <property key="AccountingCreateNewBankSalesInvoice">
+        <value xml:lang="en">New Bank Sales Invoice</value>
     </property>
     <property key="AccountingCreateNewWithdrawalPayment">
         <value xml:lang="en">Create New Withdrawal Payment</value>
