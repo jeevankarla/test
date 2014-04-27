@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
 import java.util.Map;
+import java.sql.Timestamp;
 
 import javax.servlet.ServletRequest;
 
@@ -33,6 +34,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -43,6 +45,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.product.product.ProductEvents;
 
 
 /**
@@ -418,6 +421,71 @@ public class PaymentWorker {
         }
         return paymentsNotAppliedList;
     }
-
+    public static Map<String, Object> createVoucherPayment(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String facilityId = (String) context.get("facilityId");
+        String invoiceId = (String) context.get("invoiceId");
+        String orderId = (String) context.get("orderId");
+        BigDecimal paymentAmount = ProductEvents.parseBigDecimalForEntity((String) context.get("amount"));
+        String paymentMethodType = (String) context.get("paymentMethodTypeId");
+        String paymentType = (String) context.get("paymentTypeId");
+        String comments = (String) context.get("comments");
+        
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        boolean useFifo = Boolean.FALSE;       
+        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
+        	useFifo = (Boolean)context.get("useFifo");
+        }
+        //String paymentType = "SALES_PAYIN";
+        String partyIdTo =(String)context.get("partyIdTo") ;   //"Company";
+        String partyIdFrom =(String)context.get("partyIdFrom");
+        String paymentId = "";
+        boolean roundingAdjustmentFlag =Boolean.TRUE;
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        List exprListForParameters = FastList.newInstance();
+        List boothOrdersList = FastList.newInstance();
+        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+      
+        Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+        try {
+        Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
+        Debug.log("===paymentMethodType===="+paymentMethodType+"===partyIdFrom==="+partyIdFrom+"===partyId=="+partyIdTo+"==paymentMethodType=="+paymentMethodType+"===paymentType=="+paymentType);
+        paymentCtx.put("paymentMethodTypeId", paymentMethodType);
+        paymentCtx.put("organizationPartyId", partyIdTo);
+        paymentCtx.put("partyId", partyIdFrom);
+        paymentCtx.put("facilityId", facilityId);
+        paymentCtx.put("comments", comments);
+        //paymentCtx.put("paymentPurposeType", "ROUTE_MKTG");
+        /*if (!UtilValidate.isEmpty(paymentLocationId) ) {
+            paymentCtx.put("paymentLocationId", paymentLocationId);                        	
+        }   */         
+      /*  if (!UtilValidate.isEmpty(paymentRefNum) ) {
+            paymentCtx.put("paymentRefNum", paymentRefNum);                        	
+        }*/
+       // paymentCtx.put("issuingAuthority", issuingAuthority);  
+       // paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
+        paymentCtx.put("instrumentDate", instrumentDate);
+        
+        paymentCtx.put("statusId", "PMNT_RECEIVED");
+        //paymentCtx.put("isEnableAcctg", "N");
+        paymentCtx.put("amount", paymentAmount);
+        paymentCtx.put("userLogin", userLogin); 
+        paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
+		
+        Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+        if (ServiceUtil.isError(paymentResult)) {
+        	Debug.logError(paymentResult.toString(), module);
+            return ServiceUtil.returnError(null, null, null, paymentResult);
+        }
+        paymentId = (String)paymentResult.get("paymentId");
+        }catch (Exception e) {
+        Debug.logError(e, e.toString(), module);
+        return ServiceUtil.returnError(e.toString());
+        }
+         result = ServiceUtil.returnSuccess("Payment successfully done for Party "+partyIdTo+" ..!");
+        return result; 
+   }
+   
     
 }

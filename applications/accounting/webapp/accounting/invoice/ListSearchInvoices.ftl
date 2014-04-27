@@ -16,7 +16,93 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+<link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
+
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
+
+
 <script type="text/javascript">
+
+	var voucherPaymentMethodTypeMap = ${StringUtil.wrapString(voucherPaymentMethodJSON)!'{}'};
+	var paymentMethodList;
+/*
+	 * Common dialogue() function that creates our dialogue qTip.
+	 * We'll use this method to create both our prompt and confirm dialogues
+	 * as they share very similar styles, but with varying content and titles.
+	 */
+	 var booth;
+	 var dueAmount;
+	 var paymentMethod;
+	function dialogue(content, title) {
+		/* 
+		 * Since the dialogue isn't really a tooltip as such, we'll use a dummy
+		 * out-of-DOM element as our target instead of an actual element like document.body
+		 */
+		$('<div />').qtip(
+		{
+			content: {
+				text: content,
+				title: title
+			},
+			position: {
+				my: 'center', at: 'center', // Center it...
+				target: $(window) // ... in the window
+			},
+			show: {
+				ready: true, // Show it straight away
+				modal: {
+					on: true, // Make it modal (darken the rest of the page)...
+					blur: false // ... but don't close the tooltip when clicked
+				}
+			},
+			hide: false, // We'll hide it maunally so disable hide events
+			style: {name : 'cream'}, //'ui-tooltip-light ui-tooltip-rounded ui-tooltip-dialogue', // Add a few styles
+			events: {
+				// Hide the tooltip when any buttons in the dialogue are clicked
+				render: function(event, api) {
+					populateDate();
+					$('button', api.elements.content).click(api.hide);
+				},
+				// Destroy the tooltip once it's hidden as we no longer need it!
+				hide: function(event, api) { api.destroy(); }
+			}
+		});		
+	}
+ 
+	function Alert(message, title)
+	{
+		// Content will consist of the message and an cancel and submit button
+		var message = $('<p />', { html: message }),
+			cancel = $('<button />', { text: 'cancel', 'class': 'full' });
+ 
+		dialogue(message, title );		
+		
+	}
+	//endof qtip;
+
+
+function cancelForm(){		 
+		return false;
+	}
+	function disableGenerateButton(){			
+		   $("input[type=submit]").attr("disabled", "disabled");
+		  	
+	}
+
+function datepick()
+	{		
+		$( "#effectiveDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1});
+		$( "#paymentDate" ).datepicker({
+			dateFormat:'dd/mm/yy',
+			changeMonth: true,
+			numberOfMonths: 1});		
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+	}
 //<![CDATA[
 
     function toggleInvoiceId(master) {
@@ -91,6 +177,65 @@ under the License.
         }
     }
 //]]>
+	
+
+   var partyIdFrom;
+	var partyIdTo;
+	var invoiceId;
+	var voucherType;
+	var amount;
+function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,amount1) {
+		var message = "";
+		 partyIdFrom=partyIdFrom1;
+	     partyIdTo=partyIdTo1;
+		 invoiceId=invoiceId1;
+		 voucherType=voucherType1;
+		 amount=amount1;
+		 var methodOptionList =[];
+		 var payMethodList="";
+		 if(voucherType != undefined && voucherType != "" && voucherPaymentMethodTypeMap != undefined){
+		  payMethodList=voucherPaymentMethodTypeMap[voucherType];
+	 	 if(payMethodList != undefined && payMethodList != ""){
+			$.each(payMethodList, function(key, item){
+			  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
+			});
+	 	   }
+		 }else{
+	 	   payMethodList=voucherPaymentMethodTypeMap['ALL'];
+	 	   	$.each(payMethodList, function(key, item){
+			  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
+			});
+	 	   }
+		  paymentMethodList = methodOptionList;
+		message += "<html><head></head><body><form action='createVoucherPayment' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+			//message += "<br/><br/>";
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Payment Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId'  class='h4'>"+
+						"<#if paymentTypes?has_content><#list paymentTypes as eachMethodType><option value='${eachMethodType.paymentTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
+						"</select></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentMethodTypeId' id='paymentMethodTypeId'  class='h4'>"+
+						"</select></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='effectiveDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/><input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' /><input class='h4' type='hidden' id='partyIdTo' name='partyIdTo'/><input class='h4' type='hidden' id='invoiceId' name='invoiceId' /><input class='h4' type='hidden' id='voucherType' name='voucherType' /></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='useFifo' value='TRUE'/></td></tr>"+
+				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Comments :</td><td align='left' width='60%'><input class='h4' type='text' id='Comments' name='comments' /></td></tr>" +
+				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+                		
+					message +=	"</table></form></body></html>";
+		var title = "Payment Entry : ";
+		Alert(message, title);
+	}	
+	function populateDate(){
+		jQuery("#partyIdFrom").val(partyIdFrom);
+		jQuery("#partyIdTo").val(partyIdTo);
+		jQuery("#invoiceId").val(invoiceId);
+		jQuery("#voucherType").val(voucherType);
+		jQuery("#amount").val(amount);
+		$('#paymentMethodTypeId').html(paymentMethodList.join(''));
+		//$("#paymentMethodTypeId").addOption(paymentMethodList, false); 
+		//$("#paymentMethodTypeId")[0].options.add(paymentMethodList);
+		//alert("==amount=="+amount);
+		
+	};
 </script>
 <#if invoices?has_content>
   <#assign invoiceList  =  invoices.getCompleteList() />
@@ -143,6 +288,7 @@ under the License.
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td> 
+           <td>Payment</td> 
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
       </thead>
@@ -169,7 +315,12 @@ under the License.
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+              <#if (invoicePaymentInfo.outstandingAmount >0) >
+              <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.amount}','');"/></td>
+               <#else>
+                <td align="center"></td>
+               </#if>
+               <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>

@@ -81,7 +81,25 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+    <screen name="InvoiceNewPDF">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="AccountingInvoice"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/EditInvoice.groovy"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetMyCompany.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                      <xsl-fo><html-template location="component://accounting/webapp/accounting/invoice/invoiceNewReport.fo.ftl"/></xsl-fo>
+                </platform-specific>   
+            </widgets>
+        </section>
+    </screen>
     <screen name="PrintCheckPDF">
         <section>
             <condition>

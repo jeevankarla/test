@@ -65,10 +65,18 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewSalesInvoice"/>
     </request-map>
+     <request-map uri="newCashInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewSalesCashInvoice"/>
+    </request-map>
+     <request-map uri="newBankInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewSalesBankInvoice"/>
+    </request-map>
     <request-map uri="createInvoice">
         <security https="true" auth="true"/>
         <event type="service" invoke="createInvoice"/>
-        <response name="success" type="request" value="invoiceOverview"/>
+        <response name="success" type="request" value="listInvoiceItems"/>
         <response name="error" type="view" value="NewSalesInvoice"/>
     </request-map>
     <request-map uri="createPartyGroupInvoice">
@@ -131,6 +139,9 @@ under the License.
     <view-map name="NewIncomingPayment" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#NewIncomingPayment"/>
     <view-map name="FindArInvoices" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#FindArInvoices"/>
     <view-map name="NewSalesInvoice" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#NewSalesInvoice"/>
+    <view-map name="NewSalesCashInvoice" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#NewSalesCashInvoice"/>
+    <view-map name="NewSalesBankInvoice" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#NewSalesBankInvoice"/>
+    
 
     <view-map name="LookupInvoice" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupInvoice"/>
     <view-map name="LookupPayment" type="screen" page="component://accounting/widget/ar/LookupScreens.xml#LookupPayment"/>

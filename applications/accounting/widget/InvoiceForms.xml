@@ -25,6 +25,12 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="prefPaymentMethodTypeId" title="Voucher Type">
+			<drop-down allow-empty="true">
+			<option key="CASH" description="Cash Voucher" ></option>
+			<option key="BANK" description="Bank Voucher" ></option>
+			</drop-down>
+		</field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
@@ -249,6 +255,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="statusId"><hidden value="INVOICE_IN_PROCESS"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field name="prefPaymentMethodTypeId"><hidden  value="${prefPaymentMethodTypeId}"/></field>
         <field position="1" name="invoiceTypeId" event="onchange" action="javascript:invoiceTypeOnChangeHandler();">
             <drop-down allow-empty="false" no-current-selected-key="SALES_INVOICE">
                 <entity-options description="${description}" entity-name="InvoiceType">
@@ -309,6 +316,7 @@ under the License.
         	<set field="pettyCashVendor" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;pettyCashPartyId&quot;);}"/>
         	<set field="pettyCashVendorRoleTypeId" value="${bsh:org.ofbiz.base.util.UtilProperties.getPropertyValue(&quot;general.properties&quot;, &quot;pettyCashRoleTypeId&quot;);}"/>
         </actions>
+         <field name="prefPaymentMethodTypeId"><hidden  value="${prefPaymentMethodTypeId}"/></field>
         <field name="statusId"><hidden value="INVOICE_IN_PROCESS"/></field>
         <field name="pettyCashVendorId"><hidden value="${pettyCashVendor}"/></field>
         <field name="pettyCashVendorRoleTypeId"><hidden value="${pettyCashVendorRoleTypeId}"/></field>
@@ -361,7 +369,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-
+      
     <form name="EditInvoice" type="single" target="updateInvoice" title="Edit Invoice Header" default-map-name="invoice"
         header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="invoice==null" target="createInvoice"/>

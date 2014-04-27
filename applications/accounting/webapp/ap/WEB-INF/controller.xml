@@ -61,9 +61,10 @@ under the License.
     <request-map uri="createInvoice">
         <security https="true" auth="true"/>
         <event type="service" invoke="createInvoice"/>
-        <response name="success" type="view" value="invoiceOverview"/>
+        <response name="success" type="view" value="listInvoiceItems"/>
         <response name="error" type="view" value="NewPurchaseInvoice"/>
     </request-map>
+    
     <request-map uri="createPayrolInvoice">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPayrolInvoice"/>
@@ -102,6 +103,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewPurchaseInvoice"/>
     </request-map>
+    
     <request-map uri="FindApPaymentGroups">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindApPaymentGroups"/>

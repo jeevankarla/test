@@ -87,7 +87,9 @@ under the License.
                     						</condition>
                     						<widgets>
                                        			 <container style="button-bar">
-                                            		<link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                            		<!-- <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/> -->
+                                            		<link target="newInvoice" text="New Cash Voucher" style="buttontext create" > <parameter param-name="arVoucherType" value="CASH"></parameter></link>
+                                            		<link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter param-name="arVoucherType" value="BANK"></parameter></link>
                                        			 </container>
                                        		</widgets>
                                        		</section>	 
@@ -145,7 +147,8 @@ under the License.
             <actions>
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/commonInvoice.js" global="true"/>                                   
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/receivableInvoice.js" global="true"/> 
-                <set field="titleProperty" value="AccountingCreateNewSalesInvoice"/>
+				 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
+                <set field="titleProperty" value="${arScreenTitle}"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
                 </service>
@@ -159,7 +162,7 @@ under the License.
                     			<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission"/>
                     		</condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.AccountingCreateNewSalesInvoice}">
+                                <screenlet title="${arScreenTitle}">
                                     <include-form name="NewSalesInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -172,5 +175,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+     
+    
 
 </screens>

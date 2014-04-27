@@ -71,6 +71,7 @@ under the License.
                 </service>
                 <set field="invoices" from-field="result.listIt"/>
                 <set field="tabButtonItem" value="viewInvoices"/>
+           		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.mainDecoratorLocation}">
@@ -80,7 +81,9 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/><!--  NewPurchaseInvoice-->
+                                          <!--  <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/> --> <!--  NewPurchaseInvoice-->
+                                            <link target="newInvoice" text="New Cash Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link>
+                                            <link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="BANK"/></link>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -181,16 +184,17 @@ under the License.
             <actions>
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/commonInvoice.js" global="true"/>                        
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payableInvoice.js" global="true"/>
-                <set field="titleProperty" value="AccountingCreateNewPurchaseInvoice"/>
                 <set field="headerItem" value="invoices"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
+                 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
+                 <set field="titleProperty" value="${invoiceCreateScreenTitle}"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <screenlet title="${uiLabelMap.AccountingCreateNewPurchaseInvoice}">
+                                <screenlet title="${invoiceCreateScreenTitle}">
                                     <include-form name="NewPurchaseInvoice" location="component://accounting/widget/InvoiceForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -200,7 +204,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-
     <screen name="CommissionRun">
         <section>
             <actions>

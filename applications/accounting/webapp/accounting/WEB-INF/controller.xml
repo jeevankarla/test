@@ -177,7 +177,7 @@ under the License.
     <request-map uri="createInvoice">
         <security https="true" auth="true"/>
         <event type="service" invoke="createInvoice"/>
-        <response name="success" type="request" value="editInvoice"/>
+        <response name="success" type="request" value="listInvoiceItems"/>
         <response name="error" type="view" value="newInvoice"/>
     </request-map>         
     <request-map uri="copyInvoice">
@@ -2305,6 +2305,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="InvoicePDF"/>
     </request-map>
+    <request-map uri="invoiceNew.pdf">
+    <security https="true" auth="true"/>
+    <response name="success" type="view" value="InvoiceNewPDF"/>
+    </request-map>
 
     <request-map uri="printCheck.pdf">
         <!-- security https="true" auth="true"/ -->
@@ -2774,6 +2778,13 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="InvoiceSearchResultPdf"/>
     </request-map>    
+     <request-map uri="createVoucherPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createVoucherPayment"/>
+        <response name="success" type="view-last"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -3024,6 +3035,7 @@ under the License.
 
     <!-- PDFs  -->
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="InvoiceNewPDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#InvoiceNewPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintCheckPDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#PrintCheckPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintInvoices" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#PrintInvoices" content-type="application/pdf" encoding="none"/>
 
