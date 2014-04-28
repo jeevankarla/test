@@ -143,7 +143,7 @@ under the License.
               <td>${(facility.facilityName)?if_exists}</td>
               <td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.paymentDate ,"dd/MM/yyyy HH:mm:ss")}</td> 
               <td>               
-                ${(payment.routeId)?if_exists}
+                ${(boothRouteIdsMap.get(payment.facilityId))?if_exists}
               </td>
                <td>               
                 ${(payment.paymentLocation)?if_exists}

@@ -8,6 +8,9 @@ import org.ofbiz.base.util.UtilNumber;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
+
 import javolution.util.FastList;
 import org.ofbiz.base.util.*;
 import net.sf.json.JSONObject;
@@ -38,16 +41,22 @@ dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, local
    condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
    
    checkListItemList = delegator.findList("Payment", condition, null, ["lastModifiedDate"], null, false);
-
+   
+   boothRouteResultMap = ByProductNetworkServices.getBoothsRouteByShipment(delegator,UtilMisc.toMap("facilityId",null,"effectiveDate",dayBegin));
+   boothRouteIdsMap = [:];
+   if(UtilValidate.isNotEmpty(boothRouteResultMap)){
+	   boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
+   }
+   
    checkListItemList.each { checkListItem -> 
 	   lastPaymentMap = [:];
 	   lastPaymentMap["lastModifiedDate"] = UtilDateTime.toDateString(checkListItem.lastModifiedDate, "HH:mm:ss");
 	   lastPaymentMap["boothId"] = checkListItem.facilityId;
 	   if (checkListItem.facilityId) {
-		   facility = delegator.findOne("Facility",[facilityId : checkListItem.facilityId], false);
-		   if (facility) {
-			   lastPaymentMap["routeId"] = facility.parentFacilityId;
-		   }
+		   //facility = delegator.findOne("Facility",[facilityId : checkListItem.facilityId], false);
+		   //if (facility) {
+			   lastPaymentMap["routeId"] = boothRouteIdsMap.get(checkListItem.facilityId);
+		   //}
 	   }
 	   lastPaymentMap["lastModifiedBy"] = checkListItem.lastModifiedByUserLogin;
 	   lastPaymentMap["amount"] = (new BigDecimal(checkListItem.amount)).setScale(0 ,rounding);
