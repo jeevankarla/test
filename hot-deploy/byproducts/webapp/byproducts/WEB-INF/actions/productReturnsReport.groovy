@@ -89,6 +89,8 @@ productId = "";
 returnQuantity = "";
 returnReasonId = "";
 returnPrice = "";
+returnQtyIncluded = "";
+returnQtyLtrs = "";
 
 shipmentIds=[];
 shipmentIdList = [];
@@ -110,7 +112,7 @@ conditionList=[];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIdList));
 conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
 returnCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-returnHeaderItemsList = delegator.findList("ReturnHeaderItemsAndShipment", returnCondition, null, null, null, false);
+returnHeaderItemsList = delegator.findList("ReturnHeaderItemProductAndShipment", returnCondition, null, null, null, false);
 if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 	returnHeaderItemsList.each{ returnItem->
 			productReturnMap = [:];
@@ -120,6 +122,10 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 			shipmentTypeId = returnItem.shipmentTypeId;
 			productId = returnItem.productId;
 			returnQuantity = returnItem.returnQuantity;
+			returnQtyIncluded = returnItem.quantityIncluded;
+			if(UtilValidate.isNotEmpty(returnQtyIncluded)){
+				returnQtyLtrs = (returnQuantity*returnQtyIncluded);
+			}
 			returnReasonId = returnItem.returnReasonId;
 			userLogin = returnItem.createdBy;
 			returnPrice = returnItem.returnPrice; 
@@ -134,6 +140,7 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 			//for sales report
 			saleProductPriceMap = [:];
 			saleProductPriceMap["returnQuantity"] = returnQuantity;
+			saleProductPriceMap["returnQtyLtrs"] = returnQtyLtrs;
 			saleProductPriceMap["returnPrice"] = returnPrice;
 			saleProductReturnMap[productId] = saleProductPriceMap;
 		returnProductList.add(productReturnMap);
@@ -142,3 +149,4 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 returnProductList = UtilMisc.sortMaps(returnProductList, UtilMisc.toList("routeId"));
 context.put("saleProductReturnMap",saleProductReturnMap);
 context.put("returnProductList",returnProductList);
+
