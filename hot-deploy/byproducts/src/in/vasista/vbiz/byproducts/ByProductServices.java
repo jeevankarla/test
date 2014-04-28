@@ -3794,7 +3794,15 @@ public class ByProductServices {
 			    		  prodTaxQty.put("amount", amount);
 			    		  taxAdjList.add(prodTaxQty);
 			    	  }*/
+			    	 
 			    	  if(UtilValidate.isNotEmpty(orderIds)){
+			    		  
+			    		  Map reCalPriceRes = recaliculateProductPrice(dctx,UtilMisc.toMap("userLogin",userLogin,"orderIds",orderIds));
+				    	  if(ServiceUtil.isError(reCalPriceRes)){
+				    		  Debug.logError("Error in Recaliculate Price for dealer:"+facId, module);
+		                      return ServiceUtil.returnError("Error in Recaliculate Price for dealer:"+facId);
+				    	  }
+				    	  
 			    		  Map createInvoiceCtx = FastMap.newInstance();
 				    	  createInvoiceCtx.put("userLogin", userLogin);
 				    	  createInvoiceCtx.put("orderIds", orderIds);
@@ -5377,4 +5385,88 @@ public class ByProductServices {
 			}
 			return result;
 		}
+		 public static Map<String, Object> recaliculateProductPrice(DispatchContext dctx, Map<String, Object> context) {
+		        Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();
+		        List<String> orderIds = (List)context.get("orderIds");
+		        Timestamp invoiceDate = (Timestamp)context.get("invoiceDate");
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        Locale locale = (Locale) context.get("locale");
+		        Map<String, Object> result = ServiceUtil.returnSuccess();
+		        try {
+	                if(UtilValidate.isEmpty(orderIds)){
+	                	Debug.logError("order List of empty", module);
+	                    return ServiceUtil.returnError("order list is empty");
+	                }
+	                String tempOrderId = (String)orderIds.get(0);
+	                List<GenericValue> billItems = FastList.newInstance();
+	                String productStoreId="";
+	                String productId="";
+	                String ownerPartyId="";
+	                String boothId="";
+	                Timestamp effectiveDate=null;
+		        	for(String orderId : orderIds){
+		        		GenericValue  orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+		        		 productStoreId=orderHeader.getString("productStoreId");
+		        		 boothId=orderHeader.getString("originFacilityId");
+		        		 effectiveDate=orderHeader.getTimestamp("estimatedDeliveryDate");
+		        		GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
+		        		ownerPartyId=facility.getString("ownerPartyId");
+		    	         List<GenericValue> orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+		    	        
+		    	         for(GenericValue orderItem : orderItems){
+			        		 //calculate price for
+		    	        	productId=orderItem.getString("productId");
+		    				Map<String, Object> priceContext = FastMap.newInstance();
+		                    priceContext.put("userLogin", userLogin);   
+		                    priceContext.put("productStoreId", productStoreId);                    
+		                    priceContext.put("productId", productId);
+		                    priceContext.put("partyId", ownerPartyId);
+		                    priceContext.put("facilityId", boothId); 
+		                    priceContext.put("priceDate", effectiveDate);
+		                    Map priceResult = calculateByProductsPrice(delegator, dispatcher, priceContext);            			
+		                    if (ServiceUtil.isError(priceResult)) {
+		                        Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
+		                		return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
+		                    }  
+		                    BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
+		                    List taxList = (List)priceResult.get("taxList");
+		                    BigDecimal vatPercent=BigDecimal.ZERO; 
+		                    BigDecimal vatAmount=BigDecimal.ZERO; 
+		                    for(int i=0;i<taxList.size(); i++){
+		               		 Map taxComp = (Map)taxList.get(i);
+		               		 String taxType= (String) taxComp.get("taxType");
+		               		 BigDecimal percentage = (BigDecimal) taxComp.get("percentage");
+		               		 BigDecimal amount = (BigDecimal) taxComp.get("amount");
+		               		 if(taxType.startsWith("VAT_")){
+		               			vatPercent = percentage;
+		               			vatAmount = amount;
+		               			 
+		               		 }/*else if(taxType.startsWith("BED_")){
+		               			 this.bedPercent = percentage;
+		               			 this.bedAmount = amount;
+		               			 
+		               		 }else if(taxType.startsWith("BEDCESS_")){
+		               			 this.bedcessPercent = percentage;
+		               			 this.bedcessAmount = amount;
+		               			 
+		               		 }else if(taxType.startsWith("BEDSECCESS_")){
+		               			 this.bedseccessPercent = percentage;
+		               			 this.bedseccessAmount = amount;*/
+		               		 }
+		                    BigDecimal basicPrice= (BigDecimal)priceResult.get("basicPrice");
+		                    orderItem.set("unitPrice", basicPrice);
+		                    orderItem.set("unitListPrice", totalPrice);
+		                    orderItem.set("vatPercent", vatPercent);
+		                    orderItem.set("vatAmount", vatAmount);
+		                    orderItem.store();
+		                    Debug.log("===============totalPrice=="+totalPrice+"==vatPercent=="+vatPercent+"===vatAmount=="+vatAmount+"===productId=="+productId+"==facilityId=="+boothId);
+			        	}
+		        	}
+		        }catch (GenericEntityException e) {
+		        	Debug.logError(e, module);
+			        return ServiceUtil.returnError(e.getMessage());
+		        }
+		        return result;
+		    }
 }
