@@ -241,6 +241,7 @@ under the License.
             <drop-down>
                 <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
                     <entity-constraint name="organizationPartyId" value="${finAccount.organizationPartyId}"/>
+                    <entity-constraint name="ownerPartyId" value="Company"/>
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down>
