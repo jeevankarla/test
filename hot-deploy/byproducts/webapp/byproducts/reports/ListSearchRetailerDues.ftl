@@ -174,7 +174,7 @@ under the License.
         <#list boothPaymentsList as payment>
         	<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : payment.facilityId}, false)>   
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${payment.paymentMethodTypeId?if_exists}">
+            	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${parameters.paymentMethodTypeId?if_exists}">
             	<input type="hidden" name="currDue" id="currDue" value="${payment.grandTotal?if_exists}">
             	<input type="hidden" name="tabItem" id="tabItem" value="${parameters.subTabItem?if_exists}">
               <td>${(payment.facilityId)?if_exists}</td>

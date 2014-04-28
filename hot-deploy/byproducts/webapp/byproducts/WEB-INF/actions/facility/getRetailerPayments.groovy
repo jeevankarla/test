@@ -38,6 +38,7 @@ if(parameters.facilityId){
 }else{
 	facilityId = context.facilityId;
 }
+isRetailer = false;
 if(facilityId){
 	facility = delegator.findOne("Facility",[facilityId : facilityId], false);
 	if (facility == null) {
@@ -45,8 +46,10 @@ if(facilityId){
 		context.errorMessage = "Booth '" + facilityId + "' does not exist!";
 		return;
 	}
+	if(facility.facilityTypeId == "BOOTH"){
+		isRetailer = true;
+	}
 }
-
 if(parameters.paymentMethodTypeId){
 	paymentMethodTypeId = parameters.paymentMethodTypeId;
 }else{
@@ -83,6 +86,7 @@ if(statusId =="PAID"){
 if(parameters.paymentIds){
 	paymentIds = parameters.paymentIds;	
 }
+
 partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.toSet("defaultPayMeth", "partyId"), null, null, false);
 paymentTypeParties = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "partyId", true);
 paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defaultPayMeth", true);
@@ -138,32 +142,38 @@ if(hideSearch == "N" || stopListing){
 	boothPaymentsList = [];
 	invoicesTotalAmount =0;
 	invoicesTotalDueAmount = 0;
-	if (statusId != "PAID") {
+	if (statusId != "PAID" ) {
 		
-		boothTempPaymentsList.each{boothPay ->
-			facilityId = boothPay.get("facilityId");
-			if(paymentMethodTypeId == "CHALLAN_PAYIN"){
-				if(finalFilterList && finalFilterList.contains(facilityId)){
-					boothPaymentsInnerList.add(boothPay);
-					if (statusId != "PAID") {
-						invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
-						invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
-					}
-				}
-			}
-			else{
-				if(!filterFacilityList || (filterFacilityList && filterFacilityList.contains(facilityId))){
-					boothPaymentsInnerList.add(boothPay);
-					if (statusId != "PAID") {
-						invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
-						invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
-					}
-				}
-			}
+		if(paymentMethodTypeId == "CASH_PAYIN" && isRetailer){
+			boothPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 		}
-		boothPaymentsList.addAll(boothPaymentsInnerList);
-		boothsPaymentsDetail["invoicesTotalAmount"] =invoicesTotalAmount;
-		boothsPaymentsDetail["invoicesTotalDueAmount"] =invoicesTotalDueAmount;
+		else{
+			boothTempPaymentsList.each{boothPay ->
+				facilityId = boothPay.get("facilityId");
+				if(paymentMethodTypeId == "CHALLAN_PAYIN"){
+					if(finalFilterList && finalFilterList.contains(facilityId)){
+						boothPaymentsInnerList.add(boothPay);
+						if (statusId != "PAID") {
+							invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
+							invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
+						}
+					}
+				}
+				else{
+					if(!filterFacilityList || (filterFacilityList && filterFacilityList.contains(facilityId))){
+						boothPaymentsInnerList.add(boothPay);
+						if (statusId != "PAID") {
+							invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
+							invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
+						}
+					}
+				}
+			}
+			boothPaymentsList.addAll(boothPaymentsInnerList);
+			boothsPaymentsDetail["invoicesTotalAmount"] =invoicesTotalAmount;
+			boothsPaymentsDetail["invoicesTotalDueAmount"] =invoicesTotalDueAmount;
+		}
+		
 	}
 	if(statusId == "PAID"){
 		boothPaymentsList = boothsPaymentsDetail["paymentsList"];
@@ -173,7 +183,6 @@ if(hideSearch == "N" || stopListing){
 			boothPaymentsList.addAll(axisPaymentsList);
 		}
 	}
-	
 	context.boothPaymentsList = boothPaymentsList;	
 	context.paymentDate= paymentDate;
 	context.paymentTimestamp= paymentTimestamp;
