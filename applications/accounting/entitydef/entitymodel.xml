@@ -1325,7 +1325,7 @@
 		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
 		<prim-key field="invoiceId" />
 		<relation type="one" fk-name="INVOICE_PMPRF_PMTP" rel-entity-name="PaymentMethodType">
-        <key-map  rel-field-name="prefPaymentMethodTypeId" field-name="paymentMethodTypeId"/>
+          <key-map  field-name="prefPaymentMethodTypeId" rel-field-name="paymentMethodTypeId"/>
         </relation>
 		<relation type="one" fk-name="INVOICE_INVTYP"
 			rel-entity-name="InvoiceType">
