@@ -93,7 +93,10 @@ function cleanUpGrid(value){
 	var emptyJson= [];
 	$('div#tempRouteDiv').css("display","none");
 	updateGrid1(emptyJson);
-	setupGrid2(emptyJson);
+	if(screenFlag != "DSCorrection"){
+		setupGrid2(emptyJson);
+	}
+	
 }
 
 function updateGrid(){

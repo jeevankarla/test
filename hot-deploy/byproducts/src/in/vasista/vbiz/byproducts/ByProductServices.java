@@ -704,7 +704,6 @@ public class ByProductServices {
       		  	}
       		  	BigDecimal crateQty = (BigDecimal)result.get("totalCrates");
       		  	BigDecimal canQty = (BigDecimal)result.get("totalCans");
-      		  	
       		  	List prodQty = FastList.newInstance();
       		  	if(crateQty.compareTo(BigDecimal.ZERO)>0){
     	  		  	Map tempMap = FastMap.newInstance();
@@ -3001,6 +3000,66 @@ public class ByProductServices {
   		 request.setAttribute("_ERROR_MESSAGE_", "Problem updating order for dealer " + boothId);
   		 return "error";			  
   	 }	 
+  	 //update Crates of that Route..
+	  	try{
+	    	result = dispatcher.runSync("calculateCratesForShipment", UtilMisc.toMap("userLogin", userLogin, "shipmentId", shipmentId));
+			  	if (ServiceUtil.isError(result)) {
+			  		String errMsg =  ServiceUtil.getErrorMessage(result);
+			  		Debug.logError(errMsg , module);
+	            return  "error";	
+			  	}
+			  	BigDecimal crateQty = (BigDecimal)result.get("totalCrates");
+			  	BigDecimal canQty = (BigDecimal)result.get("totalCans");
+			  	productQtyList=(List)result.get("productQtyList");
+			  	List prodQty = FastList.newInstance();
+			  	if(crateQty.compareTo(BigDecimal.ZERO)>0){
+	  		  	Map tempMap = FastMap.newInstance();
+	  		  	tempMap.put("productId", "CRATE");
+	  		  	tempMap.put("quantity", crateQty);
+	  		  	prodQty.add(tempMap);
+	  		  productQtyList.add(tempMap);
+			  	}
+			  	if(canQty.compareTo(BigDecimal.ZERO)>0){
+		  		  	Map tempMap = FastMap.newInstance();
+		  		  	tempMap.put("productId", "CAN");
+		  		  	tempMap.put("quantity", canQty);
+		  		  	prodQty.add(tempMap);
+		  		  productQtyList.add(tempMap);
+			    }
+			  	if(UtilValidate.isNotEmpty(prodQty)){
+	  		  	Map processItemIssuenceCtx = UtilMisc.toMap("userLogin",userLogin);
+	  		  	processItemIssuenceCtx.put("shipmentId", shipmentId);
+	  		  	processItemIssuenceCtx.put("routeId", routeId);
+	  		  	processItemIssuenceCtx.put("effectiveDate", effectiveDate);
+	  		  	processItemIssuenceCtx.put("productQtyList", productQtyList);
+	
+	  		  	result = dispatcher.runSync("processDispatchReconcilHelper",processItemIssuenceCtx);
+		 		
+	  		  	if (ServiceUtil.isError(result)) {
+	  		  		String errMsg =  ServiceUtil.getErrorMessage(result);
+	  		  		Debug.logError(errMsg , module);
+	  		  	}
+			  	}
+			  	GenericValue cratesCansAccnt = delegator.findOne("CrateCanAccount", UtilMisc.toMap("shipmentId", shipmentId), false);
+			  	
+			  	if(UtilValidate.isNotEmpty(cratesCansAccnt)){
+			  		delegator.removeValue(cratesCansAccnt);
+			  	}
+			  	GenericValue crateCanAcct = null;
+			  	crateCanAcct = delegator.makeValue("CrateCanAccount");
+			  	crateCanAcct.put("shipmentId", shipmentId);
+			  	crateCanAcct.put("cratesSent", crateQty);
+			  	crateCanAcct.put("cratesReceived", BigDecimal.ZERO);
+			  	crateCanAcct.put("cansSent", canQty);
+			  	crateCanAcct.put("cansReceived", BigDecimal.ZERO);
+			  	crateCanAcct.put("createdDate", UtilDateTime.nowTimestamp());
+			  	crateCanAcct.put("createdByUserLogin", userLogin.get("userLoginId"));
+			  	crateCanAcct.create();
+		    }catch(Exception e){
+		    	 Debug.logError(e, "Failed to calculate Crates For Shipment" + shipmentId, module);     
+		  		 request.setAttribute("_ERROR_MESSAGE_", "Failed to calculate Crates For Shipment" + shipmentId + ": and Booth"+ boothId);
+		  		 return "error";
+	       }  	 
   	 request.setAttribute("indentChangeFlag", indentChanged);
   	 return "success";     
 	}

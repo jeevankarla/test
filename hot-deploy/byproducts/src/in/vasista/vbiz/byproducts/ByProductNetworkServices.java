@@ -5306,6 +5306,7 @@ public class ByProductNetworkServices {
 		    GenericValue userLogin = (GenericValue) context.get("userLogin");
 		    String shipmentId = (String) context.get("shipmentId");
 		    List exprList = FastList.newInstance();
+		    List productQtyList = FastList.newInstance();
 		    Timestamp shipDate = null;
 		    try{
 		    	GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
@@ -5324,6 +5325,7 @@ public class ByProductNetworkServices {
 		    Map piecesPerCan = (Map)resultCrates.get("piecesPerCan");
 		    
 		    List facilityList = FastList.newInstance();
+			exprList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
 			exprList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 			EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);				
 			BigDecimal totalCrateQty = BigDecimal.ZERO;
@@ -5365,9 +5367,25 @@ public class ByProductNetworkServices {
 			        	totalCanQty = totalCanQty.add(prodTotCan);
 		        	}
 				}
+				//caliculating all prod Totals
+				productList = EntityUtil.getFieldListFromEntityList(shippedOrderItems, "productId", true);
+				for(String productId: productList){
+					List<GenericValue> productOrderItems = EntityUtil.filterByCondition(exluEmpShippedOrderItem, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					BigDecimal prodTotQty = BigDecimal.ZERO;
+					for(GenericValue orderItem : productOrderItems){
+						BigDecimal qty = orderItem.getBigDecimal("quantity");
+						prodTotQty = prodTotQty.add(qty);
+					}
+				  	Map tempMap = FastMap.newInstance();
+		  		  	tempMap.put("productId", productId);
+		  		  	tempMap.put("quantity", prodTotQty);
+		  		  productQtyList.add(tempMap);
+				}
+				
 				BigDecimal totalFinalCrate = totalCrateQty.add(empSubsidyCrate);
 				result.put("totalCans", totalCanQty);
 				result.put("totalCrates", totalFinalCrate);
+				result.put("productQtyList", productQtyList);
 			}catch (Exception e) {
 				Debug.logError("Error calculating crates for the shipment", module);
 	    		return ServiceUtil.returnError("Error calculating crates for the shipment"); 

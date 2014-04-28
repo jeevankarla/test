@@ -118,6 +118,7 @@
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
         <attribute name="totalCrates" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="totalCans" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="productQtyList" type="List" mode="OUT" optional="false"/>
     </service>
     
     <service name="processReturnItemsHelper" engine="java"
