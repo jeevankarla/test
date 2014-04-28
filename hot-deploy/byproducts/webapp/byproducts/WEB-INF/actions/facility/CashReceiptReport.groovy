@@ -21,6 +21,7 @@ import org.ofbiz.base.util.UtilNumber;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
+receiptDate = UtilDateTime.nowTimestamp();
 effectiveDate = null;
 effectiveDateStr = parameters.receiptDate;
 if (UtilValidate.isEmpty(effectiveDateStr)) {
@@ -38,6 +39,7 @@ dayBegin = UtilDateTime.getDayStart(effectiveDate);
 dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 
 context.put("effectiveDateStr",effectiveDateStr);
+context.put("receiptDate",receiptDate);
 
 shipmentIds=[];
 shipmentIdList = [];
