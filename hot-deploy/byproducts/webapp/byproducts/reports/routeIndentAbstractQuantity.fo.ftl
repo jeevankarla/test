@@ -37,14 +37,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "indentAbstract.txt")}
 <#if routeWiseIndentMap?has_content>	
 <fo:page-sequence master-reference="main" force-page-count="no-force">					
 			<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace"> <#assign lineNumber = 5> 
-			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                           UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
+			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;     UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 				<#assign facilityNumberInPage = 0>
 				<#if parameters.subscriptionTypeId=="AM" >          		
-              		<fo:block text-align="left" white-space-collapse="false">&#160;                           ABSTRACT INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(effectiveDate, "dd-MMMM-yyyy")}- MORNING SHIFT </fo:block>  
+              		<fo:block text-align="left" white-space-collapse="false">&#160;  ABSTRACT INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(effectiveDate, "dd-MMMM-yyyy")}- MORNING SHIFT ; Date&amp;Time :${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd-MMMM-yyyy HH:mm:ss")}  </fo:block>  
               	<#elseif parameters.subscriptionTypeId=="PM">
-              		<fo:block text-align="left" white-space-collapse="false">&#160;                           ABSTRACT INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(effectiveDate, "dd-MMMM-yyyy")}- EVENING SHIFT </fo:block>
+              		<fo:block text-align="left" white-space-collapse="false">&#160;  ABSTRACT INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(effectiveDate, "dd-MMMM-yyyy")}- EVENING SHIFT; Date&amp;Time :${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd-MMMM-yyyy HH:mm:ss")} </fo:block>
               	<#else>	
-              	<fo:block text-align="left" white-space-collapse="false">&#160;                           ABSTRACT INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(effectiveDate, "dd-MMMM-yyyy")}- MORNING &amp; EVENING </fo:block>
+              	<fo:block text-align="left" white-space-collapse="false">&#160;  ABSTRACT INDENT FOR ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(effectiveDate, "dd-MMMM-yyyy")}- MORNING &amp; EVENING; Date&amp;Time :${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd-MMMM-yyyy HH:mm:ss")} </fo:block>
               	</#if> 
               	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	<fo:block white-space-collapse="false" font-size="9pt"  font-family="Courier,monospace"  text-align="left">ROUTE  PRODUCT  PRODUCT                                          QTY     CRATES       CANS </fo:block>
