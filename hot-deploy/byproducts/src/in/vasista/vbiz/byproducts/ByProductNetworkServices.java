@@ -2652,7 +2652,7 @@ public class ByProductNetworkServices {
 			    		condList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS ,facilityId));
 			    	}
 			    	if(UtilValidate.isNotEmpty(facilityTypeId) && facilityTypeId.equals("BOOTH")){
-			    		condList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS ,facilityId));
+			    		condList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS ,facilityId));
 			    	}
 			    	if(UtilValidate.isNotEmpty(boothCategory)){
 		    			condList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS ,boothCategory));
