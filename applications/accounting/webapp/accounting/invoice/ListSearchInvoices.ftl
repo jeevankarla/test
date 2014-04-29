@@ -315,7 +315,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <#if (invoicePaymentInfo.outstandingAmount >0) >
+              <#if (invoicePaymentInfo.outstandingAmount >0) && (invoice.prefPaymentMethodTypeId?exists) >
               <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.amount}','');"/></td>
                <#else>
                 <td align="center"></td>
