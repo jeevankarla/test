@@ -6773,12 +6773,12 @@ public class ByProductNetworkServices {
 				 GenericValue shipment = null;
 				 String boothId = "";
 			  	 String ownerPartyId = "";
-			  	 String returnId = "";
+			  	 List<String> returnIdList =FastList.newInstance();
 			  	 String productStoreId = "";
 			  	 Timestamp shipDate = null;
 				 	try{
 			  		  productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-			  		  shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate); 
+			  		  shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate);
 			  		  for(int i=0;i<shipmentIds.size();i++){
 			  			  String shipmentId = (String) shipmentIds.get(i);
 			  			  shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
@@ -6787,13 +6787,14 @@ public class ByProductNetworkServices {
 				  			  return ServiceUtil.returnError("shipment does not exists with Id: " + shipmentId);
 				  		  }
 			  			  shipDate = shipment.getTimestamp("estimatedShipDate");
+			  			 
 				  		  if(UtilValidate.isNotEmpty(shipmentIds)){
 				        	  List conditionList = FastList.newInstance();
 					    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
 					    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 					    	  List<GenericValue> returnHeader = delegator.findList("ReturnHeader", condition, null, null, null, false);
 					    	  if(UtilValidate.isNotEmpty(returnHeader)){
-					    		  returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("returnId");
+					    		  returnIdList = EntityUtil.getFieldListFromEntityList(returnHeader, "returnId", true);
 					    		  boothId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("originFacilityId");
 					    	  }
 					    	  dealer = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
@@ -6802,9 +6803,7 @@ public class ByProductNetworkServices {
 					  			  return ServiceUtil.returnError("dealer does not exists with Id: " + boothId);
 					  		  }
 					  		  ownerPartyId = dealer.getString("ownerPartyId");
-					    	  
-		    				  List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), UtilMisc.toSet("returnId","productId","returnQuantity","returnItemSeqId","returnReasonId"), null, null, false);
-		 
+		    				  List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.IN, returnIdList), null, null, null, false);
 		    				  for(GenericValue eachReturnItem : returnItems){
 			    				  Map<String, Object> priceContext = FastMap.newInstance();
 				                  priceContext.put("userLogin", userLogin);   
