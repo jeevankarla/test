@@ -7117,6 +7117,7 @@ public class ByProductNetworkServices {
 				    		paymentCtx.put("facilityId", facilityId);
 				    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(paymentDate, "yyyy-MM-dd HH:mm:ss"));
 				    		paymentCtx.put("amount", outstandingAmount.toString());
+				    		paymentCtx.put("useFifo",true);
 				    		paymentCtx.put("isEnableAcctg", "N");
 				    		try{
 								 result =  dispatcher.runSync("createPaymentForBooth",paymentCtx);
