@@ -18,47 +18,28 @@ under the License.
 -->
 <script type="text/javascript">
 //<![CDATA[
-
-    function toggleFacilityId(master) {
+	
+	function toggleFacilityId(master) {
         var facilities = jQuery("#listBooths :checkbox[name='boothIds']");
-
         jQuery.each(facilities, function() {
             this.checked = master.checked;
         });
-        getBoothRunningTotal();
+        //getBoothRunningTotal();
     }
-
     function getBoothRunningTotal() {
 		var checkedBoothIds = jQuery("input[name='boothIds']:checked");
-		jQuery.each(checkedBoothIds, function() {
-            if (jQuery(this).is(':checked')) {
-            	var domObj = $(this).parent().parent();
-            	var amountObj = $(domObj).find("#currDue");
-            	var currValue = $(amountObj).val();
-            	var paymentObj = $(domObj).find("#paymentAmount");
-            	var checkEntry = $(paymentObj).val();
-            	if(checkEntry == null || checkEntry == undefined || checkEntry == ""){
-            		$(paymentObj).val(currValue);
-            	}
-            	
-            }
-        });
-        var unCheckedBoothIds = jQuery("input[name='boothIds']:unchecked");
-        jQuery.each(unCheckedBoothIds, function() {
-            if (jQuery(this).is(':unchecked')) {
-            	var domObj = $(this).parent().parent();
-            	var paymentObj = $(domObj).find("#paymentAmount");
-            	$(paymentObj).val('');
-            }
-        });
-        
         if(checkedBoothIds.size() > 0) {
             jQuery.ajax({
                 url: 'getBoothDuesRunningTotal',
                 type: 'POST',
                 async: true,
                 data: jQuery('#listBooths').serialize(),
-                success: function(data) { jQuery('#showBoothRunningTotal').html(data.boothRunningTotal + '  (' + checkedBoothIds.size() + ')') }
+                success: function(data) { 
+                	
+        			var str = "<font>"+data.boothRunningTotal+"</font> ( "+checkedBoothIds.size()+" )";
+                	jQuery('#showBoothRunningTotal').html(str);
+                	testVal = data.boothRunningTotal; 
+                }
             });
 
             if(jQuery('#serviceName').val() != "") {
@@ -70,8 +51,7 @@ under the License.
             jQuery('#showBoothRunningTotal').html("");
         }
     }
-
-    function setServiceName(selection) {
+	function setServiceName(selection) {
         jQuery('#submitButton').attr('disabled' , 'disabled');
         jQuery('#listBooths').attr('action', selection.value);
         
@@ -135,7 +115,53 @@ under the License.
     	jQuery('#paymentSubmitForm').submit();
     }
     
+    function getPaymentTotal(){
+    	var payAmount = 0;
+    	var checkedBoothIds = jQuery("input[name='boothIds']:checked");
+    	var facilities = jQuery("#listBooths :checkbox[name='boothIds']");
+        jQuery.each(facilities, function() {
+            if (jQuery(this).is(':checked')) {
+            	var domObj = $(this).parent().parent();
+            	var amountObj = $(domObj).find("#paymentAmount");
+            	var amt = parseFloat($(amountObj).val());
+            	if(amt != undefined || amt != null){
+            		payAmount = payAmount+amt;
+            	}
+            }
+            
+        });
+        var str = payAmount+" ( "+checkedBoothIds.size()+" ) ";
+        jQuery('#showPaymentTotal').html(str);
+    }
     
+    function recalcAmounts(){
+    	getBoothRunningTotal();
+    	
+    	var checkedBoothIds = jQuery("input[name='boothIds']:checked");
+		jQuery.each(checkedBoothIds, function() {
+            if (jQuery(this).is(':checked')) {
+            	var domObj = $(this).parent().parent();
+            	var amountObj = $(domObj).find("#currDue");
+            	var currValue = $(amountObj).val();
+            	var paymentObj = $(domObj).find("#paymentAmount");
+            	var checkEntry = $(paymentObj).val();
+            	if(checkEntry == null || checkEntry == undefined || checkEntry == ""){
+            		$(paymentObj).val(currValue);
+            	}
+            }
+        });
+        var unCheckedBoothIds = jQuery("input[name='boothIds']:unchecked");
+        jQuery.each(unCheckedBoothIds, function() {
+            if (jQuery(this).is(':unchecked')) {
+            	var domObj = $(this).parent().parent();
+            	var paymentObj = $(domObj).find("#paymentAmount");
+            	$(paymentObj).val('');
+            }
+        });
+        getPaymentTotal();
+        
+    }
+        
 //]]>
 </script>
 <form name="paymentSubmitForm" id="paymentSubmitForm" method="post" action="makeMassPayments">
@@ -143,8 +169,10 @@ under the License.
 <#if boothPaymentsList?has_content>
   <div>
     <span class="label">Total Booths:${boothPaymentsList?size}</span>  
-    <span class="label"> Running Total  (No.of selected Booths) :</span>
+    <span class="label"> Today's Due Total  (No.of selected Booths) :</span>
     <span class="label" id="showBoothRunningTotal"></span>
+    <span class="label"> Payment Amount Total :</span>
+    <span class="label" id="showPaymentTotal"></span>
   </div>
   <form name="listBooths" id="listBooths"  method="post" action="makeMassPayments">
     <div align="right">     
@@ -188,8 +216,8 @@ under the License.
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><input type="button" name="viewDues" id="pastDues" value="View Details" onclick="javascript:showRetailerDueHistory('${payment.facilityId}');"/></td>
               <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
-              		<td><input type="text" name="paymentAmount" id="paymentAmount"></td>
-              		<td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:getBoothRunningTotal();"/></td>
+              		<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
+              		<td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:recalcAmounts();"/></td>
               <#else>
               		<td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.facilityId}' ,'${payment.grandTotal}', '${payment.paymentMethodTypeId}', '${facilityDetails.get("facilityName")}');" value="Make Payment"/></td>
               </#if>
