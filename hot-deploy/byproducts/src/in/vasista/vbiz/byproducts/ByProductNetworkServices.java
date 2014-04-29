@@ -6817,7 +6817,7 @@ public class ByProductNetworkServices {
 				                  }  
 				                  BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
 				                  eachReturnItem.put("returnPrice", totalPrice);
-					    		  delegator.store(eachReturnItem);
+					    		  delegator.createOrStore(eachReturnItem);
 		    				  }	
 					      }
 			  		  }
