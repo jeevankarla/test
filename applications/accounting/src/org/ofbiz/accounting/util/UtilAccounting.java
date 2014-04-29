@@ -398,6 +398,7 @@ public class UtilAccounting {
         		}
         	}
         	if(UtilValidate.isNotEmpty(paymentId)){
+        		conditionReply = Boolean.TRUE;
         		GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId) ,true);
         		if(UtilValidate.isNotEmpty(payment.get("isEnableAcctg")) && (payment.getString("isEnableAcctg")).equals("N") ){
         			conditionReply = Boolean.FALSE ;
@@ -405,18 +406,18 @@ public class UtilAccounting {
         		}
         	}
         	
-        	if(UtilValidate.isNotEmpty(paymentId) && UtilValidate.isNotEmpty(invoiceId) && (!(!invConditionReply && !pmConditionReply)) && !conditionReply){
+        	/*if(UtilValidate.isNotEmpty(paymentId) && UtilValidate.isNotEmpty(invoiceId) && (!(!invConditionReply && !pmConditionReply)) && !conditionReply){
         		Debug.logError("===mismatch invoice and payment accounting configuration==="+result ,module);
         		return ServiceUtil.returnError("mismatch invoice and payment accounting configuration");
         		
-        	}
+        	}*/
            
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problem getting Invoice for Invoice ID" + invoiceId, module);
             return ServiceUtil.returnError("Problem getting Invoice for Invoice ID" + invoiceId);
         }
         result.put("conditionReply", conditionReply);
-        Debug.log("result============="+result);
+        Debug.logInfo("result============="+result , module);
         return result;
     }
     

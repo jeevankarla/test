@@ -132,9 +132,9 @@ under the License.
         <action service="createAcctgTransAndEntriesForPaymentApplication" mode="sync"/>
     </eca>
     
-     <eca service="createPaymentApplication" event="invoke">
+    <!--  <eca service="createPaymentApplication" event="invoke">
         <action service="checkEnableAccounting" mode="sync" ignore-error="false" ignore-failure="false"/>
-    </eca>
+    </eca> -->
     <!-- set GlReconciliation status after creating GlReconciliation Entries -->
     <eca service="createGlReconciliationEntry" event="commit">
         <condition field-name="statusId" operator="is-not-empty"/>
