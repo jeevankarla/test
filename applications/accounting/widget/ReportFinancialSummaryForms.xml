@@ -561,7 +561,48 @@ under the License.
         </field>
         <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
-
+	<form name="FinancialAccountTrans" type="single" target="FinancialAccountingTrans">
+        <actions>
+            <entity-and entity-name="CustomTimePeriod" list="customTimePeriods">
+                <field-map field-name="organizationPartyId"/>
+                <field-map field-name="periodTypeId" value="FISCAL_YEAR"/>
+            </entity-and>
+        </actions>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="finAccountId" title="Financial Account">
+        	<drop-down allow-empty="false">
+                <list-options list-name="financialAccnt" key-name="postToGlAccountId" description="${finAccountName}"/>
+            </drop-down>
+            <!-- <drop-down>
+                <entity-options entity-name="GlAccountOrganizationAndClass" description="${glAccountId} ${accountName}">
+                    <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
+                    <entity-order-by field-name="glAccountId"/>
+                </entity-options>
+            </drop-down> -->
+        </field>
+        <field name="timePeriod">
+            <drop-down>
+                <list-options list-name="customTimePeriods" key-name="customTimePeriodId" description="${fromDate} - ${thruDate}"/>
+            </drop-down>
+        </field>
+        <field name="isPosted">
+            <drop-down>
+                <option description="${uiLabelMap.CommonYes}" key="Y"/>
+                <option description="${uiLabelMap.CommonNo}" key="N"/>
+                <option description="${uiLabelMap.CommonAll}" key="ALL"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
+    </form>
+	<form name="FinancialAccountTransCSV" type="list" list-name="financialAcctgTransList" view-size="99999">
+        <field name="transactionDate"><display/></field>
+        <field name="paymentId"><display/></field>
+        <field name="invoiceItemType"><display/></field>
+        <field name="openingBalance"><display/></field>
+        <field name="debitAmount"><display/></field>
+         <field name="creditAmount"><display/></field>
+          <field name="closingBalance"><display/></field>
+    </form>
     <form name="InventoryValuation" type="single" target="InventoryValuation" header-row-style="header-row" default-table-style="basic-table">
         <field name="facilityId" position="1">
             <drop-down allow-empty="true">

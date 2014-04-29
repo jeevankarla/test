@@ -635,7 +635,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="CashReceiptReportTXT">
+	<screen name="CashReceiptReportPDF">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>

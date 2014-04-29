@@ -2658,10 +2658,22 @@ under the License.
         <security auth="true" https="true"/>
         <response name="success" type="view" value="GlAccountTrialBalanceReportPdf"/>
     </request-map>
-
     <request-map uri="CommissionRun">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CommissionRun"/>
+    </request-map>
+    
+    <request-map uri="FinancialAccountingTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinancialAccountingTrans"/>
+    </request-map>
+    <request-map uri="FinancialAccountTrans.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FinancialAccountTransPdf"/>
+    </request-map>
+    <request-map uri="FinancialAccountTrans.csv">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FinancialAccountTransCsv"/>
     </request-map>
 
     <!--Add Tax Settings -->
@@ -3115,6 +3127,11 @@ under the License.
     <!--<view-map name="EditGlAccountCategory" type="screen" page="component://accounting/widget/GlSetupScreens.xml#EditGlAccountCategory"/>
     <view-map name="FindGlAccountCategory" type="screen" page="component://accounting/widget/GlSetupScreens.xml#FindGlAccountCategory"/>
     <view-map name="EditGlAccountCategoryMember" type="screen" page="component://accounting/widget/GlSetupScreens.xml#EditGlAccountCategoryMember"/>-->
+    
+    <view-map name="FinancialAccountingTrans" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountingTrans"/>
+    <view-map name="FinancialAccountTransPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="FinancialAccountTransCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransCsv" content-type="text/csv" encoding="none"/>
+    
     <view-map name="CostCenters" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#CostCenters"/>
     <view-map name="GlAccountBalanceByCostCenter" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenter"/>
     <view-map name="GlAccountBalanceByCostCenterPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenterPdf" content-type="application/pdf" encoding="none"/>

@@ -1177,6 +1177,11 @@
 			<link target="AgingAnalysis">
 				<parameter param-name="organizationPartyId" />
 			</link>
+		</menu-item>
+		<menu-item name="FinancialAccountingTrans" title="Financial Acctng">
+			<link target="FinancialAccountingTrans">
+				<parameter param-name="organizationPartyId" />
+			</link>
 		</menu-item>		
 	</menu>
 	<menu name="PartyAdminTabBar" extends="CommonTabBarMenu"

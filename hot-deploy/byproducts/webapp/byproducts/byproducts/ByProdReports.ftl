@@ -248,7 +248,7 @@ function makeDatePicker(fromDateId ,thruDateId){
       		</form>
       	</tr>
       	<tr>
-      		<form id="CashReceiptReport" name="CashReceiptReport" method="post" action="<@ofbizUrl>cashReceiptReport.txt</@ofbizUrl>" target="_blank">	
+      		<form id="CashReceiptReport" name="CashReceiptReport" method="post" action="<@ofbizUrl>cashReceiptReport.pdf</@ofbizUrl>" target="_blank">	
       			<td width="34%">Cash Receipt Report</td>
       			<td width="33%">Date<input  type="text" size="18pt" id="receiptDateId" readonly  name="receiptDate"/>
 				<input type="submit" value="Download" class="buttontext"/></td>       			

@@ -402,9 +402,9 @@
    		<security https="true" auth="true"/>
         <response name="success" type="view" value="SalesReportTXT"/>
     </request-map>
-    <request-map uri="cashReceiptReport.txt">
+    <request-map uri="cashReceiptReport.pdf">
    		<security https="true" auth="true"/>
-        <response name="success" type="view" value="CashReceiptReportTXT"/>
+        <response name="success" type="view" value="CashReceiptReportPDF"/>
     </request-map>
     <!--Ajax Requests  -->
     <request-map uri="getBoothOwnerContactInfo">
@@ -885,7 +885,7 @@
     <view-map name="ProductReturnsReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ProductReturnsReportTXT" content-type="text/plain"/>
  	<view-map name="TruckSheetDetailReport" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetDetailReportCSV" content-type="text/csv"/>
     <view-map name="SalesReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#SalesReportTXT" content-type="text/plain"/>
-    <view-map name="CashReceiptReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashReceiptReportTXT" content-type="text/plain"/>
+    <view-map name="CashReceiptReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashReceiptReportPDF" content-type="application/pdf"/>
 
     <view-map name="InstBillOfSaleReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InstBillOfSaleReportTXT" content-type="text/plain"/>
     <view-map name="EnclosureOfTaxInvoiceReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#EnclosureOfTaxInvoiceReportTXT" content-type="text/plain"/>
