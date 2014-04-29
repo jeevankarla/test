@@ -478,6 +478,7 @@
         <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="boothId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
         <attribute name="routeChangeFlag" type="String" mode="IN" optional="true"/>
