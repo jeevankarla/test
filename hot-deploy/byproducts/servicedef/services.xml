@@ -502,6 +502,8 @@
         <attribute name="issuingAuthorityBranch" mode="IN" type="String" optional="true"/>
         <attribute name="instrumentDate" mode="IN" type="String" optional="true" />
         <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
+        <attribute name="isEnableAcctg" mode="IN" type="String" optional="true"/>
+        
         <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
         <attribute name="statusFlag" mode="OUT" type="String" optional="true"/>
         <attribute name="hideSearch" mode="OUT" type="String" optional="true"/>
@@ -633,5 +635,32 @@
         <description>Update Return Items For Period</description>
         <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
+    </service>
+    <service name="batchSettleLMSCashOrders" engine="java" auth="true" transaction-timeout="6000"
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="batchSettleLMSCashOrders" >
+        <description>This is a batch service that settles cash orders by 
+        creating a payment and applying it to the card order invoice.  
+        NOTE:: This is a temporary service until payments integration is completed
+        </description>
+        <attribute name="startDate"  field-name="From Date" mode="IN" type="Date" optional="true"/>
+        <attribute name="endDate"  field-name="Thru Date" mode="IN" type="Date" optional="true"/>  
+        <auto-attributes mode="OUT"></auto-attributes>
+    </service>       
+	<service name="batchSettleLMSCardOrders" engine="java" auth="true" transaction-timeout="6000"
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="batchSettleLMSCardOrders" >
+        <description>This is a batch service that settles card orders by 
+        creating a payment and applying it to the card order invoice.  Cards are actually
+        paid in advance but for efficiency/simplicity we create payments at order 
+        generation</description>
+        <attribute name="startDate" mode="IN" type="Date" optional="true"/>
+        <attribute name="endDate" mode="IN" type="Date" optional="true"/>          
+    </service> 
+	<service name="batchSettleLMSSpecialOrders" engine="java" auth="true" transaction-timeout="6000"
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="batchSettleLMSSpecialOrders" >
+        <description>This is a batch service that settles special orders by 
+        creating a payment and applying it to the card order invoice.  Special orders are actually
+        paid in advance.</description>
+        <attribute name="startDate" mode="IN" type="Date" optional="true"/>
+        <attribute name="endDate" mode="IN" type="Date" optional="true"/>          
     </service>
 </services>

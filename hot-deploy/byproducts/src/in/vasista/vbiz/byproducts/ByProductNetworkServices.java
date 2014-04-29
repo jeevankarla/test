@@ -3107,8 +3107,8 @@ public class ByProductNetworkServices {
 				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS,shipmentTypeId));
 			}
 			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
-			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
-			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,UtilDateTime.getDayStart(dayBegin)));
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.getDayEnd(dayEnd)));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
 			try {
 				shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
@@ -5562,6 +5562,7 @@ public class ByProductNetworkServices {
             String issuingAuthority = (String) context.get("issuingAuthority");
             String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
             String instrumentDateStr = (String) context.get("instrumentDate");
+            String isEnableAcctg= (String) context.get("isEnableAcctg");
 	        boolean useFifo = Boolean.FALSE;       
 	        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
 	        	useFifo = (Boolean)context.get("useFifo");
@@ -5653,7 +5654,7 @@ public class ByProductNetworkServices {
 					//exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","SPECIAL_ORDER","CREDIT")));
 					exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH") , EntityOperator.OR , EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, categoryTypeEnumList)));
 			    }else{
-					exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH"));
+			    	exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("EMP_SUBSIDY","CASH")));
 				}
 					
 			/*exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));*/
@@ -5727,7 +5728,9 @@ public class ByProductNetworkServices {
 	            paymentCtx.put("instrumentDate", instrumentDate);
 	            paymentCtx.put("paymentPurposeType", paymentPurposeType);
 	            paymentCtx.put("statusId", "PMNT_RECEIVED");
-	            paymentCtx.put("isEnableAcctg", "N");
+	            if (UtilValidate.isNotEmpty(isEnableAcctg)) {
+	                paymentCtx.put("isEnableAcctg", isEnableAcctg);                        	
+	            }
 	            paymentCtx.put("amount", paymentAmount);
 	            paymentCtx.put("userLogin", userLogin); 
 	            paymentCtx.put("invoices", invoiceIds);
@@ -6864,6 +6867,279 @@ public class ByProductNetworkServices {
 				result.put("facilityPartyMap", facilityPartyMap);
 				return result;
 		}
+		   /**
+		     * This is a batch service that settles cash orders by creating a payment and 
+		     * applying it to the card order invoice.  
+		     * NOTE:: This is a temporary service until payments integration is completed
+		     * @param ctx the dispatch context
+		     * @param context 
+		     * @return result map
+		     */   
+		    public static Map<String, Object> batchSettleLMSCashOrders(DispatchContext dctx, Map<String, Object> context){
+		    	context.put("paymentMethodType", "VBIZ_PAYIN");    	
+		    	return batchSettleLMSOrders(dctx, context);
+		    }
+		    
+		    /**
+		     * This is a batch service that settles card orders by creating a payment and 
+		     * applying it to the card order invoice.  Cards orders are actually advance pay orders 
+		     * but for efficiency/simplicity we auto create payments after order generation
+		     * @param ctx the dispatch context
+		     * @param context 
+		     * @return result map
+		     *//*    
+		    public static Map<String, Object> batchSettleLMSCardOrders(DispatchContext dctx, Map<String, Object> context){
+		    	context.put("productSubscriptionTypeId", "CARD");
+		    	return batchSettleLMSOrders(dctx, context);
+		    }
+
+		    *//**
+		     * This is a batch service that settles card orders by creating a payment and 
+		     * applying it to the card order invoice.  Cards orders are actually advance pay orders 
+		     * but for efficiency/simplicity we auto create payments after order generation
+		     * @param ctx the dispatch context
+		     * @param context 
+		     * @return result map
+		     *//*    
+		    public static Map<String, Object> batchSettleLMSSpecialOrders(DispatchContext dctx, Map<String, Object> context){
+		    	context.put("productSubscriptionTypeId", "SPECIAL_ORDER");
+		    	return batchSettleLMSOrders(dctx, context);
+		    }
+		    
+		    *//**
+		     * This is a batch service that settles orders by creating a payment and 
+		     * applying it to the order invoice. 
+		     * Note: Only VENDOR and PTC booths will be handled in this method
+		     * @param ctx the dispatch context
+		     * @param context 
+		     * @return result map
+		     */
+		    
+		    /*public static Map<String, Object> batchSettleLMSOrders(DispatchContext dctx, Map<String, Object> context){
+		        Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();
+		        String shipmentTypeId= (String) context.get("shipmentTypeId");
+		        String paymentType = "SALES_PAYIN";
+		        String paymentMethodType = (String) context.get("paymentMethodType");
+		        if (UtilValidate.isEmpty(paymentMethodType)) {
+		            paymentMethodType = "CASH_PAYIN";           	
+		        }
+		        Timestamp startDate = UtilDateTime.getDayStart(UtilDateTime.getTimestamp(((java.sql.Date)context.get("startDate")).getTime()));
+		        Timestamp endDate = UtilDateTime.getDayEnd(UtilDateTime.getTimestamp(((java.sql.Date)context.get("endDate")).getTime()));
+		        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
+		    	 if (UtilValidate.isEmpty(productSubscriptionTypeId)) {
+		    		productSubscriptionTypeId= "productSubscriptionTypeId";         	
+			        }
+		       List shipmentIds=getShipmentIdsByType(delegator,startDate,endDate,shipmentTypeId);
+		       
+		       Debug.log("====shipmentIds===="+shipmentIds);
+		        String partyIdTo ="Company";        
+		      
+		        Debug.log("startDate=" + startDate + "; =endDate=" + endDate+"==shipmentTypeId=="+shipmentTypeId+"===productSubscriptionTypeId=="+productSubscriptionTypeId);
+		        if (UtilValidate.isEmpty(productSubscriptionTypeId)) {
+					Debug.logError("Product Subscription Type Id cannot be null", module);	
+		            return ServiceUtil.returnError("Product Subscription Type Id cannot be null");	        	
+		        }
+		        Map<String, Object> result = new HashMap<String, Object>();
+		        int orderCounter = 0;        
+		        Timestamp startTimestamp = UtilDateTime.nowTimestamp();
+		        double elapsedSeconds;        
+		        GenericValue userLogin = null;
+		        try {
+		            userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "system"));
+		        } catch (GenericEntityException e) {
+					Debug.logError(e, module);	
+		            return ServiceUtil.returnError(e.toString());	
+		        }        
+		        List exprListForParameters = FastList.newInstance();
+		        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+				List invoiceStatusList=FastList.newInstance();
+				invoiceStatusList = UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF");  
+				
+				
+				exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+				exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, invoiceStatusList));
+				//exprListForParameters.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, UtilMisc.toList("VENDOR","PTC")));
+				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+				if (!UtilValidate.isEmpty(startDate)) {
+					exprListForParameters.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate));			
+				}
+				if (!UtilValidate.isEmpty(endDate)) {
+					exprListForParameters.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate));			
+				}		
+				EntityCondition	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+				EntityFindOptions findOptions = new EntityFindOptions();
+				findOptions.setDistinct(true);
+		        List boothOrdersList = FastList.newInstance();		
+				try {
+					boothOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", paramCond, null,UtilMisc.toList("estimatedDeliveryDate"), findOptions,false);
+					Set invoiceIdSet = new HashSet(EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId",true));
+					List invoiceIdList = new ArrayList(invoiceIdSet);
+					// Settle each of the card invoices
+					
+					for (int i = 0; i < invoiceIdList.size(); i++) {
+		        		orderCounter++;
+		        		if ((orderCounter % 200) == 0) {
+		        			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+		        			Debug.logImportant("Completed " + orderCounter + " orders [ in " + elapsedSeconds + " seconds]", module);
+		        		}				
+						String invoiceId = (String) invoiceIdList.get(i);
+						List paymentApplicationList =FastList.newInstance();
+						Map invoicePaymentInfoMap =FastMap.newInstance();
+						BigDecimal outstandingAmount =BigDecimal.ZERO;				
+						invoicePaymentInfoMap.put("invoiceId", invoiceId);
+						invoicePaymentInfoMap.put("userLogin",userLogin);
+						Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", invoicePaymentInfoMap);
+						if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
+							Debug.logError(getInvoicePaymentInfoListResult.toString(), module);    			
+					        return ServiceUtil.returnError(null, null, null, getInvoicePaymentInfoListResult);
+					    }
+						Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+						outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");				
+						Map<String, Object> paymentCtx = UtilMisc.<String, Object> toMap("paymentTypeId", paymentType);
+						paymentCtx.put("paymentMethodTypeId", paymentMethodType);
+						GenericValue facility = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+						String partyIdFrom = (String) facility.getString("partyId");
+						paymentCtx.put("partyIdTo", partyIdTo);
+						paymentCtx.put("partyIdFrom", partyIdFrom);
+						paymentCtx.put("statusId", "PMNT_RECEIVED");
+						paymentCtx.put("amount", outstandingAmount);
+						paymentCtx.put("userLogin", userLogin);
+						paymentCtx.put("isEnableAcctg", "N");
+						Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
+						if (ServiceUtil.isError(paymentResult)) {
+							return ServiceUtil.returnError(null, null, null,
+									paymentResult);
+						}
+						String paymentId = (String) paymentResult.get("paymentId");
+						Map<String, Object> invoiceCtx = UtilMisc.<String, Object> toMap("invoiceId", invoiceId);
+						invoiceCtx.put("userLogin", userLogin);
+						invoiceCtx.put("statusId", "INVOICE_READY");
+						try {
+							Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus", invoiceCtx);
+							if (ServiceUtil.isError(invoiceResult)) {
+								return ServiceUtil.returnError(null, null, null,
+										invoiceResult);
+							}
+
+						} catch (GenericServiceException e) {
+							Debug.logError(e, e.toString(), module);
+							return ServiceUtil.returnError(e.toString());
+						}
+
+						Map<String, Object> invoiceApplCtx = UtilMisc.<String, Object> toMap("invoiceId", invoiceId);
+						invoiceApplCtx.put("userLogin", userLogin);
+						invoiceApplCtx.put("paymentId", paymentId);
+						invoiceApplCtx.put("amountApplied", outstandingAmount);
+						Map<String, Object> invoiceApplResult = dispatcher.runSync("createPaymentApplication", invoiceApplCtx);
+						if (ServiceUtil.isError(invoiceApplResult)) {
+							return ServiceUtil.returnError(null, null, null,
+									invoiceApplResult);
+						}
+					}
+				} catch (GenericServiceException e) {
+					Debug.logError(e, e.toString(), module);
+					return ServiceUtil.returnError(e.toString());
+				} catch (GenericEntityException e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.toString());
+				}
+				elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+				Debug.logImportant("Completed " + orderCounter + " orders [ in " + elapsedSeconds + " seconds]", module);		
+				return ServiceUtil.returnSuccess();
+		        
+		    }*/
+		    public static Map<String, Object> batchSettleLMSOrders(DispatchContext dctx, Map<String, Object> context){
+		        Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();
+		        String paymentType = "SALES_PAYIN";
+		        String paymentMethodType = (String) context.get("paymentMethodType");
+		        Timestamp startDate = UtilDateTime.getDayStart(UtilDateTime.getTimestamp(((java.sql.Date)context.get("startDate")).getTime()));
+		        Timestamp endDate = UtilDateTime.getDayEnd(UtilDateTime.getTimestamp(((java.sql.Date)context.get("endDate")).getTime()));
+		        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
+		        Map<String, Object> result=ServiceUtil.returnSuccess("Service runs Succesfully");
+		    	 if (UtilValidate.isEmpty(productSubscriptionTypeId)) {
+		    		productSubscriptionTypeId= "productSubscriptionTypeId";         	
+			        }
+		        String partyIdTo ="Company";        
+		      
+		        Debug.log("startDate=" + startDate + "; =endDate=" + endDate+"===productSubscriptionTypeId=="+productSubscriptionTypeId);
+		        
+		        List facilityIds = (List)getAllBooths(delegator, null).get("boothsList");
+		        
+		        //Map<String, Object> result = new HashMap<String, Object>();
+		        int orderCounter = 0;        
+		        Timestamp startTimestamp = UtilDateTime.nowTimestamp();
+		        double elapsedSeconds;        
+		        GenericValue userLogin = null;
+		        try {
+		            userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "system"));
+		        } catch (GenericEntityException e) {
+					Debug.logError(e, module);	
+		            return ServiceUtil.returnError(e.toString());	
+		        }        
+		        List exprListForParameters = FastList.newInstance();
+		        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+				int totalDays=UtilDateTime.getIntervalInDays(startDate,endDate);
+				 Debug.log("=====totalDays==="+totalDays);
+				try {
+					for (int i = 0; i < facilityIds.size(); i++) {
+		        		orderCounter++;
+		        		if ((orderCounter % 200) == 0) {
+		        			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+		        			Debug.logImportant("Completed " + orderCounter + " orders [ in " + elapsedSeconds + " seconds]", module);
+		        		}				
+						String facilityId = (String)facilityIds.get(i);
+						List paymentApplicationList =FastList.newInstance();
+						Map invoicePaymentInfoMap =FastMap.newInstance();
+						BigDecimal outstandingAmount =BigDecimal.ZERO;	
+						
+						Timestamp paymentDate = startDate;
+				        for (int k = 0; k <=(totalDays); k++) {
+							Map routeMarginMap = FastMap.newInstance();
+							paymentDate = UtilDateTime.addDaysToTimestamp(startDate, k);
+						    Map boothsPaymentsDetail = FastMap.newInstance();
+						    boothsPaymentsDetail = getBoothPayments(delegator ,dispatcher ,userLogin , UtilDateTime.toDateString(paymentDate,"yyyy-MM-dd"),null ,facilityId ,null ,Boolean.TRUE);        
+							if (ServiceUtil.isError(boothsPaymentsDetail)) {
+								Debug.logError(boothsPaymentsDetail.toString(), module);    			
+						        return  ServiceUtil.returnError(null, null, null, boothsPaymentsDetail);
+						    }
+							List   boothPaymentsList =(List) boothsPaymentsDetail.get("boothPaymentsList");
+							if(UtilValidate.isNotEmpty(boothPaymentsList)){
+							Map	tempBoothPayment =(Map)boothPaymentsList.get(0);
+							outstandingAmount = (BigDecimal)tempBoothPayment.get("totalDue");
+							}
+					       Debug.log("=====outstandingAmount==="+outstandingAmount+"===BoothId=="+facilityId+"====PaymentDatetoBe=="+paymentDate);
+				    	   if(outstandingAmount.compareTo(BigDecimal.ZERO)<=0){
+				    	   continue;
+				    	   }
+				    		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentMethodTypeId", paymentMethodType);    		
+				    		paymentCtx.put("userLogin", userLogin);
+				    		paymentCtx.put("facilityId", facilityId);
+				    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(paymentDate, "yyyy-MM-dd HH:mm:ss"));
+				    		paymentCtx.put("amount", outstandingAmount.toString());
+				    		paymentCtx.put("isEnableAcctg", "N");
+				    		try{
+								 result =  dispatcher.runSync("createPaymentForBooth",paymentCtx);
+								if (ServiceUtil.isError(result)) {
+									return ServiceUtil.returnError(null, null, null,result);
+								}
+							}catch (GenericServiceException e) {
+								// TODO: handle exception
+								Debug.logError(e, module);    			
+								return ServiceUtil.returnError(e.getMessage());
+							}
+					}
+				 }
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.toString());
+				}
+				elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+				Debug.logImportant("Completed " + orderCounter + " orders [ in " + elapsedSeconds + " seconds]", module);		
+				return ServiceUtil.returnSuccess();
+		        
+		    }
 }
 	
 	
