@@ -341,9 +341,9 @@
     <request-map uri="cancelByProdShipment">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelByProdShipment"/>
-       <response name="success" type="view-last-noparam" />
-        <response name="failed" type="view-last-noparam" />
-        <response name="error" type="view-last-noparam"/>
+       <response name="success" type="request-redirect" value="TruckSheetMotherDairy"/>
+        <response name="failed" type="request-redirect" value="TruckSheetMotherDairy"/>
+        <response name="error" type="request-redirect" value="TruckSheetMotherDairy"/>
     </request-map>
    
     <request-map uri="routeChequeValue.txt"><security https="true" auth="true"/>
@@ -443,7 +443,11 @@
       <request-map uri="TruckSheetMotherDairy">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TruckSheetMotherDairy"/>
-    </request-map>     
+    </request-map>  
+    <request-map uri="TruckSheetMotherDairyInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TruckSheetMotherDairyInternal"/>
+    </request-map>      
     <request-map uri="MilkDeliveryScheduleReport.txt">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="MilkDeliveryScheduleReport"/>
@@ -895,6 +899,8 @@
     <!-- NG View Mappings -->
   
     <view-map name="TruckSheetMotherDairy" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheet"/>
+    <view-map name="TruckSheetMotherDairyInternal" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetInternal"/>
+
     <view-map name="VehicleStatus" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#VehicleStatus"/>
     <view-map name="VehicleStatusChange" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#VehicleStatusChange"/>
     

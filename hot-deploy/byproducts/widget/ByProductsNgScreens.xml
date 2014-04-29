@@ -227,24 +227,9 @@
 				<set field="titleProperty" value="Delivery Schedule"/> 
 				<set field="tabButtonItem" value="TruckSheet" />
 				<set field="layoutSettings.javaScripts[]" value="/byproducts/images/appendRoute.js" global="true"/> 
-				<set field="tabButtonItem2" value="TruckSheet" />				
-                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>   
-                 <entity-condition list="listTruckSheets" entity-name="Shipment">
-                	<order-by field-name="-estimatedShipDate"/>
-                	<order-by field-name="statusId"/>
-                </entity-condition> 
-                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/shipmentList.groovy"/>          
-               <!--  <set field="routeList" value="${groovy:in.vasista.vbiz.byproducts.ByProductServices.getByproductRoutes(delegator).get(&quot;routesList&quot;);}" type="List"/>  -->
-                <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/SeperateRoutesList.groovy" />
-                <!-- <entity-condition list="routeList" entity-name="Facility">
-                	<condition-list combine="and">
-                		<condition-expr field-name="facilityTypeId" operator="equals" value="ROUTE"/>
-                		<condition-expr field-name="categoryTypeEnum" operator="equals" value="BYPRODUCTS"/>
-                	</condition-list>
-                	<select-field field-name="facilityId"/>
-                	<order-by field-name="sequenceNum"/>
-                </entity-condition>	 -->
+				<set field="tabButtonItem2" value="TruckSheet" />		
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/shipmentList.groovy"/>          
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/SeperateRoutesList.groovy" />
                  <entity-condition list="lmsShipTypeList" entity-name="ShipmentType">
                		<condition-expr field-name="parentTypeId" operator="equals" value="LMS_SHIPMENT"/>
                </entity-condition>
@@ -253,7 +238,7 @@
                     	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
                     </condition-list>
                     <order-by field-name="sequenceId"/>
-                </entity-condition>			
+                </entity-condition>								
 			</actions>
 			<widgets>
 				<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -270,10 +255,9 @@
 								<container style="button-bar">
 									<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/NewDeliverySchedule.ftl"/></html></platform-specific>							  	        					
 									<link url-mode="plain" target="javascript:showTruckSheetGenerateForm();" text="Generate Delivery Schedule" style="buttontext create"  link-type="anchor"/>
-								</container>	
-								<screenlet title="Trucksheet List">				
-									<include-form name="ListTruckSheets" location="component://byproducts/widget/ByProductsNgForms.xml" />
-								</screenlet>
+								</container>
+							 	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/trucksheetStatus.ftl"></html-template></html></platform-specific>
+								<include-screen name="TruckSheetInternal"/>
 							</widgets>
 						</section>						
 					</decorator-section>	
@@ -281,6 +265,40 @@
 			</widgets>
 		</section>
 	</screen>
+  
+    <screen name="TruckSheetInternal">
+		<section>
+			<actions>
+			   <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+			   <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+               <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/> 
+                <entity-condition list="listTruckSheets" entity-name="Shipment">
+                	<order-by field-name="-estimatedShipDate"/>
+                	<order-by field-name="statusId"/>
+                </entity-condition>  
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/shipmentList.groovy"/>          
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/SeperateRoutesList.groovy" />
+                 <entity-condition list="lmsShipTypeList" entity-name="ShipmentType">
+               		<condition-expr field-name="parentTypeId" operator="equals" value="LMS_SHIPMENT"/>
+               </entity-condition>
+               <entity-condition entity-name="Enumeration" list="prodSubTrips" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="MULTI_TRIP"/>
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>	 
+
+			</actions>
+			<widgets>	
+				<screenlet title="Trucksheet List">				
+					<include-form name="ListTruckSheets" location="component://byproducts/widget/ByProductsNgForms.xml" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>  
   
 	<screen name="MilkDeliveryScheduleReport">
 		<section>
@@ -1888,8 +1906,8 @@
 									  	        	<platform-specific><html>
 												  		<html-template location="component://byproducts/webapp/byproducts/byproducts/DuePayment.ftl"/>
 												  		</html>
-												  	</platform-specific>
-												  	<platform-specific>
+												  	</platform-specific>	
+									  	        	<platform-specific>
                                             			<html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchRetailerDues.ftl"/></html>
                                         			</platform-specific>
 										        </screenlet>
