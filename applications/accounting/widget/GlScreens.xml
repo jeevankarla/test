@@ -303,14 +303,54 @@
 										<screenlet
 											title="${uiLabelMap.AccountingAcctgTransEntries} ${uiLabelMap.AccountingByAccount}">
 											<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
-												target="AcctgTransEntriesSearchResultsCsv.csv">
-												<parameter param-name="organizationPartyId" />
-
+												target="AcctgTransEntriesSearchResultsCsv.csv" target-window="_blank">
+												<parameter param-name="organizationPartyId"/>
+												<parameter param-name="acctgTransId"  from-field="parameters.acctgTransId"/>
+												<parameter param-name="glAccountId"  from-field="parameters.glAccountId"/>
+												<parameter param-name="acctgTransTypeId" from-field="parameters.acctgTransTypeId"/>
+												<parameter param-name="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>
+												<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
+												<parameter param-name="isPosted" from-field="parameters.isPosted"/>
+												<parameter param-name="partyId" from-field="parameters.partyId"/>
+												<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
+												<parameter param-name="paymentId" from-field="parameters.paymentId"/>
+												<parameter param-name="fromDate" from-field="parameters.fromDate"/>
+												<parameter param-name="thruDate" from-field="parameters.thruDate"/>
+												<parameter param-name="reportType" from-field="parameters.reportType"/>
 											</link>
 											<link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext"
-												target="AcctgTransEntriesSearchResultsPdf.pdf">
-												<parameter param-name="organizationPartyId" />
-
+												target="AcctgTransEntriesSearchResultsPdf.pdf" target-window="_blank">
+												<parameter param-name="organizationPartyId"/>
+												<parameter param-name="acctgTransId"  from-field="parameters.acctgTransId"/>
+												<parameter param-name="glAccountId"  from-field="parameters.glAccountId"/>
+												<parameter param-name="acctgTransTypeId" from-field="parameters.acctgTransTypeId"/>
+												<parameter param-name="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>
+												<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
+												<parameter param-name="isPosted" from-field="parameters.isPosted"/>
+												<parameter param-name="partyId" from-field="parameters.partyId"/>
+												<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
+												<parameter param-name="paymentId" from-field="parameters.paymentId"/>
+												<parameter param-name="fromDate" from-field="parameters.fromDate"/>
+												<parameter param-name="thruDate" from-field="parameters.thruDate"/>
+												<parameter param-name="reportType" from-field="parameters.reportType"/>
+												
+		<!-- 										<parameter param-name="organizationPartyId" />
+												organizationPartyId:Company
+performSearch:Y
+acctgTransId:
+glAccountId:112000
+acctgTransTypeId:
+glFiscalTypeId:
+glJournalId:
+isPosted:
+partyId:
+invoiceId:
+paymentId:
+fromDate_i18n:
+fromDate:
+thruDate_i18n:
+thruDate:
+reportType:byAccount -->
 											</link>
 											<include-form name="ListFindAcctgTransEntriesByAccount"
 												location="component://accounting/widget/GlForms.xml" />
