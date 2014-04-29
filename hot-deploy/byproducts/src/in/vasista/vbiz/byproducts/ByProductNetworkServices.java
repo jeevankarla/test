@@ -3459,7 +3459,7 @@ public class ByProductNetworkServices {
 	        GenericValue newEntity = delegator.makeValue("AbsenteeOverride");
 	        newEntity.set("boothId", facilityId);
 	        try{
-	         newEntity.set("supplyDate",((new DateTimeConverters.TimestampToSqlDate()).convert(supplyDate)));
+	        	newEntity.set("supplyDate",((new DateTimeConverters.TimestampToSqlDate()).convert(supplyDate)));
 	        }catch(ConversionException e){
 	            Debug.logError(e, module);			
 	            return ServiceUtil.returnError(e.getMessage());        	
@@ -3816,7 +3816,7 @@ public class ByProductNetworkServices {
 						if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
 				            	Debug.logError(getInvoicePaymentInfoListResult.toString(), module);    			
 				                return ServiceUtil.returnError(null, null, null, getInvoicePaymentInfoListResult);
-				            }
+				        }
 						Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
 						outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");
 						if(UtilValidate.isNotEmpty(isPendingDues) && !isPendingDues){
@@ -4003,7 +4003,7 @@ public class ByProductNetworkServices {
 		    if(enableSoCrPmntTrack){
 				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","SPECIAL_ORDER","CREDIT")));
 			}else{
-				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH"));
+				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH", "EMP_SUBSIDY")));
 			}
 			
 			if(UtilValidate.isEmpty(facilityId)){	
