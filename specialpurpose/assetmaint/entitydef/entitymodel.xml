@@ -289,4 +289,35 @@
 			<key-map field-name="statusId" />
 		</relation>
 	</entity>
+	 <view-entity entity-name="VehicleTripAndStatusAndShipment"
+            package-name="org.ofbiz.assetmaint.vehicle"
+            never-cache="true"
+            title="VehicleTrip And Status,Shipment View Entity">
+      <member-entity entity-alias="VHTP" entity-name="VehicleTrip"/>
+      <member-entity entity-alias="VHTPST" entity-name="VehicleTripStatus"/>
+      <member-entity entity-alias="SH" entity-name="Shipment"/>
+      
+      <alias entity-alias="VHTP" name="originFacilityId"/>
+      <alias entity-alias="VHTP" name="shipmentId" />
+      <alias entity-alias="VHTP" name="partyId"/>
+      
+      <alias entity-alias="VHTPST" name="vehicleId"/>
+      <alias entity-alias="VHTPST" name="sequenceNum"/>
+      <alias entity-alias="VHTPST" name="statusId"/>
+  
+      <alias entity-alias="SH" name="estimatedShipDate"/>
+      <alias entity-alias="SH" name="shipmentTypeId"/>
+      <alias entity-alias="SH" name="routeId"/>
+      <alias entity-alias="SH" name="shipmentStatusId" field="statusId"/>
+          
+      <view-link entity-alias="VHTP" rel-entity-alias="VHTPST">
+        <key-map field-name="vehicleId"/>
+        <key-map field-name="sequenceNum"/>
+      </view-link>
+      <view-link entity-alias="VHTP" rel-entity-alias="SH">
+        <key-map field-name="shipmentId"/>
+      </view-link>
+     
+    </view-entity>
+	
 </entitymodel>
