@@ -153,19 +153,15 @@ if(hideSearch == "N" || stopListing){
 				if(paymentMethodTypeId == "CHALLAN_PAYIN"){
 					if(finalFilterList && finalFilterList.contains(facilityId)){
 						boothPaymentsInnerList.add(boothPay);
-						if (statusId != "PAID") {
-							invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
-							invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
-						}
+						invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
+						invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
 					}
 				}
 				else{
 					if(!filterFacilityList || (filterFacilityList && filterFacilityList.contains(facilityId))){
 						boothPaymentsInnerList.add(boothPay);
-						if (statusId != "PAID") {
-							invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
-							invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
-						}
+						invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
+						invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
 					}
 				}
 			}
@@ -182,6 +178,25 @@ if(hideSearch == "N" || stopListing){
 			axisPaymentsList = axisBankPayments["paymentsList"];
 			boothPaymentsList.addAll(axisPaymentsList);
 		}
+	}
+	if(isRetailer){
+		isRetailerExists = false;
+		boothPaymentsList.each{ eachItem ->
+			if(eachItem.facilityId == facilityId){
+				isRetailerExists = true;
+			}
+		}
+		if(!isRetailerExists){
+			tempMap = [:];
+			tempMap.facilityId = facilityId;
+			tempMap.routeId = "";
+			tempMap.paymentMethodTypeId = paymentMethodTypeId;
+			tempMap.grandTotal = 0;
+			tempMap.totalDue = 0
+			tempMap.supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+			boothPaymentsList.add(tempMap);
+		}
+		
 	}
 	context.boothPaymentsList = boothPaymentsList;	
 	context.paymentDate= paymentDate;
