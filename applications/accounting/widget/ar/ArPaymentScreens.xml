@@ -20,7 +20,62 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="FindPayments">
+  <screen name="FindPayments">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingFindArPayments"/>
+                <set field="headerItem" value="payments"/>
+                <set field="tabButtonItem" value="findPayments"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonArPaymentDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                             <container style="button-bar">
+                                            <link target="newPayment" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                        </container>
+                                        </widgets>
+                                    </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindArPayments" location="component://accounting/widget/ar/forms/ArPaymentForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
+                                        <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- <screen name="FindPayments">
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindArPayments"/>
@@ -53,6 +108,9 @@ under the License.
                                         <include-form name="FindArPayments" location="component://accounting/widget/ar/forms/ArPaymentForms.xml"/>
                                     </decorator-section>
                                     <decorator-section name="search-results">
+                                    <platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
                                         <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/>
                                     </decorator-section>
                                 </decorator-screen>
@@ -62,7 +120,7 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
+    </screen> -->
     <screen name="BatchPayments">
         <section>
             <actions>
