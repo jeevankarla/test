@@ -949,32 +949,7 @@ under the License.
         <attribute name="estimatedDeliveryDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
         <attribute name="shipmentId" mode="IN" type="String" optional="false"/>      
     </service>
-	<service name="batchSettleLMSCashOrders" engine="java" auth="true" transaction-timeout="6000"
-        location="org.ofbiz.order.order.OrderServices" invoke="batchSettleLMSCashOrders" >
-        <description>This is a batch service that settles cash orders by 
-        creating a payment and applying it to the card order invoice.  
-        NOTE:: This is a temporary service until payments integration is completed
-        </description>
-        <attribute name="startDate" mode="IN" type="Date" optional="true"/>
-        <attribute name="endDate" mode="IN" type="Date" optional="true"/>        
-    </service>       
-	<service name="batchSettleLMSCardOrders" engine="java" auth="true" transaction-timeout="6000"
-        location="org.ofbiz.order.order.OrderServices" invoke="batchSettleLMSCardOrders" >
-        <description>This is a batch service that settles card orders by 
-        creating a payment and applying it to the card order invoice.  Cards are actually
-        paid in advance but for efficiency/simplicity we create payments at order 
-        generation</description>
-        <attribute name="startDate" mode="IN" type="Date" optional="true"/>
-        <attribute name="endDate" mode="IN" type="Date" optional="true"/>          
-    </service> 
-	<service name="batchSettleLMSSpecialOrders" engine="java" auth="true" transaction-timeout="6000"
-        location="org.ofbiz.order.order.OrderServices" invoke="batchSettleLMSSpecialOrders" >
-        <description>This is a batch service that settles special orders by 
-        creating a payment and applying it to the card order invoice.  Special orders are actually
-        paid in advance.</description>
-        <attribute name="startDate" mode="IN" type="Date" optional="true"/>
-        <attribute name="endDate" mode="IN" type="Date" optional="true"/>          
-    </service>         
+	         
     <service name="changeOrderPaymentStatus" engine="java" auth="true"
             location="org.ofbiz.order.order.OrderServices" invoke="setOrderPaymentStatus">
         <description>Change the payment status of an existing order</description>
