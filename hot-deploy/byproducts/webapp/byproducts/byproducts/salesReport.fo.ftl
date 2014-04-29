@@ -96,14 +96,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQtyLtrs?if_exists?string("#0.00")}<#else></#if></fo:block>  
 	                       			</fo:table-cell>
 	                       			<#assign returnPrice = (saleProductReturnMap[product.productId].get("returnPrice"))?if_exists>
-	                       			<#if returnQty?has_content>
+	                       			<#if returnPrice?has_content>
                        					<#assign retrnQtyAmount = (returnQty*returnPrice)>
                        			    	<#assign grandTotalRetrnQtyRevenue = grandTotalRetrnQtyRevenue+retrnQtyAmount?if_exists>
                        			    </#if>
 	                       			<fo:table-cell>
-	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${retrnQtyAmount?if_exists?string("#0.00")}<#else></#if></fo:block>  
+	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnPrice?has_content>${retrnQtyAmount?if_exists?string("#0.00")}<#else></#if></fo:block>  
 	                       			</fo:table-cell>
-                       				<#if returnQty?has_content>
+                       				<#if retrnQtyAmount?has_content>
                        					<#assign totalNetPrice = (revenue-retrnQtyAmount)>
                        				<#else>	
                        					<#assign totalNetPrice = revenue>
