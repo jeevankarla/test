@@ -313,7 +313,8 @@ public class ByProductChangeIndentServices {
      		 Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
 			 processChangeIndentHelperCtx.put("subscriptionId", subscription.getString("subscriptionId"));
 			 processChangeIndentHelperCtx.put("boothId", boothId);
-			 processChangeIndentHelperCtx.put("routeChangeFlag", routeChangeFlag);
+			 processChangeIndentHelperCtx.put("subscriptionTypeId", subscriptionTypeId);
+  	       	 processChangeIndentHelperCtx.put("routeChangeFlag", routeChangeFlag);
 			 processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
 			 processChangeIndentHelperCtx.put("effectiveDate", effectiveDate);
 			 processChangeIndentHelperCtx.put("productQtyList", productQtyList);
