@@ -1046,11 +1046,6 @@ under the License.
         <attribute name="cardDetails" mode="IN" type="Map" optional="true"/>
         <attribute name="orderId" mode="IN" type="String" optional="true"/>
     </service>
-     <service name="sendChangeIndentSms" engine="java"
-        location="org.ofbiz.network.NetworkServices" invoke="sendChangeIndentSms">
-        <description>Send a change indent sms</description>
-        <attribute name="facilityId" type="String" mode="IN" optional="false"/>                                              
-    </service>
     
     
 	<service name="populateLMSSalesHistorySummary" engine="java"

@@ -378,7 +378,7 @@ public class PaymentWorker {
                        
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
             sendSmsParams.put("contactNumberTo", contactNumberTo);                     
-            sendSmsParams.put("text","Received your payment amount of Rs. "+ payment.get("amount")+". Automatic message sent by Vasista Vbiz.");           
+            sendSmsParams.put("text","Received your payment amount of Rs. "+ payment.get("amount")+". Automatic message sent by Milkosoft.");           
             serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
             if (ServiceUtil.isError(serviceResult)) {
                 Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);               
