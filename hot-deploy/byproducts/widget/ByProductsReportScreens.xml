@@ -650,7 +650,7 @@
 						<platform-specific>
 							<xsl-fo>
 								<html-template
-									location="component://byproducts/webapp/byproducts/byproducts/CashReceiptReport.fo.ftl" />
+									location="component://byproducts/webapp/byproducts/byproducts/cashReceiptReport.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets> 

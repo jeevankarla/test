@@ -110,7 +110,7 @@ under the License.
 <#if boothPaymentsList?has_content>
   <form name="cancelPayment" id="cancelPayment"  method="post" action="cancelBoothPayment">
   </form>
-  <form name="listBooths" id="listBooths"  method="post" action="massPrintReceipt" target="_blank">
+  <form name="listBooths" id="listBooths"  method="post" action="cashReceiptReport.pdf" target="_blank">
     <div align="right">
       <input id="submitButton" type="button"  onclick="javascript:jQuery('#listBooths').submit();" value="Print Receipt"/>
     </div>

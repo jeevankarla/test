@@ -63,7 +63,6 @@ function makeDatePicker(fromDateId ,thruDateId){
 		makeDatePicker("bsFromDateId","fromDateId");
 		makeDatePicker("bsThruDateId","thuDateId");
 		makeDatePicker("prodReturnDateId","thuDateId");
-		makeDatePicker("receiptDateId","thuDateId");
 		makeDatePicker("saleFromDateId","fromDateId");
 		makeDatePicker("saleThruDateId","thuDateId");
 		makeDatePicker("smsNotify","");
@@ -244,13 +243,6 @@ function makeDatePicker(fromDateId ,thruDateId){
       			<td width="34%">Sales Report</td>
       			<td width="33%">From<input  type="text" size="18pt" id="saleFromDateId" readonly  name="saleFromDate"/>
       			<td width="33%">Thru<input  type="text" size="18pt" id="saleThruDateId" readonly  name="saleThruDate"/>
-				<input type="submit" value="Download" class="buttontext"/></td>       			
-      		</form>
-      	</tr>
-      	<tr>
-      		<form id="CashReceiptReport" name="CashReceiptReport" method="post" action="<@ofbizUrl>cashReceiptReport.pdf</@ofbizUrl>" target="_blank">	
-      			<td width="34%">Cash Receipt Report</td>
-      			<td width="33%">Date<input  type="text" size="18pt" id="receiptDateId" readonly  name="receiptDate"/>
 				<input type="submit" value="Download" class="buttontext"/></td>       			
       		</form>
       	</tr>
