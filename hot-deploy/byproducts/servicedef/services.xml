@@ -631,7 +631,7 @@
         <attribute name="statusId" mode="IN" type="String" optional="false"/>
         <attribute name="periodBillingList" type="List" mode="OUT" optional="true"/>
     </service>
-    <service name="updateReturnsForPeriod" engine="java" auth="true" 
+    <service name="updateReturnsForPeriod" engine="java" auth="true" transaction-timeout="70000" 
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="updateReturnsForPeriod">
         <description>Update Return Items For Period</description>
         <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
