@@ -108,9 +108,8 @@
 				<set field="headerItem" value="companies" />
 				<set field="labelTitleProperty"
 					value="${uiLabelMap.AccountingAvailableInternalOrganizations}" />
-				<entity-condition entity-name="PartyRole" list="parties">
-					<condition-expr field-name="roleTypeId" operator="equals"
-						value="INTERNAL_ORGANIZATIO" />
+				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="parties">
+					<order-by field-name="groupName"/>
 				</entity-condition>
 				<service service-name="acctgPrefPermissionCheck" result-map="permResult">
 					<field-map field-name="mainAction" value="VIEW" />
@@ -162,9 +161,8 @@
 				<set field="headerItem" value="companies" />
 				<set field="labelTitleProperty"
 					value="${uiLabelMap.AccountingAvailableInternalOrganizations}" />
-				<entity-condition entity-name="PartyRole" list="parties">
-					<condition-expr field-name="roleTypeId" operator="equals"
-						value="INTERNAL_ORGANIZATIO" />
+				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="parties">
+					<order-by field-name="groupName"/>
 				</entity-condition>
 				<service service-name="acctgPrefPermissionCheck" result-map="permResult">
 					<field-map field-name="mainAction" value="VIEW" />
@@ -216,9 +214,8 @@
 				<set field="headerItem" value="companies" />
 				<set field="labelTitleProperty"
 					value="${uiLabelMap.AccountingAvailableInternalOrganizations}" />
-				<entity-condition entity-name="PartyRole" list="parties">
-					<condition-expr field-name="roleTypeId" operator="equals"
-						value="INTERNAL_ORGANIZATIO" />
+				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="parties">
+					<order-by field-name="groupName"/>
 				</entity-condition>
 				<service service-name="acctgPrefPermissionCheck" result-map="permResult">
 					<field-map field-name="mainAction" value="VIEW" />
@@ -271,9 +268,8 @@
 				<set field="headerItem" value="companies" />
 				<set field="labelTitleProperty"
 					value="${uiLabelMap.AccountingAvailableInternalOrganizations}" />
-				<entity-condition entity-name="PartyRole" list="parties">
-					<condition-expr field-name="roleTypeId" operator="equals"
-						value="INTERNAL_ORGANIZATIO" />
+				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="parties">
+					<order-by field-name="groupName"/>
 				</entity-condition>
 				<service service-name="acctgPrefPermissionCheck" result-map="permResult">
 					<field-map field-name="mainAction" value="VIEW" />
