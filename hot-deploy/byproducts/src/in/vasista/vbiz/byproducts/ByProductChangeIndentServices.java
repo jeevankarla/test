@@ -382,7 +382,7 @@ public class ByProductChangeIndentServices {
   	    	  defaultRouteId = (String)boothDetails.get("routeId");
   		  
   	    	  if(UtilValidate.isEmpty(defaultRouteId)){
-  	    		  Debug.log("Permanent Route doesn't exist for retailer " + boothId);		  
+  	    		Debug.log("Permanent Route doesn't exist for retailer " + boothId);
     			  return ServiceUtil.returnError("Permanent Route doesn't exist for retailer " + boothId);
   	    	  }
   	      }
@@ -508,7 +508,7 @@ public class ByProductChangeIndentServices {
 				  			  updateSubscriptionProduct.put("sequenceNum",subscriptionProduct.getString("sequenceNum"));
 				  			  updateSubscriptionProduct.put("fromDate", subscriptionProduct.getTimestamp("fromDate"));
 				  			  updateSubscriptionProduct.put("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(effectiveDate, -1)));
-			  				  result = dispatcher.runSync("updateSubscriptionProduct",updateSubscriptionProduct);
+				  			  result = dispatcher.runSync("updateSubscriptionProduct",updateSubscriptionProduct);
 			  				  if (ServiceUtil.isError(result)) {
 			  					  String errMsg =  ServiceUtil.getErrorMessage(result);
 			  					  Debug.logError(errMsg , module);
@@ -559,10 +559,10 @@ public class ByProductChangeIndentServices {
 						  }
 					  }
 	  			}//end of product Qty List
-	  			
+
 	  			List condList = FastList.newInstance();
 	  			Timestamp nextEffDay = UtilDateTime.addDaysToTimestamp(effectiveDate, 1);
-	  			if(routeChange && !productSubscriptionTypeId.equalsIgnoreCase("EMP_SUBSIDY") && enableContinuousIndent){
+	  			if(routeChange){
 					  condList.clear();
 					  condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
 					  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
@@ -674,16 +674,15 @@ public class ByProductChangeIndentServices {
 	  	  		  if(UtilValidate.isNotEmpty(subsidyList)){
 	  	  			  actualSubsidyQty = ((GenericValue)EntityUtil.getFirst(subsidyList)).getBigDecimal("quantity");
 	  	  		  }
-	    	    	  
 	  	  		  condList.clear();
 	  	  		  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 	  	  		  condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productId", EntityOperator.IN, altShiftProduct), EntityOperator.OR, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, subsidyProduct)));
 	  	  		  condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, "AM"));
 	  	  		  condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.NOT_EQUAL, "EMP_SUBSIDY"));
 	  	  		  condList.add(EntityCondition.makeCondition("quantity", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
-	  	  		  condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+	  	  		  condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
 	  	  		  condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-	  	  				  EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate))));
+	  	  				  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate))));
 	  	  		  EntityCondition shiftCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	  	  		  List<GenericValue> indentList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", shiftCond, null, null, null, false);
 	  	  		  List<GenericValue> tmsLtrIndentList = EntityUtil.filterByCondition(indentList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, subsidyProduct));
@@ -735,7 +734,6 @@ public class ByProductChangeIndentServices {
 	  		    		  productQtyMap.put("quantity", actualSubsidyQty);
 	  		    		  productQtyMap.put("sequenceNum", tmsInRoute);
 	  		    		  productQtyList.add(productQtyMap);
-	  		    		  
 		  					Map inputMap = FastMap.newInstance();
 		  					inputMap.put("subscriptionId", subscriptionId);
 		  					inputMap.put("productSubscriptionTypeId", "EMP_SUBSIDY");
@@ -758,7 +756,6 @@ public class ByProductChangeIndentServices {
 		  					prodQtyMap.put("quantity", actualSubsidyQty);
 		  					prodQtyMap.put("sequenceNum", defaultRouteId);
 		  					tempList.add(prodQtyMap);
-		  		    		  
 		  					
 		  					Timestamp nxtDay = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(effectiveDate, 1));  
 		  					inputMap = FastMap.newInstance();
