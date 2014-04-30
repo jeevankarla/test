@@ -840,14 +840,14 @@ public class ByProductNetworkServices {
 	        String supplyDateStr = (String) context.get("supplyDate"); 
 	        String boothId = (String) context.get("boothId");
 	        String routeId = (String) context.get("routeId");
-	        String screenFlag = (String) context.get("screenFlag");
+	       String screenFlag = (String) context.get("screenFlag");
 	        String tripId = (String) context.get("tripId");
 	        Boolean isEnableProductSubscription = Boolean.FALSE;
 	        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
 	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        if(UtilValidate.isNotEmpty(context.get("isEnableProductSubscription"))){
-	           isEnableProductSubscription=(Boolean) context.get("isEnableProductSubscription");
+	           isEnableProductSubscription = (Boolean) context.get("isEnableProductSubscription");
 	        }
 	        Map result = ServiceUtil.returnSuccess(); 
 	        List changeIndentProductList = FastList.newInstance();
@@ -862,6 +862,7 @@ public class ByProductNetworkServices {
 	        Map qtyInPieces = FastMap.newInstance();
 	        List productList = FastList.newInstance();
 	        List conditionList = FastList.newInstance();
+	        Map prodPriceMap = FastMap.newInstance();
 	        String productStoreId = (String)(ByProductServices.getByprodFactoryStore(delegator)).get("factoryStoreId");
 	        String partyId = "";
 	        String facilityCategory = "";
@@ -881,7 +882,6 @@ public class ByProductNetworkServices {
 	  	  	}
 	        Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
   		    Timestamp dayEnd = UtilDateTime.getDayStart(supplyDate);
-  		
   		    try{
   		    	
 	    		if(UtilValidate.isNotEmpty(routeId)){
@@ -949,6 +949,10 @@ public class ByProductNetworkServices {
 	    				productSubscriptionTypeId = "CASH";
 	    			} 
 	    			else{
+	    				if(facility.getString("categoryTypeEnum").equals("SHP_RTLR")){
+		  	    			  productSubscriptionTypeId = "CASH";
+		  	    		}
+	    				
 	    				if(facility.getString("categoryTypeEnum").equals("SO_INST")){
 	  	    			  productSubscriptionTypeId = "SPECIAL_ORDER";
 	  	    		  	}
@@ -967,11 +971,31 @@ public class ByProductNetworkServices {
 	    		inputCtx.put("userLogin", userLogin);
 	    		inputCtx.put("supplyDate",dayBegin);
 	    		inputCtx.put("facilityId",boothId);
-	    		Map qtyResultMap = getFacilityIndentQtyCategories(dctx, inputCtx);
-	    		prodIndentQtyCat = (Map)qtyResultMap.get("indentQtyCategory");
-	    		qtyInPieces = (Map)qtyResultMap.get("qtyInPieces");
-	    		result.put("prodIndentQtyCat", prodIndentQtyCat);
-	    		result.put("qtyInPieces", qtyInPieces);
+	    		Boolean priceCalcFalg = Boolean.TRUE;
+	    		
+	    		if(UtilValidate.isNotEmpty(context.get("priceCalcFalg"))){
+	    			priceCalcFalg = (Boolean)context.get("priceCalcFalg");
+	    		}
+	    		if(priceCalcFalg){
+	    			Map qtyResultMap = getFacilityIndentQtyCategories(dctx, inputCtx);
+		    		prodIndentQtyCat = (Map)qtyResultMap.get("indentQtyCategory");
+		    		qtyInPieces = (Map)qtyResultMap.get("qtyInPieces");
+		    		result.put("prodIndentQtyCat", prodIndentQtyCat);
+		    		result.put("qtyInPieces", qtyInPieces);
+		    		
+		    		Map inputProductRate = FastMap.newInstance();
+		    		inputProductRate.put("productStoreId", productStoreId);
+		    		inputProductRate.put("fromDate",dayBegin);
+		    		inputProductRate.put("facilityId",boothId);
+		    		inputProductRate.put("partyId",partyId);
+		    		inputProductRate.put("facilityCategory",facilityCategory);
+		    		inputProductRate.put("userLogin",userLogin);
+		    		Map priceResultMap = getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
+		    		prodPriceMap = (Map)priceResultMap.get("priceMap");
+		    		result.put("productPrice", prodPriceMap);
+		    		
+	    		}
+	    		result.put("supplyDate", supplyDate);
 	    		/*contIndentProducts = ProductWorker.getProductsByCategory(delegator ,"CONTINUES_INDENT" ,UtilDateTime.getDayStart(supplyDate));
 	    		dayIndentProducts = ProductWorker.getProductsByCategory(delegator ,"DAILY_INDENT" ,UtilDateTime.getDayStart(supplyDate));
 	    		
@@ -1048,25 +1072,7 @@ public class ByProductNetworkServices {
 	    			}
 	    			changeQtyList.add(changeQuantityMap);
 	    			
-	    			//BigDecimal quantityIncluded = (EntityUtil.getFirst(EntityUtil.filterByAnd(productList, UtilMisc.toMap("productId",productId)))).getBigDecimal("quantityIncluded");
-	    			/*if(UtilValidate.isEmpty(changeQuantityMap.get(productId))){
-	    				changeQuantityMap.put(productId, product.getBigDecimal("quantity")); 
-	    				if(UtilValidate.isNotEmpty(qtyCategory) && (qtyCategory.equals("CRATE") || qtyCategory.equals("CAN")) && !productSubscriptionTypeId.equals("EMP_SUBSIDY")){//if(crateIndentProductList.contains(productId)){
-	    					if(UtilValidate.isEmpty(product.getBigDecimal("crateQuantity"))){
-	    						product.set("crateQuantity", convertPacketsToCrates(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "packetQuantity", product.getBigDecimal("quantity"))));
-	    						product.store();
-	    					}else{
-	    						changeQuantityMap.put(productId, product.getBigDecimal("crateQuantity"));
-	    					}
-	    					
-	    				}
-	    				   				
-	    			}else{
-	    				changeQuantityMap.put(productId, (product.getBigDecimal("quantity")).add(prevQuantityMap.get(productId)));
-	    				if(UtilValidate.isNotEmpty(qtyCategory) && (qtyCategory.equals("CRATE") || qtyCategory.equals("CAN"))){//if(crateIndentProductList.contains(productId)){
-	    					changeQuantityMap.put(productId, product.getBigDecimal("crateQuantity"));
-	    				}
-	    			}*/
+	    			
 	            }
 	    		
 	    		
@@ -1076,16 +1082,8 @@ public class ByProductNetworkServices {
 				return ServiceUtil.returnError(e.toString());
 			}
 	    	
-	        //productList = NetworkServices.getLmsProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate", dayBegin));
-	    	
-	       /* if(dayIndentProducts.size() <=  contIndentProducts.size()){
-	        	productList = contIndentProducts;
-	        }else{
-	        	productList = dayIndentProducts;
-	        }
-	        GenericValue dayIndentProduct= null;
-	        GenericValue conIndentProduct= null;
-	        */
+	    	Map totalIndentQtyMap = FastMap.newInstance();
+	    	BigDecimal totalAmount = BigDecimal.ZERO;
 	    	for(int i= (changeQtyList.size()-1);i >=0 ; i--){
 	        	Map tempChangeProdMap = FastMap.newInstance();
 	        	Map changeQuantityMap = (Map)changeQtyList.get(i);
@@ -1113,6 +1111,8 @@ public class ByProductNetworkServices {
 	            	if(UtilValidate.isNotEmpty(screenFlag) && screenFlag.equals("indentAlt")){
 	            		tempChangeProdMap.put("seqRouteId","");
 	            	}
+	            	
+	            	
 	            	//String qtyIndentCat = (String)prodIndentQtyCat.get(productId);
 	            	/*if(UtilValidate.isNotEmpty(qtyIndentCat) && qtyIndentCat.equals("CRATE")){
 	            		tempChangeProdMap.put("indentProdCat","CR");
@@ -1132,15 +1132,28 @@ public class ByProductNetworkServices {
 	            		tempChangeProdMap.put("indentProdCat","P");
 	            	}*/
 	            	if(UtilValidate.isNotEmpty(changeQuantityMap.get(productId))){
-	            		
+	            		BigDecimal quantity =  BigDecimal.ZERO;
 	            		if(UtilValidate.isNotEmpty(screenFlag) && screenFlag.equals("indentAlt")){
-	            			tempChangeProdMap.put("cQuantity", (BigDecimal)((Map)changeQuantityMap.get(productId)).get("quantity"));
+	            			quantity = (BigDecimal)(((Map)changeQuantityMap.get(productId)).get("quantity"));
+	            			tempChangeProdMap.put("cQuantity",quantity);
 	            			tempChangeProdMap.put("seqRouteId", (String)((Map)changeQuantityMap.get(productId)).get("seqRouteId"));
 	            		}
 	            		else{
-	            			tempChangeProdMap.put("cQuantity", (BigDecimal)changeQuantityMap.get(productId));
+	            			quantity = (BigDecimal)(changeQuantityMap.get(productId));
+	            			tempChangeProdMap.put("cQuantity", quantity);
 	            		}
 	            		
+	            		//lets popultate total indent qty Map
+	            		if(UtilValidate.isNotEmpty(prodPriceMap.get(productId))){
+	            			totalAmount = totalAmount.add(((BigDecimal)prodPriceMap.get(productId)).multiply(quantity));
+	            		}
+		            	if(UtilValidate.isEmpty(totalIndentQtyMap.get(productId))){
+		            		totalIndentQtyMap.put(productId,quantity);
+		            		
+		            	}else{
+		            		totalIndentQtyMap.put(productId,quantity.add((BigDecimal)totalIndentQtyMap.get(productId)));
+		            	}
+		            	
 	            		/*Map prodQtyMap = (Map)changeQuantityMap.get(productId);
 	            		Map tempMap = FastMap.newInstance();
 	            		tempMap.put("quantity", prodQtyMap.get("quantity"));
@@ -1177,6 +1190,9 @@ public class ByProductNetworkServices {
 	    	Map boothDetailResult = getRouteCrateDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId,"supplyDate", dayBegin, "subscriptionTypeId", subscriptionTypeId, "tripId", tripId, "routeId", tempRouteId));
 	    	List routeTotalList = (List)boothDetailResult.get("routeTotalList");
 	    	result.put("routeTotalsList", routeTotalList);
+	    	result.put("totalIndentQtyMap", totalIndentQtyMap);
+	    	result.put("totalAmount", totalAmount);
+	    	
 	    	// lets populate route totals
 	    	try{
 	    		/*conditionList.clear();
@@ -1230,17 +1246,7 @@ public class ByProductNetworkServices {
 	    		int totalCrates = routeCrateTotal.intValue();
 	    		result.put("routeCrateTotal", totalCrates);
 	    		*/
-	    		Map prodPriceMap = FastMap.newInstance();
-	    		Map inputProductRate = FastMap.newInstance();
-	    		inputProductRate.put("productStoreId", productStoreId);
-	    		inputProductRate.put("fromDate",dayBegin);
-	    		inputProductRate.put("facilityId",boothId);
-	    		inputProductRate.put("partyId",partyId);
-	    		inputProductRate.put("facilityCategory",facilityCategory);
-	    		inputProductRate.put("userLogin",userLogin);
-	    		Map priceResultMap = getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
-	    		prodPriceMap = (Map)priceResultMap.get("priceMap");
-	    		result.put("productPrice", prodPriceMap);
+	    	
 	    		
 	    		/*BigDecimal totalMilkInLtrs = BigDecimal.ZERO;
 	    		List categoryList = FastList.newInstance();
@@ -1258,7 +1264,7 @@ public class ByProductNetworkServices {
 	    	}catch (Exception e) {
 	    		Debug.logError(e, e.getMessage());
 			}
-	    	    	//changeIndentProductList = UtilMisc.sortMaps(changeIndentProductList ,UtilMisc.toList("cPrevQuantity","cProductName" ,"dProductName"));
+   	    	//changeIndentProductList = UtilMisc.sortMaps(changeIndentProductList ,UtilMisc.toList("cPrevQuantity","cProductName" ,"dProductName"));
 			result.put("changeIndentProductList", changeIndentProductList);
 			return result;
 	    }
@@ -6778,7 +6784,7 @@ public class ByProductNetworkServices {
 			  	 Timestamp shipDate = null;
 				 	try{
 			  		  productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-			  		  shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate);
+			  		  shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate); 
 			  		  for(int i=0;i<shipmentIds.size();i++){
 			  			  String shipmentId = (String) shipmentIds.get(i);
 			  			  shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
@@ -6787,7 +6793,6 @@ public class ByProductNetworkServices {
 				  			  return ServiceUtil.returnError("shipment does not exists with Id: " + shipmentId);
 				  		  }
 			  			  shipDate = shipment.getTimestamp("estimatedShipDate");
-			  			 
 				  		  if(UtilValidate.isNotEmpty(shipmentIds)){
 				        	  List conditionList = FastList.newInstance();
 					    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
@@ -6866,6 +6871,7 @@ public class ByProductNetworkServices {
 				result.put("facilityPartyMap", facilityPartyMap);
 				return result;
 		}
+
 		   /**
 		     * This is a batch service that settles cash orders by creating a payment and 
 		     * applying it to the card order invoice.  

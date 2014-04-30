@@ -21,8 +21,17 @@ under the License.
 <service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
 
-    <eca service="processChangeIndentHelper" event="commit">
+   <eca service="processChangeIndentHelper" event="commit">
     	<condition operator="not-equals" field-name="enableSECA" value="Y"/>
         	<action service="routeShiftEmpSubsidy" mode="sync"/>
-    </eca>    
+    </eca>
+    <eca service="processChangeIndentHelper" event="commit">
+       <condition operator="equals" field-name="smsFlag" type="Boolean" value="true"/>
+        <action service="sendChangeIndentSms" mode="async" />
+    </eca>
+    <eca service="createPaymentForBooth" event="commit">
+    	<condition field-name="enablePaymentSms" operator="equals" type="Boolean" value="true"/>
+        <condition field-name="paymentId" operator="is-not-empty"/>
+        <action service="sendPaymentSms" mode="sync"/>
+    </eca>  
 </service-eca>

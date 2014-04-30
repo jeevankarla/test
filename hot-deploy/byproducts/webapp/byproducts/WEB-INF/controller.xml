@@ -835,6 +835,12 @@
         <response name="success" type="view" value="DailyReports"/>
         <response name="error" type="view" value="DailyReports"/>        
     </request-map>
+    <request-map uri="sendIndentSmsBulk">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendIndentSmsBulk"/>
+        <response name="success" type="view" value="DailyReports"/>
+        <response name="error" type="view" value="DailyReports"/> 
+    </request-map>
     <request-map uri="updateFixedDeposit">
         <event type="service" path="" invoke="updateFixedDeposit"/>
         <response name="success" type="view" value="EditFixedDepositDetails"/>

@@ -243,6 +243,19 @@ public class ByProductChangeIndentServices {
 	    	  }     
     	  }//end row count for loop
     	  
+    	  Map prevIndentQtyMap = FastMap.newInstance();
+    	  try{
+    		  Map getIndentCtx = UtilMisc.toMap("userLogin",userLogin);
+    		  	 getIndentCtx.put("subscriptionTypeId", subscriptionTypeId);
+    		  	 getIndentCtx.put("supplyDate",  UtilDateTime.toDateString(effectiveDate, "dd MMMM, yyyy"));
+    		  	 getIndentCtx.put("boothId", boothId);
+    		  	 getIndentCtx.put("priceCalcFalg", Boolean.FALSE);
+    		  	 Map<String, Object> prevIndentResult = dispatcher.runSync("getBoothChandentIndent",getIndentCtx);
+    		  	prevIndentQtyMap =(Map)prevIndentResult.get("totalIndentQtyMap");
+    	  }catch(Exception e){
+    		  
+    	  }
+
     	  if(UtilValidate.isNotEmpty(routeChangeFlag) && routeChangeFlag.equals("Y")){
     		  try{
         		  String dateFmt = UtilDateTime.toDateString(effectiveDate, "dd MMMMM, yyyy");
@@ -252,6 +265,7 @@ public class ByProductChangeIndentServices {
         		  ctxMap.put("subscriptionTypeId", subscriptionTypeId);
         		  ctxMap.put("productSubscriptionTypeId", productSubscriptionTypeId);
         		  ctxMap.put("screenFlag", "indentAlt");
+        		  ctxMap.put("priceCalcFalg", Boolean.FALSE);
         		  ctxMap.put("userLogin", userLogin);
         		  Map ctxResultMap = dispatcher.runSync("getBoothChandentIndent",ctxMap);
         		  if(ServiceUtil.isError(ctxResultMap)){
@@ -285,9 +299,10 @@ public class ByProductChangeIndentServices {
           	       	 processChangeIndentHelperCtx.put("productQtyList", tempProductList);
           	       	 processChangeIndentHelperCtx.put("productSubscriptionTypeId", productSubscriptionTypeId);
           	       	 processChangeIndentHelperCtx.put("subscriptionTypeId", subscriptionTypeId);
+          	         processChangeIndentHelperCtx.put("prevIndentQtyMap", prevIndentQtyMap);
+          	        processChangeIndentHelperCtx.put("smsFlag", Boolean.FALSE);
           	       
           	       	 String indentChanged = "";
-          	   		 
           	       	 result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
           	   		 
                		 if (ServiceUtil.isError(result)) {
@@ -314,13 +329,14 @@ public class ByProductChangeIndentServices {
 			 processChangeIndentHelperCtx.put("subscriptionId", subscription.getString("subscriptionId"));
 			 processChangeIndentHelperCtx.put("boothId", boothId);
 			 processChangeIndentHelperCtx.put("subscriptionTypeId", subscriptionTypeId);
-  	       	 processChangeIndentHelperCtx.put("routeChangeFlag", routeChangeFlag);
+			 processChangeIndentHelperCtx.put("routeChangeFlag", routeChangeFlag);
+			 processChangeIndentHelperCtx.put("subscriptionTypeId", subscriptionTypeId);
 			 processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
 			 processChangeIndentHelperCtx.put("effectiveDate", effectiveDate);
 			 processChangeIndentHelperCtx.put("productQtyList", productQtyList);
 			 processChangeIndentHelperCtx.put("productSubscriptionTypeId", productSubscriptionTypeId);
+			 processChangeIndentHelperCtx.put("prevIndentQtyMap", prevIndentQtyMap);
 			 String indentChanged = "";
-			 
 			 result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
 
 			 if (ServiceUtil.isError(result)) {
@@ -362,22 +378,43 @@ public class ByProductChangeIndentServices {
   	      Timestamp effectiveDate = (Timestamp)context.get("effectiveDate");	      
   	      List<Map> productQtyList = (List)context.get("productQtyList");
   	      String routeChangeFlag = (String)context.get("routeChangeFlag");
+  	      
   	      List<GenericValue> custTimePeriodList =FastList.newInstance();
   	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
   	      Boolean enableContinuousIndent = Boolean.FALSE;
+  	    Boolean smsFlag = Boolean.TRUE;
+  	    if(UtilValidate.isNotEmpty(context.get("smsFlag"))){
+  	    	smsFlag = (Boolean)context.get("smsFlag");
+  	    }
   	      try{
   	    	  GenericValue tenantEnableContinuousIndent = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableContinuousIndent"), false);
   	    	  if (UtilValidate.isNotEmpty(tenantEnableContinuousIndent) && (tenantEnableContinuousIndent.getString("propertyValue")).equals("Y")) {
   	    		  enableContinuousIndent = Boolean.TRUE;
   	    	  }
+  	    	if(UtilValidate.isEmpty(subscriptionTypeId)){
+  	    		GenericValue subscription = delegator.findOne("Subscription", UtilMisc.toMap("subscriptionId",subscriptionId), true);
+  	    		subscriptionTypeId = subscription.getString("subscriptionTypeId");
+      		  
+      	    }
   	      }catch(GenericEntityException e){
   	    	  Debug.log("Error in fetching Tenant Configuration");		  
 			  return ServiceUtil.returnError("Error in fetching Tenant Configuration");
   	      }
-    	  
+  	      Map prevIndentQtyMap = (Map)context.get("prevIndentQtyMap");
+  	      if(UtilValidate.isEmpty(prevIndentQtyMap)){
+  	    	 Map getIndentCtx = UtilMisc.toMap("userLogin",userLogin);
+  		  	 getIndentCtx.put("subscriptionTypeId", subscriptionTypeId);
+  		  	 getIndentCtx.put("supplyDate",  UtilDateTime.toDateString(effectiveDate, "dd MMMM, yyyy"));
+  		  	 getIndentCtx.put("boothId", boothId);
+  		  	 getIndentCtx.put("priceCalcFalg", Boolean.FALSE);
+  			 Map<String, Object> prevIndentResult=ByProductNetworkServices.getBoothChandentIndent(dctx,getIndentCtx);
+  		     prevIndentQtyMap =(Map)prevIndentResult.get("totalIndentQtyMap");
+  	      }
+	  	  
   	      Map nxtDayPermanentIndent = FastMap.newInstance();
   	      String defaultRouteId = "";
   	      boolean routeChange = false;
+  	      
   	      if(enableContinuousIndent){
   	    	  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "userLogin", userLogin))).get("boothDetails");
   	    	  defaultRouteId = (String)boothDetails.get("routeId");
@@ -630,7 +667,10 @@ public class ByProductChangeIndentServices {
 	  			
   			    result.put("subscriptionId", subscriptionId);
   			    result.put("supplyDate", effectiveDate);
+  			    result.put("subscriptionTypeId", subscriptionTypeId);
+  			    result.put("boothId", boothId);
   			    result.put("enableSECA", secaCall);
+  			    result.put("smsFlag", smsFlag);
   			    result.put("shipmentTypeId", shipmentTypeId);
   			  
   		  }catch (Exception e) {
@@ -641,6 +681,7 @@ public class ByProductChangeIndentServices {
   		  if(indentChanged){
   			  change = "Changed";
   		  }
+  		  result.put("prevIndentQtyMap", prevIndentQtyMap);
   		  result.put("indentChangeFlag", change);
   		return result;  
       }
@@ -785,7 +826,7 @@ public class ByProductChangeIndentServices {
       }
       
       
-      public static Map<String ,Object>  processChangeRouteIndentHelper(DispatchContext dctx, Map<String, ? extends Object> context){
+     /* public static Map<String ,Object>  processChangeRouteIndentHelper(DispatchContext dctx, Map<String, ? extends Object> context){
 		  Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();       
 	      GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -816,7 +857,7 @@ public class ByProductChangeIndentServices {
 	    	  String defaultRouteId = (String)boothDetails.get("routeId");
 	    	  List<GenericValue> productCategoryList = FastList.newInstance();
 	    	  List prodCatCondition = UtilMisc.toList(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, "CONTINUES_INDENT"));
-	    	  /*prodCatCondition.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, "MILK"));*/
+	    	  prodCatCondition.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, "MILK"));
 	    	  EntityCondition prodCatCond = EntityCondition.makeCondition(prodCatCondition, EntityOperator.AND);
 	    	  productCategoryList = delegator.findList("ProductAndCategoryMember", prodCatCond, null, null, null, false);
 	    	  productCategoryList = EntityUtil.filterByDate(productCategoryList, effectiveDate);
@@ -837,7 +878,7 @@ public class ByProductChangeIndentServices {
 	    		  inputInitMap.put("boothId", boothId);
 	    		  inputInitMap.put("shipmentTypeId", shipmentTypeId);
 	    		  inputInitMap.put("userLogin", userLogin);
-	    		  /*inputInitMap.put("routeChangeFlag", "Y");*/
+	    		  inputInitMap.put("routeChangeFlag", "Y");
 	    		  inputInitMap.put("effectiveDate", (Timestamp)UtilDateTime.addDaysToTimestamp(effectiveDate, 1));
 	    		  inputInitMap.put("productQtyList", initProductQtyList);
 			      Map resultInit = dispatcher.runSync("processChangeIndentHelper",inputInitMap);
@@ -851,7 +892,7 @@ public class ByProductChangeIndentServices {
 			  return ServiceUtil.returnError("Problem temporary route change for dealer" + boothId);
 	      }
 	      return ServiceUtil.returnSuccess();  
-    }
+    }*/
       
     public static String createSpecialOrderSubscription(HttpServletRequest request, HttpServletResponse response){
 		//Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -1033,4 +1074,140 @@ public class ByProductChangeIndentServices {
         } 
         return result;
     }
+    public static Map<String, Object>  sendChangeIndentSms(DispatchContext dctx, Map<String, Object> context)  {
+        String facilityId = (String) context.get("boothId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");      
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();  
+        Map<String, Object> serviceResult;
+        Timestamp supplyDate = (Timestamp) context.get("supplyDate"); 
+        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+        Map prevIndentQtyMap = (Map) context.get("prevIndentQtyMap");
+			
+		try {
+			GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId",facilityId), true);
+    		if(UtilValidate.isEmpty(facility)){
+    			Debug.logError("Route doesn't exists with Id: "+facilityId, module);
+    			return ServiceUtil.returnError("Route doesn't exists with Id: "+facilityId);    				
+    		}
+    		
+			  Map indentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
+			  indentHelperCtx.put("subscriptionTypeId", subscriptionTypeId);
+			  indentHelperCtx.put("supplyDate",  UtilDateTime.toDateString(supplyDate, "dd MMMM, yyyy"));
+			  indentHelperCtx.put("boothId", facilityId);
+			  Map<String, Object> result=ByProductNetworkServices.getBoothChandentIndent(dctx,indentHelperCtx);
+   	          Map totalIndentQtyMap = (Map)result.get("totalIndentQtyMap");
+   	          Debug.log("prevIndentQtyMap indent sms===="+prevIndentQtyMap);
+   	          Debug.log("totalIndentQtyMap===="+totalIndentQtyMap);
+   	          if(UtilValidate.isNotEmpty( prevIndentQtyMap) &&  prevIndentQtyMap.equals(totalIndentQtyMap) || UtilValidate.isEmpty(totalIndentQtyMap)){
+   	        	 Debug.log("indent not changed, sms being sent====");
+   	        	  return ServiceUtil.returnSuccess();
+   	          }
+   	          Timestamp indentDate = (Timestamp)result.get("supplyDate");
+			  BigDecimal totalAmount = (BigDecimal)result.get("totalAmount");
+    		String text = "INDENT ("+UtilDateTime.toDateString(indentDate, "dd MMM ")+ subscriptionTypeId+"): ";
+    		String partyId = facility.getString("ownerPartyId");
+            Iterator indentIter = totalIndentQtyMap.entrySet().iterator();
+        	while(indentIter.hasNext()) {
+        		Map.Entry indent = (Entry)indentIter.next();
+                String productId = (String)indent.getKey();
+                BigDecimal quantity = (BigDecimal)indent.getValue();
+            	GenericValue product = delegator.findOne("Product",true, UtilMisc.toMap("productId",productId));
+            	if (product == null) {
+                    return ServiceUtil.returnError("Invalid productId " + productId);         		
+            	}
+                if (quantity.compareTo(BigDecimal.ZERO) == 0) {
+                	continue;
+                }            	
+                text += product.getString("brandName");
+                text += "=";
+                text += quantity.intValue();
+                text += ";";
+        	}
+        	text += "Amt: Rs"+totalAmount.intValue()+". sent at "+UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "HH:mm");
+            if (UtilValidate.isEmpty(partyId)) {
+            	Debug.logError("Invalid destination party id for booth " + facilityId, module);
+            	return ServiceUtil.returnError("Invalid destination party id for booth  " + facilityId);             
+            } 
+            Debug.log("text====================="+text);
+            Map<String, Object> getTelParams = FastMap.newInstance();
+            getTelParams.put("partyId", partyId);
+            getTelParams.put("userLogin", userLogin);                    	
+            serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+            if (ServiceUtil.isError(serviceResult)) {
+            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+            	return ServiceUtil.returnSuccess();
+            } 
+            if(UtilValidate.isEmpty(serviceResult.get("contactNumber"))){
+            	Debug.logError( "No  contactNumber found for retailer : "+facilityId, module);
+            	return ServiceUtil.returnSuccess();
+            }
+            String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
+            Map<String, Object> sendSmsParams = FastMap.newInstance();      
+            sendSmsParams.put("contactNumberTo", contactNumberTo);          
+            sendSmsParams.put("text", text);            
+            //serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
+            if (ServiceUtil.isError(serviceResult)) {
+            	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+            	return ServiceUtil.returnSuccess();
+            }    
+		}
+		catch (Exception e) {
+			Debug.logError(e, "Problem getting Invoice", module);
+			return ServiceUtil.returnError(e.getMessage());
+		}        
+        return ServiceUtil.returnSuccess();
+    }
+    
+    public static Map<String, Object>  sendIndentSmsBulk(DispatchContext dctx, Map<String, Object> context)  {
+        
+        LocalDispatcher dispatcher = dctx.getDispatcher();  
+       try{
+    	   dispatcher.runAsync("sendIndentSmsBulkInternal", context); 
+        }catch(Exception e){
+    	   
+       }
+       
+        return ServiceUtil.returnSuccess();
+    }
+    
+    public static Map<String, Object>  sendIndentSmsBulkInternal(DispatchContext dctx, Map<String, Object> context)  {
+    	String routeId = (String) context.get("routeId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");      
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();  
+        Map<String, Object> serviceResult;
+        String supplyDate = (String) context.get("supplyDate"); 
+        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+        List boothIds= FastList.newInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+        Timestamp supplyDateTime = null;
+		  try {
+			  supplyDateTime = new java.sql.Timestamp(sdf.parse(supplyDate).getTime());
+		  } catch (ParseException e) {
+			  Debug.logError(e, "Cannot parse date string: " + supplyDate, module);
+          // effectiveDate = UtilDateTime.nowTimestamp();
+		  }
+        if(UtilValidate.isNotEmpty(routeId)){
+        	boothIds = ByProductNetworkServices.getRouteBooths(delegator, routeId);
+        }else{
+        	boothIds = (List)(ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, null ,supplyDateTime)).get("boothsList");
+        }
+         Map indentSmsCtx = FastMap.newInstance();
+         indentSmsCtx.put("userLogin", userLogin);
+         indentSmsCtx.put("subscriptionTypeId", subscriptionTypeId);
+         indentSmsCtx.put("supplyDate", supplyDateTime);
+        for(int i=0 ;i< boothIds.size();i++){
+        	String boothId = (String)boothIds.get(i);
+        	 indentSmsCtx.put("boothId", boothId);
+        	 try{
+        		 dispatcher.runSync("sendChangeIndentSms", indentSmsCtx);
+        	 }catch(Exception e){
+        		 
+        	 }
+        }
+        
+        return ServiceUtil.returnSuccess();
+    }
+    
 }

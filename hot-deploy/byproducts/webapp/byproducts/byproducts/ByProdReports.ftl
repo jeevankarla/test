@@ -49,12 +49,32 @@ function makeDatePicker(fromDateId ,thruDateId){
 		});
 	}
 
+function makeDatePicker1(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
+
 
 	$(document).ready(function(){
 		makeDatePicker("RLAFromDateId","RLAThruDateId");
 		makeDatePicker("CLRFromDateId","thuDateId");
 		makeDatePicker("DBCFromDateId","thuDateId");
 		makeDatePicker("exportDate","");
+		makeDatePicker1("bulkSmsDate","");
 		makeDatePicker("NIMCDate","");
 		makeDatePicker("rtSupplyDate","");
 		makeDatePicker("RouteIndentAbstDate","");
@@ -350,6 +370,26 @@ function makeDatePicker(fromDateId ,thruDateId){
 					<option value='AM'>AM</option><option value='PM'>PM</option></select>
 					<input type="submit" value="Send SMS" class="buttontext"/></td>		
       		</form>
+      	</tr>
+      	<tr>
+      	   <form id="sendIndentSmsBulk" name="sendIndentSmsBulk" method="post" action="<@ofbizUrl>sendIndentSmsBulk</@ofbizUrl>" target="_blank">	
+      		  <td width="33%">Indent Bulk Sms</td>
+      		    <td>
+      		      Route:<select name="routeId" class='h4'><option value=''></option>
+					<#list routesList as route>    
+  	    				<option value='${route}'>${route}</option>
+					</#list>  
+				</select>
+      		 </td>
+      	   	  <td width="33%"> SupplyTime:
+				<select name="subscriptionTypeId" class='h4'>
+					<#list subscriptionTypeList as subscriptionType>    
+  	    				<option value='${subscriptionType.subscriptionTypeId}'>${subscriptionType.description}</option>
+					</#list>            
+				</select>
+      	   	   Date<input type="text" name="supplyDate" id="bulkSmsDate" size="15"/>
+      	   	  <input type="submit" target="_blank" value="send" class="buttontext"/></td>
+      	   </form>
       	</tr>	
       </table>
 	 </div>

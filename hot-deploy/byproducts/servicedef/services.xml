@@ -223,8 +223,20 @@
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>
                                                      
     </service>
-    
-    
+     <service name="sendIndentSmsBulk" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="sendIndentSmsBulk">
+        <description>Send indent sms</description>
+        <attribute name="supplyDate" type="String" mode="IN" optional="false"/>
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="true"/>                                             
+    </service>
+      <service name="sendIndentSmsBulkInternal" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="sendIndentSmsBulkInternal">
+        <description>Send indent sms</description>
+        <attribute name="supplyDate" type="String" mode="IN" optional="false"/>
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="routeId" type="String" mode="IN" optional="true"/>                                             
+    </service>
     <service name="createInvoiceAndSettlePayments" engine="simple"
             location="component://byproducts/script/ByProductServices.xml" invoke="createInvoiceAndSettlePayments" auth="true">
         <description>Create Invoice for ShipmentId and Run Settle Payments against invoices</description>
@@ -316,7 +328,7 @@
     <service name="getBoothChandentIndent" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getBoothChandentIndent" auth="true">
         <attribute name="boothId" mode="IN" type="String" optional="false"/>
-        <attribute name="productSubscriptionTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="productSubscriptionTypeId" mode="IN" type="String" optional="true"/>
         <attribute name="subscriptionTypeId" mode="IN" type="String" optional="false"/>      
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
         <attribute name="changeIndentProductList" mode="OUT" type="List" optional="true"/>
@@ -334,8 +346,12 @@
         <attribute name="routeTotalsList" mode="OUT" type="List" optional="true"/>   
         <attribute name="prodIndentQtyCat" mode="OUT" type="Map" optional="true"/>
         <attribute name="tripId" mode="INOUT" type="String" optional="true"/>
-        <attribute name="qtyInPieces" mode="OUT" type="Map" optional="true"/>  
-        <attribute name="isEnableProductSubscription" mode="IN" type="Boolean" optional="true"/>           
+        <attribute name="qtyInPieces" mode="OUT" type="Map" optional="true"/>
+        <attribute name="totalIndentQtyMap" mode="OUT" type="Map" optional="true"/>
+        <attribute name="totalAmount" mode="OUT" type="BigDecimal" optional="true"/>
+         <attribute name="supplyDate" mode="OUT" type="Timestamp" optional="false"/>  
+        <attribute name="isEnableProductSubscription" mode="IN" type="Boolean" optional="true"/> 
+         <attribute name="priceCalcFalg" mode="IN" type="Boolean" optional="true"/>           
     </service>
     
     <service name="getOrderReturnItems" engine="java"
@@ -460,7 +476,7 @@
         <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
     </service>
     
-      <service name="processChangeRouteIndentHelper" engine="java"
+     <!--  <service name="processChangeRouteIndentHelper" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="processChangeRouteIndentHelper" auth="true">
         <description>Populate and Update Facility-Party Entity</description>
         <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
@@ -469,24 +485,27 @@
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
-    </service>
+    </service> -->
       <service name="processChangeIndentHelper" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="processChangeIndentHelper" auth="true">
         <description>Change indent helper to store subscription</description>
         
         <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
         <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="boothId" type="String" mode="INOUT" optional="false"/>
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
         <attribute name="routeChangeFlag" type="String" mode="IN" optional="true"/>
         <attribute name="enableSECA" type="String" mode="INOUT" optional="true"/>
+        <attribute name="subscriptionTypeId" type="String" mode="INOUT" optional="true"/>
         <attribute name="shipmentTypeId" type="String" mode="OUT" optional="true"/>
         <attribute name="subscriptionId" type="String" mode="OUT" optional="true"/>
         <attribute name="supplyDate" type="Timestamp" mode="OUT" optional="true"/>
+        <attribute name="prevIndentQtyMap" type="Map" mode="INOUT" optional="true"/>
         <attribute name="indentChangeFlag" type="String" mode="OUT" optional="true"/>
+        <attribute name="smsFlag" type="Boolean" mode="INOUT" optional="true"/>
     </service>
     
      <service name="createPaymentForBooth" engine="java"
@@ -503,8 +522,6 @@
         <attribute name="issuingAuthorityBranch" mode="IN" type="String" optional="true"/>
         <attribute name="instrumentDate" mode="IN" type="String" optional="true" />
         <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
-        <attribute name="isEnableAcctg" mode="IN" type="String" optional="true"/>
-        
         <attribute name="paymentId" mode="OUT" type="String" optional="true"/>
         <attribute name="statusFlag" mode="OUT" type="String" optional="true"/>
         <attribute name="hideSearch" mode="OUT" type="String" optional="true"/>
@@ -636,6 +653,15 @@
         <description>Update Return Items For Period</description>
         <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"/>
+    </service>
+   <service name="sendChangeIndentSms" engine="java"
+        location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="sendChangeIndentSms">
+        <description>Send a change indent sms</description>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="supplyDate" type="Timestamp" mode="IN" optional="false"/>  
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="prevIndentQtyMap" type="Map" mode="IN" optional="true"/>
+                                                
     </service>
     <service name="batchSettleLMSCashOrders" engine="java" auth="true" transaction-timeout="6000"
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="batchSettleLMSCashOrders" >
