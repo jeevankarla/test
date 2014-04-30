@@ -29,7 +29,8 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "paychlst.txt")}
-        <#assign totalPaymentAmont = 0>     
+        <#assign totalPaymentAmont = 0>  
+        <#assign chequeNo=0>   
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	
@@ -109,8 +110,9 @@ under the License.
 	                            </fo:table-cell>
 	                          </fo:table-row>
 	                            <#assign sno= 1>
-	                     <#assign paidCheckList=bankPaidDetails.getValue()>
-	                      <#list paidCheckList as checkListReport>
+			                     <#assign paidCheckList=bankPaidDetails.getValue()>
+			                     <#assign bankTotal=0>
+	                      		 <#list paidCheckList as checkListReport>
 	                         <fo:table-row >
 	                            <fo:table-cell >	
 	                            	<fo:block text-align="left" keep-together="always">${sno}</fo:block>                               
@@ -134,13 +136,52 @@ under the License.
 	                             <fo:table-cell >
 	                            	<fo:block text-align="right">${checkListReport.amount?if_exists}</fo:block>	                               
 	                            </fo:table-cell> -->
+	                             <#assign bankTotal=bankTotal+checkListReport.amount>
 	                            <fo:table-cell >
 	                            	<#assign totalPaymentAmont =(totalPaymentAmont+checkListReport.amount) >
-	                            	<fo:block text-align="right">${checkListReport.amount}</fo:block>	                               
+	                            	<fo:block text-align="right">${checkListReport.amount?if_exists?string("#0.00")}</fo:block>	                               
 	                            </fo:table-cell> 
-	                             <#assign sno= sno+1>  	  	                            	                            
+	                             <#assign sno= sno+1>
+	                              <#if checkListReport.paymentRefNum?has_content>
+	                              		<#assign chequeNo= chequeNo+1> 
+	                              </#if>
 	                        </fo:table-row>
 	                        </#list>
+	                        <#if bankPaidDetails.getKey()!="noBankName">
+	                        <fo:table-row >
+	                           <fo:table-cell >	
+	                           <fo:block text-align="left" keep-together="always" font-size="7pt" >---------------------------------------------------------------------------------------------------------------</fo:block>
+	                            </fo:table-cell>
+	                       </fo:table-row>
+	                        <fo:table-row >
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                             <fo:table-cell >
+	                            	<fo:block text-align="left"></fo:block>	                               
+	                            </fo:table-cell>	
+	                             <fo:table-cell >
+	                            	<fo:block text-align="left"></fo:block>	                               
+	                            </fo:table-cell>
+	                        	<fo:table-cell >	
+	                            	<fo:block text-align="left" >Bank Total:</fo:block>                               
+	                            </fo:table-cell>	
+	                        	<fo:table-cell >	
+	                            	<fo:block text-align="left" ></fo:block>                               
+	                            </fo:table-cell>		                                                    
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell >
+	                            	<fo:block text-align="right">${bankTotal?if_exists?string("#0.00")}</fo:block>	                               
+	                            </fo:table-cell>
+	                        </fo:table-row>
+	                        <fo:table-row >
+	                           <fo:table-cell >	
+	                           <fo:block text-align="left" keep-together="always" font-size="7pt" >---------------------------------------------------------------------------------------------------------------</fo:block>
+	                            </fo:table-cell>
+	                       </fo:table-row>
+	                       </#if>
 	                      </#list>
 	                      <fo:table-row >
 	                            <fo:table-cell >	
@@ -170,6 +211,31 @@ under the License.
 	                            	<fo:block text-align="right" padding="1pt"><@ofbizCurrency amount=totalPaymentAmont isoCode=defaultOrganizationPartyCurrencyUomId/></fo:block>	                               
 	                            </fo:table-cell> 
 	                        </fo:table-row>
+	                        <#if chequeNo != 0>
+	                        <fo:table-row >
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                             <fo:table-cell >
+	                            	<fo:block text-align="left"></fo:block>	                               
+	                            </fo:table-cell>	
+	                             <fo:table-cell >
+	                            	<fo:block text-align="left"></fo:block>	                               
+	                            </fo:table-cell>
+	                        	<fo:table-cell >	
+	                            	<fo:block text-align="left" >No of Cheques:</fo:block>                               
+	                            </fo:table-cell>	
+	                        	<fo:table-cell >	
+	                            	<fo:block text-align="left" ></fo:block>                               
+	                            </fo:table-cell>		                                                    
+	                            <fo:table-cell >	
+	                            	<fo:block text-align="left" keep-together="always"></fo:block>                               
+	                            </fo:table-cell>
+	                            <fo:table-cell >
+	                            	<fo:block text-align="right" >${chequeNo}</fo:block>	                               
+	                            </fo:table-cell> 
+	                        </fo:table-row>
+	                        </#if>
                     </fo:table-body>
                    </fo:table>
                  </fo:block>
