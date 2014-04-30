@@ -391,6 +391,10 @@ public class ByProductChangeIndentServices {
   	    	  if (UtilValidate.isNotEmpty(tenantEnableContinuousIndent) && (tenantEnableContinuousIndent.getString("propertyValue")).equals("Y")) {
   	    		  enableContinuousIndent = Boolean.TRUE;
   	    	  }
+  	    	 GenericValue tenantConfigEnableIndentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enableIndentSms"), true);
+			 if (UtilValidate.isNotEmpty(tenantConfigEnableIndentSms) && (tenantConfigEnableIndentSms.getString("propertyValue")).equals("N")) {
+				 smsFlag = Boolean.FALSE;
+				}
   	    	if(UtilValidate.isEmpty(subscriptionTypeId)){
   	    		GenericValue subscription = delegator.findOne("Subscription", UtilMisc.toMap("subscriptionId",subscriptionId), true);
   	    		subscriptionTypeId = subscription.getString("subscriptionTypeId");
