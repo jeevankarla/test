@@ -1101,10 +1101,8 @@ public class ByProductChangeIndentServices {
 			  indentHelperCtx.put("boothId", facilityId);
 			  Map<String, Object> result=ByProductNetworkServices.getBoothChandentIndent(dctx,indentHelperCtx);
    	          Map totalIndentQtyMap = (Map)result.get("totalIndentQtyMap");
-   	          Debug.log("prevIndentQtyMap indent sms===="+prevIndentQtyMap);
-   	          Debug.log("totalIndentQtyMap===="+totalIndentQtyMap);
    	          if(UtilValidate.isNotEmpty( prevIndentQtyMap) &&  prevIndentQtyMap.equals(totalIndentQtyMap) || UtilValidate.isEmpty(totalIndentQtyMap)){
-   	        	 Debug.log("indent not changed, sms being sent====");
+   	        	 Debug.logInfo("** indent not changed, sms not being sent **" , module);
    	        	  return ServiceUtil.returnSuccess();
    	          }
    	          Timestamp indentDate = (Timestamp)result.get("supplyDate");
@@ -1133,7 +1131,6 @@ public class ByProductChangeIndentServices {
             	Debug.logError("Invalid destination party id for booth " + facilityId, module);
             	return ServiceUtil.returnError("Invalid destination party id for booth  " + facilityId);             
             } 
-            Debug.log("text====================="+text);
             Map<String, Object> getTelParams = FastMap.newInstance();
             getTelParams.put("partyId", partyId);
             getTelParams.put("userLogin", userLogin);                    	
@@ -1150,7 +1147,7 @@ public class ByProductChangeIndentServices {
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
             sendSmsParams.put("contactNumberTo", contactNumberTo);          
             sendSmsParams.put("text", text);            
-            //serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
+            serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
             if (ServiceUtil.isError(serviceResult)) {
             	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
             	return ServiceUtil.returnSuccess();
@@ -1190,7 +1187,6 @@ public class ByProductChangeIndentServices {
 			  supplyDateTime = new java.sql.Timestamp(sdf.parse(supplyDate).getTime());
 		  } catch (ParseException e) {
 			  Debug.logError(e, "Cannot parse date string: " + supplyDate, module);
-          // effectiveDate = UtilDateTime.nowTimestamp();
 		  }
         if(UtilValidate.isNotEmpty(routeId)){
         	boothIds = ByProductNetworkServices.getRouteBooths(delegator, routeId);
