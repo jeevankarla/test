@@ -392,7 +392,7 @@ public class ByProductChangeIndentServices {
   	    	 GenericValue tenantConfigEnableIndentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enableIndentSms"), true);
 			 if (UtilValidate.isNotEmpty(tenantConfigEnableIndentSms) && (tenantConfigEnableIndentSms.getString("propertyValue")).equals("Y")) {
 				 smsFlag = Boolean.TRUE;
-				}
+			 }
 			 if(UtilValidate.isNotEmpty(context.get("smsFlag"))){
 		  	    	smsFlag = (Boolean)context.get("smsFlag");
 		  	 }
@@ -790,6 +790,7 @@ public class ByProductChangeIndentServices {
 		  					inputMap.put("routeChangeFlag", "Y");
 		  					inputMap.put("enableSECA", "Y");
 		  					inputMap.put("productQtyList", productQtyList);
+		  					inputMap.put("smsFlag", Boolean.FALSE);
 		  					inputMap.put("userLogin", userLogin);
 		  					Map resultCtx = dispatcher.runSync("processChangeIndentHelper",inputMap);
 		  					if (ServiceUtil.isError(resultCtx)) {
@@ -812,6 +813,7 @@ public class ByProductChangeIndentServices {
 		  					inputMap.put("shipmentTypeId", shipmentTypeId);
 		  					inputMap.put("effectiveDate", nxtDay);
 		  					inputMap.put("enableSECA", "Y");
+		  					inputMap.put("smsFlag", Boolean.FALSE);
 		  					//inputMap.put("routeChangeFlag", "Y");
 		  					inputMap.put("productQtyList", tempList);
 		  					inputMap.put("userLogin", userLogin);
@@ -1108,7 +1110,7 @@ public class ByProductChangeIndentServices {
    	          }
    	          Timestamp indentDate = (Timestamp)result.get("supplyDate");
 			  BigDecimal totalAmount = (BigDecimal)result.get("totalAmount");
-    		String text = "INDENT ("+UtilDateTime.toDateString(indentDate, "dd MMM ")+ subscriptionTypeId+"): ";
+    		String text = UtilDateTime.toDateString(indentDate, "dd MMM ")+ subscriptionTypeId+" INDENT (in pkts): ";
     		String partyId = facility.getString("ownerPartyId");
             Iterator indentIter = totalIndentQtyMap.entrySet().iterator();
         	while(indentIter.hasNext()) {
