@@ -976,6 +976,7 @@ public class ByProductNetworkServices {
 	    		if(UtilValidate.isNotEmpty(context.get("priceCalcFalg"))){
 	    			priceCalcFalg = (Boolean)context.get("priceCalcFalg");
 	    		}
+	    		Debug.log("**** getChangeIndentJson price calc flag :"+priceCalcFalg);
 	    		if(priceCalcFalg){
 	    			Map qtyResultMap = getFacilityIndentQtyCategories(dctx, inputCtx);
 		    		prodIndentQtyCat = (Map)qtyResultMap.get("indentQtyCategory");
@@ -4147,7 +4148,7 @@ public class ByProductNetworkServices {
 	    	BigDecimal roundedtotalDueAmount = ZERO;
 	    	Map<String, Object> boothPayments = FastMap.newInstance();   	
 	    	 boothPayments = getBoothPayments(delegator, ctx.getDispatcher(), userLogin,
-	    			UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"), null, boothId ,null ,Boolean.TRUE);
+	    			UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"), null, boothId ,null ,Boolean.FALSE);
 	        List boothPaymentsList = (List) boothPayments.get("boothPaymentsList");
 	        List boothPaymentsUnRoundedList = (List) boothPayments.get("boothPaymentsUnRoundedList");
 	        if (boothPaymentsList.size() != 0) {
@@ -5708,15 +5709,15 @@ public class ByProductNetworkServices {
 				if (!ServiceUtil.isError(boothResult)) {
 					Map boothTotalDues = (Map)boothResult.get("boothTotalDues");
 					BigDecimal amount = new BigDecimal(boothTotalDues.get("amount").toString());
-					BigDecimal totalDueAmount = new BigDecimal(boothTotalDues.get("totalDueAmount").toString());        			
-					if(roundingAdjustmentFlag){
+					//BigDecimal totalDueAmount = new BigDecimal(boothTotalDues.get("totalDueAmount").toString());        			
+					/*if(roundingAdjustmentFlag){
 						if((amount.subtract(paymentAmount)).compareTo(BigDecimal.ONE) < 0 && (amount.subtract(paymentAmount)).compareTo(BigDecimal.ZERO) > 0){
 							paymentAmount = amount;
 						}
 						if((totalDueAmount.subtract(paymentAmount)).compareTo(BigDecimal.ONE) < 0 && (totalDueAmount.subtract(paymentAmount)).compareTo(BigDecimal.ZERO) > 0){
 							paymentAmount = totalDueAmount;
 						}    										
-					}	
+					}*/	
 					
 				}			
 	            paymentCtx.put("paymentMethodTypeId", paymentMethodType);
@@ -5798,7 +5799,7 @@ public class ByProductNetworkServices {
 						(String)boothPayment.get("boothId"), "userLogin", userLogin));
 				Map boothDues = (Map)boothResult.get("boothDues");
 				BigDecimal amount = new BigDecimal(boothDues.get("amount").toString());
-				if(amount.compareTo(new BigDecimal(((Double)boothPayment.get("amount")).toString())) != 0){
+				if(amount.compareTo(new BigDecimal(((Double)boothPayment.get("amount")).toString())) > 0){
 					 Debug.logError("received partial payment or no dues for booth :" + (String)boothPayment.get("boothId"), module);
 					 return ServiceUtil.returnError("received partial payment or no dues for booth :" + (String)boothPayment.get("boothId")); 
 				}

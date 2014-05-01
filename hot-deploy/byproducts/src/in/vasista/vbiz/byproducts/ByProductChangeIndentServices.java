@@ -406,7 +406,7 @@ public class ByProductChangeIndentServices {
 			  return ServiceUtil.returnError("Error in fetching Tenant Configuration");
   	      }
   	      Map prevIndentQtyMap = (Map)context.get("prevIndentQtyMap");
-  	      if(UtilValidate.isEmpty(prevIndentQtyMap)){
+  	      if(UtilValidate.isEmpty(prevIndentQtyMap) && smsFlag){
   	    	 Map getIndentCtx = UtilMisc.toMap("userLogin",userLogin);
   		  	 getIndentCtx.put("subscriptionTypeId", subscriptionTypeId);
   		  	 getIndentCtx.put("supplyDate",  UtilDateTime.toDateString(effectiveDate, "dd MMMM, yyyy"));
