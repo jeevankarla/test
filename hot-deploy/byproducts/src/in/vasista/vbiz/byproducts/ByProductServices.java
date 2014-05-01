@@ -5193,7 +5193,8 @@ public class ByProductServices {
 						            Debug.logError(e, module);
 						            return ServiceUtil.returnError("Failed to create a new Period Billing " + e);            
 						         }
-		    	  	   facilityList= (List)ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
+		    	  	   //facilityList= (List)ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
+		    	  	   facilityList= (List)ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, "SHP_RTLR", dayBeginFromDate);
 			    	   for(GenericValue eachFacility: facilityList){
 			    		  String invoiceId ="";
 			    		  partyId = eachFacility.getString("ownerPartyId");
