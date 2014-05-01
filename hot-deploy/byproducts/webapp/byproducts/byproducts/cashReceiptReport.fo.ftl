@@ -42,16 +42,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
             		<fo:block >From:																	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Number:<#if tempPaymentIds.size() lte 1 >${parameters.paymentIds}<#else>${paymentGroup.getKey()}</#if></fo:block>
             		<fo:block >By RT NO:																&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}</fo:block>
             		<fo:block>------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block >Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Retailer Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;		Amount</fo:block>
+            		<fo:block >Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Retailer Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;	Amount</fo:block>
             		<fo:block>------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
-                    <fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="130pt"/>
                     <fo:table-column column-width="155pt"/>
-                    <fo:table-column column-width="180pt"/>
-                    <fo:table-column column-width="200pt"/> 
+                    <fo:table-column column-width="140pt"/>
+                    <fo:table-column column-width="180pt"/> 
             		<fo:table-column column-width="300pt"/>
                     <fo:table-body>
                     		<#assign totalAmount = 0>
@@ -63,7 +63,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
                             		<fo:block  text-align="left"  white-space-collapse="false">${payment.getValue().get("paymentId")?if_exists}</fo:block>  
                        			</fo:table-cell>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${facility.description?if_exists}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left">${facility.description?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  white-space-collapse="false">${payment.getValue().get("partyIdFrom")?if_exists}</fo:block>  
