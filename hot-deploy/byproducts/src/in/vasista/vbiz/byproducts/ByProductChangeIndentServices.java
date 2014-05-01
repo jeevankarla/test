@@ -1100,10 +1100,16 @@ public class ByProductChangeIndentServices {
     		
 			  Map indentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
 			  indentHelperCtx.put("subscriptionTypeId", subscriptionTypeId);
-			  indentHelperCtx.put("supplyDate",  UtilDateTime.toDateString(supplyDate, "dd MMMM, yyyy"));
+			  indentHelperCtx.put("supplyDate",  UtilDateTime.toDateString(supplyDate, "dd MMMMM, yyyy"));
 			  indentHelperCtx.put("boothId", facilityId);
+			  Debug.log("indentHelperCtx================"+indentHelperCtx);
 			  Map<String, Object> result=ByProductNetworkServices.getBoothChandentIndent(dctx,indentHelperCtx);
    	          Map totalIndentQtyMap = (Map)result.get("totalIndentQtyMap");
+   	          if(UtilValidate.isNotEmpty(totalIndentQtyMap)){
+   	        	Debug.log("facilityId================"+facilityId);
+   	        	Debug.log("totalIndentQtyMap================"+totalIndentQtyMap);
+   	          }
+   	         
    	          if((UtilValidate.isNotEmpty( prevIndentQtyMap) &&  prevIndentQtyMap.equals(totalIndentQtyMap)) || UtilValidate.isEmpty(totalIndentQtyMap)){
    	        	 Debug.log("** indent not changed, sms not being sent **");
    	        	  return ServiceUtil.returnSuccess();
