@@ -1104,8 +1104,8 @@ public class ByProductChangeIndentServices {
 			  indentHelperCtx.put("boothId", facilityId);
 			  Map<String, Object> result=ByProductNetworkServices.getBoothChandentIndent(dctx,indentHelperCtx);
    	          Map totalIndentQtyMap = (Map)result.get("totalIndentQtyMap");
-   	          if(UtilValidate.isNotEmpty( prevIndentQtyMap) &&  prevIndentQtyMap.equals(totalIndentQtyMap) || UtilValidate.isEmpty(totalIndentQtyMap)){
-   	        	 Debug.logInfo("** indent not changed, sms not being sent **" , module);
+   	          if((UtilValidate.isNotEmpty( prevIndentQtyMap) &&  prevIndentQtyMap.equals(totalIndentQtyMap)) || UtilValidate.isEmpty(totalIndentQtyMap)){
+   	        	 Debug.log("** indent not changed, sms not being sent **");
    	        	  return ServiceUtil.returnSuccess();
    	          }
    	          Timestamp indentDate = (Timestamp)result.get("supplyDate");
@@ -1146,6 +1146,7 @@ public class ByProductChangeIndentServices {
             	Debug.logError( "No  contactNumber found for retailer : "+facilityId, module);
             	return ServiceUtil.returnSuccess();
             }
+            Debug.log("Indent sms text=================="+text);
             String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
             sendSmsParams.put("contactNumberTo", contactNumberTo);          
@@ -1194,22 +1195,26 @@ public class ByProductChangeIndentServices {
         if(UtilValidate.isNotEmpty(routeId)){
         	boothIds = ByProductNetworkServices.getRouteBooths(delegator, routeId);
         }else{
-        	boothIds = (List)(ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, null ,supplyDateTime)).get("boothsList");
+        	List<GenericValue> boothActiveList = (List)((ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, null ,supplyDateTime)).get("boothActiveList"));
+        	boothIds = EntityUtil.getFieldListFromEntityList(boothActiveList, "facilityId", true);
         }
          Map indentSmsCtx = FastMap.newInstance();
          indentSmsCtx.put("userLogin", userLogin);
          indentSmsCtx.put("subscriptionTypeId", subscriptionTypeId);
          indentSmsCtx.put("supplyDate", supplyDateTime);
+         double elapsedSeconds;
+         Timestamp startTimestamp = UtilDateTime.nowTimestamp();
         for(int i=0 ;i< boothIds.size();i++){
         	String boothId = (String)boothIds.get(i);
         	 indentSmsCtx.put("boothId", boothId);
         	 try{
-        		 dispatcher.runSync("sendChangeIndentSms", indentSmsCtx);
+        		dispatcher.runSync("sendChangeIndentSms", indentSmsCtx);
         	 }catch(Exception e){
         		 
         	 }
         }
-        
+        elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+		Debug.logImportant("Completed bulk in " + elapsedSeconds + " seconds]", module);
         return ServiceUtil.returnSuccess();
     }
     
