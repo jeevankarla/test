@@ -379,13 +379,13 @@ public class PaymentWorker {
             String text =   "Received your ";
             	if(UtilValidate.isNotEmpty(payment.get("paymentMethodTypeId"))){
                 	if((payment.getString("paymentMethodTypeId")).contains("CHALLAN")){
-                		text += "challan payment amount of Rs. "+payment.get("amount");
+                		text += "challan payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount");
                 	}
                 	if((payment.getString("paymentMethodTypeId")).contains("CASH")){
-                		text += "cash payment amount of Rs. "+payment.get("amount");
+                		text += "cash payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount");
                 	}
                 	if((payment.getString("paymentMethodTypeId")).contains("CHEQUE")){
-                		text += "cheque payment amount of Rs. "+payment.get("amount")+"(subj to realisation)";
+                		text += "cheque payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount")+"(subj to realisation)";
                 	}
                 }
             text += ". Automatic message sent by Milkosoft.";
