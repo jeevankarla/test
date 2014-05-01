@@ -382,19 +382,20 @@ public class ByProductChangeIndentServices {
   	      List<GenericValue> custTimePeriodList =FastList.newInstance();
   	      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
   	      Boolean enableContinuousIndent = Boolean.FALSE;
-  	    Boolean smsFlag = Boolean.TRUE;
-  	    if(UtilValidate.isNotEmpty(context.get("smsFlag"))){
-  	    	smsFlag = (Boolean)context.get("smsFlag");
-  	    }
+  	    Boolean smsFlag = Boolean.FALSE;
+  	   
   	      try{
   	    	  GenericValue tenantEnableContinuousIndent = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableContinuousIndent"), false);
   	    	  if (UtilValidate.isNotEmpty(tenantEnableContinuousIndent) && (tenantEnableContinuousIndent.getString("propertyValue")).equals("Y")) {
   	    		  enableContinuousIndent = Boolean.TRUE;
   	    	  }
   	    	 GenericValue tenantConfigEnableIndentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enableIndentSms"), true);
-			 if (UtilValidate.isNotEmpty(tenantConfigEnableIndentSms) && (tenantConfigEnableIndentSms.getString("propertyValue")).equals("N")) {
-				 smsFlag = Boolean.FALSE;
+			 if (UtilValidate.isNotEmpty(tenantConfigEnableIndentSms) && (tenantConfigEnableIndentSms.getString("propertyValue")).equals("Y")) {
+				 smsFlag = Boolean.TRUE;
 				}
+			 if(UtilValidate.isNotEmpty(context.get("smsFlag"))){
+		  	    	smsFlag = (Boolean)context.get("smsFlag");
+		  	 }
   	    	if(UtilValidate.isEmpty(subscriptionTypeId)){
   	    		GenericValue subscription = delegator.findOne("Subscription", UtilMisc.toMap("subscriptionId",subscriptionId), true);
   	    		subscriptionTypeId = subscription.getString("subscriptionTypeId");
