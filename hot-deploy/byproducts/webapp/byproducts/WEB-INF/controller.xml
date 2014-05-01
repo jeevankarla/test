@@ -877,7 +877,7 @@
     <view-map name="SubscriptionIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SubscriptionIndent"/>
     <view-map name="DueParticularsTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="text/plain"/>
     <view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
-    <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="text/plain" encoding="none"/>
+    <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="application/pdf" encoding="none"/>
     <view-map name="DailyPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckList" content-type="text/plain" encoding="none"/>
     <view-map name="PrintBoothPayments" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintBoothPayments"/>
     <view-map name="InvoicePrePrnt" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#InvoicePrePrnt" content-type="text/plain"/>
