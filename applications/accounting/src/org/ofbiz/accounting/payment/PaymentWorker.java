@@ -359,6 +359,7 @@ public class PaymentWorker {
                 Debug.logError("Invalid destination party id for payment " + paymentId, module);
                 return ServiceUtil.returnSuccess();             
             }
+            
             Map<String, Object> getTelParams = FastMap.newInstance();
         	getTelParams.put("partyId", destinationPartyId);
             getTelParams.put("userLogin", userLogin);                    	
@@ -375,10 +376,23 @@ public class PaymentWorker {
             	}
             	
             }
-                       
+            String text =   "Received your ";
+            	if(UtilValidate.isNotEmpty(payment.get("paymentMethodTypeId"))){
+                	if((payment.getString("paymentMethodTypeId")).contains("CHALLAN")){
+                		text += "challan payment amount of Rs. "+payment.get("amount");
+                	}
+                	if((payment.getString("paymentMethodTypeId")).contains("CASH")){
+                		text += "cash payment amount of Rs. "+payment.get("amount");
+                	}
+                	if((payment.getString("paymentMethodTypeId")).contains("CHEQUE")){
+                		text += "cheque payment amount of Rs. "+payment.get("amount")+"(subj to realisation)";
+                	}
+                }
+            text += ". Automatic message sent by Milkosoft.";
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
             sendSmsParams.put("contactNumberTo", contactNumberTo);                     
-            sendSmsParams.put("text","Received your payment amount of Rs. "+ payment.get("amount")+". Automatic message sent by Milkosoft.");           
+            sendSmsParams.put("text",text);  
+           // Debug.log("text========="+text);
             serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
             if (ServiceUtil.isError(serviceResult)) {
                 Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);               
