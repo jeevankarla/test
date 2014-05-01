@@ -22,7 +22,7 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"  margin-bottom=".3in" margin-left=".3in" margin-right="1in">
+	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-bottom=".3in" margin-left=".3in" margin-right="1in">
         <fo:region-body margin-top="2in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
