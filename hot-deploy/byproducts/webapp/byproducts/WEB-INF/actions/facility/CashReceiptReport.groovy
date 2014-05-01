@@ -40,20 +40,18 @@ dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 
 context.put("effectiveDateStr",effectiveDateStr);
 context.put("receiptDate",receiptDate);
-
+conditionList =[];
 tempPaymentIds=FastList.newInstance();
-conditionList=[];
 if(parameters.paymentIds){
 	paymentId=parameters.paymentIds;
 	tempPaymentIds.addAll(paymentId);
 }
-context.tempPaymentIds=tempPaymentIds;
 
 partyIdFrom = "";
 amount = "";
 paymentId = "";
 
-paymentGrpMap = [:];
+/*paymentGrpMap = [:];
 if(tempPaymentIds.size()>1){
 	paymentGroupList = delegator.findList("PaymentGroup", null, null, null, null, false);
 	paymentGroupIdList = EntityUtil.getFieldListFromEntityList(paymentGroupList, "paymentGroupId", true);
@@ -112,4 +110,69 @@ if(tempPaymentIds.size()>1){
 		paymentGrpMap.put(paymentGroupId,paymentMap);
 	}
 }
+context.put("paymentGrpMap",paymentGrpMap);*/
+
+paymentGrpMap = [:];
+condList =[];
+condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN,tempPaymentIds));
+EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
+paymentGroupMemberList = delegator.findList("PaymentGroupMember", cond, null, null, null, false);
+if(UtilValidate.isNotEmpty(paymentGroupMemberList)){
+	paymentGroupIdList = EntityUtil.getFieldListFromEntityList(paymentGroupMemberList, "paymentGroupId", true);
+	paymentGroupIdList.each{ paymentGroupId->
+		paymentMap = [:];
+		conditionList.add(EntityCondition.makeCondition("paymentGroupId", EntityOperator.EQUALS,paymentGroupId));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
+		newPaymentGroupMemberList = delegator.findList("PaymentGroupMember", condition, null, null, null, false);
+		paymentIdList = EntityUtil.getFieldListFromEntityList(newPaymentGroupMemberList, "paymentId", true);
+		payCondList =[];
+		payCondList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN,paymentIdList));
+		payCondList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS,"SALES_PAYIN"));
+		payCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"PMNT_RECEIVED"));
+		EntityCondition payCondition = EntityCondition.makeCondition(payCondList ,EntityOperator.AND);
+		paymentList = delegator.findList("Payment", payCondition, null, null, null, false);
+		if(UtilValidate.isNotEmpty(paymentList)){
+			paymentList.each{ payment->
+					cashReceivedMap = [:];
+					partyIdFrom = payment.partyIdFrom;
+					amount = payment.amount;
+					paymentId = payment.paymentId;
+					cashReceivedMap["partyIdFrom"]=partyIdFrom;
+					cashReceivedMap["amount"]=amount;
+					cashReceivedMap["paymentId"]=paymentId;
+					paymentMap.put(paymentId,cashReceivedMap);
+			}
+		}
+		if(UtilValidate.isNotEmpty(paymentMap)){
+			paymentGrpMap.put(paymentGroupId,paymentMap);
+		}
+		context.put("paymentGroupId",paymentGroupId);
+	}
+}else{
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS,parameters.paymentIds));
+	conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS,"SALES_PAYIN"));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"PMNT_RECEIVED"));
+	EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
+	paymentList = delegator.findList("Payment", condition, null, null, null, false);
+	paymentMap = [:];
+	if(UtilValidate.isNotEmpty(paymentList)){
+		paymentList.each{ payment->
+				cashReceivedMap = [:];
+				partyIdFrom = payment.partyIdFrom;
+				amount = payment.amount;
+				paymentId = payment.paymentId;
+				cashReceivedMap["partyIdFrom"]=partyIdFrom;
+				cashReceivedMap["amount"]=amount;
+				cashReceivedMap["paymentId"]=paymentId;
+				paymentMap.put(paymentId,cashReceivedMap);
+		}
+	}
+	paymentGroupId="NOGROUP";
+	if(UtilValidate.isNotEmpty(paymentMap)){
+		paymentGrpMap.put(paymentGroupId,paymentMap);
+	}
+	context.put("paymentGroupId",paymentId);
+}
 context.put("paymentGrpMap",paymentGrpMap);
+
