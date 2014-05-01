@@ -945,21 +945,14 @@ public class ByProductNetworkServices {
 	    		}*/
 	    		List genRouteIds = ByProductNetworkServices.getShipedRouteIdsByAMPM(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),subscriptionTypeId,null);
 	    		 if(!isEnableProductSubscription){
-	    			if(UtilValidate.isEmpty(facility.getString("categoryTypeEnum"))){
-	    				productSubscriptionTypeId = "CASH";
-	    			} 
-	    			else{
-	    				if(facility.getString("categoryTypeEnum").equals("SHP_RTLR")){
-		  	    			  productSubscriptionTypeId = "CASH";
-		  	    		}
-	    				
+	    			    productSubscriptionTypeId = "CASH";
 	    				if(facility.getString("categoryTypeEnum").equals("SO_INST")){
 	  	    			  productSubscriptionTypeId = "SPECIAL_ORDER";
 	  	    		  	}
 	    				if(facility.getString("categoryTypeEnum").equals("CR_INST")){
 	  	    			 productSubscriptionTypeId = "CREDIT";
 	  	    		  	}
-	    			}
+	    			
 	    		}
 	    		BigDecimal securityDeposit = BigDecimal.ZERO;  
 	    		if(UtilValidate.isNotEmpty(facility.get("securityDeposit"))){
@@ -1030,7 +1023,7 @@ public class ByProductNetworkServices {
 	    		if(UtilValidate.isNotEmpty(screenFlag) && !screenFlag.equals("indentAlt")){
 	    			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
 	    		}else{
-	    			if(UtilValidate.isNotEmpty(genRouteIds)){
+	    			if(UtilValidate.isNotEmpty(genRouteIds) && UtilValidate.isEmpty(context.get("fetchForSms"))){
 	    				conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.NOT_IN, genRouteIds));
 	    			}
 	    			
@@ -1040,7 +1033,6 @@ public class ByProductNetworkServices {
 	    		List<GenericValue> tempSubProdList =delegator.findList("SubscriptionProduct", cond, null,null, null, false);
 	    		tempSubProdList = EntityUtil.filterByDate(tempSubProdList , dayBegin);
 	    		List<GenericValue> subProdList = FastList.newInstance();
-	    		
 	    		if(UtilValidate.isNotEmpty(tempSubProdList)){
 	    			productList.addAll(EntityUtil.getFieldListFromEntityList(tempSubProdList, "productId", true));
 	    		}
@@ -1191,7 +1183,7 @@ public class ByProductNetworkServices {
 	    	Map boothDetailResult = getRouteCrateDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId,"supplyDate", dayBegin, "subscriptionTypeId", subscriptionTypeId, "tripId", tripId, "routeId", tempRouteId));
 	    	List routeTotalList = (List)boothDetailResult.get("routeTotalList");
 	    	result.put("routeTotalsList", routeTotalList);
-	    	result.put("totalIndentQtyMap", totalIndentQtyMap);
+	    	
 	    	result.put("totalAmount", totalAmount);
 	    	
 	    	// lets populate route totals
@@ -1266,7 +1258,8 @@ public class ByProductNetworkServices {
 	    		Debug.logError(e, e.getMessage());
 			}
    	    	//changeIndentProductList = UtilMisc.sortMaps(changeIndentProductList ,UtilMisc.toList("cPrevQuantity","cProductName" ,"dProductName"));
-			result.put("changeIndentProductList", changeIndentProductList);
+	    	result.put("totalIndentQtyMap", totalIndentQtyMap);
+	    	result.put("changeIndentProductList", changeIndentProductList);
 			return result;
 	    }
 	 	public static Map<String ,Object>  getRouteCrateDetails(DispatchContext dctx, Map<String, ? extends Object> context){

@@ -1102,16 +1102,14 @@ public class ByProductChangeIndentServices {
 			  indentHelperCtx.put("subscriptionTypeId", subscriptionTypeId);
 			  indentHelperCtx.put("supplyDate",  UtilDateTime.toDateString(supplyDate, "dd MMMMM, yyyy"));
 			  indentHelperCtx.put("boothId", facilityId);
-			  Debug.log("indentHelperCtx================"+indentHelperCtx);
+			  indentHelperCtx.put("fetchForSms", Boolean.TRUE);
+			  
 			  Map<String, Object> result=ByProductNetworkServices.getBoothChandentIndent(dctx,indentHelperCtx);
    	          Map totalIndentQtyMap = (Map)result.get("totalIndentQtyMap");
-   	          if(UtilValidate.isNotEmpty(totalIndentQtyMap)){
-   	        	Debug.log("facilityId================"+facilityId);
-   	        	Debug.log("totalIndentQtyMap================"+totalIndentQtyMap);
-   	          }
+   	          
    	         
    	          if((UtilValidate.isNotEmpty( prevIndentQtyMap) &&  prevIndentQtyMap.equals(totalIndentQtyMap)) || UtilValidate.isEmpty(totalIndentQtyMap)){
-   	        	 Debug.log("** indent not changed, sms not being sent **");
+   	        	 Debug.log("** indent not changed, sms not being sent **boothId===="+facilityId);
    	        	  return ServiceUtil.returnSuccess();
    	          }
    	          Timestamp indentDate = (Timestamp)result.get("supplyDate");
@@ -1138,7 +1136,7 @@ public class ByProductChangeIndentServices {
         	text += "Amt: Rs"+totalAmount.intValue()+". sent at "+UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "HH:mm");
             if (UtilValidate.isEmpty(partyId)) {
             	Debug.logError("Invalid destination party id for booth " + facilityId, module);
-            	return ServiceUtil.returnError("Invalid destination party id for booth  " + facilityId);             
+            	return ServiceUtil.returnSuccess();          
             } 
             Map<String, Object> getTelParams = FastMap.newInstance();
             getTelParams.put("partyId", partyId);
@@ -1152,7 +1150,6 @@ public class ByProductChangeIndentServices {
             	Debug.logError( "No  contactNumber found for retailer : "+facilityId, module);
             	return ServiceUtil.returnSuccess();
             }
-            Debug.log("Indent sms text=================="+text);
             String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
             sendSmsParams.put("contactNumberTo", contactNumberTo);          
@@ -1191,7 +1188,7 @@ public class ByProductChangeIndentServices {
         String supplyDate = (String) context.get("supplyDate"); 
         String subscriptionTypeId = (String) context.get("subscriptionTypeId");
         List boothIds= FastList.newInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
         Timestamp supplyDateTime = null;
 		  try {
 			  supplyDateTime = new java.sql.Timestamp(sdf.parse(supplyDate).getTime());
@@ -1210,17 +1207,23 @@ public class ByProductChangeIndentServices {
          indentSmsCtx.put("supplyDate", supplyDateTime);
          double elapsedSeconds;
          Timestamp startTimestamp = UtilDateTime.nowTimestamp();
+         int counter =0;
         for(int i=0 ;i< boothIds.size();i++){
         	String boothId = (String)boothIds.get(i);
         	 indentSmsCtx.put("boothId", boothId);
         	 try{
         		dispatcher.runSync("sendChangeIndentSms", indentSmsCtx);
+        		counter++;
+           		if ((counter % 10) == 0) {
+	        		elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+	        		Debug.logImportant("Completed "+counter+" in " + elapsedSeconds + " seconds]", module);
+           		}
         	 }catch(Exception e){
         		 
         	 }
         }
         elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
-		Debug.logImportant("Completed bulk in " + elapsedSeconds + " seconds]", module);
+        Debug.logImportant("Completed "+counter+" in " + elapsedSeconds + " seconds]", module);
         return ServiceUtil.returnSuccess();
     }
     
