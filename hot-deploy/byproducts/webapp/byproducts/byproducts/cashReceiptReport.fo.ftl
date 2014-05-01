@@ -22,7 +22,7 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-bottom=".3in" margin-left=".3in" margin-right="1in">
+	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-bottom=".3in" margin-left=".1in" margin-right=".1in">
         <fo:region-body margin-top="2in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -36,22 +36,22 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
-                    <fo:block text-align="left" font-size="12pt" keep-together="always"  white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
-              		<fo:block>------------------------------------------------------------------------------------------</fo:block>
-              		<fo:block >Received with thanks the Receipt of Cash													&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt - CSH</fo:block>
-            		<fo:block >From:																	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Number:<#if tempPaymentIds.size() lte 1 >${parameters.paymentIds}<#else>${paymentGroup.getKey()}</#if></fo:block>
-            		<fo:block >By RT NO:																&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}</fo:block>
-            		<fo:block>------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block >Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Retailer Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;	Amount</fo:block>
-            		<fo:block>------------------------------------------------------------------------------------------</fo:block>
+                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
+              		<fo:block>--------------------------------------------------------------------------------</fo:block>
+              		<fo:block >Received with thanks the Receipt of Cash													&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt - CSH</fo:block>
+            		<fo:block >From:																	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Number:<#if tempPaymentIds.size() lte 1 >${parameters.paymentIds}<#else>${paymentGroup.getKey()}</#if></fo:block>
+            		<fo:block >By RT NO:																&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}</fo:block>
+            		<fo:block>--------------------------------------------------------------------------------</fo:block>
+            		<fo:block >Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Retailer Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;Amount</fo:block>
+            		<fo:block>--------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="130pt"/>
                     <fo:table-column column-width="155pt"/>
-                    <fo:table-column column-width="140pt"/>
-                    <fo:table-column column-width="180pt"/> 
+                    <fo:table-column column-width="110pt"/>
+                    <fo:table-column column-width="140pt"/> 
             		<fo:table-column column-width="300pt"/>
                     <fo:table-body>
                     		<#assign totalAmount = 0>
@@ -77,7 +77,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
             				</#list>
             				<fo:table-row>
                					<fo:table-cell>
-                    				<fo:block>------------------------------------------------------------------------------------------</fo:block>
+                    				<fo:block>--------------------------------------------------------------------------------</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
             				<fo:table-row>
@@ -96,7 +96,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
             				</fo:table-row>
                 			<fo:table-row>
                					<fo:table-cell>
-                    				<fo:block>------------------------------------------------------------------------------------------</fo:block>
+                    				<fo:block>--------------------------------------------------------------------------------</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
 						  	<fo:table-row>
@@ -112,7 +112,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
 		  					</fo:table-row>
 						  	<fo:table-row>
 			                   <fo:table-cell>
-			                        	<fo:block keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;For Mother Dairy</fo:block>
+			                        	<fo:block keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;For Mother Dairy</fo:block>
 			                   </fo:table-cell>
 						  	</fo:table-row>
 						  	<fo:table-row>
@@ -122,7 +122,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
 		  					</fo:table-row>
 						  	<fo:table-row>
 			                   <fo:table-cell>
-			                        	<fo:block keep-together="always">SUPDT/DMF/AM                     &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Cashier</fo:block>
+			                        	<fo:block keep-together="always">SUPDT/DMF/AM                     &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Cashier</fo:block>
 			                   </fo:table-cell>
 						  	</fo:table-row>
 		              </fo:table-body>
