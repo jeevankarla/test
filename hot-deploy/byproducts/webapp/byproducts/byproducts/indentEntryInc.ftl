@@ -883,14 +883,21 @@ function updateGrid(){
 	function setSupplyDate(selection){
 		var type = selection.value;
 		var dateStr = $("#effectiveDate").val();
+		var today = new Date();
 		if(type == 'PM'){
 			var date = new Date(dateStr);
+			if(today >= date){
+			  return false;
+			}
 			date.setDate(date.getDate()-1);
 			var newDate = new Date(date);
 			$("#effectiveDate").val($.datepicker.formatDate('dd MM, yy', newDate));
-		}
-		else if(type == 'AM'){
+			
+		}else if(type == 'AM'){
 			var date = new Date(dateStr);
+			if(today < date){
+			  return false;
+			}
 			date.setDate(date.getDate()+1);
 			var newDate = new Date(date);
 			$("#effectiveDate").val($.datepicker.formatDate('dd MM, yy', newDate));
