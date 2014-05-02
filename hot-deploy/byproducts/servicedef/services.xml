@@ -231,7 +231,7 @@
         <attribute name="routeId" type="String" mode="IN" optional="true"/>                                             
     </service>
       <service name="sendIndentSmsBulkInternal" engine="java"
-        location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="sendIndentSmsBulkInternal">
+        location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="sendIndentSmsBulkInternal" transaction-timeout="7000">
         <description>Send indent sms</description>
         <attribute name="supplyDate" type="String" mode="IN" optional="false"/>
         <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>
