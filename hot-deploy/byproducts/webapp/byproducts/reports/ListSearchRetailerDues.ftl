@@ -205,6 +205,10 @@ under the License.
             	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${parameters.paymentMethodTypeId?if_exists}">
             	<input type="hidden" name="currDue" id="currDue" value="${payment.grandTotal?if_exists}">
             	<input type="hidden" name="tabItem" id="tabItem" value="${parameters.subTabItem?if_exists}">
+            	<#if parameters.paymentMethodTypeId == 'CHEQUE_PAYIN'>
+            		<input type="hidden" name="routeId" id="routeId" value="${payment.routeId?if_exists}">
+            	</#if>
+            	<input type="hidden" name="tabItem" id="tabItem" value="${parameters.subTabItem?if_exists}">
               <td>${(payment.facilityId)?if_exists}</td>
               <td>${facilityDetails.get('facilityName')?if_exists}</td>
               <td>               
@@ -219,7 +223,7 @@ under the License.
               		<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               		<td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:recalcAmounts();"/></td>
               <#else>
-              		<td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.facilityId}' ,'${payment.grandTotal}', '${payment.paymentMethodTypeId}', '${facilityDetails.get("facilityName")}');" value="Make Payment"/></td>
+              		<td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.routeId}','${payment.facilityId}' ,'${payment.grandTotal}', '${payment.paymentMethodTypeId}', '${facilityDetails.get("facilityName")}');" value="Make Payment"/></td>
               </#if>
 	          
             </tr>

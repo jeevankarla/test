@@ -534,7 +534,12 @@
         <attribute name="facilityId" mode="IN" type="String" optional="false"/>
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
         <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"/>             
-        <attribute name="amount" mode="IN" type="String" optional="false"/> 
+        <attribute name="amount" mode="IN" type="String" optional="false"/>
+        <attribute name="facilityId" mode="OUT" type="String" optional="true"/>
+        <attribute name="routeId" mode="IN" type="String" optional="true"/>
+        <attribute name="statusId" mode="OUT" type="String" optional="true"/>
+        <attribute name="hideSearch" mode="OUT" type="String" optional="true"/>
+        <attribute name="routeId" mode="OUT" type="String" optional="true"/> 
         <attribute name="subTabItem" mode="INOUT" type="String" optional="true"/>
         <attribute name="paymentLocationId" mode="IN" type="String" optional="true"/>
         <attribute name="paymentPurposeType" mode="IN" type="String" optional="true"/>

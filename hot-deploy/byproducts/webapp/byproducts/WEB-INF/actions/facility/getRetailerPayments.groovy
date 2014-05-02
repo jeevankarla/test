@@ -49,6 +49,9 @@ if(facilityId){
 	if(facility.facilityTypeId == "BOOTH"){
 		isRetailer = true;
 	}
+	/*else{
+		context.facilityId = facilityId
+	}*/
 }
 if(parameters.paymentMethodTypeId){
 	paymentMethodTypeId = parameters.paymentMethodTypeId;
@@ -179,7 +182,7 @@ if(hideSearch == "N" || stopListing){
 			boothPaymentsList.addAll(axisPaymentsList);
 		}
 	}
-	if(isRetailer){
+	if(isRetailer && statusId != "PAID"){
 		isRetailerExists = false;
 		boothPaymentsList.each{ eachItem ->
 			if(eachItem.facilityId == facilityId){
@@ -208,7 +211,7 @@ if(hideSearch == "N" || stopListing){
 	// now get the past dues breakup
 	boothsDuesDayWise = [:];
 	
-	if (!onlyCurrentDues) {
+	/*if (!onlyCurrentDues) {
 		boothPaymentsList.each { booth ->
 			boothDuesDetail = ByProductNetworkServices.getDaywiseBoothDues(dctx, [userLogin: userLogin, facilityId:booth.facilityId]);	
 			duesList = boothDuesDetail["boothDuesList"];
@@ -225,7 +228,7 @@ if(hideSearch == "N" || stopListing){
 			boothDuesMap.put("boothDuesList", boothDuesList);
 			boothsDuesDaywiseJSON.put(booth.facilityId, boothDuesMap);
 		}
-	}	
+	}	*/
 }
 context.boothsDuesDaywiseJSON = boothsDuesDaywiseJSON;
 context.statusId = statusId;

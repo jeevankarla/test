@@ -137,11 +137,11 @@ under the License.
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
             	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${payment.paymentMethodTypeId?if_exists}">   
         		<input type="hidden" name="tabItem" id="tabItem" value="${parameters.subTabItem?if_exists}"> 
-            	<td><input id="paymentId" type="hidden"  value="${payment.paymentId}"/></td>            
+            	<td><input id="paymentId" type="hidden"  value="${payment.paymentId?if_exists}"/></td>            
               <td>${(payment.facilityId)?if_exists}</td>
               <#assign facility = delegator.findOne("Facility", {"facilityId" : payment.facilityId}, false) />
               <td>${(facility.facilityName)?if_exists}</td>
-              <td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.paymentDate ,"dd/MM/yyyy HH:mm:ss")}</td> 
+              <td><#if payment.paymentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.paymentDate ,"dd/MM/yyyy HH:mm:ss")}</#if></td> 
               <td>               
                 ${(boothRouteIdsMap.get(payment.facilityId))?if_exists}
               </td>
@@ -161,7 +161,7 @@ under the License.
               			 <input id="submitButton" type="button"  onclick="javascript:setVoidPaymentParameters(this);" value="Cancel"/> 
               	  </#if>
               </td>                     
-              <td><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}"  checked="true"/></td>
+              <td><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId?if_exists}"  checked="true"/></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>

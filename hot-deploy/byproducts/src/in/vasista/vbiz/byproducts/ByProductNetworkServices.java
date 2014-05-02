@@ -969,7 +969,6 @@ public class ByProductNetworkServices {
 	    		if(UtilValidate.isNotEmpty(context.get("priceCalcFalg"))){
 	    			priceCalcFalg = (Boolean)context.get("priceCalcFalg");
 	    		}
-	    		Debug.log("**** getChangeIndentJson price calc flag :"+priceCalcFalg);
 	    		if(priceCalcFalg){
 	    			Map qtyResultMap = getFacilityIndentQtyCategories(dctx, inputCtx);
 		    		prodIndentQtyCat = (Map)qtyResultMap.get("indentQtyCategory");
@@ -2485,7 +2484,6 @@ public class ByProductNetworkServices {
 	        	List<GenericValue> rtGroup = delegator.findList("FacilityGroupAndMemberAndFacility", condGroup, null, null, null, true);
 	        	rtGroup = EntityUtil.filterByDate(rtGroup, supplyDate);
 	        	routeFacility = EntityUtil.getFirst(rtGroup);
-	        
 	        }
 	        catch (GenericEntityException e) {
 	            Debug.logError(e, module);
@@ -2500,7 +2498,6 @@ public class ByProductNetworkServices {
 	        boothDetails.put("routeId",routeFacility.getString("facilityId") );
 	        boothDetails.put("boothId", boothId);
 	        result.put("boothDetails", boothDetails);
-	        
 	        return result;
 	    }
 		// This will return the list of boothIds for the given zone and (optional) booth category type
@@ -5563,7 +5560,8 @@ public class ByProductNetworkServices {
             String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
             String instrumentDateStr = (String) context.get("instrumentDate");
             String isEnableAcctg= (String) context.get("isEnableAcctg");
-	        boolean useFifo = Boolean.FALSE;       
+            String ownerPartyId = "";
+            boolean useFifo = Boolean.FALSE;
 	        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
 	        	useFifo = (Boolean)context.get("useFifo");
 	        }
@@ -5606,6 +5604,17 @@ public class ByProductNetworkServices {
 				Debug.logError("paymentMethod Configuration not Done======For=====  "+facilityId, module);
 				return ServiceUtil.returnError("paymentMethod Configuration not Done======For====="+facilityId);
 			}
+			// get all invoices for single party and multiple facility (Ex: chai point case)
+			try{
+				GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
+		  		if(UtilValidate.isNotEmpty(facility)){
+		  			ownerPartyId = facility.getString("ownerPartyId");
+		  		}
+				
+			}catch(GenericEntityException e){
+				Debug.log("Cannot fetch entity Facility");
+			}
+			
 			// Do check for only past dues payments
 			if(useFifo){
 				try{
@@ -5633,11 +5642,10 @@ public class ByProductNetworkServices {
 	    	   exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_IN, feaShipmentIds));
 	       }
 	       
-	       
-	       exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));	
+	       exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, ownerPartyId));
+	       /*exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));	*/
 			
 			exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF")));
-			
 			//checking tenant config to find invoices only for cash or all
 			 boolean enableSoCrPmntTrack = Boolean.FALSE;
 			 try{
@@ -5670,7 +5678,6 @@ public class ByProductNetworkServices {
 					orderBy = UtilMisc.toList("estimatedDeliveryDate");
 				}
 				boothOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", paramCond, null , orderBy, findOptions, false);
-				
 			}catch(GenericEntityException e){
 				Debug.logError(e, module);	
 	            return ServiceUtil.returnError(e.toString());			
@@ -5684,18 +5691,16 @@ public class ByProductNetworkServices {
 	        	// lets get the opening balance invoices if any
 	        	List<GenericValue> obInvoiceList = (List)getOpeningBalanceInvoices(dctx,UtilMisc.toMap("facilityId", facilityId)).get("invoiceList");
 	        	boothOrdersList.addAll(obInvoiceList);
-	        	if(UtilValidate.isEmpty(boothOrdersList)){
-					Debug.logError("paramCond==================== "+paramCond, module);
-					Debug.logError("No dues found for the Booth "+facilityId, module);
-					return ServiceUtil.returnError("No dues found for the Booth"+facilityId);
+	        	List invoiceIds = FastList.newInstance();
+	        	if(UtilValidate.isNotEmpty(boothOrdersList)){
+	        		boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId","originFacilityId","-estimatedDeliveryDate"));
+					if(useFifo){
+						boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId","originFacilityId","estimatedDeliveryDate"));
+					}
+					invoiceIds =  EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", true);
+	        		
 				}
 	        	// Here we are trying change the invoice order to apply (LIFO OR FIFO)
-	        	boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId","originFacilityId","-estimatedDeliveryDate"));
-				if(useFifo){
-					boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId","originFacilityId","estimatedDeliveryDate"));
-				}        	
-	        	List invoiceIds =  EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", true);        	
-	        	
 	        	Map<String, Object> totalAmount =FastMap.newInstance();
 				Map boothResult = getBoothDues(dctx,UtilMisc.<String, Object>toMap("boothId", 
 						facility.getString("facilityId"), "userLogin", userLogin)); 
@@ -5711,8 +5716,7 @@ public class ByProductNetworkServices {
 							paymentAmount = totalDueAmount;
 						}    										
 					}*/	
-					
-				}			
+				}
 	            paymentCtx.put("paymentMethodTypeId", paymentMethodType);
 	            paymentCtx.put("organizationPartyId", partyIdTo);
 	            paymentCtx.put("partyId", partyIdFrom);
@@ -5734,7 +5738,6 @@ public class ByProductNetworkServices {
 	            paymentCtx.put("amount", paymentAmount);
 	            paymentCtx.put("userLogin", userLogin); 
 	            paymentCtx.put("invoices", invoiceIds);
-	    		
 	            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
 	            if (ServiceUtil.isError(paymentResult)) {
 	            	Debug.logError(paymentResult.toString(), module);

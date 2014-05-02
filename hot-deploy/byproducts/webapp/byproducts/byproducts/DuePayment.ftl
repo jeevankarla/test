@@ -14,6 +14,7 @@
 	 var dueAmount;
 	 var paymentMethod;
 	 var facilityName;
+	 var route;
 	function dialogue(content, title) {
 		/* 
 		 * Since the dialogue isn't really a tooltip as such, we'll use a dummy
@@ -114,15 +115,16 @@
 		
 	}	
 	
-	function showPaymentEntry(boothId ,amount, paymentMethodType, boothName) {
+	function showPaymentEntry(routeId, boothId ,amount, paymentMethodType, boothName) {
 		var message = "";
+		route = routeId;
 		booth = boothId;
 		dueAmount = amount;
 		facilityName = boothName;
 		paymentMethod = paymentMethodType;
 		message += "<html><head></head><body><form action='createChequePayment' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
-			message += "<input type='hidden' name='paymentMethodTypeId' id='paymentMethodTypeId' value='${parameters.paymentMethodTypeId?if_exists}'><input type='hidden' name='paymentPurposeType' id='paymentPurposeType' value='ROUTE_MKTG'><input type='hidden' name='subTabItem' id='subTabItem' value='${parameters.subTabItem?if_exists}'>"+
+			message += "<input type='hidden' name='routeId' id='routeSearchId'><input type='hidden' name='paymentMethodTypeId' id='paymentMethodTypeId' value='${parameters.paymentMethodTypeId?if_exists}'><input type='hidden' name='paymentPurposeType' id='paymentPurposeType' value='ROUTE_MKTG'><input type='hidden' name='subTabItem' id='subTabItem' value='${parameters.subTabItem?if_exists}'>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' id='effectiveDate' name='instrumentDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/></td></tr>" +
@@ -165,6 +167,7 @@
 		}
 		jQuery("#facilityId").val(booth);
 		jQuery("#amount").val(dueAmount);
+		jQuery("#routeSearchId").val(route);
 	}
 	
 </script>

@@ -2657,7 +2657,7 @@ public class ByProductServices {
 			  			  return "error";
 			  		  }
 		  		  }
-		  		  Map paymentInputMap = FastMap.newInstance();
+	  			  Map paymentInputMap = FastMap.newInstance();
 		  		  paymentInputMap.put("userLogin", userLogin);
 		  		  paymentInputMap.put("facilityId",facilityId);
 		  		  paymentInputMap.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
@@ -2677,6 +2677,7 @@ public class ByProductServices {
 	       				}
 	       				paymentIds.add(paymentResult.get("paymentId"));
 		  		  }
+		  		  
 		  		 
 		  	 }//end of loop
 		  	 
@@ -2755,6 +2756,7 @@ public class ByProductServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String facilityId = (String) context.get("facilityId");
         String supplyDate = (String) context.get("supplyDate");
+        String routeId = (String) context.get("routeId");
         String subTabItem = (String) context.get("subTabItem");
         Locale locale = (Locale) context.get("locale");  
         Map result = ServiceUtil.returnSuccess();
@@ -2814,6 +2816,9 @@ public class ByProductServices {
   		result = ServiceUtil.returnSuccess("Payment successfully done.");
   		result.put("paymentMethodTypeId",paymentMethodType);
 		result.put("subTabItem", subTabItem);
+		result.put("statusId", "NOT_PAID");
+		result.put("facilityId", routeId);
+		 result.put("hideSearch", "N");
         return result;
     }  
 	
