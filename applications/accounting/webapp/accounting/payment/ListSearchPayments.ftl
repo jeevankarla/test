@@ -117,15 +117,16 @@ under the License.
       <thead>
         <tr class="header-row-2">
           <td>paymentId</td>
+          <td>Payment Date</td>    
+          <td>Facility</td>                          
           <td>${uiLabelMap.AccountingPaymentType}</td>
+          <td>Payment Method</td>
           <td>${uiLabelMap.CommonStatus}</td>
           <td>${uiLabelMap.AccountingFromParty}</td>
           <td>${uiLabelMap.AccountingToParty}</td>
-          <td>Facility</td>
           <td>Effective Date</td>
-          <td>UOM</td>
           <td>Amount</td> 
-          <td>Amount To Apply</td> 
+          <td>Amt To Apply</td> 
           <td>PrintReceipt</td>
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>
         </tr>
@@ -136,20 +137,23 @@ under the License.
         	<#assign amountToApply = Static["org.ofbiz.accounting.payment.PaymentWorker"].getPaymentNotApplied(delegator, payment.paymentId)>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
               <td><a class="buttontext" href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.get("paymentId")}</a></td>
+              <td><#if payment.paymentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.paymentDate ,"dd/MM/yyyy HH:mm:ss")}</#if></td>              
+              <td>${(payment.facilityId)?if_exists}</td>
               <td>
                 <#assign paymentType = delegator.findOne("PaymentType", {"paymentTypeId" : payment.paymentTypeId}, true) />
                 ${paymentType.description?default(payment.paymentTypeId)}
               </td>
+              <td>
+                <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId}, true) />
+                ${paymentMethodType.description?default(payment.paymentMethodTypeId)}
+              </td>              
               <td>
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : payment.statusId}, true) />
                 ${statusItem.description?default(payment.statusId)}
               </td>
               <td><a href="/partymgr/control/viewprofile?partyId=${payment.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payment.partyIdFrom, false)?if_exists} [${(payment.partyIdFrom)?if_exists}] </a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${payment.partyIdTo}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payment.partyIdTo, false)?if_exists} [${(payment.partyIdTo)?if_exists}]</a></td>
-              <td>${(payment.facilityId)?if_exists}</td>
-              <td>${(payment.effectiveDate)?if_exists}</td>
-              <td>${(payment.currencyUomId)?if_exists}</td>
-              
+              <td><#if payment.effectiveDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.effectiveDate ,"dd/MM/yyyy")}</#if></td>              
               <td><@ofbizCurrency amount=payment.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=amountToApply isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td>

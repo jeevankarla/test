@@ -27,6 +27,13 @@ under the License.
         <field name="paymentId"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
         <field name="comments"><text-find ignore-case="true"/></field>
+        <field name="paymentMethodTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PaymentMethodType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>        
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="PaymentType">
@@ -47,6 +54,7 @@ under the License.
         <field position="1" name="amount"><text/></field>
         <field name="paymentRefNum"><text-find ignore-case="true"/></field>
         <!--<field name="paymentGatewayResponseId"><text/></field>-->
+        <field name="paymentDate"><date-find type="timestamp"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
