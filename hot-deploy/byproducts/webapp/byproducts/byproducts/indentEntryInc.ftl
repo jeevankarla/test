@@ -61,8 +61,10 @@ function setDateRange(){
 <#if screenFlag?exists && screenFlag == 'DSCorrection'>
 	    	$("#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',
-			changeMonth: true,
+			changeMonth: false,
 			numberOfMonths: 1,
+			minDate: -1,
+			maxDate:0,
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate );
 			}
