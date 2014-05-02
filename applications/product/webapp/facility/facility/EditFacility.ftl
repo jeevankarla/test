@@ -100,24 +100,24 @@ under the License.
   </tr>
   <tr>
     <td class="label">Address1</td>
-    <td><input type="text" name="address1" value="${partyPostalAddress.address1?if_exists}" maxlength="30" /></td>
+    <td><input type="text" name="address1" value="${partyPostalAddress.address1?if_exists}" maxlength="50" /></td>
   </tr>  
    <tr>
     <td class="label">Address2</td>
-    <td><input type="text" name="address2" value="${partyPostalAddress.address2?if_exists}"  maxlength="30" /></td>
+    <td><input type="text" name="address2" value="${partyPostalAddress.address2?if_exists}"  maxlength="50" /></td>
   </tr>  
    <tr>
     <td class="label">City</td>
-    <td><input type="text" name="city" value="${partyPostalAddress.city?if_exists}" maxlength="10" /></td>
+    <td><input type="text" name="city" value="${partyPostalAddress.city?if_exists}"  maxlength="20" /></td>
   </tr> 
    <tr>
     <td class="label">PostalCode</td>
     <td><input type="text" name="postalCode" value="${partyPostalAddress.postalCode?if_exists}" maxlength="10" /></td>
   </tr>  
-  <tr>
+  <!--<tr>
     <td class="label">Phone Number</td>
     <td><input type="text" name="contactNumber" value="${contactNumber?if_exists}"  maxlength="10" /></td>
-  </tr>  
+  </tr> -->
   <tr>
     <td class="label">Mobile Number</td>
     <td><input type="text" name="mobileNumber" value="${mobileNumber?if_exists}"  maxlength="10" /></td>

@@ -74,7 +74,7 @@ under the License.
         <field name="address2" title="${uiLabelMap.CommonAddress2}"><display/></field>
         <field name="city" title="${uiLabelMap.CommonCity}"><display/></field>
         <field name="postalCode" title="Pin" ><display/></field>
-        <field name="contactNumber" title="Phone Number"><display/></field>
+       <!--<field name="contactNumber" title="Phone Number"><display/></field>-->
         <field name="mobileNumber" title="${uiLabelMap.Mobile}"><display/></field>
         <field name="emailAddress" title="${uiLabelMap.Email}"><display/></field>
         <field name="facilityName" title="Name"><display description="${facility.facilityName}"/></field>
@@ -737,10 +737,22 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="facilityId" title="Route Id" required-field="true"><text size="10" maxlength="9"/></field>
         <field name="facilityTypeId" ><hidden/></field>
-        <field name="parentFacilityId" title="Zone Id" required-field="true"><lookup target-form-name="LookupFacility"/></field>
+        <!--  <field name="parentFacilityId" title="Zone Id" required-field="true"><lookup target-form-name="LookupFacility"/></field>-->
         <field name="facilityName" title="Route Name" required-field="true"><text/></field>
         <field name="description" title="Description" required-field="true"><text maxlength="25"/></field>
-        <field name="facilitySize" title="Facility Capacity(Area)" required-field="true"><text maxlength="10"/></field>
+        <field name="shipmentTypeId" title="${uiLabelMap.SupplyTime}" required-field="true">
+            <drop-down>
+            	<entity-options description="${description}" entity-name="ShipmentType">
+            		<entity-constraint name="parentTypeId" operator="equals" value="LMS_SHIPMENT"/>
+            	</entity-options>
+            </drop-down>
+        </field>  
+        
+        <field name="vehicleId" title="Vehicle No" required-field="true"><lookup target-form-name="LookupVehicle"/></field> 
+        <field name="tripNo" title="Trip No" required-field="true"><text/></field>
+        <field name="openedDate" title="Date"><date-time/></field>
+         <field name="ownerPartyId" parameter-name="ownerPartyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+         <!-- <field name="facilitySize" title="Facility Capacity(Area)" required-field="true"><text maxlength="10"/></field>-->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
             <hyperlink target="FindFacility" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
@@ -2197,6 +2209,40 @@ under the License.
                 <parameter param-name="fromDate"/>
            </hyperlink>
         </field>-->
+        <field name="submitButton" title="Update" separate-column="true">
+            <submit button-type="button"/>
+        </field>
+    </form>
+     <form name="EditTransportationForm" type="single"  target="CreateTransportation"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="facilityId" title="Route Id" required-field="true"><text size="10" maxlength="9"/></field>
+        <field name="facilityTypeId" ><hidden/></field>
+        <field name="parentFacilityId" title="Zone Id" required-field="true"><lookup target-form-name="LookupFacility"/></field>
+        <field name="facilityName" title="Route Name" required-field="true"><text/></field>
+        <field name="vehicleNo" title="vehicle No" required-field="true"><text/></field>
+        <field name="tds" title="TDS" required-field="true"><text size="5" maxlength="10"/></field>
+        <field name="amount" title="amount" ><text maxlength="25"/></field>
+        <field name="openedDate" title="Date From"><date-time type="timestamp" /></field>
+        <field name="closedDate" title="Date To"><date-time type="timestamp" /></field>
+         <field name="additionalPay" title="Additional Pay" required-field="true"><text size="5" maxlength="10"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="FindFacility" also-hidden="false" description="${uiLabelMap.CommonCancel}" target-type="intra-app">
+                <parameter param-name="facilityId" />
+            </hyperlink>
+        </field>
+    </form>   
+     <form name="TransportationUpdate" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="updateFacilityRoute"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<actions>
+			<set field="routeDetails" value="${groovy:import org.ofbiz.base.util.*; return (org.ofbiz.network.NetworkServices.getBoothRoute(dispatcher.getDispatchContext() ,UtilMisc.toMap(&quot;boothId&quot;,facilityId))).get(&quot;boothDetails&quot;);}" type="Object"/>
+			<set  field="routeId" value="${groovy: routeDetails.get(&quot;routeId&quot;)}"/>
+		</actions>  
+		<field name="facilityId" title="Facility Id"><display/></field>
+		<field name="amount" title="amount"><text/></field>
+		<field name="totalDeduction" title="TOTAL DEDUCTION"><text/></field>
+		<field name="netPayable" title="NET PAYABLE"><text/></field>
+        <field name="fromDate" title="From Date"><date-time type="timestamp"/></field>
         <field name="submitButton" title="Update" separate-column="true">
             <submit button-type="button"/>
         </field>

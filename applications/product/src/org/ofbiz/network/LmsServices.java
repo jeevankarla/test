@@ -1536,12 +1536,14 @@ public class LmsServices {
 		Map<String, Object> input = FastMap.newInstance();
 		Map<String, Object> outMap = FastMap.newInstance();
 		String postalCode=(String)context.get("postalCode");
+		String city=(String)context.get("city");
 		GenericValue parentFacility;
 		GenericValue facility;
+		boolean updateFlag=false;
 		try{
 		 boolean isSeqNumNumeric=(StringUtils.isNumeric(facilityId));
 		
-		 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "parentFacilityId",(String)context.get("parentFacilityId"),"openedDate",openedDate,"closedDate",closedDate, "facilityId", facilityId, "facilityTypeId", (String)context.get("facilityTypeId"), 
+		 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "openedDate",openedDate,"closedDate",closedDate, "facilityId", facilityId, "facilityTypeId", (String)context.get("facilityTypeId"), 
 				 "parentFacilityId", parentFacilityId, "categoryTypeEnum", categoryTypeEnum,"facilityName", (String)context.get("facilityName"),"useEcs", (String)context.get("useEcs"),
 				 "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
 	
@@ -1573,15 +1575,34 @@ public class LmsServices {
 	        	input.put("partyId", partyId);
 	        	input.put("userLogin", userLogin);
 	            outMap = dispatcher.runSync("getPartyPostalAddress", input);
-	            if (UtilValidate.isNotEmpty(outMap.get("address1"))  || !outMap.get("address1").equals(address1) ){
-		            	input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "stateProvinceGeoId", "IND", "postalCode", (String)context.get("postalCode"), "contactMechId", outMap.get("contactMechId"));
+	            if (UtilValidate.isNotEmpty(outMap.get("address1"))){
+	            	 if (!outMap.get("address1").equals(address1)){
+	            		 input.put("address1",address1);
+	            		 updateFlag=true;
+	            	 }
+	            	 if (UtilValidate.isNotEmpty(address2) && !outMap.get("address2").equals(address2)){
+	            		 input.put("address2",address2);
+	            		 updateFlag=true;
+	            	 }
+	            	 if (UtilValidate.isNotEmpty(city)&&!outMap.get("city").equals(city)){
+	            		 input.put("city",city);
+	            		 updateFlag=true;
+	            	 }
+	            	 if (UtilValidate.isNotEmpty(postalCode)&&!outMap.get("postalCode").equals(postalCode)){
+	            		 input.put("postalCode",postalCode);
+	            		 updateFlag=true;
+	            	 }
+	            	 if(updateFlag){
+	            		 input.put("stateProvinceGeoId","IND");
+	            		 input.put("contactMechId",outMap.get("contactMechId"));
 			            resultMap =  dispatcher.runSync("updatePartyPostalAddress", input);
-						 if(ServiceUtil.isError(outMap)){
-				     	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
-				     	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
-				         }
+	            	 }
+					 if(ServiceUtil.isError(outMap)){
+			     	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+			     	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+			         }
 				 }else{
-					    input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("postalCode"), "contactMechId", contactMechId);
+					    input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyId, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", postalCode, "contactMechId", contactMechId);
 						resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
 						if (ServiceUtil.isError(resultMap)) {
 							Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -1601,7 +1622,6 @@ public class LmsServices {
 	        	input.clear();
 	        	input.put("partyId", partyId);
 	        	input.put("userLogin", userLogin); 
-	        	input.put("contactMechPurposeTypeId", "PRIMARY_PHONE");
 	            outMap = dispatcher.runSync("getPartyTelephone", input);
 	            if(ServiceUtil.isError(outMap)){
 	           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
@@ -1635,7 +1655,7 @@ public class LmsServices {
 			          }
 	            }
 	          } 
-	        if (UtilValidate.isNotEmpty(contactNumber)){
+	        /*if (UtilValidate.isNotEmpty(contactNumber)){
 	        	input.clear();
 	        	input.put("partyId", partyId);
 	        	input.put("userLogin", userLogin);
@@ -1669,7 +1689,7 @@ public class LmsServices {
 			            }
 		            }
 		          }
-		        } 
+		        } */
 	     // update  email
 	            if (UtilValidate.isNotEmpty(email)){
 	            	input.clear();

@@ -28,6 +28,7 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/rate/RateServices.xml" invoke="updateRateAmount">
         <description>Create/update Rate Amount</description>
         <auto-attributes include="all" mode="IN" optional="true"/>
+        <attribute name="updateFlag" type="String" mode="IN" optional="true"/>
         <override name="rateTypeId" optional="false"/>
         <override name="rateAmount" optional="false"/>
     </service>
@@ -35,7 +36,9 @@ under the License.
         location="component://accounting/script/org/ofbiz/accounting/rate/RateServices.xml" invoke="deleteRateAmount">
         <description>Delete (expire) Rate Amount</description>
         <auto-attributes include="pk" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <override name="rateTypeId" optional="false"/>
+        <override name="updateFlag" optional="true"/>
         <override name="fromDate" optional="false"/>
     </service>
     <service name="getRateAmount" default-entity-name="RateAmount" engine="simple" auth="true"

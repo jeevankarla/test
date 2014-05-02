@@ -50,6 +50,7 @@ function makeDatePicker(fromDateId ,thruDateId){
                 		var facilityId = $("#facilityId").val();
                 		var facilityName = $("#facilityName").val();
                 		var parentFacilityId=jQuery("[name='"+"parentFacilityId"+"']").val();
+                		var categoryTypeEnum =$( "#categoryTypeEnum option:selected" ).val();
                 	    if( (facilityId).length < 1 ) {
 					    	$('#facilityId').css('background', 'yellow'); 
 					       	setTimeout(function () {
@@ -61,6 +62,13 @@ function makeDatePicker(fromDateId ,thruDateId){
 					    	$('#0_lookupId_parentFacilityId').css('background', 'yellow'); 
 					       	setTimeout(function () {
 					           	$('#0_lookupId_parentFacilityId').css('background', 'white').focus(); 
+					       	}, 800);
+					    	return false;
+				    	}
+				    	if( (categoryTypeEnum).length < 1 ) {
+					    	$('#categoryTypeEnum').css('background', 'yellow'); 
+					       	setTimeout(function () {
+					           	$('#categoryTypeEnum').css('background', 'white').focus(); 
 					       	}, 800);
 					    	return false;
 				    	}
@@ -337,12 +345,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 									      	<input type="text" name="emailAddress" id="emailAddress" size="30" maxlength="60" autocomplete="off" />
 									    </td>
 									</tr>
-									<tr>
+									<!--<tr>
 									    <td class="label"><b> Phone Number</b></td>
 									    <td>
 									      	<input type="text" name="contactNumber" id="contactNumber" size="30" maxlength="60" autocomplete="off"/>
 									    </td>
-									</tr>
+									</tr>-->
 									<tr>
 									    <td class="label"><b>Mobile Number</b></td>
 									    <td>

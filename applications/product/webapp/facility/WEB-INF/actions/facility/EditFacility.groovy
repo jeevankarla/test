@@ -42,9 +42,7 @@ context.facility = facility;
 context.facilityType = facilityType;
 context.facilityId = facilityId;
 if (facility && facility.ownerPartyId) {
-partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: facility.ownerPartyId, userLogin: userLogin,contactMechPurposeTypeId:"PHONE_HOME"]);
-context.contactNumber = partyTelephone.contactNumber;
-partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: facility.ownerPartyId, userLogin: userLogin,contactMechPurposeTypeId:"PRIMARY_PHONE"]);
+partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: facility.ownerPartyId, userLogin: userLogin]);
 context.mobileNumber = partyTelephone.contactNumber;
 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId: facility.ownerPartyId, userLogin: userLogin]);
 context.partyPostalAddress = partyPostalAddress;
