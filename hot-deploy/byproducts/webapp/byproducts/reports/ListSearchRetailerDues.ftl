@@ -89,6 +89,7 @@ under the License.
         var index = 0;
         var tabItemValue;
         var methodTypeId;
+        var routeId;
         jQuery.each(facilities, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
@@ -108,8 +109,13 @@ under the License.
             index = index+1;
             
         });
+        
         var appStr = "<input type=hidden name=paymentMethodTypeId value="+methodTypeId+" />";
         $("#paymentSubmitForm").append(appStr);
+       routeId= $("#routeFacilityId").val();
+       alert("==="+routeId);
+         var appStr = "<input type=hidden name=facilityId value="+routeId+" />";
+          $("#paymentSubmitForm").append(appStr);
         appStr = "<input type=hidden name=subTabItem value="+tabItemValue+" />";
         $("#paymentSubmitForm").append(appStr);
     	jQuery('#paymentSubmitForm').submit();
@@ -182,7 +188,7 @@ under the License.
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>Retailer Code</td>
+          <td>Retailer Code<input type="hidden" name="facilityId" id="routeFacilityId" value="${parameters.facilityId?if_exists}"></td>
           <td>Retailer Name</td>
           <td>${uiLabelMap.Route}</td>
           <td>PaymentMethodType</td>

@@ -113,14 +113,23 @@ if(tempPaymentIds.size()>1){
 context.put("paymentGrpMap",paymentGrpMap);*/
 
 paymentGrpMap = [:];
+paymentGrpFacMap=[:];
+paymentGrpPartyMap=[:];
 condList =[];
+
 condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN,tempPaymentIds));
 EntityCondition cond = EntityCondition.makeCondition(condList ,EntityOperator.AND);
 paymentGroupMemberList = delegator.findList("PaymentGroupMember", cond, null, null, null, false);
+if(UtilValidate.isNotEmpty(parameters.paymentIds)){
 if(UtilValidate.isNotEmpty(paymentGroupMemberList)){
 	paymentGroupIdList = EntityUtil.getFieldListFromEntityList(paymentGroupMemberList, "paymentGroupId", true);
 	paymentGroupIdList.each{ paymentGroupId->
 		paymentMap = [:];
+		facilityPartyMap=[:];
+		GenericValue paymentGroup = delegator.findOne("PaymentGroup", UtilMisc.toMap("paymentGroupId" ,paymentGroupId), false);
+		
+		paymentDate="";
+		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("paymentGroupId", EntityOperator.EQUALS,paymentGroupId));
 		EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
 		newPaymentGroupMemberList = delegator.findList("PaymentGroupMember", condition, null, null, null, false);
@@ -135,6 +144,7 @@ if(UtilValidate.isNotEmpty(paymentGroupMemberList)){
 			paymentList.each{ payment->
 					cashReceivedMap = [:];
 					partyIdFrom = payment.partyIdFrom;
+					paymentDate=payment.paymentDate;
 					amount = payment.amount;
 					paymentId = payment.paymentId;
 					cashReceivedMap["partyIdFrom"]=partyIdFrom;
@@ -146,11 +156,20 @@ if(UtilValidate.isNotEmpty(paymentGroupMemberList)){
 		if(UtilValidate.isNotEmpty(paymentMap)){
 			paymentGrpMap.put(paymentGroupId,paymentMap);
 		}
+		if(UtilValidate.isNotEmpty(paymentGroup)){
+			routeId=paymentGroup.facilityId;
+			if(UtilValidate.isNotEmpty(routeId)){
+			facilityPartyMap=ByProductNetworkServices.getFacilityPartyContractor(dispatcher.getDispatchContext(), UtilMisc.toMap("facilityId",routeId,"saleDate",paymentDate)).get("facilityPartyMap");
+			//to populate Contrcter And RouteId
+			paymentGrpPartyMap[paymentGroupId]=facilityPartyMap.get(routeId);
+			paymentGrpFacMap[paymentGroupId]=routeId;
+			}
+			}
 		context.put("paymentGroupId",paymentGroupId);
 	}
 }else{
 	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS,parameters.paymentIds));
+	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN,tempPaymentIds));
 	conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS,"SALES_PAYIN"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"PMNT_RECEIVED"));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
@@ -174,5 +193,8 @@ if(UtilValidate.isNotEmpty(paymentGroupMemberList)){
 	}
 	context.put("paymentGroupId",paymentId);
 }
+}//notEmpty check
 context.put("paymentGrpMap",paymentGrpMap);
+context.put("paymentGrpFacMap",paymentGrpFacMap);
+context.put("paymentGrpPartyMap",paymentGrpPartyMap);
 

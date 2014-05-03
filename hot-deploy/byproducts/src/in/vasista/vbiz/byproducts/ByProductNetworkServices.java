@@ -6846,13 +6846,19 @@ public class ByProductNetworkServices {
 			    	saleDate = (Timestamp)context.get("saleDate");
 			    }
 			    String roleTypeId=(String)context.get("roleTypeId");
+			    String facilityId=(String)context.get("facilityId");
 			    if(UtilValidate.isEmpty(roleTypeId)){
 			    	   conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"Contractor"));
 		  		  }
 			    if(UtilValidate.isNotEmpty(roleTypeId)){
 			    conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,roleTypeId));
 			    }
+			    if(UtilValidate.isNotEmpty(facilityId)){
+				    conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId));
+				 }
+			   
 			    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+			    Debug.log("====condition===="+condition);
 			    try {
 			    	facilityPartyList =delegator.findList("FacilityFacilityPartyAndPerson", condition, null , null, null, false);
 			    	facilityPartyList = EntityUtil.filterByDate(facilityPartyList, saleDate);

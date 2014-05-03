@@ -39,8 +39,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
                     <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------</fo:block>
               		<fo:block >Received with thanks the Receipt of Cash													&#160;&#160;&#160;&#160;Receipt - CSH</fo:block>
-            		<fo:block >From:																	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Number:${paymentGroupId?if_exists}</fo:block>
-            		<fo:block >By RT NO:																&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}</fo:block>
+            		<#assign  partyName="">
+            			<#if paymentGrpPartyMap.get(paymentGroup.getKey())?exists>
+            			<#assign partyId=paymentGrpPartyMap.get(paymentGroup.getKey())>
+            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+            			</#if>
+            		<fo:block >From:${partyName?if_exists}																	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Number:${paymentGroupId?if_exists}</fo:block>
+            		<fo:block >By RT NO:${paymentGrpFacMap.get(paymentGroup.getKey())?if_exists}																&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}</fo:block>
             		<fo:block>-------------------------------------------------------------------------</fo:block>
             		<fo:block >Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Retailer Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;Amount</fo:block>
             		<fo:block>-------------------------------------------------------------------------</fo:block>
@@ -63,7 +68,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
                             		<fo:block  text-align="left"  white-space-collapse="false">${payment.getValue().get("paymentId")?if_exists}</fo:block>  
                        			</fo:table-cell>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left">${facility.description?if_exists}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.description?if_exists)),22)}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  white-space-collapse="false">${payment.getValue().get("partyIdFrom")?if_exists}</fo:block>  
