@@ -121,8 +121,9 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 			routeId = returnItem.routeId;
 			shipmentTypeId = returnItem.shipmentTypeId;
 			productId = returnItem.productId;
+			product = delegator.findOne("Product", ["productId" : productId], true);
+			returnQtyIncluded = product.quantityIncluded;
 			returnQuantity = returnItem.returnQuantity;
-			returnQtyIncluded = returnItem.quantityIncluded;
 			if(UtilValidate.isNotEmpty(returnQtyIncluded)){
 				returnQtyLtrs = (returnQuantity*returnQtyIncluded);
 			}
