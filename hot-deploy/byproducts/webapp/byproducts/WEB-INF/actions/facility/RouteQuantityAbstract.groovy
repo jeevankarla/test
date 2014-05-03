@@ -60,7 +60,7 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 			}
 		}
 		if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
-			thruEffectiveDate = UtilDateTime.nowTimestamp();
+			thruEffectiveDate = effectiveDate;
 		}
 		else{
 			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -99,17 +99,17 @@ byProductsIdsList=EntityUtil.getFieldListFromEntityList(byProductsList, "product
 context.putAt("dayBegin", dayBegin);
 
 shipmentIds = [];
-if(thruEffectiveDate){
-	allAmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
-	shipmentIds.addAll(allAmShipmentIds);
-	allPmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
-	shipmentIds.addAll(allPmShipmentIds);
+
+	amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
+	shipmentIds.addAll(amShipmentIds);
+	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
+	shipmentIds.addAll(pmShipmentIds);
 	
-}else{
+/*else{
 	shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 }
 amShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"AM");
-pmShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"PM");
+pmShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"PM");*/
 //getADHOC shipments 
 List adhocShipments  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
 if(UtilValidate.isNotEmpty(adhocShipments)){

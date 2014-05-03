@@ -96,6 +96,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQtyLtrs?if_exists?string("#0.00")}<#else></#if></fo:block>  
 	                       			</fo:table-cell>
 	                       			<#assign returnPrice = (saleProductReturnMap[product.productId].get("returnPrice"))?if_exists>
+	                       			<#assign retrnQtyAmount=0>
+	                       			<#assign totalNetPrice = 0>
 	                       			<#if returnQty?has_content>
                        					<#assign retrnQtyAmount = (returnQty*returnPrice)>
                        			    	<#assign grandTotalRetrnQtyRevenue = grandTotalRetrnQtyRevenue+retrnQtyAmount?if_exists>
