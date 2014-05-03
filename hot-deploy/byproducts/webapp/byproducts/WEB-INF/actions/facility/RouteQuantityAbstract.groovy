@@ -100,7 +100,11 @@ context.putAt("dayBegin", dayBegin);
 
 shipmentIds = [];
 if(thruEffectiveDate){
-	shipmentIds = ByProductNetworkServices.getShipmentIds(delegator,dayBegin,dayEnd);
+	allAmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
+	shipmentIds.addAll(allAmShipmentIds);
+	allPmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
+	shipmentIds.addAll(allPmShipmentIds);
+	
 }else{
 	shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 }
