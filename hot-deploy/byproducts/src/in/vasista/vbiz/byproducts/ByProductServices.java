@@ -2587,6 +2587,7 @@ public class ByProductServices {
 	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 	  	  String paymentMethodTypeId = (String)request.getParameter("paymentMethodTypeId");
 	  	  String subTabItem = (String)request.getParameter("subTabItem");
+	  	  String routeFacility = (String)request.getParameter("facilityId");
 	  	  request.setAttribute("paymentMethodTypeId", paymentMethodTypeId);
 	  	  request.setAttribute("subTabItem", subTabItem);
 	  	  List paymentIds = FastList.newInstance();	
@@ -2601,6 +2602,11 @@ public class ByProductServices {
 	  		  
 	  		  beganTransaction = TransactionUtil.begin(7200);
 	  		  List exprListForParameters = FastList.newInstance();
+	  	      GenericValue facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId" ,routeFacility), false);
+	  	      String  routeFacilityId="";
+	  	      if("ROUTE".equalsIgnoreCase(facilityDetails.getString("facilityTypeId"))){
+	  	    	routeFacilityId=facilityDetails.getString("facilityId");
+	  	      }
 		  	  for (int i = 0; i < rowCount; i++){
 		  		  Map paymentMap = FastMap.newInstance();
 		  		  String facilityId = "";
@@ -2680,9 +2686,8 @@ public class ByProductServices {
 		  		  
 		  		 
 		  	 }//end of loop
-		  	 
-		  	 if(UtilValidate.isNotEmpty(paymentIds) && paymentIds.size() > 1){
-	    			Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", UtilMisc.toMap("paymentIds", paymentIds, "paymentGroupTypeId", "ROUTE_BATCH_PAYMENT", "userLogin", userLogin));
+		  	 if(UtilValidate.isNotEmpty(paymentIds) && paymentIds.size() > 1 ){
+	    			Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", UtilMisc.toMap("paymentIds", paymentIds, "paymentGroupTypeId", "ROUTE_BATCH_PAYMENT", "userLogin", userLogin,"facilityId",routeFacilityId));
 		    		if(ServiceUtil.isError(resultCtx)){
 		    			Debug.logError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx), module);
 		    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating payment group");
