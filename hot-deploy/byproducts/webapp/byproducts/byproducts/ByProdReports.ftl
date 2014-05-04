@@ -35,8 +35,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 			dateFormat:'MM d, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
-			onSelect: function( selectedDate ) {
-				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			onSelect: function(selectedDate) {
+			date = $(this).datepicker('getDate');
+			var maxDate = new Date(date.getTime());
+	        	maxDate.setDate(maxDate.getDate() + 31);
+				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
 			}
 		});
 	$( "#"+thruDateId ).datepicker({
@@ -68,6 +72,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		});
 	}
 
+//call one method for one time fromDATE And thruDATE
 
 	$(document).ready(function(){
 		makeDatePicker("RLAFromDateId","RLAThruDateId");
@@ -80,11 +85,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("RouteIndentAbstDate","");
 		makeDatePicker("RouteTrCorrDate","");
 		makeDatePicker("RouteTrDetDate","");
-		makeDatePicker("bsFromDateId","fromDateId");
-		makeDatePicker("bsThruDateId","thuDateId");
+		makeDatePicker("bsFromDateId","bsThruDateId");
 		makeDatePicker("prodReturnDateId","thuDateId");
-		makeDatePicker("saleFromDateId","fromDateId");
-		makeDatePicker("saleThruDateId","thuDateId");
+		makeDatePicker("saleFromDateId","saleThruDateId");
 		makeDatePicker("smsNotify","");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
