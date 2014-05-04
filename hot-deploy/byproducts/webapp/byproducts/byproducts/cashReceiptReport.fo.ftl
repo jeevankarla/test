@@ -44,8 +44,29 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
             			<#assign partyId=paymentGrpPartyMap.get(paymentGroup.getKey())>
             			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
             			</#if>
-            		<fo:block >From:${partyName?if_exists}																	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Number:${paymentGroupId?if_exists}</fo:block>
-            		<fo:block >By RT NO:${paymentGrpFacMap.get(paymentGroup.getKey())?if_exists}																&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}</fo:block>
+            		<fo:block><fo:table>
+                    <fo:table-column column-width="38%"/>
+                    <fo:table-column column-width="50%"/>
+                    <fo:table-body>
+                    <fo:table-row>
+                				<fo:table-cell>
+                            		<fo:block  text-align="left"  >From:${partyName?if_exists}</fo:block>  
+                       			</fo:table-cell>
+                				<fo:table-cell>
+                            		<fo:block  keep-together="always" text-align="left">Receipt Number:${paymentGroupId?if_exists}</fo:block>  
+                       			</fo:table-cell>
+                    </fo:table-row>	
+                     <fo:table-row>
+                				<fo:table-cell>
+                            		<fo:block  text-align="left"  >By RT NO:${paymentGrpFacMap.get(paymentGroup.getKey())?if_exists}</fo:block>  
+                       			</fo:table-cell>
+                				<fo:table-cell>
+                            		<fo:block  keep-together="always" text-align="left">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}</fo:block>  
+                       			</fo:table-cell>
+                    </fo:table-row>		
+                     </fo:table-body>
+                      </fo:table>
+            		</fo:block>
             		<fo:block>-------------------------------------------------------------------------</fo:block>
             		<fo:block >Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Retailer Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;Amount</fo:block>
             		<fo:block>-------------------------------------------------------------------------</fo:block>
