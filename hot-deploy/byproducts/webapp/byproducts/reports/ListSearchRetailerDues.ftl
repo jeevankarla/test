@@ -113,7 +113,6 @@ under the License.
         var appStr = "<input type=hidden name=paymentMethodTypeId value="+methodTypeId+" />";
         $("#paymentSubmitForm").append(appStr);
        routeId= $("#routeFacilityId").val();
-       alert("==="+routeId);
          var appStr = "<input type=hidden name=facilityId value="+routeId+" />";
           $("#paymentSubmitForm").append(appStr);
         appStr = "<input type=hidden name=subTabItem value="+tabItemValue+" />";
