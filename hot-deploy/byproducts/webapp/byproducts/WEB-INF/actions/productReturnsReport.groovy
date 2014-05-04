@@ -98,21 +98,37 @@ shipmentIdList = [];
 if(thruEffectiveDate){
 	shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,dayBegin,dayEnd);
 	shipmentIdList.addAll(shipmentIds);
-}else{
+}
+if(UtilValidate.isEmpty(thruEffectiveDate)){
 	if(parameters.subscriptionTypeId == "ALL"){
+		if(parameters.routeId == "All-Routes"){
 			shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 			shipmentIdList.addAll(shipmentIds);
-	}else{
+		}else{
+		   shipment = delegator.findList("Shipment", EntityCondition.makeCondition([routeId : parameters.routeId, statusId: "GENERATED", estimatedShipDate : dayBegin]), null, null, null, false);
+		   shipmentIds = EntityUtil.getFieldListFromEntityList(shipment, "shipmentId", true);
+		   shipmentIdList.addAll(shipmentIds);
+	   }
+	}
+	else{
+	   if(parameters.routeId == "All-Routes"){
 		   shipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),parameters.subscriptionTypeId);
 		   shipmentIdList.addAll(shipmentIds);
+	   }else{
+		   shipType = parameters.subscriptionTypeId+"_SHIPMENT";
+		   shipment = delegator.findList("Shipment", EntityCondition.makeCondition([routeId : parameters.routeId, shipmentTypeId: shipType, statusId: "GENERATED", estimatedShipDate : dayBegin]), null, null, null, false);
+		   shipmentIds = EntityUtil.getFieldListFromEntityList(shipment, "shipmentId", true);
+		   shipmentIdList.addAll(shipmentIds);
+	   }
 	}
 }
+
 saleProductReturnMap=[:];
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIdList));
 conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
 returnCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-returnHeaderItemsList = delegator.findList("ReturnHeaderItemProductAndShipment", returnCondition, null, null, null, false);
+returnHeaderItemsList = delegator.findList("ReturnHeaderItemAndShipment", returnCondition, null, null, null, false);
 if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 	returnHeaderItemsList.each{ returnItem->
 			productReturnMap = [:];

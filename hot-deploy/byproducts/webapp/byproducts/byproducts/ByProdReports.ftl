@@ -249,13 +249,20 @@ function makeDatePicker1(fromDateId ,thruDateId){
       		<form id="ProductReturnsReport" name="ProductReturnsReport" method="post" action="<@ofbizUrl>productReturnsReport.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Product Returns Report</td>
       			<td width="33%">Date<input  type="text" size="18pt" id="prodReturnDateId" readonly  name="prodReturnDate"/>
-      			<td width="33%">Type 
+      			<td width="36%">Route 
+				 <select name="routeId" class='h4'>
+				<option value='All-Routes'>All</option>
+					<#list routesList as route>    
+  	    				<option value='${route}'>${route}</option>
+					</#list> 
+					</select>
+					Type 
 					<select name='subscriptionTypeId' class='h4'>
 					<option value='ALL'>All</option>
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
 					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="submit" value="Download" class="buttontext"/></td>       			
+					<input type="submit" value="Download" class="buttontext"/></td>
       		</form>
       	</tr> 
       	<tr>
