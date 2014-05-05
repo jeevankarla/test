@@ -1178,7 +1178,7 @@
 				<parameter param-name="organizationPartyId" />
 			</link>
 		</menu-item>
-		<menu-item name="FinancialAccountingTrans" title="Financial Acctng">
+		<menu-item name="FinancialAccountingTrans" title="Financial Account Trans">
 			<link target="FinancialAccountingTrans">
 				<parameter param-name="organizationPartyId" />
 			</link>
