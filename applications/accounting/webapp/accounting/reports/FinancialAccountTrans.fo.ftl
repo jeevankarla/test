@@ -40,7 +40,7 @@ under the License.
                 </fo:table-row>
                 <fo:table-row>
                     <fo:table-cell border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="start" space-after=".01in">${uiLabelMap.AccountingGlAccountNameAndGlAccountCode} : ${(glAccount.accountCode)!} - ${(glAccount.accountName)!}</fo:block><fo:block text-align="right"> ${uiLabelMap.CommonPage} - <fo:page-number-citation ref-id="theEnd"/></fo:block>        
+                        <fo:block text-align="start" space-after=".01in">${uiLabelMap.AccountingGlAccountNameAndGlAccountCode} : ${(glAccount.accountCode)!} - ${(glAccount.accountName)!}</fo:block><fo:block text-align="right"> ${uiLabelMap.CommonPage} <fo:page-number/></fo:block>       
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-body>

@@ -132,18 +132,21 @@ if (organizationPartyId) {
 		
 		isNew = "Y";
 		isMonthEnd = "N";
+		partyId = "";
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			acctgTransIt = glAcctgTrialBalanceList[0];
 			acctgTransAndEntries = acctgTransIt.acctgTransAndEntries;
+			
 			for(j=0; j<acctgTransAndEntries.size(); j++){
 				acctgTransEntry = acctgTransAndEntries[j];
 				openingBalance = closingBalance;
 				
 			
 				paymentId = acctgTransEntry.paymentId;
-				paymentApplication = delegator.findList("PaymentAndApplication", EntityCondition.makeCondition(["paymentId" : paymentId]), null, null, null, true);
-				partyId = acctgTransEntry.partyId;
+				payment = delegator.findOne("Payment", [paymentId : paymentId], false);
+				partyId = payment.partyIdFrom;
 				
+				accountName = acctgTransEntry.accountName;
 				// Prepare List for CSV
 				
 				debitAmount = BigDecimal.ZERO;
@@ -195,7 +198,11 @@ if (organizationPartyId) {
 				acctgTransEntryMap = [:];
 				acctgTransEntryMap["transactionDate"] = transactionDateStr;
 				acctgTransEntryMap["paymentId"] = paymentId;
-				acctgTransEntryMap["partyId"] = partyId;
+				if(UtilValidate.isNotEmpty(partyId)){
+					acctgTransEntryMap["partyId"] = partyId;
+				}else{
+					acctgTransEntryMap["partyId"] = accountName;
+				}
 				acctgTransEntryMap["openingBalance"] = openingBalance;
 				acctgTransEntryMap["debitAmount"] = debitAmount;
 				acctgTransEntryMap["creditAmount"] = creditAmount;

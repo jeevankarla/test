@@ -580,7 +580,7 @@ under the License.
                 </entity-options>
             </drop-down> -->
         </field>
-        <field name="yearTimePeriod" parameter-name="timePeriod">
+        <field name="TimePeriod" parameter-name="timePeriod">
             <drop-down>
                 <list-options list-name="customTimePeriods" key-name="customTimePeriodId" description="${fromDate} - ${thruDate}"/>
             </drop-down>
@@ -613,7 +613,7 @@ under the License.
                 </entity-options>
             </drop-down> -->
         </field>
-        <field name="monthTimePeriod" parameter-name="timePeriod">
+        <field name="TimePeriod" parameter-name="timePeriod">
             <drop-down>
                 <list-options list-name="customTimePeriods" key-name="customTimePeriodId" description="${fromDate} - ${thruDate}"/>
             </drop-down>

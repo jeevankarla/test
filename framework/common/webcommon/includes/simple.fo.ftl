@@ -80,7 +80,7 @@ under the License.
                                         <fo:block font-weight="bold">${uiLabelMap.CommonDate}</fo:block>
                                     </fo:list-item-label>
                                     <fo:list-item-body start-indent="body-start()">
-                                        <fo:block>${nowTimestamp?if_exists}</fo:block>
+                                        <fo:block>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
                                     </fo:list-item-body>
                                 </fo:list-item>
                             </fo:list-block>
