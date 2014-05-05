@@ -59,12 +59,13 @@
 screenFlag = '${screenFlag}';
 function setDateRange(){
 <#if screenFlag?exists && screenFlag == 'DSCorrection'>
+         var startDate=new Date("01 May, 2014");
 	    	$("#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: false,
 			numberOfMonths: 1,
-			minDate: -1,
-			maxDate:0,
+			minDate:startDate,
+			maxDate:1,
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate );
 			}
