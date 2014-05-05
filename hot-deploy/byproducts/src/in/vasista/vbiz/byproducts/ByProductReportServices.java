@@ -1213,13 +1213,15 @@ public class ByProductReportServices {
 	    			return ServiceUtil.returnError("Cannot parse date string"); 
     			}
     		}
+	        Timestamp smsStartDate = UtilDateTime.getDayStart(smsDate);
+	        Timestamp smsEndDate = UtilDateTime.getDayEnd(smsDate);
 	        List shipmentIds = FastList.newInstance();
 	        String dateStr = UtilDateTime.toDateString(smsDate, "yyyy-MM-dd HH:mm:ss");
 	        if(UtilValidate.isNotEmpty(subscriptionTypeId) && subscriptionTypeId.equalsIgnoreCase("PM")){
-	        	shipmentIds = (List)ByProductNetworkServices.getShipmentIds(delegator, dateStr, null);	
+	        	shipmentIds = (List)ByProductNetworkServices.getShipmentIdsSupplyType(delegator, smsStartDate, smsEndDate, null);	
 	        }
 	        else{
-	        	shipmentIds =  ByProductNetworkServices.getShipmentIdsByAMPM(delegator,dateStr,subscriptionTypeId);
+	        	shipmentIds =  ByProductNetworkServices.getShipmentIdsSupplyType(delegator, smsStartDate, smsEndDate, subscriptionTypeId);
 	        }
 	        
 	        String displayDate = UtilDateTime.toDateString(smsDate, "dd MMM, yyyy");
@@ -1282,7 +1284,7 @@ public class ByProductReportServices {
 				String text = displayDate +" ("+subTypeText+") Dispatch Totals -- MILK: "+milkTotal+" Ltrs; CURD: "+curdTotal+" Ltrs; GHEE: "+gheeTotal+" Kgs; BTR: "+butterTotal+" Kgs; PNR: "+paneerTotal+" Kgs; MBM: "+butterMilkTotal+" Ltrs; OTH: " +otherTotal+" Kgs. From Milkosoft.";
 				Debug.logInfo("Sms text: " + text, module);
 				Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
-					"text", text, "userLogin", userLogin);			
+					"text", text, "userLogin", userLogin);
 				dispatcher.runAsync("sendSmsToContactListNoCommEvent", sendSmsContext);
 			}
 			catch (GenericServiceException e) {
