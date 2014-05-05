@@ -17,7 +17,6 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
 customTimePeriod=delegator.findList("CustomTimePeriod", EntityCondition.makeCondition("customTimePeriodId", parameters.customTimePeriodId), null,null, null, false);
-//Debug.log("customTimePeriod================="+customTimePeriod);
 dayStartfromDate=UtilDateTime.toTimestamp(customTimePeriod[0].fromDate);
 dayStartThruDate=UtilDateTime.toTimestamp(customTimePeriod[0].thruDate);
 
@@ -28,7 +27,6 @@ context.put("dayStartThruDate", dayStartThruDate);
 
 decimals = UtilNumber.getBigDecimalScale("ledger.decimals");
 rounding = UtilNumber.getBigDecimalRoundingMode("ledger.rounding");
-
 
 finalList =[];
 facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
@@ -42,26 +40,16 @@ facilityIdsList. each {facilityId ->
 	inputRateAmt.put("fromDate",dayBegin);
 	inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
 	
-	Map<String, Object> facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+	facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
 	BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
-	
 	BigDecimal TaxrateAmount = rateAmount.divide(new BigDecimal(12.36), rounding);
-	
 	
 	tempMap =[:];
 	tempMap.put("boothId", boothFacilityId);
 	tempMap.put("facilityName", facilityName);
 	tempMap.put("rateAmount", rateAmount);
 	tempMap.put("TaxrateAmount", TaxrateAmount);
-	
 	finalList.addAll(tempMap);
-
-	
-	/*invoiceId = parameters.get("invoiceId");
-	invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);
-	resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemTypeId", "SHOPEE_RENT",
-				   "amount", rateAmount, "userLogin", userLogin));
-			   Debug.log("resMap========="+resMap);*/
 }
 context.putAt("finalList", finalList);
 
