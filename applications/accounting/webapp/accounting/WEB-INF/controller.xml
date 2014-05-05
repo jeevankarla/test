@@ -2675,6 +2675,20 @@ under the License.
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FinancialAccountTransCsv"/>
     </request-map>
+    
+    <request-map uri="FinancialAccountTransForMonth">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinancialAccountTransForMonth"/>
+    </request-map>
+    <request-map uri="FinancialAccountTransForMonth.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FinancialAccountTransForMonthPdf"/>
+    </request-map>
+    <request-map uri="FinancialAccountTransForMonth.csv">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FinancialAccountTransForMonthCsv"/>
+    </request-map>
+    
 
     <!--Add Tax Settings -->
     <request-map uri="addtax">
@@ -3131,6 +3145,10 @@ under the License.
     <view-map name="FinancialAccountingTrans" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountingTrans"/>
     <view-map name="FinancialAccountTransPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="FinancialAccountTransCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransCsv" content-type="text/csv" encoding="none"/>
+    
+    <view-map name="FinancialAccountTransForMonth" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransForMonth"/>
+    <view-map name="FinancialAccountTransForMonthPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransForMonthPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="FinancialAccountTransForMonthCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountTransForMonthCsv" content-type="text/csv" encoding="none"/>
     
     <view-map name="CostCenters" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#CostCenters"/>
     <view-map name="GlAccountBalanceByCostCenter" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenter"/>

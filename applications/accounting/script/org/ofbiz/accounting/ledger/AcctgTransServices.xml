@@ -464,6 +464,7 @@ under the License.
                 <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.customTimePeriodStartDate"/>
                 <condition-expr field-name="transactionDate" operator="less" from-field="parameters.customTimePeriodEndDate"/>
             </condition-list>
+            <order-by field-name="transactionDate"/>
         </entity-condition>
         <set field="debitTotal" type="BigDecimal" value="0"/>
         <set field="creditTotal" type="BigDecimal" value="0"/>

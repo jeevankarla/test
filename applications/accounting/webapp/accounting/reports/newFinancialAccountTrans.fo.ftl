@@ -34,8 +34,13 @@ under the License.
                     </fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
+                    <fo:table-cell width="19cm" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="start" font-weight="normal"></fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
+                <fo:table-row>
                     <fo:table-cell width="16cm" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="start"></fo:block>        
+                        <fo:block text-align="start">${uiLabelMap.AccountingTimePeriod} : ${(currentTimePeriod.fromDate)!} ${uiLabelMap.CommonTo} ${(currentTimePeriod.thruDate)!}</fo:block>        
                     </fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
@@ -65,7 +70,7 @@ under the License.
                     <fo:block text-align="center">Payment Id</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                    <fo:block text-align="center">Description</fo:block>
+                    <fo:block text-align="center">Party Id</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border="1pt solid" border-width=".1mm">
                     <fo:block text-align="center">Opening Balance</fo:block>
@@ -90,7 +95,7 @@ under the License.
                 <#list financialAcctgTransList as finAcctngDetails>
                 		<#assign transactionDate = (finAcctngDetails.get("transactionDate")?if_exists)/>
                 		<#assign paymentId = (finAcctngDetails.get("paymentId")?if_exists)/>
-                		<#assign description = (finAcctngDetails.get("description")?if_exists)/>
+                		<#assign partyId = (finAcctngDetails.get("partyId")?if_exists)/>
                 		<#assign openingBalance = (finAcctngDetails.get("openingBalance")?if_exists)/>
                 		<#assign debitAmount = (finAcctngDetails.get("debitAmount")?if_exists)/>
                 		<#assign creditAmount = (finAcctngDetails.get("creditAmount")?if_exists)/>
@@ -107,9 +112,9 @@ under the License.
                                              ${paymentId?if_exists}
                                     </fo:block>
                                 </fo:table-cell>
-                                <#if ((description)?has_content)>
+                                <#if ((partyId)?has_content)>
                                 	<fo:table-cell  border="1pt solid" border-width=".1mm">
-	                                    <fo:block text-align="center">${(description)}</fo:block>
+	                                    <fo:block text-align="center">${(partyId)}</fo:block>
 	                                </fo:table-cell>
                                  <#else>
                                  	<fo:table-cell  border="1pt solid" border-width=".1mm">
@@ -140,7 +145,7 @@ under the License.
                           </#list>
             </fo:table-body>
         </fo:table>
-        <fo:table>
+     	<fo:table>
         <fo:table-column column-width="150pt"/>
         <fo:table-column column-width="180pt"/>
         <fo:table-column column-width="180pt"/>
