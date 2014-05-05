@@ -51,7 +51,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
                     <fo:table-row>
                               <#if partyName?has_content>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  >From:${partyName?if_exists}jj</fo:block>  
+                            		<fo:block  text-align="left"  >From:${partyName?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
