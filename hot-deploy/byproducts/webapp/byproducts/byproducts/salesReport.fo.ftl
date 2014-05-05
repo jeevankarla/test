@@ -84,57 +84,35 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                       			<#assign returnPrice = 0>
 	                       			<#assign retrnQtyAmount=0>
 	                       			<#assign totalNetPrice = 0>
-	                       			<#if reportTypeFlag = 'salesReport'>
-	                       					<#assign returnQty = (productReturnMap[product.productId].get("returnQuantity"))?if_exists>
-			                       			<#if returnQty?has_content>
-				                       			<#assign grandTotalRtrnQty = grandTotalRtrnQty+returnQty?if_exists>
-					                    	</#if>
-			                       			<fo:table-cell>
-			                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQty?if_exists?string("#0.00")}<#else></#if></fo:block>  
-			                       			</fo:table-cell>
-			                       			<#assign returnQtyLtrs = (productReturnMap[product.productId].get("returnQtyLtrs"))?if_exists>
-			                       			<#if returnQtyLtrs?has_content>
-				                       			<#assign grandTotalRtrnQtyLtrs = grandTotalRtrnQtyLtrs+returnQtyLtrs?if_exists>
-					                    	</#if>
-		                       			    <fo:table-cell>
-			                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQtyLtrs?if_exists?string("#0.00")}<#else></#if></fo:block>  
-			                       			</fo:table-cell>
-			                       			<#assign returnPrice = (productReturnMap[product.productId].get("returnPrice"))?if_exists>
-			                       			<#assign retrnQtyAmount=0>
-			                       			<#assign totalNetPrice = 0>
-			                       			<#if returnQty?has_content>
-		                       			    	<#assign grandTotalRetrnQtyRevenue = grandTotalRetrnQtyRevenue+returnPrice?if_exists>
-		                       			    </#if>
-			                       			<fo:table-cell>
-			                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnPrice?if_exists?string("#0.00")}<#else></#if></fo:block>  
-			                       			</fo:table-cell>
-		                       				<#if returnQty?has_content>
-		                       					<#assign totalNetPrice = (revenue-returnPrice)>
-		                       				<#else>	
-		                       					<#assign totalNetPrice = revenue>
-		                       				</#if>
-		                       		<#else>
-			                       			<#assign returnQtyLtrs = (saleProductReturnMap[product.productId].get("returnQtyLtrs"))?if_exists>
-			                       			<#if returnQtyLtrs?has_content>
-				                       			<#assign grandTotalRtrnQtyLtrs = grandTotalRtrnQtyLtrs+returnQtyLtrs?if_exists>
-					                    	</#if>
-		                       			    <fo:table-cell>
-			                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQtyLtrs?if_exists?string("#0.00")}<#else></#if></fo:block>  
-			                       			</fo:table-cell>
-			                       			<#assign returnPrice = (saleProductReturnMap[product.productId].get("returnPrice"))?if_exists>
-			                       			<#if returnQty?has_content>
-                       							<#assign retrnQtyAmount = (returnQty*returnPrice)>
-                       			    			<#assign grandTotalRetrnQtyRevenue = grandTotalRetrnQtyRevenue+retrnQtyAmount?if_exists>
-                       			    		</#if>
-	                       					<fo:table-cell>
-	                            				<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${retrnQtyAmount?if_exists?string("#0.00")}<#else></#if></fo:block>  
-	                       					</fo:table-cell>
-	                       					<#if returnQty?has_content>
-                       							<#assign totalNetPrice = (revenue-retrnQtyAmount)>
-                       						<#else>	
-                       							<#assign totalNetPrice = revenue>
-                       						</#if>		
-	                       			</#if>
+                   					<#assign returnQty = (productReturnMap[product.productId].get("returnQuantity"))?if_exists>
+	                       			<#if returnQty?has_content>
+		                       			<#assign grandTotalRtrnQty = grandTotalRtrnQty+returnQty?if_exists>
+			                    	</#if>
+	                       			<fo:table-cell>
+	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQty?if_exists?string("#0.00")}<#else></#if></fo:block>  
+	                       			</fo:table-cell>
+	                       			<#assign returnQtyLtrs = (productReturnMap[product.productId].get("returnQtyLtrs"))?if_exists>
+	                       			<#if returnQtyLtrs?has_content>
+		                       			<#assign grandTotalRtrnQtyLtrs = grandTotalRtrnQtyLtrs+returnQtyLtrs?if_exists>
+			                    	</#if>
+                       			    <fo:table-cell>
+	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQtyLtrs?if_exists?string("#0.00")}<#else></#if></fo:block>  
+	                       			</fo:table-cell>
+	                       			<#assign returnPrice = (productReturnMap[product.productId].get("returnPrice"))?if_exists>
+	                       			<#assign retrnQtyAmount=0>
+	                       			<#assign totalNetPrice = 0>
+	                       			<#if returnQty?has_content>
+                       			    	<#assign grandTotalRetrnQtyRevenue = grandTotalRetrnQtyRevenue+returnPrice?if_exists>
+                       			    </#if>
+	                       			<fo:table-cell>
+	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnPrice?if_exists?string("#0.00")}<#else></#if></fo:block>  
+	                       			</fo:table-cell>
+                       				<#if returnQty?has_content>
+                       					<#assign totalNetPrice = (revenue-returnPrice)>
+                       				<#else>	
+                       					<#assign totalNetPrice = revenue>
+                       				</#if>
+		                       		
                        				<#assign grandNetTotal = grandNetTotal+totalNetPrice>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${totalNetPrice?if_exists?string("#0.00")}</fo:block>  
