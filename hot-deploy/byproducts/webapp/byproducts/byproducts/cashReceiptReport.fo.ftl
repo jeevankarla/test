@@ -36,7 +36,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
-                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy")}    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
+                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(receiptDate, "MMMM dd,yyyy HH:MM:SS")}    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------</fo:block>
               		<fo:block >Received with thanks the Receipt of Cash													&#160;&#160;&#160;&#160;Receipt - CSH</fo:block>
             		<#assign  partyName="">
@@ -49,9 +49,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
                     <fo:table-column column-width="50%"/>
                     <fo:table-body>
                     <fo:table-row>
+                              <#if partyName?has_content>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  >From:${partyName?if_exists}</fo:block>  
+                            		<fo:block  text-align="left"  >From:${partyName?if_exists}jj</fo:block>  
                        			</fo:table-cell>
+                       			<#else>
+                       			<fo:table-cell>
+                            		<fo:block  text-align="left"  >&#160;</fo:block>  
+                       			</fo:table-cell>
+                       			</#if>
                 				<fo:table-cell>
                             		<fo:block  keep-together="always" text-align="left">Receipt Number:${paymentGroupId?if_exists}</fo:block>  
                        			</fo:table-cell>
