@@ -60,7 +60,7 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 			}
 		}
 		if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
-			thruEffectiveDate = UtilDateTime.nowTimestamp();
+			thruEffectiveDate = effectiveDate;
 		}
 		else{
 			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -94,25 +94,19 @@ returnQtyLtrs = "";
 
 shipmentIds=[];
 shipmentIdList = [];
-
-if(thruEffectiveDate){
-	shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,dayBegin,dayEnd);
-	shipmentIdList.addAll(shipmentIds);
-}
-if(UtilValidate.isEmpty(thruEffectiveDate)){
 	if(parameters.subscriptionTypeId == "ALL"){
 		if(parameters.routeId == "All-Routes"){
-			shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+			shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,null);
+			//shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 			shipmentIdList.addAll(shipmentIds);
 		}else{
 		   shipment = delegator.findList("Shipment", EntityCondition.makeCondition([routeId : parameters.routeId, statusId: "GENERATED", estimatedShipDate : dayBegin]), null, null, null, false);
 		   shipmentIds = EntityUtil.getFieldListFromEntityList(shipment, "shipmentId", true);
 		   shipmentIdList.addAll(shipmentIds);
 	   }
-	}
-	else{
+	}else{
 	   if(parameters.routeId == "All-Routes"){
-		   shipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),parameters.subscriptionTypeId);
+		   shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,parameters.subscriptionTypeId);
 		   shipmentIdList.addAll(shipmentIds);
 	   }else{
 		   shipType = parameters.subscriptionTypeId+"_SHIPMENT";
@@ -121,7 +115,7 @@ if(UtilValidate.isEmpty(thruEffectiveDate)){
 		   shipmentIdList.addAll(shipmentIds);
 	   }
 	}
-}
+
 
 saleProductReturnMap=[:];
 conditionList=[];
