@@ -61,6 +61,7 @@ under the License.
         <field name="workEffortId" position="1"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
         <field name="shipmentId" position="2"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
          -->
+        <field name="finAccountTransId" position="2"><text></text></field>
         <field name="fromDate" position="2"><date-time/></field>
         <field name="thruDate" position="1"><date-time/></field>
         <field name="performSearch" position="1"><hidden value="Y"/></field>
@@ -85,6 +86,7 @@ under the License.
                     <condition-expr field-name="acctgTransId" operator="equals" from-field="parameters.acctgTransId" ignore-if-empty="true"/>
                     <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
                     <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="finAccountTransId" operator="equals" from-field="parameters.finAccountTransId" ignore-if-empty="true"/>
                 </condition-list>
                 <select-field field-name="acctgTransId"/>
                 <select-field field-name="transactionDate"/>
@@ -98,6 +100,7 @@ under the License.
                 <select-field field-name="postedDate"/>
                 <order-by field-name="-transactionDate"/>
             </entity-condition>
+       
         </actions>
 
         <field name="acctgTransId" widget-style="buttontext">
@@ -507,6 +510,7 @@ under the License.
     <form name="EditAcctgTrans" type="single" target="updateAcctgTrans" default-map-name="acctgTrans"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="updateAcctgTrans"/>
+        <field name="isPosted"><hidden></hidden></field>
         <field name="acctgTransId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="organizationPartyId" map-name="parameter"><hidden/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.AccountingTransactionType}">

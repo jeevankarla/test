@@ -481,6 +481,8 @@ under the License.
     <simple-method method-name="depositWithdrawPayments" short-description="Deposit withdraw payments">
         <set field="paymentIds" from-field="parameters.paymentIds"/>
         <set field="finAccountId" from-field="parameters.finAccountId"/>
+        <set field="transactionDate" from-field="parameters.transactionDate"/>
+        
         <entity-one entity-name="FinAccount" value-field="finAccount"/>
         <!-- Do not create a batch against a financial account which is Manually Frozen or Canceled -->
         <if>
@@ -516,6 +518,7 @@ under the License.
             <set field="createFinAccountTransMap.finAccountTransTypeId" value="DEPOSIT"/>
             <set field="createFinAccountTransMap.partyId" from-field="finAccount.ownerPartyId"/>
             <set field="createFinAccountTransMap.amount" from-field="paymentRunningTotal"/>
+            <set field="createFinAccountTransMap.transactionDate" from-field="transactionDate"/>
             <set field="createFinAccountTransMap.statusId" value="FINACT_TRNS_CREATED"/>
             <call-service service-name="createFinAccountTrans" in-map-name="createFinAccountTransMap">
                 <result-to-field result-name="finAccountTransId"/>                
@@ -581,6 +584,7 @@ under the License.
                 <set field="createFinAccountTransMap.partyId" from-field="finAccount.ownerPartyId"/>
                 <set field="createFinAccountTransMap.paymentId" from-field="payment.paymentId"/>
                 <set field="createFinAccountTransMap.amount" from-field="payment.amount"/>
+                <set field="createFinAccountTransMap.transactionDate" from-field="transactionDate"/>
                 <set field="createFinAccountTransMap.statusId" value="FINACT_TRNS_CREATED"/>                
                 <call-service service-name="createFinAccountTrans" in-map-name="createFinAccountTransMap">
                     <result-to-field result-name="finAccountTransId"/>

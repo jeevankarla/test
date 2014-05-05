@@ -119,6 +119,8 @@ function getPaymentRunningTotal() {
                         <input type="text" size='25' id="paymentGroupName" name='paymentGroupName' />
                         <span class="label">${uiLabelMap.AccountingGroupInOneTransaction}</span>
                         <input type="checkbox" name="groupInOneTransaction" value="Y" checked="checked" /> -->
+                        <b>Date<@htmlTemplate.renderDateTimeField name="transactionDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="transactionDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,</b>
                         <input id="submitButton" type="button"  onclick="javascript:document.depositWithdrawPaymentsForm.submit();" value="${uiLabelMap.AccountingDepositWithdraw}" disabled="disabled"/>
                     </div>
                   </#if>

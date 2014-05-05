@@ -33,7 +33,13 @@ under the License.
         <condition field-name="oldStatusId" operator="not-equals" value="PMNT_RECEIVED"/>
         <action service="checkPaymentInvoices" mode="sync"/>
      </eca>
-
+     <!-- if the payment is cash receipt deposit directly into cash account -->
+     <eca service="setPaymentStatus" event="commit">
+        <condition field-name="statusId" operator="equals" value="PMNT_RECEIVED"/>
+        <condition field-name="oldStatusId" operator="not-equals" value="PMNT_RECEIVED"/>
+        <action service="depositCashReceiptPayment" mode="sync"/>
+     </eca>
+     
      <!-- update invoices to PAID when payment is SENT (e.g., vendor payments) -->
      <eca service="setPaymentStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="PMNT_SENT"/>

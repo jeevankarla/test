@@ -192,6 +192,7 @@
 												<parameter param-name="paymentId" from-field="parameters.paymentId"/>
 												<parameter param-name="fromDate" from-field="parameters.fromDate"/>
 												<parameter param-name="thruDate" from-field="parameters.thruDate"/>
+											    <parameter param-name="finAccountTransId" from-field="parameters.finAccountTransId"/>
 											</link>
 											<link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext"
 												target="AcctgTransSearchResultPdf.pdf" target-window="_BLANK">
@@ -203,7 +204,9 @@
 												<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
 												<parameter param-name="paymentId" from-field="parameters.paymentId"/>
 												<parameter param-name="fromDate" from-field="parameters.fromDate"/>
-												<parameter param-name="thruDate" from-field="parameters.thruDate"/>											</link>
+												<parameter param-name="thruDate" from-field="parameters.thruDate"/>
+												<parameter param-name="finAccountTransId" from-field="parameters.finAccountTransId"/>
+											</link>
 											<include-form name="ListAcctgTrans"
 												location="component://accounting/widget/GlForms.xml" />
 										</screenlet>

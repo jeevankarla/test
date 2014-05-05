@@ -501,6 +501,7 @@ under the License.
         <attribute name="groupInOneTransaction" type="String" mode="IN" optional="true"/>
         <attribute name="paymentGroupTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentGroupName" type="String" mode="IN" optional="true"/>
+        <attribute name="transactionDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="finAccountTransId" type="String" mode="OUT" optional="true"/>
         <attribute name="paymentGroupId" type="String" mode="OUT" optional="true"/>
     </service>

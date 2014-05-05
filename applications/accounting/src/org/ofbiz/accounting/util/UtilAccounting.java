@@ -220,7 +220,24 @@ public class UtilAccounting {
         // recurse up tree
         return isPaymentTypeRecurse(paymentType, inputTypeId);
     }
+    
+    public static boolean isPaymentMethodType(GenericValue payment, String inputTypeId) throws GenericEntityException {
+        if (payment == null) {
+            return false;
+        }
 
+        String paymentMethodTypeId = payment.getString("paymentMethodTypeId");
+        if (paymentMethodTypeId == null) {
+            throw new GenericEntityException("Cannot find PaymentMethod Type for paymentId " + payment.getString("paymentId"));
+        }
+
+        if (paymentMethodTypeId.contains(inputTypeId)) {
+            return true;
+        }
+        return false;
+    }
+
+    
 
     public static boolean isTaxPayment(GenericValue payment) throws GenericEntityException {
         return isPaymentType(payment, "TAX_PAYMENT");

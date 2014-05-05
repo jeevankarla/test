@@ -29,6 +29,8 @@ import javax.servlet.ServletRequest;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
+import org.ofbiz.accounting.AccountingException;
+import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
@@ -388,11 +390,10 @@ public class PaymentWorker {
                 		text += "cheque payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount")+"(subj to realisation)";
                 	}
                 }
-            text += ". Automatic message sent by Milkosoft.";
+            text += ". Automated message from Mother Dairy.";
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
             sendSmsParams.put("contactNumberTo", contactNumberTo);                     
             sendSmsParams.put("text",text);  
-           // Debug.log("text========="+text);
             serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
             if (ServiceUtil.isError(serviceResult)) {
                 Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);               
@@ -445,6 +446,7 @@ public class PaymentWorker {
         String paymentMethodType = (String) context.get("paymentMethodTypeId");
         String paymentType = (String) context.get("paymentTypeId");
         String comments = (String) context.get("comments");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
         boolean useFifo = Boolean.FALSE;       
@@ -456,7 +458,7 @@ public class PaymentWorker {
         String partyIdFrom =(String)context.get("partyIdFrom");
         String paymentId = "";
         boolean roundingAdjustmentFlag =Boolean.TRUE;
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
+       
         List exprListForParameters = FastList.newInstance();
         List boothOrdersList = FastList.newInstance();
         Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
@@ -500,6 +502,47 @@ public class PaymentWorker {
          result = ServiceUtil.returnSuccess("Payment successfully done for Party "+partyIdTo+" ..!");
         return result; 
    }
-   
+    public static Map<String, Object> depositCashReceiptPayment(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String paymentId = (String) context.get("paymentId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        
+       
+        try {
+			GenericValue payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
+			if(!UtilAccounting.isPaymentType(payment, "RECEIPT")){
+				return result; 
+			}
+			 if(!UtilAccounting.isPaymentMethodType(payment, "CASH")){
+				 return result;  
+			 }
+			 List<EntityExpr> condList = UtilMisc.toList(
+	                    EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "CASH"),
+	                    EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH")
+	                   );
+	            EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	            List cashFinAccountList = delegator.findList("FinAccount", cond, null, null, null, true);
+	           GenericValue cashAccount = EntityUtil.getFirst(cashFinAccountList);
+	          Map depositWithdrawPaymentCtx = UtilMisc.toMap("userLogin", userLogin);
+	          depositWithdrawPaymentCtx.put("paymentIds", UtilMisc.toList(paymentId));
+	          depositWithdrawPaymentCtx.put("finAccountId", cashAccount.getString("finAccountId"));
+	          Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
+	          if (ServiceUtil.isError(depositResult)) {
+	          	Debug.logError(depositResult.toString(), module);
+	              return ServiceUtil.returnError(null, null, null, depositResult);
+	          }
+			 
+        }catch(Exception e){
+        	 Debug.logError(e, e.toString(), module);
+             return ServiceUtil.returnError(e.toString());
+        }
+        
+        
+       
+  
+        return result; 
+   }
     
 }

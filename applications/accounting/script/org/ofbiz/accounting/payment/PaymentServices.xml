@@ -79,18 +79,22 @@ under the License.
 
         <set-nonpk-fields map="parameters" value-field="payment"/>
         <now-timestamp field="nowTimestamp"/>
-        <if-empty field="payment.instrumentDate">
-        	<set field="payment.instrumentDate" value="${nowTimestamp}" type="Timestamp"/>            
-        </if-empty>
+       
         <if-empty field="payment.paymentDate">
             <set field="payment.paymentDate" value="${nowTimestamp}" type="Timestamp"/> 
         </if-empty>
-        <if-compare-field operator="greater-equals" field="payment.instrumentDate" to-field="payment.paymentDate" type="Timestamp">
-        	<set field="payment.effectiveDate" from-field="payment.instrumentDate" type="Timestamp"/> 
+         <if-empty field="payment.instrumentDate">
+        	<set field="payment.effectiveDate" value="${payment.paymentDate}" type="Timestamp"/>
         	<else>
-        		<set field="payment.effectiveDate" value="${payment.paymentDate}" type="Timestamp"/>
-        	</else>
-        </if-compare-field>
+        	    <if-compare-field operator="greater-equals" field="payment.instrumentDate" to-field="payment.paymentDate" type="Timestamp">
+        			<set field="payment.effectiveDate" from-field="payment.instrumentDate" type="Timestamp"/> 
+		        	<else>
+		        		<set field="payment.effectiveDate" value="${payment.paymentDate}" type="Timestamp"/>
+		        	</else>
+        		</if-compare-field>
+           </else>          
+        </if-empty>
+       
         <create-value value-field="payment"/>
     </simple-method>
     
@@ -174,18 +178,21 @@ under the License.
             <set field="payment.paymentMethodTypeId" from-field="paymentMethod.paymentMethodTypeId"/>
         </if-not-empty>
         <now-timestamp field="nowTimestamp"/>
-        <if-empty field="payment.instrumentDate">
-        	<set field="payment.instrumentDate" value="${nowTimestamp}" type="Timestamp"/>            
-        </if-empty>
+        
         <if-empty field="payment.paymentDate">
             <set field="payment.paymentDate" value="${nowTimestamp}" type="Timestamp"/> 
         </if-empty>
-        <if-compare-field operator="greater-equals" field="payment.instrumentDate" to-field="payment.paymentDate" type="Timestamp">
-        	<set field="payment.effectiveDate" from-field="payment.instrumentDate" type="Timestamp"/> 
+        <if-empty field="payment.instrumentDate">
+        	<set field="payment.effectiveDate" value="${payment.paymentDate}" type="Timestamp"/>
         	<else>
-        		<set field="payment.effectiveDate" value="${payment.paymentDate}" type="Timestamp"/>
-        	</else>
-        </if-compare-field>	
+        	    <if-compare-field operator="greater-equals" field="payment.instrumentDate" to-field="payment.paymentDate" type="Timestamp">
+        			<set field="payment.effectiveDate" from-field="payment.instrumentDate" type="Timestamp"/> 
+		        	<else>
+		        		<set field="payment.effectiveDate" value="${payment.paymentDate}" type="Timestamp"/>
+		        	</else>
+        		</if-compare-field>
+           </else>          
+        </if-empty>
         <store-value value-field="payment"/>
 
         <if-not-empty field="parameters.statusId">
@@ -495,12 +502,21 @@ under the License.
         		<call-service service-name="setFinAccountTransStatus" in-map-name="setFinAccountTransStatusMap"/>
        			 <!-- Check whether finAccountTransId canceled or not -->        	
         	<else>
-        		<if-compare operator="not-equals" value="FINACT_TRNS_CANCELED" field="finAccountTrans.statusId">
-        			<add-error>
-            			<fail-property resource="AccountingUiLabels" property="AccountingFinAccountTransactionIsNotCanceled"/>
-            		</add-error>
-            		<check-errors/>
-        		</if-compare>
+        	    <if-compare operator="not-equals" value="FINACT_TRNS_CANCELED" field="finAccountTrans.statusId">
+        	   <!-- if it is cash receipt payemnt and there is deposit transaction cancel here , error for other than cash receipt payments -->
+        	     <set field="isCashPayment" value="${groovy:org.ofbiz.accounting.util.UtilAccounting.isPaymentMethodType(payment ,'CASH')}"/>
+        	    <if-compare operator="equals" value="true" field="isCashPayment" type="Boolean">
+        			  <set field="setFinAccountTransStatusMap.finAccountTransId" from-field="payment.finAccountTransId" />
+        		      <set field="setFinAccountTransStatusMap.statusId" value="FINACT_TRNS_CANCELED" />
+        		      <call-service service-name="setFinAccountTransStatus" in-map-name="setFinAccountTransStatusMap"/>
+        	         <else>
+        	             <add-error>
+            				<fail-property resource="AccountingUiLabels" property="AccountingFinAccountTransactionIsNotCanceled"/>
+            			</add-error>
+            			<check-errors/>
+        	         </else>
+        	    </if-compare>
+       		</if-compare>
         	</else>
         </if-compare>
         <field-to-result field="transStatusId" result-name="statusId"/>

@@ -45,7 +45,7 @@ under the License.
 
         <!-- set values for AcctgTrans -->
         <set field="quickCreateAcctgTransAndEntries.finAccountTransId" from-field="parameters.finAccountTransId"/>
-        <set field="quickCreateAcctgTransAndEntries.transactionDate" from-field="nowTimestamp"/>
+        <set field="quickCreateAcctgTransAndEntries.transactionDate" from-field="finAccountTrans.transactionDate"/>
         <set field="quickCreateAcctgTransAndEntries.glFiscalTypeId" value="ACTUAL"/>
         <set field="quickCreateAcctgTransAndEntries.partyId" from-field="finAccountTrans.partyId"/>
         <set field="quickCreateAcctgTransAndEntries.isPosted" value="N"/>
@@ -118,6 +118,13 @@ under the License.
         <if-empty field="finAccountTrans.paymentId">
         	<set field="quickCreateAcctgTransAndEntries.paymentId" from-field="parameters.paymentId"/>
         </if-empty>
+        <!-- to set paymentDate  as transaction date to support past payment transactions-->
+        <if-not-empty field="quickCreateAcctgTransAndEntries.paymentId">
+        	<entity-one value-field="payment" entity-name="Payment">
+        		<field-map field-name="paymentId" from-field="quickCreateAcctgTransAndEntries.paymentId"/>
+        	</entity-one>        	
+        	<set field="quickCreateAcctgTransAndEntries.transactionDate" from-field="payment.paymentDate"/>        	
+        </if-not-empty>
         <call-service service-name="quickCreateAcctgTransAndEntries" in-map-name="quickCreateAcctgTransAndEntries" include-user-login="true">
         	<result-to-field result-name="acctgTransId" field="postAcctgTransMap.acctgTransId"/>
         </call-service>      
@@ -131,6 +138,7 @@ under the License.
         <set field="acctgTransAttribute.attrName" value="FIN_CREATED_ACCTG_TRANS_ID"/>
         <set field="acctgTransAttribute.attrValue" from-field="quickCreateAcctgTransAndEntries.paymentId"/>
         <create-value value-field="acctgTransAttribute"/>
+     
         <call-service service-name="postAcctgTrans" in-map-name="postAcctgTransMap"/>
     </simple-method>
 </simple-methods>

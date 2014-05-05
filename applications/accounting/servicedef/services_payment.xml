@@ -74,12 +74,17 @@ under the License.
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
 
+    <service name="depositCashReceiptPayment" engine="java"
+        location="org.ofbiz.accounting.payment.PaymentWorker" invoke="depositCashReceiptPayment">
+        <description>Checks PaymentMethodType if it is cash then deposit directly into cash Account</description>
+        <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="checkPaymentInvoices" engine="java"
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="checkPaymentInvoices">
         <description>Checks to see if each invoice to which a payment is applied has been fully paid up.  If so, sets the invoice status to PAID.</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
     </service>
-
     <service name="quickSendPayment" engine="simple" default-entity-name="Payment"
         location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="quickSendPayment">
         <description>Updates a Payment and then marks it as PMNT_SENT</description>
