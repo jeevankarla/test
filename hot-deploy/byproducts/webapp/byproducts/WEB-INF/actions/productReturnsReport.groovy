@@ -115,8 +115,13 @@ shipmentIdList = [];
 		   shipmentIdList.addAll(shipmentIds);
 	   }
 	}
-
-
+if(reportTypeFlag=="salesReport"){
+	amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
+	shipmentIdList.addAll(amShipmentIds);
+	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
+	shipmentIdList.addAll(pmShipmentIds);
+	
+}
 saleProductReturnMap=[:];
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIdList));
@@ -157,7 +162,32 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 		returnProductList.add(productReturnMap);
 	}
 }
+productReturnMap = [:];
+returnProducts = EntityUtil.getFieldListFromEntityList(returnHeaderItemsList, "productId", true);
+if(UtilValidate.isNotEmpty(returnProducts)){
+	returnProducts.each{ eachProduct->
+			returnProductList = EntityUtil.filterByCondition(returnHeaderItemsList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProduct));
+			prodTotalQty = 0;
+			returnPrice = 0;
+			product = delegator.findOne("Product", ["productId" : eachProduct], true);
+			returnQtyIncluded = product.quantityIncluded;
+			
+			retTempMap = [:];
+			returnProductList.each{ eachProdReturnItem ->
+				prodTotalQty = prodTotalQty+eachProdReturnItem.returnQuantity;
+				if(eachProdReturnItem.returnPrice){
+					returnPrice = returnPrice+(eachProdReturnItem.returnQuantity*eachProdReturnItem.returnPrice);
+				}
+				
+			}
+			retTempMap.returnQuantity = prodTotalQty;
+			retTempMap.returnPrice = returnPrice;
+			retTempMap.returnQtyLtrs = prodTotalQty*returnQtyIncluded;
+			productReturnMap.put(eachProduct, retTempMap);
+	}
+}
 returnProductList = UtilMisc.sortMaps(returnProductList, UtilMisc.toList("routeId"));
+context.put("productReturnMap",productReturnMap);
 context.put("saleProductReturnMap",saleProductReturnMap);
 context.put("returnProductList",returnProductList);
 

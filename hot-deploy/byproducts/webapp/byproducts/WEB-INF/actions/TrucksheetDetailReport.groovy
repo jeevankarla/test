@@ -44,14 +44,15 @@
 	shipmentIdList = [];
 	
 	if(parameters.subscriptionTypeId == "ALL"){
-		 shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+		 shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,null);
+		// shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
 		 shipmentIdList.addAll(shipmentIds);
 	}
 	else{
-		shipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),parameters.subscriptionTypeId);
+		shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd, parameters.subscriptionTypeId);
+		//shipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),parameters.subscriptionTypeId);
 		shipmentIdList.addAll(shipmentIds);
 	}
-	
 	productName = [:];
 	products = delegator.findList("Product", null, null, null, null, false);
 	products.each{prodItem ->
@@ -83,6 +84,7 @@
 	trucksheetDetailList = [];
 	routeIdsList.each{eachRouteId ->
 		routeOrderItems = EntityUtil.filterByCondition(orderItemsList, EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, eachRouteId));
+		tempShipId = (EntityUtil.getFirst(routeOrderItems)).get("shipmentId");
 		boothIdsList = EntityUtil.getFieldListFromEntityList(routeOrderItems, "originFacilityId", true);
 		boothIdsList.each{ eachBoothId ->
 			String returnId = "";
