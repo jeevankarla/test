@@ -166,14 +166,14 @@ productReturnMap = [:];
 returnProducts = EntityUtil.getFieldListFromEntityList(returnHeaderItemsList, "productId", true);
 if(UtilValidate.isNotEmpty(returnProducts)){
 	returnProducts.each{ eachProduct->
-			returnProductList = EntityUtil.filterByCondition(returnHeaderItemsList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProduct));
+			returnProdList = EntityUtil.filterByCondition(returnHeaderItemsList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProduct));
 			prodTotalQty = 0;
 			returnPrice = 0;
 			product = delegator.findOne("Product", ["productId" : eachProduct], true);
 			returnQtyIncluded = product.quantityIncluded;
 			
 			retTempMap = [:];
-			returnProductList.each{ eachProdReturnItem ->
+			returnProdList.each{ eachProdReturnItem ->
 				prodTotalQty = prodTotalQty+eachProdReturnItem.returnQuantity;
 				if(eachProdReturnItem.returnPrice){
 					returnPrice = returnPrice+(eachProdReturnItem.returnQuantity*eachProdReturnItem.returnPrice);
@@ -190,4 +190,3 @@ returnProductList = UtilMisc.sortMaps(returnProductList, UtilMisc.toList("routeI
 context.put("productReturnMap",productReturnMap);
 context.put("saleProductReturnMap",saleProductReturnMap);
 context.put("returnProductList",returnProductList);
-
