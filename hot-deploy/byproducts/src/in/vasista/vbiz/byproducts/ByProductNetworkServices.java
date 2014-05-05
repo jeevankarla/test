@@ -3068,9 +3068,9 @@ public class ByProductNetworkServices {
 				if(!UtilValidate.isEmpty(shipmentList)){
 					shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
 				}
-			}else{
+			}else{//combine both shipments AM nd PM
 				conditionList.clear();
-				//conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS , shipmentTypeId));
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.IN , UtilMisc.toList("AM_SHIPMENT","AM_SHIPMENT_SUPPL","PM_SHIPMENT","PM_SHIPMENT_SUPPL")));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
 				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
 				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
