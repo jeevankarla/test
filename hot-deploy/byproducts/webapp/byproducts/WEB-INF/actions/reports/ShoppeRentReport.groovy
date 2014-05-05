@@ -20,6 +20,9 @@ customTimePeriod=delegator.findList("CustomTimePeriod", EntityCondition.makeCond
 //Debug.log("customTimePeriod================="+customTimePeriod);
 dayStartfromDate=UtilDateTime.toTimestamp(customTimePeriod[0].fromDate);
 dayStartThruDate=UtilDateTime.toTimestamp(customTimePeriod[0].thruDate);
+
+dayBegin = UtilDateTime.getDayStart(dayStartfromDate, timeZone, locale);
+dayEnd = UtilDateTime.getDayEnd(dayStartThruDate, timeZone, locale);
 context.put("dayStartfromDate", dayStartfromDate);
 context.put("dayStartThruDate", dayStartThruDate);
 
@@ -36,7 +39,7 @@ facilityIdsList. each {facilityId ->
 	Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
 	inputRateAmt.put("rateCurrencyUomId", "INR");
 	inputRateAmt.put("facilityId", boothFacilityId);
-	inputRateAmt.put("fromDate",dayStartThruDate);
+	inputRateAmt.put("fromDate",dayBegin);
 	inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
 	
 	Map<String, Object> facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
