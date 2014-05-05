@@ -78,6 +78,12 @@ context.put("effectiveDate",effectiveDate);
 
 piecesPerCrate=[:];
 piecesPerCan=[:];
+List boothInActiveList = (List) (ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator ,null ,effectiveDate)).get("boothInActiveList");
+
+stopShipList =[];
+if(UtilValidate.isNotEmpty(boothInActiveList)){
+	stopShipList.addAll(EntityUtil.getFieldListFromEntityList(boothInActiveList, "facilityId", true));
+}
 result =ByProductNetworkServices.getProductCratesAndCans(dctx, UtilMisc.toMap("userLogin",userLogin, "saleDate", effectiveDate));
 piecesPerCrate = result.get("piecesPerCrate");
 piecesPerCan = result.get("piecesPerCan");
@@ -110,6 +116,9 @@ for(i=0; i<routesList.size(); i++){
 	routeId=route.get("facilityId");
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
+	if(UtilValidate.isNotEmpty(stopShipList)){
+	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, stopShipList));//get only Active booths for given period
+    }
 	if(UtilValidate.isEmpty(parameters.subscriptionTypeId)){
 	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.IN, ["AM","PM"]));
 	}else{
