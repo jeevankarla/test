@@ -483,28 +483,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			           </form>
 			        </tr> 
 
-					<div class="screenlet">
-						<div class="screenlet-title-bar">
-				  			<h3>Shoppe Rent Report</h3>
-						</div>
-						<div class="screenlet-body">
-							<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
-				  				<tr class="alternate-row">
-				  					<form id="ShoppeRentReport" name="ShoppeRentReport" method="post" action="<@ofbizUrl>ShoppeRentReport.pdf</@ofbizUrl>" target="_blank">	
-				  						<td>Shoppe Rent Report</td>
-				  						<td >Time Period
-				  							<select name="customTimePeriodId" class='h4'>
-				            					<#list timePeriodList as timePeriod>    
-				              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.customTimePeriodId}</option>
-				            					</#list>            
-											</select>
-											<input type="submit" value="Download" class="buttontext"/>
-				      					</td>       			
-				  					</form>
-				  				</tr>
-				  			</table>
-				  		</div>
-				  	 </div>
+	  				<tr class="alternate-row">
+	  					<form id="ShoppeRentReport" name="ShoppeRentReport" method="post" action="<@ofbizUrl>ShoppeRentReport.pdf</@ofbizUrl>" target="_blank">	
+	  						<td>Shoppe Rent Report</td>
+	  						<td >Time Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list timePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.customTimePeriodId}</option>
+	            					</#list>            
+								</select>
+								<input type="submit" value="Download" class="buttontext"/>
+	      					</td>       			
+	  					</form>
+	  				</tr>
 			        
 			        <#-- 
       				<tr class="alternate-row">
