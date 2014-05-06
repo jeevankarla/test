@@ -71,6 +71,7 @@ under the License.
         <description>Change the status of a Payment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="transactionDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
 

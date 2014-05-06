@@ -119,12 +119,6 @@ under the License.
         	<set field="quickCreateAcctgTransAndEntries.paymentId" from-field="parameters.paymentId"/>
         </if-empty>
         <!-- to set paymentDate  as transaction date to support past payment transactions-->
-        <if-not-empty field="quickCreateAcctgTransAndEntries.paymentId">
-        	<entity-one value-field="payment" entity-name="Payment">
-        		<field-map field-name="paymentId" from-field="quickCreateAcctgTransAndEntries.paymentId"/>
-        	</entity-one>        	
-        	<set field="quickCreateAcctgTransAndEntries.transactionDate" from-field="payment.paymentDate"/>        	
-        </if-not-empty>
         <call-service service-name="quickCreateAcctgTransAndEntries" in-map-name="quickCreateAcctgTransAndEntries" include-user-login="true">
         	<result-to-field result-name="acctgTransId" field="postAcctgTransMap.acctgTransId"/>
         </call-service>      

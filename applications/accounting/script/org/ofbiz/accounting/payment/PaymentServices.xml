@@ -257,7 +257,6 @@ under the License.
             <alt-permission permission="ACCOUNTING" action="_PAYMENTSTATUS_CONFIRMED"/>
             <fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
         </check-permission>
-
         <entity-one entity-name="Payment" value-field="payment"/>
         <field-to-result field="payment.statusId" result-name="oldStatusId"/>
 
@@ -299,8 +298,10 @@ under the License.
 
                     <!-- everything ok so now change the status field -->
                     <set from-field="parameters.statusId" field="payment.statusId"/>
+                    <if-not-empty field="parameters.transactionDate">
+                         <set from-field="parameters.transactionDate" field="payment.transactionDate"/>
+                    </if-not-empty>
                     <store-value value-field="payment"/>
-
                 </else>
             </if-empty>
         </if-compare-field>

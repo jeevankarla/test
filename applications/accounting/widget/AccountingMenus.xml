@@ -636,7 +636,7 @@
 						value="PMNT_NOT_PAID" />
 				</and>
 			</condition>
-			<link target="setPaymentStatus">
+				<link target="javascript:showSetPaymentStatus()"  url-mode="plain" link-type="hidden-form">
 				<parameter param-name="paymentId" from-field="payment.paymentId" />
 				<parameter param-name="statusId" value="PMNT_SENT" />
 			</link>
@@ -656,7 +656,7 @@
 						value="PMNT_NOT_PAID" />
 				</and>
 			</condition>
-			<link target="setPaymentStatus">
+			<link target="javascript:showSetPaymentStatus()"  url-mode="plain" link-type="hidden-form">
 				<parameter param-name="paymentId" from-field="payment.paymentId" />
 				<parameter param-name="statusId" value="PMNT_RECEIVED" />
 			</link>
@@ -857,7 +857,7 @@
 		name="EditFixedAssetMeters" title="${uiLabelMap.AccountingFixedAssetMeters}"> 
 		<link target="EditFixedAssetMeters"> <parameter param-name="fixedAssetId"/> 
 		<parameter param-name="maintHistSeqId"/> <parameter param-name="productMeterTypeId" 
-		from-field="fixedAssetMaint.intervalMeterTypeId"/> </link> </menu-item>x 
+		from-field="fixedAssetMaint.intervalMeterTypeId"/> </link> </menu-item>
 		<menu-item name="EditFixedAssetMaintOrders" title="${uiLabelMap.AccountingFixedAssetMaintOrders}"> 
 		<link target="EditFixedAssetMaintOrders"> <parameter param-name="fixedAssetId" 
 		from-field="fixedAssetMaint.fixedAssetId"/> <parameter param-name="maintHistSeqId" 

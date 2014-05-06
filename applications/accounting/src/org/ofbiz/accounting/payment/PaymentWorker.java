@@ -527,6 +527,11 @@ public class PaymentWorker {
 	           GenericValue cashAccount = EntityUtil.getFirst(cashFinAccountList);
 	          Map depositWithdrawPaymentCtx = UtilMisc.toMap("userLogin", userLogin);
 	          depositWithdrawPaymentCtx.put("paymentIds", UtilMisc.toList(paymentId));
+	          depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("transactionDate"));
+	          if(UtilValidate.isEmpty(payment.getString("transactionDate"))){
+	        	  depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("effectiveDate"));
+	          }
+	          
 	          depositWithdrawPaymentCtx.put("finAccountId", cashAccount.getString("finAccountId"));
 	          Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
 	          if (ServiceUtil.isError(depositResult)) {

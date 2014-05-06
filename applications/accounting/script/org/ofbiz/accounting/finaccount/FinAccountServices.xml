@@ -187,6 +187,18 @@ under the License.
         <if-empty field="newEntity.transactionDate">
             <set from-field="nowTimestamp" field="newEntity.transactionDate"/>
         </if-empty>
+          <if-not-empty field="parameters.paymentId">
+            <entity-one value-field="payment" entity-name="Payment">
+               <field-map field-name="paymentId" from-field="parameters.paymentId"/>
+            </entity-one>
+             <set field="effectiveDateDayStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(payment.effectiveDate)}" type="Timestamp"/>
+            <if-compare-field operator="less" field="newEntity.transactionDate" type="Timestamp" to-field="effectiveDateDayStart">
+                 <add-error>
+                     <fail-message message="deposit or withdraw date should be greater than payment effective Date"/>
+                 </add-error>
+                 <check-errors/>
+            </if-compare-field>
+       </if-not-empty>
         <if-empty field="newEntity.entryDate">
             <set from-field="nowTimestamp" field="newEntity.entryDate"/>
         </if-empty>

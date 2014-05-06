@@ -3127,7 +3127,8 @@
 		<field name="statusId" type="id"></field>
 		<field name="isEnableAcctg" type="indicator"></field>	
 		<field name="facilityId" type="id-ne"></field>
-		<field name="instrumentDate" type="date-time"></field>	
+		<field name="instrumentDate" type="date-time"></field>
+		<field name="transactionDate" type="date-time"></field>
 		<field name="effectiveDate" type="date-time"></field>
 		<field name="paymentDate" type="date-time"></field>
 		<field name="paymentRefNum" type="short-varchar"></field>
