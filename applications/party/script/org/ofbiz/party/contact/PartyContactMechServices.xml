@@ -33,7 +33,7 @@ under the License.
         </entity-and>
         <iterate entry="partyAndContactMech" list="partyAndContactMechs">
             <entity-one entity-name="ContactMechType" value-field="contactMechType">
-                <field-map field-name="contactMechTypeId" from-field="partyAndContactMech.contactMechTypeId"/>
+                <field-map field-name="contactMechTypeId" from-field="parameters.contactMechTypeId"/>
             </entity-one>
             <if>
                 <condition>
