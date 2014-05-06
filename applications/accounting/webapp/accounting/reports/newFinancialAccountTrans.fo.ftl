@@ -58,6 +58,7 @@ under the License.
             <fo:table-column/>
             <fo:table-column/>
             <fo:table-column/>
+            <fo:table-column/>
             <#--<fo:table-column/>
             <fo:table-column/>
             <fo:table-column/>
@@ -71,6 +72,9 @@ under the License.
                 </fo:table-cell>
                 <fo:table-cell border="1pt solid" border-width=".1mm">
                     <fo:block text-align="center">Party Id</fo:block>
+                </fo:table-cell>
+                <fo:table-cell border="1pt solid" border-width=".1mm">
+                    <fo:block text-align="center">Party Name</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border="1pt solid" border-width=".1mm">
                     <fo:block text-align="center">Opening Balance</fo:block>
@@ -121,6 +125,11 @@ under the License.
 	                                    <fo:block text-align="center"></fo:block>
 	                                </fo:table-cell>
                                 </#if>
+                                <fo:table-cell border="1pt solid" border-width=".1mm">
+                                    <fo:block text-align="left">
+                                            <#if partyId?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)} </#if>
+                                    </fo:block>
+                                </fo:table-cell>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
                                     <fo:block text-align="right">
                                             <#if openingBalance?has_content>${(openingBalance)?string("##0.0")}<#else>0.0</#if>

@@ -77,7 +77,7 @@ if (organizationPartyId) {
             }
         }
     }
-    if (currentTimePeriod) {
+    if (currentTimePeriod){
         context.currentTimePeriod = currentTimePeriod;
         customTimePeriodStartDate = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
         customTimePeriodEndDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
@@ -132,117 +132,120 @@ if (organizationPartyId) {
 		
 		isNew = "Y";
 		isMonthEnd = "N";
+		
 		partyId = "";
+		paymentId = "";
+		accountName = "";
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			acctgTransIt = glAcctgTrialBalanceList[0];
 			acctgTransAndEntries = acctgTransIt.acctgTransAndEntries;
-			
-			for(j=0; j<acctgTransAndEntries.size(); j++){
-				acctgTransEntry = acctgTransAndEntries[j];
-				openingBalance = closingBalance;
-				
-			
-				paymentId = acctgTransEntry.paymentId;
-				payment = delegator.findOne("Payment", [paymentId : paymentId], false);
-				partyId = payment.partyIdFrom;
-				
-				accountName = acctgTransEntry.accountName;
-				// Prepare List for CSV
-				
-				debitAmount = BigDecimal.ZERO;
-				creditAmount = BigDecimal.ZERO;
-				
-				if(acctgTransEntry.debitCreditFlag == "D"){
-					debitAmount = acctgTransEntry.amount;
-				}
-				if(acctgTransEntry.debitCreditFlag == "C"){
-					creditAmount = acctgTransEntry.amount;
-				}
-				closingBalance = (openingBalance+debitAmount-creditAmount);
-				
-				transactionDate = acctgTransEntry.transactionDate;
-				transactionDateStr=UtilDateTime.toDateString(transactionDate ,"MMMM dd, yyyy");
-				
-				
-				if(prevDateStr == transactionDateStr){
-					// Add Credit and Debit
-					dayTotalDebit = debitAmount + dayTotalDebit;
-					dayTotalCredit = creditAmount + dayTotalCredit;
-					dayTotalCB = dayTotalOB+(dayTotalDebit)-(dayTotalCredit);
-					isNew = "N";
-				}
-				else{
-					// Handle First Entry
-					// Prepare a Map For Day Totals
-					// Add the map to financialAcctgTransList
-					if((isNew == "N" || isNew == "MAYBE") && (isMonthEnd == "N")){
+			if(UtilValidate.isNotEmpty(acctgTransAndEntries)){
+				for(j=0; j<acctgTransAndEntries.size(); j++){
+					acctgTransEntry = acctgTransAndEntries[j];
+					openingBalance = closingBalance;
+					
+					paymentId = acctgTransEntry.paymentId;
+					payment = delegator.findOne("Payment", [paymentId : paymentId], false);
+					if(UtilValidate.isNotEmpty(payment)){
+						partyId = payment.partyIdFrom;
+					}
+					accountName = acctgTransEntry.accountName;
+					// Prepare List for CSV
+					
+					debitAmount = BigDecimal.ZERO;
+					creditAmount = BigDecimal.ZERO;
+					
+					if(acctgTransEntry.debitCreditFlag == "D"){
+						debitAmount = acctgTransEntry.amount;
+					}
+					if(acctgTransEntry.debitCreditFlag == "C"){
+						creditAmount = acctgTransEntry.amount;
+					}
+					closingBalance = (openingBalance+debitAmount-creditAmount);
+					
+					transactionDate = acctgTransEntry.transactionDate;
+					transactionDateStr=UtilDateTime.toDateString(transactionDate ,"MMMM dd, yyyy");
+					
+					
+					if(prevDateStr == transactionDateStr){
+						// Add Credit and Debit
+						dayTotalDebit = debitAmount + dayTotalDebit;
+						dayTotalCredit = creditAmount + dayTotalCredit;
+						dayTotalCB = dayTotalOB+(dayTotalDebit)-(dayTotalCredit);
+						isNew = "N";
+					}
+					else{
+						// Handle First Entry
+						// Prepare a Map For Day Totals
+						// Add the map to financialAcctgTransList
+						if((isNew == "N" || isNew == "MAYBE") && (isMonthEnd == "N")){
+							dayWiseTotMap = [:];
+							dayWiseTotMap["paymentId"] = "DAY TOTAL";
+							dayWiseTotMap["openingBalance"] = dayTotalOB;
+							dayWiseTotMap["debitAmount"] = dayTotalDebit;
+							dayWiseTotMap["creditAmount"] = dayTotalCredit;
+							dayWiseTotMap["closingBalance"] = dayTotalCB;
+							
+							tempDayTotalMap = [:];
+							tempDayTotalMap.putAll(dayWiseTotMap);
+							financialAcctgTransList.add(tempDayTotalMap);
+						}
+						dayTotalOB = openingBalance;
+						dayTotalDebit = debitAmount;
+						dayTotalCredit = creditAmount;
+						dayTotalCB = dayTotalOB+(dayTotalDebit)-(dayTotalCredit);
+					}
+					isNew = "MAYBE";
+					prevDateStr = transactionDateStr;
+					
+					acctgTransEntryMap = [:];
+					acctgTransEntryMap["transactionDate"] = transactionDateStr;
+					acctgTransEntryMap["paymentId"] = paymentId;
+					if(UtilValidate.isNotEmpty(paymentId)){
+						acctgTransEntryMap["partyId"] = partyId;
+					}else{
+						acctgTransEntryMap["partyId"] = accountName;
+					}
+					acctgTransEntryMap["openingBalance"] = openingBalance;
+					acctgTransEntryMap["debitAmount"] = debitAmount;
+					acctgTransEntryMap["creditAmount"] = creditAmount;
+					acctgTransEntryMap["closingBalance"] = closingBalance;
+					
+					tempAcctgTransMap = [:];
+					tempAcctgTransMap.putAll(acctgTransEntryMap);
+					financialAcctgTransList.add(tempAcctgTransMap);
+					
+					
+					if((j == ((acctgTransAndEntries.size())-1)) && (isMonthEnd == "N")){
 						dayWiseTotMap = [:];
 						dayWiseTotMap["paymentId"] = "DAY TOTAL";
 						dayWiseTotMap["openingBalance"] = dayTotalOB;
 						dayWiseTotMap["debitAmount"] = dayTotalDebit;
 						dayWiseTotMap["creditAmount"] = dayTotalCredit;
 						dayWiseTotMap["closingBalance"] = dayTotalCB;
-						
 						tempDayTotalMap = [:];
 						tempDayTotalMap.putAll(dayWiseTotMap);
 						financialAcctgTransList.add(tempDayTotalMap);
 					}
-					dayTotalOB = openingBalance;
-					dayTotalDebit = debitAmount;
-					dayTotalCredit = creditAmount;
-					dayTotalCB = dayTotalOB+(dayTotalDebit)-(dayTotalCredit);
+					isMonthEnd = "N";
 				}
-				isNew = "MAYBE";
-				prevDateStr = transactionDateStr;
-				
-				acctgTransEntryMap = [:];
-				acctgTransEntryMap["transactionDate"] = transactionDateStr;
-				acctgTransEntryMap["paymentId"] = paymentId;
-				if(UtilValidate.isNotEmpty(partyId)){
-					acctgTransEntryMap["partyId"] = partyId;
-				}else{
-					acctgTransEntryMap["partyId"] = accountName;
-				}
-				acctgTransEntryMap["openingBalance"] = openingBalance;
-				acctgTransEntryMap["debitAmount"] = debitAmount;
-				acctgTransEntryMap["creditAmount"] = creditAmount;
-				acctgTransEntryMap["closingBalance"] = closingBalance;
-				
-				tempAcctgTransMap = [:];
-				tempAcctgTransMap.putAll(acctgTransEntryMap);
-				financialAcctgTransList.add(tempAcctgTransMap);
-				
-				
-				if((j == ((acctgTransAndEntries.size())-1)) && (isMonthEnd == "N")){
-					dayWiseTotMap = [:];
-					dayWiseTotMap["paymentId"] = "DAY TOTAL";
-					dayWiseTotMap["openingBalance"] = dayTotalOB;
-					dayWiseTotMap["debitAmount"] = dayTotalDebit;
-					dayWiseTotMap["creditAmount"] = dayTotalCredit;
-					dayWiseTotMap["closingBalance"] = dayTotalCB;
-					tempDayTotalMap = [:];
-					tempDayTotalMap.putAll(dayWiseTotMap);
-					financialAcctgTransList.add(tempDayTotalMap);
-				}
-				isMonthEnd = "N";
-			}
-		
-			totClosingBalance = (totOpeningBalance+(acctgTransIt.debitTotal)-(acctgTransIt.creditTotal));
 			
-			if( ((acctgTransIt.debitTotal) == 0) && ((acctgTransIt.creditTotal) == 0) ){
-			}else{
-				acctgTransTotals = [:];
-				acctgTransTotals["paymentId"] = "MONTH TOTAL";
-				acctgTransTotals["openingBalance"] = totOpeningBalance;
-				acctgTransTotals["debitAmount"] = acctgTransIt.debitTotal;
-				acctgTransTotals["creditAmount"] = acctgTransIt.creditTotal;
-				acctgTransTotals["closingBalance"] = totClosingBalance;
-				tempTransTotalsMap = [:];
-				tempTransTotalsMap.putAll(acctgTransTotals);
-				financialAcctgTransList.add(tempTransTotalsMap);
-			}
-		}	
+				totClosingBalance = (totOpeningBalance+(acctgTransIt.debitTotal)-(acctgTransIt.creditTotal));
 				
+				if( ((acctgTransIt.debitTotal) == 0) && ((acctgTransIt.creditTotal) == 0) ){
+				}else{
+					acctgTransTotals = [:];
+					acctgTransTotals["paymentId"] = "MONTH TOTAL";
+					acctgTransTotals["openingBalance"] = totOpeningBalance;
+					acctgTransTotals["debitAmount"] = acctgTransIt.debitTotal;
+					acctgTransTotals["creditAmount"] = acctgTransIt.creditTotal;
+					acctgTransTotals["closingBalance"] = totClosingBalance;
+					tempTransTotalsMap = [:];
+					tempTransTotalsMap.putAll(acctgTransTotals);
+					financialAcctgTransList.add(tempTransTotalsMap);
+				}
+			}	
+		}		
 		context.financialAcctgTransList = financialAcctgTransList;
         context.glAcctgTrialBalanceList = glAcctgTrialBalanceList;
 		context.paymentInvType = paymentInvType;
