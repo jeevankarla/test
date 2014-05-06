@@ -485,6 +485,15 @@ under the License.
         <!-- <field-to-result field="payment.finAccountTransId" result-name="finAccountTransId"/>
         <set field="transStatusId" value="FINACT_TRNS_CANCELED"/> -->
         <!-- Check whether finAccountTransId canceled or not-->
+        <entity-one entity-name="StatusValidChange" value-field="statusChange" auto-field-map="false">
+                <field-map field-name="statusId" from-field="payment.statusId"/>
+                <field-map field-name="statusIdTo" value="PMNT_VOID"/>
+        </entity-one>
+        <if-empty field="statusChange">
+             <add-error><fail-message message="Status is not a valid change"/></add-error>
+             <log level="error" message="Cannot change from ${payment.statusId} to ${parameters.statusId}"/>
+             <check-errors/>
+        </if-empty> 
         <if-not-empty field="payment.finAccountTransId">
         <entity-one value-field="finAccountTrans" entity-name="FinAccountTrans">
         	<field-map field-name="finAccountTransId" from-field="payment.finAccountTransId"/>
@@ -563,7 +572,6 @@ under the License.
         		<field-to-list list="acctgTransPaymentList" field="paymentAcctgTrans"/>
         	</if-empty>        	
         </iterate>    
-        <log level="always" message="acctgTransPaymentList==========> ${acctgTransPaymentList}"></log>   
         <iterate list="acctgTransPaymentList" entry="acctgTransPayment">
             <clear-field field="copyAcctgTransCtx"/>
             <set field="copyAcctgTransCtx.fromAcctgTransId" from-field="acctgTransPayment.acctgTransId"/>            
