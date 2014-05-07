@@ -96,6 +96,10 @@ partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.t
 paymentTypeParties = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "partyId", true);
 paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defaultPayMeth", true);
 paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, paymentTypes), null, null, null, false);
+
+payMethList = EntityUtil.filterByCondition(paymentMethodType, EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, parameters.paymentMethodTypeId));
+
+paymentMethodDesc = (EntityUtil.getFirst(payMethList)).get("description");
 context.paymentMethodType = paymentMethodType;
 
 boothPaymentsList=[];
@@ -121,7 +125,6 @@ if(parameters.finAccountCode != "AllBanks"){
 	accountNameOwnerIds = EntityUtil.getFieldListFromEntityList(accountNameFacility, "ownerPartyId", true);
 	facilityList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, accountNameOwnerIds), null, null, null, false);
 	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
-	
 }
 
 context.putAt("accountNameList", accountNameList);
@@ -150,6 +153,7 @@ if(hideSearch == "N" || stopListing){
 	boothPaymentsList = [];
 	invoicesTotalAmount =0;
 	invoicesTotalDueAmount = 0;
+	exclList = [];
 	if (statusId != "PAID" ) {
 		
 		if(paymentMethodTypeId == "CASH_PAYIN" && isRetailer){
@@ -160,6 +164,7 @@ if(hideSearch == "N" || stopListing){
 				facilityId = boothPay.get("facilityId");
 				if(paymentMethodTypeId == "CHALLAN_PAYIN"){
 					if(finalFilterList && finalFilterList.contains(facilityId)){
+						exclList.add(facilityId);
 						boothPaymentsInnerList.add(boothPay);
 						invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
 						invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
@@ -173,6 +178,22 @@ if(hideSearch == "N" || stopListing){
 					}
 				}
 			}
+			
+			if(paymentMethodTypeId == "CHALLAN_PAYIN" && parameters.finAccountCode != "AllBanks"){
+				accountNameFacilityIds.each{ eachRetailer ->
+					if(!exclList.contains(eachRetailer)){
+						tempMap = [:];
+						tempMap.facilityId = eachRetailer;
+						tempMap.routeId = "";
+						tempMap.paymentMethodTypeDesc = paymentMethodDesc;
+						tempMap.grandTotal = 0;
+						tempMap.totalDue = 0
+						tempMap.supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+						boothPaymentsInnerList.add(tempMap);
+					}	
+				}
+			}
+			
 			boothPaymentsList.addAll(boothPaymentsInnerList);
 			boothsPaymentsDetail["invoicesTotalAmount"] =invoicesTotalAmount;
 			boothsPaymentsDetail["invoicesTotalDueAmount"] =invoicesTotalDueAmount;
@@ -198,7 +219,7 @@ if(hideSearch == "N" || stopListing){
 			tempMap = [:];
 			tempMap.facilityId = facilityId;
 			tempMap.routeId = "";
-			tempMap.paymentMethodTypeId = paymentMethodTypeId;
+			tempMap.paymentMethodTypeDesc = paymentMethodDesc;
 			tempMap.grandTotal = 0;
 			tempMap.totalDue = 0
 			tempMap.supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
