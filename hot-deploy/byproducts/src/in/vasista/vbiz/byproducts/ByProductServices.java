@@ -2588,6 +2588,10 @@ public class ByProductServices {
 	  	  String paymentMethodTypeId = (String)request.getParameter("paymentMethodTypeId");
 	  	  String subTabItem = (String)request.getParameter("subTabItem");
 	  	  String routeFacility = (String)request.getParameter("facilityId");
+	  	  String retainFacility = "";
+	  	  if(UtilValidate.isNotEmpty(routeFacility)){
+	  		retainFacility = routeFacility;
+	  	  }
 	  	  request.setAttribute("paymentMethodTypeId", paymentMethodTypeId);
 	  	  request.setAttribute("subTabItem", subTabItem);
 	  	  List paymentIds = FastList.newInstance();	
@@ -2597,8 +2601,8 @@ public class ByProductServices {
 			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
 	  		  return "error";
 	  	  }
-	  	  String paymentGroupId = ""; 
-	  	  String  routeFacilityId="";
+	  	  String paymentGroupId = "";
+	  	  String routeFacilityId = "";
 	  	  boolean beganTransaction = false;
 	  	  try{
 	  		  
@@ -2629,7 +2633,9 @@ public class ByProductServices {
 		  		  if (paramMap.containsKey("amount" + thisSuffix)) {
 		  			amountStr = (String) paramMap.get("amount"+thisSuffix);
 		  		  }
-
+		  		  if(UtilValidate.isEmpty(retainFacility)){
+			  		retainFacility = facilityId;
+			  	  }
 		  		  exprListForParameters.clear();
 		  		  exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,userLogin.getString("partyId")));
 		  		  exprListForParameters.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "FACILITY_CASHIER"));
@@ -2735,7 +2741,7 @@ public class ByProductServices {
 	  	  
 	  	  if(paymentMethodTypeId.equalsIgnoreCase("CASH_PAYIN")){
 	  		request.setAttribute("paymentGroupId", paymentGroupId);
-		    request.setAttribute("facilityId", routeFacilityId);
+	    	request.setAttribute("facilityId", retainFacility);
 		    request.setAttribute("statusId", "PAID");
 		    request.setAttribute("hideSearch", "N");
 		  	 
