@@ -36,7 +36,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
                     <fo:block text-align="left" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;        Sales  Report From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
               		<fo:block>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-size="8pt">&#160;&#160;Product    								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TotQty  					&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TotQty(Ltrs/Kgs)  			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; 	TotAmount  			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;		RtrnQty  			&#160;&#160;&#160;&#160; RtrnQty(Ltrs/Kgs)     &#160;&#160;&#160;&#160;TotRetnAmnt				 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;NetTotal</fo:block>
+            		<fo:block font-size="8pt">&#160;&#160;Product    						&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty(Ltr/Kg)  	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; DspAmt  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RtnQty   &#160;&#160;&#160; RtnQty(Ltr/Kg)  &#160;&#160;RtnAmt			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    NetQty  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; NetAmt  </fo:block>
             		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
@@ -46,11 +46,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                     <fo:table-column column-width="70pt"/>
                     <fo:table-column column-width="100pt"/> 
                	    <fo:table-column column-width="130pt"/>
-            		<fo:table-column column-width="100pt"/> 		
+            		<fo:table-column column-width="70pt"/> 		
+            		<fo:table-column column-width="70pt"/>
             		<fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="130pt"/>
-            		<fo:table-column column-width="110pt"/>
-            		<fo:table-column column-width="76pt"/>
+            		<fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="100pt"/>
                     <fo:table-body>
                     	<#assign grandNetTotal = 0>
                     	<#assign grandTotalQty = 0>
@@ -66,7 +66,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                     				<fo:table-cell>
 	                            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false">${product.brandName}</fo:block>  
 	                       			</fo:table-cell>
+	                       			<#assign netQty = 0>
 	                       			<#assign quantity = (prodTotals.getValue().get("packetQuantity"))?if_exists>
+	                       			<#assign netQty = netQty+quantity>
 	                       			<#assign grandTotalQty = grandTotalQty+quantity>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${quantity?if_exists?string("#0.00")}</fo:block>  
@@ -87,6 +89,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                    					<#assign returnQty = (productReturnMap[product.productId].get("returnQuantity"))?if_exists>
 	                       			<#if returnQty?has_content>
 		                       			<#assign grandTotalRtrnQty = grandTotalRtrnQty+returnQty?if_exists>
+		                       			<#assign netQty = netQty-returnQty>
 			                    	</#if>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQty?if_exists?string("#0.00")}<#else></#if></fo:block>  
@@ -112,7 +115,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                        				<#else>	
                        					<#assign totalNetPrice = revenue>
                        				</#if>
-		                       		
+		                       		<fo:table-cell>
+	                            		<fo:block  text-align="right"  white-space-collapse="false">${netQty?if_exists?string("#0.00")}</fo:block>  
+	                       			</fo:table-cell>
                        				<#assign grandNetTotal = grandNetTotal+totalNetPrice>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${totalNetPrice?if_exists?string("#0.00")}</fo:block>  
@@ -131,34 +136,37 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 									   	 <fo:table-column column-width="80pt"/>
 					                     <fo:table-column column-width="70pt"/>
 					                     <fo:table-column column-width="100pt"/> 
-					               	     <fo:table-column column-width="130pt"/>
-					            		 <fo:table-column column-width="100pt"/> 		
+					               	     <fo:table-column column-width="120pt"/>
+					            		 <fo:table-column column-width="70pt"/> 		
+					            		 <fo:table-column column-width="70pt"/>
 					            		 <fo:table-column column-width="100pt"/>
-					            		 <fo:table-column column-width="130pt"/>
-					            		 <fo:table-column column-width="110pt"/>
-					            		 <fo:table-column column-width="76pt"/>
+					            		 <fo:table-column column-width="100pt"/>
+					            		 <fo:table-column column-width="100pt"/>
 										 <fo:table-body>
 							                <fo:table-row>
 						                  		 <fo:table-cell>
 						                        	<fo:block  keep-together="always" text-align="left" white-space-collapse="false">GrandTotal</fo:block>
 						                   		</fo:table-cell>
 						                      <fo:table-cell>
-						                        	<fo:block text-align="right" white-space-collapse="false">${grandTotalQty?if_exists?string("#0.00")}</fo:block>
+						                        	<fo:block text-align="right" white-space-collapse="false"></fo:block>
 						                      </fo:table-cell>
 						                      <fo:table-cell>
-						                        	<fo:block text-align="right" white-space-collapse="false">${grandTotalQtyLtrs?if_exists?string("#0.00")}</fo:block>
+						                        	<fo:block text-align="right" white-space-collapse="false"></fo:block>
 						                      </fo:table-cell>
 						                      <fo:table-cell>
 						                        	<fo:block text-align="right" white-space-collapse="false">${grandTotalRevenue?if_exists?string("#0.00")}</fo:block>
 						                      </fo:table-cell>
 						                      <fo:table-cell>
-						                        	<fo:block text-align="right" white-space-collapse="false">${grandTotalRtrnQty?if_exists?string("#0.00")}</fo:block>
+						                        	<fo:block text-align="right" white-space-collapse="false"></fo:block>
 						                      </fo:table-cell>
 						                      <fo:table-cell>
-						                        	<fo:block text-align="right" white-space-collapse="false">${grandTotalRtrnQtyLtrs?if_exists?string("#0.00")}</fo:block>
+						                        	<fo:block text-align="right" white-space-collapse="false"></fo:block>
 						                      </fo:table-cell>
 						                      <fo:table-cell>
 						                        	<fo:block text-align="right" white-space-collapse="false">${grandTotalRetrnQtyRevenue?if_exists?string("#0.00")}</fo:block>
+						                      </fo:table-cell>
+						                      <fo:table-cell>
+						                        	<fo:block text-align="right" white-space-collapse="false"></fo:block>
 						                      </fo:table-cell>
 						                      <fo:table-cell>
 						                        	<fo:block text-align="right" white-space-collapse="false">${grandNetTotal?if_exists?string("#0.00")}</fo:block>

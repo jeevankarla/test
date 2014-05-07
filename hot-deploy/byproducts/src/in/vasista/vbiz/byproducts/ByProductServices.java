@@ -2597,13 +2597,15 @@ public class ByProductServices {
 			  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
 	  		  return "error";
 	  	  }
+	  	  String paymentGroupId = ""; 
+	  	  String  routeFacilityId="";
 	  	  boolean beganTransaction = false;
 	  	  try{
 	  		  
 	  		  beganTransaction = TransactionUtil.begin(7200);
 	  		  List exprListForParameters = FastList.newInstance();
 	  	     
-	  	      String  routeFacilityId="";
+	  	      
 	  	      if(UtilValidate.isNotEmpty(routeFacility)){
 	  	    	 GenericValue facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId" ,routeFacility), false);
 		  	      if(UtilValidate.isNotEmpty(facilityDetails) && ("ROUTE".equalsIgnoreCase(facilityDetails.getString("facilityTypeId")))){
@@ -2698,6 +2700,7 @@ public class ByProductServices {
 			  			TransactionUtil.rollback();
 			  			return "error";
 		    		}
+		    		paymentGroupId = (String)resultCtx.get("paymentGroupId");
 	    	 } 
 		  	  
 		  	 
@@ -2729,6 +2732,14 @@ public class ByProductServices {
 	  	  }
 	  	  
 	  	  request.setAttribute("_EVENT_MESSAGE_", "Successfully made payment entries ");
+	  	  
+	  	  if(paymentMethodTypeId.equalsIgnoreCase("CASH_PAYIN")){
+	  		request.setAttribute("paymentGroupId", paymentGroupId);
+		    request.setAttribute("facilityId", routeFacilityId);
+		    request.setAttribute("statusId", "PAID");
+		    request.setAttribute("hideSearch", "N");
+		  	 
+	  	  }
 	  	  return "success";     
 	}
 	
@@ -3465,7 +3476,6 @@ public class ByProductServices {
 	    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 	    	   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	    	  List<GenericValue> orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null, null, null, false);
-	    	 
 	    	  BigDecimal totalReturnAmount = BigDecimal.ZERO;
 	    	  if(UtilValidate.isEmpty(returnId)){
 	    		  Map returnHeaderCtx = FastMap.newInstance();
@@ -3553,6 +3563,10 @@ public class ByProductServices {
 		                  return ServiceUtil.returnError(null, null, null, paymentResult);
 		              }
 		              String paymentId = (String)paymentResult.get("paymentId");
+		              GenericValue returnHeaders = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
+		              returnHeaders.set("paymentId", paymentId);
+		              returnHeaders.store();
+		              
 		    	  }
 	    	  }else{
 	    		  List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId), null, null, null , false);
@@ -3603,7 +3617,7 @@ public class ByProductServices {
 		    		  String returnReasonId = (String)productQtyMap.get("returnReasonId");
 		    		  
 		    		  //Debug.log("calculating return items prices for product : "+prodId);
-  				  Map<String, Object> priceContext = FastMap.newInstance();
+		    		  Map<String, Object> priceContext = FastMap.newInstance();
 	                  priceContext.put("userLogin", userLogin);   
 	                  priceContext.put("productStoreId", productStoreId);                    
 	                  priceContext.put("productId", prodId);
@@ -3635,15 +3649,24 @@ public class ByProductServices {
 		    		  delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
 		    		  delegator.create(returnItem);
   			  }
+  			  
+  			  GenericValue retHeader = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
+  			  String payReference = retHeader.getString("paymentId");
+  			  
   			  Timestamp dayBegin = UtilDateTime.getDayStart(effectiveDate);
   			  Timestamp dayEnd = UtilDateTime.getDayEnd(effectiveDate);
   			  //Debug.log("calculated return items prices : "+totalReturnAmount);
   			  List condList = FastList.newInstance();
-  			  condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
-  			  condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
-  			  condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID")));
-  			  condList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
-  			  condList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+  			  if(UtilValidate.isNotEmpty(payReference)){
+  				  condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, payReference));
+  			  }
+  			  else{
+  				  condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
+    			  condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
+    			  condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID")));
+    			  condList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+    			  condList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+  			  }
   			  EntityCondition exprCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
   			  List<GenericValue> payments = delegator.findList("Payment", exprCond, null, null, null, false);
   			  if(UtilValidate.isNotEmpty(payments)){
@@ -3655,32 +3678,34 @@ public class ByProductServices {
 	                  }
   			  }
   			  Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "SALES_PAYIN");        	
-	              paymentCtx.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
-	              paymentCtx.put("partyIdFrom", "Company");
-	              paymentCtx.put("partyIdTo", ownerPartyId);
-	              paymentCtx.put("effectiveDate", effectiveDate);
-	              paymentCtx.put("facilityId", boothId);            
-	              paymentCtx.put("statusId", "PMNT_RECEIVED");            
-	              paymentCtx.put("amount", totalReturnAmount);
-	              paymentCtx.put("paymentDate", effectiveDate);
-	              paymentCtx.put("userLogin", userLogin);
-	              paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
-	              paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
-	              paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
-	              paymentCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
-	              Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
-	              if (ServiceUtil.isError(paymentResult)) {
-	              	Debug.logError(paymentResult.toString(), module);    			
-	                  return ServiceUtil.returnError(null, null, null, paymentResult);
-	              }
-	              String paymentId = (String)paymentResult.get("paymentId");
-	    	  }
+              paymentCtx.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
+              paymentCtx.put("partyIdFrom", "Company");
+              paymentCtx.put("partyIdTo", ownerPartyId);
+              paymentCtx.put("effectiveDate", effectiveDate);
+              paymentCtx.put("facilityId", boothId);            
+              paymentCtx.put("statusId", "PMNT_RECEIVED");            
+              paymentCtx.put("amount", totalReturnAmount);
+              paymentCtx.put("paymentDate", effectiveDate);
+              paymentCtx.put("userLogin", userLogin);
+              paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+              paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
+              paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
+              paymentCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+              Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
+              if (ServiceUtil.isError(paymentResult)) {
+              	Debug.logError(paymentResult.toString(), module);    			
+                  return ServiceUtil.returnError(null, null, null, paymentResult);
+              }
+	          String paymentId = (String)paymentResult.get("paymentId");
+	          retHeader.set("paymentId", paymentId);
+	          retHeader.store();
+	    	}
 		  }catch (Exception e) {
 			  Debug.logError(e, "Error creating Returns", module);		  
 			  return ServiceUtil.returnError("Error creating Returns");			  
 		  }
 		  return result;  
-  }
+	}
 	
 	    public static Map<String ,Object> processInstitutionBilling(DispatchContext dctx, Map<String, ? extends Object> context){
 			  Delegator delegator = dctx.getDelegator();
