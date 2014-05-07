@@ -74,4 +74,21 @@
         screenLocation="component://accounting/widget/InvoiceScreens.xml"
         description="List Invoices for a certain supplier who is just logged in"/>
     <PortletPortletCategory portalPortletId="ListSupplierInvoices" portletCategoryId="ACCOUNTING"/>
+    
+    
+        <SecurityPermission permissionId="MYPORTAL_CASHIER" description="Use the Cashier Screens in myportal."/>
+        <SecurityGroup description="Cashier Role user will have  myportal Access" groupId="MYPORTAL_CASHIER"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="MYPORTAL_CASHIER"/>
+	 <!-- 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="FACILITY_VIEW"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="BYPRODUCTS_VIEW"/> -->	 	
+	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="MYPORTALBASE_ADMIN"/>
+		<PortalPage portalPageId="MYPORTAL_CASHIER" sequenceNum="0" portalPageName="Main" description="The Milkosoft System Cashier page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_CASHIER"/>
+	   
+	    <PortalPortlet portalPortletId="CASHIER" portletName="Cashier Portal Screen" screenName="MyPortalCashierScreen"
+            screenLocation="component://accounting/widget/CommonScreens.xml" description="Cashier Portal Screen"/>
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_CASHIER" sequenceNum="0" portalPageName="CASHIER" description="The Milkosoft System ByProduct page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_CASHIER"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_CASHIER" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_CASHIER" portalPortletId="CASHIER" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+    
 </entity-engine-xml>
