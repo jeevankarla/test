@@ -2433,6 +2433,7 @@ under the License.
         <field name="paymentMethodId" type="id"></field>
         <field name="originFacilityId" type="id"></field><!-- Returns for kmf  -->
         <field name="shipmentId" type="id"></field><!-- Returns for kmf  -->
+        <field name="paymentId" type="id"></field><!-- Returns for kmf  -->
         <field name="finAccountId" type="id"></field>
         <field name="billingAccountId" type="id"></field>
         <field name="entryDate" type="date-time"></field>
@@ -2453,6 +2454,9 @@ under the License.
         </relation>
         <relation type="one" fk-name="RTN_SHPMNT" rel-entity-name="Shipment">
         	<key-map field-name="shipmentId"/>
+      	</relation>
+      	<relation type="one" fk-name="RTN_PAY" rel-entity-name="Payment">
+        	<key-map field-name="paymentId"/>
       	</relation>
         <relation type="one" fk-name="RTN_TO_BACT" rel-entity-name="BillingAccount">
             <key-map field-name="billingAccountId"/>

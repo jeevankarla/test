@@ -1955,16 +1955,17 @@ under the License.
 	        <key-map field-name="invoiceId"/>
 	    </relation>   	    
   </view-entity>
-  <view-entity entity-name="ReturnHeaderItemAndShipment"
+  <view-entity entity-name="ReturnHeaderItemAndShipmentAndFacility"
             package-name="org.ofbiz.order.order"
             never-cache="true"
             title="Return Header and Return Items and Shipment View Entity">
       <member-entity entity-alias="RH" entity-name="ReturnHeader"/>
       <member-entity entity-alias="RI" entity-name="ReturnItem"/>
-       <member-entity entity-alias="SH" entity-name="Shipment"/>    
+       <member-entity entity-alias="SH" entity-name="Shipment"/>
+       <member-entity entity-alias="FA" entity-name="Facility"/>    
       <alias entity-alias="RH" name="returnId"/>
       <alias entity-alias="RH" name="entryDate"/>
-      <alias entity-alias="RH" name="orderStatusId" field="statusId"/>
+      <alias entity-alias="RH" name="returnStatusId" field="statusId"/>
       <alias entity-alias="RH" name="returnHeaderTypeId"/>
       <alias entity-alias="RH" name="originFacilityId"/>
       <alias entity-alias="RH" name="shipmentId"/>
@@ -1976,13 +1977,19 @@ under the License.
       <alias entity-alias="RI" name="vatPercent" />
       <alias entity-alias="RI" name="vatAmount"  />
       <alias entity-alias="RI" name="description"/>
-      <alias entity-alias="RI" name="returnStatusId" field="statusId"/>
+      <alias entity-alias="RI" name="returnItemStatusId" field="statusId"/>
       <alias entity-alias="RI" name="returnItemTypeId"/>
       <alias entity-alias="RI" name="returnReasonId"/>
       <alias entity-alias="SH" name="estimatedShipDate"/>
       <alias entity-alias="SH" name="shipmentTypeId"/>
       <alias entity-alias="SH" name="routeId"/>
       <alias entity-alias="SH" name="shipmentStatusId" field="statusId"/>
+      <alias entity-alias="FA" name="categoryTypeEnum"/> 
+      <alias entity-alias="FA" name="excludeIncentive"/>
+      <alias entity-alias="FA" name="ownerPartyId"/>
+      <view-link entity-alias="RH" rel-entity-alias="FA">
+        <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
+      </view-link>
       <view-link entity-alias="RH" rel-entity-alias="RI" rel-optional="true">
         <key-map field-name="returnId" />
       </view-link>
