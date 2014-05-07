@@ -127,7 +127,7 @@ conditionList=[];
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIdList));
 conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
 returnCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-returnHeaderItemsList = delegator.findList("ReturnHeaderItemAndShipment", returnCondition, null, null, null, false);
+returnHeaderItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondition, null, null, null, false);
 if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 	returnHeaderItemsList.each{ returnItem->
 			productReturnMap = [:];

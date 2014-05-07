@@ -28,11 +28,13 @@ if(parameters.paymentDate){
 }else{
 	paymentDate = context.paymentDate;
 }
+
 if(parameters.statusId){
 	statusId = parameters.statusId;
 }else{
 	statusId = context.statusId;
 }
+
 if(parameters.facilityId){
 	facilityId = parameters.facilityId;
 }else{
@@ -116,7 +118,10 @@ accountList.each{ eachAcc ->
 accountNameFacilityIds = [];
 if(parameters.finAccountCode != "AllBanks"){
 	accountNameFacility = EntityUtil.filterByCondition(accountList, EntityCondition.makeCondition("finAccountCode", EntityOperator.EQUALS, parameters.finAccountCode));
-	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(accountNameFacility, "ownerPartyId", true);
+	accountNameOwnerIds = EntityUtil.getFieldListFromEntityList(accountNameFacility, "ownerPartyId", true);
+	facilityList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, accountNameOwnerIds), null, null, null, false);
+	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
+	
 }
 
 context.putAt("accountNameList", accountNameList);

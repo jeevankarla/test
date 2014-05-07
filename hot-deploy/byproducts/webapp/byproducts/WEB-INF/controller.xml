@@ -697,6 +697,10 @@
      	<response name="success" type="request-redirect-noparam" value="FindPaymentByMethod">
         	<redirect-parameter name="paymentMethodTypeId"/>
         	<redirect-parameter name="subTabItem"/>
+        	<redirect-parameter name="paymentGroupId"/>
+        	<redirect-parameter name="facilityId"/>
+        	<redirect-parameter name="statusId"/>
+        	<redirect-parameter name="hideSearch"/>
         </response>     	
         <response name="error" type="request-redirect-noparam" value="FindPaymentByMethod">
         	<redirect-parameter name="paymentMethodTypeId"/>

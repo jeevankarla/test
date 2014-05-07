@@ -127,6 +127,7 @@ if(dailySalesRevenueTrend){
 
 dctx = dispatcher.getDispatchContext();
 conditionList = [];
+returnCondition = [];
 conditionList.clear();
 shipments = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, thruDate);
 addShipments = ByProductNetworkServices.getShipmentIdsByType(delegator, fromDate, thruDate, "RM_DIRECT_SHIPMENT");
@@ -134,6 +135,7 @@ if(addShipments){
 	shipments.addAll(addShipments);
 }
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
+returnCondition.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
 List boothsList = FastList.newInstance();
 if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", parameters.facilityId), false);
@@ -149,6 +151,7 @@ if(UtilValidate.isNotEmpty(parameters.facilityId)){
 		boothsList.add(facility.facilityId);
 	}
 	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, boothsList));
+	returnCondition.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN , boothsList));
 	context.facilityId = parameters.facilityId;
 }
 /*if(UtilValidate.isNotEmpty(parameters.productCategoryId)){
@@ -158,15 +161,19 @@ if(UtilValidate.isNotEmpty(parameters.facilityId)){
 }*/
 if(UtilValidate.isNotEmpty(parameters.productId)){
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
+	returnCondition.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
 	context.productId = parameters.productId;
 }
 if(UtilValidate.isNotEmpty(filterProductSale)){
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, filterProductSale));
+	returnCondition.add(EntityCondition.makeCondition("productId", EntityOperator.IN, filterProductSale));
 }
 if(subscriptionTypeId && subscriptionTypeId != "All"){
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+	returnCondition.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
 }
 conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED")));
+returnCondition.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_IN, UtilMisc.toList("BYPROD_GIFT","REPLACEMENT_BYPROD")));
 context.putAt("salesDate", fromDate);
 productList = ByProductNetworkServices.getByProductProducts(dctx, context);
@@ -174,6 +181,33 @@ productList = ByProductNetworkServices.getByProductProducts(dctx, context);
 
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
+
+returnCondExpr = EntityCondition.makeCondition(returnCondition,EntityOperator.AND);
+returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondExpr, null, null, null, false);
+
+returnItemList = [];
+returnItemsList.each{ eachItem ->
+	returnPrice = 0;
+	if(eachItem.returnPrice){
+		returnPrice = eachItem.returnPrice; 
+	}
+	GenericValue ordReturnValue  = delegator.makeValue("OrderHeaderItemProductShipmentAndFacility");
+	ordReturnValue.shipmentId = eachItem.shipmentId;
+	ordReturnValue.originFacilityId = eachItem.originFacilityId;
+	ordReturnValue.productId = eachItem.productId;
+	ordReturnValue.quantity = -(eachItem.returnQuantity);
+	ordReturnValue.estimatedShipDate = eachItem.estimatedShipDate;
+	ordReturnValue.shipmentTypeId = eachItem.shipmentTypeId;
+	ordReturnValue.routeId = eachItem.routeId;
+	ordReturnValue.unitPrice = eachItem.returnPrice;
+	ordReturnValue.unitListPrice = returnPrice;
+	ordReturnValue.categoryTypeEnum = eachItem.categoryTypeEnum;
+	ordReturnValue.ownerPartyId = eachItem.ownerPartyId;
+	returnItemList.add(ordReturnValue);
+}
+orderItemList.addAll(returnItemList);
+
+
 dctx = dispatcher.getDispatchContext();
 tempBoothList = EntityUtil.getFieldListFromEntityList(orderItemList, "originFacilityId", true);
 distinctFacility = [];
@@ -264,6 +298,12 @@ if(dailySalesRevenueTrend){
 	
 	productCatMap = ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","CONTINUES_INDENT","salesDate",fromDate ));
 	productCatMap.putAll(ByProductNetworkServices.getProductCategoryMap(dctx, UtilMisc.toMap("productCategoryId","DAILY_INDENT" ,"salesDate",fromDate)));
+	/*Debug.log("orderItems ###########################"+orderItemList);*/
+	subsidyOrderItems = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "EMP_SUBSIDY"));
+	subsidyOrderIds = EntityUtil.getFieldListFromEntityList(subsidyOrderItems, "orderId", true);
+
+	List<GenericValue>  adjustmentsList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.IN, subsidyOrderIds), null , null, null, false);
+						
 	if(orderItemList){
 		orderItemList.each{ eachItem ->	
 			boothRegionMap =[:];
@@ -281,9 +321,24 @@ if(dailySalesRevenueTrend){
 				categoryTypeEnum = eachItem.getAt("categoryTypeEnum");
 				booth = (eachItem.getAt("originFacilityId")).toUpperCase();
 				// for now lets take unit price without vat
+				
+				
 				unitPrice = eachItem.getAt("unitListPrice");
 				quantity = eachItem.getAt("quantity");
 				totalAmount = quantity * unitPrice;
+				
+				if(eachItem.get("orderId") && eachItem.get("productSubscriptionTypeId") && ((eachItem.get("productSubscriptionTypeId")).equals("EMP_SUBSIDY"))){
+					List<GenericValue>  orderAdjustList = EntityUtil.filterByCondition(adjustmentsList, EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, eachItem.getString("orderId")));
+					exclAmt = 0;
+					for(GenericValue adjustemnt :orderAdjustList){
+						if(adjustemnt.amount){
+							exclAmt = exclAmt+adjustemnt.amount;
+						}
+					}
+					totalAmount = totalAmount + exclAmt;
+				}
+
+				
 				tempQuant = productQuantIncluded.get(productId).multiply(quantity)
 				/*itemDescription = eachItem.getAt("itemDescription");*/
 				itemDescription = productId;
