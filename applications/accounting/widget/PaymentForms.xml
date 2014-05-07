@@ -100,6 +100,40 @@ under the License.
 <!--        <field name="amountToApply"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>-->
     </form>
 
+  <form name="ListPaymentsCsv" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Payment"/>
+                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+
+        <field name="paymentId" widget-style="buttontext">
+            <hyperlink description="${paymentId}" target="paymentOverview">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
+        <field name="facilityId" title="${uiLabelMap.RetailerId}"><display/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
+        <field name="comments"><display/></field>
+         
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
+           <display></display>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}"><display></display>
+        </field>        
+        <field name="instrumentDate"><display/></field>
+         <field name="paymentRefNum"><display/></field>
+        <field name="issuingAuthority"><display/></field>
+        <field name="issuingAuthorityBranch"><display/></field>
+        <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+    </form>
+
     <form name="NewPaymentOut" type="single" target="createPayment" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>

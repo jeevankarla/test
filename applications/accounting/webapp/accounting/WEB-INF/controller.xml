@@ -2573,7 +2573,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AcctgTransSearchResultsCsv"/>
     </request-map>
-
+   <request-map uri="PaymentSearchResultsCsv.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PaymentSearchResultsCsv"/>
+    </request-map>
     <request-map uri="AcctgTransSearchResultPdf.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AcctgTransSearchResultPdf"/>
@@ -3133,6 +3136,7 @@ under the License.
     <view-map name="AcctgTransEntriesSearchResultsPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#AcctgTransEntriesSearchResultsPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="AcctgTransSearchResultsCsv" type="screencsv" page="component://accounting/widget/GlScreens.xml#AcctgTransSearchResultsCsv" content-type="text/csv" encoding="none"/>
     <view-map name="AcctgTransSearchResultPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#AcctgTransSearchResultPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="PaymentSearchResultsCsv" type="screencsv" page="component://accounting/widget/PaymentScreens.xml#PaymentSearchResultsCsv" content-type="text/csv" encoding="none"/>
 
     <view-map name="AcctgTransDetailReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#AcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="GlAccountTrialBalance" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountTrialBalance"/>

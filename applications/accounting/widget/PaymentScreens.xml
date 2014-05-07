@@ -95,6 +95,22 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="PaymentSearchResultsCsv">
+		<section>
+			<actions>
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<set field="viewSize"  value="100000"/>
+			</actions>
+			<widgets>
+				<container>
+					<include-form name="ListPaymentsCsv"
+						location="component://accounting/widget/PaymentForms.xml" />
+				</container>
+			</widgets>
+		</section>
+	</screen>
     <screen name="NewPayment">
         <section>
             <actions>
