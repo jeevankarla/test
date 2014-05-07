@@ -638,4 +638,370 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="newReceipts">
+        <section>
+            <actions>
+                 <set field="tabButtonItem" value="CashPaymentOther" />
+				<set field="subTabButtonItem" value="findCashReceipts" />
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+            <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                       <include-menu location="component://accounting/widget/AccountingMenus.xml" name="NonRoutePaymentTabBar"/>
+                      	<section>
+                        	<widgets>
+                        		 <screenlet title="New Cash Receipt">
+								               <include-form name="NewCashReceipt" location="component://accounting/widget/PaymentForms.xml"/>
+								</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewOutgoingPayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingNewPaymentOutgoing"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+              <!--  <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml"> -->
+                <decorator-screen name="CommonApPaymentDecorator" location="${parameters.cashierDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                        	<condition>
+                        		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                        	</condition>
+                            <widgets>
+                            <screenlet title="New Cash Payable Payment">
+								      <include-form name="NewCashPayablePayment" location="component://accounting/widget/PaymentForms.xml"/>
+							</screenlet>
+                            </widgets>
+                            <fail-widgets>
+                           		<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="newPayablePayment">
+        <section>
+            <actions>
+               <set field="tabButtonItem" value="CashPaymentOther"/>
+                <set field="subTabButtonItem" value="findCashPayblePayment" />
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            
+            <widgets>
+            <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+                      <decorator-section name="body">
+                       <include-menu location="component://accounting/widget/AccountingMenus.xml" name="NonRoutePaymentTabBar"/>
+                      	<section>
+                        	<widgets>
+                        		 <screenlet title="New Cash Receipt">
+								               <include-form name="NewCashPayablePayment" location="component://accounting/widget/PaymentForms.xml"/>
+								</screenlet>
+                            </widgets>
+                    	</section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="findCashReceipts">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Cash Recipts Search"/>
+               <set field="subTabButtonItem" value="findCashReceipts" />
+                <set field="tabButtonItem" value="CashPaymentOther"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+            </actions>
+            <widgets>
+                   <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://accounting/widget/AccountingMenus.xml" name="NonRoutePaymentTabBar"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="newReceipts" text="Creare New Receipt" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options" > 
+                                        <include-form name="FindCashRecipts" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      <screen name="findRouteCashPayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Route Cash Receipts "/>
+                <set field="headerItem" value="payments"/>
+               <set field="subTabButtonItem" value="findCashReceipts" />
+                <set field="tabButtonItem" value="findRouteCashPayment"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                   <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+                     <decorator-section name="body">
+                   		<section>
+                   			<condition>
+	               				<or>
+	          						<if-has-permission permission="INDENT" action="_ADMIN"/>
+	          						<if-has-permission permission="FACILITY" action="_ADMIN"/>	
+	                   			</or>
+           				 	</condition>
+                      		<widgets>
+                           		<include-screen name="DispatchReconciliationInner" />                        
+                           	</widgets>
+                    	</section>  							  	
+					</decorator-section>	
+                    <decorator-section name="body">
+                   <!--  <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="PaymentSubTabBar"/> -->
+                        <section>
+                            <widgets>
+                           		<include-screen name="FindRouteCashPayment" location="component://byproducts/widget/ByProductsNgScreens.xml"/>                        
+                           </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+        <screen name="findCashPayblePayment">
+        <section>
+            <actions>
+            <set field="titleProperty" value="Cash Payble Payment Search"/>
+               <set field="headerItem" value="payments"/>
+               <set field="subTabButtonItem" value="findCashPayblePayment" />
+                <set field="tabButtonItem" value="CashPaymentOther"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <include-menu location="component://accounting/widget/AccountingMenus.xml" name="NonRoutePaymentTabBar"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                    		   <container style="button-bar">
+		                                            <link target="newPayablePayment" text="Creare New Payment" style="buttontext create"/>
+		                                        </container>
+                                       		</widgets>
+                                       	</section>		
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                     <include-form name="findCashPayblePayment" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListPayments" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PrintReceipt">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/PrintReceipt.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                <html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentReceiptNew.fo.ftl"/></html>
+	            	<!-- <html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentReciept.fo.ftl"/></html> -->
+	            </platform-specific>	
+            </widgets>
+        </section>
+    </screen>
+<screen name="FindPayableInvoices">
+	<section>
+		<actions>
+			<set field="tabButtonItem" value="TransporterDue" />
+			<set field="subTabButtonItem" value="FindPayableInvoices" />
+			<entity-one entity-name="PartyNameView" value-field="currentOrganization"  auto-field-map="false">
+				<field-map field-name="partyId" from-field="organizationPartyId" />
+			</entity-one>
+		</actions>
+		<widgets>
+			<decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+			 <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="newPayablePayment" text="Creare New Payment" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                       	<include-form name="FindPayableVouchers" location="component://accounting/widget/InvoiceForms.xml" />
+                                    </decorator-section>
+                                   <decorator-section name="search-results">
+									<screenlet title="Invoices List">
+										<section>
+											<condition><not><if-empty field="invoices" /></not></condition>
+											<widgets>
+											</widgets>
+										</section>
+										<platform-specific>
+											<html>
+												<html-template location="component://accounting/webapp/accounting/invoice/ListSearchInvoices.ftl" />
+											</html>
+										</platform-specific>
+									</screenlet>
+								</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+			</decorator-screen>
+		</widgets>
+	</section>
+</screen>
+
+<screen name="findNonRouteCashReceipts">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Cash Recipts Search"/>
+                <set field="headerItem" value="payments"/>
+                <set field="tabButtonItem" value="CashPaymentOther"/>
+                <set field="subTabButtonItem" value="findCashReceipts" />
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+              
+            </actions>
+            <widgets>
+                    <include-menu location="component://accounting/widget/AccountingMenus.xml" name="NonRoutePaymentTabBar"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="newReceipts" text="Creare New Receipt" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options" > 
+                                        <include-form name="FindCashRecipts" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FindReceiptInvoices">
+        <section>
+            <actions> 
+                <set field="titleProperty" value="AccountingFindArInvoices"/>
+                <service service-name="performFind" result-map="result">
+                    <field-map field-name="inputFields" from-field="parameters"/>
+                    <field-map field-name="entityName" value="InvoiceAndType"/>
+                    <field-map field-name="orderBy" value="invoiceDate DESC"/>
+                </service>
+                <set field="invoices" from-field="result.listIt"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
+                </service>
+                <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>                
+            </actions>
+            <widgets>
+                   <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                               <decorator-section name="search-results">
+                               <label> Cashier Payments Dashboard</label>
+                                </decorator-section>
+                     </decorator-screen>
+                       <!-- <widgets>
+                           <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                               <decorator-section name="search-options">
+                                   <include-form name="FindRecivableVouchers" location="component://accounting/widget/InvoiceForms.xml"/>
+                               </decorator-section>
+                               <decorator-section name="search-results">
+       							<screenlet title="Invoices List"> 
+       								<section>   
+       									<condition>
+       										<not><if-empty field="invoices" /></not>
+       									</condition>
+       									<widgets>              							                                   
+							</widgets>
+						</section>               
+                                   	<platform-specific>
+                                       	<html><html-template location="component://accounting/webapp/accounting/invoice/ListSearchInvoices.ftl"/></html>
+                                   	</platform-specific>
+                                   </screenlet>
+                               </decorator-section>
+                           </decorator-screen>
+                       </widgets> -->
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

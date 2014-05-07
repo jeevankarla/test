@@ -1723,4 +1723,89 @@
 			</link>
 		</menu-item>
 	</menu>		
+	<!-- <menu name="CashierPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
+           <menu-item name="FindReceivableVouchers" title="List Recipts Vouchers">
+            <condition>
+				<or>
+            		<if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+            <link target="FindReceivableInvoices" >
+            	<parameter param-name="subTabItem" value="FindReceiptInvoices"/>
+            	<parameter param-name="paymentMethodTypeId" value="CHALLAN_PAYIN"/>
+            </link>            
+          </menu-item>
+          <menu-item name="FindPayableInvoices" title="List Payable Vouchers">
+            <condition>
+				<or>
+            		<if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+            <link target="FindPayableInvoices" >
+            	<parameter param-name="subTabItem" value="newReceipts"/>
+            	<parameter param-name="paymentMethodTypeId" value="CHALLAN_PAYIN"/>
+            </link>            
+          </menu-item>
+          
+          <menu-item name="CashPayment" title="Cash">
+          	<condition>
+				<or>
+            		<if-has-permission permission="BYPRODUCTS"  action="_CASH"/>
+            	</or>            
+            </condition>
+            <link target="FindPaymentByMethod">
+            	<parameter param-name="subTabItem" value="CashPayment"/>
+            	<parameter param-name="paymentMethodTypeId" value="CASH_PAYIN"/>
+            </link>
+          </menu-item>
+          
+    </menu> --> 
+    <menu name="CashierPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem">
+           <menu-item name="CashPaymentOther" title="Non Route Marketing">
+            <condition>
+				<or>
+            		<if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+             <link target="findCashReceipts">
+            </link>
+          </menu-item>
+          <menu-item name="findRouteCashPayment" title="Route Marketing">
+          	<condition>
+				<or>
+				   <if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
+            		<if-has-permission permission="BYPRODUCTS"  action="_CASH"/>
+            	</or>            
+            </condition>
+            <link target="findRouteCashPayment">
+            	<parameter param-name="subTabItem" value="CashPayment"/>
+            	<parameter param-name="paymentMethodTypeId" value="CASH_PAYIN"/>
+            </link>
+          </menu-item>
+          
+    </menu> 
+     <menu name="NonRoutePaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
+           <menu-item name="findCashReceipts" title="Receipts">
+            <condition>
+				<or>
+            		<if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+            <link target="findCashReceipts">
+            </link>
+          </menu-item>
+          <menu-item name="findCashPayblePayment" title="Payments">
+          	<condition>
+				<or>
+            		<if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+            <link target="findCashPayblePayment">
+            </link>
+          </menu-item>
+          
+    </menu> 
 </menus>

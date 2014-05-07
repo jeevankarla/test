@@ -157,7 +157,7 @@ under the License.
               <td><@ofbizCurrency amount=payment.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=amountToApply isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td>
-              	<a target="_blank" class="buttontext" href="<@ofbizUrl>printReceipt?paymentId=${payment.paymentId}</@ofbizUrl>" >
+              	<a target="_blank" class="buttontext" href="<@ofbizUrl>printReceipt?paymentIds=${payment.paymentId}</@ofbizUrl>" >
               		PrintReceipt
               	</a>
               </td>
