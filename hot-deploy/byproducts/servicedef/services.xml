@@ -675,9 +675,8 @@
         creating a payment and applying it to the card order invoice.  
         NOTE:: This is a temporary service until payments integration is completed
         </description>
-        <attribute name="startDate"  field-name="From Date" mode="IN" type="Date" optional="true"/>
-        <attribute name="endDate"  field-name="Thru Date" mode="IN" type="Date" optional="true"/>  
-        <auto-attributes mode="OUT"></auto-attributes>
+        <attribute name="startDate"  mode="IN" type="Date" optional="true"/>
+        <attribute name="endDate"  mode="IN" type="Date" optional="true"/>  
     </service>       
 	<service name="batchSettleLMSCardOrders" engine="java" auth="true" transaction-timeout="6000"
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="batchSettleLMSCardOrders" >
