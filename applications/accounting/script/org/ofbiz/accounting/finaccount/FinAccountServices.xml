@@ -299,7 +299,10 @@ under the License.
 				<result-to-result result-name="finAccountTransId"/>
 			</call-service>
 			<check-errors/>	
-		</if-compare>			
+		</if-compare>
+		<set field="successMessageList[]" value="Contra Done Succesfully!"/>
+		<field-to-result field="error_list" result-name="successMessageList"/>
+		<return response-code="success"  > 	</return>		
 	</simple-method>
 
     <!-- FinAccountRole Services -->
@@ -1151,6 +1154,9 @@ under the License.
         	</if-not-empty>
         </if-compare>
         <field-to-result field="paymentId"/>
+	      <set field="successMessageList[]" value="Payment Done Succesfully!"/>
+		<field-to-result field="error_list" result-name="successMessageList"/>
+		<return response-code="success"  > 	</return>        
     </simple-method>
 
     <simple-method method-name="getTransactionTotalByGlReconcileId" short-description="Transaction Total By GlReconcile Id">
