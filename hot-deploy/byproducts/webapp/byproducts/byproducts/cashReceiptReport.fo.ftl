@@ -59,7 +59,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
                        			</fo:table-cell>
                        			</#if>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left">Receipt Number:${paymentGroupId?if_exists}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left">Receipt Number:${paymentGroup.getKey()?if_exists}</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>	
                      <fo:table-row>

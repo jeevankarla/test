@@ -705,7 +705,8 @@
     	<field name="subTabItem"><hidden value="${parameters.subTabItem}"/></field>   	   	
     	<!--<field name="paymentDate" title="${uiLabelMap.SupplyDate}"><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}"/></field>
     	<field name="displayDate" title="${uiLabelMap.SupplyDate}" widget-style="h3"><display default-value="${defaultEffectiveDate}"/></field>       
-        --><field name="facilityId" title="${uiLabelMap.BoothRoute}"><lookup target-form-name="LookupFacility"/></field>
+        -->
+        <field name="facilityId" title="${uiLabelMap.BoothRoute}" action="javascript:this.value=this.value.toUpperCase();" event="onblur"><lookup target-form-name="LookupFacility"/></field>
         <field name="paymentMethodTypeId"> <hidden value="${parameters.paymentMethodTypeId}"/></field>
         <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHALLAN_PAYIN&quot;" name="finAccountCode" title="Bank">
         	<drop-down >
