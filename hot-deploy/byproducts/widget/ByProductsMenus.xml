@@ -63,7 +63,7 @@
             <link target="VehicleStatus">               
             </link>
         </menu-item>           
-        <menu-item name="TransporterMargins" title="MarginReports">
+        <menu-item name="TransporterMargins" title="TransporterBilling">
             <condition>
                 <or>
 					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
@@ -661,6 +661,14 @@
         </menu-item>
         <menu-item name="FindAdhocSalesOrder" title="Find Adhoc Orders">
         	<link target="FindAdhocSalesOrder"/>
+        </menu-item>
+      </menu>
+      <menu name="TransporterMarginsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="TransporterMargins" title="TransporterBilling">
+        	<link target="TransporterMargins"/>
+        </menu-item>
+        <menu-item name="FinesAndPenalties" title="Fines And Penalties">
+        	<link target="FinesAndPenalties"/>
         </menu-item>
       </menu>
 </menus>

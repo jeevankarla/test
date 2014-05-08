@@ -24,6 +24,8 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 effectiveDate = null;
 thruEffectiveDate = null;
 
+dayBegin = "";
+dayEnd = "";
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="productReturnsReport"){
 		effectiveDateStr = parameters.prodReturnDate;
@@ -38,10 +40,11 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
 			}
 		}
+		dayBegin = UtilDateTime.getDayStart(effectiveDate);
+		dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 	}
 }
-dayBegin = UtilDateTime.getDayStart(effectiveDate);
-dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+
 
 // for sales Report
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
@@ -70,11 +73,12 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
 			}
 		}
+		dayBegin = UtilDateTime.getDayStart(effectiveDate);
+		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
 	}
 }
 
-dayBegin = UtilDateTime.getDayStart(effectiveDate);
-dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
+
 
 context.put("effectiveDateStr",effectiveDateStr);
 if(thruEffectiveDate){

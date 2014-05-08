@@ -39,50 +39,77 @@
 	dctx = dispatcher.getDispatchContext();
 	context.put("dctx",dctx);
 		
-	customTimePeriod = parameters.customTimePeriodId;
-	customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
+	effectiveDateStr = parameters.fromDate;
+	thruEffectiveDateStr = parameters.thruDate;
 	
-	fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-	thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	if (UtilValidate.isEmpty(effectiveDateStr)) {
+		effectiveDate = UtilDateTime.nowTimestamp();
+	}
+	else{
+		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		try {
+			effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
+		}
+	}
+	if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
+		thruEffectiveDate = effectiveDate;
+	}
+	else{
+		def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+		try {
+			thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruEffectiveDateStr+" 00:00:00").getTime());
+		}catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
+		}
+	}
 	
-	productStoreId = ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-	List unionProductList = ByProductServices.getProdStoreProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("productStoreId", productStoreId)).get("categoryProduct").get("UNION_PRODUCTS");
-	unionProducts = parameters.unionProductList;
+	dayBegin = UtilDateTime.getDayStart(effectiveDate);
+	dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
+
+	context.put("dayBegin",dayBegin);
+	context.put("dayEnd",dayEnd);
 	
-	context.putAt("fromDateTime", fromDateTime);
-	
-	monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
-	monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
-	
-	monthDate = UtilDateTime.toDateString(monthBegin, "MMMMM - yyyy");
-	context.monthDate = monthDate;
 	
 	List conditionList= FastList.newInstance();
-	conditionList.add(EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "BYPROD_FA_CAT"));
-	conditionList.add(EntityCondition.makeCondition("enumId", EntityOperator.NOT_EQUAL, "BYPROD_SO"));
-	conditionList.add(EntityCondition.makeCondition("enumId", EntityOperator.NOT_EQUAL, "BYPROD_GIFT"));
-	conditionList.add(EntityCondition.makeCondition("enumId", EntityOperator.NOT_EQUAL, "SP_SALES"));
-	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	
-	facilityCatEnum = delegator.findList("Enumeration", condition, null, ["sequenceId"], null, false);
-	
-	facilityCategoryList = EntityUtil.getFieldListFromEntityList(facilityCatEnum, "enumId", false);
-	
-	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.NOT_EQUAL, null));
-	conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, "%VAT_AMT"));
+	conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, "VAT_SALE"));
 	EntityCondition condition1 = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	Set fieldsToSelect = UtilMisc.toSet("productId", "taxPercentage");
 	
 	EntityFindOptions findOptions = new EntityFindOptions();
 	findOptions.setDistinct(true);
 	
-	Set fieldsToSelect = UtilMisc.toSet("productId", "taxPercentage");
 	productPrice = delegator.findList("ProductPrice", condition1,  fieldsToSelect, ["taxPercentage"], findOptions, false);
-	
 	List vatList = EntityUtil.getFieldListFromEntityList(productPrice, "taxPercentage", true);
 	context.vatList = vatList;
-	
-	vatWiseProductTotals = [:];
+	finalVatList = [];
+	resultMap = (ByProductNetworkServices.getPeriodTotals(dctx, [fromDate:dayBegin, thruDate:dayEnd])).get("productTotals");
+	vatList.each { vat->
+		vatMap = [:];
+		productIdList = EntityUtil.filterByDate(delegator.findByAnd("ProductPrice", [taxPercentage : vat ,productPriceTypeId : "VAT_SALE"]));
+		if(UtilValidate.isNotEmpty(productIdList)){
+			List productList = EntityUtil.getFieldListFromEntityList(productIdList, "productId", true);
+			if(UtilValidate.isNotEmpty(productList)){
+				productMap = [:];
+				productList.each { prodId->
+					prodValue = resultMap.get(prodId);
+					if(prodValue != null){
+						productMap[prodId] = prodValue;
+					}
+				}
+				tempMap = [:];
+				tempMap.putAll(productMap);
+				if(UtilValidate.isNotEmpty(tempMap)){
+					vatMap.put(vat,tempMap);
+					finalVatList.add(vatMap);
+				}
+			}
+		}
+	}
+	context.put("finalVatList",finalVatList);
+/*	vatWiseProductTotals = [:];
 	
 	categoryProductMap = [:];
 	categoryList = [];
@@ -96,24 +123,22 @@
 	EntityCondition AttrCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	
 	productCategoryAttribute = delegator.findList("ProductCategoryAttribute", AttrCondition, null, ["attrName","attrValue","productCategoryId"], null, false);
-	
 	categoryGroupingMap = [:];
 	for(i=0; i<productCategoryAttribute.size(); i++){
 		
 		productCategoryAtt = productCategoryAttribute.get(i);
-		
 		catGroupingDetailsMap = [:];
 		catGroupingDetailsMap.put("origin", productCategoryAtt.get("attrName"));
 		catGroupingDetailsMap.put("vatPercent", productCategoryAtt.get("attrValue"));
-		
 		tempMap = [:];
 		tempMap.putAll(catGroupingDetailsMap);
-		
 		categoryGroupingMap.put(productCategoryAtt.get("productCategoryId"), tempMap);
 	}
 	
-	resultMap = ByProductReportServices.getByProductPeriodTotals(dctx, UtilMisc.toMap("fromDate", monthBegin, "thruDate", monthEnd));
-	periodTotalsMap = resultMap.get("periodTotalsMap");
+	resultMap = ByProductNetworkServices.getPeriodTotals(dctx, UtilMisc.toMap("fromDate", monthBegin, "thruDate", monthEnd));
+	periodTotalsMap = resultMap.get("productTotals");
+	
+	
 	
 	Iterator periodTotalsIter = periodTotalsMap.entrySet().iterator();
 	while (periodTotalsIter.hasNext()) {
@@ -121,6 +146,8 @@
 		productCategory = periodTotalsEntry.getKey();
 		
 		groupingDetailMap = categoryGroupingMap.get(productCategory);
+		
+		
 		groupingDetails = groupingDetailMap.get("origin") + "_" +groupingDetailMap.get("vatPercent");
 		vatPercentage = groupingDetailMap.get("vatPercent");
 		
@@ -151,7 +178,7 @@
 	List categoryGroupingList = [];
 	categoryGroupingList = UtilMisc.toList("UNION_TAXABLE_0","UNION_TAXABLE_5","UNION_TAXABLE_14.5","DAIRY_TAXABLE_0","DAIRY_TAXABLE_5","DAIRY_TAXABLE_14.5");
 	
-	context.categoryGroupingList = categoryGroupingList;
+	context.categoryGroupingList = categoryGroupingList;*/
 	
 	
 	

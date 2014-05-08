@@ -655,6 +655,21 @@
      <request-map uri="GenerateTrnsptMarginReport.txt"><security https="true" auth="true"/>
         <response name="success" type="view" value="GenerateTrnsptMarginReportTXT"/>
     </request-map>
+    <request-map uri="FinesAndPenalties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinesAndPenalties"/>
+    </request-map>
+    <request-map uri="CreateNewFineorPenalty">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateNewFineorPenalty"/>
+    </request-map>
+     <request-map uri="createTransporterRecovery">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createTransporterRecovery"/>
+        <response name="success" type="request" value="FinesAndPenalties"/>
+        <response name="failed" type="view" value="FinesAndPenalties"/>
+        <response name="error" type="view" value="FinesAndPenalties"/>
+    </request-map>
     <!-- migrated requests -->
     <request-map uri="processDispatchReconcilMISAjax">
         <security https="true" auth="true"/>
@@ -832,6 +847,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="ShoppeRentReportPDF"/>
     </request-map>
+    <request-map uri="MonthlyVatReport.txt">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="MonthlyVatReportTXT"/>
+    </request-map>
      <request-map uri="boothPayments.csv">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="BoothPaymentsCSV"/>    	
@@ -958,6 +977,7 @@
 	<view-map name="IndentAbstractReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentAbstractReport" content-type="text/plain"/>
 	<view-map name="RetailerLedgerAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerLedgerAbstractPDF" content-type="application/pdf"/>
 	<view-map name="ShoppeRentReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ShoppeRentReportPDF" content-type="application/pdf"/>
+	<view-map name="MonthlyVatReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyVatReportTXT" content-type="text/plain"/>
 	<view-map name="BoothPaymentsCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothPaymentsCSV"  content-type="text/csv"/>
 	<view-map name="EmployeeReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#EmployeeReportCSV"  content-type="text/csv"/>
 	 
@@ -993,6 +1013,9 @@
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
    <view-map name="GenerateTrnsptMarginReportTXT" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#GenerateTrnsptMarginReportTXT" content-type="text/plain"/>
+   <view-map name="FinesAndPenalties" type="screen" page="component://byproducts/widget/TransporterScreens.xml#FinesAndPenalties"/>
+   <view-map name="CreateNewFineorPenalty" type="screen" page="component://byproducts/widget/TransporterScreens.xml#CreateNewFineorPenalty"/>
+   
 <!-- Transporter views -->
  <view-map name="FindPastBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPastBoothPayments"/>
  <view-map name="FindBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindBoothPayments"/>

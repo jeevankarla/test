@@ -42,6 +42,9 @@
 	import org.ofbiz.service.LocalDispatcher;
 	import org.ofbiz.service.ModelService;
 	import org.ofbiz.service.ServiceUtil;
+
+import java.util.List;
+import java.util.Map;
 	import java.util.TimeZone;
 	import java.util.Locale;
 	
@@ -1311,6 +1314,45 @@ import java.text.SimpleDateFormat;
 				result = ServiceUtil.returnSuccess("Service For UpdateVehicleStatus Runs Sucessfully");	        
 		        return result;
 		      }
+		    public static Map<String, Object> createTransporterRecovery(DispatchContext dctx, Map context) {
+		    	Map<String, Object> result = ServiceUtil.returnSuccess();
+		    	String facilityId = (String) context.get("facilityId");
+		    	String customTimePeriodId = (String) context.get("customTimePeriodId");
+		    	String recoveryTypeId = (String)context.get("recoveryTypeId");
+		    	BigDecimal amount = (BigDecimal)context.get("amount");
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+		    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				
+				try {
+		    		GenericValue facilityRecovery = delegator.findOne("FacilityRecovery", UtilMisc.toMap("facilityId", facilityId, "customTimePeriodId", customTimePeriodId, "recoveryTypeId",recoveryTypeId), false);
+		    		if (facilityRecovery == null) {
+		    			facilityRecovery = delegator.makeValue("FacilityRecovery");
+		    			facilityRecovery.put("facilityId", facilityId );
+		    			facilityRecovery.put("customTimePeriodId", customTimePeriodId);
+		    			facilityRecovery.put("recoveryTypeId", recoveryTypeId); 
+		    			facilityRecovery.put("amount", amount);
+		    			facilityRecovery.put("createdDate", UtilDateTime.nowTimestamp());
+		    			facilityRecovery.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			facilityRecovery.put("createdByUserLogin", userLogin.get("userLoginId"));
+		    			facilityRecovery.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		    			facilityRecovery.create();    
+		            }
+		    		else {  
+		    			facilityRecovery.clear();
+		    			facilityRecovery.set("amount", amount);
+		    			facilityRecovery.set("createdDate", UtilDateTime.nowTimestamp());
+		    			facilityRecovery.set("createdByUserLogin", userLogin.get("userLoginId"));
+		    			facilityRecovery.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			facilityRecovery.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	    			    facilityRecovery.store();
+		            }
+		        }catch(GenericEntityException e){
+					Debug.logError("Error while creating Transporter Recovery"+e.getMessage(), module);
+				}
+		        result = ServiceUtil.returnSuccess("Transporter Recovery Created Sucessfully");	        
+		        return result;
+		    }  
 	}
 
 

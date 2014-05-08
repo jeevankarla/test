@@ -29,5 +29,12 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>   
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>                
     </service>
-    
+     <service name="createTransporterRecovery" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="createTransporterRecovery">
+        <description>Create Transporter Recovery based on Fines and Penalties</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>   
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>              
+    </service>
     </services>

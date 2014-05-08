@@ -4898,6 +4898,34 @@
         <key-map field-name="productId"/>
       </relation>    
     </entity>
+    <entity entity-name="FacilityRecovery" package-name="org.ofbiz.accounting.invoice"
+		title="Facility Recovery">
+		<field name="facilityId" type="id-ne"></field>
+		<field name="customTimePeriodId" type="id"></field>
+		<field name="recoveryTypeId" type="id-ne"></field>
+		<field name="amount" type="currency-amount"></field>
+		<field name="periodBillingId" type="id"></field>
+		<field name="createdDate" type="date-time"></field>
+      	<field name="createdByUserLogin" type="id-vlong"></field>
+      	<field name="lastModifiedDate" type="date-time"></field>
+      	<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      	
+		<prim-key field="facilityId" />
+		<prim-key field="customTimePeriodId" />
+		<prim-key field="recoveryTypeId" />
+		<relation type="one" fk-name="FR_CTP" rel-entity-name="CustomTimePeriod">
+        <key-map field-name="customTimePeriodId"/>
+      	</relation>        
+      	<relation type="one" fk-name="FR_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      	</relation>
+      	<relation type="one" fk-name="FR_RTP" rel-entity-name="Enumeration">
+        	<key-map field-name="recoveryTypeId" rel-field-name="enumId"/>
+      	</relation>
+      	<relation type="one" fk-name="FR_PB" rel-entity-name="PeriodBilling">
+        <key-map field-name="periodBillingId"/>
+      </relation>
+	</entity>
     <entity entity-name="PartyAccountingHistory" package-name="org.ofbiz.accounting.invoice"
 		title="Party accounting history">
 		<field name="facilityId" type="id-ne"></field>
@@ -4920,5 +4948,5 @@
 		<relation type="one" fk-name="PHA_CTP" rel-entity-name="CustomTimePeriod">
 			<key-map field-name="customTimePeriodId" />
 		</relation>
-	</entity>	    	
+	</entity>
 </entitymodel>
