@@ -169,8 +169,15 @@ under the License.
         
 //]]>
 </script>
+<set field="screenFlag" value=""/>
+<#if screenFlag?exists && screenFlag="MyPortalCashierScreen" >
+<form name="paymentSubmitForm" id="paymentSubmitForm" method="post" action="cashierPortalMakeMassPayments">
+</form>
+<#else>
 <form name="paymentSubmitForm" id="paymentSubmitForm" method="post" action="makeMassPayments">
 </form>
+</#if>
+
 <#if boothPaymentsList?has_content>
   <div>
     <span class="label">Total Booths:${boothPaymentsList?size}</span>  
