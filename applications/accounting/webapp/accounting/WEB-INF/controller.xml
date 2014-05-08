@@ -2832,6 +2832,18 @@ under the License.
         <response name="success" type="view" value="findRouteCashPayment"/>
     </request-map>  
     
+     <request-map uri="cashierPortalMakeMassPayments">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="makeMassPayments" global-transaction="true"/>
+     	<response name="success" type="request-redirect-noparam" value="findRouteCashPayment">
+        </response>     	
+        <response name="error" type="request-redirect-noparam" value="findRouteCashPayment">
+        </response>
+    </request-map>
+     <request-map uri="FindPaymentCashier">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindPaymentCashier"/>    	
+    </request-map>
     
     <request-map uri="FindReceipts">
         <security https="true" auth="true"/>
@@ -2907,6 +2919,8 @@ under the License.
 	<view-map name="findCashPayblePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findCashPayblePayment"/>
 	<view-map name="PrintReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintReceipt" content-type="application/pdf" encoding="none"/>
 	<view-map name="findRouteCashPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
+	<view-map name="FindPaymentCashier" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
+	 
 	
 	<!-- Budget  -->
 	 <view-map name="FindBudgets" type="screen" page="component://accounting/widget/BudgetScreens.xml#FindBudgets"/>
