@@ -1843,7 +1843,8 @@
                     <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
                 </service>
                 <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
-    			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>										
+    			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>		
+    			<set field="targetValue" value="FindPaymentByMethod"/>										
     			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
     			<set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId" default-value="${paymentMethodTypeId}"/>
     			<set field="parameters.onlyCurrentDues" value="true"/>
@@ -2473,10 +2474,12 @@
                     <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
                 </service>
                 <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
+                <set field="targetValue" value="FindPaymentCashier"/>	
     			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>										
     			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
     			<set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId" default-value="${paymentMethodTypeId}"/>
     			<set field="parameters.onlyCurrentDues" value="true"/>
+    			<set field="screenFlag" value="MyPortalCashierScreen"/>
     			<!--<entity-condition list="companyBankList" entity-name="FinAccount" distinct="true" >
     				<condition-list combine="and">
     					<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>

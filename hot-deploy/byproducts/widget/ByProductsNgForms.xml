@@ -698,7 +698,7 @@
             </hyperlink>
         </field> 
     </form>
-    <form name="FindPaymentsByMethod" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="FindPaymentByMethod"
+    <form name="FindPaymentsByMethod" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="${targetValue}"
     	default-table-style="basic-table hover-bar" separate-columns="true"> 
     	<field name="hideSearch"><hidden value="N"/></field>
     	<field name="onlyCurrentDues"><hidden value="false"/></field>
