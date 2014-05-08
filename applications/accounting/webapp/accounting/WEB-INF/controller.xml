@@ -2032,6 +2032,11 @@ under the License.
         <response name="success" type="view" value="EditFinAccountTrans"/>
         <response name="error" type="view" value="EditFinAccountTrans"/>
     </request-map>
+     <request-map uri="EditFinAccountTransAlt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFinAccountTransAlt"/>
+        <response name="error" type="view" value="EditFinAccountTransAlt"/>
+    </request-map>
     <request-map uri="createFinAccountTrans">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFinAccountTrans"/>
@@ -2043,6 +2048,12 @@ under the License.
         <event type="service" path="" invoke="preCreateFinAccountTrans"/>
         <response name="success" type="view" value="FindFinAccountTrans"/>
         <response name="error" type="view" value="EditFinAccountTrans"/>
+    </request-map>
+     <request-map uri="preCreateFinAccountTransAlt">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="preCreateFinAccountTrans"/>
+        <response name="success" type="request-redirect-noparam" value="EditFinAccountTransAlt"/>
+        <response name="error" type="request-redirect-noparam" value="EditFinAccountTransAlt"/>
     </request-map>
     <request-map uri="FindFinAccountTrans">
         <security https="true" auth="true"/>
@@ -2990,6 +3001,7 @@ under the License.
     <view-map name="EditFinAccountReconciliations" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountReconciliations"/>
     <view-map name="ViewGlReconciliationWithTransaction" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ViewGlReconciliationWithTransaction"/>
     <view-map name="FindFinAccountReconciliations" type="screen" page="component://accounting/widget/FinAccountScreens.xml#FindFinAccountReconciliations"/>
+    <view-map name="EditFinAccountTransAlt" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountTransAlt"/>
 
     <!-- FixedAsset -->
     <view-map name="ListFixedAssets" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssets"/>

@@ -753,7 +753,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newReceipts" text="Creare New Receipt" style="buttontext create"/>
+                                            <link target="newReceipts" text="Create New Receipt" style="buttontext create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options" > 
@@ -838,7 +838,7 @@ under the License.
                                     		</condition>
                                     		<widgets>
                                     		   <container style="button-bar">
-		                                            <link target="newPayablePayment" text="Creare New Payment" style="buttontext create"/>
+		                                            <link target="newPayablePayment" text="Create New Payment" style="buttontext create"/>
 		                                        </container>
                                        		</widgets>
                                        	</section>		
@@ -890,7 +890,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newPayablePayment" text="Creare New Payment" style="buttontext create"/>
+                                            <link target="newPayablePayment" text="Create New Payment" style="buttontext create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -940,7 +940,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newReceipts" text="Creare New Receipt" style="buttontext create"/>
+                                            <link target="newReceipts" text="Create New Receipt" style="buttontext create"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options" > 
