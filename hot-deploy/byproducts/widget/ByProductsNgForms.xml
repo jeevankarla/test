@@ -1007,32 +1007,26 @@
     <form name="ListVehicleStatus" type="list" list-name="vehicleTripStatusList"   paginate-target="VehicleStatus" id="VehicleStatusListId"
     		 header-row-style="header-row-2"  default-table-style="basic-table hover-bar" separate-columns="true">
          <row-actions>
-         
-            <entity-condition entity-name="VehicleTrip" list="vehicleTripsList">
-    			<condition-list combine="and">
-                		<condition-expr field-name="vehicleId" operator="equals" value="${vehicleId}"/>
-                		<condition-expr field-name="originFacilityId" operator="equals" value="${facilityId}"/>
-                		<condition-expr field-name="sequenceNum" operator="equals" value="${sequenceNum}"/>
-                </condition-list>
-    		</entity-condition>
-            <set field="shipmentId" from-field="vehicleTripsList[0].shipmentId"/>  
-            <entity-one entity-name="Shipment"  value-field="shipment" use-cache="false">
-            	<field-map field-name="shipmentId" from-field="shipmentId"/>
-            </entity-one>
-            <set field="estimatedShipDate" type="Timestamp" from-field="shipment.estimatedShipDate"/>
+            <entity-one entity-name="Shipment" value-field="shipment">
+        		<field-map field-name="shipmentId" value="${shipmentId}" />
+        	</entity-one>
+        	<set field="estimatedShipDate" type="Timestamp" from-field="shipment.estimatedShipDate"/>
+        	<set field="shipmentId"  from-field="shipment.shipmentId"/>
         </row-actions>
         
         <field name="SupplyDate" title="Supply Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>
-    	<field name="facilityId" title="${uiLabelMap.Route}" sort-field="true"><display description="${facilityId}"/></field>
+    	<field name="facilityId" title="${uiLabelMap.Route}" sort-field="true"><display description="${originFacilityId}"/></field>
     	<field name="vehicleId"><display></display></field>  
+    	<field name="crateStatus" title="Crates Entered"><display></display></field>  
+    	
     	<field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-         <field name="changedDate" title="createdDate" ><display description="${createdDate}" /></field>
+         <field name="changedDate" title="createdDate" ><display description="${estimatedStartDate}" /></field>
           <field name="Update Status"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"    widget-style="buttontext">
             <hyperlink target="VehicleStatusChange"  description="Update Status" target-window="_blank">
-                <parameter param-name="statusId"/>
-                <parameter param-name="facilityId"/>
+                <parameter param-name="statusId"  />
+                <parameter param-name="facilityId" value="${originFacilityId}"/>
                  <parameter param-name="shipmentId"/>
                  <parameter param-name="vehicleId"/>
             </hyperlink>
@@ -1041,18 +1035,11 @@
      <form name="ListVehicleCratesReturn" type="list" list-name="routeVehicleCratesList"  paginate="false"  id="VehicleStatusListId"  
     		 header-row-style="header-row-2"  default-table-style="basic-table hover-bar"  separate-columns="true" target="createReturnCrate"  use-row-submit="true" >
          <row-actions>
-            <entity-condition entity-name="VehicleTrip" list="vehicleTripsList">
-    			<condition-list combine="and">
-                		<condition-expr field-name="vehicleId" operator="equals" value="${vehicleId}"/>
-                		<condition-expr field-name="originFacilityId" operator="equals" value="${facilityId}"/>
-                		<condition-expr field-name="sequenceNum" operator="equals" value="${sequenceNum}"/>
-                </condition-list>
-    		</entity-condition>
-            <set field="shipmentId" from-field="vehicleTripsList[0].shipmentId"/>  
-            <entity-one entity-name="Shipment"  value-field="shipment" use-cache="false">
-            	<field-map field-name="shipmentId" from-field="shipmentId"/>
-            </entity-one>
-            <set field="estimatedShipDate" type="Timestamp" from-field="shipment.estimatedShipDate"/>
+             <entity-one entity-name="Shipment" value-field="shipment">
+        		<field-map field-name="shipmentId" value="${shipmentId}" />
+        	</entity-one>
+        	<set field="estimatedShipDate" type="Timestamp" from-field="shipment.estimatedShipDate"/>
+        	<set field="shipmentId"  from-field="shipment.shipmentId"/>
         </row-actions>
         
         <field name="supplyDate" title="Supply Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>

@@ -3710,6 +3710,34 @@ public class ByProductServices {
 			  Debug.logError(e, "Error creating Returns", module);		  
 			  return ServiceUtil.returnError("Error creating Returns");			  
 		  }
+		  //populating Vehicle Status.
+		/*Map vehicleTripInMap=FastMap.newInstance();
+  		vehicleTripInMap.put("shipmentId",shipmentId);
+  		vehicleTripInMap.put("routeId",routeId);
+  		 Map vehcileResultMap=ByProductNetworkServices.getVehicleTrip(dctx,vehicleTripInMap);
+  		 GenericValue vehicleTrip=(GenericValue)vehcileResultMap.get("vehicleTrip");
+	    		 if(UtilValidate.isNotEmpty(vehicleTrip)){
+	    			  vehicleId=vehicleTrip.getString("vehicleId");
+	    			 Map<String, Object> vehicleTripStatusMap = FastMap.newInstance(); 
+	    			 vehicleTripStatusMap.put("vehicleId", vehicleTrip.getString("vehicleId"));
+	    			 vehicleTripStatusMap.put("facilityId",vehicleTrip.getString("originFacilityId"));
+	    			 vehicleTripStatusMap.put("sequenceNum", vehicleTrip.getString("sequenceNum"));
+	    			 vehicleTripStatusMap.put("userLogin", userLogin);
+	    			 vehicleTripStatusMap.put("statusId", "VEHICLE_RETURNED");
+	    			 vehicleTripStatusMap.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    			 vehicleTripStatusMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			        try {
+			        	 Map vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
+			            if (ServiceUtil.isError(vehicleTripStatusResult)) {
+			  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
+			  		  		Debug.logError(errMsg , module);
+			  		  	    return ServiceUtil.returnError("Error while Updating Status To VEHICLE_RETURNED"+ vehicleId);   
+			  		  	}
+			        }catch (GenericServiceException e) {
+			            Debug.logError(e, "Error while Updating Status To VEHICLE_RETURNED", module);
+			            return ServiceUtil.returnError(e.getMessage());
+			        }
+	    		 }*/
 		  return result;  
 	}
 	
@@ -4046,6 +4074,7 @@ public class ByProductServices {
       	BigDecimal returnCrQuantity = (BigDecimal)context.get("returnCrQuantity");
       	BigDecimal returnCnQuantity = (BigDecimal)context.get("returnCnQuantity");
       	String shipmentId = (String)context.get("shipmentId");
+      	String routeId="";
       	Map<String, Object> result = ServiceUtil.returnSuccess();
       	List conditionList = FastList.newInstance();
 		try {
@@ -4054,10 +4083,12 @@ public class ByProductServices {
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("SHIPMENT_CANCELLED")));
 				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 				EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				List<GenericValue> shipment = delegator.findList("Shipment", cond, null, null, null, false);
-				if(UtilValidate.isEmpty(shipment)){
+				List<GenericValue> shipmentList = delegator.findList("Shipment", cond, null, null, null, false);
+				if(UtilValidate.isEmpty(shipmentList)){
 					Debug.logError("No Shipment found for the given details",module);
 	 				return ServiceUtil.returnError("No Shipment found for the given details");
+				}else{//populating route Id
+					routeId = (EntityUtil.getFirst(shipmentList)).getString("routeId");
 				}
 			}
 			
@@ -4076,7 +4107,36 @@ public class ByProductServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
 		}
-		
+		 //populating Vehicle Status.
+		Map vehicleTripInMap=FastMap.newInstance();
+		String vehicleId="";
+    	Debug.log("===shipmentId=="+shipmentId+"==routeId=="+routeId);
+  		vehicleTripInMap.put("shipmentId",shipmentId);
+  		vehicleTripInMap.put("routeId",routeId);
+  		 Map vehcileResultMap=ByProductNetworkServices.getVehicleTrip(ctx,vehicleTripInMap);
+  		 GenericValue vehicleTrip=(GenericValue)vehcileResultMap.get("vehicleTrip");
+	    		 if(UtilValidate.isNotEmpty(vehicleTrip)){
+	    			  vehicleId=vehicleTrip.getString("vehicleId");
+	    			 Map<String, Object> vehicleTripStatusMap = FastMap.newInstance(); 
+	    			 vehicleTripStatusMap.put("vehicleId", vehicleTrip.getString("vehicleId"));
+	    			 vehicleTripStatusMap.put("facilityId",vehicleTrip.getString("originFacilityId"));
+	    			 vehicleTripStatusMap.put("sequenceNum", vehicleTrip.getString("sequenceNum"));
+	    			 vehicleTripStatusMap.put("userLogin", userLogin);
+	    			 vehicleTripStatusMap.put("statusId", "VEHICLE_CRATE_RTN");
+	    			 vehicleTripStatusMap.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    			 vehicleTripStatusMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+			        try {
+			        	 Map vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
+			            if (ServiceUtil.isError(vehicleTripStatusResult)) {
+			  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
+			  		  		Debug.logError(errMsg , module);
+			  		  	    return ServiceUtil.returnError("Error while Updating Status To VEHICLE_CRATE_RTN"+ vehicleId);   
+			  		  	}
+			        }catch (GenericServiceException e) {
+			            Debug.logError(e, "Error while Updating Status To VEHICLE_CRATE_RTN", module);
+			            return ServiceUtil.returnError(e.getMessage());
+			        }
+	    		 }
         result = ServiceUtil.returnSuccess("Successfully received crates from transporter!!");
         return result;
     }

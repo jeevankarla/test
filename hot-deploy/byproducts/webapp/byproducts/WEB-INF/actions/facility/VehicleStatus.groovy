@@ -98,43 +98,41 @@ shipmentTypeId="";
 			  conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, "PM_SHIPMENT"));
 			}
 		}
-		/*conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));*/
 		EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		List<GenericValue> shipmentList = delegator.findList("Shipment", cond, null,UtilMisc.toList("routeId"), null, false);
 		shipmentIds.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
 		routeIdsList.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "routeId", false))
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
-		/*conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, routeId));*/
-		//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("RETURN_CANCELLED")));
 		EntityCondition vhCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		List<GenericValue> vehicleTrpList = delegator.findList("VehicleTrip", vhCondition, null, UtilMisc.toList("originFacilityId"), null, false);
+		List<GenericValue> vehicleTrpStatList = delegator.findList("VehicleTripAndStatusAndShipment", vhCondition, null, UtilMisc.toList("-estimatedStartDate","originFacilityId"), null, false);
 		List<GenericValue> vehicleTripStatusList=FastList.newInstance();
 		List routeVehicleCratesList=FastList.newInstance();
-		if(UtilValidate.isNotEmpty(vehicleTrpList)){
-			for(i=0;i<vehicleTrpList.size();i++){
+		if(UtilValidate.isNotEmpty(vehicleTrpStatList)){
+			for(i=0;i<shipmentIds.size();i++){
 				Map vehicleCratesMap = FastMap.newInstance();
-				GenericValue vehicleTrip=vehicleTrpList.get(i);
-				shipmentId=vehicleTrip.getString("shipmentId");
-				sequenceId=vehicleTrip.getString("sequenceNum");
-				vehicleId=vehicleTrip.getString("vehicleId");
-				conditionList.clear();
-				conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceId));
-				conditionList.add(EntityCondition.makeCondition("vehicleId", EntityOperator.EQUALS, vehicleId));
-				/*if(UtilValidate.isNotEmpty(routeId)){
-				 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, routeId));
-				 }*/
+				//GenericValue vehicleTrip=vehicleTrpList.get(i);
+				shipmentId=shipmentIds.get(i);
 				EntityCondition vhTripCondi = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				List<GenericValue> tempVehicleTripStatusList = delegator.findList("VehicleTripStatus", vhTripCondi, null, UtilMisc.toList("-estimatedStartDate","facilityId"), null, false);
+				List<GenericValue> tempVehicleTripStatusList = EntityUtil.orderBy(EntityUtil.filterByCondition(vehicleTrpStatList, EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS , shipmentId)),["-estimatedStartDate"]);
+				//List<GenericValue> tempVehicleTripStatusList = delegator.findList("VehicleTripStatus", vhTripCondi, null, UtilMisc.toList("-estimatedStartDate","facilityId"), null, false);
 				if(UtilValidate.isNotEmpty(tempVehicleTripStatusList)){
+					 vehicleTripStatusMap=[:];
+					 statusList=EntityUtil.getFieldListFromEntityList(tempVehicleTripStatusList, "statusId", false);
 					GenericValue vehicleTripStatus=EntityUtil.getFirst(tempVehicleTripStatusList);
-					vehicleTripStatusList.add(vehicleTripStatus);//only needs to get one valid status for each shipment which is recent one
-					
+					vehicleTripStatusMap.putAll(vehicleTripStatus);
+					vehicleTripStatusMap.put("crateStatus","No");
+					if(statusList.contains("VEHICLE_CRATE_RTN")){
+						vehicleTripStatusMap.put("crateStatus","Yes");
+					}
+					vehicleTripStatusList.add(vehicleTripStatusMap);//only needs to get one valid status for each shipment which is recent one
+					sequenceId=vehicleTripStatus.getString("sequenceNum");
+					vehicleId=vehicleTripStatus.getString("vehicleId");
 					vehicleCratesMap.put("shipmentId", shipmentId);
 					vehicleCratesMap.put("sequenceNum", sequenceId);
 					vehicleCratesMap.put("vehicleId", vehicleId);
 					vehicleCratesMap.put("statusId", vehicleTripStatus.statusId);
-					vehicleCratesMap.put("facilityId",vehicleTripStatus.facilityId);
+					vehicleCratesMap.put("facilityId",vehicleTripStatus.originFacilityId);
 					cratesSent=0;cratesReceived=0;cansSent=0;cansReceived=0;
 					/*issuanceTotalRes=ByProductNetworkServices.getItemIssuenceForShipments(dctx,[shipmentIds:UtilMisc.toList(shipmentId)]);
 					if(UtilValidate.isNotEmpty(issuanceTotalRes)){

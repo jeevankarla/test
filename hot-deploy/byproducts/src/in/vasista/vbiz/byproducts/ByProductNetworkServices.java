@@ -2326,13 +2326,13 @@ public class ByProductNetworkServices {
 	    	inputMap.put("fromDate",dayBegin);
 	    	inputMap.put("thruDate",dayEnd);
 	    	//if success method will return false otherwise true
-	    	 resultCompareMap =compareOrdersAndItemIssuence(dctx,inputMap);
+	    	 /*resultCompareMap =compareOrdersAndItemIssuence(dctx,inputMap);
 	    	 String isFailedStr=(String) resultCompareMap.get("isFailed");
 	    		Debug.log("==isComparsionFaild==:"+isComparsionFaild+"==for ShipmentId===="+shipmentIds+"==resultcomapreMap=="+resultCompareMap);
 	    	if(isFailedStr.equals("Y")){
 	    		 isComparsionFaild=true;
 	    		  return ServiceUtil.returnError("Failed to create invoice..!"+resultCompareMap.get("failedProductItemsMap"));
-	    	}
+	    	}*/
 	    
 	    	if(!isComparsionFaild){
 	    		Map vehicleTripInMap=FastMap.newInstance();

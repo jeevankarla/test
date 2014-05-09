@@ -71,6 +71,8 @@ function changeRowColor(){
 	    var compText=$.trim($(result).text());
 	    if (compText==("Returned")){
 	    	 $(this).css("background-color", "#77BA72");
+	    }else if(compText==("CratesReturned")){
+	    	 $(this).css("background-color", "#98928F");
 	    }else{
 	    	$(this).css("background-color", "#FFCC88");
 	    }

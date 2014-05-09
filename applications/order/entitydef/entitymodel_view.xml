@@ -1990,7 +1990,7 @@ under the License.
       <view-link entity-alias="RH" rel-entity-alias="FA">
         <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
       </view-link>
-      <view-link entity-alias="RH" rel-entity-alias="RI" rel-optional="true">
+      <view-link entity-alias="RH" rel-entity-alias="RI" >
         <key-map field-name="returnId" />
       </view-link>
       <view-link entity-alias="RH" rel-entity-alias="SH" >
