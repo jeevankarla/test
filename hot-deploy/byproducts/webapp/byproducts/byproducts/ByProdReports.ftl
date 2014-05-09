@@ -83,6 +83,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("NIMCDate","");
 		makeDatePicker("rtSupplyDate","");
 		makeDatePicker("RouteIndentAbstDate","");
+		makeDatePicker("ProductIndentAbstDate","");
 		makeDatePicker("RouteTrCorrDate","");
 		makeDatePicker("RouteTrDetDate","");
 		makeDatePicker("bsFromDateId","bsThruDateId");
@@ -307,6 +308,28 @@ function makeDatePicker1(fromDateId ,thruDateId){
         	<form id="IndentAbstractReport" name="IndentAbstractReport" method="post"  target="_blank" action="<@ofbizUrl>IndentAbstractReport</@ofbizUrl>">	
       			<td width="34%">RouteWise Indent Abstract Report </td>
       			<td width="30%">Date<input  type="text" size="18pt" id="RouteIndentAbstDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      			<input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br>
+      			</td>			
+      			<td width="36%">Route 
+				 <select name="routeId" class='h4'>
+				<option value='All-Routes'>All</option>
+					<#list routesList as route>    
+  	    				<option value='${route}'>${route}</option>
+					</#list> 
+					</select>
+					Type 
+					<select name='subscriptionTypeId' class='h4'>
+					<option value=''>All</option>
+					<option value='AM'>AM</option>
+					<option value='PM'>PM</option>
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+        </tr>
+        <tr class="alternate-row">
+        	<form id="ProductIndentAbstractReport" name="ProductIndentAbstractReport" method="post"  target="_blank" action="<@ofbizUrl>ProductIndentAbstractReport</@ofbizUrl>">	
+      			<td width="34%">Product Indent Abstract Report</td>
+      			<td width="30%">Date<input  type="text" size="18pt" id="ProductIndentAbstDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       			<input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br>
       			</td>			
       			<td width="36%">Route 

@@ -102,10 +102,11 @@ grandProdTotal=[:];
 allProdGrandTotal=[:];
 totalCrates=0;
 totalCans=0;
-
+nonCratesRouteMap=[:];
 for(i=0; i<routesList.size(); i++){
 	grandTotalMap =[:];
 	productFinalMap = [:];
+	nonCratesProdMap=[:];
 	routeTotQty=0;
 	rtCrates = 0;
 	rtExcessPkts = 0;
@@ -181,7 +182,8 @@ for(i=0; i<routesList.size(); i++){
 		prodMap =[:];
 		prodMap["qty"]=qty;
 		routeTotQty=routeTotQty+qty;
-		tempCrates=0;tempExcess=0;
+		tempCrates=0;
+		tempExcess=0;
 		if(crateProductsIdsList.contains(productId)){
 			if(piecesPerCrate && piecesPerCrate.get(productId)){
 				int crateDivisior=(piecesPerCrate.get(productId)).intValue();
@@ -193,8 +195,12 @@ for(i=0; i<routesList.size(); i++){
 			   prodMap["crates"]=tempCrates;
 			   totalCrates+=tempCrates;
 			   rtCrates = rtCrates+tempCrates;
-			   
 		   }
+		}else{
+			nonCratesProdMap[productId]=prodMap;
+			if(UtilValidate.isNotEmpty(nonCratesProdMap)){
+				nonCratesRouteMap.put(routeId,nonCratesProdMap);
+			}
 		}
 		tempCan=0;
 		if(canProductsIdsList.contains(productId)){
@@ -246,10 +252,14 @@ for(i=0; i<routesList.size(); i++){
 	routeWiseIndentMap.put(routeId, tempFinalMap);
 	routeMap.put(routeId, tempRouteMap);
 }
+
 prodSequenceList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, allProductsSet) , null, ["sequenceNum"], null, false);
 prodIdsSeqList= EntityUtil.getFieldListFromEntityList(prodSequenceList, "productId", true);
 context.prodIdsSeqList=prodIdsSeqList;
 
+context.nonCratesRouteMap = nonCratesRouteMap;
+context.crateProductsIdsList = crateProductsIdsList;
+context.canProductsIdsList = canProductsIdsList;
 context.routeMap = routeMap;
 context.routeWiseIndentMap = routeWiseIndentMap;
 context.indentDate = UtilDateTime.toDateString(effectiveDate, "dd.MM.yyyy");
