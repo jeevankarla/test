@@ -4109,8 +4109,8 @@ public class ByProductServices {
             		return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
                 }  
                 BigDecimal defaultPrice = (BigDecimal)priceResult.get("totalPrice");
-                BigDecimal margnAmount = (orederItem.getBigDecimal("unitPrice")).subtract(defaultPrice);
-				BigDecimal itemSubAmt = (orederItem.getBigDecimal("unitPrice").multiply(subPercent.divide(new BigDecimal("100")))).add(margnAmount);
+                BigDecimal marginAmount = (orederItem.getBigDecimal("unitPrice")).subtract(defaultPrice);
+				BigDecimal itemSubAmt = (orederItem.getBigDecimal("unitPrice").multiply(subPercent.divide(new BigDecimal("100")))).add(marginAmount);
 				subAmount = (subAmount.add(itemSubAmt)).multiply(orederItem.getBigDecimal("quantity"));
 				
 			}

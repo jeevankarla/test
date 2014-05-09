@@ -1121,6 +1121,9 @@ public class ByProductChangeIndentServices {
         		Map.Entry indent = (Entry)indentIter.next();
                 String productId = (String)indent.getKey();
                 BigDecimal quantity = (BigDecimal)indent.getValue();
+                if(quantity.compareTo(BigDecimal.ZERO)==0){
+                	continue;
+                }
             	GenericValue product = delegator.findOne("Product",true, UtilMisc.toMap("productId",productId));
             	if (product == null) {
                     return ServiceUtil.returnError("Invalid productId " + productId);         		
@@ -1153,7 +1156,7 @@ public class ByProductChangeIndentServices {
             String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
             Map<String, Object> sendSmsParams = FastMap.newInstance();      
             sendSmsParams.put("contactNumberTo", contactNumberTo);          
-            sendSmsParams.put("text", text);            
+            sendSmsParams.put("text", text);   
             serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
             if (ServiceUtil.isError(serviceResult)) {
             	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);

@@ -882,6 +882,7 @@ public class ByProductNetworkServices {
 	  	  	}
 	        Timestamp dayBegin = UtilDateTime.getDayStart(supplyDate);
   		    Timestamp dayEnd = UtilDateTime.getDayStart(supplyDate);
+  		    BigDecimal totalAmount = BigDecimal.ZERO;
   		    try{
   		    	
 	    		if(UtilValidate.isNotEmpty(routeId)){
@@ -1032,6 +1033,7 @@ public class ByProductNetworkServices {
 	    		List<GenericValue> tempSubProdList =delegator.findList("SubscriptionProduct", cond, null,null, null, false);
 	    		tempSubProdList = EntityUtil.filterByDate(tempSubProdList , dayBegin);
 	    		List<GenericValue> subProdList = FastList.newInstance();
+	    		
 	    		if(UtilValidate.isNotEmpty(tempSubProdList)){
 	    			productList.addAll(EntityUtil.getFieldListFromEntityList(tempSubProdList, "productId", true));
 	    		}
@@ -1067,15 +1069,55 @@ public class ByProductNetworkServices {
 	    			
 	            }
 	    		
+	    		// here fetch employee subsidy quantity and add amount to total amount
+	    		Map  empSubIndent = FastMap.newInstance();
+	    		if(UtilValidate.isNotEmpty(context.get("fetchForSms")) && ((Boolean)context.get("fetchForSms"))){
+	    			BigDecimal subPercent = new BigDecimal("50");
+	    			conditionList.clear();
+		    		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+		    		conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "EMP_SUBSIDY"));
+		    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dayBegin, -1))) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
+		    		EntityCondition condEmp= EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    		List<GenericValue> tempEmpSubProdList =delegator.findList("SubscriptionProduct", condEmp, null,null, null, false);
+		    		tempEmpSubProdList = EntityUtil.filterByDate(tempEmpSubProdList , dayBegin);
+		    		for(GenericValue product : tempEmpSubProdList){
+		    			String productId = product.getString("productId");
+		    			BigDecimal quantity = product.getBigDecimal("quantity");
+		    			/*if(UtilValidate.isNotEmpty(empSubIndent.get("productId"))){
+		    				quantity = quantity.add((BigDecimal)empSubIndent.get("productId"));
+		            	}
+		    			empSubIndent.put("productId",quantity);*/
+		    			
+		    			//lets popultate total indent qty Map
+		    			Map<String, Object> priceContext = FastMap.newInstance();
+		                priceContext.put("userLogin", userLogin);   
+		                priceContext.put("productStoreId",productStoreId);                    
+		                priceContext.put("productId", productId);
+		                priceContext.put("facilityId", boothId); 
+		                priceContext.put("priceDate", dayEnd);
+		                priceContext.put("productSubscriptionTypeId", "EMP_SUBSIDY");
+		                Map priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);            			
+		                if (ServiceUtil.isError(priceResult)) {
+		                    Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
+		            		return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
+		                }  
+		                BigDecimal defaultPrice = (BigDecimal)priceResult.get("totalPrice");
+		                BigDecimal subAmount = BigDecimal.ZERO;
+		                BigDecimal marginAmount = (defaultPrice).subtract((BigDecimal)prodPriceMap.get(productId));
+						BigDecimal itemSubAmt = ((defaultPrice).multiply(subPercent.divide(new BigDecimal("100")))).subtract(marginAmount);
+						subAmount = (subAmount.add(itemSubAmt)).multiply(quantity);
+	            		totalAmount = totalAmount.add(subAmount);
+		            }
+    			}
+	    		
 	    		
 	    	}catch (Exception e) {
 				// TODO: handle exception
 				Debug.logError(e.toString()+"context ===="+context, module);
 				return ServiceUtil.returnError(e.toString());
 			}
-	    	
 	    	Map totalIndentQtyMap = FastMap.newInstance();
-	    	BigDecimal totalAmount = BigDecimal.ZERO;
+	    	
 	    	for(int i= (changeQtyList.size()-1);i >=0 ; i--){
 	        	Map tempChangeProdMap = FastMap.newInstance();
 	        	Map changeQuantityMap = (Map)changeQtyList.get(i);
