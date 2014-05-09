@@ -59,12 +59,16 @@
 screenFlag = '${screenFlag}';
 function setDateRange(){
 <#if screenFlag?exists && screenFlag == 'DSCorrection'>
-         var startDate=new Date("01 May, 2014");
+         var startDate=new Date("01 April, 2014");
 	    	$("#effectiveDate" ).datepicker({
 			dateFormat:'d MM, yy',
 			changeMonth: false,
 			numberOfMonths: 1,
+			<#if security.hasEntityPermission("TRUCKSHEETCORRECTION", "_ADMIN", session)>
 			minDate:startDate,
+			<#else>
+				minDate:-1,
+			</#if>
 			maxDate:1,
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate );
