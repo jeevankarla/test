@@ -88,6 +88,13 @@
 			</condition>
 			<link target="findBudgets" />
 		</menu-item>
+		<menu-item name="CashierPortal" title="Cashier Portal">
+			<condition>
+				<if-has-permission permission="MYPORTAL" action="_CASHIER" />
+			</condition>
+			<link target="cashierPortal" />
+		</menu-item>
+		
 	</menu>
 
 	<menu name="InvoiceTabBar" extends="CommonTabBarMenu"

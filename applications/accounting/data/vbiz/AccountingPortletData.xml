@@ -79,8 +79,8 @@
         <SecurityPermission permissionId="MYPORTAL_CASHIER" description="Use the Cashier Screens in myportal."/>
         <SecurityGroup description="Cashier Role user will have  myportal Access" groupId="MYPORTAL_CASHIER"/>
 	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="MYPORTAL_CASHIER"/>
-	 <!-- 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="FACILITY_VIEW"/>
-	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="BYPRODUCTS_VIEW"/> -->	 	
+	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="FACILITY_VIEW"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="BYPRODUCTS_VIEW"/> 	
 	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="MYPORTALBASE_ADMIN"/>
 		<PortalPage portalPageId="MYPORTAL_CASHIER" sequenceNum="0" portalPageName="Main" description="The Milkosoft System Cashier page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_CASHIER"/>
 	   

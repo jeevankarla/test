@@ -2824,6 +2824,11 @@ under the License.
         <response name="success" type="view-last"/>
         <response name="error" type="view-last"/>
     </request-map>
+    
+     <request-map uri="cashierPortal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="cashierPortal"/>
+    </request-map>
       <request-map uri="newReceipts">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newReceipts"/>
@@ -2886,6 +2891,7 @@ under the License.
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>
+    <view-map name="cashierPortal" type="screen" page="component://accounting/widget/PaymentScreens.xml#findCashReceipts"/>
 
     <!-- BillingAccount -->
    <view-map name="FindBillingAccount" type="screen" page="component://accounting/widget/BillingAccountScreens.xml#FindBillingAccount"/>
@@ -2921,6 +2927,10 @@ under the License.
     <view-map name="PrintChecks" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintChecks" content-type="application/pdf" encoding="none"/>
     <view-map name="FindSalesInvoicesByDueDate" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindSalesInvoicesByDueDate"/>
     <view-map name="FindPurchaseInvoicesByDueDate" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPurchaseInvoicesByDueDate"/>
+	
+	
+	
+	
 	<view-map name="newReceipts" type="screen" page="component://accounting/widget/PaymentScreens.xml#newReceipts"/>
 	<view-map name="newPayablePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#newPayablePayment"/>
 	<view-map name="FindReceipts" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindReceipts"/>
