@@ -28,15 +28,6 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
          ${setRequestAttribute("OUTPUT_FILENAME", "VATReturns.txt")}
-          <#if errorMessage?has_content>
-	<fo:page-sequence master-reference="main">
-	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-	   <fo:block font-size="14pt">
-	           ${errorMessage}.
-        </fo:block>
-	</fo:flow>
-	</fo:page-sequence>	
-	<#else>
          <#assign totalBasicRevenue = 0>
 		 <#assign totalVatRevenue = 0>
 		 <#assign totalRevenueValue = 0>
@@ -174,7 +165,6 @@ under the License.
                </fo:block> 		
 			</fo:flow>
 		</fo:page-sequence>
-	
 	<#else>
 	<fo:page-sequence master-reference="main">
     	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
@@ -183,7 +173,6 @@ under the License.
        		 </fo:block>
     	</fo:flow>
 	</fo:page-sequence>	
-  </#if>   
   </#if>   
  </fo:root>
 </#escape>
