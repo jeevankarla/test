@@ -325,6 +325,35 @@
         <attribute name="productsPrice" type="Map" optional="true" mode="OUT"/>
     </service>
     
+    <service name="getRetailerIndent" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getRetailerIndent" auth="true">
+        <attribute name="boothId" mode="IN" type="String" optional="false"/>
+        <attribute name="productSubscriptionTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="subscriptionTypeId" mode="IN" type="String" optional="false"/>      
+        <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
+        <attribute name="changeIndentProductList" mode="OUT" type="List" optional="true"/>
+        <attribute name="screenFlag" mode="IN" type="String" optional="true"/>
+        <attribute name="routeId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="tempRouteId" mode="OUT" type="String" optional="true"/>
+        <attribute name="boothName" mode="OUT" type="String" optional="true"/>
+        <attribute name="routeCrateTotal" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="categoryTotals" mode="OUT" type="List" optional="true"/>
+        <attribute name="routeTotalLtr" mode="OUT" type="BigDecimal" optional="true"/> 
+        <attribute name="routeName" mode="OUT" type="String" optional="true"/> 
+        <attribute name="securityDeposit" mode="OUT" type="BigDecimal" optional="true"/> 
+        <attribute name="routeCapacity" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="productPrice" mode="OUT" type="Map" optional="true"/>
+        <attribute name="routeTotalsList" mode="OUT" type="List" optional="true"/>   
+        <attribute name="prodIndentQtyCat" mode="OUT" type="Map" optional="true"/>
+        <attribute name="tripId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="qtyInPieces" mode="OUT" type="Map" optional="true"/>
+        <attribute name="totalIndentQtyMap" mode="OUT" type="Map" optional="true"/>
+        <attribute name="totalAmount" mode="OUT" type="BigDecimal" optional="true"/>
+         <attribute name="supplyDate" mode="OUT" type="Timestamp" optional="false"/>  
+        <attribute name="isEnableProductSubscription" mode="IN" type="Boolean" optional="true"/> 
+         <attribute name="priceCalcFalg" mode="IN" type="Boolean" optional="true"/>           
+    </service>
+    
     <service name="getBoothChandentIndent" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getBoothChandentIndent" auth="true">
         <attribute name="boothId" mode="IN" type="String" optional="false"/>

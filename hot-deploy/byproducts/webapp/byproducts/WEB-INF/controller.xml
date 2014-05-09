@@ -252,7 +252,15 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="LookupByProductCategory"/>
     </request-map>    
-   
+    
+    <request-map uri="getRetailerIndentJson">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="getRetailerIndent"/>        
+       <response name="success" type="request" value="json"/>
+       <response name="failed" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>       
+    </request-map>
+    
     <request-map uri="ProductWiseSalesVolumeTotals">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProductWiseSalesVolumeTotals"/>

@@ -507,7 +507,7 @@ public class ByProductChangeIndentServices {
 	  					  createNewSubscriptionProduct.put("fromDate", UtilDateTime.getDayStart(effectiveDate));
 	  					 // for now populate thruDate
 	  					  //createNewSubscriptionProduct.put("thruDate", null);
-	  					  if(enableContinuousIndent && contIndentProductList.contains(productId) && !routeChange && UtilValidate.isEmpty(routeChangeFlag)){
+	  					  if(quantity.compareTo(BigDecimal.ZERO)>0 && enableContinuousIndent && contIndentProductList.contains(productId) && !routeChange && UtilValidate.isEmpty(routeChangeFlag)){
 	  						  createNewSubscriptionProduct.put("thruDate", null);
 	  					  }
 	  					  else{
@@ -566,7 +566,7 @@ public class ByProductChangeIndentServices {
 						  int removed = delegator.removeValue(subscriptionProduct);
 						  //Debug.log("removed todays subscription "+subscriptionProduct);
 					  }
-					  if(quantity.compareTo(BigDecimal.ZERO)>0 && createFlag){
+					  if(createFlag){
 						  indentChanged = true;
 						  Map createNewSubscProduct = FastMap.newInstance();
 						  createNewSubscProduct.put("facilityId", boothId);
@@ -579,7 +579,7 @@ public class ByProductChangeIndentServices {
 						  createNewSubscProduct.put("quantity", quantity);
 						  createNewSubscProduct.put("crateQuantity", crateQuantity);
 						  createNewSubscProduct.put("fromDate", UtilDateTime.getDayStart(effectiveDate));
-						  if(enableContinuousIndent && contIndentProductList.contains(productId) && !routeChange && UtilValidate.isEmpty(routeChangeFlag)){
+						  if(quantity.compareTo(BigDecimal.ZERO)>0 && enableContinuousIndent && contIndentProductList.contains(productId) && !routeChange && UtilValidate.isEmpty(routeChangeFlag)){
 							  createNewSubscProduct.put("thruDate", null);
 	  					  }
 	  					  else{

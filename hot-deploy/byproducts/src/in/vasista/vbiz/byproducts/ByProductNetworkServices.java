@@ -1303,6 +1303,95 @@ public class ByProductNetworkServices {
 	    	result.put("changeIndentProductList", changeIndentProductList);
 			return result;
 	    }
+	 	
+	 	public static Map<String, Object> getRetailerIndent(DispatchContext dctx, Map<String, ? extends Object> context){
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        String supplyDateStr = (String) context.get("supplyDate"); 
+	        String boothId = (String) context.get("boothId");
+	        String routeId = (String) context.get("routeId");
+	        String screenFlag = (String) context.get("screenFlag");
+	        String tripId = (String) context.get("tripId");
+	        Boolean isEnableProductSubscription = Boolean.FALSE;
+	        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
+	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        if(UtilValidate.isNotEmpty(context.get("isEnableProductSubscription"))){
+	           isEnableProductSubscription = (Boolean) context.get("isEnableProductSubscription");
+	        }
+	        Map result = ServiceUtil.returnSuccess(); 
+	        
+	        Timestamp supplyDate = null;
+	        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+	        if(UtilValidate.isNotEmpty(supplyDateStr)){
+		  		  try {
+		  			  supplyDate = new java.sql.Timestamp(sdf.parse(supplyDateStr).getTime());
+		  		  } catch (ParseException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + supplyDateStr, module);
+		  		  } catch (NullPointerException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + supplyDateStr, module);
+		  		  }
+			}
+	  	  	else{
+	  	  		supplyDate = UtilDateTime.nowTimestamp();
+	  	  	}
+	        
+	        List changeIndentProductList = FastList.newInstance();
+	        
+	        try{
+	        	result = getBoothChandentIndent(dctx, context);
+		        
+		        changeIndentProductList = (List)result.get("changeIndentProductList");
+		        
+		        if(UtilValidate.isEmpty(changeIndentProductList)){
+		        	EntityFindOptions opts = new EntityFindOptions();
+		            opts.setMaxRows(1);
+		            opts.setFetchSize(1);
+
+		        	List conditionList = FastList.newInstance();
+		        	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
+		        	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
+		        	conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
+		        	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, supplyDate));
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		        	List<GenericValue> previousSubscriptionProductList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, UtilMisc.toSet("thruDate"), UtilMisc.toList("-thruDate"), opts, false);
+		        	GenericValue prevSubscriptionProduct = (GenericValue)EntityUtil.getFirst(previousSubscriptionProductList);
+		        	String prevDate = "";
+		        	if(UtilValidate.isNotEmpty(prevSubscriptionProduct)){
+		        		Timestamp previousDate =  prevSubscriptionProduct.getTimestamp("thruDate");
+		        		prevDate = UtilDateTime.toDateString(previousDate, "dd MMMMM, yyyy");
+		        		Map newContext = FastMap.newInstance();
+		        		newContext.put("boothId", boothId);
+		    	        newContext.put("routeId", routeId);
+		    	        newContext.put("screenFlag", screenFlag);
+		    	        newContext.put("tripId", tripId);
+		    	        newContext.put("productSubscriptionTypeId", productSubscriptionTypeId);
+		    	        newContext.put("subscriptionTypeId", subscriptionTypeId);
+		    	        newContext.put("userLogin", userLogin);
+		    	        newContext.put("isEnableProductSubscription", (Boolean)context.get("isEnableProductSubscription"));
+		    	        newContext.put("supplyDate", prevDate);
+		    	        newContext.put("priceCalcFalg", Boolean.FALSE);
+		        		Map resultCtx = getBoothChandentIndent(dctx, newContext);
+		        		List tempProdQtyList = (List)resultCtx.get("changeIndentProductList");
+		        		List changedIndentProducts = FastList.newInstance();
+		        		for(int i=0;i<tempProdQtyList.size();i++){
+		        			Map tempMap = (Map)tempProdQtyList.get(i);
+		        			tempMap.put("cQuantity", BigDecimal.ZERO);
+		        			changedIndentProducts.add(tempMap);
+		        		}
+		        		result.put("changeIndentProductList", changedIndentProducts);
+		        	}
+		        }
+	        }catch(Exception e){
+	        	Debug.logError(e, "Error in fetching indent for the date" + supplyDateStr, module);
+	        	return ServiceUtil.returnError(e.toString());
+	        }
+	        
+	        	
+	        return result;
+	    }
+	 	
+	 	
 	 	public static Map<String ,Object>  getRouteCrateDetails(DispatchContext dctx, Map<String, ? extends Object> context){
 			  Delegator delegator = dctx.getDelegator();
 		      LocalDispatcher dispatcher = dctx.getDispatcher();

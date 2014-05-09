@@ -112,7 +112,7 @@ function updateGrid(){
 		action = "getBoothOrderDetailsJson";
 	}
 	else{
-		action = "getBoothChandentIndentJson";
+		action = "getRetailerIndentJson";
 	}
 	var dataJson = {"boothId":$('[name=boothId]').val(),
 						"supplyDate":$('[name=effectiveDate]').val(),
