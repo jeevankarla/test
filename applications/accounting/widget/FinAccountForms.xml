@@ -274,7 +274,7 @@ under the License.
             <drop-down no-current-selected-key="DEPOSIT">
                 <entity-options description="${description}" entity-name="FinAccountTransType">  
                 	<entity-constraint name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>              	
-                    <entity-order-by field-name="description"/>
+                    <entity-order-by field-name="-description"/>
                 </entity-options>
             </drop-down>
         </field>
