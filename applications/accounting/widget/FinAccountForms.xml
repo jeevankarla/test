@@ -271,7 +271,7 @@ under the License.
         <field name="finAccountTransId"><hidden/></field>
         <field name="entryType"   ><hidden value="Contra"/></field>       
         <field name="finAccountTransTypeId" use-when="finAccountTransTypeId==null" action="javascript:setPaymentType();" event="onChange"> 
-            <drop-down no-current-selected-key="DEPOSIT">
+            <drop-down no-current-selected-key="WITHDRAWAL">
                 <entity-options description="${description}" entity-name="FinAccountTransType">  
                 	<entity-constraint name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>              	
                     <entity-order-by field-name="-description"/>
