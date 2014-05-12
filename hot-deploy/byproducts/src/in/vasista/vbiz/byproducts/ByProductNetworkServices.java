@@ -1347,7 +1347,15 @@ public class ByProductNetworkServices {
 		        	EntityFindOptions opts = new EntityFindOptions();
 		            opts.setMaxRows(1);
 		            opts.setFetchSize(1);
-
+		            GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
+		            
+    			    productSubscriptionTypeId = "CASH";
+    				if(facility.getString("categoryTypeEnum").equals("SO_INST")){
+    					productSubscriptionTypeId = "SPECIAL_ORDER";
+	  	    		}
+	    			if(facility.getString("categoryTypeEnum").equals("CR_INST")){
+	  	    			 productSubscriptionTypeId = "CREDIT";
+	  	    		}
 		        	List conditionList = FastList.newInstance();
 		        	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
 		        	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
