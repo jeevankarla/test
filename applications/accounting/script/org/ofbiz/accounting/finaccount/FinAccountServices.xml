@@ -302,7 +302,7 @@ under the License.
 		</if-compare>
 		<set field="successMessageList[]" value="Contra Done Succesfully!"/>
 		<field-to-result field="error_list" result-name="successMessageList"/>
-		<return response-code="success"  > 	</return>		
+		<return response-code="success"/>	
 	</simple-method>
 
     <!-- FinAccountRole Services -->
@@ -671,8 +671,8 @@ under the License.
 					<result-to-field field="postAcctgTransMap.acctgTransId"
 						result-name="acctgTransId" />
 				</call-service>
-				<call-service service-name="postAcctgTrans"
-					in-map-name="postAcctgTransMap" />
+				<!-- <call-service service-name="postAcctgTrans"
+					in-map-name="postAcctgTransMap" /> -->
 				<make-value value-field="acctgTransAttribute"
 					entity-name="AcctgTransAttribute" />
 				<set field="acctgTransAttribute.acctgTransId" from-field="relatedAcctgTransToFinAcctran.acctgTransId" />
@@ -1156,7 +1156,7 @@ under the License.
         <field-to-result field="paymentId"/>
 	      <set field="successMessageList[]" value="Payment Done Succesfully!"/>
 		<field-to-result field="error_list" result-name="successMessageList"/>
-		<return response-code="success"  > 	</return>        
+		<return response-code="success"/>       
     </simple-method>
 
     <simple-method method-name="getTransactionTotalByGlReconcileId" short-description="Transaction Total By GlReconcile Id">

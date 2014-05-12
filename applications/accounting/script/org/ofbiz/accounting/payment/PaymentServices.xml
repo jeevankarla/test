@@ -579,9 +579,9 @@ under the License.
             <call-service service-name="copyAcctgTransAndEntries" in-map-name="copyAcctgTransCtx">
                 <result-to-field field="postAcctgTransMap.acctgTransId" result-name="acctgTransId"/>
             </call-service>
-            <if-compare field="acctgTransPayment.isPosted" operator="equals" value="Y">
+            <!-- <if-compare field="acctgTransPayment.isPosted" operator="equals" value="Y">
                 <call-service service-name="postAcctgTrans" in-map-name="postAcctgTransMap"/>
-            </if-compare>
+            </if-compare> -->
             <clear-field field="postAcctgTransMap"/>
         </iterate>
         <if-compare operator="equals" value="PETTYCASH_INVOICE" field="updateInvoiceCtx.invoiceTypeId">
