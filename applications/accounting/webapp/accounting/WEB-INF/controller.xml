@@ -2847,7 +2847,26 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findRouteCashPayment"/>
     </request-map>  
-    
+     <request-map uri="findAdhocSalePayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindAdhocSalePayment"/>
+    </request-map> 
+     <request-map uri="createAdhocSalePaymentAlt">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createAdhocSalePayment"/>   	
+    	<response name="success"  type="request-redirect-noparam" value="findAdhocSalePayment"/>
+    	<response name="error"  type="request-redirect-noparam" value="findAdhocSalePayment"/>       	
+    </request-map>
+      <request-map uri="cancelAdhocSalePayment">
+     	 <security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelRetailerPayment"/>
+        <response name="success" type="request" value="findAdhocSalePayment"/>
+        <response name="error" type="request" value="findAdhocSalePayment"/>
+    </request-map>
+     <request-map uri="cashReceiptReport.pdf">
+   		<security https="true" auth="true"/>
+        <response name="success" type="view" value="CashReceiptReportPDF"/>
+    </request-map>
      <request-map uri="cashierPortalMakeMassPayments">
      	<security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="makeMassPayments" global-transaction="true"/>
@@ -2881,7 +2900,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findCashPayblePayment"/>
     </request-map> 
-      <request-map uri="printReceipt">
+      <request-map uri="printReceipt.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintReceipt"/>
     </request-map>
@@ -2941,6 +2960,9 @@ under the License.
 	<view-map name="PrintReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintReceipt" content-type="application/pdf" encoding="none"/>
 	<view-map name="findRouteCashPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
 	<view-map name="FindPaymentCashier" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
+	<view-map name="FindAdhocSalePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindAdhocSalePayment"/>
+	
+	
 	 
 	
 	<!-- Budget  -->
@@ -3260,7 +3282,7 @@ under the License.
 
     <view-map name="InvoiceSearchResultsCsv" type="screencsv" page="component://accounting/widget/InvoiceScreens.xml#InvoiceSearchResultsCsv" content-type="text/csv" encoding="none"/>
     <view-map name="InvoiceSearchResultPdf" type="screenfop" page="component://accounting/widget/InvoiceScreens.xml#InvoiceSearchResultPdf" content-type="application/pdf" encoding="none"/>
-
-
+   <!-- Common request used for byProducts And Accountiing -->
+   <view-map name="CashReceiptReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashReceiptReportPDF" content-type="application/pdf"/>
     <!-- end of view mappings -->
 </site-conf>

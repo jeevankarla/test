@@ -10,8 +10,9 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.base.util.UtilNumber;
 
-
+//${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0")), "%rupees-and-paise", locale).toUpperCase()}
 
 paymentIds=FastList.newInstance();
 tempPaymentIds=FastList.newInstance();
@@ -23,8 +24,18 @@ if(parameters.paymentId){
 }
 printPaymentsList = FastList.newInstance();
 if(parameters.paymentIds){
+	
 	paymentIds.addAll(parameters.paymentIds);
-	printPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds)  , null, null, null, false );
+	tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds)  , null, null, null, false );
+	tempprintPaymentsList.each{paymentRecipt->
+		tempprintPaymentMap=[:];
+		tempprintPaymentMap.putAll(paymentRecipt);
+		totalAmount=paymentRecipt.amount;
+	
+	amountwords=UtilNumber.formatRuleBasedAmount(totalAmount,"%rupees-and-paise", locale).toUpperCase();
+	tempprintPaymentMap.put("amountWords",amountwords);
+	printPaymentsList.add(tempprintPaymentMap);
+	}
 }
 
 paymentType = delegator.findList("PaymentType", EntityCondition.makeCondition(["paymentTypeId" : printPaymentsList[0].get("paymentTypeId")]), null, null, null, false);
