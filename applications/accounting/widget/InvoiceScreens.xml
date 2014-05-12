@@ -749,10 +749,25 @@
 				<decorator-screen name="CommonInvoiceDecorator"
 					location="${parameters.invoiceDecoratorLocation}">
 					<decorator-section name="body">
-						<screenlet title="${uiLabelMap.AccountingInvoiceItems}">
+						<section>
+							<condition>
+								<if-compare operator="equals" value="true"
+											field="hasArInvoiceEditPermission" />
+							</condition>
+							<widgets>
+							<screenlet title="${uiLabelMap.AccountingInvoiceItems}">
 							<include-form name="EditInvoiceItems"
 								location="component://accounting/widget/InvoiceForms.xml" />
-						</screenlet>
+						   </screenlet>
+							</widgets>
+							<fail-widgets>
+							<screenlet title="${uiLabelMap.AccountingInvoiceItems}">
+							<include-form name="EditInvoiceItemsRead"
+								location="component://accounting/widget/InvoiceForms.xml" />
+						   </screenlet>
+							</fail-widgets>
+						</section>
+						
 						<section>
 							<condition>
 								<and>
