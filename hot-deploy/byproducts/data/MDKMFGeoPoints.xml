@@ -1,0 +1,10 @@
+<entity-engine-xml>
+
+
+    <GeoPoint geoPointId="B40905" latitude="12.9991558" longitude="77.5826919" dataSourceId="GEOPT_GOOGLE"/>
+    <Facility facilityId="B40905" geoPointId="B40905" /> 
+    
+    <GeoPoint geoPointId="B307" latitude="12.9989885" longitude="77.5744039" dataSourceId="GEOPT_GOOGLE"/>
+    <Facility facilityId="B307" geoPointId="B307" />   
+          
+</entity-engine-xml>

@@ -17,6 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Facility Locations <#if geoChart?has_content && geoChart.points?has_content>[Displaying ${geoChart.points.size()} points]</#if></h3>
+    </div>
+    <div class="screenlet-body">
 <#if geoChart?has_content>
     <#if geoChart.dataSourceId?has_content>
       <#if geoChart.dataSourceId == "GEOPT_GOOGLE">
@@ -26,6 +31,7 @@ under the License.
         </div>
     <style type="text/css">
     .style1 {background-color:#ffffff;font-weight:bold;border:1px #006699 solid;}
+    .style2 {background-color:yellow;}
     </style>        
         <#assign defaultUrl = "https." + request.getServerName()>
         <#assign defaultGogleMapKey = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", defaultUrl)>
@@ -100,7 +106,7 @@ under the License.
       }
       
       // === A function to put arrow heads in the middle of lines
-      function midLineArrows(points) {
+      function midLineArrows(points, routeLabel) {
         for (var i=0; i<points.length-1; i++) {  
           var p1=points[i];
           var p2=points[i+1];
@@ -112,27 +118,34 @@ under the License.
           // == use the corresponding triangle marker 
           arrowIcon.image = "http://www.google.com/intl/en_ALL/mapfiles/dir_"+dir+".png";
           createMarker(p3, arrowIcon);
+          var label = new ELabel(p3, routeLabel, "style2");
+          map.addOverlay(label);
         }
       }          
         
       function loadStats () {
 		var marker = this;
-    	marker.openInfoWindow('<div id="marker-info">Loading location stats...</div>');
+    	marker.openInfoWindow('<div id="marker-info" style="width:200px; height:120px">Loading location stats...</div>');
     	$.get("getFacilityStats?ajaxLookup=Y&facilityId=" + marker.facilityId, function(data){
         	var $contentDiv = $("#marker-info");
         	var dataJSON = jQuery.parseJSON(data.facilityJSON);
         	//alert (dataJSON.name);
-        	var htmlData = "Name: " + dataJSON.name + "<br>" + "Owner: " + dataJSON.owner + "<br>" +
-        				"Phone: " + dataJSON.phone + "<br>" +
-        				 "Revenue to-date: " + dataJSON.revenue;
+        	var htmlData = "Name: " + dataJSON.name + "<br>" + "Route: " + dataJSON.route + "<br>" +
+        				 "Contact Number: " + dataJSON.phone + "<br>" +
+        				dataJSON.dispatchTotals + "<br>" +
+        				"MILK: " + dataJSON.milk + "<br>" +
+        				"CURD: " + dataJSON.curd + "<br>";
         	$contentDiv.html(htmlData);
+        	
+        	marker.openInfoWindow($contentDiv);
+        	
         	//the magic happens here
-        	var position = marker.getLatLng();
-        	var infoWindow = map.getInfoWindow(); //map is my global GMaps2 object
+        	//var position = marker.getLatLng();
+        	//var infoWindow = map.getInfoWindow(); //map is my global GMaps2 object
         	// set the infowindow size to the dimensions of the content div
-        	var infoWindowSize = new GSize($contentDiv.width(), $contentDiv.height());
+        	//var infoWindowSize = new GSize($contentDiv.width(), $contentDiv.height());
         	//apply the modifications 
-        	infoWindow.reset(position, null, infoWindowSize, null, null); //reset the infowindow
+        	//infoWindow.reset(position, null, infoWindowSize, null, null); //reset the infowindow
    		});
       }   
           
@@ -175,7 +188,7 @@ under the License.
                   map.addOverlay(marker_${point_index});
                   var label = new ELabel(new GLatLng(${point.lat?c}, ${point.lon?c}), "${StringUtil.wrapString(point.shortName)}", "style1");
                   map.addOverlay(label);
-				  marker_${point_index}.facilityId = "${point.facilityId}";
+				  marker_${point_index}.facilityId = '${point.facilityId}';
                   GEvent.addListener(marker_${point_index}, 'click', loadStats);
                 </#list>
             </#if>
@@ -191,7 +204,7 @@ under the License.
                 	];       
 					var polyline = new GPolyline(latlng, colors[${lineNum%3}], 3);
 					map.addOverlay(polyline);
-					midLineArrows(latlng);
+					midLineArrows(latlng, '${geoChart.routeLabels[lineNum]}');
 					<#assign lineNum = lineNum + 1/>
 				</#list>
 			</#if>
@@ -250,3 +263,6 @@ under the License.
 <#else>
   <h2>${uiLabelMap.CommonNoGeolocationAvailable}</h2>
 </#if>
+
+</div>
+</div>

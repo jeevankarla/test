@@ -40,7 +40,10 @@
         <response name="error" type="request" value="FindPaymentByMethod"/>
     </request-map>
     
-    
+    <request-map uri="ViewFacilityGeoPoint">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewFacilityGeoPoint"/>
+    </request-map>    
     
     <request-map uri="updateCrateQtyConfig">
         <security https="true" auth="true"/>
@@ -896,6 +899,7 @@
      <view-map name="CheckListReportsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CheckListReportsPDF" content-type="application/pdf"/>
 	<view-map name="RouteChequeValueTxt" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RouteChequeValueTxt" content-type="text/plain"/>
 	<view-map name="IndentVsDispatchReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#IndentVsDispatchReportPDF" content-type="application/pdf"/>
+    <view-map name="ViewFacilityGeoPoint" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ViewFacilityGeoPoint"/>
 	
 	<view-map name="FindByProduct" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindByProduct"/>
 	<view-map name="FindReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindReturns"/>

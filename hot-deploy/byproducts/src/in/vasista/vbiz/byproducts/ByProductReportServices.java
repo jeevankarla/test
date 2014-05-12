@@ -1104,6 +1104,7 @@ public class ByProductReportServices {
 		    List shipmentIds = (List) context.get("shipmentIds");
 	        Timestamp salesDate = (Timestamp) context.get("salesDate");
 	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+	        List<String> facilityIds = (List<String>) context.get("facilityIds");
 	        Timestamp fromDate = UtilDateTime.getDayStart(salesDate); 
 	        Timestamp thruDate = UtilDateTime.getDayEnd(salesDate); 
 	        Map categoryTotals = FastMap.newInstance(); 
@@ -1123,8 +1124,16 @@ public class ByProductReportServices {
 	        List<GenericValue> indentProducts = ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
 	        List indentProductIds = EntityUtil.getFieldListFromEntityList(indentProducts, "productId", true); 
 	        
-	        
-	        Map resultCtx = (Map)ByProductNetworkServices.getPeriodTotals(dctx, UtilMisc.toMap("userLogin", userLogin, "shipmentIds", shipmentIds, "fromDate", fromDate, "thruDate", thruDate));
+			Map periodTotalsCtx = FastMap.newInstance();
+			periodTotalsCtx.put("userLogin", userLogin);
+			periodTotalsCtx.put("shipmentIds", shipmentIds);
+			periodTotalsCtx.put("fromDate", fromDate);	
+			periodTotalsCtx.put( "thruDate", thruDate);	
+	        if(!UtilValidate.isEmpty(facilityIds)){
+				periodTotalsCtx.put("facilityIds", facilityIds);	        
+	        }
+
+	        Map resultCtx = (Map)ByProductNetworkServices.getPeriodTotals(dctx, periodTotalsCtx);
  	    	if(ServiceUtil.isError(resultCtx)){
  	    		Debug.logError("Error in service getPeriodTotals ", module);    			
 	            return ServiceUtil.returnError("Error in service getPeriodTotals");

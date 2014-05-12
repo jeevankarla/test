@@ -35,6 +35,16 @@
             <link target="FindByProduct">               
             </link>
         </menu-item>
+        <menu-item name="ViewFacilityGeoPoint" title="Location Map">
+			<condition>
+				<or>
+					<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+				</or>
+            	
+            </condition>         
+            <link target="ViewFacilityGeoPoint">
+            </link>
+        </menu-item>  
         <menu-item name="EditFacilityGroups" title="Facility Groups">
         	<condition>
 				<or>

@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-	
+
+    <form name="ViewFacilityGeoPointSearch" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
+    	default-table-style="basic-table hover-bar" separate-columns="true" target="ViewFacilityGeoPoint">
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="facilityId" title="${uiLabelMap.BoothRoute}" position="1"><lookup target-form-name="LookupFacility"/></field>
+        <field name="routeId2" title="Addtl. Route Id (Optional)" position="2"><lookup target-form-name="LookupFacility"/></field>
+        <field name="categoryTypeEnum" title="${uiLabelMap.ProductFacilityCategoryType}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="BOOTH_CAT_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    	
 	 <form name="ListTruckSheets"   id="ListTruckSheetId" list-name="listDeliverySchedule" title="" type="list" paginate-target="TruckSheetMotherDairy"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
     	<row-actions>

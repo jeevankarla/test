@@ -15,4 +15,8 @@
     <TenantConfiguration description="Enable Employee Subsidy Shift" propertyName="enableSubsidyRouteShift" propertyTypeEnumId="LMS" propertyValue="N"/>
     <TenantConfiguration description="Enable Continuous Indent" propertyName="enableContinuousIndent" propertyTypeEnumId="LMS" propertyValue="N"/>
     <Enumeration description="Route Marketing Purpose" enumCode="ROUTE_MKTG" enumId="ROUTE_MKTG" enumTypeId="PAYMENT_PURPOSE"/>
+
+    <EnumerationType description="Shoppee Rent" enumTypeId="SHOPEE_RENT" />
+    <Enumeration description="Shoppee Rent" enumCode="SHOPEE_RENT" enumId="SHOPEE_RENT" enumTypeId="SHOPEE_RENT"/>
+
 </entity-engine-xml>

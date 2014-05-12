@@ -55,6 +55,33 @@
         </widgets>     
 		</section>
     </screen>
+    <screen name="ViewFacilityGeoPoint">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="ViewFacilityGeoPoint"/>
+                <set field="titleProperty" value="Location Map"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/viewFacilityGeoPoint.groovy"/>                         
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+                <set field="title" value="${uiLabelMap.PageTitleFacilityGeoLocation}"/> 
+                <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+            	<set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set>                 
+            </actions>
+            <widgets>
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="h1">Location Map</label>
+                        </container>
+                        <screenlet title="Location Search">
+                        	<include-form name="ViewFacilityGeoPointSearch" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                        </screenlet>
+                        <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>        
+        </section>
+    </screen>      
     <screen name="EmployeeSearch">
         <section>
             <actions>

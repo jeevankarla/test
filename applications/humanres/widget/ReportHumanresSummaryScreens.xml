@@ -826,6 +826,7 @@
         		<entity-condition entity-name="InvoiceAndAttribute" list="timePeriodInvoices">
             		<condition-list combine="and">
                 		<condition-expr field-name="partyIdFrom" operator="in" from-field="orgParties"/>
+                		<condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
                 		<condition-expr field-name="invoiceAttrName" operator="equals" value="TIME_PERIOD_ID"/>
                 		<condition-expr field-name="invoiceAttrValue" operator="equals" from-field="parameters.customTimePeriodId"/>
             		</condition-list>
@@ -1077,7 +1078,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="DailyPunchInoutTrend">
+      <screen name="DailyPunchInoutTrend">
         <section>
             <actions>
                 <set field="titleProperty" value="Analytics"/>
