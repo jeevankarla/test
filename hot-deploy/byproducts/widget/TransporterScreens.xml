@@ -116,7 +116,19 @@
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
-				</section>				
+				</section>	
+				<section>
+					<condition>
+						<if-compare operator="equals" value="DTCReport" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+							<html-template	location="component://byproducts/webapp/byproducts/transporter/DTCReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>							
 			</widgets>
 		</section>
 	</screen>

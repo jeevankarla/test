@@ -73,11 +73,54 @@ facilityCommissionList = delegator.findList("FacilityCommission",EntityCondition
 if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	facilityCommissionList.each { facilityCommission ->
 		facilityId = facilityCommission.facilityId;
+		facilityRateResult=[:];
+		rateMap =[:];
+		rateList =[];
+		List<GenericValue> facilities = delegator.findList("FacilityPersonAndFinAccount", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
+		facility = EntityUtil.getFirst(facilities);
+
+		Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
+			inputRateAmt.put("rateCurrencyUomId", "INR");
+			inputRateAmt.put("facilityId", facilityId);
+			inputRateAmt.put("fromDate",monthBegin );
+			inputRateAmt.put("rateTypeId", "TRANSPORTER_MRGN");
+			facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+		
 		List dayTotalsList =  transporterMargins[facilityId];
 		dayValuesMap = dayTotalsList.get(0);
 		routeValueMap =[:];
 		totalsMap =[:];
 		totalsMap = dayValuesMap["Tot"];
+		totalsMap.put("partyCode", facility.ownerPartyId);
+		totalsMap.put("distance", facility.facilitySize);
+		String partyName = "";
+			if(UtilValidate.isNotEmpty(person.firstName)){
+		       partyName=facility.firstName;
+			}
+			if(UtilValidate.isNotEmpty(facility.lastName)){
+				partyName=facility.firstName+","+facility.lastName;
+			}
+			if(UtilValidate.isNotEmpty(facility.panId)){
+			    totalsMap.put("panId",facility.panId);
+			}
+			if(UtilValidate.isNotEmpty(facility.closedDate)){
+				closedDate=UtilDateTime.toDateString(facility.closedDate, "dd-MMM-yyyy");
+				totalsMap.put("closedDate", closedDate);
+			}
+			if(UtilValidate.isNotEmpty(facility.finAccountCode) && "FNACT_ACTIVE".equals(facility.statusId)){
+				totalsMap.put("accNo", facility.finAccountCode);
+			}
+			if(UtilValidate.isNotEmpty(facility.facilityCode)){
+				totalsMap.put("facilityCode", facility.facilityCode);
+			}
+		   totalsMap.put("partyName",partyName);
+		
+		if(UtilValidate.isNotEmpty(facilityRateResult)){
+			monthBeginMargin = (BigDecimal) facilityRateResult.get("rateAmount");
+			uomId=(String)facilityRateResult.get("uomId");
+			totalsMap.put("uomId", uomId);
+			totalsMap.put("margin", monthBeginMargin);
+		}
 		int dayInteger = UtilDateTime.getDayOfMonth((facilityCommission.commissionDate),timeZone, locale);
 		routeValueMap = dayValuesMap[(String)dayInteger];
 		routeValueMap["totalQuantity"]=BigDecimal.ZERO;

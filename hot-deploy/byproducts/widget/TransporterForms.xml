@@ -58,7 +58,14 @@ under the License.
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
             </hyperlink>
-         </field>   
+         </field>  
+         <field name="DTCReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target="GenerateTrnsptMarginReport.txt" description="DTC Report" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="DTCReport"/>                                  
+            </hyperlink>
+        </field>         
     </form>
     <form name="GenerateTransporterMarginReport" type="single" target="createTransporterMarginReport" header-row-style="header-row" 
 		default-table-style="basic-table" >
