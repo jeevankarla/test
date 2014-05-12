@@ -412,7 +412,8 @@ import java.text.SimpleDateFormat;
 				                //createInvoiceContext.put("billingAccountId", billingAccountId);
 				                createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
 				                createInvoiceContext.put("dueDate", monthEnd);
-				                createInvoiceContext.put("invoiceTypeId", "TRANSPORTER_OUT");
+				                //createInvoiceContext.put("invoiceTypeId", "TRANSPORTER_OUT");
+				                createInvoiceContext.put("invoiceTypeId", "SALES_DIS_OUT");
 				                createInvoiceContext.put("referenceNumber", "TRSPT_MRGN_"+periodBillingId);
 				                // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
 				                createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
@@ -434,7 +435,7 @@ import java.text.SimpleDateFormat;
 				                invoiceId = (String) createInvoiceResult.get("invoiceId");
 				                Map<String, Object> resMap = null;
 				                Map<String, Object> invoiceItemAssocResultMap = null;
-				                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "TRANSPORTER_INV_ITEM","quantity",quantity,"amount", totalMargin,"userLogin", userLogin));
+				                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_ROUTE","quantity",quantity,"amount", totalMargin,"userLogin", userLogin));
 				                    if (ServiceUtil.isError(result)) {
 				                    	generationFailed = true;
 				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);

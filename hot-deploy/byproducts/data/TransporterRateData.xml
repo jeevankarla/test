@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Party partyId="TAX1" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="INR" description="Commissioner- Income Tax" statusId="PARTY_ENABLED"/>   
- <PartyRole partyId="TAX1" roleTypeId="TAX_AUTHORITY"/>   
-<PartyGroup partyId="TAX1"   groupName="Commissioner- Income Tax" />
-<TaxAuthority taxAuthGeoId="IND" taxAuthPartyId="TAX1" requireTaxIdForExemption="N" taxDueDayOfMonth="7"/>  
-<TaxAuthorityGlAccount taxAuthGeoId="IND" taxAuthPartyId="TAX1" organizationPartyId="Company" glAccountId="210000"/>
+	<Party partyId="TAX1" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="INR" description="Commissioner- Income Tax" statusId="PARTY_ENABLED"/>   
+	 <PartyRole partyId="TAX1" roleTypeId="TAX_AUTHORITY"/>   
+	<PartyGroup partyId="TAX1"   groupName="Commissioner- Income Tax" />
+	
 	 <!-- VNDRMRGN Admin permissions -->
     <SecurityGroup description="All 'VNDR MRGN' permissions like create,cancel " groupId="VNDRMRGNADMIN"/>    
     <SecurityGroupPermission groupId="VNDRMRGNADMIN" permissionId="VNDRMRGN_ADMIN"/>
@@ -15,7 +14,7 @@
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="VNDRMRGN_VIEW"/>
 
 
-    <RateType rateTypeId="TRANSPORTER_MRGN"  description="Transporter margin"/> 
+     <RateType rateTypeId="TRANSPORTER_MRGN"  description="Transporter margin"/> 
      <Uom abbreviation="Trip per Amount"   description="Trip Amount"  uomId="OTH_TRIP" uomTypeId="OTHER_MEASURE"/>   
      <Uom abbreviation="km"   description="Kilometer"   uomId="LEN_km" uomTypeId="LENGTH_MEASURE"/> 
      
@@ -32,42 +31,13 @@
      
      <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Adjustment Vehicle Short Payment screen"/>
     
-    
-    <PaymentType paymentTypeId="TRANSPORTER_PAYIN" parentTypeId="RECEIPT" hasTable="N" description="Trasnporter- payin" lastUpdatedStamp="2011-01-01 0:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 0:00:00.00" createdTxStamp="2011-01-01 0:00:00.00"/>
-<PaymentType paymentTypeId="TRANSPORTER_PAYOUT" parentTypeId="DISBURSEMENT" hasTable="N" description="Trasnporter- payout" lastUpdatedStamp="2011-01-01 0:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 0:00:00.00" createdTxStamp="2011-01-01 0:00:00.00"/>
-<InvoiceType invoiceTypeId="TRANSPORTER_IN" parentTypeId="SALES_INVOICE" hasTable="N" description="Transporter Receivable" paymentTypeId="TRANSPORTER_PAYIN"  lastUpdatedStamp="2011-01-01 0:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 0:00:00.00" createdTxStamp="2011-01-01 0:00:00.00"/>
-<InvoiceType invoiceTypeId="TRANSPORTER_OUT" parentTypeId="PURCHASE_INVOICE" hasTable="N" description="Transporter Adjustment" paymentTypeId="TRANSPORTER_PAYOUT"  lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-<GlAccount parentGlAccountId="123000" glAccountId="123301" accountCode="123301" glAccountClassId="CURRENT_ASSET" glAccountTypeId="BANK_STLMNT_ACCOUNT" glResourceTypeId="MONEY" accountName="ACCOUNTS RECEIVABLE-TRANSPORTERS" description="Accounts Receivable-Transporters"/>
-<GlAccountOrganization glAccountId="123301" organizationPartyId="Company" roleTypeId="INTERNAL_ORGANIZATIO" fromDate="2011-01-01 00:00:00.00" thruDate="" postedBalance="" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-<InvoiceItemType invoiceItemTypeId="TRANSPORTER_INV_ITEM" parentTypeId="" hasTable="N" description="Accounts Receivable-Transporters" defaultGlAccountId="123301"/>
-<InvoiceItemTypeMap invoiceItemMapKey="CURASS_MAP1" invoiceTypeId="TRANSPORTER_IN" invoiceItemTypeId="TRANSPORTER_INV_ITEM" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="12-22/2011 19:55" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-<InvoiceItemTypeMap invoiceItemMapKey="CURASS_MAP101" invoiceTypeId="TRANSPORTER_OUT" invoiceItemTypeId="TRANSPORTER_INV_ITEM" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-<GlAccount parentGlAccountId="116000" glAccountId="116004" accountCode="116004" glAccountClassId="CASH_EQUIVALENT" glAccountTypeId="BALANCE_ACCOUNT" glResourceTypeId="MONEY" accountName="TRANSPORTERS-RECEIVABLE" description="Transporters Receivable"/>
-<GlAccountOrganization glAccountId="116004" organizationPartyId="Company" roleTypeId="INTERNAL_ORGANIZATIO" fromDate="2011-01-01 00:00:00.00" thruDate="" postedBalance="" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-<PaymentMethodType paymentMethodTypeId="TRANSPORTER_PAYIN" description="Transporter Receipt" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-<PaymentMethodTypeGlAccount paymentMethodTypeId="TRANSPORTER_PAYIN" organizationPartyId="Company" glAccountId="116004" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-<PaymentGlAccountTypeMap paymentTypeId="TRANSPORTER_PAYIN" organizationPartyId="Company" glAccountTypeId="ACCREC_UNAPPLIED" />
-
-    
-    <PaymentType  description="Transporter credit payin" hasTable="N"  parentTypeId="RECEIPT" paymentTypeId="TRANS_CREDIT_PAYIN"/>
-  	<GlAccount accountCode="516102" accountName="Transporter_CreditNote" createdStamp="2012-10-05 12:32:08.0" createdTxStamp="2012-10-05 12:32:08.0" description="Transporter_CreditNote" glAccountClassId="NON_CASH_EXPENSE" glAccountId="516102" glAccountTypeId="OPERATING_EXPENSE" glResourceTypeId="MONEY" lastUpdatedStamp="2012-10-05 12:32:08.0" lastUpdatedTxStamp="2012-10-05 12:32:08.0" parentGlAccountId="516100"/>
- 	<GlAccountOrganization createdStamp="2012-10-03 12:22:38.0" createdTxStamp="2012-10-03 12:22:38.0" fromDate="2012-05-05 12:00:00.0" glAccountId="516102" lastUpdatedStamp="2012-10-05 12:42:31.0" lastUpdatedTxStamp="2012-10-05 12:42:30.0" organizationPartyId="Company" postedBalance="" roleTypeId="INTERNAL_ORGANIZATIO"/>
-  	<PaymentMethodType  description="Transporter Credit note" paymentMethodTypeId="TRANS_CREDIT_PAYIN"/>
-  	<GlAccountType description="Accounts Receivable - Unapplied Payments" glAccountTypeId="ACCREC_UNAPPLIED" hasTable="N" parentTypeId="ACCOUNTS_RECEIVABLE"/>
-  	<PaymentGlAccountTypeMap paymentTypeId="TRANS_CREDIT_PAYIN" glAccountTypeId="ACCREC_UNAPPLIED"  organizationPartyId="Company" /> 
-  	<PaymentMethodTypeGlAccount  glAccountId="516102"  organizationPartyId="COMPANY" paymentMethodTypeId="TRANS_CREDIT_PAYIN"/>
-  	
-    <InvoiceType invoiceTypeId="TRANSPORTER_IN" parentTypeId="SALES_INVOICE" hasTable="N" description="Transporter Receivable" paymentTypeId="TRANSPORTER_PAYIN"  lastUpdatedStamp="2011-01-01 0:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 0:00:00.00" createdTxStamp="2011-01-01 0:00:00.00"/>
-    <InvoiceType invoiceTypeId="TRANSPORTER_OUT" parentTypeId="PURCHASE_INVOICE" hasTable="N" description="Transporter Adjustment" paymentTypeId="TRANSPORTER_PAYOUT"  lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 0:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-    <InvoiceItemType invoiceItemTypeId="TRANSPORTER_INV_ITEM" parentTypeId="" hasTable="N" description="Accounts Receivable-Transporters" defaultGlAccountId="123301"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="CURASS_MAP1" invoiceTypeId="TRANSPORTER_IN" invoiceItemTypeId="TRANSPORTER_INV_ITEM" lastUpdatedStamp="2011-01-01 00:00:00.00"  createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
-    <InvoiceItemTypeMap invoiceItemMapKey="CURASS_MAP101" invoiceTypeId="TRANSPORTER_OUT" invoiceItemTypeId="TRANSPORTER_INV_ITEM" lastUpdatedStamp="2011-01-01 00:00:00.00" lastUpdatedTxStamp="2011-01-01 00:00:00.00" createdStamp="2011-01-01 00:00:00.00" createdTxStamp="2011-01-01 00:00:00.00"/>
+	<PaymentType paymentTypeId="EXPENSE_PAYOUT" parentTypeId="DISBURSEMENT" hasTable="N" description="Expense Pay-out" />
+	<InvoiceType description="Sales and Distribution Expenses" hasTable="N" invoiceTypeId="SALES_DIS_OUT" parentTypeId="PURCHASE_INVOICE" paymentTypeId="EXPENSE_PAYOUT"/>
+	<InvoiceItemType invoiceItemTypeId="DTC_ROUTE" parentTypeId="" hasTable="N" description="Transporter Commission" />
+	<InvoiceItemTypeMap invoiceItemMapKey="SD_DTC_ROUTE" invoiceTypeId="SALES_DIS_OUT" invoiceItemTypeId="DTC_ROUTE" />
 	
 	
-    <GlAccount glAccountId="217000" glAccountTypeId="ACCOUNTS_PAYABLE" glAccountClassId="CURRENT_LIABILITY" glResourceTypeId="MONEY" parentGlAccountId="210000" accountCode="217000" accountName="STATUTORY DEDUCTIONS" description="STATUTORY DEDUCTIONS"/>
-    <GlAccount glAccountId="217100" glAccountTypeId="CURRENT_LIABILITY" glAccountClassId="CURRENT_LIABILITY" glResourceTypeId="MONEY" parentGlAccountId="217000" accountCode="217100" accountName="TDS" description="TAX DEDUCTION AT SOURCE" />
-    <GlAccount glAccountId="217113" glAccountTypeId="CURRENT_LIABILITY" glAccountClassId="CURRENT_LIABILITY" glResourceTypeId="MONEY" parentGlAccountId="217100" accountCode="217113" accountName="TDS on Commission or Brokerage (Sec. 194 H)" description="TDS on Commission or Brokerage (Sec. 194 H)" />
-    <InvoiceItemType description="TDS on Commission or Brokerage (Sec. 194 H)" hasTable="N" invoiceItemTypeId="TDS_194H" parentTypeId="" defaultGlAccountId="217113" taxAuthPartyId="TAX1"/>
+    
     
    
      <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="COM_CANCELLED" statusTypeId="COM_EVENT_STATUS"/>
@@ -75,6 +45,7 @@
      <StatusItem description="Cancel Failed" sequenceId="80" statusCode="CANCEL_FAILED" statusId="CANCEL_FAILED" statusTypeId="COM_EVENT_STATUS"/>
      <StatusValidChange condition="" statusId="CANCEL_INPROCESS" statusIdTo="COM_CANCELLED" transitionName=" canceld in process"/>
      <StatusValidChange condition="" statusId="CANCEL_INPROCESS" statusIdTo="CANCEL_FAILED" transitionName="cancel failed"/>
+     <InvoiceItemType description="TDS on Commission or Brokerage (Sec. 194 H)" hasTable="N" invoiceItemTypeId="TDS_194H" parentTypeId="" defaultGlAccountId="217113" taxAuthPartyId="TAX1"/>
        <!-- end of  transporter margin related -->
     <TenantConfiguration propertyName="setVehicleStatusFinal" propertyValue="N" propertyTypeEnumId="LMS" description="SetVehcileTripStatus to Final or Not"/>
     
