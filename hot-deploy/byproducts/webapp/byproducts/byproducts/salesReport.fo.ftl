@@ -36,7 +36,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
                     <fo:block text-align="left" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;        Sales  Report From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
               		<fo:block>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-size="8pt">&#160;&#160;Product    						&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty(Ltr/Kg)  	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; DspAmt  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RtnQty   &#160;&#160;&#160; RtnQty(Ltr/Kg)  &#160;&#160;RtnAmt			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    NetQty  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; NetAmt  </fo:block>
+            		<fo:block font-size="8pt">&#160;&#160;Product    						&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty(Ltr/Kg)  	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; DspAmt  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RtnQty   &#160;&#160;&#160; RtnQty(Ltr/Kg)  &#160;&#160;RtnAmt  &#160;&#160;&#160;&#160;&#160;&#160;&#160;  NetQty(L/K)  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; NetAmt  </fo:block>
             		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
@@ -68,12 +68,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                       			</fo:table-cell>
 	                       			<#assign netQty = 0>
 	                       			<#assign quantity = (prodTotals.getValue().get("packetQuantity"))?if_exists>
-	                       			<#assign netQty = netQty+quantity>
+	                       			
 	                       			<#assign grandTotalQty = grandTotalQty+quantity>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${quantity?if_exists?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<#assign qtyLtrsKgs = (prodTotals.getValue().get("total"))?if_exists>
+	                       			<#assign netQty = netQty+qtyLtrsKgs>
 	                       			<#assign grandTotalQtyLtrs = grandTotalQtyLtrs+qtyLtrsKgs>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${qtyLtrsKgs?if_exists?string("#0.00")}</fo:block>  
@@ -89,7 +90,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                    					<#assign returnQty = (productReturnMap[product.productId].get("returnQuantity"))?if_exists>
 	                       			<#if returnQty?has_content>
 		                       			<#assign grandTotalRtrnQty = grandTotalRtrnQty+returnQty?if_exists>
-		                       			<#assign netQty = netQty-returnQty>
 			                    	</#if>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQty?if_exists?string("#0.00")}<#else></#if></fo:block>  
@@ -97,6 +97,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                       			<#assign returnQtyLtrs = (productReturnMap[product.productId].get("returnQtyLtrs"))?if_exists>
 	                       			<#if returnQtyLtrs?has_content>
 		                       			<#assign grandTotalRtrnQtyLtrs = grandTotalRtrnQtyLtrs+returnQtyLtrs?if_exists>
+		                       			<#assign netQty = netQty-returnQtyLtrs>
 			                    	</#if>
                        			    <fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false"><#if returnQty?has_content>${returnQtyLtrs?if_exists?string("#0.00")}<#else></#if></fo:block>  
