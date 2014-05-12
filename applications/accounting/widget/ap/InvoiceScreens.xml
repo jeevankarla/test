@@ -186,6 +186,7 @@ under the License.
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payableInvoice.js" global="true"/>
                 <set field="headerItem" value="invoices"/>
                 <entity-one entity-name="Invoice" value-field="invoice"/>
+                 <set field="prefPaymentMethodTypeId"  from-field="parameters.prefPaymentMethodTypeId"/>
                  <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
                  <set field="titleProperty" value="${invoiceCreateScreenTitle}"/>
             </actions>
