@@ -304,6 +304,7 @@
       <alias entity-alias="VHTPST" name="vehicleId"/>
       <alias entity-alias="VHTPST" name="sequenceNum"/>
       <alias entity-alias="VHTPST" name="statusId"/>
+        <alias entity-alias="VHTPST" name="estimatedStartDate"/>
   
       <alias entity-alias="SH" name="estimatedShipDate"/>
       <alias entity-alias="SH" name="shipmentTypeId"/>
