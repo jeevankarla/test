@@ -133,10 +133,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
 		  					</fo:table-row>
 						  	<fo:table-row>
 			                   	<fo:table-cell>
-			                        <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalAmount, "%dollars-and-hundredths", locale)>
-                   					<fo:block white-space-collapse="false" keep-together="always">(In Words:Rupees ${amountWords?if_exists.substring(0,(amountWords.length()-10)).toUpperCase()}  only)</fo:block>
+			                        <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalAmount, "%rupees-and-paise", locale).toUpperCase()>
+                   					<fo:block white-space-collapse="false" keep-together="always">(In Words: ${StringUtil.wrapString(amountWords?default(""))}  only)</fo:block>
 			                   	</fo:table-cell>
-						  	</fo:table-row>
+						  	</fo:table-row> 	  
 						  	<fo:table-row>
                					<fo:table-cell>
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>

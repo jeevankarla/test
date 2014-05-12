@@ -723,7 +723,7 @@ under the License.
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>   -->      
         <field name="amount" position="1" required-field="true"><text/></field>
-       <!--  <field name="comments" position="2"><text size="70"/></field> -->
+       <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">
@@ -767,8 +767,13 @@ under the License.
         </field>
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+        
             <drop-down allow-empty="false">
-                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
+            <option key="EXPENSE_PAYOUT" description="Expense Pay-out"></option>
+            
+                <list-options  list-name="paymentTypes" key-name="paymentTypeId" description="${description}">
+                
+                </list-options>
             </drop-down>
         </field>
         <field name="paymentMethodId" id-name="paymentMethodId" position="2" event="onchange" action="javascript:setPaymentMethodTypeFields();" >
@@ -784,7 +789,7 @@ under the License.
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>     -->        
         <field name="amount" position="1" required-field="true"><text/></field>
-      <!--   <field name="comments" position="2"><text size="70"/></field> -->
+       <field name="comments" position="2"><text size="70"/></field> 
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">

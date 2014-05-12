@@ -108,7 +108,15 @@ under the License.
                        			</fo:table-cell>
             				</fo:table-row>
             				<fo:table-row>
-               					<fo:table-cell>
+            				     <fo:table-cell>
+                    				<fo:block></fo:block>
+               					</fo:table-cell>
+               					<fo:table-cell number-columns-spanned="3">
+               					<fo:block>${paymentListReport.comments?if_exists}</fo:block>
+               					</fo:table-cell>
+		  					</fo:table-row>
+            				<fo:table-row>
+               					<fo:table-cell >
                     				<fo:block>-------------------------------------------------------------------------</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
@@ -133,8 +141,7 @@ under the License.
 		  					</fo:table-row>
 						  	<fo:table-row>
 			                   	<fo:table-cell>
-			                        <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalAmount, "%dollars-and-hundredths", locale)>
-                   					<fo:block white-space-collapse="false" keep-together="always">(In Words:Rupees ${amountWords?if_exists.substring(0,(amountWords.length()-10)).toUpperCase()}  only)</fo:block>
+                   					<fo:block white-space-collapse="false" keep-together="always">(In Words: ${paymentListReport.amountWords} only)</fo:block>
 			                   	</fo:table-cell>
 						  	</fo:table-row>
 						  	<fo:table-row>

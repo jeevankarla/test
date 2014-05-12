@@ -77,6 +77,9 @@
     
     
         <SecurityPermission permissionId="MYPORTAL_CASHIER" description="Use the Cashier Screens in myportal."/>
+        <SecurityPermission description="View Cashier Potal View in Accounting" permissionId="ACCOUNTING_CASHIER"/>
+         <SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="ACCOUNTING_CASHIER"/>
+         
         <SecurityGroup description="Cashier Role user will have  myportal Access" groupId="MYPORTAL_CASHIER"/>
 	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="MYPORTAL_CASHIER"/>
 	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="FACILITY_VIEW"/>

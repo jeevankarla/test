@@ -90,7 +90,7 @@
 		</menu-item>
 		<menu-item name="CashierPortal" title="Cashier Portal">
 			<condition>
-				<if-has-permission permission="MYPORTAL" action="_CASHIER" />
+				<if-has-permission permission="ACCOUNTING" action="_CASHIER" />
 			</condition>
 			<link target="cashierPortal" />
 		</menu-item>
@@ -1770,15 +1770,7 @@
     </menu> --> 
     <menu name="CashierPaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem">
-           <menu-item name="CashPaymentOther" title="Non Route Marketing">
-            <condition>
-				<or>
-            		<if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
-            	</or>            
-            </condition>
-             <link target="findCashReceipts">
-            </link>
-          </menu-item>
+           
           <menu-item name="findRouteCashPayment" title="Route Marketing">
           	<condition>
 				<or>
@@ -1791,6 +1783,15 @@
             	<parameter param-name="paymentMethodTypeId" value="CASH_PAYIN"/>
             </link>
           </menu-item>
+          <menu-item name="CashPaymentOther" title="Non Route Marketing">
+            <condition>
+				<or>
+            		<if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+             <link target="findCashReceipts">
+            </link>
+          </menu-item>
           <menu-item name="EditFinAccountTransAlt" title="${uiLabelMap.AccountingDepositWithdraw}">
           <condition>
 				<or>
@@ -1799,6 +1800,15 @@
             	</or>            
             </condition>
 			<link target="EditFinAccountTransAlt">
+			</link>
+		 </menu-item>
+		  <menu-item name="AdhocSalePayment" title="AdhocSale Payment">
+          <condition>
+				<or>
+				   <if-has-permission permission="MYPORTAL"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+			<link target="findAdhocSalePayment">
 			</link>
 		 </menu-item>
     </menu> 

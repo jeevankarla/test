@@ -712,7 +712,7 @@ under the License.
                        <include-menu location="component://accounting/widget/AccountingMenus.xml" name="NonRoutePaymentTabBar"/>
                       	<section>
                         	<widgets>
-                        		 <screenlet title="New Cash Receipt">
+                        		 <screenlet title="New Cash Payment">
 								               <include-form name="NewCashPayablePayment" location="component://accounting/widget/PaymentForms.xml"/>
 								</screenlet>
                             </widgets>
@@ -787,24 +787,37 @@ under the License.
             </actions>
             <widgets>
                    <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
-                     <decorator-section name="body">
-                   		<section>
-                   			<condition>
-	               				<or>
-	          						<if-has-permission permission="INDENT" action="_ADMIN"/>
-	          						<if-has-permission permission="FACILITY" action="_ADMIN"/>	
-	                   			</or>
-           				 	</condition>
-                      		<widgets>
-                           		<include-screen name="DispatchReconciliationInner" />                        
-                           	</widgets>
-                    	</section>  							  	
-					</decorator-section>	
                     <decorator-section name="body">
                    <!--  <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="PaymentSubTabBar"/> -->
                         <section>
                             <widgets>
                            		<include-screen name="FindRouteCashPayment" location="component://byproducts/widget/ByProductsNgScreens.xml"/>                        
+                           </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindAdhocSalePayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find AdhocSale Receipts "/>
+                <set field="headerItem" value="payments"/>
+               <set field="subTabButtonItem" value="findCashReceipts" />
+                <set field="tabButtonItem" value="AdhocSalePayment"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                   <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                           		<include-screen name="FindAdhocSalesOrderAlt" location="component://byproducts/widget/ByProductsNgScreens.xml"/>                        
                            </widgets>
                         </section>
                     </decorator-section>

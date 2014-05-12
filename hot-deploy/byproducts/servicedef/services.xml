@@ -589,7 +589,7 @@
         <description> create Cash Payment For AdhocSale Booth</description>        
         <attribute name="facilityId" mode="IN" type="String" optional="false"/>
         <attribute name="amount" mode="IN" type="String" optional="false"/>
-        <attribute name="orderId" mode="IN" type="String" optional="false"/> 
+        <attribute name="orderId" mode="IN" type="String" optional="true"/> 
          <attribute name="invoiceId" mode="IN" type="String" optional="false"/> 
          <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/> 
     </service>
