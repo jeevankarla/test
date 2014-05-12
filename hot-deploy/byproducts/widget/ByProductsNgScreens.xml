@@ -1775,6 +1775,7 @@
 			   <set field="tabButtonItem2" value="FindAdhocSalesOrder"/>       
                <set field="headerItem" value="byProductsOrderEntry"/>
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindAdhocSalesOrder"/>
             </actions>
             <widgets>
                    <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -1806,6 +1807,34 @@
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>            
+        </section>
+    </screen> 
+     <screen name="FindAdhocSalesOrderAlt">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find AdHoc Sales"/>              
+			    <set field="tabButtonItem" value="AdhocSale" />	
+			   <set field="tabButtonItem2" value="FindAdhocSalesOrder"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+                <set field="targetRequest" value="findAdhocSalePayment"/>
+            </actions>
+            <widgets>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindAdhocSalesOrder" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                          					<include-form name="listAdhocOrdersAlt" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
             </widgets>            
         </section>
     </screen> 
