@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-
+import net.sf.json.JSONObject;
 import javolution.util.FastList;
 import org.ofbiz.base.util.*;
 import net.sf.json.JSONObject;
@@ -92,6 +92,7 @@ if(parameters.paymentIds){
 	paymentIds = parameters.paymentIds;	
 }
 
+
 partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.toSet("defaultPayMeth", "partyId"), null, null, false);
 paymentTypeParties = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "partyId", true);
 paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defaultPayMeth", true);
@@ -112,13 +113,18 @@ cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 accountList = delegator.findList("FinAccount", cond, ["finAccountCode", "finAccountName", "ownerPartyId"] as Set, null, null ,false);
 checkList = [];
 accountNameList = [];
+//JSONObject partyFinAccMap = new JSONObject();
+partyFinAccMap = [:];	
 accountList.each{ eachAcc ->
 	accCode = eachAcc.finAccountCode;
 	if(!checkList.contains(accCode)){
 		checkList.add(accCode);
 		accountNameList.add(eachAcc);
 	}
+	partyFinAccMap.put(eachAcc.ownerPartyId,eachAcc.finAccountName);
+	
 }
+context.partyFinAccMap = partyFinAccMap;
 accountNameFacilityIds = [];
 if(parameters.finAccountCode != "AllBanks"){
 	accountNameFacility = EntityUtil.filterByCondition(accountList, EntityCondition.makeCondition("finAccountCode", EntityOperator.EQUALS, parameters.finAccountCode));

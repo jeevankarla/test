@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 import java.io.*;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,7 +49,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.order.OrderServices;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
@@ -96,7 +96,7 @@ public class ByProductServices {
         Timestamp salesDate = UtilDateTime.nowTimestamp();
         if(!UtilValidate.isEmpty(context.get("salesDate"))){
         	salesDate =  (Timestamp) context.get("salesDate");  
-         }
+        }
         Timestamp dayBegin =UtilDateTime.getDayStart(salesDate);
         
         String productStoreId = (String) context.get("productStoreId"); 
@@ -2587,13 +2587,29 @@ public class ByProductServices {
 	  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 	  	  String paymentMethodTypeId = (String)request.getParameter("paymentMethodTypeId");
 	  	  String subTabItem = (String)request.getParameter("subTabItem");
-	  	  String routeFacility = (String)request.getParameter("facilityId");
+	  	  String routeFacility = (String)request.getParameter("routeId");
+	  	  String paymentDateStr = (String)request.getParameter("paymentDate");
 	  	  String retainFacility = "";
 	  	  if(UtilValidate.isNotEmpty(routeFacility)){
 	  		retainFacility = routeFacility;
 	  	  }
 	  	  request.setAttribute("paymentMethodTypeId", paymentMethodTypeId);
 	  	  request.setAttribute("subTabItem", subTabItem);
+	  	  Timestamp paymentDate = null;
+	  	  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+	  	  if(UtilValidate.isNotEmpty(paymentDateStr)){
+	  		try {
+				paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
+		  	  } catch (ParseException e) {
+	  			  Debug.logError(e, "Cannot parse date string: " + paymentDateStr, module);
+		  	  } catch (NullPointerException e) {
+	  			  Debug.logError(e, "Cannot parse date string: " + paymentDateStr, module);
+		  	  }
+	  	  }
+	  	  else{
+	  		  paymentDate = UtilDateTime.nowTimestamp();
+	  	  }
+	  	  
 	  	  List paymentIds = FastList.newInstance();	
 	  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 	  	  if (rowCount < 1) {
@@ -2652,17 +2668,22 @@ public class ByProductServices {
 		  		  paymentLocationId = (EntityUtil.getFirst(faclityPartyList)).getString("facilityId");
 					
 		  		  if(paymentMethodTypeId.equals("CHALLAN_PAYIN")){
-		  			  Map resultCtx = dispatcher.runSync("getFacilityFinAccountInfo", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
-			  			if(ServiceUtil.isError(resultCtx)){
-		   					Debug.logError("Problems in service getFacilityFinAccountInfo", module);
-				  			request.setAttribute("_ERROR_MESSAGE_", "Error in service getFacilityFinAccountInfo");
-				  			TransactionUtil.rollback();
-				  			return "error";
-		   				}
-			  			Map accountDetail = (Map)resultCtx.get("accountInfo");
-			  			if(UtilValidate.isNotEmpty(accountDetail)){
-			  				issuingAuthority = (String)accountDetail.get("finAccountName");
-			  			}
+		  			  if (paramMap.containsKey("issuingAuthority" + thisSuffix)) {
+		  				issuingAuthority = (String) paramMap.get("issuingAuthority" + thisSuffix);
+			  		  }
+		  			  if(UtilValidate.isEmpty(issuingAuthority)){
+			  				Map resultCtx = dispatcher.runSync("getFacilityFinAccountInfo", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
+				  			if(ServiceUtil.isError(resultCtx)){
+			   					Debug.logError("Problems in service getFacilityFinAccountInfo", module);
+					  			request.setAttribute("_ERROR_MESSAGE_", "Error in service getFacilityFinAccountInfo");
+					  			TransactionUtil.rollback();
+					  			return "error";
+			   				}
+				  			Map accountDetail = (Map)resultCtx.get("accountInfo");
+				  			if(UtilValidate.isNotEmpty(accountDetail)){
+				  				issuingAuthority = (String)accountDetail.get("finAccountName");
+				  			}
+		  			  }
 		  		  }
 		  		  
 		  		  if(UtilValidate.isNotEmpty(amountStr)){
@@ -2678,7 +2699,8 @@ public class ByProductServices {
 	  			  Map paymentInputMap = FastMap.newInstance();
 		  		  paymentInputMap.put("userLogin", userLogin);
 		  		  paymentInputMap.put("facilityId",facilityId);
-		  		  paymentInputMap.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
+		  		  paymentInputMap.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
+		  		  paymentInputMap.put("paymentDate", paymentDate);
 		  		  paymentInputMap.put("paymentMethodTypeId",paymentMethodTypeId);
 		  		  paymentInputMap.put("paymentPurposeType","ROUTE_MKTG");
 		  		  paymentInputMap.put("paymentLocationId", paymentLocationId);
@@ -2781,7 +2803,7 @@ public class ByProductServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String facilityId = (String) context.get("facilityId");
-        String supplyDate = (String) context.get("supplyDate");
+        String supplyDate = (String) context.get("paymentDate");
         String routeId = (String) context.get("routeId");
         String subTabItem = (String) context.get("subTabItem");
         Locale locale = (Locale) context.get("locale");  
@@ -2811,23 +2833,35 @@ public class ByProductServices {
 	  			  return ServiceUtil.returnError("Problems parsing amount string: " + amountStr);
 	  		}
 		}
-        try {
+		Timestamp paymentDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		if(UtilValidate.isNotEmpty(supplyDate)){
+				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+				try {
+					paymentDate = new java.sql.Timestamp(sdf.parse(supplyDate).getTime());
+		  		 } catch (ParseException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + supplyDate, module);
+		  		 } catch (NullPointerException e) {
+		  			  Debug.logError(e, "Cannot parse date string: " + supplyDate, module);
+		  		 }
+		}
+		//String payDateStr = UtilDateTime.toDateString(paymentDate, "yyyy-MM-dd");
+		try {
         	Map<String, Object> paymentCtx = FastMap.newInstance();
         	
         	paymentCtx.put("userLogin", userLogin);
         	paymentCtx.put("facilityId",facilityId);
-        	paymentCtx.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
+        	paymentCtx.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
         	paymentCtx.put("paymentMethodTypeId",paymentMethodType);
         	paymentCtx.put("paymentPurposeType","ROUTE_MKTG");
         	paymentCtx.put("issuingAuthority", issuingAuthority);
         	paymentCtx.put("amount",amount.toString());
         	paymentCtx.put("useFifo",true);
+        	paymentCtx.put("paymentDate", paymentDate);
         	paymentCtx.put("paymentRefNum", paymentRefNum);
         	paymentCtx.put("issuingAuthority", issuingAuthority);  
             paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
             paymentCtx.put("instrumentDate", instrumentDate);
             paymentCtx.put("paymentPurposeType", paymentPurposeType);
-            
 	  		if(amount.compareTo(BigDecimal.ZERO) > 0){
      				Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
      				if(ServiceUtil.isError(paymentResult)){
@@ -3760,7 +3794,6 @@ public class ByProductServices {
 		    	  Timestamp dayStartThruDate = UtilDateTime.getDayStart(thruDate);
 		    	  Timestamp dayBeginFromDate = UtilDateTime.getDayStart(fromDate);
 		    	  
-		    	  
 		    	  if(!facilityId.equals("AllInstitutions")){
 		    		  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 		    		  conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
@@ -3788,7 +3821,6 @@ public class ByProductServices {
 		    	  else{
 		    		  facilityIds.add(facilityId);
 		    	  }
-		    	  
 		    	  for(String facId : facilityIds){
 		    		  
 		    		  conditionList.clear();
@@ -3817,7 +3849,6 @@ public class ByProductServices {
 			    	  }
 			    	  
 			    	  List shipmentIds = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, endThruDate);
-			    	  
 			    	  conditionList.clear();
 			    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
 			    	  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facId));
@@ -3867,7 +3898,6 @@ public class ByProductServices {
 			    		  prodTaxQty.put("amount", amount);
 			    		  taxAdjList.add(prodTaxQty);
 			    	  }*/
-			    	 
 			    	  if(UtilValidate.isNotEmpty(orderIds)){
 			    		  
 			    		  Map reCalPriceRes = recaliculateProductPrice(dctx,UtilMisc.toMap("userLogin",userLogin,"orderIds",orderIds));

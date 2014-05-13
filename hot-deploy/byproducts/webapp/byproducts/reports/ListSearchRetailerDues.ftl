@@ -19,6 +19,7 @@ under the License.
 <script type="text/javascript">
 //<![CDATA[
 	
+	
 	function toggleFacilityId(master) {
         var facilities = jQuery("#listBooths :checkbox[name='boothIds']");
         jQuery.each(facilities, function() {
@@ -90,10 +91,12 @@ under the License.
         var tabItemValue;
         var methodTypeId;
         var routeId;
+        var paymentDate = $("#paymentDate").val();
         jQuery.each(facilities, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
             	var amountObj = $(domObj).find("#paymentAmount");
+            	var dateObj = $(domObj).find("#paymentDate");
             	var payMethodObj = $(domObj).find("#paymentMethodTypeId");
             	var boothId = $(this).val();
             	var amt = $(amountObj).val();
@@ -101,7 +104,12 @@ under the License.
             	var tabItemObj = $(domObj).find("#tabItem");
             	tabItemValue = $(tabItemObj).val();
             	methodTypeId = methodType;
-            	var appendStr = ""; 
+            	var appendStr = "";
+            	if(methodTypeId == "CHALLAN_PAYIN"){
+            		var bankObj = $(domObj).find("#issuingAuthority");
+            		var bankName = $(bankObj).val();
+            		appendStr += "<input type=hidden name=issuingAuthority_o_"+index+" value='"+bankName+"' />";
+            	} 
             	appendStr += "<input type=hidden name=facilityId_o_"+index+" value="+boothId+" />";
             	appendStr += "<input type=hidden name=amount_o_"+index+" value="+amt+" />";
                 $("#paymentSubmitForm").append(appendStr);
@@ -113,9 +121,15 @@ under the License.
         var appStr = "<input type=hidden name=paymentMethodTypeId value="+methodTypeId+" />";
         $("#paymentSubmitForm").append(appStr);
        routeId= $("#routeFacilityId").val();
-         var appStr = "<input type=hidden name=facilityId value="+routeId+" />";
-          $("#paymentSubmitForm").append(appStr);
+       if(routeId != "undefined" && routeId != null && routeId != ""){
+       		appStr = "<input type=hidden name=routeId value="+routeId+" />";
+       }
+        $("#paymentSubmitForm").append(appStr);
         appStr = "<input type=hidden name=subTabItem value="+tabItemValue+" />";
+        if(paymentDate != "undefined" && paymentDate != null){
+    		appStr += "<input type=hidden name=paymentDate value='"+ paymentDate +"' />";
+    	}
+        
         $("#paymentSubmitForm").append(appStr);
     	jQuery('#paymentSubmitForm').submit();
     }
@@ -187,7 +201,10 @@ under the License.
     <span class="label" id="showPaymentTotal"></span>
   </div>
   <form name="listBooths" id="listBooths"  method="post" action="makeMassPayments">
-    <div align="right">     
+    <div align="right">
+    	<#if parameters.paymentMethodTypeId == "CHALLAN_PAYIN">
+          		<span class="label"> Payment Date:</span><input class='h3' type='text' id='paymentDate' name='paymentDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/>
+         </#if>     
       <#if parameters.paymentMethodTypeId?exists && parameters.paymentMethodTypeId != "CHEQUE_PAYIN"><input id="submitButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment"/></#if>
     </div>
 	
@@ -200,6 +217,9 @@ under the License.
           <td>PaymentMethodType</td>
           <td>Todays Due</td>
           <td>Full Dues</td>
+          <#if parameters.paymentMethodTypeId == "CHALLAN_PAYIN">
+          		<td>Bank</td>
+          </#if>
           <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
           		<td>Payment Amount</td>
           		<td align="right">${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllFacilities" name="checkAllFacilities" onchange="javascript:toggleFacilityId(this);"/></td>
@@ -231,6 +251,12 @@ under the License.
               </td>
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><input type="button" name="viewDues" id="pastDues" value="View Details" onclick="javascript:showRetailerDueHistory('${payment.facilityId}');"/></td>
+              <#if parameters.paymentMethodTypeId == "CHALLAN_PAYIN">
+              	<#assign selectVal = partyFinAccMap.get(payment.facilityId)>
+          		<td><select name='issuingAuthority' id='issuingAuthority' class='h4'>
+					<#if accountNameList?has_content><#list accountNameList as eachBank><option value='${eachBank.finAccountName?if_exists}' <#if selectVal == eachBank.finAccountName>selected</#if>>${eachBank.finAccountName?if_exists}</option></#list></#if>            
+				</select></td>
+          	  </#if>
               <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
               		<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               		<td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:recalcAmounts();"/></td>

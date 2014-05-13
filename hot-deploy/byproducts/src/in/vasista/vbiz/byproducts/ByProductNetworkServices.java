@@ -5692,6 +5692,7 @@ public class ByProductNetworkServices {
 	        BigDecimal paymentAmount = ProductEvents.parseBigDecimalForEntity((String) context.get("amount"));
 	        Locale locale = (Locale) context.get("locale");     
 	        String paymentMethodType = (String) context.get("paymentMethodTypeId");
+	        Timestamp paymentDate = (Timestamp) context.get("paymentDate");
 	        String paymentLocationId = (String) context.get("paymentLocationId");                
 	        String paymentRefNum = (String) context.get("paymentRefNum");
 	        String paymentPurposeType = (String) context.get("paymentPurposeType");
@@ -5707,13 +5708,16 @@ public class ByProductNetworkServices {
 	        String paymentType = "SALES_PAYIN";
 	        String partyIdTo ="Company";
 	        String paymentId = "";
+	        if(UtilValidate.isEmpty(paymentDate)){
+	        	paymentDate = UtilDateTime.nowTimestamp();
+	        }
 	        boolean roundingAdjustmentFlag =Boolean.TRUE;
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        List exprListForParameters = FastList.newInstance();
 	        List boothOrdersList = FastList.newInstance();
 	        Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
 	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	        Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+	        Timestamp instrumentDate = null;
 			try {
 				paymentTimestamp = UtilDateTime.toTimestamp(dateFormat.parse(supplyDate));
 			} catch (ParseException e) {
@@ -5866,9 +5870,12 @@ public class ByProductNetworkServices {
 	            if (!UtilValidate.isEmpty(paymentRefNum) ) {
 	                paymentCtx.put("paymentRefNum", paymentRefNum);                        	
 	            }
+	            paymentCtx.put("paymentDate", paymentDate);
 	            paymentCtx.put("issuingAuthority", issuingAuthority);  
 	            paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
-	            paymentCtx.put("instrumentDate", instrumentDate);
+	            if(UtilValidate.isNotEmpty(instrumentDate)){
+	            	paymentCtx.put("instrumentDate", instrumentDate);
+	            }
 	            paymentCtx.put("paymentPurposeType", paymentPurposeType);
 	            paymentCtx.put("statusId", "PMNT_RECEIVED");
 	            if (UtilValidate.isNotEmpty(isEnableAcctg)) {
