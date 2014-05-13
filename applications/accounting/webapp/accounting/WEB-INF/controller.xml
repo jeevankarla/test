@@ -2833,11 +2833,17 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newReceipts"/>
     </request-map> 
-     <request-map uri="createCashPayment">
+     <request-map uri="createCashReceipt">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPaymentAndFinAccountTrans"/>
-        <response name="success" type="view" value="findCashReceipts"/>
-        <response name="error" type="view" value="findCashReceipts"/>
+        <response name="success" type="request-redirect-noparam" value="findCashReceipts"/>
+        <response name="error" type="request-redirect-noparam" value="findCashReceipts"/>
+    </request-map>
+    <request-map uri="createCashPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="request-redirect-noparam" value="findCashPayblePayment"/>
+        <response name="error" type="request-redirect-noparam" value="findCashPayblePayment"/>
     </request-map>
      <request-map uri="newPayablePayment">
         <security https="true" auth="true"/>
