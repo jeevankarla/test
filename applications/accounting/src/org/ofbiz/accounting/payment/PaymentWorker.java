@@ -347,7 +347,8 @@ public class PaymentWorker {
 			GenericValue payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
             if (payment == null) {
                 Debug.logError("Invalid payment id  " + paymentId, module);
-                return ServiceUtil.returnError("Invalid payment id  " + paymentId);            	
+                return ServiceUtil.returnSuccess();
+                //return ServiceUtil.returnError("Invalid payment id  " + paymentId);            	
             }
             GenericValue paymentType=delegator.findOne("PaymentType",UtilMisc.toMap("paymentTypeId",payment.getString("paymentTypeId")) , false);
         	String destinationPartyId = "";
