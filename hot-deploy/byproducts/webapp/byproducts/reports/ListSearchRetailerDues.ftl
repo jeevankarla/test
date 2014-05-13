@@ -252,9 +252,13 @@ under the License.
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><input type="button" name="viewDues" id="pastDues" value="View Details" onclick="javascript:showRetailerDueHistory('${payment.facilityId}');"/></td>
               <#if parameters.paymentMethodTypeId == "CHALLAN_PAYIN">
-              	<#assign selectVal = partyFinAccMap.get(payment.facilityId)>
+              	<#assign selectVal = "">
+              	<#if partyFinAccMap?has_content && (partyFinAccMap.get(payment.facilityId)?exists)>
+              		<#assign selectVal = partyFinAccMap.get(payment.facilityId)>	
+              	</#if>
+              	
           		<td><select name='issuingAuthority' id='issuingAuthority' class='h4'>
-					<#if accountNameList?has_content><#list accountNameList as eachBank><option value='${eachBank.finAccountName?if_exists}' <#if selectVal == eachBank.finAccountName>selected</#if>>${eachBank.finAccountName?if_exists}</option></#list></#if>            
+					<#if accountNameList?has_content><#list accountNameList as eachBank><option value='${eachBank.finAccountName?if_exists}' <#if selectVal?has_content && selectVal == eachBank.finAccountName>selected</#if>>${eachBank.finAccountName?if_exists}</option></#list></#if>            
 				</select></td>
           	  </#if>
               <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
