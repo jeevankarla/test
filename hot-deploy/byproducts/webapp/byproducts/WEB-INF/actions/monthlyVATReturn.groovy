@@ -71,7 +71,6 @@
 	context.put("dayBegin",dayBegin);
 	context.put("dayEnd",dayEnd);
 	
-	
 	List conditionList= FastList.newInstance();
 	conditionList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.NOT_EQUAL, null));
 	conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, "VAT_SALE"));
@@ -85,7 +84,40 @@
 	List vatList = EntityUtil.getFieldListFromEntityList(productPrice, "taxPercentage", true);
 	context.vatList = vatList;
 	finalVatList = [];
+	
+	productReturnMap = [:];
 	resultMap = (ByProductNetworkServices.getPeriodTotals(dctx, [fromDate:dayBegin, thruDate:dayEnd])).get("productTotals");
+	returnConditionList=[];
+	returnConditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+	returnConditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+	returnConditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
+	returnCondition = EntityCondition.makeCondition(returnConditionList,EntityOperator.AND);
+	returnHeaderItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondition, null, null, null, false);
+	if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
+		returnHeaderItemsList.each{ returnItem->		
+			returnQuantity =0;
+			returnPrice = 0;
+			returnRevenue = 0;
+			returnProductId = 0;
+			if(UtilValidate.isNotEmpty(returnItem.returnQuantity)){
+				returnQuantity = returnItem.returnQuantity;
+			}
+			if(UtilValidate.isNotEmpty(returnItem.returnPrice)){
+				returnPrice = returnItem.returnPrice;
+			}
+			if(UtilValidate.isNotEmpty(returnItem.productId)){
+				returnProductId = returnItem.productId;
+			}
+			if(UtilValidate.isNotEmpty(returnQuantity)){
+				returnRevenue = (returnQuantity*returnPrice);
+			}
+			if(UtilValidate.isEmpty(productReturnMap[returnProductId])){
+				productReturnMap[returnProductId] = returnRevenue;
+			}else{
+				productReturnMap[returnProductId] += returnRevenue;
+			}
+		}
+	}
 	vatList.each { vat->
 		vatMap = [:];
 		productIdList = EntityUtil.filterByDate(delegator.findByAnd("ProductPrice", [taxPercentage : vat ,productPriceTypeId : "VAT_SALE"]));
@@ -94,9 +126,23 @@
 			if(UtilValidate.isNotEmpty(productList)){
 				productMap = [:];
 				productList.each { prodId->
-					prodValue = resultMap.get(prodId);
-					if(prodValue != null){
-						productMap[prodId] = prodValue;
+					prodValMap=[:];
+					prodValue=0;
+					if(UtilValidate.isNotEmpty(resultMap.get(prodId))){
+						prodValue = resultMap.get(prodId).get("totalRevenue");
+					}
+					returnProdValue=0;
+					if(UtilValidate.isNotEmpty(productReturnMap.get(prodId))){
+						returnProdValue = productReturnMap.get(prodId);
+					}
+					if(UtilValidate.isNotEmpty(prodValue)&&(prodValue!=0)){
+						prodValMap["prodValue"]=prodValue;
+					}
+					if(UtilValidate.isNotEmpty(returnProdValue)&&(returnProdValue!=0)){
+						prodValMap["returnProdValue"]=returnProdValue;
+					}
+					if(UtilValidate.isNotEmpty(prodValMap)){
+						productMap[prodId] = prodValMap;
 					}
 				}
 				tempMap = [:];

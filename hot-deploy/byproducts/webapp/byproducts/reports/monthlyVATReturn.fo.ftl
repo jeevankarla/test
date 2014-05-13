@@ -28,21 +28,20 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
          ${setRequestAttribute("OUTPUT_FILENAME", "VATReturns.txt")}
-         <#assign totalBasicRevenue = 0>
-		 <#assign totalVatRevenue = 0>
-		 <#assign totalRevenueValue = 0>
 		 
-		 <#assign grandTotalBasicRevenue = 0>
-		 <#assign grandTotalVatRevenue = 0>
-		 <#assign grandTotalRevenueValue = 0>
+	  	 <#assign grandTotalSaleValue = 0>
+	  	 <#assign grandTotalReturnValue = 0>
+	  	 <#assign grandTotalNetValue = 0>
+		 <#assign grandTotalVatValue = 0>
+		 
        <#if finalVatList?has_content>        
 		        <fo:page-sequence master-reference="main" font-size="10pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 		        		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 						<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
-                    	<fo:block text-align="left" font-size="7pt" keep-together="always"  white-space-collapse="false">&#160;     MONTHLY VALUE ADDED TAX RETURN UNDER VAT ACT FROM: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")} TO: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd/MM/yyyy")}</fo:block>
-              			<fo:block font-size="13pt">====================================================================================</fo:block>
-            			<fo:block text-align="left" font-size="7pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">&#160;S NO      DESCRIPTION         VAT%     BASIC VALUE     VAT VALUE    TOTAL VALUE</fo:block>	 	 	  
+                    	<fo:block text-align="left" font-size="7pt" keep-together="always"  white-space-collapse="false">&#160;     MONTHLY VAT SUPPORT STATEMENT FOR THE PERIOD: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")} TO: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd/MM/yyyy")}</fo:block>
+              			<fo:block font-size="13pt">========================================================================================================</fo:block>
+            			<fo:block text-align="left" font-size="7pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">&#160;S NO      DESCRIPTION         VAT%     SALE VALUE     RETURN VALUE    NET VALUE      		VAT COLLECTED</fo:block>	 	 	  
 		        	</fo:static-content>	        	
 		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
@@ -53,6 +52,7 @@ under the License.
             		<fo:table-column column-width="40pt"/> 	
             		<fo:table-column column-width="60pt"/>	
             		<fo:table-column column-width="70pt"/>
+            		<fo:table-column column-width="80pt"/>
 	                    <fo:table-body>
 	                    	<#assign serialNo = 1>
 	                    	<#list finalVatList as finalVat>
@@ -60,26 +60,35 @@ under the License.
 		                    	<#list vatDetails as vat>
 		                    		<fo:table-row>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">-----------------------------------------------------------------------------------</fo:block>  
+		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">-----------------------------------------------------------------------------------------------------</fo:block>  
 		                        			</fo:table-cell>
 		                        	</fo:table-row>
 	                    			<fo:table-row>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">EXEMPTED TURNOVER (${vat.getKey()})</fo:block>  
+		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false"><#if vat.getKey() == 0> EXEMPTED TURNOVER (${vat.getKey()})<#else> TURNOVER WITH VAT (${vat.getKey()})</#if></fo:block>  
 		                        			</fo:table-cell>
 		                        	</fo:table-row>
 		                        	<fo:table-row>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">-----------------------------------------------------------------------------------</fo:block>  
+		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">-----------------------------------------------------------------------------------------------------</fo:block>  
 		                        			</fo:table-cell>
 		                        	</fo:table-row>
+		                        	<#assign totalSaleValue = 0>
+						 			<#assign totalReturnValue = 0>
+									<#assign totalNetValue = 0>
+						 			<#assign totalVatValue = 0>
 		                    		<#assign prodDetails = vat.getValue().entrySet()>
 		                    			<#list prodDetails as product>
 		                    				 <#assign productDetails = delegator.findOne("Product", {"productId" : product.getKey()}, true)?if_exists/>
 		                    				 
-		                    				 <#assign totalRevenue = product.getValue().get("totalRevenue")?if_exists>
-		                    				 <#assign vatRevenue = ((totalRevenue * vat.getKey())/100)>
-		                    				 <#assign basicRevenue = (totalRevenue - vatRevenue)>
+		                    				 <#assign saleValue = product.getValue().get("prodValue")?if_exists>
+		                    				 <#assign returnValue = product.getValue().get("returnProdValue")?if_exists>
+		                    				  <#if returnValue?has_content>
+		                    				 	<#assign netValue = (saleValue-returnValue)?if_exists>
+		                    				 <#else>
+		                    				 	<#assign netValue = (saleValue?if_exists)>
+		                    				 </#if>
+		                    				 <#assign vatValue = ((netValue * vat.getKey())/100)>
 											<fo:table-row>
 												<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">${serialNo}</fo:block>  
@@ -90,17 +99,27 @@ under the License.
 			                        			<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">${vat.getKey()?if_exists}</fo:block>  
 			                        			</fo:table-cell>
-			                        			<#assign totalBasicRevenue = (totalBasicRevenue + basicRevenue?if_exists)>
+			                        			<#assign totalSaleValue = (totalSaleValue + saleValue?if_exists)>
 			                        			<fo:table-cell>
-			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${basicRevenue?if_exists?string("#0.00")}</fo:block>  
+			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${saleValue?if_exists?string("#0.00")}</fo:block>  
 			                        			</fo:table-cell>
-			                        			<#assign totalVatRevenue = (totalVatRevenue + vatRevenue?if_exists)>
+			                        			<#if returnValue?has_content>
+			                        				<#assign totalReturnValue = (totalReturnValue + returnValue?if_exists)>
 			                        			<fo:table-cell>
-			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${vatRevenue?if_exists?string("#0.00")}</fo:block>  
+			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${returnValue?if_exists?string("#0.00")}</fo:block>  
 			                        			</fo:table-cell>
-			                        			<#assign totalRevenueValue = (totalRevenueValue + totalRevenue?if_exists)>
+			                        			<#else>
 			                        			<fo:table-cell>
-			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${totalRevenue?if_exists?string("#0.00")}</fo:block>  
+			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false"></fo:block>  
+			                        			</fo:table-cell>
+			                        			</#if>
+			                        			<#assign totalNetValue = (totalNetValue + netValue?if_exists)>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${netValue?if_exists?string("#0.00")}</fo:block>  
+			                        			</fo:table-cell>
+			                        			<#assign totalVatValue = (totalVatValue + vatValue?if_exists)>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${vatValue?if_exists?string("#0.00")}</fo:block>  
 			                        			</fo:table-cell>
 			                        		</fo:table-row>
 			                        		<#assign serialNo = serialNo+1>
@@ -108,7 +127,7 @@ under the License.
 			                      </#list>
 			                      <fo:table-row>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">-----------------------------------------------------------------------------------</fo:block>
+		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">------------------------------------------------------------------------------------------------------</fo:block>
 		                        			</fo:table-cell>
 		                        	</fo:table-row>
 	                    			<fo:table-row>
@@ -121,23 +140,33 @@ under the License.
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false"></fo:block>  
 		                        			</fo:table-cell>
-		                        			<#assign grandTotalBasicRevenue = (grandTotalBasicRevenue + totalBasicRevenue?if_exists)>
+		                        			<#assign grandTotalSaleValue = (grandTotalSaleValue + totalSaleValue?if_exists)>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${totalBasicRevenue?if_exists?string("#0.00")}</fo:block>  
+		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${totalSaleValue?if_exists?string("#0.00")}</fo:block>  
 		                        			</fo:table-cell>
-		                        			<#assign grandTotalVatRevenue = (grandTotalVatRevenue + totalVatRevenue?if_exists)>
+		                        			<#if totalReturnValue?has_content>
+		                        				<#assign grandTotalReturnValue = (grandTotalReturnValue + totalReturnValue?if_exists)>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${totalVatRevenue?if_exists?string("#0.00")}</fo:block>  
+		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${totalReturnValue?if_exists?string("#0.00")}</fo:block>  
 		                        			</fo:table-cell>
-		                        			<#assign grandTotalRevenueValue = (grandTotalRevenueValue + totalRevenueValue?if_exists)>
+		                        			<#else>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${totalRevenueValue?if_exists?string("#0.00")}</fo:block>  
+		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false"></fo:block>  
 		                        			</fo:table-cell>
+		                        			</#if>
+		                        			<#assign grandTotalNetValue = (grandTotalNetValue + totalNetValue?if_exists)>
+		                        			<fo:table-cell>
+		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${totalNetValue?if_exists?string("#0.00")}</fo:block>  
+		                        			</fo:table-cell>
+		                        			<#assign grandTotalVatValue = (grandTotalVatValue + totalVatValue?if_exists)>
+		                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${totalVatValue?if_exists?string("#0.00")}</fo:block>  
+			                        			</fo:table-cell>
 		                        	</fo:table-row>
 		                      </#list>		
 	                    		 <fo:table-row>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">-----------------------------------------------------------------------------------</fo:block>
+		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">------------------------------------------------------------------------------------------------------</fo:block>
 		                        			</fo:table-cell>
 		                        </fo:table-row>
 		                        <fo:table-row>
@@ -151,15 +180,35 @@ under the License.
 		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false"></fo:block>  
 		                        			</fo:table-cell>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${grandTotalBasicRevenue?if_exists?string("#0.00")}</fo:block>  
+		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${grandTotalSaleValue?if_exists?string("#0.00")}</fo:block>  
+		                        			</fo:table-cell>
+		                        			<#if grandTotalReturnValue?has_content>
+		                        			<fo:table-cell>
+		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${grandTotalReturnValue?if_exists?string("#0.00")}</fo:block>  
+		                        			</fo:table-cell>
+		                        			<#else>
+		                        			<fo:table-cell>
+		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false"></fo:block>  
+		                        			</fo:table-cell>
+		                        			</#if>
+		                        			<fo:table-cell>
+		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${grandTotalNetValue?if_exists?string("#0.00")}</fo:block>  
 		                        			</fo:table-cell>
 		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${grandTotalVatRevenue?if_exists?string("#0.00")}</fo:block>  
-		                        			</fo:table-cell>
-		                        			<fo:table-cell>
-		                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${grandTotalRevenueValue?if_exists?string("#0.00")}</fo:block>  
-		                        			</fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${grandTotalVatValue?if_exists?string("#0.00")}</fo:block>  
+			                        			</fo:table-cell>
 		                        	</fo:table-row>
+		                        	<fo:table-row>
+		                        			<fo:table-cell>
+		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">------------------------------------------------------------------------------------------------------</fo:block>
+		                        			</fo:table-cell>
+		                        </fo:table-row>
+		                        <fo:table-row>
+			                   	<fo:table-cell>
+			                        <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(grandTotalNetValue, "%rupees-and-paise", locale).toUpperCase()>
+                   					<fo:block white-space-collapse="false" keep-together="always">(In Words: ${StringUtil.wrapString(amountWords?default(""))}only)</fo:block>
+			                   	</fo:table-cell>
+						  	</fo:table-row>
 	                    </fo:table-body>
                 	</fo:table>
                </fo:block> 		
