@@ -29,8 +29,9 @@ if (parameters.all == 'Y') {
 }
 List exprList = [];
 List checkListReportList = [];
-dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, locale);
-
+boothRouteIdsMap = [:];
+if(UtilValidate.isEmpty(reportTypeFlag)){
+   dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, locale);
 	exprList.add(EntityCondition.makeCondition([
 		EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
 		EntityCondition.makeCondition("lastModifiedDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)
@@ -39,15 +40,12 @@ dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, local
 	   exprList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS, userLogin.userLoginId));
    }
    condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-   
    checkListItemList = delegator.findList("Payment", condition, null, ["lastModifiedDate"], null, false);
-   
    boothRouteResultMap = ByProductNetworkServices.getBoothsRouteByShipment(delegator,UtilMisc.toMap("facilityId",null,"effectiveDate",dayBegin));
-   boothRouteIdsMap = [:];
    if(UtilValidate.isNotEmpty(boothRouteResultMap)){
 	   boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
    }
-   
+  
    checkListItemList.each { checkListItem -> 
 	   lastPaymentMap = [:];
 	   lastPaymentMap["lastModifiedDate"] = UtilDateTime.toDateString(checkListItem.lastModifiedDate, "HH:mm:ss");
@@ -62,18 +60,17 @@ dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, local
 	   lastPaymentMap["amount"] = (new BigDecimal(checkListItem.amount)).setScale(0 ,rounding);
 	   checkListReportList.add(lastPaymentMap);
    }
-
+}
 context.checkListReportList = checkListReportList;
-
 //report invoking for Daily checklist report
 
 boothPaymentCheckMap=[:];
 bankPaidMap=[:];
-boothRouteIdsMap=[:];
+
+
 if(UtilValidate.isNotEmpty(reportTypeFlag) && "DailyPaymentCheckList".equals(reportTypeFlag)){
 paymentDate=parameters.paymentDate;
 paymentMethodTypeId = parameters.paymentMethodTypeId;
-
 fromDateTime=UtilDateTime.nowTimestamp();
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
@@ -88,7 +85,6 @@ routeIds=[];
 List<GenericValue> paymentsList = FastList.newInstance();
 conditionList=[];
 facilityIdsList=[];
-
 	if(parameters.routeId !="All"){
 		facilityIdsList =ByProductNetworkServices.getRouteBooths(delegator, parameters.routeId);
 	}else{
@@ -135,5 +131,45 @@ facilityIdsList=[];
 			}
 	}
 }
+
+List routeCheckListReportList = [];
+List nonRouteCheckListReportList = [];
+if(UtilValidate.isNotEmpty(reportTypeFlag) && "CashPaymentCheckList".equals(reportTypeFlag)){
+	paymentDate=parameters.paymentDate;
+	paymentMethodTypeId = parameters.paymentMethodTypeId;
+	fromDateTime=UtilDateTime.nowTimestamp();
+	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	try {
+		fromDateTime = new java.sql.Timestamp(sdf.parse(paymentDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: "+paymentDate, "");
+	}
+	context.paymentDate=fromDateTime;
+	dayStart = UtilDateTime.getDayStart(fromDateTime);
+	dayEnd = UtilDateTime.getDayEnd(fromDateTime);
+	
+	routeIds=[];
+	List<GenericValue> paymentsList = FastList.newInstance();
+	conditionList=[];
+	facilityIdsList=[];
+			boothRouteResultMap = ByProductNetworkServices.getBoothsRouteByShipment(delegator,UtilMisc.toMap("facilityId",null,"effectiveDate",dayStart));
+			if(UtilValidate.isNotEmpty(boothRouteResultMap)){
+				boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
+			}
+			
+		   exprList.clear();
+			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+			if (!UtilValidate.isEmpty(paymentMethodTypeId)) {
+				exprList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, paymentMethodTypeId));
+			}
+			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+			boothTempPaymentsList = delegator.findList("Payment", condition, null, ["facilityId"], null, false);
+		routeCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "ROUTE_MKTG"));
+		nonRouteCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "NON_ROUTE_MKTG"));
+	}
+context.routeCheckListReportList=routeCheckListReportList;
+context.nonRouteCheckListReportList=nonRouteCheckListReportList;
 context.bankPaidMap=bankPaidMap;
+
 context.boothRouteIdsMap=boothRouteIdsMap;

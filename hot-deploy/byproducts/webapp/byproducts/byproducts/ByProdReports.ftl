@@ -91,6 +91,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("saleFromDateId","saleThruDateId");
 		makeDatePicker("vatFromDateId","vatThruDateId");
 		makeDatePicker("smsNotify","");
+		makeDatePicker("CASHFromDateId","");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 
@@ -129,7 +130,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 </div>
 </div>
 </#if>
-<#if screenFlag?exists && screenFlag.equals("DailyReports")  && security.hasEntityPermission("BYPRODUCTS", "_DAILREPOR", session)>
+<#if screenFlag?exists && screenFlag.equals("DailyReports")  && (security.hasEntityPermission("BYPRODUCTS", "_DAILREPOR", session) || security.hasEntityPermission("ACCOUNTING", "_CASHIER", session))>
 <div class="lefthalf">
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -369,13 +370,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</#list>  
 					</select>
       			</td>
-      			<#--
-      			<td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="bankChallanSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>
-      			-->
       			<td >
 					PaymentType 
 					<select name="paymentMethodTypeId" class='h4'>
-						<#list paymentMethodList as paymentMethod>    
+						<#list paymentMethodList as paymentMethod>   
 	  	    				<option value='${paymentMethod.paymentMethodTypeId}'>${paymentMethod.description}</option>
 						</#list> 
 						</select>
@@ -383,11 +381,26 @@ function makeDatePicker1(fromDateId ,thruDateId){
       		</form>	
         </tr>
      </#if>
-      	
+      	 <#if security.hasEntityPermission("ACCOUNTING", "_CASHIER", session)>
+        <tr class="alternate-row">
+        	<form id="CashPaymentCheckList" name="CashierPaymentCheckList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentCheckList</@ofbizUrl>">	
+      			<td width="34%">Cash Payment CheckList Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
+      			<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
+      			</td>
+      			<td>
+      			Date<input  type="text" size="18pt" id="CASHFromDateId" readonly  name="paymentDate"/>
+      			</td>
+      			<td>
+      			    <input  type="hidden"  name="routeId" value="All"/>
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+          </tr>
+         </#if>
          
       </table>
 	 </div>
     </div>
+  
     <#if security.hasEntityPermission("SENDLVDSMS", "_VIEW", session)>
      <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -621,3 +634,4 @@ function makeDatePicker1(fromDateId ,thruDateId){
 </div>
 </div>
 </#if>
+  </div>

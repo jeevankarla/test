@@ -51,13 +51,29 @@
                 <set field="screenFlag" value="DailyReports"/>
             </actions>
             <widgets>
-                
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                     <decorator-section name="body"> 
                             <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ReportsSubTabBar"/> 
    							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ByProdReports.ftl"></html-template></html></platform-specific>
                 	</decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="CashierReports">
+        <section>
+            <actions>
+               <set field="titleProperty" value="PageTitleFacilityReports"/>	            
+               <set field="tabButtonItem" value="reports"/> 
+                <set field="tabButtonItem2" value="DailyReports"/>          
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="screenFlag" value="DailyReports"/>
+            </actions>
+            <widgets>
+            
+   				<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ByProdReports.ftl"></html-template></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -765,6 +781,24 @@
             </widgets>
         </section>
     </screen>
+    <screen name="CashierPaymentCheckList">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>     
+                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>         
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/paymentsCheckListReport.groovy"/>            
+            </actions>            
+            <widgets>            	
+				<platform-specific> 
+                     <xsl-fo><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckListCash.fo.ftl"/></xsl-fo>
+                </platform-specific>				
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="PrintBoothPayments">
 		<section>
 			<actions>
