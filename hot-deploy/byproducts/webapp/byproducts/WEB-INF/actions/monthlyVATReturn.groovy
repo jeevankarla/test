@@ -67,7 +67,6 @@
 	
 	dayBegin = UtilDateTime.getDayStart(effectiveDate);
 	dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
-
 	context.put("dayBegin",dayBegin);
 	context.put("dayEnd",dayEnd);
 	
@@ -86,7 +85,19 @@
 	finalVatList = [];
 	
 	productReturnMap = [:];
-	resultMap = (ByProductNetworkServices.getPeriodTotals(dctx, [fromDate:dayBegin, thruDate:dayEnd])).get("productTotals");
+	resultMap = [:];
+	shipmentIds = [];
+	amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
+	shipmentIds.addAll(amShipmentIds);
+	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
+	shipmentIds.addAll(pmShipmentIds);
+	List adhocShipments  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
+	if(UtilValidate.isNotEmpty(adhocShipments)){
+		shipmentIds.addAll(adhocShipments);
+	}
+	if(UtilValidate.isNotEmpty(shipmentIds)){
+		resultMap = ByProductNetworkServices.getPeriodTotals(dctx, [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]).get("productTotals");
+	}
 	returnConditionList=[];
 	returnConditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 	returnConditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));

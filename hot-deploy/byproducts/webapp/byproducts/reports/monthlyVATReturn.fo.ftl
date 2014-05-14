@@ -203,12 +203,6 @@ under the License.
 		                            			<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">------------------------------------------------------------------------------------------------------</fo:block>
 		                        			</fo:table-cell>
 		                        </fo:table-row>
-		                        <fo:table-row>
-			                   	<fo:table-cell>
-			                        <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(grandTotalNetValue, "%rupees-and-paise", locale).toUpperCase()>
-                   					<fo:block white-space-collapse="false" keep-together="always">(In Words: ${StringUtil.wrapString(amountWords?default(""))}only)</fo:block>
-			                   	</fo:table-cell>
-						  	</fo:table-row>
 	                    </fo:table-body>
                 	</fo:table>
                </fo:block> 		
