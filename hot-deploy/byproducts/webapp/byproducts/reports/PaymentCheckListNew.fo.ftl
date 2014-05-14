@@ -23,7 +23,7 @@ under the License.
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
                      margin-left="1in" margin-right="1in">
-                <fo:region-body margin-top="1in"/>
+                <fo:region-body margin-top="1.3in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -118,13 +118,21 @@ under the License.
 	                            	<fo:block text-align="left" keep-together="always">${sno}</fo:block>                               
 	                            </fo:table-cell>
 	                             <fo:table-cell >
-	                            	<fo:block text-align="left">${boothRouteIdsMap.get(checkListReport.facilityId)?if_exists}</fo:block>	                               
+	                             <#if checkListReport.facilityId?exists>
+	                            	<fo:block text-align="left">${boothRouteIdsMap.get(checkListReport.facilityId)?if_exists}</fo:block>	
+	                            	</#if>                               
 	                            </fo:table-cell>	
 	                             <fo:table-cell >
 	                            	<fo:block text-align="left">${checkListReport.facilityId?if_exists}</fo:block>	                               
 	                            </fo:table-cell>
 	                        	<fo:table-cell >	
-	                            	<fo:block text-align="left" >${checkListReport.facilityName?if_exists}</fo:block>                               
+                            	
+                            	<#assign  partyName="">
+		            			<#if (checkListReport.partyIdFrom)?exists>
+		            			<#assign partyId=checkListReport.partyIdFrom>
+		            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+		            			</#if>     
+		            			<fo:block text-align="left" >${partyName?if_exists}</fo:block>                          
 	                            </fo:table-cell>	
 	                        	<fo:table-cell >	
 	                            	<fo:block text-align="left" >${checkListReport.paymentRefNum?if_exists}</fo:block>                               
