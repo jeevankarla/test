@@ -164,7 +164,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "CashPaymentCheckList".equals(repo
 				exprList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, paymentMethodTypeId));
 			}
 			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-			boothTempPaymentsList = delegator.findList("Payment", condition, null, ["facilityId"], null, false);
+			boothTempPaymentsList = delegator.findList("Payment", condition, null, ["paymentId"], null, false);
 		routeCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "ROUTE_MKTG"));
 		nonRouteCheckListReportList = EntityUtil.filterByCondition(boothTempPaymentsList, EntityCondition.makeCondition("paymentPurposeType", EntityOperator.EQUALS, "NON_ROUTE_MKTG"));
 	}
