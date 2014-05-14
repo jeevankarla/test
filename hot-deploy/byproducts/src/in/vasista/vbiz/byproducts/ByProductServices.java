@@ -3482,7 +3482,9 @@ public class ByProductServices {
 	  	  Map prodQtyMap = FastMap.newInstance();
 	  	  BigDecimal crateQty = BigDecimal.ZERO;
 	  	  String productStoreId = "";
-	      try{
+	  	  List invoiceIds = FastList.newInstance();
+	  	  boolean enableCreditNote = Boolean.FALSE;
+	  	  try{
 	    	  productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
 	    	  route = delegator.findOne("Facility", UtilMisc.toMap("facilityId", routeId), false);
 	  		  if(UtilValidate.isEmpty(route)){
@@ -3495,7 +3497,17 @@ public class ByProductServices {
 	  			  return ServiceUtil.returnError("dealer does not exists with Id: " + boothId);
 	  		  }
 	  		  ownerPartyId = dealer.getString("ownerPartyId");
-	    	  
+
+	  		  try{
+	  			  GenericValue tenantConfigEnableCreditNote = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableCreditNote"), true);
+	  			  if (UtilValidate.isNotEmpty(tenantConfigEnableCreditNote) && (tenantConfigEnableCreditNote.getString("propertyValue")).equals("Y")) {
+	  				enableCreditNote = Boolean.TRUE;
+	  			  }
+	  		  }catch (GenericEntityException e) {
+				// TODO: handle exception
+				 Debug.logError(e, module);             
+	  		  }
+	  		  
 	    	  List conditionList = FastList.newInstance();
 	    	  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, boothId));
 	    	  conditionList.add(EntityCondition.makeCondition("returnHeaderTypeId", EntityOperator.EQUALS, returnHeaderTypeId));
@@ -3507,17 +3519,19 @@ public class ByProductServices {
 	    	  if(UtilValidate.isNotEmpty(returnHeader)){
 	    		  returnId = ((GenericValue)EntityUtil.getFirst(returnHeader)). getString("returnId");
 	    	  }
+	    	  
+	    	  
 	    	  //getting orginal order for return qty
 	    	   conditionList.clear();
-	    	  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, boothId));
-	    	 // conditionList.add(EntityCondition.makeCondition("returnHeaderTypeId", EntityOperator.EQUALS, returnHeaderTypeId));
+	    	   conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, boothId));
+	    	  // conditionList.add(EntityCondition.makeCondition("returnHeaderTypeId", EntityOperator.EQUALS, returnHeaderTypeId));
 	    	  //conditionList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.EQUALS, ownerPartyId));
-	    	  conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
-	    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	    	   conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
+	    	   conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
 	    	   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	    	  List<GenericValue> orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null, null, null, false);
-	    	  BigDecimal totalReturnAmount = BigDecimal.ZERO;
-	    	  if(UtilValidate.isEmpty(returnId)){
+	    	   List<GenericValue> orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null, null, null, false);
+	    	   BigDecimal totalReturnAmount = BigDecimal.ZERO;
+	    	   if(UtilValidate.isEmpty(returnId)){
 	    		  Map returnHeaderCtx = FastMap.newInstance();
 		    	  returnHeaderCtx.put("originFacilityId", boothId);
 		    	  returnHeaderCtx.put("returnHeaderTypeId", returnHeaderTypeId);
@@ -3540,15 +3554,6 @@ public class ByProductServices {
 		    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
 		    		   String returnReasonId=(String)productQtyMap.get("returnReasonId");
 		    		   List boothApprovedItemList = EntityUtil.filterByAnd(orderItemList, UtilMisc.toMap("productId", productId));
-		    		   /*BigDecimal totalPrice = BigDecimal.ZERO;
-		    		   BigDecimal vatPercent =BigDecimal.ZERO;
-		    		   BigDecimal vatAmount=BigDecimal.ZERO;
-			   			if(UtilValidate.isNotEmpty(boothApprovedItemList)){
-			   				GenericValue orderItem=(GenericValue)boothApprovedItemList.get(0);
-			   			    totalPrice = (BigDecimal)orderItem.getBigDecimal("unitListPrice");
-			   			     vatPercent=(BigDecimal)orderItem.getBigDecimal("vatPercent");
-			   			     vatAmount=(BigDecimal)orderItem.getBigDecimal("vatAmount");
-			   			}*/
 		    		   //calculate price for return items and create payment(Credit note)
 	    				Map<String, Object> priceContext = FastMap.newInstance();
 	                    priceContext.put("userLogin", userLogin);   
@@ -3565,44 +3570,44 @@ public class ByProductServices {
 	                    }  
 	                    BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
 	                    
-		    		  GenericValue returnItem = delegator.makeValue("ReturnItem");
-		    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
-		    		  if(UtilValidate.isNotEmpty(returnReasonId)){
-		    			  returnItem.put("returnReasonId", returnReasonId);
-		    		  }
-		    		  returnItem.put("statusId", "RETURN_ACCEPTED");
-		    		  returnItem.put("returnId", returnId);
-		    		  returnItem.put("productId", productId);
-		    		  returnItem.put("returnQuantity", quantity);
-		    		  returnItem.put("returnTypeId", "RTN_REFUND");
-		    		  returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
-		    		  returnItem.put("returnPrice", totalPrice);
-		    		  /*returnItem.put("vatPercent", vatPercent);
-		    		  returnItem.put("vatAmount", vatAmount);*/
-		    		  delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
-		    		  delegator.create(returnItem);
+			    		GenericValue returnItem = delegator.makeValue("ReturnItem");
+			    		returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
+			    		if(UtilValidate.isNotEmpty(returnReasonId)){
+			    			returnItem.put("returnReasonId", returnReasonId);
+			    		}
+			    		returnItem.put("statusId", "RETURN_ACCEPTED");
+			    		returnItem.put("returnId", returnId);
+			    		returnItem.put("productId", productId);
+			    		returnItem.put("returnQuantity", quantity);
+			    		returnItem.put("returnTypeId", "RTN_REFUND");
+			    		returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
+			    		returnItem.put("returnPrice", totalPrice);
+   		    		    delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
+			    		delegator.create(returnItem);
+			    		totalPrice = totalPrice.multiply(quantity);
+		                totalReturnAmount = totalReturnAmount.add(totalPrice);
 			  	  }
-		    	  if(totalReturnAmount.compareTo(BigDecimal.ZERO)>0){
-		    		  Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "SALES_PAYIN");        	
-		              paymentCtx.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
-		              paymentCtx.put("partyIdFrom", "Company");
-		              paymentCtx.put("partyIdTo", ownerPartyId);
-		              paymentCtx.put("effectiveDate", effectiveDate);
-		              paymentCtx.put("facilityId", boothId);            
-		              paymentCtx.put("statusId", "PMNT_RECEIVED");            
-		              paymentCtx.put("amount", totalReturnAmount);
-		              paymentCtx.put("paymentDate", effectiveDate);
-		              paymentCtx.put("userLogin", userLogin);
-		              paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
-		              paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
-		              paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
-		              paymentCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
-		              Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
-		              if (ServiceUtil.isError(paymentResult)) {
-		              	Debug.logError(paymentResult.toString(), module);    			
-		                  return ServiceUtil.returnError(null, null, null, paymentResult);
-		              }
-		              String paymentId = (String)paymentResult.get("paymentId");
+
+		    	  if(totalReturnAmount.compareTo(BigDecimal.ZERO)>0 && enableCreditNote){
+		    		  
+		    		  Map paymentInputMap = FastMap.newInstance();
+			  		  paymentInputMap.put("userLogin", userLogin);
+			  		  paymentInputMap.put("facilityId",boothId);
+			  		  paymentInputMap.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
+			  		  paymentInputMap.put("paymentDate", effectiveDate);
+			  		  paymentInputMap.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
+			  		  paymentInputMap.put("paymentPurposeType","ROUTE_MKTG");
+			  		  paymentInputMap.put("amount",totalReturnAmount.toString());
+			  		  paymentInputMap.put("useFifo",true);
+			  		  paymentInputMap.put("sendSMS",false);
+			  		  
+			  		  Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentInputMap);
+			  		  if(ServiceUtil.isError(paymentResult)){
+			  			  Debug.logError(paymentResult.toString(), module);
+		    			  return ServiceUtil.returnError(null, null, null, paymentResult);
+			  		  }
+
+			  		  String paymentId = (String)paymentResult.get("paymentId");
 		              GenericValue returnHeaders = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
 		              returnHeaders.set("paymentId", paymentId);
 		              returnHeaders.store();
@@ -3613,44 +3618,8 @@ public class ByProductServices {
 	    		  if(UtilValidate.isNotEmpty(returnItems)){
 	    			  int removeReturnItems = delegator.removeAll(returnItems);
 	    		  }
-	    		  /*for(int i=0; i< productQtyList.size() ; i++){
-		    		  Map productQtyMap = productQtyList.get(i);
-		    		  String productId = (String)productQtyMap.get("productId");
-		    		  BigDecimal quantity = (BigDecimal)productQtyMap.get("quantity");
-		    		  String returnReasonId = (String)productQtyMap.get("returnReasonId");
-		    		  List boothApprovedItemList = EntityUtil.filterByAnd(orderItemList, UtilMisc.toMap("productId", productId));
-		    		   BigDecimal totalPrice = BigDecimal.ZERO;
-		    		   BigDecimal vatPercent =BigDecimal.ZERO;
-		    		   BigDecimal vatAmount=BigDecimal.ZERO;
-		   			    if(UtilValidate.isNotEmpty(boothApprovedItemList)){
-			   				GenericValue orderItem=(GenericValue)boothApprovedItemList.get(0);
-				   			     totalPrice = (BigDecimal)orderItem.getBigDecimal("unitListPrice");
-				   			     vatPercent=(BigDecimal)orderItem.getBigDecimal("vatPercent");
-				   			     vatAmount=(BigDecimal)orderItem.getBigDecimal("vatAmount");
-		   			    }
-		   			
-		    		  GenericValue returnItem = delegator.makeValue("ReturnItem");
-		    		  returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
-		    		  if(UtilValidate.isNotEmpty(returnReasonId)){
-		    			  returnItem.put("returnReasonId", returnReasonId);
-		    		  }
-		    		  returnItem.put("statusId", "RETURN_ACCEPTED");
-		    		  returnItem.put("returnId", returnId);
-		    		  returnItem.put("productId", productId);
-		    		  returnItem.put("returnQuantity", quantity);
-		    		  returnItem.put("returnTypeId", "RTN_REFUND");
-		    		  returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
-		    		  returnItem.put("returnPrice", totalPrice);
-		    		  returnItem.put("vatPercent", vatPercent);
-		    		  returnItem.put("vatAmount", vatAmount);
-		    		  delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
-		    		  delegator.create(returnItem);
-		    		  totalPrice = totalPrice.multiply(quantity);
-	                    totalReturnAmount = totalReturnAmount.add(totalPrice);
-	    		  } */
 	    			  
-  			/* BigDecimal totalReturnAmount = BigDecimal.ZERO;*/
-  			  for(int i=0; i< productQtyList.size() ; i++){
+	    		  for(int i=0; i< productQtyList.size() ; i++){
 		    		  Map productQtyMap = productQtyList.get(i);
 		    		  String prodId = (String)productQtyMap.get("productId");
 		    		  BigDecimal qty = (BigDecimal)productQtyMap.get("quantity");
@@ -3684,15 +3653,14 @@ public class ByProductServices {
 		    		  returnItem.put("returnTypeId", "RTN_REFUND");
 		    		  returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
 		    		  returnItem.put("returnPrice", totalPrice);
-		    		  /*returnItem.put("vatPercent", vatPercent);
-		    		  returnItem.put("vatAmount", vatAmount);*/
 		    		  delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
 		    		  delegator.create(returnItem);
+		    		  totalPrice = totalPrice.multiply(qty);
+	                  totalReturnAmount = totalReturnAmount.add(totalPrice);
   			  }
   			  
   			  GenericValue retHeader = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
   			  String payReference = retHeader.getString("paymentId");
-  			  
   			  Timestamp dayBegin = UtilDateTime.getDayStart(effectiveDate);
   			  Timestamp dayEnd = UtilDateTime.getDayEnd(effectiveDate);
   			  //Debug.log("calculated return items prices : "+totalReturnAmount);
@@ -3717,28 +3685,30 @@ public class ByProductServices {
 	                       return ServiceUtil.returnError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap));          	            
 	                  }
   			  }
-  			  Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "SALES_PAYIN");        	
-              paymentCtx.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
-              paymentCtx.put("partyIdFrom", "Company");
-              paymentCtx.put("partyIdTo", ownerPartyId);
-              paymentCtx.put("effectiveDate", effectiveDate);
-              paymentCtx.put("facilityId", boothId);            
-              paymentCtx.put("statusId", "PMNT_RECEIVED");            
-              paymentCtx.put("amount", totalReturnAmount);
-              paymentCtx.put("paymentDate", effectiveDate);
-              paymentCtx.put("userLogin", userLogin);
-              paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
-              paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
-              paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
-              paymentCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
-              Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
-              if (ServiceUtil.isError(paymentResult)) {
-              	Debug.logError(paymentResult.toString(), module);    			
-                  return ServiceUtil.returnError(null, null, null, paymentResult);
-              }
-	          String paymentId = (String)paymentResult.get("paymentId");
-	          retHeader.set("paymentId", paymentId);
-	          retHeader.store();
+  			  if(totalReturnAmount.compareTo(BigDecimal.ZERO)>0 && enableCreditNote){
+	  			  
+  				  Map paymentInputMap = FastMap.newInstance();
+		  		  paymentInputMap.put("userLogin", userLogin);
+		  		  paymentInputMap.put("facilityId",boothId);
+		  		  paymentInputMap.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
+		  		  paymentInputMap.put("paymentDate", effectiveDate);
+		  		  paymentInputMap.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
+		  		  paymentInputMap.put("paymentPurposeType","ROUTE_MKTG");
+		  		  paymentInputMap.put("amount",totalReturnAmount.toString());
+		  		  paymentInputMap.put("useFifo",true);
+		  		  paymentInputMap.put("sendSMS",false);
+		  		  
+		  		  Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentInputMap);
+		  		  if(ServiceUtil.isError(paymentResult)){
+		  			  Debug.logError(paymentResult.toString(), module);
+	    			  return ServiceUtil.returnError(null, null, null, paymentResult);
+		  		  }
+		  		  
+	  			  String paymentId = (String)paymentResult.get("paymentId");
+		          retHeader.set("paymentId", paymentId);
+		          retHeader.store();
+  			  }
+	          
 	    	}
 		  }catch (Exception e) {
 			  Debug.logError(e, "Error creating Returns", module);		  
@@ -5133,6 +5103,60 @@ public class ByProductServices {
 			  }
 			  return result;  
 	    }
+	    
+	    public static Map<String, Object> cancelPaymentForChequeReturn(DispatchContext ctx, Map<String, ? extends Object> context){
+          	Delegator delegator = ctx.getDelegator();
+          	GenericValue userLogin = (GenericValue) context.get("userLogin");
+          	LocalDispatcher dispatcher = ctx.getDispatcher();
+          	String paymentId = (String)context.get("paymentId");
+          	String chequeReturns = (String)context.get("chequeBounce");
+          	String comments = (String)context.get("bounceReason");
+          	Map<String, Object> result =  FastMap.newInstance();
+          	Map<String, Object> inMap = FastMap.newInstance();
+          	Map<String, Object> createInvoiceResult = FastMap.newInstance();
+          	BigDecimal invoiceAmount = new BigDecimal(300);
+    		inMap.put("paymentId", paymentId);
+    		inMap.put("userLogin", userLogin);
+    		GenericValue payment = null;
+    		try{
+    			payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+    			payment.put("chequeReturns", chequeReturns);
+    			payment.put("comments", comments);
+    			payment.put("cancelDate", UtilDateTime.nowTimestamp());
+    			payment.store();
+    			
+    			Map<String, Object> cancelResults = dispatcher.runSync("voidPayment",inMap);
+    			if (ServiceUtil.isError(cancelResults)) {
+                	Debug.logError("Error cancelling payment of retailer ", module);	
+                    return ServiceUtil.returnError("Error cancelling payment of retailer ");
+				}
+    			if(chequeReturns.equals("Y")){
+    				Map<String, Object> createInvoice = FastMap.newInstance();
+    				createInvoice.put("userLogin", userLogin);
+    				createInvoice.put("facilityId", payment.get("facilityId"));
+    				createInvoice.put("partyId", payment.get("partyIdFrom"));
+    				createInvoice.put("invoiceAmount",invoiceAmount);
+    				createInvoice.put("referenceNumber",paymentId);
+    				createInvoice.put("invoiceItemTypeId","INCO_FINEPENALTY_CHQ");
+    				createInvoice.put("invoiceTypeId", "MIS_INCOME_IN");
+    				createInvoice.put("description", "Cheque Bounce");
+    				createInvoice.put("invoiceDate",UtilDateTime.nowTimestamp());
+    				createInvoiceResult = ByProductNetworkServices.createFacilityInvoice(ctx, createInvoice);
+    				if (ServiceUtil.isError(createInvoiceResult)) {
+	                	Debug.logError("Error creating invoice for the retailer"+payment.get("facilityId"), module);	
+	                    return ServiceUtil.returnError("Error creating invoice for the retailer"+payment.get("facilityId"));
+    				}
+    			}
+    			
+    		}catch(Exception e){
+    			Debug.logError("Unable to cancel the payment"+e, module);
+        		return ServiceUtil.returnError("Unable to cancel the payment");
+    		}
+    		result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("facilityId"));
+          	return result;
+	    }
+	    
+	    
 	    public static Map<String, Object> createOrUpdateInstBillingPeriod(DispatchContext ctx,Map<String, Object> context) {
 	        Map<String, Object> finalResult = FastMap.newInstance();
 	        Map<String, Object> result = FastMap.newInstance();

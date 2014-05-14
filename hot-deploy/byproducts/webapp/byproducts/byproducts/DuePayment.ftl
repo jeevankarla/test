@@ -83,6 +83,10 @@
 		   $("input[type=submit]").attr("disabled", "disabled");
 		  	
 	}
+	function submitFormParam(){
+		var payDate = $("#paymentDate").val();
+		$("#effectiveDate").val(payDate);
+	}
 	//handle cancel event
 	function cancelForm(){		 
 		return false;
@@ -124,17 +128,16 @@
 		dueAmount = amount;
 		facilityName = boothName;
 		paymentMethod = paymentMethodType;
-		message += "<html><head></head><body><form action='createChequePayment' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+		message += "<html><head></head><body><form action='createChequePayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
-			message += "<input type='hidden' name='routeId' id='routeSearchId'><input type='hidden' name='paymentMethodTypeId' id='paymentMethodTypeId' value='${parameters.paymentMethodTypeId?if_exists}'><input type='hidden' name='paymentPurposeType' id='paymentPurposeType' value='ROUTE_MKTG'><input type='hidden' name='subTabItem' id='subTabItem' value='${parameters.subTabItem?if_exists}'>"+
+			message += "<input type='hidden' name='routeId' id='routeSearchId'><input class='h4' type='hidden' id='effectiveDate' name='instrumentDate'/><input type='hidden' name='paymentMethodTypeId' id='paymentMethodTypeId' value='${parameters.paymentMethodTypeId?if_exists}'><input type='hidden' name='paymentPurposeType' id='paymentPurposeType' value='ROUTE_MKTG'><input type='hidden' name='subTabItem' id='subTabItem' value='${parameters.subTabItem?if_exists}'>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Retailer Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' readOnly/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Issue Authority/ Bank :</td><td align='left' width='60%'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' id='paymentDate' name='paymentDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/></td></tr>" +
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' id='effectiveDate' name='instrumentDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Num :</td><td align='left' width='60%'><input class='h4' type='text' id='paymentRefNum' name='paymentRefNum' /></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='supplyDate' value='${paymentDate}'/></td></tr>"+
-				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 				 		
                 		
 					message +=	"</table></form></body></html>";

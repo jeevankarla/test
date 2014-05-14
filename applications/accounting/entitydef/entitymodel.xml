@@ -3136,6 +3136,8 @@
 		<field name="amount" type="currency-amount"></field>
 		<field name="currencyUomId" type="id"></field>
 		<field name="comments" type="comment"></field>
+		<field name="cancelDate" type="date-time"></field><!-- Cheque bounce date -->
+		<field name="chequeReturns" type="indicator"><description>If this Payment is Cancelled because of cheque Bounce then check this flag.</description></field>
 		<field name="finAccountTransId" type="id"></field>
 		<field name="overrideGlAccountId" type="id"></field>
 		<field name="issuingAuthority" type="short-varchar"></field>

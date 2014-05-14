@@ -515,7 +515,8 @@
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
     </service> -->
-      <service name="processChangeIndentHelper" engine="java"
+      
+    <service name="processChangeIndentHelper" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="processChangeIndentHelper" auth="true">
         <description>Change indent helper to store subscription</description>
         
@@ -537,6 +538,22 @@
         <attribute name="smsFlag" type="Boolean" mode="INOUT" optional="true"/>
     </service>
     
+    <service name="createCreditNoteForReturns" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createCreditNoteForReturns" auth="true">
+        <description>Create Credit Notes For Return Items</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+    
+    
+    <service name="cancelPaymentForChequeReturn" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelPaymentForChequeReturn" auth="true">
+        <description>cancel Payment For ChequeReturn</description>
+        <attribute name="chequeBounce" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+        <attribute name="bounceReason" type="String" mode="IN" optional="true"/>
+    </service>
+    
      <service name="createPaymentForBooth" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createPaymentForBooth">
         <description> create Cash Payment For Booth</description>        
@@ -544,7 +561,8 @@
         <attribute name="supplyDate" mode="IN" type="String" optional="false"/>
         <attribute name="paymentDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"/>             
-        <attribute name="amount" mode="IN" type="String" optional="false"/>        
+        <attribute name="amount" mode="IN" type="String" optional="false"/>
+        <attribute name="sendSMS" mode="IN" type="Boolean" optional="true"/>        
         <attribute name="paymentLocationId" mode="IN" type="String" optional="true"/>
         <attribute name="paymentPurposeType" mode="IN" type="String" optional="true"/>
         <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/>
@@ -559,6 +577,17 @@
         <attribute name="enablePaymentSms" mode="OUT" type="Boolean" optional="true"/>
     </service>
     
+    <service name="createFacilityInvoice" engine="java"
+                location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createFacilityInvoice">
+        <description> create Cash Payment For Booth</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>
+        <attribute name="invoiceDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="invoiceAmount" mode="IN" type="BigDecimal" optional="true"/>             
+        <attribute name="invoiceItemTypeId" mode="IN" type="String" optional="false"/>
+        <attribute name="invoiceTypeId" mode="IN" type="String" optional="true"/>        
+        <attribute name="referenceNumber" mode="IN" type="String" optional="true"/>
+    </service>
+	    	
     <service name="createChequePayment" engine="java"
                 location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createChequePayment">
         <description> create Cash Payment For Booth</description>        

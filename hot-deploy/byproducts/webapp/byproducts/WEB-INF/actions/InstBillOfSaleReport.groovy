@@ -45,9 +45,9 @@
 	Timestamp fromDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 	Timestamp thruDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 	billingPeriodDateStr = "";
-	billingPeriodDateStr += UtilDateTime.toDateString(fromDate, "dd-MMM-2014");
+	billingPeriodDateStr += UtilDateTime.toDateString(fromDate, "dd-MMM-yyyy");
 	billingPeriodDateStr += "--";
-	billingPeriodDateStr += UtilDateTime.toDateString(thruDate, "dd-MMM-2014");
+	billingPeriodDateStr += UtilDateTime.toDateString(thruDate, "dd-MMM-yyyy");
 	context.billingPeriodDate = billingPeriodDateStr;
 	
 	/*

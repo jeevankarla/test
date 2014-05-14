@@ -265,7 +265,7 @@ under the License.
               		<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               		<td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:recalcAmounts();"/></td>
               <#else>
-              		<td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.routeId}','${payment.facilityId}' ,'${payment.grandTotal}', '${payment.paymentMethodTypeId}', '${facilityDetails.get("facilityName")}');" value="Make Payment"/></td>
+              		<td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.routeId}','${payment.facilityId}' ,'${payment.grandTotal}', '${parameters.paymentMethodTypeId}', '${facilityDetails.get("facilityName")}');" value="Make Payment"/></td>
               </#if>
 	          
             </tr>

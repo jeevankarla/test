@@ -3771,6 +3771,93 @@ public class ByProductNetworkServices {
 			return boothsPaymentsDetail;
 		}
 	    
+	    public static Map<String, Object> createFacilityInvoice(DispatchContext dctx, Map<String, ? extends Object> context){
+	        
+			Delegator delegator = dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Map<String, Object> serviceResults;
+			String facilityId = (String) context.get("facilityId"); 
+	    	BigDecimal invoiceAmount = (BigDecimal) context.get("invoiceAmount");
+	    	String invoiceItemTypeId = (String) context.get("invoiceItemTypeId"); 
+	    	String invoiceTypeId = (String) context.get("invoiceTypeId"); 
+	    	Timestamp  invoiceDateParameter=  (Timestamp)context.get("invoiceDate");
+	    	
+	    	String referenceNumber = (String) context.get("referenceNumber"); 
+	    
+	    	Timestamp invoiceDate = UtilDateTime.getDayStart(invoiceDateParameter);
+	    	String partyIdFrom = "Company";
+			String partyId="";
+	    	GenericValue facility;
+			try {
+				facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false );
+				if(UtilValidate.isEmpty(facility)){
+					Debug.logError(facilityId+"====is not a booth", module);    			
+	                return ServiceUtil.returnError(facilityId+"====is not a booth");
+				}
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+			if(UtilValidate.isNotEmpty(facility)){
+				partyId = facility.getString("ownerPartyId");
+			}
+		    Map<String, Object> createInvoiceContext = FastMap.newInstance();
+		    createInvoiceContext.put("partyId", partyId);
+		    createInvoiceContext.put("partyIdFrom", partyIdFrom);
+		    createInvoiceContext.put("invoiceDate", invoiceDate);
+		    createInvoiceContext.put("dueDate", invoiceDate);
+		    createInvoiceContext.put("facilityId", facilityId);
+		    createInvoiceContext.put("invoiceTypeId", invoiceTypeId);
+		    createInvoiceContext.put("referenceNumber", referenceNumber);
+		    createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
+		    createInvoiceContext.put("userLogin", userLogin);
+		    
+		    String invoiceId = null;
+	        try {
+	        	serviceResults = dispatcher.runSync("createInvoice", createInvoiceContext);
+	            if (ServiceUtil.isError(serviceResults)) {
+	                return ServiceUtil.returnError("There was an error while creating Invoice" + ServiceUtil.getErrorMessage(serviceResults));
+	            }
+	            invoiceId = (String) serviceResults.get("invoiceId");
+	        }catch (GenericServiceException e){
+				Debug.logError(e, e.toString(), module);
+	             return ServiceUtil.returnError(e.toString());
+			}
+	        //createInvoiceItem
+	        Map input = UtilMisc.toMap("userLogin", userLogin,"invoiceId", invoiceId);
+	        input.put("invoiceItemTypeId", invoiceItemTypeId); 
+	        input.put("quantity", BigDecimal.ONE);
+	        input.put("amount",invoiceAmount );
+			try {
+				serviceResults = dispatcher.runSync("createInvoiceItem", input);
+				if (ServiceUtil.isError(serviceResults)) {
+		        	return ServiceUtil.returnError("Unable to create Invoice Item", null, null, serviceResults);
+		        }
+			} catch (GenericServiceException e) {
+				Debug.logError(e, e.toString(), module);
+	            return ServiceUtil.returnError(e.toString());
+			}
+	        
+	        //set invoice status
+			try {
+				serviceResults = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", "INVOICE_APPROVED", "userLogin", userLogin));
+				 if (ServiceUtil.isError(serviceResults)) {
+			          return ServiceUtil.returnError("Unable to set Invoice Status", null, null, serviceResults);
+			     }
+				 serviceResults = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", "INVOICE_READY", "userLogin", userLogin));
+				 if (ServiceUtil.isError(serviceResults)) {
+			          return ServiceUtil.returnError("Unable to set Invoice Status", null, null, serviceResults);
+			     }
+			} catch (GenericServiceException e) {
+				Debug.logError(e, e.toString(), module);
+	            return ServiceUtil.returnError(e.toString());
+			}
+			
+			Map<String, Object> result = ServiceUtil.returnSuccess("Payment Cancelled and Penalty Invoice ("+invoiceId+") Created Sucessfully"+" for Party : "+facilityId);	
+			return result;
+	    }
+	    
 	    public static Map<String, Object> getPaymentMethodTypeForBooth(DispatchContext dctx, Map context) {		
 			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -5194,6 +5281,60 @@ public class ByProductNetworkServices {
 	        return result;
 	    }
 	    
+	    /*public static Map<String, Object> createCreditNoteForReturns(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");	
+			Timestamp fromDate = (Timestamp) context.get("fromDate");
+			Timestamp thruDate = (Timestamp)context.get("thruDate");
+			Map result = ServiceUtil.returnSuccess();
+			List shipments = getByProdShipmentIds(delegator, fromDate, thruDate);
+			List conditionList = FastList.newInstance();
+			
+			try {
+				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipments));
+				conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				
+	        	List<GenericValue> returnHeaderAndItems = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", condition, null, null, null, false);
+	        	
+	        	List returnIds = EntityUtil.getFieldListFromEntityList(returnHeaderAndItems, "returnId", true);
+	        
+	        	for(String returnId : returnIds){
+	        		List<GenericValue> returnItems = EntityUtil.filterByCondition(returnHeaderAndItems, EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId));
+	        		GenericValue payItem = EntityUtil.getFirst(returnItems);
+	        		boolean createNote = Boolean.TRUE;
+	        		if(UtilValidate.isNotEmpty(payItem) && UtilValidate.isNotEmpty(payItem.getString("paymentId"))){
+	        			String paidId = payItem.getString("paymentId");
+	        			GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paidId));
+	        			String payType = payment.getString("paymentMethodTypeId");
+	        			String status = payment.getString("statusId");
+	        			if(payType.equals("CREDITNOTE_PAYIN") && !status.equals("PMNT_VOID")){
+	        				createNote = Boolean.FALSE;
+	        			}
+	        		}
+	        		if(createNote){
+	        			BigDecimal creditAmount = BigDecimal.ZERO;
+	        			for(GenericValue eachItem : returnItems){
+	        				BigDecimal unitPrice = eachItem.getBigDecimal("returnPrice");
+	        				BigDecimal retQty = eachItem.getBigDecimal("returnQuantity");
+	        				BigDecimal tempAmount = unitPrice.multiply(retQty);
+	        				creditAmount = creditAmount.add(tempAmount);
+	        			}
+	        			if(creditAmount.compareTo(BigDecimal.ZERO)>0){
+	        				
+	        			}
+	        		}
+	        	}
+			}catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());          	
+	        }    
+	        
+	        return result;
+	    }*/
+	    
+	    
+	    
 	    public static Map<String, Object> getFacilityByCategory(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");	
@@ -5709,6 +5850,10 @@ public class ByProductNetworkServices {
 	        if(UtilValidate.isNotEmpty(context.get("useFifo"))){
 	        	useFifo = (Boolean)context.get("useFifo");
 	        }
+	        boolean sendSMS = Boolean.TRUE;
+	        if(UtilValidate.isNotEmpty(context.get("sendSMS"))){
+	        	sendSMS = (Boolean)context.get("sendSMS");
+	        }
 	        String paymentType = "SALES_PAYIN";
 	        String partyIdTo ="Company";
 	        String paymentId = "";
@@ -5900,15 +6045,18 @@ public class ByProductNetworkServices {
 	        }       
 			 Map result = ServiceUtil.returnSuccess("Payment successfully done.");
 			 boolean enablePaymentSms = Boolean.FALSE;
-			 try{
-				 GenericValue tenantConfigEnablePaymentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enablePaymentSms"), true);
-				 if (UtilValidate.isNotEmpty(tenantConfigEnablePaymentSms) && (tenantConfigEnablePaymentSms.getString("propertyValue")).equals("Y")) {
-					 enablePaymentSms = Boolean.TRUE;
-					}
-			 }catch (GenericEntityException e) {
-				// TODO: handle exception
-				 Debug.logError(e, module);             
-			}
+			 if(sendSMS){
+				 try{
+					 GenericValue tenantConfigEnablePaymentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enablePaymentSms"), true);
+					 if (UtilValidate.isNotEmpty(tenantConfigEnablePaymentSms) && (tenantConfigEnablePaymentSms.getString("propertyValue")).equals("Y")) {
+						 enablePaymentSms = Boolean.TRUE;
+						}
+				 }catch (GenericEntityException e) {
+					// TODO: handle exception
+					 Debug.logError(e, module);             
+				}
+			 }
+			 
 			 result.put("enablePaymentSms",enablePaymentSms);
 			 result.put("paymentId",paymentId);
 			 result.put("paymentMethodTypeId",paymentMethodType);

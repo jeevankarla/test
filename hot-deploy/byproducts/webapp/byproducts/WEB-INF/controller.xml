@@ -62,6 +62,13 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AbsenteeList"/>
     </request-map>
+    <request-map uri="cancelPaymentForChequeReturn"> 
+     	<security https="true" auth="true"/>
+     	<event type="service" invoke="cancelPaymentForChequeReturn"/>
+     	<response name="success" type="view" value="FindChequeReturns"/>
+    	<response name="error" type="view" value="FindChequeReturns"/>
+    </request-map>
+    
 	<request-map uri="AbsenteeOverride">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="AbsenteeOverride"/>    	
@@ -701,6 +708,11 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindPaymentByMethod"/>    	
     </request-map>
+    <request-map uri="FindChequeReturns">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindChequeReturns"/>    	
+    </request-map>
+    
     <request-map uri="FindBoothPayments">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindBoothPayments"/>    	
@@ -1034,7 +1046,9 @@
  <view-map name="FacilityRateSearchForm" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FacilityRateSearchForm"/>
  <view-map name="createFacilityRate" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createFacilityRate"/>
  <!-- Payment views -->
- <view-map name="FindPaymentByMethod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentByMethod"/>	
+ <view-map name="FindPaymentByMethod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentByMethod"/>
+ <view-map name="FindChequeReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindChequeReturns"/>	
+ 
  
  
     
