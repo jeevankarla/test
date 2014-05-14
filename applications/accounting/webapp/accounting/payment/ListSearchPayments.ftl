@@ -94,7 +94,7 @@ under the License.
   </div>
   <form name="listPayments" id="listPayments"  method="post" action="">
     <div align="right">
-      <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
+   <!--   <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
         <option value="">${uiLabelMap.AccountingSelectAction}</option>
         <option value="<@ofbizUrl>PrintPayments</@ofbizUrl>">Print Payments</option>
         <option value="massPaymentsToSent">Status To 'Sent'</option>
@@ -102,7 +102,7 @@ under the License.
         <option value="massPaymentsToCancel">Status To 'Cancelled'</option>
         <option value="massPaymentsToReceived">Status To 'Received'</option>
       </select>
-      <input id="submitButton" type="button"  onclick="javascript:jQuery('#listPayments').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
+      <input id="submitButton" type="button"  onclick="javascript:jQuery('#listPayments').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" /> -->
       <input type="hidden" name="organizationPartyId" value="${defaultOrganizationPartyId}"/>
       <input type="hidden" name="partyIdFrom" value="${parameters.partyIdFrom?if_exists}"/>
       <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId?if_exists}"/>
@@ -162,7 +162,7 @@ under the License.
               	</a>
               </td>
               
-              <td align="right"><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+             <#--  <td align="right"><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getInvoiceRunningTotal();"/></td> -->
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
