@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.accounting.invoice.InvoiceServices;
 import org.ofbiz.base.util.Debug;
@@ -179,6 +180,14 @@ public class Evaluator {
             throw new RuntimeException("Error retrieving record for formula '" + 
 	            		formulaId + "'");
         }
+	}
+	
+	/**
+	 * return variableValues
+	 * @return result value
+	 */
+	public  Map getVariableValues() {
+		return variableValues;
 	}
 	
 	/**

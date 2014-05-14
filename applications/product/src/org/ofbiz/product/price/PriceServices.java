@@ -65,7 +65,7 @@ public class PriceServices {
     public static final int taxRounding = UtilNumber.getBigDecimalRoundingMode("salestax.rounding");
 
     
-    public static Map<String, Object> calculateLMSProductPrice(Delegator delegator, LocalDispatcher dispatcher, Map<String, ? extends Object> context) {
+    /*public static Map<String, Object> calculateLMSProductPrice(Delegator delegator, LocalDispatcher dispatcher, Map<String, ? extends Object> context) {
         Map<String, Object> result = FastMap.newInstance();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String productId = (String) context.get("productId");    
@@ -235,7 +235,7 @@ public class PriceServices {
         BigDecimal price = resultPrice.getBigDecimal("price").subtract(discountAmount);
         result.put("price", price);
         return result;
-    }
+    }*/
     
     public static Map<String, Object> getProductPriceByDate(Delegator delegator, LocalDispatcher dispatcher, Map<String, ? extends Object> context) {
         Map<String, Object> result = FastMap.newInstance();
@@ -1623,7 +1623,6 @@ public class PriceServices {
             }
         } else if ("PRIP_LIST_PRICE".equals(productPriceCond.getString("inputParamEnumId"))) {
             BigDecimal listPriceValue = listPrice;
-
             compare = listPriceValue.compareTo(new BigDecimal(productPriceCond.getString("condValue")));
         } else if ("PRIP_CURRENCY_UOMID".equals(productPriceCond.getString("inputParamEnumId"))) {
             compare = currencyUomId.compareTo(productPriceCond.getString("condValue"));
