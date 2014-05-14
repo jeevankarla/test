@@ -416,7 +416,6 @@
         <menu-item name="FacilityRate" title="Shopee Rent">
         	<condition>
         		<and>
-        			<not><if-empty field="ctxFacilityId"/></not>
         			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
         		</and>        		
         	</condition>         
