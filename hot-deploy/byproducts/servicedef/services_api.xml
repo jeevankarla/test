@@ -38,6 +38,16 @@
         <attribute name="indentResults" mode="OUT" type="Map" optional="true"/>
     </service>    
     
+    <service name="processChangeIndent" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.byproducts.POSApiServices" invoke="processChangeIndent">
+        <description>Service to process a change indent</description>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>    
+        <attribute name="supplyDate" mode="IN" type="Timestamp" optional="false"/> 
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="false"/>                                                  
+        <attribute type="List" mode="IN" name="indentItems" optional="false"/>                      
+        <attribute type="Map" mode="OUT" name="indentResults" optional="true"/>
+    </service>      
+    
     <service name="getProductPrices" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.byproducts.POSApiServices" invoke="getProductPrices">
         <description>Service to get products price list</description>

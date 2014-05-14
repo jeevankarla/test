@@ -314,7 +314,8 @@ Debug.logInfo(infoString, module);
 			return ServiceUtil.returnError("Error fetching facility " + boothId);	   
   		}  
 		Map result = FastMap.newInstance();  		
-    	Map priceResult = ByProductReportServices.getByProductPricesForFacility(dctx, UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId));
+    	Map priceResult = ByProductReportServices.getByProductPricesForFacility(dctx, 
+    			UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId, "productCategoryId", "INDENT"));
 		 if(!ServiceUtil.isError(priceResult)){
 			 result.put("productsPrice", (Map)priceResult.get("productsPrice"));
 		 }  
@@ -345,18 +346,121 @@ Debug.logInfo(infoString, module);
 		inputParamMap.put("productSubscriptionTypeId", "CASH"); 				
     	Map indentResultsAM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);
 		if(!ServiceUtil.isError(indentResultsAM)){
-			indentMap.put("AM", (List)indentResultsAM.get("changeIndentProductList"));
+			indentMap.put("AM", indentResultsAM.get("changeIndentProductList"));
 		}  
 		inputParamMap.put("subscriptionTypeId", "PM"); 			
     	Map indentResultsPM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);
 		if(!ServiceUtil.isError(indentResultsPM)){
-			indentMap.put("PM", (List)indentResultsAM.get("changeIndentProductList"));
+			indentMap.put("PM", indentResultsAM.get("changeIndentProductList"));
 		}  
 		
 		Map result = FastMap.newInstance();  		
 		result.put("indentResults", indentMap);
 	    Debug.logInfo("indentResults:" + indentMap, module);		 
     	return result;
+    }
+    
+    public static Map<String, Object> processChangeIndent(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context
+				.get("indentItems");
+		String infoString = "processChangeIndent:: indentItems: " + indentItems;
+		Debug.logInfo(infoString, module);
+		if (indentItems.isEmpty()) {
+			Debug.logError("No indent items found; " + infoString, module);
+			return ServiceUtil.returnError("No indent items found; "
+					+ infoString);
+		}
+		Map result = ServiceUtil
+				.returnSuccess("Indent items successfully processed.");
+		Map<String, Object> indentResults = FastMap.newInstance();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String boothId = (String) context.get("boothId");
+		if (UtilValidate.isEmpty(boothId)) {
+			Debug.logError("Empty facility Id", module);
+			return ServiceUtil.returnError("Empty facility Id" + infoString);
+		}
+		Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+		String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+		String shipmentTypeId = subscriptionTypeId + "_SHIPMENT";
+		String productSubscriptionTypeId = "CASH";
+		String routeChangeFlag = "";
+		Map boothDetails = (Map) (ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "userLogin", userLogin))).get("boothDetails");
+		String sequenceNum = (String) boothDetails.get("routeId"); // ::TODO:: for now fix to default route
+		GenericValue facility = null;
+		try {
+			facility = delegator.findOne("Facility", UtilMisc.toMap(
+					"facilityId", boothId), false);
+		} catch (GenericEntityException e) {
+			Debug.logWarning("Error fetching facility " + boothId + " " + e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching facility " + boothId);
+		}
+
+		List<GenericValue> subscriptionList = FastList.newInstance();
+		GenericValue subscription = null;
+		try {
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("facilityId",
+					EntityOperator.EQUALS, boothId));
+			if (subscriptionTypeId.equals("AM")) {
+				conditionList.add(EntityCondition.makeCondition(EntityCondition
+						.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId), EntityOperator.OR, EntityCondition.makeCondition(
+								"subscriptionTypeId", EntityOperator.EQUALS,
+								null)));
+
+			} else {
+				conditionList.add(EntityCondition.makeCondition( "subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
+			}
+			EntityCondition subCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			subscriptionList = delegator.findList("SubscriptionAndFacility", subCond, null, null, null, false);
+			subscriptionList = EntityUtil.filterByDate(subscriptionList, supplyDate);
+			if (UtilValidate.isEmpty(subscriptionList)) {
+				return ServiceUtil.returnError("Booth subscription does not exist for " + boothId);
+			}
+			subscription = EntityUtil.getFirst(subscriptionList);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Problem getting Booth subscription for " + boothId, module);
+			return ServiceUtil.returnError("Problem getting Booth subscription for "+ boothId);
+		}
+		Map prodQuant = FastMap.newInstance();
+		List<Map> productQtyList = FastList.newInstance();
+		for (int i = 0; i < indentItems.size(); ++i) {
+			Map indentItem = indentItems.get(i);
+			String productId = (String) indentItem.get("productId");
+			int quantityInt = ((Integer) indentItem.get("qty")).intValue();
+			BigDecimal quantity = BigDecimal.valueOf(quantityInt);
+			prodQuant.put(productId, quantity);
+			if (UtilValidate.isEmpty(quantity)) {
+				Debug.logError("quantity is empty for the product " + productId, module);
+				return ServiceUtil.returnError("quantity is empty for the product " + productId);
+			}
+			prodQuant.put("sequenceNum", sequenceNum);
+			productQtyList.add(prodQuant);
+
+		}// end of loop
+
+		Map processChangeIndentHelperCtx = UtilMisc.toMap("userLogin", userLogin);
+		processChangeIndentHelperCtx.put("subscriptionId", subscription.getString("subscriptionId"));
+		processChangeIndentHelperCtx.put("boothId", boothId);
+		processChangeIndentHelperCtx.put("shipmentTypeId", shipmentTypeId);
+		processChangeIndentHelperCtx.put("effectiveDate", supplyDate);
+		processChangeIndentHelperCtx.put("productQtyList", productQtyList);
+		processChangeIndentHelperCtx.put("productSubscriptionTypeId", productSubscriptionTypeId);
+		try {
+			result = dispatcher.runSync("processChangeIndentHelper", processChangeIndentHelperCtx);
+			if (ServiceUtil.isError(result)) {
+				String errMsg = ServiceUtil.getErrorMessage(result);
+				Debug.logError(errMsg, module);
+				return ServiceUtil.returnError(errMsg);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problem updating subscription for booth " + boothId, module);
+			return ServiceUtil.returnError("Problem updating subscription for booth " + boothId);
+		}
+  		indentResults.put("numIndentItems", indentItems.size());
+  		result.put("indentResults", indentResults);		
+  		return result;   
     }
 
     public static Map<String, Object> getFacilityAccountSummary(DispatchContext dctx, Map<String, ? extends Object> context) {

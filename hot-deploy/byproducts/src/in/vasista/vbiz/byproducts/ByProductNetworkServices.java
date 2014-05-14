@@ -94,6 +94,10 @@ public class ByProductNetworkServices {
         	salesDate =  (Timestamp) context.get("salesDate");  
          }
         Timestamp dayBegin =UtilDateTime.getDayStart(salesDate);
+        String productCategoryId = (String)context.get("productCategoryId");
+        if (UtilValidate.isEmpty(productCategoryId)) {
+        	productCategoryId = "MILK_MILKPRODUCTS";
+        }
     	List<GenericValue> productList =FastList.newInstance();
     	/*List condList =FastList.newInstance();
     	condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, "MILK_MILKPRODUCTS"));
@@ -106,7 +110,7 @@ public class ByProductNetworkServices {
 			// TODO: handle exception
     		Debug.logError(e, module);
 		} */
-        productList = ProductWorker.getProductsByCategory(delegator ,"MILK_MILKPRODUCTS" ,dayBegin);
+        productList = ProductWorker.getProductsByCategory(delegator , productCategoryId ,dayBegin);
     	return productList;
 	}
 	 /*

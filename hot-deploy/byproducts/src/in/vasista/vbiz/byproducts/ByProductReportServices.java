@@ -1008,7 +1008,12 @@ public class ByProductReportServices {
 	        	priceDate = UtilDateTime.nowTimestamp();
 	        }
 	        String productStoreId = (String) ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-	        List<GenericValue> products = ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
+	        String productCategoryId = (String)context.get("productCategoryId");
+    		Map<String, Object> productsContext = FastMap.newInstance();
+    		if (UtilValidate.isNotEmpty(productCategoryId)) {
+    			productsContext.put("productCategoryId", productCategoryId);
+    		}
+	        List<GenericValue> products = ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), productsContext);
 	        List<String> productList = EntityUtil.getFieldListFromEntityList(products, "productId", true);
 	        Map<String, Map> productsPrice = FastMap.newInstance();
 	        if(UtilValidate.isNotEmpty(productList)){
@@ -1085,7 +1090,8 @@ public class ByProductReportServices {
 						priceCatMap.put("bedCessPercent", bedPercentage);
 						priceCatMap.put("bedsecPercent", bedsecPercent);
 						priceCatMap.put("name", products.get(j).get("brandName"));
-						priceCatMap.put("description", products.get(j).get("description"));						
+						priceCatMap.put("description", products.get(j).get("description"));		
+						priceCatMap.put("sequenceNum", products.get(j).get("sequenceNum"));							
 						productsPrice.put(eachProd, priceCatMap);
 	        		}
 	        	}
