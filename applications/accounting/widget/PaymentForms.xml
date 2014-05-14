@@ -693,6 +693,10 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+        <field name="createdDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
+        <field name="lastModifiedDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
+        <field name="createdByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>  
+        <field name="lastModifiedByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>   	
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
@@ -753,6 +757,10 @@ under the License.
                 </condition-list>
             </entity-condition>
         </actions>
+        <field name="createdDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
+        <field name="lastModifiedDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
+        <field name="createdByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>  
+        <field name="lastModifiedByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>   	
         <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>

@@ -331,7 +331,41 @@ under the License.
                         <section>
                             <widgets>
                             	 <include-menu name="CashierPaymentTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                <decorator-section-include name="body"/>
+                            	 <container> 
+                            	 <section>
+                            	 <actions> 
+                            	 <entity-condition entity-name="GlAccountAndHistoryTotals" filter-by-date="false" list="glAccountAndHistories">
+					                 <condition-list combine="and">
+					                    <condition-expr field-name="organizationPartyId" operator="equals" value="Company"/>
+					                   <!--  <condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+					                     <condition-expr field-name="finAccountId" operator="equals" value="FIN_ACCNT1"/> -->
+					                      <condition-expr field-name="customTimePeriodId" operator="equals" value="APRL_MAR15"/>
+					                </condition-list>
+					                <select-field field-name="glAccountId"/>
+					                <select-field field-name="accountCode"/>
+					                <select-field field-name="accountName"/>
+					                <select-field field-name="totalPostedDebits"/>
+					                <select-field field-name="totalPostedCredits"/>
+					                <select-field field-name="totalEndingBalance"/>
+					                <order-by field-name="accountCode"/>
+					            </entity-condition>
+					            <set field="cashGlAccountTotal" from-field="glAccountAndHistories[0]"  />
+					            </actions>
+                            	 <widgets  > <label  style="h2" >Available Cash Balance:Rs ${(cashGlAccountTotal.totalPostedDebits)-(cashGlAccountTotal.totalPostedCredits)}</label>
+                            	 </widgets>
+                            	  <!-- <entity-condition entity-name="FinAccount" filter-by-date="false" list="cashFinAccountList">
+					                <condition-list combine="and">
+					                    <condition-expr field-name="organizationPartyId" operator="equals" value="Company"/>
+					                    <condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
+					                     <condition-expr field-name="finAccountId" operator="equals" value="FIN_ACCNT1"/>
+					                </condition-list>
+					            </entity-condition>
+					            <set field="cashFinAccount" from-field="cashFinAccountList[0]"  />
+                               </actions>
+                               <widgets > <label style="{color:blue;font-style:italic}" >CashBalance:${cashFinAccount.availableBalance}</label></widgets> -->
+                             </section> 
+                            </container>
+                                <decorator-section-include name="body"></decorator-section-include>
                             </widgets>
                             <fail-widgets>
                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>

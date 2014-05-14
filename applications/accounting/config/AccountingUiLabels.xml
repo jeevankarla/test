@@ -14374,4 +14374,7 @@
     <property key="InvoiceTypeRoleTypePartyPurMisMatchError">
         <value xml:lang="en">Input Error: Role '${parameters.roleTypeId}' is not valid for party '${parameters.partyIdFrom}'. Please make sure the party has the selected role. </value>
     </property>
+     <property key="BoothRoute">
+        <value xml:lang="en">Retailer /Route Id</value>        
+    </property> 
 </resource>

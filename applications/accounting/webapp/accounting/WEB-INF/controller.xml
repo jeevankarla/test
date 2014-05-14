@@ -2808,6 +2808,12 @@ under the License.
         <event type="service" invoke="massChangeInvoiceStatus"/>
         <response name="success" type="view" value="findInvoices"/>
     </request-map>
+    <request-map uri="massChangePaymentStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="massChangePaymentStatus"/>
+        <response name="success" type="view" value="findCashReceipts"/>
+        <response name="error" type="view" value="findCashReceipts"/>
+    </request-map>
     
     <request-map uri="InvoiceSearchResultsCsv.csv">
         <security https="true" auth="true"/>
@@ -2833,15 +2839,16 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newReceipts"/>
     </request-map> 
+    <!-- here we using general Creation payment Services. -->
      <request-map uri="createCashReceipt">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <event type="service" invoke="createPayment"/>
         <response name="success" type="request-redirect-noparam" value="findCashReceipts"/>
         <response name="error" type="request-redirect-noparam" value="findCashReceipts"/>
     </request-map>
     <request-map uri="createCashPayment">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <event type="service" invoke="createPayment"/>
         <response name="success" type="request-redirect-noparam" value="findCashPayblePayment"/>
         <response name="error" type="request-redirect-noparam" value="findCashPayblePayment"/>
     </request-map>
@@ -2910,7 +2917,18 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintReceipt"/>
     </request-map>
-     
+     <request-map uri="showCashierReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ShowCashierReports"/>
+    </request-map>
+     <request-map uri="PaymentsCheckList">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="PaymentsCheckList"/>        
+    </request-map>
+     <request-map uri="CashierPaymentCheckList">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="CashierPaymentCheckList"/>        
+    </request-map>
     
     <!-- end of request mappings -->
 
@@ -2967,7 +2985,9 @@ under the License.
 	<view-map name="findRouteCashPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
 	<view-map name="FindPaymentCashier" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
 	<view-map name="FindAdhocSalePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindAdhocSalePayment"/>
-	
+	<view-map name="ShowCashierReports" type="screen" page="component://accounting/widget/PaymentScreens.xml#ShowCashierReports"/>
+	<!-- global Requests -->
+	<view-map name="CashierPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashierPaymentCheckList" content-type="application/pdf" encoding="none"/>
 	
 	 
 	
@@ -3290,5 +3310,6 @@ under the License.
     <view-map name="InvoiceSearchResultPdf" type="screenfop" page="component://accounting/widget/InvoiceScreens.xml#InvoiceSearchResultPdf" content-type="application/pdf" encoding="none"/>
    <!-- Common request used for byProducts And Accountiing -->
    <view-map name="CashReceiptReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashReceiptReportPDF" content-type="application/pdf"/>
+   <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>
