@@ -29,8 +29,8 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
-<#if itemsListMap?has_content> 
-<#assign itemsList=itemsListMap.entrySet()>
+<#if itemsReturnListMap?has_content> 
+<#assign itemsList=itemsReturnListMap.entrySet()>
 <#assign tinNumber="">
 <#assign cstNumber="">
 <#list itemsList as itemlst>
@@ -45,61 +45,95 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
 	        </#if>	
 			<fo:block>
 	            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
-	             <fo:table-column column-width="150pt"/>
-	              <fo:table-column column-width="480pt"/>
-	               <fo:table-column column-width="330pt"/>
+	             <fo:table-column column-width="200pt"/>
+	              <fo:table-column column-width="300pt"/>
+	               <fo:table-column column-width="300pt"/>
 	               <fo:table-body>
 	                 <fo:table-row>
 		                   <fo:table-cell>
 		                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-		                         <fo:block  text-indent="15pt">TIN :${tinNumber}</fo:block>
-		                         <fo:block  text-indent="15pt">CST :${cstNumber}</fo:block>
+		                                 <fo:block  text-indent="5pt">INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
+			                         <fo:block  text-indent="5pt">INVOICE NO :${invoiceList.getString("invoiceId")}</fo:block>
 		                     </fo:table-cell>
 		                    <fo:table-cell>
 		                        <fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">&#160; KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED</fo:block>
-								<fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">&#160;      UNIT : MOTHER DAIRY : BANGALORE - 560 065</fo:block>
+								<fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">                UNIT : MOTHER DAIRY :G.K.V.K. POST, YELAHANKA, BANGALORE - 560 065</fo:block>
 								<fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">&#160;                 ENCLOSURE FOR TAX INVOICE</fo:block>
 								<fo:block text-align="left" font-weight="bold"  keep-together="always" white-space-collapse="false">-----------------------------------------------------------</fo:block>
 		                   </fo:table-cell>
-		                   <fo:table-cell>
-		                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-		                         <fo:block >INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
-		                         <fo:block >INVOICE NO :${invoiceList.getString("invoiceId")}</fo:block>
-		                     </fo:table-cell>
 	                     </fo:table-row>
+	                     	<fo:table-row>
+				             <#--fo:table-cell>
+								<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
+							</fo:table-cell-->
+							<fo:table-cell>
+								<fo:block text-align="right" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;</fo:block>
+								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;&#160;</fo:block>
+							</fo:table-cell>
+						</fo:table-row>
 	                     </fo:table-body>
 	                    </fo:table>
 		     </fo:block> 
 		        <fo:block>
 		            <fo:table width="100%" table-layout="fixed" space-after="0.0in">
-		              <fo:table-column column-width="150pt"/>
-		               <fo:table-column column-width="480pt"/>
+		              <fo:table-column column-width="300pt"/>
+		               <fo:table-column column-width="300pt"/>
 		               <fo:table-column column-width="330pt"/>
 		               <fo:table-body>
+		                 
 		                 <fo:table-row>
+			             
 			                   <fo:table-cell>
-			                     <fo:block  text-indent="15pt">CUST NO :${facilityId}</fo:block>
+			                     <fo:block  text-indent="">Bayer Name :${facilityId}/(${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityId, false)})</fo:block>
 			                     <#assign partyTelephoneResult = dispatcher.runSync("getPartyTelephone", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", facilityId, "userLogin", userLogin))/>
 			                     <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", facilityId, "userLogin", userLogin))/>
-			                      <fo:block  text-indent="15pt">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityId, false)}</fo:block>
-								<#if (partyAddressResult.address1?has_content)>
+			                    <#if (partyAddressResult.address1?has_content)>
+			                      <fo:block  text-indent="">Address: ${partyAddressResult.address1?if_exists}</fo:block>
+			                      </#if>
+								<#--if (partyAddressResult.address1?has_content)>
 								<fo:block font-size="5pt" text-align="center" keep-together="always">&#160;(${partyAddressResult.address1?if_exists})</fo:block>
-								</#if>
+								</#if-->
 								<#if (partyAddressResult.contactNumber?has_content)>
 								<fo:block font-size="5pt" text-align="center" keep-together="always">&#160;(${partyAddressResult.contactNumber?if_exists})</fo:block>
 								</#if>
+								<#if (partyAddressResult.postalCode?has_content)>
+								<fo:block font-size="5pt" text-align="" keep-together="always">&#160;(${partyAddressResult.postalCode?if_exists})</fo:block>
+								</#if>
 			                    </fo:table-cell>
+			             
 			                    <fo:table-cell ><fo:block linefeed-treatment="preserve">&#xA;</fo:block> </fo:table-cell>
+			             
 			                    <fo:table-cell>
-			                         <fo:block>THE DIRECTOR:</fo:block>
-			                         <fo:block>MOTHER DAIRY</fo:block>
-			                         <fo:block>G.K.V.K. POST</fo:block>
-			                         <fo:block>YELAHANKA</fo:block>
-			                         <fo:block>BANGALORE</fo:block>
-			                         <fo:block>PHONE : 8460162</fo:block>
-			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-			                         <fo:block>PLEASE MAIL CHEQUES TO</fo:block>
-			                   </fo:table-cell>
+			                         <fo:table >
+					                  <fo:table-column column-width="300pt"/>
+									  <fo:table-column column-width="200pt"/>
+									  <fo:table-column column-width="100pt"/>
+										<fo:table-body>
+										<fo:table-row>
+										<fo:table-cell>
+										<fo:block  text-align="left" font-weight="bold">
+										 Billing Period:${billingPeriodDate}</fo:block>
+										</fo:table-cell>
+										</fo:table-row>
+				
+										<fo:table-row>
+										<fo:table-cell>
+										<fo:block number-columns-spanned="2" text-align="left" font-weight="bold">
+										 TIN :${tinNumber}</fo:block>
+										</fo:table-cell>
+									</fo:table-row>
+									<fo:table-row>
+									<fo:table-cell>
+									<fo:block number-columns-spanned="2" text-align="left" font-weight="bold">
+                                          CST:${cstNumber}</fo:block>
+									</fo:table-cell>
+									</fo:table-row>					
+								</fo:table-body>
+								</fo:table>
+			             
+			                  </fo:table-cell>
+		                     
+		                     
 		                     </fo:table-row>
 		                     </fo:table-body>
 		                    </fo:table>
@@ -110,21 +144,25 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
 	    			 <fo:table-column column-width="105mm"/>
 		               <fo:table-header height="14px">
 		                 <fo:table-row>
-		                   <fo:table-cell><fo:block text-align="left">PO Number:</fo:block></fo:table-cell>
-		                    <fo:table-cell><fo:block text-align="right">PO Date:</fo:block></fo:table-cell>
+		                   <fo:table-cell><fo:block text-align="left"></fo:block></fo:table-cell>
+		                    <fo:table-cell><fo:block text-align="right"></fo:block></fo:table-cell>
+		                    <#--fo:table-cell><fo:block text-align="left">PO Number:</fo:block></fo:table-cell>
+		                    <fo:table-cell><fo:block text-align="right">PO Date:</fo:block></fo:table-cell-->
 		                  </fo:table-row>
 		                 </fo:table-header>
 		                  <fo:table-body><fo:table-row><fo:table-cell></fo:table-cell></fo:table-row></fo:table-body>
 	             </fo:table>
 		     </fo:block>      
-			  <fo:block text-align="left" keep-together="always" white-space-collapse="false">------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			  <fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			  	<fo:block >
 				<fo:table>
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
+					<fo:table-column column-width="120pt"/>
+					<fo:table-column column-width="130pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-body>
 						<fo:table-row>
@@ -146,10 +184,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
 							<fo:table-cell>
 								<fo:block text-align="right" font-weight="bold">AMOUNT</fo:block>
 							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block text-align="right" font-weight="bold">RETURN QUANTITY</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block text-align="right" font-weight="bold">RETURN AMOUNT</fo:block>
+							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
 						<fo:table-cell>
-						<fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+						<fo:block>-------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 						</fo:table-cell>
 					</fo:table-row>					
 					</fo:table-body>
@@ -157,7 +201,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
 			</fo:block>
 			<fo:block>
 				<fo:table>
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="50pt"/>
+					<fo:table-column column-width="120pt"/>
+					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
@@ -166,48 +212,65 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
 					<fo:table-body>
 					 <#assign totalQuantity=0>
 					 <#assign totalAmount=0>
-					 <#assign  itList=itemlst.getValue()>
-					 <#list itList as orderLst>
-					 <#assign quantity=orderLst.getBigDecimal("quantity")>
-					 <#assign unitListPrice=orderLst.getBigDecimal("unitListPrice")>
-					 <#assign shipmentTypeId=orderLst.getString("shipmentTypeId")>
-					 <#if shipmentTypeId=="AM_SHIPMENT_SUPPL" || shipmentTypeId=="AM_SHIPMENT">  
+					 <#assign totalReturnQuantity=0>
+					 <#assign totalReturnAmount=0>
+					 	<#assign orderItemsList= itemlst.getValue()?if_exists>	
+						<#list orderItemsList as eachItem>
+						
+						<#if eachItem.get("shipmentTypeId")=="AM_SHIPMENT_SUPPL" || eachItem.get("shipmentTypeId")=="AM_SHIPMENT">  
 					 <#assign shipmentTypeId="M">        		
-	              	<#elseif shipmentTypeId=="PM_SHIPMENT_SUPPL" || shipmentTypeId=="PM_SHIPMENT">
+	              	<#elseif eachItem.get("shipmentTypeId")=="PM_SHIPMENT_SUPPL" || eachItem.get("shipmentTypeId")=="PM_SHIPMENT">
 	              	 <#assign shipmentTypeId="E">   
               	    </#if> 
-              	    <#assign amount=(quantity)*(unitListPrice)>
-					
+						
+						<#assign quantity=eachItem.get("quantity")>
+						<#assign unitListPrice=eachItem.get("unitListPrice")>
+						<#assign amount=(quantity)*(unitListPrice)>
+						<#assign returnQuantity=eachItem.get("returnQuantity")>
+						<#assign returnAmount=eachItem.get("returnAmount")>
+					 
 						<fo:table-row>
 							<fo:table-cell>
-								<fo:block  text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderLst.getTimestamp("estimatedShipDate"), "dd-MMM-yyyy")}</fo:block>
+								<fo:block  text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.get("estimatedShipDate"), "dd-MM-yyyy")}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">${shipmentTypeId}</fo:block>
+								<fo:block  text-align="right">${shipmentTypeId} </fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">${orderLst.getString("orderId")}</fo:block>
+								<fo:block  text-align="right">${eachItem.get('orderId')?if_exists} </fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block text-align="right">${orderLst.getString("itemDescription")}</fo:block>
+								<fo:block text-align="right"> ${eachItem.get("itemDescription")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">${quantity?string("#0.00")}</fo:block>
+								<fo:block  text-align="right">${eachItem.get("quantity")?string("#0.00")?if_exists} </fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right">${amount?string("#0.00")}</fo:block>
+								<fo:block  text-align="right">${eachItem.get("amount")?string("#0.00")?if_exists} </fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">${eachItem.get("returnQuantity")?string("#0.00")?if_exists} </fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">${eachItem.get("returnAmount")?string("#0.00")?if_exists} </fo:block>
 							</fo:table-cell>
 							<#assign totalQuantity=totalQuantity+quantity>
 							<#assign totalAmount=totalAmount+amount>
+							<#assign totalReturnQuantity=totalReturnQuantity+returnQuantity>
+							<#assign totalReturnAmount=totalReturnAmount+returnAmount>
+							<#assign netQuantity=totalQuantity-totalReturnQuantity>
+							<#assign netAmount=totalAmount-totalReturnAmount>
 						</fo:table-row>
 						</#list>
 					</fo:table-body>
 				</fo:table>
 			</fo:block>
-		  <fo:block text-align="left" keep-together="always" white-space-collapse="false">------------------------------------------------------------------------------------------------------------------------------</fo:block>	
+		  <fo:block>-------------------------------------------------------------------------------------------------------------------------------------</fo:block>	
 		  <fo:block>
 				<fo:table>
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="60pt"/>
+					<fo:table-column column-width="120pt"/>
+					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="120pt"/>
@@ -233,10 +296,51 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
 							<fo:table-cell>
 								<fo:block  text-align="right" font-weight="bold">${totalAmount?string("#0.00")}</fo:block>
 							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">${totalReturnQuantity?string("#0.00")}</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">${totalReturnAmount?string("#0.00")}</fo:block>
+							</fo:table-cell>
+						</fo:table-row>
+						
+						
+						<fo:table-row>
+						<fo:table-cell>
+							<fo:block  keep-together="always" white-space-collapse="false" font-weight="bold">&#160;</fo:block>
+						</fo:table-cell>
+							</fo:table-row>		
+						
+						<fo:table-row>
+							<fo:table-cell>
+								<fo:block  text-align="left" font-weight="bold">Net Pay</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">&#160;</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">&#160;</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">&#160;</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">&#160;</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">&#160;</fo:block>
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">&#160;&#160;</fo:block>
+								<#-- fo:block  text-align="right">&#160;&#160;${netQuantity?string("#0.00")}</fo:block-->
+							</fo:table-cell>
+							<fo:table-cell>
+								<fo:block  text-align="right">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${netAmount?string("#0.00")}</fo:block>
+							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
 							<fo:table-cell>
-							  <fo:block text-align="left" keep-together="always" white-space-collapse="false">-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+							  <fo:block>-------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 				           </fo:table-cell>
 					</fo:table-row>					
 					</fo:table-body>
@@ -253,14 +357,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "ENCLOSUREINVOICE.txt")}
 							</fo:table-row>		
 				          <fo:table-row>
 							<fo:table-cell>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">Note:  Kindly verify the Details and confirm the invoice within three days of receiving the invoice failing which will be deemed</fo:block>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;         that the invoice is in order  expedits payment within 15 days of bill received.</fo:block>
+								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">Note: Kindly verify the details and confirm the invoice within three days of receiving the invoice failing which will be deemed</fo:block>
+								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;         that the invoice is in order. Expedite payment within 15 days from the receipt of this bill.</fo:block>
 								<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 							</fo:table-cell>
 						</fo:table-row>	
 						<fo:table-row>
 						<fo:table-cell>
-							<fo:block  keep-together="always" white-space-collapse="false" font-weight="bold" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                                                                      FOR MOTHER DAIRY </fo:block>
+							<fo:block  keep-together="always" white-space-collapse="false" font-weight="bold" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                     This is a system generated report, signature is not required. </fo:block>
 						</fo:table-cell>
 							</fo:table-row>		
 					 </fo:table-body>	
