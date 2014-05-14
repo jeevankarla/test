@@ -417,6 +417,7 @@ under the License.
       <field name="terminationTypeId" type="id"></field>
       <field name="appointmentDate" type="date-time"></field>
       <field name="resignationDate" type="date-time"></field>
+      <field name="locationGeoId" type="id"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
@@ -610,6 +611,47 @@ under the License.
         <key-map field-name="periodTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="PartyDeduction"
+            package-name="org.ofbiz.humanres.employment"
+            title="Party Deduction Entity">
+      <field name="roleTypeIdFrom" type="id-ne"></field>
+      <field name="roleTypeIdTo" type="id-ne"></field>
+      <field name="partyIdFrom" type="id-ne"></field>
+      <field name="partyIdTo" type="id-ne"></field>
+      <field name="deductionTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="periodTypeId" type="id"></field>
+      <field name="cost" type="currency-amount"></field>
+      <field name="actualEmployerPaidPercent" type="floating-point"></field>
+      <prim-key field="roleTypeIdFrom"/>
+      <prim-key field="roleTypeIdTo"/>
+      <prim-key field="partyIdFrom"/>
+      <prim-key field="partyIdTo"/>
+      <prim-key field="deductionTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PTY_BNFT_TPTY" title="To" rel-entity-name="Party">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_TPTRL" title="To" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_FPTY" title="From" rel-entity-name="Party">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_FPTRL" title="From" rel-entity-name="PartyRole">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PTY_BNFT_BNFTTP" rel-entity-name="DeductionType">
+        <key-map field-name="deductionTypeId"/>
+      </relation>
+      <relation type="one-nofk" fk-name="PTY_BNFT_PRDTYP" rel-entity-name="PeriodType">
+        <key-map field-name="periodTypeId"/>
+      </relation>
+    </entity>
+    
     <entity entity-name="PayGrade"
             package-name="org.ofbiz.humanres.employment"
             title="Pay Grade Entity">
@@ -1283,9 +1325,9 @@ under the License.
         <key-map field-name="productPriceRuleId"/>
       </relation>
     </entity>
-    <!-- ==================payroll billing process=============================== -->
+    <!-- ==================payroll =============================== -->
     <entity entity-name="PayrollHeader" package-name="org.ofbiz.humanres"
-		title="Invoice Entity">
+		title="PayrollHeader Entity">
 		<field name="payrollHeaderId" type="id-ne"></field>
 		<field name="periodBillingId" type="id-ne"></field>
 		<field name="partyId" type="id"></field>
@@ -1310,14 +1352,13 @@ under the License.
       </index>		
 	</entity>
    <entity entity-name="PayrollHeaderItem" package-name="org.ofbiz.humanres"
-		title="Invoice Item Entity">
+		title="PayrollHeader Item Entity">
 		<field name="payrollHeaderId" type="id-ne"></field>
 		<field name="payrollItemSeqId" type="id-ne"></field>
 		<field name="payrollHeaderItemTypeId" type="id"></field>
 		<field name="amount" type="currency-precise"></field>
 		<field name="description" type="description"></field>
 		<field name="showInPaySlip" type="indicator" />
-		
 		<prim-key field="payrollHeaderId" />
 		<prim-key field="payrollItemSeqId" />
 		<relation type="one" fk-name="PAYH_IID"
@@ -1329,4 +1370,65 @@ under the License.
 			<key-map rel-field-name ="invoiceItemTypeId" field-name="payrollHeaderItemTypeId"/>
 		</relation>
 	</entity>
+	<entity entity-name="PayHeadPriceAction"
+            package-name="org.ofbiz.humanres"
+            title="PayHead Price Action Entity">
+      <field name="payrollBenDedRuleId" type="id-ne"></field>
+      <field name="payHeadPriceActionSeqId" type="id-ne"></field>
+      <field name="payHeadPriceActionTypeId" type="id-ne"></field>
+      <field name="acctgFormulaId" type="id"></field>   
+      <field name="amount" type="fixed-point"></field>
+      <field name="rateCode" type="short-varchar"></field>
+      <prim-key field="payrollBenDedRuleId"/>
+      <prim-key field="payHeadPriceActionSeqId"/>
+      <relation type="one" fk-name="PYH_PCACT_TYPE" rel-entity-name="PayHeadPriceActionType">
+        <key-map field-name="payHeadPriceActionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PYH_PCACT_RL" rel-entity-name="PayrollBenDedRule">
+        <key-map field-name="payrollBenDedRuleId"/>
+      </relation>
+      <relation type="one" fk-name="PAY_HED_FORMULA"
+          rel-entity-name="AcctgFormula">
+  		<key-map field-name="acctgFormulaId"/>
+	  </relation>
+    </entity>
+    <entity entity-name="PayHeadPriceActionType"
+            package-name="org.ofbiz.humanres"
+            default-resource-name="ProductEntityLabels"
+            title="PayHead Price Action Type Entity">
+      <field name="payHeadPriceActionTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="payHeadPriceActionTypeId"/>
+    </entity>
+    <entity entity-name="PayrollBenDedCond"
+            package-name="org.ofbiz.humanres"
+            title="Payroll Benfit ,Deduction Condition Entity">
+      <field name="payrollBenDedRuleId" type="id-ne"></field>
+      <field name="payrollBenDedCondSeqId" type="id-ne"></field>
+      <field name="inputParamEnumId" type="id"></field>
+      <field name="operatorEnumId" type="id"></field>
+      <field name="condValue" type="long-varchar"></field>
+      <prim-key field="payrollBenDedRuleId"/>
+      <prim-key field="payrollBenDedCondSeqId"/>
+      <relation type="one" fk-name="PYB_PCCOND_RULE" rel-entity-name="PayrollBenDedRule">
+        <key-map field-name="payrollBenDedRuleId"/>
+      </relation>
+      <relation type="one" fk-name="PYB_PCCOND_INENUM" title="InputParam" rel-entity-name="Enumeration">
+        <key-map field-name="inputParamEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PYB_PCCOND_OPENUM" title="Operator" rel-entity-name="Enumeration">
+        <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="PayrollBenDedRule"
+            package-name="org.ofbiz.humanres"
+            title="Benfit ,Deduction Amount Rule Entity">
+      <field name="payrollBenDedRuleId" type="id-ne"></field>
+      <field name="payHeadTypeId" type="id-ne"></field>
+      <field name="ruleName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="payrollBenDedRuleId"/>
+    </entity>
 </entitymodel>

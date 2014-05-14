@@ -37,5 +37,55 @@ under the License.
     <SecurityPermission description="Employee can check the status of his requests and trainings assigned to him with this permission." permissionId="EMPLOYEE_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="EMPLOYEE_VIEW"/>
     <UserLoginSecurityGroup groupId="HUMANRES_EMPLOYEE" userLoginId="demoemployee" fromDate="2001-01-01 12:00:00.0"/>
-
+    
+    
+    
+    <!--  -->
+    <EnumerationType description="Payhead Price Parent Enum Type" enumTypeId="PYHD_PRICE" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Payhead Price Input Parameter" enumTypeId="PYHD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PYHD_PRICE"/>
+    <Enumeration description="Location" enumCode="PAYHD_BEDE_GEO" enumId="PAYHD_BEDE_GEO" sequenceId="01" enumTypeId="PYHD_PRICE_IN_PARAM"/>
+    <Enumeration description="PositionType" enumCode="PAYHD_BEDE_POS" enumId="PAYHD_BEDE_POS" sequenceId="02" enumTypeId="PYHD_PRICE_IN_PARAM"/>
+    <Enumeration description="Employee" enumCode="PAYHD_BEDE_EMPID" enumId="PAYHD_BEDE_EMPID" sequenceId="03" enumTypeId="PYHD_PRICE_IN_PARAM"/>
+    
+    
+    
+    
+    
+    <PayHeadPriceActionType payHeadPriceActionTypeId="PRICE_FLAT"/>
+    <PayHeadPriceActionType payHeadPriceActionTypeId="PRICE_FORMU"/>
+     
+    <AcctgFormula acctgFormulaId="DA"  description="DA" formula="0.8*(${BASIC})" hasTable="N" isSlabBased="N" />
+    <AcctgFormula acctgFormulaId="HRA" createdStamp="2013-09-16 11:14:10.0" createdTxStamp="2013-09-16 11:14:10.0" description="HRA" formula="0.3*(${BASIC})" hasTable="N" isSlabBased="N"/>
+    <PayrollBenDedRule payrollBenDedRuleId="100" ruleName="Test Benfit Rule 1" payHeadTypeId="PAYROL_BEN_DA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="BANG" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="100"/>
+    <PayHeadPriceAction acctgFormulaId="DA" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="100" />
+    
+    
+   
+    <PayrollBenDedRule payrollBenDedRuleId="101" ruleName="Test Benfit Rule 2" payHeadTypeId="PAYROL_BEN_HRA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="ACCOUNTS" inputParamEnumId="PAYHD_BEDE_POS" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="101"/>
+     
+     <PayrollBenDedCond condValue="6022" inputParamEnumId="PAYHD_BEDE_EMPID" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="101"/>
+    <PayHeadPriceAction amount="1000.0" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="101" />
+    
+    <PayrollBenDedRule payrollBenDedRuleId="102" ruleName="Test Benfit Rule 3" payHeadTypeId="PAYROL_BEN_HRA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="WATCH_MAN" inputParamEnumId="PAYHD_BEDE_POS" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="102"/>
+    <PayrollBenDedCond condValue="BANG" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="02" payrollBenDedRuleId="102"/>
+    <PayrollBenDedCond condValue="6022" inputParamEnumId="PAYHD_BEDE_EMPID" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="03" payrollBenDedRuleId="102"/>
+    <PayHeadPriceAction amount="5001.0" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="102" />
+     
+     <PayrollBenDedRule payrollBenDedRuleId="103" ruleName="Test Benfit Rule 3" payHeadTypeId="PAYROL_BEN_HRA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="WATCH_MAN" inputParamEnumId="PAYHD_BEDE_POS" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="103"/>
+    <PayrollBenDedCond condValue="BANG" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="02" payrollBenDedRuleId="103"/>
+    <PayHeadPriceAction acctgFormulaId="HRA" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="103" />
+     
+   
+   
+   
+<!-- PayHeadPriceAction
+	PayHeadPriceActionType
+	PayrollBenDedCond
+	PayrollBenDedRule
+  -->
+  
 </entity-engine-xml>
