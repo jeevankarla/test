@@ -67,7 +67,7 @@
     
     
     <service name="processInstitutionBilling" engine="java" 
-        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processInstitutionBilling">
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="processInstitutionBilling" transaction-timeout="10000">
         <description>Process Credit Institution Custom Billing</description>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="periodTypeId" type="String" mode="IN" optional="false"/>
