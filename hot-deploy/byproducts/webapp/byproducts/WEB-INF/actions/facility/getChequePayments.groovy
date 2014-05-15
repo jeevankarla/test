@@ -27,6 +27,6 @@ if(parameters.paymentRefNum){
 }
 condList.add(EntityCondition.makeCondition("paymentMethodTypeId" ,EntityOperator.EQUALS, "CHEQUE_PAYIN"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-paymentList = delegator.findList("Payment", cond, null, null, null ,false);
+paymentList = delegator.findList("Payment", cond, null, ["-paymentDate"], null ,false);
 context.paymentList = paymentList;
 

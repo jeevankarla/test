@@ -824,17 +824,18 @@
     <form name="FindChequePayments" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="FindChequeReturns"
     	default-table-style="basic-table hover-bar" separate-columns="true"> 
     	
-        <field name="facilityId" title="${uiLabelMap.BoothRoute}" action="javascript:this.value=this.value.toUpperCase();" event="onblur"><lookup target-form-name="LookupFacility"/></field>
-        <field name="paymentRefNum" title="Cheque Number"> <text/></field>
+        <field name="facilityId" title="Retailer" action="javascript:this.value=this.value.toUpperCase();" event="onblur"><lookup target-form-name="LookupFacility"/></field>
+        <field name="paymentRefNum" title="Cheque No."> <text/></field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
     <form name="ListChequePayments" type="list" list-name="paymentList" target=""  paginate-target="FindChequeReturns"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
     	<field name="paymentId"><hidden value="${paymentId}"/></field>
-    	<field name="facilityId" title="Retailer"><display/></field>
-    	<field name="paymentDate"><display/></field>
+    	<field name="facilityId" title="Retailer"><display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]"/></field>
+    	<field name="paymentDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate, &quot;dd MMM, yyyy&quot;);}"/></field>
     	<field name="amount"><display/></field>
-    	<field name="paymentRefNum"><display/></field>
+    	<field name="paymentRefNum" title="Cheque No."><display/></field>
+    	<field name="issuingAuthority" title="Bank"><display/></field>
         <field name="cancelPayment" title="" widget-style="buttontext">
         	<hyperlink  target-type="plain" description="${uiLabelMap.cancelPayment}"  target="javascript:chequeReturns('${paymentId}', 0);"></hyperlink>
         </field>         	    	
