@@ -579,9 +579,14 @@ under the License.
             <call-service service-name="copyAcctgTransAndEntries" in-map-name="copyAcctgTransCtx">
                 <result-to-field field="postAcctgTransMap.acctgTransId" result-name="acctgTransId"/>
             </call-service>
-            <!-- <if-compare field="acctgTransPayment.isPosted" operator="equals" value="Y">
-                <call-service service-name="postAcctgTrans" in-map-name="postAcctgTransMap"/>
-            </if-compare> -->
+            <now-timestamp field="nowTimestamp"/>
+            <set field="dayStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}" type="Timestamp"/>
+		    <set field="paymentDateStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(payment.paymentDate)}" type="Timestamp"/>
+		    <if-compare-field operator="equals" field="dayStart" to-field="paymentDateStart" type="Timestamp">
+                   <if-compare field="acctgTransPayment.isPosted" operator="equals" value="Y">
+                		<call-service service-name="postAcctgTrans" in-map-name="postAcctgTransMap"/>
+            	  </if-compare>
+            </if-compare-field>
             <clear-field field="postAcctgTransMap"/>
         </iterate>
         <if-compare operator="equals" value="PETTYCASH_INVOICE" field="updateInvoiceCtx.invoiceTypeId">

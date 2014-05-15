@@ -562,6 +562,17 @@ under the License.
             	<result-to-field field="postAcctgTransMap.acctgTransId"
 						result-name="acctgTransId"/>
             </call-service>
+            <!--  here post  reversal AcctgTrans if payment date is today-->
+            <now-timestamp field="nowTimestamp"/>
+            <entity-one value-field="payment" entity-name="Payment">
+               <field-map field-name="paymentId" from-field="acctgTransPayment.paymentId"/>
+            </entity-one>
+            <set field="dayStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}" type="Timestamp"/>
+	        <set field="paymentDateStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(payment.paymentDate)}" type="Timestamp"/>
+			<if-compare-field operator="equals" field="dayStart" to-field="paymentDateStart" type="Timestamp">
+				<call-service service-name="postAcctgTrans"
+				in-map-name="postAcctgTransMap" />
+			</if-compare-field>
             <make-value value-field="acctgTransAttribute"
 					entity-name="AcctgTransAttribute" />
 			<set field="acctgTransAttribute.acctgTransId" from-field="acctgTransPayment.acctgTransId" />
