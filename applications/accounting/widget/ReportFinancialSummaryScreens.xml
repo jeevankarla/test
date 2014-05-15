@@ -2876,17 +2876,12 @@
 							field="hasReportsEditPermission" />
 					</condition>
 					<widgets>
-						<decorator-screen name="SimpleDecorator"
-							location="component://common/widget/CommonScreens.xml">
-							<decorator-section name="body">
-								<platform-specific>
-									<xsl-fo>
-										<html-template
-											location="component://accounting/webapp/accounting/reports/newFinancialAccountTrans.fo.ftl" />
-									</xsl-fo>
-								</platform-specific>
-							</decorator-section>
-						</decorator-screen>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/cashBookReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
 					</widgets>
 					<fail-widgets>
 						<decorator-screen name="main-decorator"

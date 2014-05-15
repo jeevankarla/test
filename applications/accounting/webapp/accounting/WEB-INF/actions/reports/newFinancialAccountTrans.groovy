@@ -190,7 +190,7 @@ if (organizationPartyId) {
 					finAccount = [:];
 					
 					if(UtilValidate.isEmpty(paymentId)){
-					finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["reasonEnumId" : "FATR_CONTRA"]), null, null, null, true);
+					finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["reasonEnumId" : "FATR_CONTRA","finAccountTransTypeId" : "DEPOSIT"]), null, null, null, true);
 						if(UtilValidate.isNotEmpty(finAccountList)){
 							finAccountId = finAccountList[0].finAccountId;
 							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
