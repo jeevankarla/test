@@ -91,6 +91,7 @@ function getPaymentRunningTotal() {
                         <td>${uiLabelMap.AccountingPaymentType}</td>
                         <td>${uiLabelMap.AccountingFromParty}</td>
                         <td>${uiLabelMap.AccountingToParty}</td>
+                        <td>Bank Name</td>
                         <td>${uiLabelMap.CommonAmount}</td>
                         <td>${uiLabelMap.CommonDate}</td>
                         <td align="right">${uiLabelMap.CommonSelectAll}<input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>
@@ -103,6 +104,8 @@ function getPaymentRunningTotal() {
                             <td>${payment.paymentTypeDesc?if_exists}</td>
                             <td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</td>
                             <td>${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</td>
+                            <td>${(payment.issuingAuthority)!}</td>
+                            
                             <td><@ofbizCurrency amount=payment.amount isoCode=payment.currencyUomId/></td>
                             <td>${payment.effectiveDate?if_exists}</td>
                             <td align="right">
