@@ -888,6 +888,53 @@ public class PayrollService {
 				serviceResults.put("itemsList", itemsList);
 				return serviceResults;      
 			}
+			
+			public static Map<String, Object> getPayHeadAmount(DispatchContext dctx, Map<String, ? extends Object> context) {
+
+		        Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();
+		        Map<String, Object> result = FastMap.newInstance();
+		        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        String payHeadTypeId = (String) context.get("payHeadTypeId");
+		        String employeeId = (String) context.get("employeeId");
+		        String customTimePeriodId = (String)context.get("customTimePeriodId");
+		        Locale locale = (Locale) context.get("locale");
+		        BigDecimal amount = BigDecimal.ZERO;
+		        try{
+		        	GenericValue customTimePeriod;
+					try {
+						customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+					} catch (GenericEntityException e1) {
+						Debug.logError(e1,"Error While Finding Customtime Period");
+						return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+					}
+					Timestamp timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+					Timestamp timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+					//get employee position details here
+					Map empPositionDetails = getEmployeePositionDetail(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd));       
+	        	    Map payheadAmtCtx = FastMap.newInstance();
+                    payheadAmtCtx.put("userLogin", userLogin);
+                    payheadAmtCtx.put("employeeId", employeeId);
+                    payheadAmtCtx.put("geoId", empPositionDetails.get("geoId"));
+                    payheadAmtCtx.put("emplPositionTypeId", empPositionDetails.get("emplPositionTypeId"));
+                    payheadAmtCtx.put("timePeriodStart", timePeriodStart);
+                    payheadAmtCtx.put("timePeriodEnd", timePeriodEnd);
+                    payheadAmtCtx.put("payHeadTypeId", payHeadTypeId);
+	                Map<String, Object> calcResults = calculatePayHeadAmount(dctx,payheadAmtCtx);
+	                result.putAll(calcResults);
+		                
+		            } catch (Exception e) {
+		                Debug.logError(e, "Error getting rules from the database while calculating price", module);
+		                return ServiceUtil.returnError(e.toString());
+		            }
+		        //end of price rules
+
+		       
+		        // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
+		        return result;
+		    }
+
 		    /**
 		     * <p>Calculates the pay head amount from pricing rules given the following input, and of course access to the database:</p>
 		     * <ul>
@@ -917,8 +964,7 @@ public class PayrollService {
 		        Locale locale = (Locale) context.get("locale");
 		        BigDecimal amount = BigDecimal.ZERO;
 		        try{
-			        
-		         
+			           		         
 		        	    Map makePayHedPrice = FastMap.newInstance();
 		        	    makePayHedPrice.put("userLogin",userLogin);
 		        	    makePayHedPrice.put("payHeadTypeId",payHeadTypeId);
