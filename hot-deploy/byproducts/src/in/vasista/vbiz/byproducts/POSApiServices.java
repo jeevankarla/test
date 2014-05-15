@@ -430,11 +430,12 @@ Debug.logInfo(infoString, module);
 			String productId = (String) indentItem.get("productId");
 			int quantityInt = ((Integer) indentItem.get("qty")).intValue();
 			BigDecimal quantity = BigDecimal.valueOf(quantityInt);
-			prodQuant.put(productId, quantity);
+			prodQuant.put("productId", productId);
 			if (UtilValidate.isEmpty(quantity)) {
 				Debug.logError("quantity is empty for the product " + productId, module);
 				return ServiceUtil.returnError("quantity is empty for the product " + productId);
 			}
+			prodQuant.put("quantity", quantity);			
 			prodQuant.put("sequenceNum", sequenceNum);
 			productQtyList.add(prodQuant);
 
