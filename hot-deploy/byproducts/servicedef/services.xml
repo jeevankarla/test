@@ -539,12 +539,11 @@
     </service>
     
     <service name="createCreditNoteForReturns" engine="java"
-            location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createCreditNoteForReturns" auth="true">
+            location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createCreditNoteForReturns" auth="true" transaction-timeout="70000">
         <description>Create Credit Notes For Return Items</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
-    
     
     <service name="cancelPaymentForChequeReturn" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelPaymentForChequeReturn" auth="true">
@@ -609,6 +608,7 @@
         <attribute name="instrumentDate" mode="IN" type="String" optional="true" />
         <attribute name="useFifo" mode="IN" type="Boolean" optional="true"/>
     </service>
+
      <service name="massMakeBoothPayments" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="massMakeBoothPayments">
         <description>Service to get the list of routes</description>

@@ -3767,7 +3767,6 @@ public class ByProductNetworkServices {
 			}
 			context.put("thruDate", UtilDateTime.getDayEnd(paymentTimestamp));
 	    	Map boothsPaymentsDetail = getBoothReceivablePaymentsForPeriod(dispatcher.getDispatchContext() ,context);
-	    	    	
 			return boothsPaymentsDetail;
 		}
 	    
@@ -4347,7 +4346,7 @@ public class ByProductNetworkServices {
 	    	Delegator delegator = ctx.getDelegator();
 			String boothId = (String) context.get("boothId");  
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");	
-	//Debug.logInfo("userLogin= " + userLogin, module);
+	        //Debug.logInfo("userLogin= " + userLogin, module);
 	        
 	        if (UtilValidate.isEmpty(boothId)) {
 	            Debug.logError("Booth Id cannot be empty", module);
@@ -5281,8 +5280,9 @@ public class ByProductNetworkServices {
 	        return result;
 	    }
 	    
-	    /*public static Map<String, Object> createCreditNoteForReturns(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    public static Map<String, Object> createCreditNoteForReturns(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
+	    	LocalDispatcher dispatcher = ctx.getDispatcher();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");	
 			Timestamp fromDate = (Timestamp) context.get("fromDate");
 			Timestamp thruDate = (Timestamp)context.get("thruDate");
@@ -5297,15 +5297,16 @@ public class ByProductNetworkServices {
 				
 	        	List<GenericValue> returnHeaderAndItems = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", condition, null, null, null, false);
 	        	
-	        	List returnIds = EntityUtil.getFieldListFromEntityList(returnHeaderAndItems, "returnId", true);
-	        
+	        	List<String> returnIds = EntityUtil.getFieldListFromEntityList(returnHeaderAndItems, "returnId", true);
 	        	for(String returnId : returnIds){
 	        		List<GenericValue> returnItems = EntityUtil.filterByCondition(returnHeaderAndItems, EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId));
 	        		GenericValue payItem = EntityUtil.getFirst(returnItems);
 	        		boolean createNote = Boolean.TRUE;
+	        		String boothId = payItem.getString("originFacilityId");
+	        		Timestamp payDate = payItem.getTimestamp("estimatedShipDate");
 	        		if(UtilValidate.isNotEmpty(payItem) && UtilValidate.isNotEmpty(payItem.getString("paymentId"))){
 	        			String paidId = payItem.getString("paymentId");
-	        			GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paidId));
+	        			GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paidId),false);
 	        			String payType = payment.getString("paymentMethodTypeId");
 	        			String status = payment.getString("statusId");
 	        			if(payType.equals("CREDITNOTE_PAYIN") && !status.equals("PMNT_VOID")){
@@ -5321,7 +5322,27 @@ public class ByProductNetworkServices {
 	        				creditAmount = creditAmount.add(tempAmount);
 	        			}
 	        			if(creditAmount.compareTo(BigDecimal.ZERO)>0){
-	        				
+	        				  Map paymentInputMap = FastMap.newInstance();
+		  			  		  paymentInputMap.put("userLogin", userLogin);
+		  			  		  paymentInputMap.put("facilityId",boothId);
+		  			  		  paymentInputMap.put("supplyDate",UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd"));
+		  			  		  paymentInputMap.put("paymentDate", payDate);
+		  			  		  paymentInputMap.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
+		  			  		  paymentInputMap.put("paymentPurposeType","ROUTE_MKTG");
+		  			  		  paymentInputMap.put("amount",creditAmount.toString());
+		  			  		  paymentInputMap.put("useFifo",true);
+		  			  		  paymentInputMap.put("sendSMS",false);
+		  			  		  
+		  			  		  Map paymentResult = createPaymentForBooth(ctx, paymentInputMap);
+		  			  		  if(ServiceUtil.isError(paymentResult)){
+		  			  			  Debug.logError(paymentResult.toString(), module);
+		  		    			  return ServiceUtil.returnError(null, null, null, paymentResult);
+		  			  		  }
+	
+		  			  		  String paymentId = (String)paymentResult.get("paymentId");
+		  		              GenericValue returnHeaders = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
+		  		              returnHeaders.set("paymentId", paymentId);
+		  		              returnHeaders.store();
 	        			}
 	        		}
 	        	}
@@ -5331,7 +5352,7 @@ public class ByProductNetworkServices {
 	        }    
 	        
 	        return result;
-	    }*/
+	    }
 	    
 	    
 	    
@@ -5585,7 +5606,7 @@ public class ByProductNetworkServices {
 			if(UtilValidate.isNotEmpty(thruDate)){
 				exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));	
 			}
-			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList(obInvoiceType, "SHOPEE_RENT")));		
+			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList(obInvoiceType, "SHOPEE_RENT", "MIS_INCOME_IN")));		
 			List invoiceStatusList = UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF");		
 			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,invoiceStatusList));
 			
@@ -5610,7 +5631,7 @@ public class ByProductNetworkServices {
 			}
 					
 			result.put("invoiceList", tempObInvoiceList);
-			result.put("invoiceIds", EntityUtil.getFieldListFromEntityList(pendingOBInvoiceList, "invoiceId", true));	   
+			result.put("invoiceIds", EntityUtil.getFieldListFromEntityList(pendingOBInvoiceList, "invoiceId", true));
 			return result;
 			
 		    
