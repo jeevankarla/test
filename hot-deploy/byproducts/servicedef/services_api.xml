@@ -38,7 +38,7 @@
         <attribute name="indentResults" mode="OUT" type="Map" optional="true"/>
     </service>    
     
-    <service name="processChangeIndent" engine="java"  auth="true" export="true"
+    <service name="processChangeIndentApi" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.byproducts.POSApiServices" invoke="processChangeIndent">
         <description>Service to process a change indent</description>
         <attribute name="boothId" type="String" mode="IN" optional="false"/>    
