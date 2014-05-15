@@ -26,6 +26,8 @@ import org.ofbiz.accounting.util.UtilAccounting;
 import java.math.BigDecimal;
 import com.ibm.icu.util.Calendar;
 import org.ofbiz.base.util.*;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 if (organizationPartyId) {
     onlyIncludePeriodTypeIdList = [];
@@ -58,11 +60,42 @@ if (organizationPartyId) {
     BigDecimal balanceOfTheAcctgForYear = BigDecimal.ZERO;
 	openingBalance = BigDecimal.ZERO;
 	
+	finAccountCustomTimePeriodId = null;
+	effectiveDate = null;
+	effectiveDateStr = parameters.fromDate;
+	if (UtilValidate.isEmpty(effectiveDateStr)) {
+		effectiveDate = UtilDateTime.nowTimestamp();
+	}
+	else{
+		def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
+		}
+	}
+	monthBegin = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
+	monthEnd = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
 	
-    if (parameters.timePeriod) {
-        currentTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.timePeriod], false);
+	fromDateStr = UtilDateTime.toDateString(effectiveDate ,"MMMM dd, yyyy");
+	context.put("fromDateStr",fromDateStr);
+
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
+	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_MONTH"));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(monthBegin)));
+	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(monthEnd)));
+	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	customTimePeriodList = delegator.findList("CustomTimePeriod", condition, null, null, null, true);
+	
+	if(UtilValidate.isNotEmpty(customTimePeriodList)){
+		finAccountCustomTimePeriodId = customTimePeriodList[0].customTimePeriodId;
+	}
+	
+    if (finAccountCustomTimePeriodId) {
+        currentTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : finAccountCustomTimePeriodId], false);
         previousTimePeriodResult = dispatcher.runSync("getPreviousTimePeriod", 
-                [customTimePeriodId : parameters.timePeriod, userLogin : userLogin]);
+                [customTimePeriodId : finAccountCustomTimePeriodId, userLogin : userLogin]);
         previousTimePeriod = previousTimePeriodResult.previousTimePeriod;
         if (UtilValidate.isNotEmpty(previousTimePeriod)) {
             glAccountHistory = delegator.findOne("GlAccountHistory", 
@@ -149,7 +182,21 @@ if (organizationPartyId) {
 					if(UtilValidate.isNotEmpty(payment)){
 						partyId = payment.partyIdFrom;
 					}
-					accountName = acctgTransEntry.accountName;
+					if(partyId == "Company"){
+						partyId = payment.partyIdTo;
+					}
+					
+					finAccountId = "";
+					finAccount = [:];
+					
+					if(UtilValidate.isEmpty(paymentId)){
+					finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["reasonEnumId" : "FATR_CONTRA"]), null, null, null, true);
+						if(UtilValidate.isNotEmpty(finAccountList)){
+							finAccountId = finAccountList[0].finAccountId;
+							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
+							accountName = finAccount.finAccountName;
+						}
+					}
 					// Prepare List for CSV
 					
 					debitAmount = BigDecimal.ZERO;
@@ -165,7 +212,6 @@ if (organizationPartyId) {
 					
 					transactionDate = acctgTransEntry.transactionDate;
 					transactionDateStr=UtilDateTime.toDateString(transactionDate ,"MMMM dd, yyyy");
-					
 					
 					if(prevDateStr == transactionDateStr){
 						// Add Credit and Debit
@@ -251,5 +297,43 @@ if (organizationPartyId) {
 		context.paymentInvType = paymentInvType;
     }
 }
+//for each day in cash Book
+dayFinAccountTransList= [];
+getDayTot = "N";
+financialAcctgTransList.each{ dayFinAccount ->
+	dayFinAccountMap = [:];
+	if(context.get("fromDateStr") == dayFinAccount.transactionDate){
+		getDayTot = "Y";
+		dayFinAccountMap["transactionDate"] = dayFinAccount.transactionDate;
+		dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
+		dayFinAccountMap["partyId"] = dayFinAccount.partyId;
+		dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
+		dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
+		dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
+		dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
+		tempDayTotalsMap = [:];
+		tempDayTotalsMap.putAll(dayFinAccountMap);
+		dayFinAccountTransList.add(tempDayTotalsMap);
+	}
+	if((getDayTot == "Y") && (dayFinAccount.get("paymentId") == "DAY TOTAL")){
+		getDayTot = "N";
+		dayFinAccountMap["transactionDate"] = dayFinAccount.transactionDate;
+		dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
+		dayFinAccountMap["partyId"] = dayFinAccount.partyId;
+		dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
+		dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
+		dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
+		dayFinAccountMap["closingBalance"] = dayFinAccount.closingBalance;
+		tempDayTotalsMap = [:];
+		tempDayTotalsMap.putAll(dayFinAccountMap);
+		dayFinAccountTransList.add(tempDayTotalsMap);
+	}
+}
+context.dayFinAccountTransList = dayFinAccountTransList;
+
+
+
+
+
 
 

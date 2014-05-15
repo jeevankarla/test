@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if financialAcctgTransList?has_content>
+    <#if dayFinAccountTransList?has_content>
     	<fo:block text-align="left" font-style="normal">${uiLabelMap.KMFDairyHeader}</fo:block>
     	<fo:block text-align="left" font-style="normal">${uiLabelMap.KMFDairySubHeader}</fo:block>
         <fo:table border="1pt solid" border-width=".1mm" width="19cm">
             <fo:table-column column-number="1" column-width="100%"/>
             <fo:table-header>
                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                    <fo:block text-align="center" font-style="normal">CASH BOOK FOR THE PERIOD ${(currentTimePeriod.fromDate)!} ${uiLabelMap.CommonTo} ${(currentTimePeriod.thruDate)!}</fo:block>
+                    <fo:block text-align="center" font-style="normal">CASH BOOK FOR THE DAY ${fromDateStr?if_exists} </fo:block>
                 </fo:table-cell>
             </fo:table-header>
             <fo:table-body>
@@ -40,7 +40,7 @@ under the License.
                 </fo:table-row>
                 <fo:table-row>
                     <fo:table-cell width="16cm" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="start">${uiLabelMap.AccountingTimePeriod} : ${(currentTimePeriod.fromDate)!} ${uiLabelMap.CommonTo} ${(currentTimePeriod.thruDate)!}</fo:block>        
+                        <fo:block text-align="start">Date : ${(fromDateStr)?if_exists} </fo:block>        
                     </fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
@@ -68,7 +68,7 @@ under the License.
                     <fo:block text-align="center">${uiLabelMap.FormFieldTitle_transactionDate}</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border="1pt solid" border-width=".1mm">
-                    <fo:block text-align="center">Payment Id</fo:block>
+                    <fo:block text-align="center">Payment Id/Type</fo:block>
                 </fo:table-cell>
                 <fo:table-cell border="1pt solid" border-width=".1mm">
                     <fo:block text-align="center">Party Id</fo:block>
@@ -96,7 +96,7 @@ under the License.
                 </fo:table-cell>
             </fo:table-header>
             <fo:table-body>
-                <#list financialAcctgTransList as finAcctngDetails>
+                <#list dayFinAccountTransList as finAcctngDetails>
                 		<#assign transactionDate = (finAcctngDetails.get("transactionDate")?if_exists)/>
                 		<#assign paymentId = (finAcctngDetails.get("paymentId")?if_exists)/>
                 		<#assign partyId = (finAcctngDetails.get("partyId")?if_exists)/>
@@ -111,9 +111,14 @@ under the License.
                                             ${transactionDate?if_exists}
                                     </fo:block>
                                 </fo:table-cell>
+                                <#assign paymentType = delegator.findOne("PaymentAndType", {"paymentId" : paymentId}, true)?if_exists/>
                                 <fo:table-cell border="1pt solid" border-width=".1mm">
                                     <fo:block text-align="center">
+                                    <#if paymentId != "DAY TOTAL">
+                                             ${paymentId?if_exists}/${paymentType.description?if_exists}
+                                     <#else>
                                              ${paymentId?if_exists}
+                                      </#if>
                                     </fo:block>
                                 </fo:table-cell>
                                 <#if ((partyId)?has_content)>

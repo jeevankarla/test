@@ -595,12 +595,7 @@ under the License.
         <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
     <form name="FinancialAccountTransForMonth" type="single" target="FinancialAccountTransForMonth">
-        <actions>
-            <entity-and entity-name="CustomTimePeriod" list="customTimePeriods">
-                <field-map field-name="organizationPartyId"/>
-                <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
-            </entity-and>
-        </actions>
+        <field name="fromDate" title="Date"><date-time type="timestamp"/></field>
         <field name="organizationPartyId"><hidden/></field>
         <field name="finAccountId" title="Financial Account">
         	<drop-down allow-empty="false">
@@ -612,11 +607,6 @@ under the License.
                     <entity-order-by field-name="glAccountId"/>
                 </entity-options>
             </drop-down> -->
-        </field>
-        <field name="TimePeriod" parameter-name="timePeriod">
-            <drop-down>
-                <list-options list-name="customTimePeriods" key-name="customTimePeriodId" description="${fromDate} - ${thruDate}"/>
-            </drop-down>
         </field>
         <field name="isPosted">
             <drop-down>
@@ -636,7 +626,7 @@ under the License.
          <field name="creditAmount"><display/></field>
           <field name="closingBalance"><display/></field>
     </form>
-    <form name="FinancialAccountTransForMonthCSV" type="list" list-name="financialAcctgTransList" view-size="99999">
+    <form name="FinancialAccountTransForMonthCSV" type="list" list-name="dayFinAccountTransList" view-size="99999">
         <field name="transactionDate"><display/></field>
         <field name="paymentId"><display/></field>
         <field name="partyId"><display/></field>
