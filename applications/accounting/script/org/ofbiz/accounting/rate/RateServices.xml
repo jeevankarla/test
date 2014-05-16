@@ -23,7 +23,6 @@ under the License.
 
     <simple-method method-name="updateRateAmount" short-description="update/create a rate amount value">
         <set value="_GLACCOUNT_EDIT" field="securityAction"/>
-        <set field="updateFlag" from-field="parameters.updateFlag"></set>
         <check-permission permission="ACCOUNTING" action="${securityAction}">
             <alt-permission permission="HUMANRES" action="_GLOBALHR_EDIT"/>
         	<fail-property resource="AccountingUiLabels" property="AccountingPermissionError"/>
@@ -49,11 +48,9 @@ under the License.
         <if-empty field="parameters.workEffortId">
             <set field="parameters.workEffortId" value="_NA_"/>
         </if-empty>
-		
-		 <set field="createRateAmt" value="Y"/>
-		
+
         <!-- try to find existing value -->
-        <entity-and entity-name="RateAmount" list="rateAmounts">
+        <entity-and entity-name="RateAmount" list="rateAmounts" filter-by-date="true">
             <field-map field-name="rateTypeId" from-field="parameters.rateTypeId"/>
             <field-map field-name="workEffortId" from-field="parameters.workEffortId"/>
             <field-map field-name="rateCurrencyUomId" from-field="parameters.rateCurrencyUomId"/>
@@ -61,7 +58,6 @@ under the License.
             <field-map field-name="productId" from-field="parameters.productId"/>
             <field-map field-name="partyId" from-field="parameters.partyId"/>
             <field-map field-name="periodTypeId" from-field="parameters.periodTypeId"/>
-            <order-by field-name="-fromDate"/>
         </entity-and>
 
         <!-- end existing value -->
@@ -71,31 +67,14 @@ under the License.
                 <set-service-fields service-name="deleteRateAmount" map="rateAmount" to-map="delRateAmount"/>
                 <call-service service-name="deleteRateAmount" in-map-name="delRateAmount"/>
             </if-compare-field>
-       <if-not-empty field="updateFlag">
-            <if-compare-field field="rateAmount.fromDate" operator="equals" to-field="parameters.fromDate">
-             <set field="createRateAmt" value="N"/>
-             <set field="rateAmount.lmsProductPriceTypeId" from-field="parameters.lmsProductPriceTypeId"/>
-             <set field="rateAmount.byprodProductPriceTypeId" from-field="parameters.byprodProductPriceTypeId"/>
-             <store-value value-field="rateAmount"/>
-             <else>
-              	<set-service-fields service-name="deleteRateAmount" map="rateAmount" to-map="delRateAmount"/>
-             	<set field="delRateAmount.thruDate" from-field="parameters.thruDate"/>
-	         	<call-service service-name="deleteRateAmount" in-map-name="delRateAmount"/>
-	         </else>
-            </if-compare-field>
-       </if-not-empty>
-       </if-not-empty>
-        
-        <if-compare field="createRateAmt" operator="equals" value="Y">
-         <make-value entity-name="RateAmount" value-field="newEntity"/>
+        </if-not-empty>
+
+        <make-value entity-name="RateAmount" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <if-empty field="parameters.fromDate">
-        	<now-timestamp field="newEntity.fromDate"/>
-        </if-empty>
+        <now-timestamp field="newEntity.fromDate"/>
         <clear-field field="newEntity.thruDate"/>
         <create-value value-field="newEntity"/>
-        </if-compare>
     </simple-method>
 
     <simple-method method-name="deleteRateAmount" short-description="update/create a rate amount value">
@@ -122,20 +101,13 @@ under the License.
         <if-empty field="parameters.workEffortId">
             <set field="parameters.workEffortId" value="_NA_"/>
         </if-empty>
-        <if-not-empty field="updateFlag">
-            <set field="parameters.partyId"/>
-        </if-not-empty>
-        
+
         <entity-one entity-name="RateAmount" value-field="rateAmount"/>
-         <if-not-empty field="rateAmount">
-        <if-not-empty field="parameters.thruDate">
-            <set field="rateAmount.thruDate" from-field="parameters.thruDate"/>
-        </if-not-empty>
-        <if-empty field="parameters.thruDate">
-        	<now-timestamp field="rateAmount.thruDate"/>
-        </if-empty>
-               <store-value value-field="rateAmount"/>
-              <else>
+
+        <if-not-empty field="rateAmount">
+            <now-timestamp field="rateAmount.thruDate"/>
+            <store-value value-field="rateAmount"/>
+            <else>
                 <add-error><fail-message message="could not find record to be deleted"/></add-error>
             </else>
         </if-not-empty>
