@@ -356,6 +356,7 @@ public class LmsServices {
 		String marginOnMilk =(String)context.get("marginOnMilk");
 		String marginOnProduct =(String)context.get("marginOnProduct");
 		String fdrNumber =(String)context.get("fdrNumber");
+		BigDecimal rateAmount =(BigDecimal)context.get("rateAmount");
 		Map<String, Object> resultMap = FastMap.newInstance();
 		Map<String, Object> input = FastMap.newInstance();
 		Map<String, Object> outMap = FastMap.newInstance();
@@ -401,7 +402,7 @@ public class LmsServices {
 				openedDate = UtilDateTime.nowTimestamp();
 			}
 			openedDate = UtilDateTime.getDayStart(openedDate);
-			if(categoryTypeEnum.equals("VENDOR") || categoryTypeEnum.equals("FRANCHISEE")){
+			if(!categoryTypeEnum.equals("CR_INST")){
 				if(firstName == null){
 					Debug.logError("firstName is missing", module);
 					return ServiceUtil.returnError("firstName is missing");
@@ -418,7 +419,7 @@ public class LmsServices {
                     return resultMap;
                 }
 				ownerPartyId = (String) resultMap.get("partyId");
-			}else {
+			}else{
 				if(groupName == null){
 					Debug.logError("groupName is missing", module);
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -553,6 +554,28 @@ public class LmsServices {
 				 delegator.createSetNextSeqId(newSubscription);
 			 }else{
 				 delegator.createSetNextSeqId(newSubscription);
+			 }
+			 if(UtilValidate.isNotEmpty(parentFacilityId)){
+			    Map tempMap = FastMap.newInstance();
+	        	tempMap.put("facilityId", facilityId);
+	        	tempMap.put("facilityGroupId", parentFacilityId);
+	        	tempMap.put("fromDate", openedDate);
+	        	tempMap.put("userLogin", userLogin);
+	        	resultMap = dispatcher.runSync("addFacilityToGroup", tempMap);
+	        	if(ServiceUtil.isError(resultMap)){
+	        		Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+                 return resultMap;
+	        	}
+			 }
+			 if (UtilValidate.isNotEmpty(categoryTypeEnum)&& categoryTypeEnum.equals("SHP_RTLR")){
+				  input.clear();
+				  input = UtilMisc.toMap("userLogin", userLogin, "fromDate",openedDate,"facilityId", facilityId,
+							 "rateTypeId", "SHOPEE_RENT","productId","_NA_","rateAmount",rateAmount,"supplyTypeEnumId","_NA_","rateCurrencyUomId","INR");
+			      dispatcher.runSync("createOrUpdateFacilityRate",input);
+			      if (ServiceUtil.isError(resultMap)) {
+					  Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+			          return resultMap;
+			       }
 			 }
 			 input = UtilMisc.toMap("userLogin", userLogin, "partyId", ownerPartyId, "facilityId", facilityId, "parentFacilityId", parentFacilityId);
 			 resultMap = dispatcher.runSync("updateFacilityParty", input);
@@ -1536,7 +1559,9 @@ public class LmsServices {
 		Map<String, Object> input = FastMap.newInstance();
 		Map<String, Object> outMap = FastMap.newInstance();
 		String postalCode=(String)context.get("postalCode");
+		BigDecimal rateAmount =(BigDecimal)context.get("rateAmount");
 		String city=(String)context.get("city");
+		String reopen =(String)context.get("reopen");
 		GenericValue parentFacility;
 		GenericValue facility;
 		boolean updateFlag=false;
@@ -1554,22 +1579,148 @@ public class LmsServices {
 		 }
 		 	 resultMap =  dispatcher.runSync("updateFacility", input);
 		 if(ServiceUtil.isError(outMap)){
-        	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+        	 	Debug.logError("failed service update facility party:"+ServiceUtil.getErrorMessage(outMap), module);
         	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
          }
 		 if (UtilValidate.isNotEmpty(categoryTypeEnum)&& categoryTypeEnum.equals("CR_INST")){
-			  String rateTypeId =categoryTypeEnum+"_MRGN";
-			  input.clear();
-			  closedDate=UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(openedDate, -1), TimeZone.getDefault(), locale);
-			  input = UtilMisc.toMap("userLogin", userLogin,"partyId",partyId, "rateTypeId",rateTypeId,"fromDate",UtilDateTime.getDayStart(openedDate),"thruDate",closedDate,"lmsProductPriceTypeId",marginOnMilk,"byprodProductPriceTypeId",marginOnProduct,"rateAmount",new BigDecimal("0"),"updateFlag","update");
-			  resultMap =  dispatcher.runSync("updateRateAmount", input);
+			    boolean isNewCrInst = true;
+			    List<GenericValue> activeRateAmount = FastList.newInstance();
+			    List<GenericValue> futureRateAmount = FastList.newInstance();
+			    String rateTypeId =categoryTypeEnum+"_MRGN";
+			    GenericValue rateAmountTypes=null;
+			    Timestamp fromDate=UtilDateTime.getDayStart(openedDate);
+			    List conditionList = UtilMisc.toList(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS,rateTypeId));
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+				EntityCondition condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				List<GenericValue> rateAmountList = delegator.findList("RateAmount", condition1, null, UtilMisc.toList("-fromDate"), null, false);
+				activeRateAmount = EntityUtil.filterByDate(rateAmountList, fromDate);
+				futureRateAmount = EntityUtil.filterByCondition(rateAmountList, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, fromDate));
+				futureRateAmount = EntityUtil.orderBy(futureRateAmount, UtilMisc.toList("fromDate","fromDate"));
+				GenericValue futureRateAmounts = EntityUtil.getFirst(futureRateAmount);
+				 if(UtilValidate.isNotEmpty(futureRateAmounts)){
+					 futureRateAmounts.getTimestamp("fromDate");
+					 closedDate=UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(futureRateAmounts.getTimestamp("fromDate"), -1), TimeZone.getDefault(), locale);
+				 }
+				if (UtilValidate.isNotEmpty(activeRateAmount)){
+					 Timestamp tempfromDate=null;
+					 rateAmountTypes= EntityUtil.getFirst(activeRateAmount);
+					 rateAmountTypes.getString("lmsProductPriceTypeId");
+					 rateAmountTypes.getString("byprodProductPriceTypeId");
+					 tempfromDate= rateAmountTypes.getTimestamp("fromDate");
+					   if(UtilDateTime.getDayStart(openedDate).compareTo(UtilDateTime.getDayStart(tempfromDate))>0){
+						   rateAmountTypes.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(openedDate, -1), TimeZone.getDefault(), locale));
+						   rateAmountTypes.store();
+					    }
+				       	if(UtilDateTime.getDayStart(openedDate).compareTo(UtilDateTime.getDayStart(tempfromDate))==0){
+				       		rateAmountTypes.set("lmsProductPriceTypeId", marginOnMilk);
+				       		rateAmountTypes.set("byprodProductPriceTypeId", marginOnProduct);
+				       		rateAmountTypes.set("thruDate",closedDate);
+				       		rateAmountTypes.store();
+				       		isNewCrInst=false;
+				       	}
+				}   
+				if(isNewCrInst){
+					GenericValue newEntity = delegator.makeValue("RateAmount");
+	     	        newEntity.set("partyId", partyId);
+	     	        newEntity.set("productId", "_NA_");
+	     	        newEntity.set("rateTypeId", "CR_INST_MRGN");
+	     	        newEntity.set("periodTypeId", "RATE_HOUR");
+	     	        newEntity.set("rateCurrencyUomId", "INR");
+	     	        newEntity.set("emplPositionTypeId", "_NA_");
+	     	        newEntity.set("workEffortId", "_NA_");
+	     	        newEntity.set("lmsProductPriceTypeId", marginOnMilk);
+	     	        newEntity.set("byprodProductPriceTypeId", marginOnProduct);
+	     	        newEntity.set("fromDate", openedDate);
+	     	        newEntity.set("thruDate", closedDate);
+	 		        try {
+	 					delegator.create(newEntity);
+	 				}catch (GenericEntityException e) {
+	 					Debug.logError("Error in creating Facility Rate: "+facilityId+ "\t"+e.toString(),module);
+	 					return ServiceUtil.returnError(e.getMessage());
+	 				}
+				  }
 			  if (ServiceUtil.isError(resultMap)) {
 				 Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
 	            return resultMap;
 	         }
 		 }
-		 
-		 
+			if (UtilValidate.isNotEmpty(categoryTypeEnum)&& categoryTypeEnum.equals("SHP_RTLR")){
+				if (UtilValidate.isNotEmpty(reopen)){
+				      input.clear();
+					  input = UtilMisc.toMap("userLogin", userLogin, "fromDate",UtilDateTime.nowTimestamp(),"facilityId", facilityId,
+								 "rateTypeId", "SHOPEE_RENT","productId","_NA_","rateAmount",rateAmount,"supplyTypeEnumId","_NA_","rateCurrencyUomId","INR");
+				      dispatcher.runSync("createOrUpdateFacilityRate",input);
+				      if (ServiceUtil.isError(resultMap)) {
+						  Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+				          return resultMap;
+				       }
+				}else{
+				  input.clear();
+				  List<GenericValue> facilityRateList = FastList.newInstance();
+			      List<GenericValue> activeFacilityRate = FastList.newInstance();
+			      Timestamp tempfromDate=null;
+			      Timestamp fromDate=UtilDateTime.nowTimestamp();
+			      Timestamp thruDate=UtilDateTime.getDayEnd(closedDate);
+			      boolean isNewShpRtlr = true;
+				  List conditionList = UtilMisc.toList(
+			                EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+			                conditionList.add( EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS, "SHOPEE_RENT"));
+			                conditionList.add( EntityCondition.makeCondition("productId", EntityOperator.EQUALS, "_NA_"));
+			                conditionList.add( EntityCondition.makeCondition("supplyTypeEnumId", EntityOperator.EQUALS, "_NA_"));
+			                conditionList.add( EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, "INR"));
+			                EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			                try {
+								 facilityRateList = delegator.findList("FacilityRate", condition, null, UtilMisc.toList("-fromDate"), null, false);
+								 GenericValue newEntity = delegator.makeValue("FacilityRate");
+								 if(UtilValidate.isNotEmpty(facilityRateList)){
+										GenericValue activeRate = facilityRateList.get(0);
+								       	tempfromDate = activeRate.getTimestamp("fromDate");
+								    	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))>0){
+								    		if(UtilValidate.isNotEmpty(thruDate)){
+								    		  activeRate.set("thruDate", thruDate);
+								    		}else{
+								    		  activeRate.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+								    		}
+								       		activeRate.store();
+								       		isNewShpRtlr=false;
+									    }
+								       	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))==0){
+								       		activeRate.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+								       		activeRate.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+								       		activeRate.set("rateAmount",rateAmount);
+								       		activeRate.set("thruDate",thruDate);
+								       		activeRate.store();
+								       		isNewShpRtlr=false;
+								       	}
+								 }
+								 if(isNewShpRtlr ){
+						     	        newEntity.set("facilityId", facilityId);
+						     	        newEntity.set("productId", "_NA_");
+						     	        newEntity.set("rateTypeId", "SHOPEE_RENT");
+						     	        newEntity.set("supplyTypeEnumId", "_NA_");
+						     	        newEntity.set("rateCurrencyUomId", "INR");
+						     	        newEntity.set("rateAmount", rateAmount);
+						     	        newEntity.set("fromDate", fromDate);
+						     	        newEntity.set("thruDate", thruDate);
+						     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+						    	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+						 		        try {
+						 					delegator.create(newEntity);
+						 				}catch (GenericEntityException e) {
+						 					Debug.logError("Error in creating Facility Rate: "+facilityId+ "\t"+e.toString(),module);
+						 					return ServiceUtil.returnError(e.getMessage());
+						 				}
+									  }
+			      if (ServiceUtil.isError(resultMap)) {
+					  Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+			          return resultMap;
+			       }
+				}catch (GenericEntityException e) {
+					Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+				} 
+			  }
+			}
 		   if (UtilValidate.isNotEmpty(address1)){
 			    input.clear();
 	        	input.put("partyId", partyId);
@@ -1644,10 +1795,12 @@ public class LmsServices {
 		        	  }else{
 							    input.clear();
 					            input.put("userLogin", userLogin);
-					            input.put("contactNumber",mobileNumber);
+					            input.put("contactNumber",contactNumber);
+					            input.put("contactMechTypeId","TELECOM_NUMBER");
 					            input.put("contactMechPurposeTypeId", "PRIMARY_PHONE");
 					            input.put("partyId", partyId);
 					            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
+					           
 					            if(ServiceUtil.isError(outMap)){
 					           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
 					           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));

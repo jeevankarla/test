@@ -35,11 +35,16 @@ function makeDatePicker(fromDateId ,thruDateId){
 			jQuery("#marginOnMilk").parent().parent().hide();
 			jQuery("#marginOnProduct").parent().parent().hide();
 		}
+		if(categoryTypeEnum == "SHP_RTLR"){
+		    jQuery("#rateAmount").parent().parent().show();
+		}else{
+			jQuery("#rateAmount").parent().parent().hide();
+		}
 	}
     $(document).ready(function(){
       	jQuery("#marginOnMilk").parent().parent().hide();
 		jQuery("#marginOnProduct").parent().parent().hide();
-    		
+    	jQuery("#rateAmount").parent().parent().hide();	
             $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -84,11 +89,28 @@ function makeDatePicker(fromDateId ,thruDateId){
                 	}
                 	if(currentIndex == 1 && newIndex == 2){
                 	     var groupName = $("#groupName").val();
+                	     var firstName = $("#firstName").val();
+                	     var lastName = $("#lastName").val();
 	                	 var address1 = $("#address1").val();
 	                	 var city = $("#city").val();
 	                	 var postalCode = $("#postalCode").val();
 	                	 var email = $("#emailAddress").val();
-                		 if( (groupName).length < 1 ) {
+	                	 var categoryTypeEnum =$( "#categoryTypeEnum option:selected" ).val();
+	                	 if( categoryTypeEnum != "CR_INST" && (firstName).length < 1 ) {
+					    	$('#firstName').css('background', 'yellow'); 
+					       	setTimeout(function () {
+					           	$('#firstName').css('background', 'white').focus(); 
+					       	}, 800);
+					    	return false;
+				    	}
+				    	if( !categoryTypeEnum != "CR_INST" && (lastName).length < 1 ) {
+					    	$('#lastName').css('background', 'yellow'); 
+					       	setTimeout(function () {
+					           	$('#lastName').css('background', 'white').focus(); 
+					       	}, 800);
+					    	return false;
+				    	}
+                		 if( categoryTypeEnum == "CR_INST" && (groupName).length < 1 ) {
 					    	$('#groupName').css('background', 'yellow'); 
 					       	setTimeout(function () {
 					           	$('#groupName').css('background', 'white').focus(); 
@@ -226,9 +248,15 @@ function makeDatePicker(fromDateId ,thruDateId){
 				         <tr>
 	       					<td class="label"><b> Security Deposit</b></td>
 	       					 <td>
-	        				  <input class="h3" type="text" size="18" maxlength="20" name="securityDeposit" id="securityDeposit" />
+	        				  <input class="h3" type="text" size="10" maxlength="20" name="securityDeposit" id="securityDeposit" />
 	          				</td>
 				        </tr>
+				        <tr>
+   							<td class="label">Rate Amount</td>
+							 <td>
+								 <input type="text" name="rateAmount" id="rateAmount" size="10" maxlength="60" />
+							 </td>
+ 						 </tr>
 				        <tr>
 				           <td class="label"><b> Maximum Credit</b></td>
 				           <td>
@@ -304,7 +332,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		          				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Group Details</div></td>
 					        </tr>
 					         <tr>
-					            <td class="label"><b>Group Name*</b></td></td>
+					            <td class="label"><b>Group Name</b></td></td>
 		          				<td>
 									<input class="h3" type="text" size="18" maxlength="20" name="groupName" id="groupName" />
 		          				</td>

@@ -19,7 +19,8 @@ under the License.
 <script>
 	
       function setClosedDateNull(){      
-      	$('#closedDate').val('');      
+      	$('#closedDate').val(''); 
+      	$('#reopen').val('Y');     
       } 
       function hideorshow(){
 	    var categoryTypeEnum =$( "#categoryTypeEnum option:selected" ).val();
@@ -29,6 +30,11 @@ under the License.
 		}else{
 			jQuery("#marginOnMilk").parent().parent().hide();
 			jQuery("#marginOnProduct").parent().parent().hide();
+		}
+		if(categoryTypeEnum == "SHP_RTLR"){
+		    jQuery("#rateAmount").parent().parent().show();
+		}else{
+			jQuery("#rateAmount").parent().parent().hide();
 		}
 	}
 	  $(document).ready(function(){
@@ -85,12 +91,6 @@ under the License.
           </td>
         </tr>  
   </#if>
-  <tr>
-    <td class="label">${uiLabelMap.FormFieldTitle_parentFacilityId}</td>
-    <td>
-      <@htmlTemplate.lookupField value="${facility.parentFacilityId?if_exists}" formName="EditFacilityForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility"/>
-    </td>
-  </tr>
   <tr>
     <td class="label">${uiLabelMap.ProductFacilityOwner}</td>
     <td>
@@ -202,7 +202,7 @@ under the License.
     <td class="label">Margin Allowed On Milk</td>
     <td > 
           <select name="marginOnMilk" id="marginOnMilk" >
-          <#if rateAmountTypes != null && rateAmountTypes?has_content>
+          <#if rateAmountTypes?has_content && rateAmountTypes != null>
               <option value="${rateAmountTypes.lmsProductPriceTypeId?if_exists}" selected>${rateAmountTypes.lmsProductPriceTypeId?if_exists}</option>
             </#if> 
         	<option value="DEFAULT_PRICE">DEFAULT_PRICE</option> 
@@ -214,7 +214,7 @@ under the License.
     <td class="label">Margin Allowed On Product</td>
     <td > 
           <select name="marginOnProduct" id="marginOnProduct" >
-            <#if rateAmountTypes != null && rateAmountTypes?has_content >
+            <#if   rateAmountTypes?has_content && rateAmountTypes != null>
             <option value="${rateAmountTypes.byprodProductPriceTypeId?if_exists}" selected>${rateAmountTypes.byprodProductPriceTypeId?if_exists}</option>
             </#if>
         	<option value="DEFAULT_PRICE">DEFAULT_PRICE</option> 
@@ -222,7 +222,13 @@ under the License.
           </select>   
   </td>
   </tr>
-   <tr>
+  <tr>
+    <td class="label">Rate Amount</td>
+    <td>
+      <input type="text" name="rateAmount" id="rateAmount" value="${rateAmount?if_exists}" size="10" maxlength="60" />
+    </td>
+  </tr>
+  
    <tr>
        <td class="label">Date of Commissioning</td>
        <td>	 

@@ -59,13 +59,18 @@ facilityTypes = delegator.findList("FacilityType", null, null, null, null, false
 if (facilityTypes) {
   context.facilityTypes = facilityTypes;
 }
-conditionList=[];
-conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS,"CR_INST_MRGN"));
-conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, facility.ownerPartyId,));
-condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-fieldsToSelect = ["byprodProductPriceTypeId","lmsProductPriceTypeId","fromDate"] as Set;
-rateAmountList = delegator.findList("RateAmount", condition1, fieldsToSelect , ["-fromDate"], null, false);
-GenericValue rateAmountTypes= EntityUtil.getFirst(rateAmountList);
+GenericValue rateAmountTypes=null;
+if (UtilValidate.isNotEmpty(facilityId)) {
+	conditionList=[];
+	conditionList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS,"CR_INST_MRGN"));
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, facility.ownerPartyId));
+	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	fieldsToSelect = ["byprodProductPriceTypeId","lmsProductPriceTypeId","fromDate"] as Set;
+	rateAmountList = delegator.findList("RateAmount", condition1, fieldsToSelect , ["-fromDate"], null, false);
+	if (UtilValidate.isNotEmpty(rateAmountList)) {
+	    rateAmountTypes= EntityUtil.getFirst(rateAmountList);
+	}
+}
 context.rateAmountTypes = rateAmountTypes;
 // all possible inventory item types
 context.inventoryItemTypes = delegator.findList("InventoryItemType", null, null, ['description'], null, true);
@@ -75,10 +80,33 @@ context.weightUomList = delegator.findList("Uom", EntityCondition.makeCondition(
 
 // area unit of measures
 context.areaUomList = delegator.findList("Uom", EntityCondition.makeCondition([uomTypeId : 'AREA_MEASURE']), null, null, null, true);
+Timestamp fromDate=UtilDateTime.toTimestamp(facility.openedDate);
 
-
-
-
+BigDecimal rateAmount=null;
+if (UtilValidate.isNotEmpty(facilityId)) {
+	dayBegin = UtilDateTime.getDayStart(fromDate);
+	Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
+	inputRateAmt.put("rateCurrencyUomId", "INR");
+	inputRateAmt.put("facilityId", facilityId);
+	inputRateAmt.put("fromDate",dayBegin);
+	inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
+	condList=[];
+	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId));
+	condList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS,"SHOPEE_RENT"));
+	condList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, "INR"));
+	condList.add(EntityCondition.makeCondition("supplyTypeEnumId", EntityOperator.EQUALS, "_NA_"));
+	cond1=EntityCondition.makeCondition(condList,EntityOperator.AND);
+	facilityRates = delegator.findList("FacilityRate", cond1, null , null, null, false);
+	if (UtilValidate.isNotEmpty(facilityTypes)) {
+	   facilityRate = EntityUtil.filterByDate(facilityRates,fromDate);
+	}
+	if (UtilValidate.isNotEmpty(facilityRate)) {
+		GenericValue validFacilityRate= EntityUtil.getFirst(facilityRate);
+		 rateAmount=(BigDecimal)validFacilityRate.get("rateAmount");
+	}
+	
+}
+context.rateAmount=rateAmount;
 
 
 
