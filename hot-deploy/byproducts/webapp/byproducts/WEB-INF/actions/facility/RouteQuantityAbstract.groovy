@@ -168,6 +168,18 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 		prodTotals = dayTotals.get("productTotals");
 		grandTotalRevenue=dayTotals.get("totalRevenue");
 		if(UtilValidate.isNotEmpty(prodTotals)){
+			// for sale report
+			Set prodKeys = prodTotals.keySet();
+			productList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, prodKeys) , null, null, null, false);
+			productList = UtilMisc.sortMaps(productList, UtilMisc.toList("brandName"));
+			productValueMap = [:];
+			productList.each{ product->
+				if(UtilValidate.isNotEmpty(prodTotals.get(product.productId))){
+					prodMap = prodTotals.get(product.productId);
+					productValueMap.put(product.productId,prodMap);
+				}
+			}
+			context.putAt("saleProductTotals", productValueMap);
 			context.putAt("grandProdTotals", prodTotals);
 			Iterator mapIter = prodTotals.entrySet().iterator();		
 			while (mapIter.hasNext()) {

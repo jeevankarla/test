@@ -126,7 +126,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
                                 	</#if>
 	                       			<fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" keep-together="always" font-weight="bold">
+                                    <fo:block text-align="left" font-weight="bold">
                                             <#if partyId?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)} </#if>
                                     </fo:block>
 	                                </fo:table-cell>

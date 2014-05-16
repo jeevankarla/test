@@ -29,7 +29,7 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
- <#if grandProdTotals?has_content> 
+ <#if saleProductTotals?has_content> 
 <fo:page-sequence master-reference="main" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
@@ -59,7 +59,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                     	<#assign grandTotalRtrnQty = 0>
                     	<#assign grandTotalRtrnQtyLtrs = 0>
                     	<#assign grandTotalRetrnQtyRevenue = 0>
-                    	<#assign productDetails = grandProdTotals.entrySet()>
+                    	<#assign productDetails = saleProductTotals.entrySet()>
                     	<#list productDetails as prodTotals>
 		                        <#assign product = delegator.findOne("Product", {"productId" : prodTotals.getKey()}, true)?if_exists/>
 		                        <#assign quantity = (prodTotals.getValue().get("packetQuantity"))?if_exists>
