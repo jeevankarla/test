@@ -62,13 +62,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                     	<#assign productDetails = grandProdTotals.entrySet()>
                     	<#list productDetails as prodTotals>
 		                        <#assign product = delegator.findOne("Product", {"productId" : prodTotals.getKey()}, true)?if_exists/>
+		                        <#assign quantity = (prodTotals.getValue().get("packetQuantity"))?if_exists>
+		                        <#if (quantity != 0)>
 								<fo:table-row>
                     				<fo:table-cell>
 	                            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false">${product.brandName}</fo:block>  
 	                       			</fo:table-cell>
 	                       			<#assign netQty = 0>
-	                       			<#assign quantity = (prodTotals.getValue().get("packetQuantity"))?if_exists>
-	                       			
 	                       			<#assign grandTotalQty = grandTotalQty+quantity>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${quantity?if_exists?string("#0.00")}</fo:block>  
@@ -124,6 +124,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${totalNetPrice?if_exists?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
                 				</fo:table-row>
+                				</#if>
                 			</#list>
                 			<fo:table-row>
 			                   <fo:table-cell>
