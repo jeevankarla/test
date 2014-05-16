@@ -1589,6 +1589,10 @@ public class LmsServices {
 			    String rateTypeId =categoryTypeEnum+"_MRGN";
 			    GenericValue rateAmountTypes=null;
 			    Timestamp fromDate=UtilDateTime.getDayStart(openedDate);
+			    Timestamp thruDate=null;
+			    if(UtilValidate.isNotEmpty(closedDate)){
+			       thruDate=UtilDateTime.getDayEnd(closedDate);
+			    }
 			    List conditionList = UtilMisc.toList(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS,rateTypeId));
 				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				EntityCondition condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -1599,7 +1603,7 @@ public class LmsServices {
 				GenericValue futureRateAmounts = EntityUtil.getFirst(futureRateAmount);
 				 if(UtilValidate.isNotEmpty(futureRateAmounts)){
 					 futureRateAmounts.getTimestamp("fromDate");
-					 closedDate=UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(futureRateAmounts.getTimestamp("fromDate"), -1), TimeZone.getDefault(), locale);
+					 thruDate=UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(futureRateAmounts.getTimestamp("fromDate"), -1), TimeZone.getDefault(), locale);
 				 }
 				if (UtilValidate.isNotEmpty(activeRateAmount)){
 					 Timestamp tempfromDate=null;
@@ -1659,8 +1663,11 @@ public class LmsServices {
 				  List<GenericValue> facilityRateList = FastList.newInstance();
 			      List<GenericValue> activeFacilityRate = FastList.newInstance();
 			      Timestamp tempfromDate=null;
-			      Timestamp fromDate=UtilDateTime.nowTimestamp();
-			      Timestamp thruDate=UtilDateTime.getDayEnd(closedDate);
+			      Timestamp fromDate=UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+			      Timestamp thruDate=null;
+				    if(UtilValidate.isNotEmpty(closedDate)){
+				       thruDate=UtilDateTime.getDayEnd(closedDate);
+				    }
 			      boolean isNewShpRtlr = true;
 				  List conditionList = UtilMisc.toList(
 			                EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
@@ -1678,8 +1685,6 @@ public class LmsServices {
 								    	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))>0){
 								    		if(UtilValidate.isNotEmpty(thruDate)){
 								    		  activeRate.set("thruDate", thruDate);
-								    		}else{
-								    		  activeRate.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
 								    		}
 								       		activeRate.store();
 								       		isNewShpRtlr=false;
