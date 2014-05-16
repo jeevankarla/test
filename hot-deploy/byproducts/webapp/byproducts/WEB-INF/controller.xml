@@ -258,6 +258,11 @@
         <response name="success" type="view" value="ByProdReports"/>
     </request-map>
      -->
+    <request-map uri="LookupVehicle">
+	    <security auth="true" https="true"/>
+	    <response name="success" type="view" value="LookupVehicle"/>
+    </request-map>
+  
     <request-map uri="LookupByProductCategory">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="LookupByProductCategory"/>
@@ -1048,7 +1053,7 @@
  <!-- Payment views -->
  <view-map name="FindPaymentByMethod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentByMethod"/>
  <view-map name="FindChequeReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindChequeReturns"/>	
- 
+<view-map name="LookupVehicle" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupVehicle"/> 
  
  
     
