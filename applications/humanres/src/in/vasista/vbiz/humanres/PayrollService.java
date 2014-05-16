@@ -901,6 +901,7 @@ public class PayrollService {
 		        String customTimePeriodId = (String)context.get("customTimePeriodId");
 		        Locale locale = (Locale) context.get("locale");
 		        BigDecimal amount = BigDecimal.ZERO;
+		        
 		        try{
 		        	GenericValue customTimePeriod;
 					try {
@@ -913,7 +914,7 @@ public class PayrollService {
 					Timestamp timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 					//get employee position details here
 					Map empPositionDetails = getEmployeePositionDetail(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd));       
-	        	    Map payheadAmtCtx = FastMap.newInstance();
+					Map payheadAmtCtx = FastMap.newInstance();
                     payheadAmtCtx.put("userLogin", userLogin);
                     payheadAmtCtx.put("employeeId", employeeId);
                     payheadAmtCtx.put("geoId", empPositionDetails.get("geoId"));
@@ -981,8 +982,6 @@ public class PayrollService {
 	                    priceResultRuleCtx.put("payHeadPriceRules", allBenDedPriceRules);
 	                    Map<String, Object> calcResults = calcPriceResultFromRules(dctx,priceResultRuleCtx);
 	                    result.putAll(calcResults);
-	                    Debug.log("calcResults============="+calcResults);
-		                
 		            } catch (GenericEntityException e) {
 		                Debug.logError(e, "Error getting rules from the database while calculating price", module);
 		                return ServiceUtil.returnError(e.toString());
@@ -1040,9 +1039,7 @@ public class PayrollService {
 	                // if all true, perform all actions
 	                BigDecimal modifyAmount = BigDecimal.ZERO;
 	                if (allTrue) {
-	                	Debug.log("payrollBenDedRuleId true===="+payHeadPriceRuleId);
 	                    List<GenericValue> payHeadPriceActions = delegator.findByAndCache("PayHeadPriceAction", UtilMisc.toMap("payrollBenDedRuleId", payHeadPriceRuleId));
-	                    Debug.log("payHeadPriceActions ===="+payHeadPriceActions);
 	                    for (GenericValue payHeadPriceAction: payHeadPriceActions) {
 	                        // yeah, finally here, perform the action, ie, modify the price
 
@@ -1055,8 +1052,6 @@ public class PayrollService {
 		    		        		evltr.setFormulaIdAndSlabAmount(formulaId, basicSalary);
 		    						HashMap<String, Double> variables = new HashMap<String, Double>();
 		    						Map varibulesForm = evltr.getVariableValues();
-		    						Debug.log("formulaId==========="+formulaId);
-		    						Debug.log("varibulesForm==========="+varibulesForm);
 		    						variables.put("BASIC", basicSalary);
 		    						evltr.addVariableValues(variables);        		
 		    						modifyAmount = new BigDecimal( evltr.evaluate());

@@ -403,6 +403,51 @@
 		<field name="statusId">
 			<display/>
 		</field>
+	</form>
+	<form name="createBenefitDeductionCalculator" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="calculateEmployeeBenefitDeduction">
+       	<field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+       	  <field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="payHeadTypeId" title="Benefit/Deduction Type" >
+         	<drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="benefitTypeId" entity-name="BenefitType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                 <entity-options description="${description}" key-field-name="deductionTypeId" entity-name="DeductionType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+            
+        </field>
+       <field name="submit" title="calculate"><submit/></field>
+    </form>
+   <form name="ListBenefitDedutions" type="list"
+		list-name="benefitDeductionList" odd-row-style="alternate-row"
+		default-table-style="basic-table hover-bar">
+		<actions>
+		    <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeBenefitDeduction.groovy"/>
+		</actions>
+		<field name="employeeId">
+			<display description="${employeeId}" />
+		</field>
+		 <field name="customTimePeriodId" title = "Custom Time Period">
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${fromDate} - ${thruDate}"/>
+        </field>
+		<field name="payHeadTypeId" title="Benefit/Deduction Type">
+			<display/>
+		</field>
+		<field name="amount">
+			<display/>
+		</field>
 	</form>  
 </forms>
         

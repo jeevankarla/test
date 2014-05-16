@@ -213,6 +213,9 @@
 	<menu-item name="FindPayrollBilling" title="${uiLabelMap.payrollGeneration}">
 		<link target="FindPayrollBilling"/>
 	</menu-item>
+	<menu-item name="BenefitDeductionCalculator" title="Benefit Deduction Calculator">
+		<link target="BenefitDeductionCalculator"/>
+	</menu-item>
    </menu>
     <menu name="EmploymentBar" default-menu-item-name="EditPartyBenefit" default-selected-style="selected"
         type="simple" menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem">

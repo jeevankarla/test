@@ -593,6 +593,18 @@ under the License.
         <response name="success" type="view" value="FindPayrollBilling"/>
         <response name="error" type="view" value="FindPayrollBilling"/>
     </request-map>
+    
+    <request-map uri="BenefitDeductionCalculator">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BenefitDeductionCalculator"/>
+    </request-map>
+    <request-map uri="calculateEmployeeBenefitDeduction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getPayHeadAmount"/>
+        <response name="success" type="view" value="BenefitDeductionCalculator"/>
+        <response name="error" type="view" value="BenefitDeductionCalculator"/>
+    </request-map>
+    
    <!-- ================Employee Position Group==================================== -->
     <request-map uri="FindEmplPositions">
         <security https="true" auth="true"/>
@@ -1561,6 +1573,7 @@ under the License.
  <view-map name="TDSform16a" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSform16a" content-type="application/pdf" encoding="none"/>
  <view-map name="TDSchallan" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSchallan" content-type="application/pdf" encoding="none"/>
  <view-map name="FindPayrollBilling" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#FindPayrollBilling"/>
+ <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
  
  <view-map name="PFReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFReport"/>
  <view-map name="ESIReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIReport"/>
