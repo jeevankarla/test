@@ -98,7 +98,7 @@ if (UtilValidate.isNotEmpty(facilityId)) {
 	cond1=EntityCondition.makeCondition(condList,EntityOperator.AND);
 	facilityRates = delegator.findList("FacilityRate", cond1, null , null, null, false);
 	if (UtilValidate.isNotEmpty(facilityTypes)) {
-	   facilityRate = EntityUtil.filterByDate(facilityRates,fromDate);
+	   facilityRate = EntityUtil.filterByDate(facilityRates,UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
 	}
 	if (UtilValidate.isNotEmpty(facilityRate)) {
 		GenericValue validFacilityRate= EntityUtil.getFirst(facilityRate);
