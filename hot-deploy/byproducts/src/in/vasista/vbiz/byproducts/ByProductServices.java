@@ -4294,7 +4294,7 @@ public class ByProductServices {
 			indentHelperCtx.put("productId", productId);
 			indentHelperCtx.put("productSubscriptionTypeId","EMP_SUBSIDY");
 			indentHelperCtx.put("supplyDate",  fromDateStr);
-			indentHelperCtx.put("isEnableProductSubscriptionType",  Boolean.TRUE);
+			indentHelperCtx.put("isEnableProductSubscription",  Boolean.TRUE);
 			  	/**if facility party not equals to old facility party  getting the quantity and subtracting the quantity and
 			   creating a new record  with new quantity  in subscription product and doing the end subscription for the old facility party  **/
 			    if(UtilValidate.isNotEmpty(tempFacId) && !tempFacId.equals(facilityId)){
@@ -5260,9 +5260,11 @@ public class ByProductServices {
 					 facilityRateList = delegator.findList("FacilityRate", condition, null, UtilMisc.toList("-fromDate"), null, false);
 					 activeFacilityRate = EntityUtil.filterByDate(facilityRateList, fromDate);
 					 futureFacilityRate = EntityUtil.filterByCondition(facilityRateList, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, fromDate));
-					 if(UtilValidate.isNotEmpty(futureFacilityRate)){
-							GenericValue facilityRateDesc = delegator.findOne("RateType", UtilMisc.toMap("rateTypeId", rateTypeId), false);	
-					        return ServiceUtil.returnError("Cannot create "+facilityRateDesc.get("description"));
+					 futureFacilityRate = EntityUtil.orderBy(futureFacilityRate, UtilMisc.toList("fromDate","fromDate"));
+					 GenericValue futureFacilityRates = EntityUtil.getFirst(futureFacilityRate);
+					 if(UtilValidate.isNotEmpty(futureFacilityRates)){
+						    futureFacilityRates.getTimestamp("fromDate");
+						    thruDate=UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(futureFacilityRates.getTimestamp("fromDate"), -1), TimeZone.getDefault(), locale);
 					 }
 					 GenericValue newEntity = delegator.makeValue("FacilityRate");
 					 if(UtilValidate.isNotEmpty(activeFacilityRate)){
@@ -5276,6 +5278,7 @@ public class ByProductServices {
 					       		activeRate.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 					       		activeRate.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 					       		activeRate.set("rateAmount",rateAmount);
+					       		activeRate.set("thruDate",thruDate);
 					       		activeRate.store();
 					       		isNewFacility=false;
 					       	}
