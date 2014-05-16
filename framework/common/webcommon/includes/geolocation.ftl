@@ -35,7 +35,7 @@ under the License.
     </style>        
         <#assign defaultUrl = "https." + request.getServerName()>
         <#assign defaultGogleMapKey = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", defaultUrl)>
-        <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=${defaultGogleMapKey}" type="text/javascript"></script>
+        <script src="https://maps.google.com/maps?file=api&amp;v=2&amp;key=${defaultGogleMapKey}" type="text/javascript"></script>
 		<script src="/images/elabel.js" type="text/javascript"></script>
         <script type="text/javascript"><!--
           if (GBrowserIsCompatible()) {
