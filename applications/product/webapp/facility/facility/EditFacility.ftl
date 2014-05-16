@@ -92,6 +92,12 @@ under the License.
         </tr>  
   </#if>
   <tr>
+    <td class="label">${uiLabelMap.FormFieldTitle_parentFacilityId}</td>
+    <td>
+      <@htmlTemplate.lookupField value="${facility.parentFacilityId?if_exists}" formName="EditFacilityForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility"/>
+    </td>
+  </tr>
+  <tr>
     <td class="label">${uiLabelMap.ProductFacilityOwner}</td>
     <td>
       <@htmlTemplate.lookupField value="${facility.ownerPartyId?if_exists}" formName="EditFacilityForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
