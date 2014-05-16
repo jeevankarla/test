@@ -1704,6 +1704,7 @@ under the License.
         <attribute name="finAccountBranch" type="String" mode="IN" optional="true"/>
         <attribute name="ifscCode" type="String" mode="IN" optional="true"/>
         <attribute name="fDate" type="String" mode="IN" optional="true"/>
+        <attribute name="rateAmount" mode="IN" type="BigDecimal" optional="true"></attribute>
     </service>
     <service name="createRoute"  engine="java"  auth="true"
                 location="org.ofbiz.network.LmsServices" invoke="createRoute">
@@ -1712,6 +1713,8 @@ under the License.
             <exclude field-name="facilityId"/>
         </auto-attributes>
         <attribute name="facilityId" mode="INOUT" type="String"></attribute>
+        <attribute name="shipmentTypeId" mode="IN" type="String"></attribute>
+        <attribute name="vehicleId" mode="IN" type="String"></attribute>
     </service>
     
     <!-- LMS SERVICES -->  
@@ -1845,6 +1848,7 @@ under the License.
         <attribute name="emailAddress" mode="IN" type="String" optional="true"></attribute>
         <attribute name="mobileNumber" mode="IN" type="String" optional="true"></attribute>
         <attribute name="contactMechId" mode="IN" type="String" optional="true"></attribute>
-        <attribute name="contactMechId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="rateAmount" mode="IN" type="BigDecimal" optional="true"></attribute>
+        <attribute name="reopen" mode="IN" type="String" optional="true"></attribute>
         </service> 
 </services>
