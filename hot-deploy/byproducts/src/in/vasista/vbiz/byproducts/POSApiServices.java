@@ -366,7 +366,7 @@ Debug.logInfo(infoString, module);
 		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context
 				.get("indentItems");
 		String infoString = "processChangeIndent:: indentItems: " + indentItems;
-		Debug.logInfo(infoString, module);
+Debug.logInfo(infoString, module);
 		if (indentItems.isEmpty()) {
 			Debug.logError("No indent items found; " + infoString, module);
 			return ServiceUtil.returnError("No indent items found; "
@@ -423,9 +423,9 @@ Debug.logInfo(infoString, module);
 			Debug.logError(e, "Problem getting Booth subscription for " + boothId, module);
 			return ServiceUtil.returnError("Problem getting Booth subscription for "+ boothId);
 		}
-		Map prodQuant = FastMap.newInstance();
 		List<Map> productQtyList = FastList.newInstance();
 		for (int i = 0; i < indentItems.size(); ++i) {
+			Map prodQuant = FastMap.newInstance();
 			Map indentItem = indentItems.get(i);
 			String productId = (String) indentItem.get("productId");
 			int quantityInt = ((Integer) indentItem.get("qty")).intValue();
@@ -449,9 +449,10 @@ Debug.logInfo(infoString, module);
 		processChangeIndentHelperCtx.put("productQtyList", productQtyList);
 		processChangeIndentHelperCtx.put("productSubscriptionTypeId", productSubscriptionTypeId);
 		try {
-			result = dispatcher.runSync("processChangeIndentHelper", processChangeIndentHelperCtx);
-			if (ServiceUtil.isError(result)) {
-				String errMsg = ServiceUtil.getErrorMessage(result);
+			Map svcResult = FastMap.newInstance(); 
+			svcResult = dispatcher.runSync("processChangeIndentHelper", processChangeIndentHelperCtx);
+			if (ServiceUtil.isError(svcResult)) {
+				String errMsg = ServiceUtil.getErrorMessage(svcResult);
 				Debug.logError(errMsg, module);
 				return ServiceUtil.returnError(errMsg);
 			}
@@ -516,7 +517,7 @@ Debug.logInfo(infoString, module);
 		
 		Map result = FastMap.newInstance();  		
 		result.put("accountSummary", facilityLedgerMap);
-	    Debug.logInfo("accountSummary:" + facilityLedgerMap, module);		 
+Debug.logInfo("accountSummary:" + facilityLedgerMap, module);		 
     	return result;
     }
     
