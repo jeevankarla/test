@@ -755,4 +755,10 @@
         <attribute name="startDate" mode="IN" type="Date" optional="true"/>
         <attribute name="endDate" mode="IN" type="Date" optional="true"/>          
     </service>
+     <service name="createVehicleRole" engine="simple" default-entity-name="VehicleRole"
+            location="component://byproducts/script/ByProductServices.xml" invoke="createVehicleRole" auth="true">
+        <description>Create a Vehicle Role</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
 </services>
