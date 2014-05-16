@@ -133,18 +133,21 @@
 		vatMap = [:];
 		productIdList = EntityUtil.filterByDate(delegator.findByAnd("ProductPrice", [taxPercentage : vat ,productPriceTypeId : "VAT_SALE"]));
 		if(UtilValidate.isNotEmpty(productIdList)){
-			List productList = EntityUtil.getFieldListFromEntityList(productIdList, "productId", true);
+			List productIdList = EntityUtil.getFieldListFromEntityList(productIdList, "productId", true);
+			
+			productList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, productIdList) , null, null, null, false);
+			productList = UtilMisc.sortMaps(productList, UtilMisc.toList("brandName"));
 			if(UtilValidate.isNotEmpty(productList)){
 				productMap = [:];
-				productList.each { prodId->
+				productList.each { product->
 					prodValMap=[:];
 					prodValue=0;
-					if(UtilValidate.isNotEmpty(resultMap.get(prodId))){
-						prodValue = resultMap.get(prodId).get("totalRevenue");
+					if(UtilValidate.isNotEmpty(resultMap.get(product.productId))){
+						prodValue = resultMap.get(product.productId).get("totalRevenue");
 					}
 					returnProdValue=0;
-					if(UtilValidate.isNotEmpty(productReturnMap.get(prodId))){
-						returnProdValue = productReturnMap.get(prodId);
+					if(UtilValidate.isNotEmpty(productReturnMap.get(product.productId))){
+						returnProdValue = productReturnMap.get(product.productId);
 					}
 					if(UtilValidate.isNotEmpty(prodValue)&&(prodValue!=0)){
 						prodValMap["prodValue"]=prodValue;
@@ -153,7 +156,7 @@
 						prodValMap["returnProdValue"]=returnProdValue;
 					}
 					if(UtilValidate.isNotEmpty(prodValMap)){
-						productMap[prodId] = prodValMap;
+						productMap[product.productId] = prodValMap;
 					}
 				}
 				tempMap = [:];
