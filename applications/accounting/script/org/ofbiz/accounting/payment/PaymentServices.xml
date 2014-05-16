@@ -94,7 +94,11 @@ under the License.
         		</if-compare-field>
            </else>          
         </if-empty>
-       
+        
+        <set from-field="userLogin.userLoginId" field="payment.createdByUserLogin"/>
+        <set from-field="nowTimestamp" field="payment.createdDate"/>
+        <set from-field="userLogin.userLoginId" field="payment.lastModifiedByUserLogin"/>
+        <set from-field="nowTimestamp" field="payment.lastModifiedDate"/>
         <create-value value-field="payment"/>
     </simple-method>
     
@@ -193,6 +197,8 @@ under the License.
         		</if-compare-field>
            </else>          
         </if-empty>
+        <set from-field="userLogin.userLoginId" field="payment.lastModifiedByUserLogin"/>
+        <set from-field="nowTimestamp" field="payment.lastModifiedDate"/>
         <store-value value-field="payment"/>
 
         <if-not-empty field="parameters.statusId">
@@ -301,6 +307,8 @@ under the License.
                     <if-not-empty field="parameters.transactionDate">
                          <set from-field="parameters.transactionDate" field="payment.transactionDate"/>
                     </if-not-empty>
+                    <set from-field="userLogin.userLoginId" field="payment.lastModifiedByUserLogin"/>
+       				<set from-field="nowTimestamp" field="payment.lastModifiedDate"/>
                     <store-value value-field="payment"/>
                 </else>
             </if-empty>
