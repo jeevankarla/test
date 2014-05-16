@@ -423,6 +423,7 @@ public class ByProductChangeIndentServices {
   	      if(enableContinuousIndent){
   	    	  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "userLogin", userLogin))).get("boothDetails");
   	    	  defaultRouteId = (String)boothDetails.get("routeId");
+  		  
   	    	  if(UtilValidate.isEmpty(defaultRouteId)){
   	    		Debug.log("Permanent Route doesn't exist for retailer " + boothId);
     			  return ServiceUtil.returnError("Permanent Route doesn't exist for retailer " + boothId);
@@ -433,10 +434,12 @@ public class ByProductChangeIndentServices {
   	    		  routeChange = true;
   	    	  }
   	      }
+  	      
   	      List<String> contIndentProductList = EntityUtil.getFieldListFromEntityList(ProductWorker.getProductsByCategory(delegator ,"CONTINUES_INDENT" ,UtilDateTime.getDayStart(effectiveDate)), "productId", true);
   	      //List<String> dayIndentProductList = EntityUtil.getFieldListFromEntityList(ProductWorker.getProductsByCategory(delegator ,"DAILY_INDENT" ,UtilDateTime.getDayStart(effectiveDate)), "productId", true);
+  	      
   	      Map prodIndentCat = (Map)ByProductNetworkServices.getFacilityIndentQtyCategories(dctx,UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId)).get("indentQtyCategory");
-  	      List crateCanIndentProductList = FastList.newInstance();
+    	  List crateCanIndentProductList = FastList.newInstance();
     	  if(UtilValidate.isNotEmpty(prodIndentCat)){
     			String prodId = "";
     			String categoryType = "";
@@ -463,10 +466,7 @@ public class ByProductChangeIndentServices {
 	  			List productsList = EntityUtil.getFieldListFromEntityList(subscriptionProdList, "productId", true);
 	  			List activeProdList = FastList.newInstance();
 	  			List<GenericValue> subscriptionProductsList = FastList.newInstance();
-	  			boolean killerCase = false;
 	  			for(int i=0; i< productQtyList.size() ; i++){
-	  				
-	  				boolean indentProbCheck = false;
 	  				Map productQtyMap = productQtyList.get(i);
 	  				String productId = (String)productQtyMap.get("productId");
 	  				String sequenceNum = (String)productQtyMap.get("sequenceNum");
@@ -492,22 +492,6 @@ public class ByProductChangeIndentServices {
 	  				  
 	  				  subscriptionProductsList = EntityUtil.filterByCondition(subscriptionProdList, cond);
 	  				  
-	  				  if(UtilValidate.isNotEmpty(subscriptionProductsList) && !productSubscriptionTypeId.equals("EMP_SUBSIDY")){
-	  					   List condList = FastList.newInstance();
-	  					   condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
-	  					   condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
-	  					   condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-	  					   condList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));
-	  					   condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, effectiveDate));
-	  					   EntityCondition cond1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	  					   List<GenericValue> checkSubscriptions = delegator.findList("SubscriptionProduct", cond1, UtilMisc.toSet("productId"),null, null, false);
-	  					   if(UtilValidate.isNotEmpty(checkSubscriptions)){
-	  						   indentProbCheck = true;
-  							   killerCase = true;
-	  					   }
-	  				  }
-	  				  
-	  				  
 	  				  if(UtilValidate.isEmpty(subscriptionProductsList)){
 	  					  indentChanged = true;
 	  					  Map createNewSubscriptionProduct = FastMap.newInstance();
@@ -523,7 +507,7 @@ public class ByProductChangeIndentServices {
 	  					  createNewSubscriptionProduct.put("fromDate", UtilDateTime.getDayStart(effectiveDate));
 	  					 // for now populate thruDate
 	  					  //createNewSubscriptionProduct.put("thruDate", null);
-	  					  if(!indentProbCheck && quantity.compareTo(BigDecimal.ZERO)>0 && enableContinuousIndent && contIndentProductList.contains(productId) && !routeChange && UtilValidate.isEmpty(routeChangeFlag)){
+	  					  if(quantity.compareTo(BigDecimal.ZERO)>0 && enableContinuousIndent && contIndentProductList.contains(productId) && !routeChange && UtilValidate.isEmpty(routeChangeFlag)){
 	  						  createNewSubscriptionProduct.put("thruDate", null);
 	  					  }
 	  					  else{
@@ -595,7 +579,7 @@ public class ByProductChangeIndentServices {
 						  createNewSubscProduct.put("quantity", quantity);
 						  createNewSubscProduct.put("crateQuantity", crateQuantity);
 						  createNewSubscProduct.put("fromDate", UtilDateTime.getDayStart(effectiveDate));
-						  if(!indentProbCheck && quantity.compareTo(BigDecimal.ZERO)>0 && enableContinuousIndent && contIndentProductList.contains(productId) && !routeChange && UtilValidate.isEmpty(routeChangeFlag)){
+						  if(quantity.compareTo(BigDecimal.ZERO)>0 && enableContinuousIndent && contIndentProductList.contains(productId) && !routeChange && UtilValidate.isEmpty(routeChangeFlag)){
 							  createNewSubscProduct.put("thruDate", null);
 	  					  }
 	  					  else{
@@ -621,7 +605,7 @@ public class ByProductChangeIndentServices {
 
 	  			List condList = FastList.newInstance();
 	  			Timestamp nextEffDay = UtilDateTime.addDaysToTimestamp(effectiveDate, 1);
-	  			if(routeChange || killerCase){
+	  			if(routeChange){
 					  condList.clear();
 					  condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
 					  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
@@ -636,12 +620,13 @@ public class ByProductChangeIndentServices {
 					  }
 			  	}
 	  			
-	  			if(enableContinuousIndent && !productSubscriptionTypeId.equalsIgnoreCase("EMP_SUBSIDY") && (routeChange || killerCase)){
+	  			if(enableContinuousIndent && !productSubscriptionTypeId.equalsIgnoreCase("EMP_SUBSIDY") && routeChange){
 	  				condList.clear();
 	  			   	condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
 	  	  			condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 	  	  			condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
-	  	  			condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
+	  	  			condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+						  EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate))));
 	  	  			EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	  	  			List<GenericValue> getTodaysIndent = delegator.findList("SubscriptionProduct", cond, null, null, null, false);
 	  	  			List<String> todayProductList = EntityUtil.getFieldListFromEntityList(getTodaysIndent, "productId", true);
@@ -692,6 +677,7 @@ public class ByProductChangeIndentServices {
   			    result.put("enableSECA", secaCall);
   			    result.put("smsFlag", smsFlag);
   			    result.put("shipmentTypeId", shipmentTypeId);
+  			  
   		  }catch (Exception e) {
   			  Debug.logError(e, "Problem updating subscription for booth " + boothId, module);		  
   			  return ServiceUtil.returnError("Problem updating subscription for booth " + boothId);			  

@@ -135,7 +135,7 @@ $(function() {
      $('#boothId').keyup(function (e) {
 	 	if (e.keyCode == 8 || e.keyCode == 46) {
 	 		updateGrid1([]); 
-	 		updateGrid2([]);
+	 		//updateGrid2([]);
 	 		jQuery("#boothId").focus(); 
 	      }	
 	 });

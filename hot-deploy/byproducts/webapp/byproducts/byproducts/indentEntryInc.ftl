@@ -184,7 +184,7 @@ function updateGrid(){
 						gridShowCall();
 						updateGrid1(changeIndentProductList);
 						if(screenFlag != "DSCorrection"){
-							updateGrid2(routeTotals);	
+							//updateGrid2(routeTotals);	
 						}
 						$('span#boothTooltip').html('<label>'+boothName +'</label>');
 						$('span#boothDepositTip').html('<label> Security Deposit:: Rs. '+securityDeposit +'</label>');
@@ -648,7 +648,7 @@ function updateGrid(){
 		
 	}
 	var absGrid;
-	function setupGrid2(ajaxJson) {
+	/*function setupGrid2(ajaxJson) {
 		
 		if(ajaxJson != ''){
 			data1 = ajaxJson;
@@ -691,7 +691,7 @@ function updateGrid(){
 		dataView2.beginUpdate();
 		dataView2.setItems(data1);
 		dataView2.endUpdate();
-	}
+	}*/
 
 	jQuery(function(){
 		
@@ -705,7 +705,7 @@ function updateGrid(){
 		
 		 //$("select#subscriptionTypeId").change();
 		if(screenFlag !="DSCorrection"){
-			setupGrid2([]);
+			//setupGrid2([]);
 		} 
 				
         jQuery(".grid-header .ui-icon")
@@ -812,13 +812,13 @@ function updateGrid(){
     }
     
     
-    function updateGrid2(ajaxJson) {
+    /*function updateGrid2(ajaxJson) {
              data1 = ajaxJson;
              absGrid.setData(data1);
              absGrid.invalidate();
              absGrid.render();
            
-    }
+    }*/
     function gridHideCall() {
            $('#myGrid1Hdr').hide();
            $('#myGrid1').hide();

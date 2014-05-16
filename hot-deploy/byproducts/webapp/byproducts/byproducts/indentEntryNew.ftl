@@ -175,14 +175,14 @@
 	</div>
 	</div>
 	<#if screenFlag?exists && screenFlag != 'DSCorrection'> 
- 	<div class="screenlet">
+ 	<#--<div class="screenlet">
     	<div class="screenlet-body">
  			<div class="grid-header" style="width:100%">
 				<label>Route Details
 				</label> 
 			</div>    
 		<div id="myGrid2" style="width:100%;height:150px;"></div>		
-    </div>
+    </div>-->
     </#if>
 </div>
 </div>
