@@ -6069,7 +6069,7 @@ public class ByProductNetworkServices {
 			 if(sendSMS){
 				 try{
 					 GenericValue tenantConfigEnablePaymentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enablePaymentSms"), true);
-					 if (UtilValidate.isNotEmpty(tenantConfigEnablePaymentSms) && (tenantConfigEnablePaymentSms.getString("propertyValue")).equals("Y")) {
+					 if (UtilValidate.isNotEmpty(tenantConfigEnablePaymentSms) && (tenantConfigEnablePaymentSms.getString("propertyValue")).equals("Y") && UtilValidate.isNotEmpty(paymentMethodType) && paymentMethodType.equals("CASH_PAYIN")) {
 						 enablePaymentSms = Boolean.TRUE;
 						}
 				 }catch (GenericEntityException e) {
