@@ -34,10 +34,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">&#160;      UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
+					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">&#160;      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
-                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Cash Book For ${fromDateStr}:								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
+                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Cash Book For ${fromDateStr}:								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
               		<fo:block>
 	                 	<fo:table border-style="solid">
 	                    <fo:table-column column-width="120pt"/>
@@ -97,10 +97,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign closingBalance = (finAcctngDetails.get("closingBalance")?if_exists)/>
 								<fo:table-row border-style="solid">
 									<#if ((paymentId)?has_content)>
-										<#if (paymentId != "DAY TOTAL")>
+										<#assign paymentType = delegator.findOne("PaymentAndType", {"paymentId" : paymentId}, true)?if_exists/>
+										<#if (paymentId != "DAY TOTAL") && paymentType?has_content>
 		                       			<fo:table-cell border-style="solid">
 		                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"> 
-		                            			<#assign paymentType = delegator.findOne("PaymentAndType", {"paymentId" : paymentId}, true)?if_exists/>
 	                                             ${paymentId?if_exists}/${paymentType.description?if_exists}
 	                                      </fo:block>  
 		                       			</fo:table-cell>

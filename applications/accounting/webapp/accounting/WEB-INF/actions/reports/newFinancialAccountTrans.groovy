@@ -169,6 +169,7 @@ if (organizationPartyId) {
 		partyId = "";
 		paymentId = "";
 		accountName = "";
+		finAccountTransId = "";
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			acctgTransIt = glAcctgTrialBalanceList[0];
 			acctgTransAndEntries = acctgTransIt.acctgTransAndEntries;
@@ -185,12 +186,13 @@ if (organizationPartyId) {
 					if(partyId == "Company"){
 						partyId = payment.partyIdTo;
 					}
+					finAccountTransId = acctgTransEntry.finAccountTransId;
 					
 					finAccountId = "";
 					finAccount = [:];
 					
 					if(UtilValidate.isEmpty(paymentId)){
-					finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["reasonEnumId" : "FATR_CONTRA","finAccountTransTypeId" : "DEPOSIT"]), null, null, null, true);
+					finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["finAccountTransId" : finAccountTransId, "reasonEnumId" : "FATR_CONTRA","finAccountTransTypeId" : "DEPOSIT"]), null, null, null, true);
 						if(UtilValidate.isNotEmpty(finAccountList)){
 							finAccountId = finAccountList[0].finAccountId;
 							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
@@ -198,7 +200,6 @@ if (organizationPartyId) {
 						}
 					}
 					// Prepare List for CSV
-					
 					debitAmount = BigDecimal.ZERO;
 					creditAmount = BigDecimal.ZERO;
 					
@@ -246,10 +247,12 @@ if (organizationPartyId) {
 					
 					acctgTransEntryMap = [:];
 					acctgTransEntryMap["transactionDate"] = transactionDateStr;
-					acctgTransEntryMap["paymentId"] = paymentId;
+					
 					if(UtilValidate.isNotEmpty(paymentId)){
+						acctgTransEntryMap["paymentId"] = paymentId;
 						acctgTransEntryMap["partyId"] = partyId;
 					}else{
+						acctgTransEntryMap["paymentId"] = finAccountTransId;
 						acctgTransEntryMap["partyId"] = accountName;
 					}
 					acctgTransEntryMap["openingBalance"] = openingBalance;
