@@ -6630,7 +6630,7 @@ public class ByProductNetworkServices {
 			 Map dayWisePartyInvoiceDetail = new TreeMap();
 			 try{
 				 List conditionList = FastList.newInstance();
-		    	 conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.NOT_IN, UtilMisc.toList("PENALTY_IN","STATUTORY_OUT")));
+		    	 conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.NOT_IN, UtilMisc.toList("MIS_INCOME_IN","STATUTORY_OUT")));
 	    		 conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	   			 conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	   			 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList));
@@ -6710,7 +6710,7 @@ public class ByProductNetworkServices {
 			 try{
 				 List returnChequeExpr = FastList.newInstance();
 				 returnChequeExpr.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_VOID"));
-		    	/* returnChequeExpr.add(EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"));*/
+		    	 returnChequeExpr.add(EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"));
 		    	 EntityCondition cond = EntityCondition.makeCondition(returnChequeExpr, EntityOperator.AND);
 		    	 List<GenericValue> returnPayments = delegator.findList("Payment", cond, UtilMisc.toSet("paymentId", "paymentRefNum", "amount"), null, null, false);
 		    	 if(UtilValidate.isNotEmpty(returnPayments)){
@@ -6726,8 +6726,7 @@ public class ByProductNetworkServices {
 		    	 }
 				
 				 List conditionList = FastList.newInstance();
-		    	 conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PENALTY_IN"));
-		    	/* conditionList.add(EntityCondition.makeCondition("invoicePurposeType", EntityOperator.EQUALS, "BYPROD_INVOICE"));*/
+		    	 conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "MIS_INCOME_IN"));
 	    		 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	   			 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	   			 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
