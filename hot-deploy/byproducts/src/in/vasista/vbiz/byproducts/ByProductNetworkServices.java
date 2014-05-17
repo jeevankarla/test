@@ -1227,9 +1227,9 @@ public class ByProductNetworkServices {
 	    	}
 	    	/*Map boothDetailResult = getRouteCrateDetails(dctx, UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId,"supplyDate", dayBegin, "subscriptionTypeId", subscriptionTypeId, "tripId", tripId, "routeId", tempRouteId));
 	    	List routeTotalList = (List)boothDetailResult.get("routeTotalList");
-	    	result.put("routeTotalsList", routeTotalList);
+	    	result.put("routeTotalsList", routeTotalList);*/
 	    	
-	    	result.put("totalAmount", totalAmount);*/
+	    	result.put("totalAmount", totalAmount);
 	    	
 	    	// lets populate route totals
 	    	try{
