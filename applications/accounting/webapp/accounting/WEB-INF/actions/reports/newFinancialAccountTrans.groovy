@@ -195,7 +195,7 @@ if (organizationPartyId) {
 					
 					finAccountId = "";
 					finAccount = [:];
-					
+					/*
 					if(UtilValidate.isEmpty(paymentId)){
 						finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["finAccountTransId" : finAccountTransId, "reasonEnumId" : "FATR_CONTRA","finAccountTransTypeId" : "DEPOSIT"]), null, null, null, true);
 						if(UtilValidate.isNotEmpty(finAccountList)){
@@ -203,7 +203,7 @@ if (organizationPartyId) {
 							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
 							finAccountName = finAccount.finAccountName;
 						}
-					}
+					}*/
 					if(UtilValidate.isNotEmpty(partyId)){
 						partyName = PartyHelper.getPartyName(delegator, partyId, false);
 					}
@@ -269,8 +269,10 @@ if (organizationPartyId) {
 						acctgTransEntryMap["description"] = paymentTypeDescription;
 					}else{
 						acctgTransEntryMap["paymentId"] = acctgTransId;
-						acctgTransEntryMap["partyId"] = finAccountId;
-						acctgTransEntryMap["partyName"] = finAccountName;
+						if(UtilValidate.isNotEmpty(finAccountId)){
+							acctgTransEntryMap["partyId"] = finAccountId;
+							acctgTransEntryMap["partyName"] = finAccountName;
+						}
 						acctgTransEntryMap["description"] = "DEPOSIT";
 					}
 					acctgTransEntryMap["openingBalance"] = openingBalance;
