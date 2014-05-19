@@ -595,7 +595,7 @@
         <value xml:lang="ar">أوفبيز: مسير المحتوى</value>
         <value xml:lang="da">OFBiz: Indholdsadministration</value>
         <value xml:lang="de">OFBiz: Inhaltsverwaltung</value>
-        <value xml:lang="en">vbiz: OMS</value>
+        <value xml:lang="en">vbiz: Documents</value>
         <value xml:lang="es">OFBiz: Administración de Contenidos</value>
         <value xml:lang="fr">OFBiz: gestion de contenu</value>
         <value xml:lang="it">OFBiz: Gestione contenuti</value>
@@ -652,7 +652,7 @@
         <value xml:lang="ar">تطبيق تسيير المحتوى</value>
         <value xml:lang="da">Indholdsadministrator</value>
         <value xml:lang="de">Inhaltsverwaltung Anwendung</value>
-        <value xml:lang="en">OMS</value>
+        <value xml:lang="en">Documents</value>
         <value xml:lang="es">Aplicación de Administración de Contenidos</value>
         <value xml:lang="fr">Application de gestion de contenu</value>
         <value xml:lang="it">Gestione contenuti</value>
@@ -666,7 +666,7 @@
         <value xml:lang="ar">تطبيق تسيير المحتوى</value>
         <value xml:lang="da">Indholdsadministraton applikation</value>
         <value xml:lang="de">Inhaltsverwaltung Anwendung</value>
-        <value xml:lang="en">OMS Application</value>
+        <value xml:lang="en">Documents Application</value>
         <value xml:lang="es">Aplicación de Administración de Contenidos</value>
         <value xml:lang="fr">Application de gestion de contenu</value>
         <value xml:lang="it">Applicazione gestione contenuti</value>
@@ -2646,7 +2646,7 @@
     </property>
     <property key="ContentWelcome">
         <value xml:lang="da">Velkommen til Content Manager</value>
-        <value xml:lang="en">Welcome to the OMS!</value>
+        <value xml:lang="en">Welcome to the Document Management System!</value>
         <value xml:lang="fr">Gestionnaire de contenu : bienvenue !</value>
         <value xml:lang="it">Benvenuti nella gestione contenuti!</value>
         <value xml:lang="nl">Welkom in de Content Manager</value>
