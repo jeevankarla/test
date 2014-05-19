@@ -284,6 +284,7 @@ under the License.
 			<set field="createFinAccountTransMap.statusId" from-field="parameters.statusId"/>			
 			<call-service service-name="createFinAccountTrans" in-map-name="createFinAccountTransMap">
 				<result-to-result result-name="finAccountTransId"/>
+				<result-to-field result-name="finAccountTransId" field="finAccountTransId1"/>
 			</call-service>
 			<check-errors/>
 			<!--creating  transaction in other contra FinAccount  -->
@@ -297,7 +298,19 @@ under the License.
 			<set field="createContraFinAccountTransMap.finAccountId" from-field="parameters.contraFinAccountId"/>
 			<call-service service-name="createFinAccountTrans" in-map-name="createContraFinAccountTransMap">
 				<result-to-result result-name="finAccountTransId"/>
+				<result-to-field result-name="finAccountTransId" field="finAccountTransId2"/>
 			</call-service>
+			<!-- here create relationship  for deposit and withdraw transactions -->
+			<make-value value-field="finAccTransAttribute" entity-name="FinAccountTransAttribute"/>
+	        <set field="finAccTransAttribute.finAccountTransId" from-field="finAccountTransId1"/>
+	        <set field="finAccTransAttribute.attrName" value="FATR_CONTRA"/>
+	        <set field="finAccTransAttribute.attrValue" from-field="finAccountTransId2"/>
+	        <create-value value-field="finAccTransAttribute"/>
+	        <make-value value-field="finAccTransAttribute" entity-name="FinAccountTransAttribute"/>
+	        <set field="finAccTransAttribute.finAccountTransId" from-field="finAccountTransId2"/>
+	        <set field="finAccTransAttribute.attrName" value="FATR_CONTRA"/>
+	        <set field="finAccTransAttribute.attrValue" from-field="finAccountTransId1"/>
+	        <create-value value-field="finAccTransAttribute"/>
 			<check-errors/>	
 		</if-compare>
 		<set field="successMessageList[]" value="Contra Done Succesfully!"/>
