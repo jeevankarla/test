@@ -95,13 +95,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign debitAmount = (finAcctngDetails.get("debitAmount")?if_exists)/>
 	                		<#assign creditAmount = (finAcctngDetails.get("creditAmount")?if_exists)/>
 	                		<#assign closingBalance = (finAcctngDetails.get("closingBalance")?if_exists)/>
+	                		<#assign partyName = (finAcctngDetails.get("partyName")?if_exists)/>
+	                		<#assign description = (finAcctngDetails.get("description")?if_exists)/>
 								<fo:table-row border-style="solid">
 									<#if ((paymentId)?has_content)>
-										<#assign paymentType = delegator.findOne("PaymentAndType", {"paymentId" : paymentId}, true)?if_exists/>
-										<#if (paymentId != "DAY TOTAL") && paymentType?has_content>
+										<#if (paymentId != "DAY TOTAL")>
 		                       			<fo:table-cell border-style="solid">
-		                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"> 
-	                                             ${paymentId?if_exists}/${paymentType.description?if_exists}
+		                            		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"> 
+	                                             ${paymentId?if_exists}/${description?if_exists}
 	                                      </fo:block>  
 		                       			</fo:table-cell>
 		                       			<#else>
@@ -127,7 +128,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                                 	</#if>
 	                       			<fo:table-cell border-style="solid">
                                     <fo:block text-align="left" font-weight="bold">
-                                            <#if partyId?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)} </#if>
+                                            ${partyName?if_exists}
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <#if (paymentId != "DAY TOTAL")>

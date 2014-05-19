@@ -28,6 +28,7 @@ import com.ibm.icu.util.Calendar;
 import org.ofbiz.base.util.*;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import org.ofbiz.party.party.PartyHelper;
 
 if (organizationPartyId) {
     onlyIncludePeriodTypeIdList = [];
@@ -168,8 +169,11 @@ if (organizationPartyId) {
 		
 		partyId = "";
 		paymentId = "";
-		accountName = "";
+		finAccountName = "";
 		finAccountTransId = "";
+		acctgTransId = "";
+		partyName = "";
+		paymentTypeDescription = "";
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			acctgTransIt = glAcctgTrialBalanceList[0];
 			acctgTransAndEntries = acctgTransIt.acctgTransAndEntries;
@@ -187,18 +191,28 @@ if (organizationPartyId) {
 						partyId = payment.partyIdTo;
 					}
 					finAccountTransId = acctgTransEntry.finAccountTransId;
+					acctgTransId = acctgTransEntry.acctgTransId;
 					
 					finAccountId = "";
 					finAccount = [:];
 					
 					if(UtilValidate.isEmpty(paymentId)){
-					finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["finAccountTransId" : finAccountTransId, "reasonEnumId" : "FATR_CONTRA","finAccountTransTypeId" : "DEPOSIT"]), null, null, null, true);
+						finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["finAccountTransId" : finAccountTransId, "reasonEnumId" : "FATR_CONTRA","finAccountTransTypeId" : "DEPOSIT"]), null, null, null, true);
 						if(UtilValidate.isNotEmpty(finAccountList)){
 							finAccountId = finAccountList[0].finAccountId;
 							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
-							accountName = finAccount.finAccountName;
+							finAccountName = finAccount.finAccountName;
 						}
 					}
+					if(UtilValidate.isNotEmpty(partyId)){
+						partyName = PartyHelper.getPartyName(delegator, partyId, false);
+					}
+					paymentType = [:];
+					if(UtilValidate.isNotEmpty(paymentId)){
+						paymentType = delegator.findOne("PaymentAndType", [paymentId : paymentId], false);
+						paymentTypeDescription = paymentType.description;
+					}
+					
 					// Prepare List for CSV
 					debitAmount = BigDecimal.ZERO;
 					creditAmount = BigDecimal.ZERO;
@@ -251,9 +265,13 @@ if (organizationPartyId) {
 					if(UtilValidate.isNotEmpty(paymentId)){
 						acctgTransEntryMap["paymentId"] = paymentId;
 						acctgTransEntryMap["partyId"] = partyId;
+						acctgTransEntryMap["partyName"] = partyName;
+						acctgTransEntryMap["description"] = paymentTypeDescription;
 					}else{
-						acctgTransEntryMap["paymentId"] = finAccountTransId;
-						acctgTransEntryMap["partyId"] = accountName;
+						acctgTransEntryMap["paymentId"] = acctgTransId;
+						acctgTransEntryMap["partyId"] = finAccountId;
+						acctgTransEntryMap["partyName"] = finAccountName;
+						acctgTransEntryMap["description"] = "DEPOSIT";
 					}
 					acctgTransEntryMap["openingBalance"] = openingBalance;
 					acctgTransEntryMap["debitAmount"] = debitAmount;
@@ -310,6 +328,8 @@ financialAcctgTransList.each{ dayFinAccount ->
 		dayFinAccountMap["transactionDate"] = dayFinAccount.transactionDate;
 		dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
 		dayFinAccountMap["partyId"] = dayFinAccount.partyId;
+		dayFinAccountMap["partyName"] = dayFinAccount.partyName;
+		dayFinAccountMap["description"] = dayFinAccount.description;
 		dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
 		dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
 		dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
