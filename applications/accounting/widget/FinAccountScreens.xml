@@ -266,6 +266,7 @@ under the License.
                 <set field="thruDate" type="Timestamp" from-field="parameters.thruDate"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                 <set field="issuingAuthority" from-field="parameters.issuingAuthority"/>
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNTDW_EDIT"/>
                 </service>

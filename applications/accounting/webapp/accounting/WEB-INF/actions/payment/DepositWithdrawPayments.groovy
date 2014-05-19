@@ -47,6 +47,9 @@ if ("Y".equals(parameters.noConditionFind)) {
     if (partyIdFrom) {
         exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
     }
+	if (issuingAuthority) {
+		exprListForParameters.add(EntityCondition.makeCondition("issuingAuthority", EntityOperator.LIKE, "%"+issuingAuthority+"%"));
+	}
     exprListForParameters.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, null));
     paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
     combinedPaymentCond = EntityCondition.makeCondition([partyCond, statusCond, paramCond], EntityOperator.AND);

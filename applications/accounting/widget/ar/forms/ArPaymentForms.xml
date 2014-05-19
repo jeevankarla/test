@@ -38,6 +38,7 @@ under the License.
         <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}">
             <lookup target-form-name="LookupPartyName"/>
         </field> 
+        <field name="issuingAuthority"><text/></field>
         <field name="fromDate"><date-time/></field>
         <field name="thruDate"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
