@@ -21,6 +21,8 @@
 	import org.ofbiz.base.util.UtilNumber;
     import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 	
+	dctx = dispatcher.getDispatchContext();
+	context.put("dctx",dctx);
 	periodBillingList=[];
 	facilityIds=[];
 	conditionList=[];
@@ -46,50 +48,102 @@
 	Timestamp thruDate = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 	billingPeriodDateStr = "";
 	billingPeriodDateStr += UtilDateTime.toDateString(fromDate, "dd-MMM-yyyy");
-	billingPeriodDateStr += "--";
+	billingPeriodDateStr += " to ";
 	billingPeriodDateStr += UtilDateTime.toDateString(thruDate, "dd-MMM-yyyy");
 	context.billingPeriodDate = billingPeriodDateStr;
 	
-	/*
-	facilityIds.each{eachFacilityId->
-		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
-		conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
-		conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-		conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
-		conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS ,eachFacilityId));
-		condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitListPrice"] as Set;
-		itemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
-			if (UtilValidate.isNotEmpty(itemsList)) {
-				itemsListMap.put(eachFacilityId, itemsList);
-			}
-		}
-	context.itemsListMap=itemsListMap;*/
-	
-	
-	
-	
-	
+
+		shipmentIds = [];
+		amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"AM");
+		shipmentIds.addAll(amShipmentIds);
+		pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"PM");
+		shipmentIds.addAll(pmShipmentIds);
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS , "RETURN_ACCEPTED"));
-	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
 	condition2=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", condition2, null, ["estimatedShipDate"], null, false);
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
-	conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-	conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
 	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
 	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId"] as Set;
 	orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
 	
+	
+//	Debug.log("------------------orderItemsList--------------------- : "+orderItemsList);
+//	Debug.log("------------------orderItemsList--------------------- : "+orderItemsList.quantity);
+	
+	
+	
+	
+	List conditionList= FastList.newInstance();
+	conditionList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.NOT_EQUAL, null));
+	conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, "VAT_SALE"));
+	EntityCondition condition1 = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	Set fieldsToSelect = UtilMisc.toSet("productId", "taxPercentage");
+	
+	productPrice = delegator.findList("ProductPrice", condition1,  fieldsToSelect, ["taxPercentage"], null, false);
+	productPrice = EntityUtil.filterByDate(productPrice, fromDate);
+	List vatList = EntityUtil.getFieldListFromEntityList(productPrice, "taxPercentage", true);
+	context.vatList = vatList;
+	/*finalVatList = [];
+	productReturnMap = [:];
+	productVatMap = [:];
+	resultMap = (ByProductNetworkServices.getPeriodTotals(dctx, [fromDate:fromDate, thruDate:thruDate])).get("productTotals");
+	vatList.each { vat->
+		vatMap = [:];
+		productIdList = EntityUtil.filterByDate(delegator.findByAnd("ProductPrice", [taxPercentage : vat ,productPriceTypeId : "VAT_SALE"]));
+		productIdList = EntityUtil.getFieldListFromEntityList(productIdList, "productId",true);
+		productIdList.each{eachProd ->
+			productVatMap.put(eachProd, vat)
+		}*/
+		/*if(UtilValidate.isNotEmpty(productIdList)){
+			List productList = EntityUtil.getFieldListFromEntityList(productIdList, "productId", true);
+			if(UtilValidate.isNotEmpty(productList)){
+				productMap = [:];
+				productList.each { prodId->
+					prodValMap=[:];
+					prodValue=0;
+					if(UtilValidate.isNotEmpty(resultMap.get(prodId))){
+						prodValue = resultMap.get(prodId).get("totalRevenue");
+					}
+					returnProdValue=0;
+					if(UtilValidate.isNotEmpty(productReturnMap.get(prodId))){
+						returnProdValue = productReturnMap.get(prodId);
+					}
+					if(UtilValidate.isNotEmpty(prodValue)&&(prodValue!=0)){
+						prodValMap["prodValue"]=prodValue;
+					}
+					if(UtilValidate.isNotEmpty(returnProdValue)&&(returnProdValue!=0)){
+						prodValMap["returnProdValue"]=returnProdValue;
+					}
+					if(UtilValidate.isNotEmpty(prodValMap)){
+						productMap[prodId] = prodValMap;
+					}
+				}
+				tempMap = [:];
+				tempMap.putAll(productMap);
+				if(UtilValidate.isNotEmpty(tempMap)){
+					vatMap.put(vat,tempMap);
+					finalVatList.add(vatMap);
+				}
+			}
+		}*/
+	/*}*/
+//	Debug.log("------------------productVatMap--------------------- : "+productVatMap);
+	//context.put("productVatMap",productVatMap);
+	//Debug.log("---------------------vatList--------------------------- : "+vatList)
+	//Debug.log("----------------------finalVatList-------------------------- : "+finalVatList)
+	
 	returnItemMap = FastMap.newInstance();
+	saleTotal=0;
+	returnTotal=0;
+	finalAmount=0;
 	
 	facilityIds.each{eachFacilityId->
 		
@@ -121,14 +175,38 @@
 				condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachEntry.productId));
 				cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 				returnItems = EntityUtil.filterByCondition(returnItemsList, cond);
-				
 				returnPrice=0;
+				returnProductName ="";
+				
+				
+				List conditionList1= FastList.newInstance();
+				conditionList1.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.NOT_EQUAL, null));
+				conditionList1.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, "VAT_SALE"));
+				conditionList1.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachEntry.productId));
+				EntityCondition condition2 = EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
+				fieldsToSelect = ["taxPercentage"] as Set;
+		     	 productPrice = delegator.findList("ProductPrice", condition2, fieldsToSelect ,  null , null, false);
+				vatValues= EntityUtil.getFirst(productPrice);
+				tempMap.vatPercentage = vatValues.taxPercentage;
+				 
+				 
+				 
 				
 				if(returnItems){
 					returnValues = EntityUtil.getFirst(returnItems);
 					tempMap.returnQuantity = returnValues.returnQuantity;
+					tempMap.taxReturnQuantity = returnValues.returnQuantity;
+					productList=[];
+					productList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachEntry.productId));
+					condition = EntityCondition.makeCondition(productList, EntityOperator.AND);
+					fieldsToSelect = ["productName"] as Set;
+					returnProductDescriptionsList = delegator.findList("Product", condition, fieldsToSelect, null , null, false);
+					returnProductDescriptions= EntityUtil.getFirst(returnProductDescriptionsList);
+					
+					tempMap.returnProductName = returnProductDescriptions.productName;
+
 					if (UtilValidate.isNotEmpty(returnValues.returnPrice)) {
-						tempMap.returnAmount = (returnValues.returnQuantity*returnValues.returnPrice);
+							tempMap.returnAmount = (returnValues.returnQuantity*returnValues.returnPrice);
 			      	}else{
 					  tempMap.returnAmount = (returnValues.returnQuantity*returnPrice);
 					  }
@@ -136,18 +214,58 @@
 				else{
 					tempMap.returnQuantity = 0;
 					tempMap.returnAmount = 0;
+					tempMap.returnProductName=returnProductName;
+					tempMap.taxReturnQuantity = ""
+					tempMap.taxReturnAmount = "";
 				}
+				netTotalAmount=0.00;
+				taxAmount=0;
+				/*saleTotal=saleTotal+tempMap.amount;
+				returnTotal=returnTotal+tempMap.returnAmount;
+				netTotalAmount=saleTotal-returnTotal;
+				taxAmount=netTotalAmount*14.50/100;*/
+				
 				finalReturnItemList.add(tempMap);
 				
 			}
+			
+			finalAmount=finalAmount+netTotalAmount+taxAmount;
 			returnItemMap.put(eachFacilityId,finalReturnItemList);
 		}
-		/*if (UtilValidate.isNotEmpty(itemsList)) {
-		    itemsListMap.put(eachFacilityId, itemsList);
-		}*/
 	}
 	context.itemsReturnListMap=returnItemMap;	
 	context.itemsListMap=itemsListMap;
+
+	/*finalSaleVatMap =[:];
+	facilityIds.each{eachFacilityId->
+		facilityOrderList = returnItemMap.get(eachFacilityId);
+		facilitySaleMap = [:];
+		facilityOrderList.each{eachOrderItem ->
+			productId = eachOrderItem.productId;
+			vatPercent = productVatMap.get(productId);
+			if(facilitySaleMap.get(vatPercent)){
+				tempVatProd = facilitySaleMap.get(vatPercent);
+				tempVatProd.add(eachOrderItem);
+				facilitySaleMap.put(vatPercent, tempVatProd);
+			}
+			else{
+				tempList = [];
+				tempList.add(eachOrderItem);
+				facilitySaleMap.put(vatPercent, tempList);
+			}
+		}
+		finalSaleVatMap.put(eachFacilityId, facilitySaleMap)
+		prodDetails = finalSaleVatMap.entrySet();
+//        Debug.log("------------------prd -------------------------- :"+prodDetails);
+
+	}*/
+	
+	//context.saleTotal=saleTotal;
+//	context.returnTotal=returnTotal;
+//	context.netTotalAmount=netTotalAmount;
+//    context.taxAmount=taxAmount;
+//	context.finalAmount=finalAmount;
+//	context.finalSaleVatMap=finalSaleVatMap;
 	
 	
 	periodBillingIds.each{eachperiodBillingId->
@@ -164,6 +282,9 @@
 			context.invoiceListMap=invoiceListMap;
 		}
 	}
+	/*if (UtilValidate.isNotEmpty(itemsList)) {
+		    itemsListMap.put(eachFacilityId, itemsList);
+		}*/
 	
 	
 	
