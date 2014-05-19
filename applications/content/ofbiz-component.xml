@@ -68,7 +68,7 @@ under the License.
     <test-suite loader="main" location="testdef/lucenetests.xml"/>
 
     <webapp name="content"
-        title="OMS"
+        title="Documents"
         app-bar-display="true"        
         server="default-server"
         location="webapp/content"

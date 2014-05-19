@@ -46,10 +46,10 @@ under the License.
 <!--                                            <link target="ContentSearchOptions" text="${uiLabelMap.CommonAdvancedSearch}" style="buttontext"/>-->
 <!--                                            <include-menu name="contentMenu" location="component://content/widget/content/ContentMenus.xml"/>-->
                                         </container>
-                            			<screenlet title="APDDCF OMS Search">                                    
+                            			<screenlet title="Mother Dairy Documents Search">                                    
                                         	<include-form name="FindContent" location="component://content/widget/content/ContentForms.xml"/>
 										</screenlet>
-                            			<screenlet title="APDDCF OMS Results">										
+                            			<screenlet title="Mother Dairy Documents Results">										
                                         	<include-form name="ListContent" location="component://content/widget/content/ContentForms.xml"/>
 										</screenlet>
                             </widgets>
@@ -57,10 +57,10 @@ under the License.
                             	<container style="button-bar">
                             		<link name="login" target="main" style="buttontext create h2" text="Login"> </link>
                             	</container>                            	
-                            	<screenlet title="APDDCF OMS Search">
+                            	<screenlet title="Mother Dairy Documents Search">
                             		 <include-form name="FindContent" location="component://content/widget/content/ContentForms.xml"/>
                             	</screenlet>
-                            	<screenlet title="APDDCF OMS Results">
+                            	<screenlet title="Mother Dairy Documents Results">
                             		   <include-form name="ListContent" location="component://content/widget/content/ContentForms.xml"/>
                             	</screenlet>                            	
                             </fail-widgets>

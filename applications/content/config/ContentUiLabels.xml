@@ -1527,7 +1527,7 @@
         <value xml:lang="en">FileNO</value>        
     </property>
     <property key="SectionName">      
-        <value xml:lang="en">Milk Shed/Department Name</value>        
+        <value xml:lang="en">Department Name</value>        
     </property>
     <property key="IsPublic">      
         <value xml:lang="en">Status of File</value>        
