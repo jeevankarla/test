@@ -100,7 +100,7 @@ under the License.
         <field name="description" sort-field="true" title="${uiLabelMap.SubjectORAbstract}"><display/></field>
         <field name="dataResourceName" sort-field="true" title="File Path"><display/></field>       
         <field name="contentTypeId" sort-field="true"  title="${uiLabelMap.OrderType}"><display-entity entity-name="ContentType"/></field>
-        <field name="dataCategoryId" title="Milk Shed/Dept Name" sort-field="true">
+        <field name="dataCategoryId" title="Dept Name" sort-field="true">
         	<display-entity entity-name="DataCategory" description="${categoryName}"/>
         </field>         
         <field name="isPublic" sort-field="true" title="Confidential"><display description="${groovy: isPublic.equals('Y')?'N':'Y'}"/></field>
