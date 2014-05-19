@@ -441,7 +441,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 				 	     keep-together="always">${afterReturnTotal?string("#0.00")}</fo:block>
                   </fo:table-cell>
                   <#assign taxAmount=afterReturnTotal*vatPercentage/100>
-                  <#assign netTotalAmount=netTotalAmount+afterReturnTotal+taxAmount>
+                  <#assign netTotalAmount=netTotalAmount-returnTotal+taxAmount>
                    </fo:table-row>
                    
                    </#if>
