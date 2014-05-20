@@ -939,24 +939,6 @@ public class ByProductServices {
             		}
             		 item.setListPrice(totalPrice);
             		item.setTaxDetails(taxList);
-            		// populate tax amount percent here 
-            	/*	item.setVatPercent();
-                    item.setVatAmount();
-                    item.setBedPercent();
-                    item.setBedAmount();
-                    item.setBedcessPercent();
-                    item.setBedcessAmount();
-                    item.setBedseccessPercent();
-                    item.setBedseccessPercent();*/
-					/*GenericValue productDetail = delegator.findOne("Product", UtilMisc.toMap("productId", subscriptionProduct.getString("productId")), false);
-					if (productDetail != null) {
-						BigDecimal tempQuantity  = subscriptionProduct.getBigDecimal("quantity").multiply(productDetail.getBigDecimal("quantityIncluded"));
-						quantity = quantity.add(tempQuantity);
-					}*/
-            		
-            		
-            		
-            		
             		
                 } catch (Exception exc) {
                     Debug.logError("Error adding product with id " + subscriptionProduct.getString("productId") + " to the cart: " + exc.getMessage(), module);
@@ -1098,27 +1080,38 @@ public class ByProductServices {
                     		return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(resultMap));          	            
                         }
             		}
-            		 
-    	        	/*Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
-    	             invoiceCtx.put("userLogin", userLogin);
-    	             invoiceCtx.put("statusId","INVOICE_READY");
-    	             try{
-    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
-    	             	if (ServiceUtil.isError(invoiceResult)) {
-    	             		Debug.logError(invoiceResult.toString(), module);
-    	                     return ServiceUtil.returnError(null, null, null, invoiceResult);
-    	                 }	             	
-    	             }catch(GenericServiceException e){
-    	             	 Debug.logError(e, e.toString(), module);
-    	                 return ServiceUtil.returnError(e.toString());
-    	             }       */ 		
-            		// apply invoice if any adavance payments from this  party
-    				  			            
-    				/*Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
-    				if (ServiceUtil.isError(resultPaymentApp)) {						  
-    	        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
-    	               return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
-    		        }	*/			           
+            		 Boolean enableAdvancePaymentApp  = Boolean.FALSE;
+                	 try{        	 	
+            			 GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableAdvancePaymentApp"), true);
+            			 if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
+            				 enableAdvancePaymentApp = Boolean.TRUE;
+            			 } 
+            			 
+        	         }catch (GenericEntityException e) {
+        				 Debug.logError(e, module);
+        				 
+        			}
+	        	   if(enableAdvancePaymentApp){
+	        		   Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
+	    	             invoiceCtx.put("userLogin", userLogin);
+	    	             invoiceCtx.put("statusId","INVOICE_READY");
+	    	             try{
+	    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+	    	             	if (ServiceUtil.isError(invoiceResult)) {
+	    	             		Debug.logError(invoiceResult.toString(), module);
+	    	                     return ServiceUtil.returnError(null, null, null, invoiceResult);
+	    	                 }	             	
+	    	             }catch(GenericServiceException e){
+	    	             	 Debug.logError(e, e.toString(), module);
+	    	                 return ServiceUtil.returnError(e.toString());
+	    	             }  
+	    	          // apply invoice if any adavance payments from this  party
+	     				Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
+	     				if (ServiceUtil.isError(resultPaymentApp)) {						  
+	     	        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
+	     	               return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
+	     		        }
+	        		}
     		          
                 }catch (Exception e) {
                     Debug.logError(e, module);
