@@ -2493,7 +2493,16 @@ under the License.
         <set field="createAcctgTransAndEntriesInMap.glFiscalTypeId" value="ACTUAL"/>
         <set field="createAcctgTransAndEntriesInMap.paymentId" from-field="paymentApplication.paymentId"/>
         <set field="createAcctgTransAndEntriesInMap.invoiceId" from-field="paymentApplication.invoiceId"/>
-        <if-compare field="isReceipt" operator="equals" type="Boolean" value="true">
+        <entity-one value-field="invoice" entity-name="Invoice">
+            <field-map field-name="invoiceId" from-field="paymentApplication.invoiceId"/>
+        </entity-one>
+        <if-compare-field operator="greater"  field="payment.paymentDate" type="Timestamp" to-field="invoice.invoiceDate">
+             <set field="createAcctgTransAndEntriesInMap.transactionDate" from-field="payment.paymentDate"/>
+             <else>
+                  <set field="createAcctgTransAndEntriesInMap.transactionDate" from-field="invoice.invoiceDate"/>
+             </else>
+        </if-compare-field>
+       	<if-compare field="isReceipt" operator="equals" type="Boolean" value="true">
             <set field="createAcctgTransAndEntriesInMap.partyId" from-field="payment.partyIdFrom"/>
             <set field="createAcctgTransAndEntriesInMap.roleTypeId" value="BILL_TO_CUSTOMER"/>
             <else>
