@@ -5875,6 +5875,7 @@ public class ByProductNetworkServices {
 	        if(UtilValidate.isNotEmpty(context.get("sendSMS"))){
 	        	sendSMS = (Boolean)context.get("sendSMS");
 	        }
+	        facilityId = facilityId.toUpperCase();
 	        String paymentType = "SALES_PAYIN";
 	        String partyIdTo ="Company";
 	        String paymentId = "";
@@ -6118,9 +6119,10 @@ public class ByProductNetworkServices {
 					 Debug.logError("received partial payment or no dues for booth :" + (String)boothPayment.get("boothId"), module);
 					 return ServiceUtil.returnError("received partial payment or no dues for booth :" + (String)boothPayment.get("boothId")); 
 				}
+				
 	        	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentMethodTypeId", paymentChannel);    		
 	    		paymentCtx.put("userLogin", context.get("userLogin"));
-	    		paymentCtx.put("facilityId", (String)boothPayment.get("boothId"));
+	    		paymentCtx.put("facilityId", ((String)boothPayment.get("boothId")).toUpperCase());
 	    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"));
 	            paymentCtx.put("paymentLocationId", paymentLocationId); 
 	            paymentCtx.put("paymentRefNum", transactionId);                        	    		            
