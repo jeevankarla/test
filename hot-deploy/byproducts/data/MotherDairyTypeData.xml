@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 	<RoleType description="Employee subsidy Role" hasTable="N" parentTypeId="" roleTypeId="EMPSUBISDY_ROLE"/>	
-	<PaymentMethodType paymentMethodTypeId="AXISHTOH_PAYIN"></PaymentMethodType>
+	<PaymentMethodType paymentMethodTypeId="AXISHTOH_PAYIN" description="Axis Bank Host-Host"></PaymentMethodType>
+	<PaymentMethodTypeGlAccount  glAccountId="112000" organizationPartyId="Company" paymentMethodTypeId="AXISHTOH_PAYIN"/>
 	<PeriodType description="Fortnightly Bill" periodLength="2" periodTypeId="INST_FORTNIGHT_BILL" uomId="TF_wk"/>
     <PeriodType description="Monthly Bill" periodLength="1" periodTypeId="INST_MONTH_BILL" uomId="TF_mon"/> 
     <PeriodType description="Quarterly Bill" periodLength="3" periodTypeId="INST_QUARTER_BILL" uomId="TF_mon"/> 
@@ -16,7 +17,9 @@
     <TenantConfiguration description="Enable Continuous Indent" propertyName="enableContinuousIndent" propertyTypeEnumId="LMS" propertyValue="N"/>
     <TenantConfiguration description="Enable Create Credit Note" propertyName="enableCreditNote" propertyTypeEnumId="LMS" propertyValue="N"/>
     <Enumeration description="Route Marketing Purpose" enumCode="ROUTE_MKTG" enumId="ROUTE_MKTG" enumTypeId="PAYMENT_PURPOSE"/>
-
+    <TenantConfiguration propertyName="enableIndentSms" propertyValue="N" propertyTypeEnumId="SMS" description="Enable Indent Sms functionality"/>
+	
+   <TenantConfiguration propertyName="enableAdvancePaymentApp" propertyValue="N" propertyTypeEnumId="LMS" description="Enable Advance payment application while trucksheet generation"/>
     <EnumerationType description="Shoppee Rent" enumTypeId="SHOPEE_RENT" />
     <Enumeration description="Shoppee Rent" enumCode="SHOPEE_RENT" enumId="SHOPEE_RENT" enumTypeId="SHOPEE_RENT"/>
 
