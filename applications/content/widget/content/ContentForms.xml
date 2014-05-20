@@ -76,9 +76,10 @@ under the License.
         </field>        
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>	
-    <form name="ListContent" target="" title="" list-name="listIt" type="list" paginate-target="findContent"
+    <form name="ListContent"   list-name="listIt" type="list" paginate-target="findContent"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+        	<set field="parameters.sortField" from-field="parameters.sortField" default-value="-createdDate"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="PartyContentAndDataResource"/>
@@ -89,7 +90,7 @@ under the License.
         </actions>
         <field name="view">
         	  <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
-                <sub-hyperlink  target="img/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK" link-style="smallSubmit">
+                <sub-hyperlink  target="img/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK" link-style="smallSubmit" target-type="content">
                     <parameter param-name="imgId" value="${dataResourceId}"/>
                 </sub-hyperlink>                
             </display-entity>        
@@ -114,7 +115,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>            
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="findContentSearchResults"/>
+<!--        <on-event-update-area event-type="paginate" area-id="search-results" area-target="findContentSearchResults"/>-->
     </form>    
 	<form name="AddContent" target="uploadPartyContentFile" type="upload" 
   		header-row-style="header-row">

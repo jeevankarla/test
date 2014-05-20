@@ -29,7 +29,7 @@ under the License.
                 <set field="tabButtonItem" value="findContent"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="30"/>
+                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="50"/>
                 <set field="noConditionFind" value="Y"/>
                 <script location="component://content/webapp/content/WEB-INF/actions/content/findContent.groovy" />                
             </actions> 
@@ -81,8 +81,8 @@ under the License.
                 <set field="entityName" value="PartyContentAndDataResource"/>
                 <set field="tabButtonItem" value="confidential"/>
                 <set field="queryString" from-field="result.queryString"/>
-                <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
-                <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="30"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="30"/>
                  <set field="noConditionFind" value="Y"/>
                  <set field="parameters.isPublic" value="N"/>               
             </actions>

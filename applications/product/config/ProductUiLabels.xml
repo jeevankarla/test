@@ -113,7 +113,7 @@
     </property>
     <property key="FacilityCompanyName">
         <value xml:lang="de">OFBiz: Einrichtungen Verwaltung</value>
-        <value xml:lang="en">vbiz: Network</value>
+        <value xml:lang="en">milkosoft: Network</value>
         <value xml:lang="es">OFBiz: Administrador de Almacén</value>
         <value xml:lang="fr">OFBiz: Gestion de stock</value>
         <value xml:lang="it">OFBiz: Gestione stabilimenti</value>
@@ -10450,7 +10450,7 @@
     </property>
     <property key="ProductCatalogCompanyName">
         <value xml:lang="de">OFBiz: Katalogverwaltung</value>
-        <value xml:lang="en">vbiz: Product</value>
+        <value xml:lang="en">milkosoft: Product</value>
         <value xml:lang="es">OFBiz: Administrador del Catálogo</value>
         <value xml:lang="fr">OFBiz: Gestion des articles</value>
         <value xml:lang="it">OFBiz: Gestione cataloghi</value>

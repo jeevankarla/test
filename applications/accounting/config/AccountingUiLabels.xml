@@ -810,7 +810,7 @@
     </property>
     <property key="AccountingApCompanyName">
         <value xml:lang="de">OFBiz: Kreditorenbuchhaltung</value>
-        <value xml:lang="en">vbiz: AP Manager</value>
+        <value xml:lang="en">milkosoft: AP Manager</value>
         <value xml:lang="fr">OFBiz : gestion des comptes fourn.</value>
         <value xml:lang="hi_IN">OFBiz: खाता देय प्रबंधक</value>
         <value xml:lang="it">OFBiz: Gestione conti debitori</value>
@@ -1033,7 +1033,7 @@
     </property>
     <property key="AccountingArCompanyName">
         <value xml:lang="de">OFBiz: Debitorenbuchhaltung</value>
-        <value xml:lang="en">vbiz: AR Manager</value>
+        <value xml:lang="en">milkosoft: AR Manager</value>
         <value xml:lang="fr">OFBiz : gestion des comptes clients</value>
         <value xml:lang="hi_IN">OFBiz: खाता प्राप्य प्रबंधक</value>
         <value xml:lang="it">OFBiz: Gestione conti creditori</value>
@@ -2051,7 +2051,7 @@
     <property key="AccountingCompanyName">
         <value xml:lang="ar">أوفبيز: مسير المحاسبة</value>
         <value xml:lang="de">OFBiz: Buchhaltung</value>
-        <value xml:lang="en">vbiz: Accounting Manager</value>
+        <value xml:lang="en">milkosoft: Accounting Manager</value>
         <value xml:lang="es">OFBiz: Administrador de cuentas</value>
         <value xml:lang="fr">OFBiz: Gestion comptable</value>
         <value xml:lang="hi_IN">OFBiz: लेखा प्रबंधक</value>
