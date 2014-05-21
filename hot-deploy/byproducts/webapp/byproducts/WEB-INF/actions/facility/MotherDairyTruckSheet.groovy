@@ -378,4 +378,3 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 context.routeShipmentMap = routeShipmentMap;
 context.put("routeWiseMap",routeWiseMap);
 context.putAt("routeWiseTotalCrates", routeWiseTotalCrates);
-Debug.log("#########################"+routeWiseMap);
