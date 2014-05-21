@@ -957,7 +957,6 @@ public class ByProductNetworkServices {
 	    				if(facility.getString("categoryTypeEnum").equals("CR_INST")){
 	  	    			 productSubscriptionTypeId = "CREDIT";
 	  	    		  	}
-	    			
 	    		}
 	    		BigDecimal securityDeposit = BigDecimal.ZERO;  
 	    		if(UtilValidate.isNotEmpty(facility.get("securityDeposit"))){
@@ -4386,7 +4385,7 @@ public class ByProductNetworkServices {
 	        result = ServiceUtil.returnSuccess();        
 	        result.put("boothDues", boothDues);
 	        result.put("boothTotalDues", boothTotalDues);
-
+Debug.logInfo("result= " + result, module);
 	        return result;        
 	    }
 	    /**
@@ -6119,7 +6118,6 @@ public class ByProductNetworkServices {
 					 Debug.logError("received partial payment or no dues for booth :" + (String)boothPayment.get("boothId"), module);
 					 return ServiceUtil.returnError("received partial payment or no dues for booth :" + (String)boothPayment.get("boothId")); 
 				}
-				
 	        	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentMethodTypeId", paymentChannel);    		
 	    		paymentCtx.put("userLogin", context.get("userLogin"));
 	    		paymentCtx.put("facilityId", ((String)boothPayment.get("boothId")).toUpperCase());

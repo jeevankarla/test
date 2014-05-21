@@ -343,7 +343,8 @@ Debug.logInfo(infoString, module);
 		inputParamMap.put("boothId", facilityId);  
 		inputParamMap.put("supplyDate", supplyDateStr); 
 		inputParamMap.put("subscriptionTypeId", "AM"); 	
-		inputParamMap.put("productSubscriptionTypeId", "CASH"); 				
+		inputParamMap.put("productSubscriptionTypeId", "CASH"); 
+Debug.logInfo("inputParamMap:" + inputParamMap, module);		 		
     	Map indentResultsAM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);
 		if(!ServiceUtil.isError(indentResultsAM)){
 			indentMap.put("AM", indentResultsAM.get("changeIndentProductList"));
@@ -356,7 +357,7 @@ Debug.logInfo(infoString, module);
 		
 		Map result = FastMap.newInstance();  		
 		result.put("indentResults", indentMap);
-	    Debug.logInfo("indentResults:" + indentMap, module);		 
+Debug.logInfo("indentResults:" + indentMap, module);		 
     	return result;
     }
     
@@ -521,4 +522,98 @@ Debug.logInfo("accountSummary:" + facilityLedgerMap, module);
     	return result;
     }
     
+    
+    public static Map<String, Object> getFacilityPayments(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	String facilityId = (String) context.get("facilityId");
+		if (UtilValidate.isEmpty(facilityId)) {
+			Debug.logError("Empty facility Id", module);
+			return ServiceUtil.returnError("Empty facility Id");	   
+		}	    	
+    	Timestamp fromDate = (Timestamp) context.get("fromDate");
+		if (UtilValidate.isEmpty(fromDate)) {
+			Debug.logError("Empty fromDate", module);
+			return ServiceUtil.returnError("Empty fromDate");	   
+		}    	
+    	Timestamp thruDate = (Timestamp) context.get("thruDate");
+		if (UtilValidate.isEmpty(thruDate)) {
+			Debug.logError("Empty thruDate", module);
+			return ServiceUtil.returnError("Empty thruDate");	   
+		}   
+		Map result = FastMap.newInstance();  		
+		Map<String, Object> paramMap = FastMap.newInstance();
+		paramMap.put("userLogin", userLogin);  
+		paramMap.put("facilityId", facilityId);  
+		paramMap.put("fromDate", fromDate);     
+		paramMap.put("thruDate", thruDate);  
+		Map<String, Object> facilityPayments = FastMap.newInstance();
+		facilityPayments = ByProductNetworkServices.getBoothPaidPayments( dctx , paramMap);
+		result.put("paymentsResult", facilityPayments);
+Debug.logInfo("paymentResults:" + facilityPayments, module);		 
+    	return result;
+    }    
+    
+    public static Map<String, Object> getFacilityOrders(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	String facilityId = (String) context.get("facilityId");
+		if (UtilValidate.isEmpty(facilityId)) {
+			Debug.logError("Empty facility Id", module);
+			return ServiceUtil.returnError("Empty facility Id");	   
+		}	    	
+    	Timestamp fromDate = (Timestamp) context.get("fromDate");
+		if (UtilValidate.isEmpty(fromDate)) {
+			Debug.logError("Empty fromDate", module);
+			return ServiceUtil.returnError("Empty fromDate");	   
+		}    
+    	Timestamp thruDate = (Timestamp) context.get("thruDate");
+		if (UtilValidate.isEmpty(thruDate)) {
+			Debug.logError("Empty thruDate", module);
+			return ServiceUtil.returnError("Empty thruDate");	   
+		}   
+		Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+		Timestamp thruDateEnd = UtilDateTime.getDayEnd(thruDate);
+
+		List amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator ,fromDateStart,thruDateEnd,"AM");
+		List pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator ,fromDateStart,thruDateEnd,"PM");
+
+		Map allDaySaleMap = FastMap.newInstance(); 
+		Map amBoothDayTotals = FastMap.newInstance(); 
+		Map pmBoothDayTotals = FastMap.newInstance(); 
+
+		if(UtilValidate.isNotEmpty(amShipmentIds)){
+			Map dayTotals = ByProductNetworkServices.getPeriodTotals(dctx, 
+					UtilMisc.toMap("facilityIds", UtilMisc.toList(facilityId), "shipmentIds", amShipmentIds,"fromDate", fromDateStart, "thruDate", thruDateEnd));
+			if(UtilValidate.isNotEmpty(dayTotals)){
+				amBoothDayTotals = (Map)dayTotals.get("dayWiseTotals");
+			}
+		}
+
+		//pmShipments
+		if(UtilValidate.isNotEmpty(pmShipmentIds)){
+			Map dayTotals = ByProductNetworkServices.getPeriodTotals(dctx, 
+					UtilMisc.toMap("facilityIds", UtilMisc.toList(facilityId), "shipmentIds", pmShipmentIds,"fromDate", fromDateStart, "thruDate", thruDateEnd));
+			if(UtilValidate.isNotEmpty(dayTotals)){
+				pmBoothDayTotals = (Map)dayTotals.get("dayWiseTotals");
+			}
+		}
+		
+		for(int j=0 ; j < (UtilDateTime.getIntervalInDays(fromDateStart,thruDateEnd)+1); j++){
+			Timestamp saleDate = UtilDateTime.addDaysToTimestamp(fromDateStart, j);
+			String curntDay=UtilDateTime.toDateString(saleDate ,"yyyy-MM-dd");
+			Map curntDaySalesMap = FastMap.newInstance(); 
+			if(UtilValidate.isNotEmpty(amBoothDayTotals.get(curntDay))){
+				curntDaySalesMap.put("AM", ((Map)amBoothDayTotals.get(curntDay)).get("productTotals"));
+			}
+			if(UtilValidate.isNotEmpty(pmBoothDayTotals.get(curntDay))){
+				curntDaySalesMap.put("PM", ((Map)pmBoothDayTotals.get(curntDay)).get("productTotals"));
+			}
+			allDaySaleMap.put(curntDay, curntDaySalesMap);
+		}
+		Map result = FastMap.newInstance();  		
+		result.put("ordersResult", allDaySaleMap);
+Debug.logInfo("result:" + result, module);		 
+    	return result;
+    }        
 }
