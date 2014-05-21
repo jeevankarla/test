@@ -352,7 +352,7 @@ Debug.logInfo("inputParamMap:" + inputParamMap, module);
 		inputParamMap.put("subscriptionTypeId", "PM"); 			
     	Map indentResultsPM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);
 		if(!ServiceUtil.isError(indentResultsPM)){
-			indentMap.put("PM", indentResultsAM.get("changeIndentProductList"));
+			indentMap.put("PM", indentResultsPM.get("changeIndentProductList"));
 		}  
 		
 		Map result = FastMap.newInstance();  		
