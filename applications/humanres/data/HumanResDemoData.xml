@@ -81,7 +81,44 @@ under the License.
      
    
    
-   
+   <!--  Sample date-->
+    <AcctgFormula acctgFormulaId="DA_BGLR"  description="DA BGLR" formula="0.15*(${BASIC})" hasTable="N" isSlabBased="N" />
+    <AcctgFormula acctgFormulaId="DA_GULB"  description="DA GULB" formula="0.09*(${BASIC})" hasTable="N" isSlabBased="N" />
+    <AcctgFormula acctgFormulaId="DA_BELL"  description="DA BGLR" formula="0.15*(${BASIC})" hasTable="N" isSlabBased="N" />
+     
+    <AcctgFormula acctgFormulaId="HRA_BGLR" createdStamp="2013-09-16 11:14:10.0" createdTxStamp="2013-09-16 11:14:10.0" description="HRA BGLR" formula="0.3*(${BASIC})" hasTable="N" isSlabBased="N"/>
+    <AcctgFormula acctgFormulaId="HRA_BELL" createdStamp="2013-09-16 11:14:10.0" createdTxStamp="2013-09-16 11:14:10.0" description="HRA BELL" formula="0.1*(${BASIC})" hasTable="N" isSlabBased="N"/>
+    <AcctgFormula acctgFormulaId="HRA_GULB" createdStamp="2013-09-16 11:14:10.0" createdTxStamp="2013-09-16 11:14:10.0" description="HRA GULD" formula="0.3*(${BASIC})" hasTable="N" isSlabBased="N"/>
+    
+    <PayrollBenDedRule payrollBenDedRuleId="200" ruleName="DA rule banglore location" payHeadTypeId="PAYROL_BEN_DA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="BGLR" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="200"/>
+    <PayHeadPriceAction acctgFormulaId="DA_BGLR" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="200" />
+    
+    <PayrollBenDedRule payrollBenDedRuleId="201" ruleName="DA rule gulbarga location" payHeadTypeId="PAYROL_BEN_DA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="GULB" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="201"/>
+    <PayHeadPriceAction acctgFormulaId="DA_GULB" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="201" />
+    
+     
+    <PayrollBenDedRule payrollBenDedRuleId="202" ruleName="DA rule bellary location" payHeadTypeId="PAYROL_BEN_DA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="BELL" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="202"/>
+    <PayHeadPriceAction acctgFormulaId="DA_BELL" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="202" />
+    
+    
+    
+    
+    <PayrollBenDedRule payrollBenDedRuleId="203" ruleName="HRA rule banglore location" payHeadTypeId="PAYROL_BEN_HRA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="BGLR" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="203"/>
+    <PayHeadPriceAction acctgFormulaId="HRA_BGLR" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="203" />
+     
+     <PayrollBenDedRule payrollBenDedRuleId="204" ruleName="HRA rule gulbarga location" payHeadTypeId="PAYROL_BEN_HRA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="GULB" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="204"/>
+    <PayHeadPriceAction acctgFormulaId="HRA_GULB" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="204" />
+     
+     <PayrollBenDedRule payrollBenDedRuleId="205" ruleName="HRA rule bellary location" payHeadTypeId="PAYROL_BEN_HRA" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="BELL" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="205"/>
+    <PayHeadPriceAction acctgFormulaId="HRA_BELL" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="205" />
+     
+     
 <!-- PayHeadPriceAction
 	PayHeadPriceActionType
 	PayrollBenDedCond
