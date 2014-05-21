@@ -1079,19 +1079,18 @@ public class ByProductServices {
                             Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(resultMap), module);
                     		return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(resultMap));          	            
                         }
-            		}
-            		 Boolean enableAdvancePaymentApp  = Boolean.FALSE;
-                	 try{        	 	
-            			 GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableAdvancePaymentApp"), true);
-            			 if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
-            				 enableAdvancePaymentApp = Boolean.TRUE;
-            			 } 
-            			 
-        	         }catch (GenericEntityException e) {
-        				 Debug.logError(e, module);
-        				 
-        			}
-	        	   if(enableAdvancePaymentApp){
+                		Boolean enableAdvancePaymentApp  = Boolean.FALSE;
+                   	 try{        	 	
+               			 GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableAdvancePaymentApp"), true);
+               			 if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
+               				 enableAdvancePaymentApp = Boolean.TRUE;
+               			 } 
+               			 
+           	         }catch (GenericEntityException e) {
+           				 Debug.logError(e, module);
+           				 
+           			}
+           	      if(enableAdvancePaymentApp){
 	        		   Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
 	    	             invoiceCtx.put("userLogin", userLogin);
 	    	             invoiceCtx.put("statusId","INVOICE_READY");
@@ -1111,7 +1110,8 @@ public class ByProductServices {
 	     	        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
 	     	               return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
 	     		        }
-	        		}
+	        		}//end of advance payment appl   
+            	}
     		          
                 }catch (Exception e) {
                     Debug.logError(e, module);
