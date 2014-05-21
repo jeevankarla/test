@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <ContentType contentTypeId="OMS" description="Oms" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="SHOW_CASE_NOTICES" description="Show Cause Notice" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="NOTICES" description="Notices" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="MEMO" description="Memo" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="WARNING" description="Warning" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="CHARGE_SHEET" description="Charge Sheet" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="UNDER_OFFICE_NOTE" description="Under Office Note" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="NOTE" description="Note" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="CIRCULAR" description="Circular" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="MEETING_NOTICE" description="Meeting Notice" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="OFFICE_ORDER" description="Office Order" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="OFFICIAL_DOC" description="Official Documents" hasTable="N" parentTypeId="OMS"/>
+    <ContentType contentTypeId="PRICE_REVISION" description="Price Revision" hasTable="N" parentTypeId="OMS"/>
+    
+    <DataCategory dataCategoryId="OMS" parentCategoryId="" categoryName=""/>
+    <DataCategory dataCategoryId="KMFCO" parentCategoryId="OMS" categoryName="KMF-CO"/>
+    <DataCategory dataCategoryId="MOTHER_DAIRY" parentCategoryId="OMS" categoryName="Mother-Dairy"/>
+    <DataCategory dataCategoryId="ADMIN" parentCategoryId="OMS" categoryName="Admin"/>
+    <DataCategory dataCategoryId="SYSTEMS" parentCategoryId="OMS" categoryName="Systems"/>
+    <DataCategory dataCategoryId="MARKETING" parentCategoryId="OMS" categoryName="Marketing"/>
+    <DataCategory dataCategoryId="PURCHASE" parentCategoryId="OMS" categoryName="Purchase"/>
+    <DataCategory dataCategoryId="PROCESSING" parentCategoryId="OMS" categoryName="Processing"/>
+    <DataCategory dataCategoryId="PACKING" parentCategoryId="OMS" categoryName="Packing"/>
+    <DataCategory dataCategoryId="PRODUCTS" parentCategoryId="OMS" categoryName="Products"/>
+    <DataCategory dataCategoryId="NEW_PRODUCTS" parentCategoryId="OMS" categoryName="New Products"/>
+    <DataCategory dataCategoryId="ICE_CREAM_PLANT" parentCategoryId="OMS" categoryName="Ice Cream Plant"/>
+    <DataCategory dataCategoryId="POWDER_PLANT" parentCategoryId="OMS" categoryName="Powder Plant"/>
+    <DataCategory dataCategoryId="ENGINEERING" parentCategoryId="OMS" categoryName="Engineering"/>
+    <DataCategory dataCategoryId="SECURITY" parentCategoryId="OMS" categoryName="Security"/>
+    <DataCategory dataCategoryId="FGS" parentCategoryId="OMS" categoryName="FGS"/>
+
+</entity-engine-xml>
