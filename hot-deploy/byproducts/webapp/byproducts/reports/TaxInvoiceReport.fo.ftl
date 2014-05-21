@@ -27,14 +27,14 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
-<#if itemsReturnListMap?has_content> 
-<#assign itemsList=itemsReturnListMap.entrySet()>
+<#if facilityMap?has_content> 
+<#assign itemsList=facilityMap.entrySet()>
 <#assign tinNumber="">
 <#assign cstNumber="">
- <#list itemsList as itemlst>
+ <#list itemsList as facilityList>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-	         <#assign  facilityId=itemlst.getKey()>   
+	         <#assign  facilityId=facilityList.getKey()>   
 	         <#assign invoiceList=invoiceListMap.get(facilityId)>	
 	          <#if (tinNumber ="") && (cstNumber ="")>
 	        	<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" :invoiceList.getString("partyId")}, true)>
@@ -46,55 +46,74 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
  	<fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 		 <fo:table-column column-width="40%"/>
 	     <fo:table-column column-width="20%"/>
-	     <fo:table-column column-width="20%"/>
-	     <fo:table-column column-width="20%"/>
+	     <fo:table-column column-width="50%"/>
+	     <fo:table-column column-width="57%"/>
 	     <fo:table-body>
 		     <fo:table-row> 
-			     <fo:table-cell number-columns-spanned="4">   						
-			 	     <fo:block text-align="center" white-space-collapse="false" font-weight="bold" keep-together="always">CONSOLIDATED TAX INVOICE</fo:block>
+			     <fo:table-cell>   						
+			 	     <fo:block text-align="center" white-space-collapse="false" font-weight="bold" keep-together="always" text-indent="200pt">CONSOLIDATED TAX INVOICE</fo:block>
 			 	</fo:table-cell>
 		 	  </fo:table-row>	
 		 	  <fo:table-row> 
-			     <fo:table-cell border-style="solid" >   						
+			     <fo:table-cell border-style="solid">   						
 					<fo:block>
 						<fo:table  table-layout="fixed" width="100%" space-before="0.2in">
+							 <fo:table-column column-width="40%"/>
+						     <fo:table-column column-width="40%"/>
+						     <fo:table-column column-width="50%"/>
+						     <fo:table-column column-width="57%"/>
 							 <fo:table-body>
-								 <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-									    <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-									    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								  <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									    <fo:block font-weight="bold">BUYER'S NAME </fo:block>  
-									 </fo:table-cell>   
-								 </fo:table-row> 
 								  <fo:table-row> 
 									 <fo:table-cell>
-									    <fo:block text-align="left" text-indent="5pt">${facilityId} ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityId, false)} </fo:block> 
-					                     <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", invoiceList.getString("partyId"), "userLogin", userLogin))/>
-										 <#assign partyTelephoneResult = dispatcher.runSync("getPartyTelephone", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", invoiceList.getString("partyId"), "userLogin", userLogin))/>
-										 <#if (partyAddressResult.address1?has_content)>
-										   <fo:block text-indent="5pt" text-align="left" keep-together="always">&#160;(${partyAddressResult.address1?if_exists})</fo:block>
-										</#if>
-										<#if (partyAddressResult.address2?has_content)>
-										<fo:block  text-align="left" keep-together="always" text-indent="5pt">&#160;${partyAddressResult.address2?if_exists}</fo:block>
-										</#if>
-										<#if (partyAddressResult.city?has_content)>
-										<fo:block  text-align="left" keep-together="always" text-indent="5pt">&#160;${partyAddressResult.city?if_exists} ${partyAddressResult.stateProvinceGeoId?if_exists}</fo:block>
-										</#if>
-										<#if (partyAddressResult.countryGeoId?has_content)>
-										<fo:block  text-align="left" keep-together="always" text-indent="5pt">&#160;${partyAddressResult.countryGeoId?if_exists}</fo:block>
-										</#if>
-										<#if (partyTelephoneResult.contactNumber?has_content)>
-										  <fo:block  text-indent="5pt" text-align="left" keep-together="always">&#160;(${partyTelephoneResult.contactNumber?if_exists})</fo:block>
-										</#if>
-										<#if (partyAddressResult.postalCode?has_content)>
-										  <fo:block  text-indent="5pt" text-align="left" keep-together="always">&#160;(${partyAddressResult.postalCode?if_exists})</fo:block>
-										</#if>
-										
+									 <fo:block>
+										<fo:table>
+											 <fo:table-body>
+												  <fo:table-row> 
+													 <fo:table-cell> 
+													      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">BUYER NAME</fo:block>
+													 </fo:table-cell>
+													 <fo:table-cell> 
+													      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">${facilityId} ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facilityId, false)} </fo:block>
+													 </fo:table-cell>
+												 </fo:table-row> 
+												 <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", invoiceList.getString("partyId"), "userLogin", userLogin))/>
+										 		 <#assign partyTelephoneResult = dispatcher.runSync("getPartyTelephone", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", invoiceList.getString("partyId"), "userLogin", userLogin))/>
+												 <fo:table-row> 
+												 	<fo:table-cell>
+										   				<fo:block text-align="left" keep-together="always" font-weight="bold" >ADDRESS</fo:block>
+													</fo:table-cell>
+													<fo:table-cell>
+														 <#if (partyAddressResult.address1?has_content)>
+											   				<fo:block text-align="left" keep-together="always">${partyAddressResult.address1?if_exists}</fo:block>
+														</#if>
+														<#if (partyAddressResult.address2?has_content)>
+															<fo:block  text-align="left" keep-together="always">${partyAddressResult.address2?if_exists}</fo:block>
+														</#if>
+														<#if (partyAddressResult.city?has_content)>
+															<fo:block  text-align="left" keep-together="always">${partyAddressResult.city?if_exists} ${partyAddressResult.stateProvinceGeoId?if_exists}</fo:block>
+														</#if>
+														<#if (partyAddressResult.countryGeoId?has_content)>
+															<fo:block  text-align="left" keep-together="always">${partyAddressResult.countryGeoId?if_exists}</fo:block>
+														</#if>
+														<#if (partyTelephoneResult.contactNumber?has_content)>
+														  	<fo:block text-align="left" keep-together="always">${partyTelephoneResult.contactNumber?if_exists}</fo:block>
+														</#if>
+														<#if (partyAddressResult.postalCode?has_content)>
+														  	<fo:block  text-align="left" keep-together="always">${partyAddressResult.postalCode?if_exists}</fo:block>
+														</#if>   
+													</fo:table-cell>
+												 </fo:table-row>
+												  <fo:table-row> 
+													 <fo:table-cell> 
+													      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">BILLING PERIOD</fo:block>
+													 </fo:table-cell>
+													 <fo:table-cell> 
+													      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt"  keep-together="always">${billingPeriodDate?if_exists}</fo:block>
+													 </fo:table-cell>
+												 </fo:table-row> 
+											</fo:table-body>
+											</fo:table>
+											</fo:block>
 									 </fo:table-cell>   
 								 </fo:table-row> 
 							  </fo:table-body>
@@ -107,131 +126,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 							 <fo:table-body>
 								  <fo:table-row> 
 									 <fo:table-cell> 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Invice No</fo:block>
-									       <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">${invoiceList.getString("invoiceId")}</fo:block>
-			   							  <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Delivery Note No</fo:block>
+									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">Invoice No-${invoiceList.getString("invoiceId")}</fo:block>
+			   							  <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">Date-${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
 									 </fo:table-cell>   
 								 </fo:table-row> 
 								  <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Supplier's Ref</fo:block>
+									 <fo:table-cell> 
+									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">TIN-${tinNumber?if_exists}</fo:block>
+									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">CST-${cstNumber?if_exists}</fo:block>
 									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 									 </fo:table-cell>   
 								 </fo:table-row> 
-								 <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Buyer's Order No</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								 <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Despatch Document No</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								  <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Despatched Through</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								  <fo:table-row> 
-									 <fo:table-cell > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Terms of Delivery</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-							  </fo:table-body>
-						</fo:table>
-					</fo:block>
-				</fo:table-cell>
-			 	 <fo:table-cell border-style="solid">   						
-			 	    <fo:block>
-						<fo:table table-layout="fixed" width="100%" space-before="0.2in">
-							 <fo:table-body>
-								  <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Dated</fo:block>
-									       <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
-			   							  <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Terms of Payment</fo:block>
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								  <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Other Reference</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								 <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Dated</fo:block>
-									       <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								 <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Dated</fo:block>
-									       <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
-									 </fo:table-cell>   
-								 </fo:table-row>
- 								<fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Destination</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								  <fo:table-row> 
-									 <fo:table-cell > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Ref:-Sale Order No</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-							  </fo:table-body>
-						</fo:table>
-					</fo:block>
-				</fo:table-cell>
-				 <fo:table-cell border-style="solid">   						
-			 	    <fo:block>
-						<fo:table table-layout="fixed" width="100%" space-before="0.2in">
-							 <fo:table-body>
-								  <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" >TIN NO:${tinNumber}</fo:block>
-			   							  <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always" >CST NO:${cstNumber}</fo:block>
-			   							  <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								 <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								 <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								 <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row>
-								  <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row> 
-								  <fo:table-row> 
-									 <fo:table-cell border-style="solid" > 
-									      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>
-									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-									 </fo:table-cell>   
-								 </fo:table-row>  
 							  </fo:table-body>
 						</fo:table>
 					</fo:block>
@@ -239,296 +144,478 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 		 	  </fo:table-row>	
 	 	 </fo:table-body> 
  	</fo:table>
- 	<fo:table  table-layout="fixed" width="100%">
-		 <fo:table-column column-width="30%"/>
-		 <fo:table-column column-width="15%"/>
-	     <fo:table-column column-width="10%"/>
-	     <fo:table-column column-width="18%"/>
-	     <fo:table-column column-width="13%"/>
-	     <fo:table-column column-width="13%"/>
+ 	<fo:table  table-layout="fixed">
+		 <fo:table-column column-width="10%"/>
+	     <fo:table-column column-width="20%"/>
+	     <fo:table-column column-width="30%"/>
+	     <fo:table-column column-width="40%"/>
+	     <fo:table-column column-width="40%"/>
+	     <fo:table-column column-width="40%"/>
 		     <fo:table-body>
-			     <fo:table-row> 
-				     <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     font-weight="bold" keep-together="always">Description of Goods</fo:block>
-				 	</fo:table-cell>
-				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     font-weight="bold" keep-together="always">Vat Percentage</fo:block>
-				 	</fo:table-cell>
-				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     font-weight="bold" keep-together="always">DC No</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     font-weight="bold" keep-together="always">Quantity(Kg/Ltr)</fo:block>
-				 	</fo:table-cell>
-				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     font-weight="bold" keep-together="always">Unit Rate</fo:block>
-				 	</fo:table-cell>
-				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     font-weight="bold" keep-together="always">Amount (Rs)</fo:block>
-				 	</fo:table-cell>
-			 	  </fo:table-row>
-			 	    <#assign totalAmount=0>
-              	    <#assign netTotalAmount=0>
-              	    <#assign finalAmount=0>
-              	    <#assign taxAmount=0>
-              	    <#assign afterReturnTotal=0>
-						<#list vatList as eachVat>
-              	    <#assign returnTotal=0>
-					<#assign saleTotal = 0>
-						<#assign totalFlag = 0>
-					<#if (eachVat==0)>
-						<fo:table-row> 
-				     <fo:table-cell>   						
-				 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-				 	     font-size="10pt" font-weight="bold" keep-together="always">NON Taxable Goods </fo:block>
-                  </fo:table-cell>
-                  </fo:table-row>
-						</#if>
-			 		    <#assign  itList=itemlst.getValue()>
-			        	<#list itList as eachItem>
-				        
-				        <#assign quantity=eachItem.get("quantity")>
-						<#assign unitListPrice=eachItem.get("unitListPrice")>
-						<#assign amount=(quantity)*(unitListPrice)>
-						<#assign returnQuantity=eachItem.get("returnQuantity")>
-						<#assign returnAmount=eachItem.get("returnAmount")>
-						<#assign vatPercentage=eachItem.get("vatPercentage")>
-						
-						<#if (vatPercentage==eachVat)>
-						<#assign totalFlag = 1>
-						<#if (eachVat!=0)>
-						<fo:table-row> 
-				     <fo:table-cell>   						
-				 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-				 	     font-size="10pt" font-weight="bold" keep-together="always">Taxable Goods (WITH ${vatPercentage}%) </fo:block>
-                  </fo:table-cell>
-                  </fo:table-row>
-						</#if>
-						
-			 	   
-			 	  <fo:table-row> 
-				     <fo:table-cell >  
-					    <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-					    font-size="10pt" keep-together="always">${eachItem.get("productName")}</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >  
-					   <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-					   keep-together="always">${eachItem.get("vatPercentage")}</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >  
-					   <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-					   keep-together="always">${eachItem.get("orderId")}</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >  
-					   <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-					   keep-together="always">${eachItem.get("quantity")}   </fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >  
-						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-						keep-together="always">${eachItem.get("unitListPrice")}</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell>  
-						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-						keep-together="always">${amount?string("#0.00")}</fo:block>
-				 	</fo:table-cell>
-				 	<#assign saleTotal = (saleTotal + amount?if_exists)>
-			 	  </fo:table-row>
-			 	    <#assign totalAmount=totalAmount+amount>
-				 	</#if>
-			 	   </#list> 
-			 	   <#if totalFlag == 1>
-			 	   <fo:table-row> 
-				     
-                  <fo:table-cell number-columns-spanned="4">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 	</fo:table-cell>
-                   <fo:table-cell >   						
-				 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-				 	     font-size="10pt" keep-together="always" font-weight="bold">Total</fo:block>
-                  </fo:table-cell>
-                   <fo:table-cell >   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     keep-together="always">${saleTotal?string("#0.00")}</fo:block>
-                  </fo:table-cell>
-                   </fo:table-row>
-                   <#assign netTotalAmount=netTotalAmount+totalAmount> 
-			 	   </#if>
-                  
-                  <#assign returnTotalAmount=0>
-                  
-                  <#assign returnTotalFalg=0>
-                  <#assign  itList=itemlst.getValue()>
-			        	<#list itList as eachItem>
-				        <#assign quantity=eachItem.get("quantity")>
-						<#assign unitListPrice=eachItem.get("unitListPrice")>
-						<#assign amount=(quantity)*(unitListPrice)>
-						<#assign returnQuantity=eachItem.get("returnQuantity")>
-						<#assign returnAmount=eachItem.get("returnAmount")>
-                      <#assign vatPercentage=eachItem.get("vatPercentage")>
-						
-						<#if (vatPercentage==eachVat)>
-				 	<#if (returnQuantity>0)>
-					<#assign returnTotalFalg=1>                  
-                   <fo:table-row> 
-				     <fo:table-cell>   						
-				 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-				 	     font-size="10pt" font-weight="bold" keep-together="always">Less-Returns</fo:block>
-                  </fo:table-cell>
-                  </fo:table-row>
-                  <fo:table-row > 
-				     <fo:table-cell >  
-					    <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-					    font-size="10pt" keep-together="always">${eachItem.get("returnProductName")}</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >  
-					   <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-					   keep-together="always">${eachItem.get("vatPercentage")} </fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >  
-					   <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-						keep-together="always">${eachItem.get("orderId")}</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >  
-					   <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-					   keep-together="always"> ${eachItem.get("returnQuantity")}</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >  
-						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-					   keep-together="always">${eachItem.get("unitListPrice")}</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell>  
-						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-						keep-together="always">${eachItem.get("returnAmount")?string("#0.00")}</fo:block>
-				 	</fo:table-cell>
-				 	<#assign returnTotal = (returnTotal + returnAmount?if_exists)>
-				 	
-				   </fo:table-row>
-				   
-                   <#assign afterReturnTotal = (saleTotal - returnTotal?if_exists)>
-					<#if (returnTotalFalg==1)>
-                  	<fo:table-row> 
-					<fo:table-cell number-columns-spanned="4">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >   						
-				 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-				 	     font-size="10pt" keep-together="always" font-weight="bold">RETURN Total</fo:block>
-                  </fo:table-cell>
-                   <fo:table-cell >   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     keep-together="always">${returnTotal?string("#0.00")}</fo:block>
-                  </fo:table-cell>
-                   </fo:table-row>
-                    <#--fo:table-cell number-columns-spanned="5">
-                        <fo:block font-weight="bold"> ${uiLabelMap.ProductShipmentId}: ${newShipmentId}<#if issuedDateTime?exists> ${uiLabelMap.CommonDate}: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(issuedDateTime)}</#if></fo:block>
-                   </fo:table-cell-->
-                   <fo:table-row> 
-                  <fo:table-cell number-columns-spanned="4">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 	</fo:table-cell>
-				 	<fo:table-cell >   						
-				 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-				 	     font-size="10pt" keep-together="always" font-weight="bold">Net Amount</fo:block>
-                  </fo:table-cell>
-                   <fo:table-cell >   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     keep-together="always">${afterReturnTotal?string("#0.00")}</fo:block>
-                  </fo:table-cell>
-                  <#assign taxAmount=afterReturnTotal*vatPercentage/100>
-                  <#assign netTotalAmount=netTotalAmount-returnTotal+taxAmount>
-                   </fo:table-row>
-                   
-                   </#if>
-                   <#if (vatPercentage>1)>
-                  <fo:table-row> 
-				     <fo:table-cell >   						
-				 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt"
-				 	      keep-together="always">ADD : VAT @ ${vatPercentage} % of Amount</fo:block>
-                  </fo:table-cell>
-                  <fo:table-cell number-columns-spanned="4">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 	</fo:table-cell>
-                   <fo:table-cell >   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     keep-together="always">${taxAmount?string("#0.00")}</fo:block>
-                  </fo:table-cell>
-                  </fo:table-row>
-                   </#if>
-				 	</#if>
-				 	</#if>
-                  </#list>
-				 	
-				</#list>
-                  
-                  
-                  <fo:table-row> 
-				     <fo:table-cell >   						
-				 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-				 	     font-size="10pt" keep-together="always" font-weight="bold">Final Total</fo:block>
-                  </fo:table-cell>
-                  <fo:table-cell number-columns-spanned="4">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 	</fo:table-cell>
-                   <fo:table-cell >   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     keep-together="always">${netTotalAmount?string("#0.00")}</fo:block>
-                  </fo:table-cell>	
-                   </fo:table-row>
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                   
-                  <#--fo:table-row> 
-				     <fo:table-cell >   						
-				 	     <fo:block text-align="left" text-indent="12pt" white-space-collapse="false" font-family="Courier,monospace" 
-				 	     font-size="10pt" keep-together="always">Sub Total Value</fo:block>
-                  </fo:table-cell>
-                  <fo:table-cell number-columns-spanned="4">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 	</fo:table-cell>
-                   <fo:table-cell >   						
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     keep-together="always">${finalAmount?string("#0.00")}</fo:block>
-                  </fo:table-cell>
-                   </fo:table-row--> 
-			 	   <fo:table-row> 
-				     <fo:table-cell border-style="solid">   						
-				 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     font-weight="bold" keep-together="always">Grand Total</fo:block>
-				 	</fo:table-cell>
-				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 	</fo:table-cell>
-				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				 	</fo:table-cell>
-				 	  <fo:table-cell border-style="solid">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				 	</fo:table-cell>
-				 	<fo:table-cell border-style="solid">   						
-				 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				 	</fo:table-cell>
-				 	  <fo:table-cell border-style="solid">   
-				 	     <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-				 	     font-weight="bold" keep-together="always">${netTotalAmount?string("#0.00")}</fo:block>
-				 	</fo:table-cell>
-			 	  </fo:table-row>
-			 	 <fo:table-row> 
+		     			<#assign grandTotal = 0>
+				     	<fo:table-row> 
+					     <fo:table-cell>   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-weight="bold" keep-together="always" text-indent="250pt">DESCRIPTION</fo:block>
+					 	</fo:table-cell>
+					 	</fo:table-row>
+	                  <fo:table-row> 
+					     <fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" font-weight="bold" keep-together="always">Taxable Goods </fo:block>
+	                  	</fo:table-cell>
+	                  </fo:table-row>
+	                  <fo:table-row> 
+					     <fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">S.NO</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">Product</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">QTY(Kg/Ltr)</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">Amount</fo:block>
+					 	</fo:table-cell>
+		 	  		 </fo:table-row>
+		 	  		 <#assign taxTotal = 0>
+		 	  		 <#assign taxGrandTotal = 0>
+		 	  		 <#assign taxableTotal = 0>
+		 	  		 <#assign vatGrandTotal5 = 0>
+		 	  		 <#assign vatGrandTotal14 = 0>
+		 	  		 <#assign prodTotals = facilityList.getValue().get("prodMap")>
+				 	  		 <#assign prod = prodTotals.entrySet()>
+				 	  		 <#assign taxSubTotal = 0>
+				 	  		 <#assign vatAmount5 = 0>
+				 	  		 <#assign vatAmount14 = 0>
+				 	  		 <#assign vatno = 1>
+				 	  		 <#list prod as productTotals>
+				 	  		 <#assign vat = vatMap.get(productTotals.getKey())>
+				 	  		 <#if (vat == 5.5)>
+								<#assign vatAmount5 = (vatAmount5+productTotals.getValue().get("amount")?if_exists)>
+							</#if>
+							<#if (vat == 14.5)>
+								<#assign vatAmount14 = (vatAmount14+productTotals.getValue().get("amount")?if_exists)>
+							</#if>
+				 	  		 <#if (vat != 0)>
+	                  <fo:table-row> 
+	                  	<#assign productDetails = delegator.findOne("Product", {"productId" : productTotals.getKey()}, true)?if_exists/>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt"  keep-together="always">${vatno?if_exists}</fo:block>
+	                  	</fo:table-cell>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${productDetails.brandName?if_exists}</fo:block>
+	                  	</fo:table-cell>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt"  keep-together="always">${productTotals.getValue().get("quantity")?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  	<#assign taxSubTotal = taxSubTotal+(productTotals.getValue().get("amount")?if_exists)>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${productTotals.getValue().get("amount")?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  </fo:table-row>
+	                   </#if>
+	                   <#assign vatno = vatno+1>
+	                    </#list>
+	                    <#if taxSubTotal?has_content && (taxSubTotal!=0)>
+	                    <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">Sub Total</fo:block>
+						 	</fo:table-cell>
+						 	<#assign taxTotal = taxTotal+taxSubTotal>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${taxSubTotal?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+	                  </#if>
+	                    <#assign prodTotals = facilityList.getValue().get("returnMap")>
+	                  	<#assign prod = prodTotals.entrySet()>
+	                  		<#assign vatRetAmount5 = 0>
+	                  		<#assign vatRetAmount14 = 0>
+	                  		 <#assign taxRetSubTotal = 0>
+	                  		 
+	                  		 <#assign vatRetNo = 1>
+				 	  		 <#list prod as productTotals>
+				 	  		 <#assign vat = vatMap.get(productTotals.getKey())>
+				 	  		 <#if (vat == 5.5)>
+								<#assign vatRetAmount5 = (vatRetAmount5+productTotals.getValue().get("amount")?if_exists)>
+							</#if>
+							<#if (vat == 14.5)>
+								<#assign vatRetAmount14 = (vatRetAmount14+productTotals.getValue().get("amount")?if_exists)>
+							</#if>
+				 	  		 <#if (vat != 0)>
+	                  <fo:table-row> 
+					     <fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" font-weight="bold" keep-together="always">LESS RETURNS</fo:block>
+	                  	</fo:table-cell>
+	                  </fo:table-row>
+	                  <fo:table-row> 
+					     <fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">S.NO</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">Product</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">QTY(Kg/Ltr)</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">Amount</fo:block>
+					 	</fo:table-cell>
+		 	  		 </fo:table-row>
+				 	  		 <fo:table-row> 
+	                  	<#assign productDetails = delegator.findOne("Product", {"productId" : productTotals.getKey()}, true)?if_exists/>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt"  keep-together="always">${vatRetNo?if_exists}</fo:block>
+	                  	</fo:table-cell>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${productDetails.brandName?if_exists}</fo:block>
+	                  	</fo:table-cell>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt"  keep-together="always">${productTotals.getValue().get("returnQtyLtrs")?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  	<#assign taxRetSubTotal = taxRetSubTotal+(productTotals.getValue().get("returnPrice")?if_exists)>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${productTotals.getValue().get("returnPrice")?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  </fo:table-row>
+	                  </#if>
+	                  <#assign vatRetNo = vatRetNo+1>
+	                  </#list>
+	                  <#if taxRetSubTotal?has_content && (taxRetSubTotal!=0)>
+	                 <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">Sub Total</fo:block>
+						 	</fo:table-cell>
+						 	<#assign taxTotal = taxTotal+taxRetSubTotal>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${taxRetSubTotal?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+					</#if>
+					<#if taxTotal?has_content && (taxTotal!=0)>
+	                 <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">Taxable Sales</fo:block>
+						 	</fo:table-cell>
+						 	<#assign taxGrandTotal = taxGrandTotal+taxTotal>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${taxTotal?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+					</#if>
+					<#if vatAmount5?has_content && (vatAmount5!=0)>
+	                 <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">VAT@5.5</fo:block>
+						 	</fo:table-cell>
+						 	<#assign vatTotal5 = (vatAmount5+vatRetAmount5)>
+						 	<#assign vatGrandTotal5 = vatGrandTotal5+((vatTotal5*5.5)/100)>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${vatGrandTotal5?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+					</#if>
+					<#if vatAmount14?has_content && (vatAmount14!=0)>
+	                 <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">VAT@14.5</fo:block>
+						 	</fo:table-cell>
+						 	<#assign vatTotal14 = (vatAmount14+vatRetAmount14)>
+						 	<#assign vatGrandTotal14= vatGrandTotal14+((vatTotal14*14.5)/100)>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${vatGrandTotal14?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+					</#if>
+	                 <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">Total</fo:block>
+						 	</fo:table-cell>
+						 	<#assign taxableTotal = (taxGrandTotal+vatGrandTotal5+vatGrandTotal14)>
+						 	<#assign grandTotal = grandTotal+taxableTotal>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${taxableTotal?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+					<fo:table-row> 
+					     <fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" font-weight="bold" keep-together="always">NON Taxable Goods </fo:block>
+	                  	</fo:table-cell>
+	                  </fo:table-row>
+	                  <fo:table-row> 
+					     <fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">S.NO</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">Product</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">QTY(Kg/Ltr)</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">Amount</fo:block>
+					 	</fo:table-cell>
+		 	  		 </fo:table-row>
+		 	  		 <#assign total = 0>
+		 	  		 <#assign prodTotals = facilityList.getValue().get("prodMap")>
+				 	  		 <#assign prod = prodTotals.entrySet()>
+				 	  		 <#assign sno = 1>
+				 	  		 <#assign subTotal = 0>
+				 	  		 <#list prod as productTotals>
+				 	  		 <#assign vat = vatMap.get(productTotals.getKey())>
+				 	  		 <#if (vat == 0)>
+	                  <fo:table-row> 
+	                  	<#assign productDetails = delegator.findOne("Product", {"productId" : productTotals.getKey()}, true)?if_exists/>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt"  keep-together="always">${sno}</fo:block>
+	                  	</fo:table-cell>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${productDetails.brandName?if_exists}</fo:block>
+	                  	</fo:table-cell>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt"  keep-together="always">${productTotals.getValue().get("quantity")?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  	<#assign subTotal = subTotal+(productTotals.getValue().get("amount")?if_exists)>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${productTotals.getValue().get("amount")?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  </fo:table-row>
+	                   </#if>
+	                   <#assign sno = sno+1>
+	                    </#list>
+	                    <#if subTotal?has_content && (subTotal!=0)>
+	                    <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">Sub Total</fo:block>
+						 	</fo:table-cell>
+						 	<#assign total = total+subTotal>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${subTotal?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+	                   </#if>
+	                    <#assign prodTotals = facilityList.getValue().get("returnMap")>
+	                  	<#assign prod = prodTotals.entrySet()>
+	                  		<#assign subReturnPrice = 0>
+	                  		<#assign retSno = 1>
+				 	  		 <#list prod as productTotals>
+				 	  		 <#assign vat = vatMap.get(productTotals.getKey())>
+				 	  		 <#if (vat == 0)>
+	                  <fo:table-row> 
+					     <fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" font-weight="bold" keep-together="always">LESS RETURNS</fo:block>
+	                  	</fo:table-cell>
+	                  </fo:table-row>
+	                  <fo:table-row> 
+					     <fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">S.NO</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">Product</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">QTY(Kg/Ltr)</fo:block>
+					 	</fo:table-cell>
+					 	<fo:table-cell border-style="solid">   						
+					 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+					 	     font-weight="bold" keep-together="always">Amount</fo:block>
+					 	</fo:table-cell>
+		 	  		 </fo:table-row>
+				 	  		 <fo:table-row> 
+	                  	<#assign productDetails = delegator.findOne("Product", {"productId" : productTotals.getKey()}, true)?if_exists/>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt"  keep-together="always">${retSno?if_exists}</fo:block>
+	                  	</fo:table-cell>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${productDetails.brandName?if_exists}</fo:block>
+	                  	</fo:table-cell>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt"  keep-together="always">${productTotals.getValue().get("returnQtyLtrs")?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  	<#assign subReturnPrice = subReturnPrice+(productTotals.getValue().get("returnPrice")?if_exists)>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${productTotals.getValue().get("returnPrice")?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  </fo:table-row>
+	                  </#if>
+	                  <#assign retSno = retSno+1>
+	                  </#list>
+	                  <#if subReturnPrice?has_content && (subReturnPrice!=0)>
+	                  <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">Sub Total</fo:block>
+						 	</fo:table-cell>
+						 	<#assign total = total+subReturnPrice>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${subReturnPrice?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+	                  </#if>
+	                  <#if total?has_content && (total!=0)>
+	                 <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">Total</fo:block>
+						 	</fo:table-cell>
+						 	<#assign grandTotal = (grandTotal+total)>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${total?if_exists?string("#0.00")}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+					</#if>
+			 	 	<#if grandTotal?has_content && (grandTotal!=0)>
+	                 <fo:table-row>
+		                   <fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always"></fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">Grand Total</fo:block>
+						 	</fo:table-cell>
+						 	<fo:table-cell >   						
+						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
+						 	     font-weight="bold" keep-together="always">${grandTotal?string("#0.00")?if_exists}</fo:block>
+						 	</fo:table-cell>
+	                  </fo:table-row>
+					</#if>
+			 	 <fo:table-row>
+			       <fo:table-cell number-columns-spanned="1">   						
+						<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+			      </fo:table-cell>
+			     </fo:table-row>
+			     <fo:table-row>
 			     <fo:table-cell number-columns-spanned="5">   						
 			 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Amount chargeable (in words)</fo:block>
-					 <fo:block text-align="left" text-indent="5pt" keep-together="always" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false" >Rupees ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netTotalAmount?string("#0.00")), "%rupees-and-paise", locale)} ONLY  </fo:block>
+					 <fo:block text-align="left" text-indent="5pt" keep-together="always" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false" >Rupees ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(grandTotal?if_exists?string("#0.00")), "%rupees-and-paise", locale)} ONLY  </fo:block>
 					 <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			         <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Declaration</fo:block>
 			         <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">We declare that this invoice shows the actual price of the goods</fo:block>
@@ -540,7 +627,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 		 	      <fo:table-cell number-columns-spanned="3">   						
 			 	     <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				 </fo:table-cell>
-		 	      <fo:table-cell border-style="solid" number-columns-spanned="2">   						
+		 	      <fo:table-cell border-style="solid">   						
 			 	      <fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold"
 			 	       keep-together="always">For MOTHER DAIRY</fo:block>
 			 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 

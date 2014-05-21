@@ -195,22 +195,29 @@ if (organizationPartyId) {
 					
 					finAccountId = "";
 					finAccount = [:];
-					/*
+					
+					attrValue  = "";
+					finAccountTrans = [:];
 					if(UtilValidate.isEmpty(paymentId)){
-						finAccountList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition(["finAccountTransId" : finAccountTransId, "reasonEnumId" : "FATR_CONTRA","finAccountTransTypeId" : "DEPOSIT"]), null, null, null, true);
-						if(UtilValidate.isNotEmpty(finAccountList)){
-							finAccountId = finAccountList[0].finAccountId;
+						finAccountTransAttr = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
+						if(UtilValidate.isNotEmpty(finAccountTransAttr)){
+							attrValue = finAccountTransAttr.attrValue;
+							finAccountTrans = delegator.findOne("FinAccountTrans", [finAccountTransId : attrValue], false);
+							finAccountId = finAccountTrans.finAccountId;
 							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
 							finAccountName = finAccount.finAccountName;
 						}
-					}*/
+					}
 					if(UtilValidate.isNotEmpty(partyId)){
 						partyName = PartyHelper.getPartyName(delegator, partyId, false);
 					}
 					paymentType = [:];
 					if(UtilValidate.isNotEmpty(paymentId)){
 						paymentType = delegator.findOne("PaymentAndType", [paymentId : paymentId], false);
-						paymentTypeDescription = paymentType.description;
+						if(UtilValidate.isNotEmpty(paymentType)){
+							paymentTypeDescription = paymentType.description;
+						}
+						
 					}
 					
 					// Prepare List for CSV

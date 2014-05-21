@@ -1100,7 +1100,7 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/InstBillOfSaleReport.groovy" /> 
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/taxInvoiceReport.groovy" /> 
 			</actions>
 			<widgets>
 				<section>
