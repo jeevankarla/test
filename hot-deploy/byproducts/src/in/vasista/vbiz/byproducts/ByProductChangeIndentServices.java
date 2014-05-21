@@ -453,11 +453,11 @@ public class ByProductChangeIndentServices {
     		List<GenericValue> subscriptionProdList =FastList.newInstance();
     		List conditionList = UtilMisc.toList(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
     		conditionList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
+    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN,UtilDateTime.getDayStart(effectiveDate)) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
     		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     		boolean indentChanged = false;  
     		try {
 	  			//List<GenericValue> products = delegator.findList("Product", null, UtilMisc.toSet("productId", "quantityIncluded"), null, null, true);
-	  			  
 	  			subscriptionProdList = delegator.findList("SubscriptionProduct", condition, null, null, null, false);
 	  			subscriptionProdList = EntityUtil.filterByDate(subscriptionProdList, effectiveDate);
 	  			List productsList = EntityUtil.getFieldListFromEntityList(subscriptionProdList, "productId", true);
