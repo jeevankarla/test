@@ -28,7 +28,7 @@ under the License.
         <field name="dataCategoryId" title="${uiLabelMap.SectionName}">
             <drop-down allow-empty="true">
                 <entity-options description="${categoryName}" entity-name="DataCategory">
-                	<entity-constraint name="parentCategoryId" value="APDDCF_OMS"/>
+                	<entity-constraint name="parentCategoryId" value="OMS"/>
                 	<entity-order-by field-name="categoryName"/>
                 </entity-options>
             </drop-down>
@@ -36,7 +36,7 @@ under the License.
         <field name="contentTypeId" position="1" title="${uiLabelMap.OrderType}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId">
-                	<entity-constraint name="parentTypeId" value="APDDCF_OMS"/>
+                	<entity-constraint name="parentTypeId" value="OMS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -55,7 +55,7 @@ under the License.
         <field name="dataCategoryId" title="${uiLabelMap.SectionName}">
             <drop-down allow-empty="true">
                 <entity-options description="${categoryName}" entity-name="DataCategory">
-                	<entity-constraint name="parentCategoryId" value="APDDCF_OMS"/>
+                	<entity-constraint name="parentCategoryId" value="OMS"/>
                 	<entity-order-by field-name="categoryName"/>
                 </entity-options>
             </drop-down>
@@ -64,7 +64,7 @@ under the License.
         <field name="contentTypeId" position="1" title="${uiLabelMap.OrderType}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId">
-                	<entity-constraint name="parentTypeId" value="APDDCF_OMS"/>
+                	<entity-constraint name="parentTypeId" value="OMS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -142,7 +142,7 @@ under the License.
          <field name="dataCategoryId" title="${uiLabelMap.SectionName}" use-when="hasAdminPermission">
             <drop-down allow-empty="false">
                 <entity-options description="${categoryName}" entity-name="DataCategory">
-                	<entity-constraint name="parentCategoryId" value="APDDCF_OMS"/>
+                	<entity-constraint name="parentCategoryId" value="OMS"/>
                 	<entity-order-by field-name="categoryName"/>
                 </entity-options>
             </drop-down>
@@ -150,7 +150,7 @@ under the License.
          <field name="contentTypeId"  title="${uiLabelMap.OrderType}">
          	<drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="ContentType">
-                	<entity-constraint name="parentTypeId" operator="equals" value="APDDCF_OMS"/>
+                	<entity-constraint name="parentTypeId" operator="equals" value="OMS"/>
                 	<entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
