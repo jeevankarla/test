@@ -69,7 +69,7 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateGlAccountOrganization" default-entity-name="GlAccountOrganization" engine="simple"
-            location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlAccountOrganization" auth="true">
+            location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlAccountOrganization" auth="true" transaction-timeout="600">
         <description>Update a GlAccount record</description>
         <required-permissions join-type="OR">
         	 <permission-service service-name="basicGeneralLedgerPermissionCheck" main-action="UPDATE"/>
