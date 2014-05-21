@@ -2281,7 +2281,7 @@ under the License.
     
 
     <!-- ================ Entity Lookup Requests ================= -->
-    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    <request-map uri="LookupProduct" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
     <request-map uri="LookupProductFeature"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductFeature"/></request-map>
     <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
     <request-map uri="LookupProductCategory"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductCategory"/></request-map>
@@ -2289,7 +2289,7 @@ under the License.
 
     <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
     <request-map uri="LookupPartyGroup"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
-    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupTaxAuthPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthPartyName"/></request-map>
     <request-map uri="LookupInternalOrganization"><security auth="true" https="true"/><response name="success" type="view" value="LookupInternalOrganization"/></request-map>
 
@@ -2909,6 +2909,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findCashReceipts"/>
     </request-map>
+     
     <request-map uri="findCashPayblePayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findCashPayblePayment"/>
