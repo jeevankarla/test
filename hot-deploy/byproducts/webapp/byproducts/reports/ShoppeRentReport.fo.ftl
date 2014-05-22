@@ -59,6 +59,7 @@ under the License.
                     <#assign sno=0>
                     <#assign rateAmt=0>
                     <#assign taxAmt=0>
+                    <#assign totAmt=0>
                     <#list finalList as shoppeRent>
                     <#if shoppeRent.get("rateAmount")!=0>
 					<#assign sno=sno+1>
@@ -73,15 +74,17 @@ under the License.
                            		<fo:block  keep-together="always" text-align="left" white-space-collapse="false">${shoppeRent.get("facilityName")}</fo:block>  
                        		</fo:table-cell>
                        		<#assign rateAmt=(rateAmt+shoppeRent.get("rateAmount"))>
+                       		<#assign totAmt=shoppeRent.get("rateAmount")>
            					<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${shoppeRent.get("rateAmount")?if_exists?string("#0.00")}</fo:block>  
+	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(shoppeRent.get("rateAmount")-shoppeRent.get("TaxrateAmount"))?if_exists?string("#0.00")}</fo:block>  
 	            			</fo:table-cell>
 	            			<#assign taxAmt=(taxAmt+shoppeRent.get("TaxrateAmount"))>
 	            			<fo:table-cell>
 	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${shoppeRent.get("TaxrateAmount")?if_exists?string("#0.00")}</fo:block>  
 	            			</fo:table-cell>
+	            			
 	           				<fo:table-cell>
-		                		<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(shoppeRent.get("rateAmount") + shoppeRent.get("TaxrateAmount"))?if_exists?string("#0.00")}</fo:block>  
+		                		<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${totAmt?if_exists?string("#0.00")}</fo:block>  
 		                	</fo:table-cell>
 						</fo:table-row>
 						</#if>
@@ -102,13 +105,13 @@ under the License.
                            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false">TOTALS</fo:block>  
                        		</fo:table-cell>
 	            			<fo:table-cell>
-		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${rateAmt?if_exists?string("#0.00")}</fo:block>  
+		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(rateAmt-taxAmt)?if_exists?string("#0.00")}</fo:block>  
 		                	</fo:table-cell>
 	            			<fo:table-cell>
 	            				<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${taxAmt?if_exists?string("#0.00")}</fo:block>  
 	            			</fo:table-cell>
 	            			<fo:table-cell>
-		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(rateAmt+taxAmt)?if_exists?string("#0.00")}</fo:block>  
+		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${rateAmt?if_exists?string("#0.00")}</fo:block>  
 		                	</fo:table-cell>
 				        </fo:table-row>
 				         <fo:table-row>	
