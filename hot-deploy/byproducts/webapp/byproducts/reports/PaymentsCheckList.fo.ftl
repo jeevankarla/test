@@ -40,7 +40,8 @@ under the License.
             	 <fo:block font-family="Courier,monospace"  font-size="10pt">                
                 <fo:table border-width="1pt" border-style="dotted">
                     <fo:table-column column-width="85pt"/>
-                    <fo:table-column column-width="85pt"/>                
+                    <fo:table-column column-width="85pt"/>
+                    <fo:table-column column-width="120pt"/>                
                     <fo:table-column column-width="60pt"/>
                     <fo:table-column column-width="55pt"/>
                     <fo:table-column column-width="55pt"/>
@@ -51,6 +52,9 @@ under the License.
 		           	</fo:table-header>		    -->       
                     <fo:table-body>        
                             <fo:table-row border-width="1pt" border-style="dotted">
+                               <fo:table-cell border-width="1pt" border-style="dotted">	
+	                            	<fo:block text-align="left" keep-together="always">Receipt Id</fo:block>                               
+	                            </fo:table-cell>
 	                        	<fo:table-cell border-width="1pt" border-style="dotted">	
 	                            	<fo:block text-align="left" keep-together="always">SupplyDate</fo:block>                               
 	                            </fo:table-cell>
@@ -73,11 +77,14 @@ under the License.
                     		<fo:table-row><fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell></fo:table-row>
                        <#list checkListReportList as checkListReport>
 	                        <fo:table-row border-width="1pt" border-style="dotted">
+	                           <fo:table-cell border-width="1pt" border-style="dotted">	
+	                            	<fo:block text-align="left" text-indent="0.05in" padding="1pt">${checkListReport.paymentId?if_exists}</fo:block>                               
+	                            </fo:table-cell>	
 	                        	<fo:table-cell border-width="1pt" border-style="dotted">	
 	                            	<fo:block text-align="left" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy")}</fo:block>                               
 	                            </fo:table-cell>
 	                        	<fo:table-cell border-width="1pt" border-style="dotted">	
-	                            	<fo:block text-align="right" text-indent="0.05in" padding="1pt">${checkListReport.lastModifiedBy?if_exists}</fo:block>                               
+	                            	<fo:block text-align="center" text-indent="0.05in" padding="1pt">${checkListReport.lastModifiedBy?if_exists}</fo:block>                               
 	                            </fo:table-cell>	
 	                        	<fo:table-cell border-width="1pt" border-style="dotted">	
 	                            	<fo:block text-align="right" text-indent="0.05in" padding="1pt">${checkListReport.lastModifiedDate?if_exists}</fo:block>                               
@@ -95,6 +102,7 @@ under the License.
 	                        </fo:table-row>
                        </#list>
                        <fo:table-row border-width="1pt" border-style="dotted">
+	                        	<fo:table-cell border-width="1pt" />
 	                        	<fo:table-cell border-width="1pt" />	                            	                           
 	                        	<fo:table-cell border-width="1pt" />	
 	                        	<fo:table-cell border-width="1pt" />	

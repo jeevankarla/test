@@ -37,7 +37,15 @@ under the License.
         		<fo:block text-align="center" keep-together="always">VST_ASCII-015</fo:block>
         		<fo:block text-align="left" white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/>                 MOTHER DAIRY</fo:block>
         		<fo:block text-align="center" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")}  UserLogin:${userLogin.get("userLoginId")}</fo:block>	 	 	  
+        		<#if unDepositedCheques?exists>
+        		 <#if unDepositedCheques=="TRUE" >
+        		 <fo:block text-align="center" keep-together="always">   UnDeposited Cheques List</fo:block>
+        		 <#else>
+        		  <fo:block text-align="center" keep-together="always">  Deposited Cheques List</fo:block>
+        		 </#if>
+        		<#else>
         		<fo:block text-align="center" keep-together="always">   Payments CheckList</fo:block>
+        		</#if>
         		 <fo:block font-family="Courier,monospace"  >                
                 <fo:table >
                        <fo:table-column column-width="30pt"/>
@@ -74,7 +82,7 @@ under the License.
 	                            	<fo:block text-align="left"  font-size="7pt">&#160; No.</fo:block>	                               
 	                            </fo:table-cell>	                            
 	                            <fo:table-cell >
-	                            	<fo:block text-align="left" font-size="7pt">DATE</fo:block>	                               
+	                            	<fo:block text-align="left" font-size="7pt">PaymentDATE</fo:block>	                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >
 	                            	<fo:block text-align="right" font-size="7pt">Amount</fo:block>	                               
