@@ -404,11 +404,11 @@ import java.text.SimpleDateFormat;
 						Debug.log("===partyIdTo==="+partyIdTo+"=====");
 						/*GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId) ,false);
 						String partyIdTo = facilityDetail.getString("ownerPartyId");*/
-						
+						// heree Invoice Raised by Transporter
 						 if (UtilValidate.isEmpty(invoiceId)&& UtilValidate.isNotEmpty(partyIdTo)) {
 				                Map<String, Object> createInvoiceContext = FastMap.newInstance();
-				                createInvoiceContext.put("partyId", partyIdTo);
-				                createInvoiceContext.put("partyIdFrom", "Company");
+				                createInvoiceContext.put("partyId", "Company");
+				                createInvoiceContext.put("partyIdFrom", partyIdTo);
 				                //createInvoiceContext.put("billingAccountId", billingAccountId);
 				                createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
 				                createInvoiceContext.put("dueDate", monthEnd);
