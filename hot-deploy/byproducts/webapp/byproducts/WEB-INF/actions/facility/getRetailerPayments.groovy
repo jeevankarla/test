@@ -135,7 +135,7 @@ if(parameters.finAccountCode != "AllBanks"){
 
 context.putAt("accountNameList", accountNameList);
 stopListing = true;
-if(parameters.paymentMethodTypeId == "CASH_PAYIN"){
+if(parameters.paymentMethodTypeId == "CASH_PAYIN" || parameters.paymentMethodTypeId == "CHALLAN_PAYIN"){
 	stopListing = false;
 }
 if(hideSearch == "N" || stopListing){
