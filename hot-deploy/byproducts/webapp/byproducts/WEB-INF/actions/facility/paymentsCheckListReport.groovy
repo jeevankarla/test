@@ -23,6 +23,8 @@ dctx = dispatcher.getDispatchContext();
 decimals = 0;//UtilNumber.getBigDecimalScale("order.decimals");
 rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
 reportTypeFlag=parameters.reportTypeFlag;
+unDepositedCheques=parameters.unDepositedCheques;
+searchBy=parameters.searchBy;
 allChanges= false;
 if (parameters.all == 'Y') {
 	allChanges = true;
@@ -33,8 +35,9 @@ boothRouteIdsMap = [:];
 if(UtilValidate.isEmpty(reportTypeFlag)){
    dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), timeZone, locale);
 	exprList.add(EntityCondition.makeCondition([
-		EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin),
-		EntityCondition.makeCondition("lastModifiedDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)
+		EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)
+		/*,
+		EntityCondition.makeCondition("lastModifiedDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)*/
 	   ], EntityOperator.OR));
    if (!allChanges) {
 	   exprList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS, userLogin.userLoginId));
@@ -57,6 +60,7 @@ if(UtilValidate.isEmpty(reportTypeFlag)){
 		   //}
 	   }
 	   lastPaymentMap["lastModifiedBy"] = checkListItem.lastModifiedByUserLogin;
+	   lastPaymentMap["paymentId"] = checkListItem.paymentId;
 	   lastPaymentMap["amount"] = (new BigDecimal(checkListItem.amount)).setScale(0 ,rounding);
 	   checkListReportList.add(lastPaymentMap);
    }
@@ -70,8 +74,10 @@ bankPaidMap=[:];
 
 if(UtilValidate.isNotEmpty(reportTypeFlag) && "DailyPaymentCheckList".equals(reportTypeFlag)){
 paymentDate=parameters.paymentDate;
+thruDate=parameters.thruDate;
 paymentMethodTypeId = parameters.paymentMethodTypeId;
 fromDateTime=UtilDateTime.nowTimestamp();
+thruDateTime=UtilDateTime.nowTimestamp();
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(paymentDate+" 00:00:00").getTime());
@@ -80,7 +86,14 @@ try {
 }
 dayStart = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(fromDateTime);
-
+if(UtilValidate.isNotEmpty(thruDate)){
+	try {
+		thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: "+thruDate, "");
+	}
+	dayEnd = UtilDateTime.getDayEnd(thruDateTime);
+}
 routeIds=[];
 List<GenericValue> paymentsList = FastList.newInstance();
 conditionList=[];
@@ -96,11 +109,22 @@ facilityIdsList=[];
 	paidPaymentInput["paymentMethodTypeId"]=paymentMethodTypeId;
 	paidPaymentInput["facilityIdsList"]=facilityIdsList;
 	paidPaymentInput["orderByBankName"]=true;
-	
-	if(UtilValidate.isNotEmpty(paymentMethodTypeId) && (paymentMethodTypeId=="CHEQUE_PAYIN")){
-		paidPaymentInput["findByInstrumentDate"]=true;
+	//for DayPayment CheckList for CreatedDate otherWise FindByPaymentDate
+	if(UtilValidate.isNotEmpty(searchBy) &&(searchBy=="findByCreatedDate")){
+		paidPaymentInput["findByCreatedDate"]=true;
 	}
+	if(UtilValidate.isNotEmpty(paymentMethodTypeId) && (paymentMethodTypeId=="CHEQUE_PAYIN")&& (unDepositedCheques=="TRUE")){
+		paidPaymentInput["unDepositedChequesOnly"]=true;
+		context.unDepositedCheques=unDepositedCheques
+	}
+	boothPaidDetail=[:];
+	//if Deposited cheques we have to use another Helper
+	if(UtilValidate.isNotEmpty(paymentMethodTypeId) && (paymentMethodTypeId=="CHEQUE_PAYIN")&& (unDepositedCheques=="FALSE")){
+		boothPaidDetail = ByProductNetworkServices.getBoothPaidDepositedPayments( dctx , paidPaymentInput);
+		context.unDepositedCheques=unDepositedCheques
+	}else{
 	boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
+	}
 	boothTempPaymentsList = boothPaidDetail["paymentsList"];
 	boothRouteIdsMap= boothPaidDetail["boothRouteIdsMap"];
 
@@ -134,6 +158,7 @@ facilityIdsList=[];
 
 List routeCheckListReportList = [];
 List nonRouteCheckListReportList = [];
+paymentIdsList=[];
 if(UtilValidate.isNotEmpty(reportTypeFlag) && "CashPaymentCheckList".equals(reportTypeFlag)){
 	paymentDate=parameters.paymentDate;
 	paymentMethodTypeId = parameters.paymentMethodTypeId;
@@ -156,8 +181,7 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "CashPaymentCheckList".equals(repo
 			if(UtilValidate.isNotEmpty(boothRouteResultMap)){
 				boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
 			}
-			
-		   exprList.clear();
+		    exprList.clear();
 			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
 			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
 			if (!UtilValidate.isEmpty(paymentMethodTypeId)) {
@@ -173,3 +197,4 @@ context.nonRouteCheckListReportList=nonRouteCheckListReportList;
 context.bankPaidMap=bankPaidMap;
 
 context.boothRouteIdsMap=boothRouteIdsMap;
+
