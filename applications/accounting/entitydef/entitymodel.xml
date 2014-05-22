@@ -4785,6 +4785,31 @@
 			<key-map field-name="finAccountTransId" />
 		</view-link>
 	</view-entity>
+	<view-entity entity-name="PaymentAndFacilityAndFinAcctTrans"
+		package-name="org.ofbiz.accounting.finaccount"
+		title="Payment and Facility and FinAccountTrans view entity">
+		<member-entity entity-alias="PY" entity-name="Payment" />
+		<member-entity entity-alias="FAT" entity-name="FinAccountTrans" />
+		<member-entity entity-alias="FA" entity-name="Facility"/>	
+		
+		<alias-all entity-alias="PY" />
+		<alias name="finAccountId" entity-alias="FAT" />
+		<alias name="finAccountTransTypeId" entity-alias="FAT" />
+		<alias name="finAccountTransactionDate" entity-alias="FAT" field="transactionDate" />
+		<alias name="finAccountTransStatusId" entity-alias="FAT" field="statusId" />
+		<alias name="finAccountTransAmount" entity-alias="FAT" field="amount" />
+		<alias name="partyId" entity-alias="FAT" />
+		<alias name="glReconciliationId" entity-alias="FAT" />
+		<alias entity-alias="FA" name="facilityName"/>
+	    <alias entity-alias="FA" name="parentFacilityId"/>		
+	    <alias entity-alias="FA" name="categoryTypeEnum"/>	
+		<view-link entity-alias="PY" rel-entity-alias="FAT">
+			<key-map field-name="finAccountTransId" />
+		</view-link>
+		<view-link entity-alias="PY" rel-entity-alias="FA">
+        	<key-map field-name="facilityId"/>
+      	</view-link> 
+	</view-entity>
 	<view-entity entity-name="PaymentMethodAndFinAccount"
 		package-name="org.ofbiz.accounting.finaccount" title="PaymentMethod and FinAccount view entity">
 		<member-entity entity-alias="PM" entity-name="PaymentMethod" />
