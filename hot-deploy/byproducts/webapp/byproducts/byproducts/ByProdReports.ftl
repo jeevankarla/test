@@ -92,6 +92,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("vatFromDateId","vatThruDateId");
 		makeDatePicker("smsNotify","");
 		makeDatePicker("CASHFromDateId","");
+		makeDatePicker("CashReceiptDateId","");
+		makeDatePicker("DUCRFromDateId","DUCRThruDateId");
+		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 
@@ -359,16 +362,24 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	</tr>
       	<tr class="alternate-row">
         	<form id="DailyPaymentCheckList" name="DailyPaymentCheckList" method="post"  target="_blank" action="<@ofbizUrl>DailyPaymentCheckList</@ofbizUrl>">	
-      			<td width="34%">Daily Payment CheckList Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/> </td>
+      			<td width="34%">Daily Payments Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/>
+      			<input  type="hidden"  value="All"   name="routeId"/>
+      			 </td>
       			<td>
       			Date<input  type="text" size="18pt" id="CLRFromDateId" readonly  name="paymentDate"/>
-      			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   &nbsp;Route 
+      			SearchBy 
+				<select name="searchBy" class='h4'>
+				<option value='findByCreatedDate'>EntryDate</option>
+				<option value='findByPaymentDate'>PaymentDate</option>
+					</select>
+      			<#-->
+      			Route 
 				<select name="routeId" class='h4'>
 				<option value='All'>All </option>
 					<#list routesList as route>    
   	    				<option value='${route}'>${route}</option>
 					</#list>  
-					</select>
+					</select> -->
       			</td>
       			<td >
 					PaymentType 
@@ -377,6 +388,24 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	  	    				<option value='${paymentMethod.paymentMethodTypeId}'>${paymentMethod.description}</option>
 						</#list> 
 						</select>
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+        </tr>
+        <tr class="alternate-row">
+        	<form id="DailyUndepositedCheckList" name="DailyUndepositedCheckList" method="post"  target="_blank" action="<@ofbizUrl>DailyPaymentCheckList</@ofbizUrl>">	
+      			<td width="34%">Daily Undeposited/Deposited Cheques Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/>
+      			<input  type="hidden"  name="paymentMethodTypeId"   value="CHEQUE_PAYIN"   />
+      			<input  type="hidden" name="routeId"  value="All" />
+      			 </td>
+      			<td>
+      			From Date<input  type="text" size="18pt" id="DUCRFromDateId" readonly  name="paymentDate"/>
+      			Thru Date<input  type="text" size="18pt" id="DUCRThruDateId" readonly  name="thruDate"/>
+      			</td>
+      			<td >Type
+				<select name="unDepositedCheques" class='h4'>
+				<option value='TRUE'>UnDeposited</option>
+				<option value='FALSE'>Deposited</option>
+					</select>
 					<input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>
@@ -389,6 +418,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			</td>
       			<td>
       			Date<input  type="text" size="18pt" id="CASHFromDateId" readonly  name="paymentDate"/>
+      			</td>
+      			<td>
+      			    <input  type="hidden"  name="routeId" value="All"/>
+					<input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+          </tr>
+           <tr class="alternate-row">
+        	<form id="CashPaymentTranscationList" name="CashierPaymentTransactionList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentReceiptList</@ofbizUrl>">	
+      			<td width="34%">Cash Group Receipts Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
+      			<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
+      			</td>
+      			<td>
+      			Date<input  type="text" size="18pt" id="CashReceiptDateId" readonly  name="paymentDate"/>
       			</td>
       			<td>
       			    <input  type="hidden"  name="routeId" value="All"/>

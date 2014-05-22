@@ -3376,6 +3376,15 @@ public class ByProductNetworkServices {
 	        if(context.get("findByInstrumentDate") != null){
 	        	findByInstrumentDate = (Boolean)context.get("findByInstrumentDate");
 	        }
+	        boolean findByCreatedDate= Boolean.FALSE;
+	        if(context.get("findByCreatedDate") != null){
+	        	findByCreatedDate = (Boolean)context.get("findByCreatedDate");
+	        }
+	        
+	        boolean unDepositedChequesOnly= Boolean.FALSE;
+	        if(context.get("unDepositedChequesOnly") != null){
+	        	unDepositedChequesOnly = (Boolean)context.get("unDepositedChequesOnly");
+	        }
 	        
 	        boolean excludeAdhocPayments= Boolean.TRUE;//always excluding if externally not set
 	        if(context.get("excludeAdhocPayments") != null){
@@ -3459,6 +3468,8 @@ public class ByProductNetworkServices {
 			}
 			if(findByInstrumentDate){//findByInstrumentDate  filtering used for  cheQue paymentChecklist
 			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("instrumentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("instrumentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+			}else if(findByCreatedDate){//findByCreatedDate  filtering used for  cheQue paymentChecklist
+				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
 			}else{
 				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
 			}
@@ -3471,6 +3482,9 @@ public class ByProductNetworkServices {
 			}
 			if (!UtilValidate.isEmpty(paymentIds)) {
 				exprList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds));
+			}
+			if (unDepositedChequesOnly) {//consider If  Undeposited is true
+				exprList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, null));
 			}
 			if (excludeAdhocPayments) {
 				//get AdhocSale Payments to exclude them
@@ -3498,6 +3512,169 @@ public class ByProductNetworkServices {
 						tempFacilityId = boothPayment.getString("facilityId");
 						tempPayment.put("facilityId", boothPayment.getString("facilityId"));
 						//tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
+						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))) {
+							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
+						}
+						tempPayment.put("paymentDate",  boothPayment.getTimestamp("paymentDate"));
+						tempPayment.put("paymentId",  boothPayment.getString("paymentId"));
+						tempPayment.put("paymentLocation",  boothPayment.getString("paymentLocation"));
+						tempPayment.put("paymentMethodTypeId", boothPayment.getString("paymentMethodTypeId"));				
+						tempPayment.put("amount",BigDecimal.ZERO);
+						tempPayment.put("userId", boothPayment.getString("createdByUserLogin"));			
+					}					
+					if (!(tempFacilityId.equals(boothPayment.getString("facilityId"))))  {				
+						//populating paymentMethodTypeId for paid invoices										
+						boothPaymentsList.add(tempPayment);
+						tempFacilityId = boothPayment.getString("facilityId");
+						tempPayment =FastMap.newInstance();
+						tempPayment.put("facilityId", boothPayment.getString("facilityId"));
+						tempPayment.put("routeId", boothPayment.getString("parentFacilityId"));
+						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))) {
+							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
+						}
+						tempPayment.put("paymentDate",  boothPayment.getTimestamp("paymentDate"));
+						tempPayment.put("paymentId",  boothPayment.getString("paymentId"));
+						tempPayment.put("paymentMethodTypeId", boothPayment.getString("paymentMethodTypeId"));				
+						tempPayment.put("amount",boothPayment.getBigDecimal("amount"));
+						tempPayment.put("userId", boothPayment.getString("createdByUserLogin"));					
+						
+					}else{				
+						tempPayment.put("amount", (boothPayment.getBigDecimal("amount")).add((BigDecimal)tempPayment.get("amount")));					
+					}					
+					if((i == paymentsList.size()-1)){						
+						boothPaymentsList.add(tempPayment);					
+					}
+				}			
+			}
+			catch(GenericEntityException e){
+				Debug.logError(e, module);	
+				return ServiceUtil.returnError(e.toString());
+			}
+			// rounding off booth amounts		
+			List tempPaymentsList =FastList.newInstance();
+			for(int i=0; i<boothPaymentsList.size();i++){
+				Map entry = FastMap.newInstance();
+				entry.putAll((Map)boothPaymentsList.get(i));
+				BigDecimal roundingAmount = ((BigDecimal)entry.get("amount")).setScale(0, rounding);
+				entry.put("amount" ,roundingAmount);
+				invoicesTotalAmount = invoicesTotalAmount.add(roundingAmount);			
+				tempPaymentsList.add(entry);		
+			}
+			boothsPaymentsDetail.put("invoicesTotalAmount", invoicesTotalAmount);
+			boothsPaymentsDetail.put("boothPaymentsList", tempPaymentsList);
+			boothsPaymentsDetail.put("paymentsList", paymentsList);
+			boothsPaymentsDetail.put("boothRouteIdsMap", boothRouteIdsMap);//for reporting purpose (boothId,routeId) for which route tat booth belongsto
+			return boothsPaymentsDetail;   
+	    }
+	    public static Map getBoothPaidDepositedPayments(DispatchContext dctx, Map<String, ? extends Object> context) {
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+			BigDecimal invoicesTotalAmount = BigDecimal.ZERO;		        
+			List boothPaymentsList = FastList.newInstance();
+	    	Map boothsPaymentsDetail = FastMap.newInstance();
+	        String facilityId = (String) context.get("facilityId");
+	        String userLoginId = (String) context.get("userLoginId"); 
+	        String paymentDate = (String) context.get("paymentDate");
+	        Timestamp fromDate = UtilDateTime.nowTimestamp();
+	        Timestamp thruDate = UtilDateTime.nowTimestamp();
+	        List facilityIdsList=(List)context.get("facilityIdsList");
+	        Map boothRouteIdsMap = FastMap.newInstance();
+	        
+	        boolean orderByBankName= Boolean.FALSE;
+	        if(context.get("orderByBankName") != null){
+	        	orderByBankName = (Boolean)context.get("orderByBankName");
+	        }
+	        boolean excludeAdhocPayments= Boolean.TRUE;//always excluding if externally not set
+	        if(context.get("excludeAdhocPayments") != null){
+	        	excludeAdhocPayments = (Boolean)context.get("excludeAdhocPayments");
+	        }
+	        
+	        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
+	       
+	         Map boothRtInMap=UtilMisc.toMap("facilityId",facilityId);
+	         boothRtInMap.put("facilityIdsList",facilityIdsList);
+	         if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){//if not Empty Consider them only
+	        	 boothRtInMap.put("facilityTypeId","BOOTH");
+			 }
+	        boothRtInMap.put("effectiveDate",fromDate);
+	        Map boothRouteResultMap = getBoothsRouteByShipment(delegator, boothRtInMap);
+			facilityIdsList=(List)boothRouteResultMap.get("boothIdsList");
+			//get All booths RouteIds
+			if(UtilValidate.isNotEmpty(boothRouteResultMap)){
+				boothRouteIdsMap=(Map)boothRouteResultMap.get("boothRouteIdsMap");//to get routeIds
+			}
+			if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){//if not Empty Consider tehm only
+				facilityIdsList=(List)context.get("facilityIdsList");
+			}
+			Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+			if(paymentDate != null) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				try {
+					paymentTimestamp = UtilDateTime.toTimestamp(dateFormat.parse(paymentDate));
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+				   
+				}		
+			}
+	        Locale locale = (Locale) context.get("locale");
+			Timestamp dayBegin = UtilDateTime.getDayStart(paymentTimestamp, TimeZone.getDefault(), locale);
+			Timestamp dayEnd = UtilDateTime.getDayEnd(paymentTimestamp, TimeZone.getDefault(), locale);
+			List exprList = FastList.newInstance();
+			//get Payments for period if fromDate and thruDate available in params
+			if(!UtilValidate.isEmpty(context.get("fromDate"))){
+	        	fromDate = (Timestamp)context.get("fromDate");
+	        	dayBegin = UtilDateTime.getDayStart(fromDate);
+	        }
+	        if(!UtilValidate.isEmpty(context.get("thruDate"))){
+	        	thruDate = (Timestamp)context.get("thruDate");
+	        	dayEnd = UtilDateTime.getDayEnd(thruDate);
+	        }		
+			
+			if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){
+				exprList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIdsList));
+			}
+			/*if(findByInstrumentDate){//findByInstrumentDate  filtering used for  cheQue paymentChecklist
+			exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("instrumentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("instrumentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+			}else{
+				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+			}*/
+			
+			exprList.add(EntityCondition.makeCondition("finAccountTransactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+			exprList.add(EntityCondition.makeCondition("finAccountTransactionDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+			if (!UtilValidate.isEmpty(userLoginId)) {
+				exprList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS, userLoginId));
+			}
+			if (!UtilValidate.isEmpty(paymentMethodTypeId)) {
+				exprList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, paymentMethodTypeId));
+			}
+			exprList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.NOT_EQUAL, null));
+			exprList.add(EntityCondition.makeCondition("finAccountTransStatusId", EntityOperator.IN,UtilMisc.toList("FINACT_TRNS_APPROVED","FINACT_TRNS_CREATED")));
+			//TO DO : Need to revisit ExcludeAdhoc Payments logic
+			if (excludeAdhocPayments) {
+				//get AdhocSale Payments to exclude them
+				Map adhocSaleDetails = getAdhocSalePayments(dctx , UtilMisc.toMap("estimatedShipDate",dayBegin));
+				if(UtilValidate.isNotEmpty(adhocSaleDetails.get("paymentIds"))){
+					List adhocPaymentIds=(List)adhocSaleDetails.get("paymentIds");
+				exprList.add(EntityCondition.makeCondition("paymentId", EntityOperator.NOT_IN, adhocPaymentIds));
+				}
+			}
+			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+			List paymentsList = FastList.newInstance();
+			//order by condition will change basing on requirement;
+			List<String> orderBy = UtilMisc.toList("-lastModifiedDate");
+			if(orderByBankName){
+				orderBy = UtilMisc.toList("issuingAuthority","-lastModifiedDate");
+			}
+			try {                                       
+				paymentsList = delegator.findList("PaymentAndFacilityAndFinAcctTrans", condition, null,orderBy , null, false);			
+				String tempFacilityId = "";	
+				Map tempPayment = FastMap.newInstance();
+				for (int i = 0; i < paymentsList.size(); i++) {				
+					GenericValue boothPayment = (GenericValue)paymentsList.get(i);				
+					if(tempFacilityId == ""){
+						tempFacilityId = boothPayment.getString("facilityId");
+						tempPayment.put("facilityId", boothPayment.getString("facilityId"));
 						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))) {
 							tempPayment.put("routeId", boothRouteIdsMap.get(tempFacilityId));
 						}
