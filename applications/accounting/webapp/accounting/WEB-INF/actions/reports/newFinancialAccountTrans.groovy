@@ -361,6 +361,7 @@ financialAcctgTransList.each{ dayFinAccount ->
 		dayFinAccountTransList.add(tempDayTotalsMap);
 	}
 }
+dayFinAccountTransList = UtilMisc.sortMaps(dayFinAccountTransList, UtilMisc.toList("paymentId"));
 context.dayFinAccountTransList = dayFinAccountTransList;
 
 

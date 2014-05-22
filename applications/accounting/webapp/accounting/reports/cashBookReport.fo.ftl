@@ -119,7 +119,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </#if>	
 	                       			<#if ((partyId)?has_content)>
                                 	<fo:table-cell border-style="solid" font-weight="bold">
-	                                    <fo:block text-align="center">${(partyId)}</fo:block>
+	                                    <fo:block text-align="left">${(partyId)}</fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell border-style="solid">
@@ -134,43 +134,43 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                <#if (paymentId != "DAY TOTAL")>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right">
-	                                            <#if openingBalance?has_content>${(openingBalance)?string("##0.0")}<#else>0.0</#if>
+	                                            <#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right">
-	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.0")}<#else>0.0</#if>
+	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right">
-	                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.0")}<#else>0.0</#if>
+	                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right">
-	                                            <#if closingBalance?has_content>${(closingBalance)?string("##0.0")}<#else>0.0</#if>
+	                                            <#if closingBalance?has_content>${(closingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <#else>
 	                                <fo:table-cell border-style="solid" font-weight="bold">
 	                                    <fo:block text-align="right">
-	                                            <#if openingBalance?has_content>${(openingBalance)?string("##0.0")}<#else>0.0</#if>
+	                                            <#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid" font-weight="bold">
 	                                    <fo:block text-align="right">
-	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.0")}<#else>0.0</#if>
+	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid" font-weight="bold">
 	                                    <fo:block text-align="right">
-	                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.0")}<#else>0.0</#if>
+	                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid" font-weight="bold">
 	                                    <fo:block text-align="right">
-	                                            <#if closingBalance?has_content>${(closingBalance)?string("##0.0")}<#else>0.0</#if>
+	                                            <#if closingBalance?has_content>${(closingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                </#if>
