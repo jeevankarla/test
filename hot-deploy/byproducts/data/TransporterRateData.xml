@@ -28,17 +28,12 @@
      <Enumeration description="Facility Cans"   enumId="CANS" enumTypeId="FAC_RECVRY"/>
      <Enumeration description="Facility Fines or Penalties" enumId="FINES_PENALTIES" enumTypeId="FAC_RECVRY"/>
      
-     
      <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Adjustment Vehicle Short Payment screen"/>
     
 	<PaymentType paymentTypeId="EXPENSE_PAYOUT" parentTypeId="DISBURSEMENT" hasTable="N" description="Expense Pay-out" />
 	<InvoiceType description="Sales and Distribution Expenses" hasTable="N" invoiceTypeId="SALES_DIS_OUT" parentTypeId="PURCHASE_INVOICE" paymentTypeId="EXPENSE_PAYOUT"/>
 	<InvoiceItemType invoiceItemTypeId="DTC_ROUTE" parentTypeId="" hasTable="N" description="Transporter Commission" />
 	<InvoiceItemTypeMap invoiceItemMapKey="SD_DTC_ROUTE" invoiceTypeId="SALES_DIS_OUT" invoiceItemTypeId="DTC_ROUTE" />
-	
-	
-    
-    
    
      <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="COM_CANCELLED" statusTypeId="COM_EVENT_STATUS"/>
      <StatusItem description="Cancel Inprocess" sequenceId="79" statusCode="CANCEL_INPROCESS" statusId="CANCEL_INPROCESS" statusTypeId="COM_EVENT_STATUS"/>

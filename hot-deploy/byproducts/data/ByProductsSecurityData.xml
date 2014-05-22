@@ -222,6 +222,7 @@
     <SecurityGroup groupId="BYPRODUCTS_CSHENTRY" description="Route Marketing Cash Payment"/>
     <SecurityGroup groupId="BYPRODUCTS_CHQENTRY" description="Route Marketing Cheque Payment"/>
     <SecurityGroup groupId="BYPRODUCTS_CLNENTRY" description="Route Marketing Challan Payment"/>
+    
 	<SecurityPermission permissionId="BYPRODUCTS_CASH" description="Special permission to show and collect cash payments" />
 	<SecurityPermission permissionId="BYPRODUCTS_CHEQUE" description="Special permission to show and collect cheque payments" />
 	<SecurityPermission permissionId="BYPRODUCTS_CHALLAN" description="Special permission to show and collect challan payments" />
@@ -234,4 +235,11 @@
 	<SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="BYPRODUCTS_CHALLAN"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="PAYMENTSTATUS_CANCEL"/> 
     
+    <!-- instead of adding each group one Permission group added -->
+     <SecurityGroup groupId="BYPROD_PAYMENT_WING" description="Route Marketing All Types of Payment  Entry"/>
+     <SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CASH"/>
+	<SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CHALLAN"/>
+	<SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CHEQUE"/>
+	<SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="PAYMENTSTATUS_CANCEL"/>
+	
 </entity-engine-xml>
