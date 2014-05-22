@@ -155,7 +155,9 @@
 		productMap.put("prodMap",productTotalsMap);
 		productMap.put("vatMap",vatMap);
 		productMap.put("returnMap",productReturnMap);
-		facilityMap.put(eachFacilityId,productMap);
+		if (UtilValidate.isNotEmpty(productMap)) {
+			facilityMap.put(eachFacilityId,productMap);
+		}
 	}
 	context.put("facilityMap",facilityMap);
 	periodBillingIds.each{eachperiodBillingId->
@@ -166,7 +168,9 @@
 		if (UtilValidate.isNotEmpty(invoiceList)) {
 			invoice=EntityUtil.getFirst(invoiceList);
 			invoiceListMap.put(invoice.getString("facilityId"), invoice);
-			context.invoiceListMap=invoiceListMap;
+			if (UtilValidate.isNotEmpty(invoiceListMap)) {
+				context.invoiceListMap=invoiceListMap;
+			}
+			
 		}
 	}
-

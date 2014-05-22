@@ -27,7 +27,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
-<#if facilityMap?has_content> 
+<#if facilityMap?has_content && invoiceListMap?has_content> 
 <#assign itemsList=facilityMap.entrySet()>
 <#assign tinNumber="">
 <#assign cstNumber="">
@@ -68,6 +68,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 									 <fo:block>
 										<fo:table>
 											 <fo:table-body>
+											 <#if invoiceListMap?has_content>
 												  <fo:table-row> 
 													 <fo:table-cell> 
 													      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">BUYER NAME</fo:block>
@@ -111,6 +112,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 													      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt"  keep-together="always">${billingPeriodDate?if_exists}</fo:block>
 													 </fo:table-cell>
 												 </fo:table-row> 
+												 </#if>
 											</fo:table-body>
 											</fo:table>
 											</fo:block>
@@ -124,6 +126,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 			 	    <fo:block>
 						<fo:table table-layout="fixed" width="100%" space-before="0.2in">
 							 <fo:table-body>
+							 	 <#if invoiceListMap?has_content>
 								  <fo:table-row> 
 									 <fo:table-cell> 
 									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">Invoice No-${invoiceList.getString("invoiceId")}</fo:block>
@@ -132,16 +135,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 								 </fo:table-row> 
 								  <fo:table-row> 
 									 <fo:table-cell> 
-									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">TIN-${tinNumber?if_exists}</fo:block>
-									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">CST-${cstNumber?if_exists}</fo:block>
+									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">TIN-29710050983</fo:block>
+									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" font-weight="bold" keep-together="always">CST-90750068</fo:block>
 									      <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 									 </fo:table-cell>   
 								 </fo:table-row> 
+								 </#if>
 							  </fo:table-body>
 						</fo:table>
 					</fo:block>
 				</fo:table-cell>
-		 	  </fo:table-row>	
+		 	  </fo:table-row>
 	 	 </fo:table-body> 
  	</fo:table>
  	<fo:table  table-layout="fixed">
@@ -183,10 +187,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 					 	</fo:table-cell>
 		 	  		 </fo:table-row>
 		 	  		 <#assign taxTotal = 0>
-		 	  		 <#assign taxGrandTotal = 0>
 		 	  		 <#assign taxableTotal = 0>
 		 	  		 <#assign vatGrandTotal5 = 0>
 		 	  		 <#assign vatGrandTotal14 = 0>
+		 	  		
 		 	  		 <#assign prodTotals = facilityList.getValue().get("prodMap")>
 				 	  		 <#assign prod = prodTotals.entrySet()>
 				 	  		 <#assign taxSubTotal = 0>
@@ -239,29 +243,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">Sub Total</fo:block>
 						 	</fo:table-cell>
-						 	<#assign taxTotal = taxTotal+taxSubTotal>
 						 	<fo:table-cell >   						
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">${taxSubTotal?string("#0.00")?if_exists}</fo:block>
 						 	</fo:table-cell>
 	                  </fo:table-row>
 	                  </#if>
-	                    <#assign prodTotals = facilityList.getValue().get("returnMap")>
-	                  	<#assign prod = prodTotals.entrySet()>
-	                  		<#assign vatRetAmount5 = 0>
-	                  		<#assign vatRetAmount14 = 0>
-	                  		 <#assign taxRetSubTotal = 0>
-	                  		 
-	                  		 <#assign vatRetNo = 1>
-				 	  		 <#list prod as productTotals>
-				 	  		 <#assign vat = vatMap.get(productTotals.getKey())>
-				 	  		 <#if (vat == 5.5)>
-								<#assign vatRetAmount5 = (vatRetAmount5+productTotals.getValue().get("amount")?if_exists)>
-							</#if>
-							<#if (vat == 14.5)>
-								<#assign vatRetAmount14 = (vatRetAmount14+productTotals.getValue().get("amount")?if_exists)>
-							</#if>
-				 	  		 <#if (vat != 0)>
 	                  <fo:table-row> 
 					     <fo:table-cell>   						
 					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
@@ -286,6 +273,38 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 					 	     font-weight="bold" keep-together="always">Amount</fo:block>
 					 	</fo:table-cell>
 		 	  		 </fo:table-row>
+	                    <#assign prodTotals = facilityList.getValue().get("returnMap")>
+	                  	<#assign prod = prodTotals.entrySet()>
+	                  		<#assign vatRetAmount5 = 0>
+	                  		<#assign vatRetAmount14 = 0>
+	                  		
+	                  		<#assign vatReturnAmount5 = 0>
+	                  		<#assign vatReturnAmount14 = 0>
+	                  		
+	                  		 <#assign taxRetSubTotal5 = 0>
+	                  		 <#assign taxRetSubTotal14 = 0>
+	                  		 <#assign vatRetNo = 1>
+	                  		 
+	                  		  <#assign vatReturnPrice5 =0>
+	                  		 
+				 	  		 <#list prod as productTotals>
+				 	  		 <#assign vat = vatMap.get(productTotals.getKey())>
+				 	  		 <#if (vat == 5.5)>
+				 	  		 	<#assign retAmount5 = productTotals.getValue().get("returnPrice")?if_exists>
+				 	  		 	<#assign vatRetAmount5 = ((retAmount5*5.5)/100)>
+				 	  		 	 <#assign taxRetSubTotal5 = retAmount5 - vatRetAmount5>
+				 	  		 	 <#assign vatReturnAmount5 =vatReturnAmount5+taxRetSubTotal5>
+	                  			<#assign vatReturnPrice5 = vatReturnPrice5+taxRetSubTotal5>
+				 	  		 </#if>
+				 	  		 <#if (vat == 14.5)>
+				 	  		 	<#assign retAmount14 = productTotals.getValue().get("returnPrice")?if_exists>
+				 	  		 	<#assign vatRetAmount14 = ((retAmount14*14.5)/100)>
+				 	  		 	<#assign taxRetSubTotal14 = retAmount14 - vatRetAmount14>
+				 	  		 	<#assign vatReturnAmount14 =vatReturnAmount14+taxRetSubTotal14>
+				 	  		 	<#assign vatReturnPrice5 = vatReturnPrice5+taxRetSubTotal14>
+				 	  		 </#if>
+				 	  		 
+				 	  		 <#if (vat != 0)>
 				 	  		 <fo:table-row> 
 	                  	<#assign productDetails = delegator.findOne("Product", {"productId" : productTotals.getKey()}, true)?if_exists/>
 	                  	<fo:table-cell>   						
@@ -300,16 +319,22 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
 					 	     font-size="10pt"  keep-together="always">${productTotals.getValue().get("returnQtyLtrs")?if_exists?string("#0.00")}</fo:block>
 	                  	</fo:table-cell>
-	                  	<#assign taxRetSubTotal = taxRetSubTotal+(productTotals.getValue().get("returnPrice")?if_exists)>
+	                  	 <#if (vat == 5.5)>
 	                  	<fo:table-cell>   						
 					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-					 	     font-size="10pt" keep-together="always">${productTotals.getValue().get("returnPrice")?if_exists?string("#0.00")}</fo:block>
+					 	     font-size="10pt" keep-together="always">${taxRetSubTotal5?if_exists?string("#0.00")}</fo:block>
 	                  	</fo:table-cell>
+	                  	</#if>
+	                  	 <#if (vat == 14.5)>
+	                  	<fo:table-cell>   						
+					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
+					 	     font-size="10pt" keep-together="always">${taxRetSubTotal14?if_exists?string("#0.00")}</fo:block>
+	                  	</fo:table-cell>
+	                  	</#if>
 	                  </fo:table-row>
 	                  </#if>
 	                  <#assign vatRetNo = vatRetNo+1>
 	                  </#list>
-	                  <#if taxRetSubTotal?has_content && (taxRetSubTotal!=0)>
 	                 <fo:table-row>
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
@@ -323,14 +348,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">Sub Total</fo:block>
 						 	</fo:table-cell>
-						 	<#assign taxTotal = taxTotal+taxRetSubTotal>
 						 	<fo:table-cell >   						
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
-						 	     font-weight="bold" keep-together="always">${taxRetSubTotal?string("#0.00")?if_exists}</fo:block>
+						 	     font-weight="bold" keep-together="always">${(vatReturnPrice5)?string("#0.00")?if_exists}</fo:block>
 						 	</fo:table-cell>
 	                  </fo:table-row>
-					</#if>
-					<#if taxTotal?has_content && (taxTotal!=0)>
 	                 <fo:table-row>
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
@@ -344,14 +366,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">Taxable Sales</fo:block>
 						 	</fo:table-cell>
-						 	<#assign taxGrandTotal = taxGrandTotal+taxTotal>
+						 	<#assign taxTotal = (taxSubTotal-vatReturnPrice5)>
 						 	<fo:table-cell >   						
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">${taxTotal?string("#0.00")?if_exists}</fo:block>
 						 	</fo:table-cell>
 	                  </fo:table-row>
-					</#if>
-					<#if vatAmount5?has_content && (vatAmount5!=0)>
 	                 <fo:table-row>
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
@@ -365,15 +385,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">VAT@5.5</fo:block>
 						 	</fo:table-cell>
-						 	<#assign vatTotal5 = (vatAmount5+vatRetAmount5)>
+						 	<#assign vatTotal5 = (vatAmount5-vatReturnAmount5)>
 						 	<#assign vatGrandTotal5 = vatGrandTotal5+((vatTotal5*5.5)/100)>
 						 	<fo:table-cell >   						
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">${vatGrandTotal5?string("#0.00")?if_exists}</fo:block>
 						 	</fo:table-cell>
 	                  </fo:table-row>
-					</#if>
-					<#if vatAmount14?has_content && (vatAmount14!=0)>
 	                 <fo:table-row>
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
@@ -387,15 +405,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">VAT@14.5</fo:block>
 						 	</fo:table-cell>
-						 	<#assign vatTotal14 = (vatAmount14+vatRetAmount14)>
+						 	<#assign vatTotal14 = (vatAmount14-vatReturnAmount14)>
 						 	<#assign vatGrandTotal14= vatGrandTotal14+((vatTotal14*14.5)/100)>
 						 	<fo:table-cell >   						
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">${vatGrandTotal14?string("#0.00")?if_exists}</fo:block>
 						 	</fo:table-cell>
 	                  </fo:table-row>
-					</#if>
-	                 <fo:table-row>
+							<#assign taxableTotal = (taxTotal+vatGrandTotal5+vatGrandTotal14)>
+						 	<#assign grandTotal = grandTotal+taxableTotal>
+	                 <#--<fo:table-row>
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always"></fo:block>
@@ -408,8 +427,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">Total</fo:block>
 						 	</fo:table-cell>
-						 	<#assign taxableTotal = (taxGrandTotal+vatGrandTotal5+vatGrandTotal14)>
-						 	<#assign grandTotal = grandTotal+taxableTotal>
+						 	
 						 	<fo:table-cell >   						
 						 	     <fo:block text-align="right" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" 
 						 	     font-weight="bold" keep-together="always">${taxableTotal?string("#0.00")?if_exists}</fo:block>
@@ -586,7 +604,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     font-weight="bold" keep-together="always">${total?if_exists?string("#0.00")}</fo:block>
 						 	</fo:table-cell>
 	                  </fo:table-row>
-					</#if>
+					</#if>-->
+					
 			 	 	<#if grandTotal?has_content && (grandTotal!=0)>
 	                 <fo:table-row>
 		                   <fo:table-cell >   						
@@ -614,10 +633,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 			     </fo:table-row>
 			     <fo:table-row>
 			     <fo:table-cell number-columns-spanned="5">   						
-			 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Amount chargeable (in words)</fo:block>
-					 <fo:block text-align="left" text-indent="5pt" keep-together="always" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false" >Rupees ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(grandTotal?if_exists?string("#0.00")), "%rupees-and-paise", locale)} ONLY  </fo:block>
+			 	     <fo:block text-align="left" text-indent="5pt" font-weight="bold" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Amount chargeable (in words)</fo:block>
+					 <#if invoiceListMap?has_content>
+						<#assign invoice = invoiceList.getString("invoiceId")?if_exists>
+					 	<@ofbizCurrency amount=grandTotal isoCode=invoice.currencyUomId?if_exists/>
+					 </#if>
+					 <#assign amount = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(grandTotal, "%rupees-and-paise", locale).toUpperCase()>
+                   	 <fo:block  text-align="left" text-indent="5pt" white-space-collapse="false" keep-together="always">(${StringUtil.wrapString(amount?default(""))}  only)</fo:block>
 					 <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-			         <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Declaration</fo:block>
+			         <fo:block text-align="left" text-indent="5pt" font-weight="bold" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">Declaration</fo:block>
 			         <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">We declare that this invoice shows the actual price of the goods</fo:block>
 			         <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">described and that all particulars are true and correct</fo:block>
 			         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
