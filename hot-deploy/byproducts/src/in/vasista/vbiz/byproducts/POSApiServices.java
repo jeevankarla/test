@@ -387,7 +387,7 @@ Debug.logInfo(infoString, module);
 		String shipmentTypeId = subscriptionTypeId + "_SHIPMENT";
 		String productSubscriptionTypeId = "CASH";
 		String routeChangeFlag = "";
-		Map boothDetails = (Map) (ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "userLogin", userLogin))).get("boothDetails");
+		Map boothDetails = (Map) (ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "userLogin", userLogin))).get("boothDetails");
 		String sequenceNum = (String) boothDetails.get("routeId"); // ::TODO:: for now fix to default route
 		GenericValue facility = null;
 		try {
