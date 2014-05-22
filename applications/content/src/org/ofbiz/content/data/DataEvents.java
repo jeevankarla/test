@@ -226,6 +226,7 @@ public class DataEvents {
     public static String serveImage(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         ServletContext application = session.getServletContext();
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Map<String, Object> parameters = UtilHttp.getParameterMap(request);
@@ -254,9 +255,36 @@ public class DataEvents {
 
                 // make sure the logged in user can download this content; otherwise is a pretty big security hole for DataResource records...
                 // TODO: should we restrict the roleTypeId?
+                // get the permission service required for streaming data; default is always the genericContentPermission
+                String permissionService = UtilProperties.getPropertyValue("content.properties", "stream.permission.service", "genericContentPermission");
+
+                Map<String, Object> permSvcCtx = UtilMisc.toMap("userLogin", userLogin, "mainAction", "ADMIN");
+                Map<String, Object> permSvcResp;
+                try {
+                    permSvcResp = dispatcher.runSync(permissionService, permSvcCtx);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, module);
+                    request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                    return "error";
+                }
+                if (ServiceUtil.isError(permSvcResp)) {
+                    String errorMsg = ServiceUtil.getErrorMessage(permSvcResp);
+                    Debug.logError(errorMsg, module);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                    return "error";
+                }
+
+                // no service errors; now check the actual response
+                Boolean hasPermission = (Boolean) permSvcResp.get("hasPermission");
+                if (!hasPermission.booleanValue()) {
+                    String errorMsg = (String) permSvcResp.get("failMessage");
+                    Debug.logError(errorMsg, module);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                    return "error";
+                }
                 List<GenericValue> contentAndRoleList = delegator.findByAnd("ContentAndRole",
                         UtilMisc.toMap("partyId", userLogin.get("partyId"), "dataResourceId", dataResourceId));
-                if (contentAndRoleList.size() == 0) {
+                if (contentAndRoleList.size() == 0 && !hasPermission) {
                     String errorMsg = "You do not have permission to download the Data Resource with ID [" + dataResourceId + "], ie you are not associated with it.";
                     Debug.logError(errorMsg, module);
                     request.setAttribute("_ERROR_MESSAGE_", errorMsg);
