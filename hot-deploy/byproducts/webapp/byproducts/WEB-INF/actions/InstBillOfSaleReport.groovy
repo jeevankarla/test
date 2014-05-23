@@ -33,7 +33,8 @@
 	invoiceListMap=[:];
 	invoiceList=[];
 	periodBillingIds=[];
-	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
+
+		conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"COM_CANCELLED"));
 	if(!((parameters.periodBillingId).equals("allInstitutions"))){
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, parameters.periodBillingId));
@@ -52,7 +53,7 @@
 	billingPeriodDateStr += UtilDateTime.toDateString(thruDate, "dd-MMM-yyyy");
 	context.billingPeriodDate = billingPeriodDateStr;
 	
-
+//		Debug.log("########################################################## : "+facilityIds);
 		shipmentIds = [];
 		amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"AM");
 		shipmentIds.addAll(amShipmentIds);
@@ -65,18 +66,22 @@
 	condition2=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", condition2, null, ["estimatedShipDate"], null, false);
 	
+	//Debug.log("------------------returnItemsList--------------------- : "+returnItemsList);
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
 	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
 	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId"] as Set;
+	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId", "vatPercent"] as Set;
 	orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
 	
 	
+	if(parameters.BOS && parameters.BOS=="billOfSale"){
+		orderItemsList = EntityUtil.filterByCondition(orderItemsList, EntityCondition.makeCondition("vatPercent", EntityOperator.LESS_THAN, BigDecimal.ONE));
+	}
+	
 //	Debug.log("------------------orderItemsList--------------------- : "+orderItemsList);
-//	Debug.log("------------------orderItemsList--------------------- : "+orderItemsList.quantity);
 	
 	
 	
@@ -91,54 +96,8 @@
 	productPrice = EntityUtil.filterByDate(productPrice, fromDate);
 	List vatList = EntityUtil.getFieldListFromEntityList(productPrice, "taxPercentage", true);
 	context.vatList = vatList;
-	/*finalVatList = [];
-	productReturnMap = [:];
-	productVatMap = [:];
-	resultMap = (ByProductNetworkServices.getPeriodTotals(dctx, [fromDate:fromDate, thruDate:thruDate])).get("productTotals");
-	vatList.each { vat->
-		vatMap = [:];
-		productIdList = EntityUtil.filterByDate(delegator.findByAnd("ProductPrice", [taxPercentage : vat ,productPriceTypeId : "VAT_SALE"]));
-		productIdList = EntityUtil.getFieldListFromEntityList(productIdList, "productId",true);
-		productIdList.each{eachProd ->
-			productVatMap.put(eachProd, vat)
-		}*/
-		/*if(UtilValidate.isNotEmpty(productIdList)){
-			List productList = EntityUtil.getFieldListFromEntityList(productIdList, "productId", true);
-			if(UtilValidate.isNotEmpty(productList)){
-				productMap = [:];
-				productList.each { prodId->
-					prodValMap=[:];
-					prodValue=0;
-					if(UtilValidate.isNotEmpty(resultMap.get(prodId))){
-						prodValue = resultMap.get(prodId).get("totalRevenue");
-					}
-					returnProdValue=0;
-					if(UtilValidate.isNotEmpty(productReturnMap.get(prodId))){
-						returnProdValue = productReturnMap.get(prodId);
-					}
-					if(UtilValidate.isNotEmpty(prodValue)&&(prodValue!=0)){
-						prodValMap["prodValue"]=prodValue;
-					}
-					if(UtilValidate.isNotEmpty(returnProdValue)&&(returnProdValue!=0)){
-						prodValMap["returnProdValue"]=returnProdValue;
-					}
-					if(UtilValidate.isNotEmpty(prodValMap)){
-						productMap[prodId] = prodValMap;
-					}
-				}
-				tempMap = [:];
-				tempMap.putAll(productMap);
-				if(UtilValidate.isNotEmpty(tempMap)){
-					vatMap.put(vat,tempMap);
-					finalVatList.add(vatMap);
-				}
-			}
-		}*/
-	/*}*/
-//	Debug.log("------------------productVatMap--------------------- : "+productVatMap);
-	//context.put("productVatMap",productVatMap);
-	//Debug.log("---------------------vatList--------------------------- : "+vatList)
-	//Debug.log("----------------------finalVatList-------------------------- : "+finalVatList)
+
+
 	
 	returnItemMap = FastMap.newInstance();
 	saleTotal=0;
@@ -152,13 +111,27 @@
 		if (UtilValidate.isNotEmpty(itemsList)) {
 			itemsListMap.put(eachFacilityId, itemsList);
 		}
-		
+		//Debug.log("=============================="+itemsList);
 		if (itemsList.size() > 0) {
 			finalReturnItemList = [];
 			for (i = 0; i < itemsList.size(); i++) {
 				
 				eachEntry = itemsList.get(i);
 				tempMap = [:];
+				/*condProductIdList = [];
+				condProductIdList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.NOT_EQUAL, 0.00));
+				condProductIdList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, "VAT_SALE"));
+				condProductIdList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachEntry.productId));
+				conditionProdId=EntityCondition.makeCondition(condProductIdList,EntityOperator.AND);
+				fieldsToSelect = ["taxPercentage"] as Set;
+				productPriceList = delegator.findList("ProductPrice", conditionProdId, fieldsToSelect , null, null, false);
+				
+				productVatAmount=0;
+				if(productPriceList){
+					productVatAmount = EntityUtil.getFirst(productPriceList);
+					}*/
+			//if(productVatAmount==0 || productVatAmount==0.00){
+				
 				tempMap.estimatedShipDate = eachEntry.estimatedShipDate;
 				tempMap.originFacilityId = eachEntry.originFacilityId;
 				tempMap.shipmentTypeId = eachEntry.shipmentTypeId;
@@ -220,14 +193,11 @@
 				}
 				netTotalAmount=0.00;
 				taxAmount=0;
-				/*saleTotal=saleTotal+tempMap.amount;
-				returnTotal=returnTotal+tempMap.returnAmount;
-				netTotalAmount=saleTotal-returnTotal;
-				taxAmount=netTotalAmount*14.50/100;*/
+				
 				
 				finalReturnItemList.add(tempMap);
-				
-			}
+			//}
+			}//for loop close
 			
 			finalAmount=finalAmount+netTotalAmount+taxAmount;
 			returnItemMap.put(eachFacilityId,finalReturnItemList);
@@ -236,36 +206,9 @@
 	context.itemsReturnListMap=returnItemMap;	
 	context.itemsListMap=itemsListMap;
 
-	/*finalSaleVatMap =[:];
-	facilityIds.each{eachFacilityId->
-		facilityOrderList = returnItemMap.get(eachFacilityId);
-		facilitySaleMap = [:];
-		facilityOrderList.each{eachOrderItem ->
-			productId = eachOrderItem.productId;
-			vatPercent = productVatMap.get(productId);
-			if(facilitySaleMap.get(vatPercent)){
-				tempVatProd = facilitySaleMap.get(vatPercent);
-				tempVatProd.add(eachOrderItem);
-				facilitySaleMap.put(vatPercent, tempVatProd);
-			}
-			else{
-				tempList = [];
-				tempList.add(eachOrderItem);
-				facilitySaleMap.put(vatPercent, tempList);
-			}
-		}
-		finalSaleVatMap.put(eachFacilityId, facilitySaleMap)
-		prodDetails = finalSaleVatMap.entrySet();
-//        Debug.log("------------------prd -------------------------- :"+prodDetails);
-
-	}*/
 	
-	//context.saleTotal=saleTotal;
-//	context.returnTotal=returnTotal;
-//	context.netTotalAmount=netTotalAmount;
-//    context.taxAmount=taxAmount;
-//	context.finalAmount=finalAmount;
-//	context.finalSaleVatMap=finalSaleVatMap;
+	
+	
 	
 	
 	periodBillingIds.each{eachperiodBillingId->
@@ -280,6 +223,7 @@
 			invoice=EntityUtil.getFirst(invoiceList);
 			invoiceListMap.put(invoice.getString("facilityId"), invoice);
 			context.invoiceListMap=invoiceListMap;
+//			Debug.log("------------invoiceListMap--------------- : "+invoiceListMap);
 		}
 	}
 	/*if (UtilValidate.isNotEmpty(itemsList)) {
