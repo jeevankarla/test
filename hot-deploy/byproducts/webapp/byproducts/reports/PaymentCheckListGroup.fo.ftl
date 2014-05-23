@@ -34,9 +34,10 @@ under the License.
         	<fo:static-content flow-name="xsl-region-before">
         	<#-- 
         		<fo:block text-align="center" keep-together="always">VST_ASCII-015</fo:block> -->
-        		<fo:block text-align="left" font-size="12pt"  white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/> MOTHER DAIRY, KMF UNIT</fo:block>
-        		<fo:block text-align="center" keep-together="always" font-size="12pt" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")}  UserLogin:${userLogin.get("userLoginId")}</fo:block>	 	 	  
-        		<fo:block text-align="center" keep-together="always" font-size="12pt" >   Payments CheckList For Cash On Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "dd-MM-yyyy")}</fo:block>
+        		<fo:block text-align="left" font-size="10pt" keep-together="always">${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
+        		<fo:block text-align="center" font-size="12pt"  white-space-collapse="false"> MOTHER DAIRY, KMF UNIT</fo:block>
+        		<fo:block text-align="center" keep-together="always" font-size="11pt" white-space-collapse="false"> UserLogin:${userLogin.get("userLoginId")} ,Time: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")} </fo:block>	 	 	  
+        		<fo:block text-align="center" keep-together="always" font-size="11pt" > Cash Payment Group CheckList Report For Cash On Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "dd-MM-yyyy")}</fo:block>
         		 <fo:block font-family="Courier,monospace"  >                
                 <fo:table >
                       <fo:table-column column-width="35pt"/>
