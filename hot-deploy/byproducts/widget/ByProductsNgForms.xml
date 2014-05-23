@@ -1008,9 +1008,10 @@
             </drop-down>
         </field>
         <field name="billOfSale" title="Bill of Sale" widget-style="buttontext" id-name="billOfSale" event="onclick" action="javascript:appendBillingParam(this);">
-            <hyperlink target="instBillOfSaleReport.txt" description="Report" target-window="_blank" >
+            <hyperlink target="instBillOfSaleReport.txt" description="Bill of Sale" target-window="_blank" >
                 <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
+               	<parameter param-name="BOS" value="billOfSale"/>
             </hyperlink>
         </field>
          <field name="enclosureOfTaxInvoice" title="Enclosure OF Tax Invoice" widget-style="buttontext" id-name="enclosureOfTaxInvoice" event="onclick" action="javascript:appendBillingParam(this);">
@@ -1019,12 +1020,12 @@
                	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
             </hyperlink>
         </field>
-        <field name="relianceBill" title="Reliance Bill Report" widget-style="buttontext" id-name="relianceBill" event="onclick" action="javascript:appendBillingParam(this);">
+        <!-- field name="relianceBill" title="Reliance Bill Report" widget-style="buttontext" id-name="relianceBill" event="onclick" action="javascript:appendBillingParam(this);">
             <hyperlink target="relianceBillReport.txt" description="Reliance Bill Report" target-window="_blank" >
                 <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
             </hyperlink>
-        </field>
+        </field-->
         <field name="taxInvoice" title="Tax Invoice" widget-style="buttontext" id-name="taxInvoice" event="onclick" action="javascript:appendBillingParam(this);">
             <hyperlink target="taxInvoiceReport.txt" description="Tax Invoice Report" target-window="_blank" >
                 <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
