@@ -205,4 +205,9 @@ under the License.
 	<SecurityGroupPermission groupId="Controller" permissionId="ACCOUNTING_ACCTFORMULA_EDIT"/>
 	<SecurityGroupPermission groupId="Controller" permissionId="ACCOUNTING_GLACCOUNT_EDIT"/>
 
+     <SecurityGroup description="Accounting view permission for all accounting menus" groupId="ACCTG_VIEW"/>
+     <SecurityGroupPermission groupId="ACCTG_VIEW" permissionId="ACCOUNTING_VIEW"/>
+     <SecurityGroupPermission groupId="ACCTG_VIEW" permissionId="ACCOUNTING_COMM_VIEW"/>
+     
+     
 </entity-engine-xml>
