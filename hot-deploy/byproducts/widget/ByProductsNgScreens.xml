@@ -2061,7 +2061,7 @@
 										        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
 										        	<include-form name="FindPaymentsByMethod" location="component://byproducts/widget/ByProductsNgForms.xml" />
 										        </screenlet>
-									  	        <screenlet title="Retailers ${uiLabelMap.PaymentSearchResults} :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
+									  	        <screenlet title="Retailers Receipts :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
 									  	       		<!--<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
 									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
 														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
@@ -2695,7 +2695,7 @@
 										        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
 										        	<include-form name="FindPaymentsByMethod" location="component://byproducts/widget/ByProductsNgForms.xml" />
 										        </screenlet>
-									  	        <screenlet title="Retailers ${uiLabelMap.PaymentSearchResults} :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
+									  	        <screenlet title="Retailers Receipts :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
 									  	       		<!--<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
 									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
 														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
