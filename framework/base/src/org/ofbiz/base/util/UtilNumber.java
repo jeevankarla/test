@@ -145,6 +145,23 @@ public class UtilNumber {
         + "    1,000,000,000: << billion[ >>];\n"
         + "    1,000,000,000,000: << trillion[ >>];\n"
         + "    1,000,000,000,000,000: =#,##0=;\n"
+        + "%%vmain:\n"
+        + "    zero; one; two; three; four; five; six; seven; eight; nine;\n"
+        + "    ten; eleven; twelve; thirteen; fourteen; fifteen; sixteen;\n"
+        + "        seventeen; eighteen; nineteen;\n"
+        + "    20: twenty[->>];\n"
+        + "    30: thirty[->>];\n"
+        + "    40: forty[->>];\n"
+        + "    50: fifty[->>];\n"
+        + "    60: sixty[->>];\n"
+        + "    70: seventy[->>];\n"
+        + "    80: eighty[->>];\n"
+        + "    90: ninety[->>];\n"
+        + "    100: << hundred[ >>];\n"
+        + "    1000: << thousand[ >>];\n"
+        + "    100,000: << lakh[ >>];\n"
+        + "    10,000,000: << crore[ >>];\n"
+        + "    1,000,000,000,000,000: =#,##0=;\n"
         + "%%cents:\n"
         + "    100: <%%main< cent[s];\n"
         + "%dollars-and-hundredths:\n"
@@ -158,8 +175,13 @@ public class UtilNumber {
         + "    0.x: >%%paise>;\n"
         + "    0: zero rupees ; one rupee; =%%main= rupees;\n"
         + "%%paise:\n"
-        + "    100: <%%main< paise[s];\n";
-
+        + "    100: <%%main< paise[s];\n"
+	    +"%indRupees-and-paise:\n"//This is used for Rupees-paise define By our Vasista Programmers for Lakhs
+	    + "    x.0: << [and >%%paise>];\n"
+	    + "    0.x: >%%paise>;\n"
+	    + "    0: zero rupees ; one rupee; =%%vmain= rupees;\n"
+	    + "%%paise:\n"
+	    + "    100: <%%main< paise[s];\n";
      
 
     // ICU4J rule sets for the th_TH locale. To add more rules, expand this string.
