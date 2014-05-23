@@ -158,6 +158,7 @@ if(hideSearch == "N" || stopListing){
 	boothPaymentsInnerList = [];
 	boothPaymentsList = [];
 	invoicesTotalAmount =0;
+	axisHostTotalAmount =0;
 	invoicesTotalDueAmount = 0;
 	exclList = [];
 	if (statusId != "PAID" ) {
@@ -210,6 +211,7 @@ if(hideSearch == "N" || stopListing){
 		boothPaymentsList = boothsPaymentsDetail["paymentsList"];
 		if(paymentMethodTypeId == "CHALLAN_PAYIN"){
 			axisBankPayments = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:"AXISHTOH_PAYIN" , paymentIds : paymentIds]);
+			axisHostTotalAmount+=axisBankPayments["invoicesTotalAmount"];
 			axisPaymentsList = axisBankPayments["paymentsList"];
 			boothPaymentsList.addAll(axisPaymentsList);
 		}
@@ -236,7 +238,7 @@ if(hideSearch == "N" || stopListing){
 	context.boothPaymentsList = boothPaymentsList;	
 	context.paymentDate= paymentDate;
 	context.paymentTimestamp= paymentTimestamp;
-	context.invoicesTotalAmount = UtilFormatOut.formatCurrency(boothsPaymentsDetail["invoicesTotalAmount"], context.get("currencyUomId"), locale);
+	context.invoicesTotalAmount = UtilFormatOut.formatCurrency((boothsPaymentsDetail["invoicesTotalAmount"]+axisHostTotalAmount), context.get("currencyUomId"), locale);
 	if(boothsPaymentsDetail["invoicesTotalDueAmount"] != null){
 		context.invoicesTotalDueAmount = UtilFormatOut.formatCurrency(boothsPaymentsDetail["invoicesTotalDueAmount"], context.get("currencyUomId"), locale);
 	}
