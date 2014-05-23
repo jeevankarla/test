@@ -377,10 +377,10 @@
     	<menu-item name="CustomPayments" title="Route Marketing Payment"> 
     		<condition>
 				<or>
-					<if-has-permission permission="BYPRODUCTS_PMNTVIEW"/>
-					<if-has-permission permission="BYPRODUCTS_CASH"/>
-					<if-has-permission permission="BYPRODUCTS_CHEQUE"/>
-					<if-has-permission permission="BYPRODUCTS_CHALLAN"/>
+					<if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
+					<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+					<if-has-permission permission="BYPRODUCTS" action="_CHALLAN"/>
+					<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
 					<if-has-permission permission="PAYMENTSTATUS_CANCEL"/>
 				</or>
             </condition>
