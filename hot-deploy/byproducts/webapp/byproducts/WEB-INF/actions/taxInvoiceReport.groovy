@@ -133,20 +133,20 @@
 				returnProducts.each{ eachProduct->
 						returnProdList = EntityUtil.filterByCondition(returnHeaderItemsList, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProduct));
 						prodTotalQty = 0;
-						returnPrice = 0;
+						returnBasicPrice = 0;
 						product = delegator.findOne("Product", ["productId" : eachProduct], true);
 						returnQtyIncluded = product.quantityIncluded;
 						
 						retTempMap = [:];
 						returnProdList.each{ eachProdReturnItem ->
 							prodTotalQty = prodTotalQty+eachProdReturnItem.returnQuantity;
-							if(eachProdReturnItem.returnPrice){
-								returnPrice = returnPrice+(eachProdReturnItem.returnQuantity*eachProdReturnItem.returnPrice);
+							if(eachProdReturnItem.returnBasicPrice){
+								returnBasicPrice = returnBasicPrice+(eachProdReturnItem.returnQuantity*eachProdReturnItem.returnBasicPrice);
 							}
 							
 						}
 						retTempMap.returnQuantity = prodTotalQty;
-						retTempMap.returnPrice = returnPrice;
+						retTempMap.returnPrice = returnBasicPrice;
 						retTempMap.returnQtyLtrs = prodTotalQty*returnQtyIncluded;
 						productReturnMap.put(eachProduct, retTempMap);
 				}

@@ -7267,59 +7267,60 @@ Debug.logInfo("result= " + result, module);
 				 Locale locale = (Locale) context.get("locale");
 				 List<String> shipmentIds =FastList.newInstance();
 				 Map<String, Object> result = ServiceUtil.returnSuccess();
-				 GenericValue dealer = null;
-				 GenericValue shipment = null;
-				 String boothId = "";
-			  	 String ownerPartyId = "";
 			  	 List<String> returnIdList =FastList.newInstance();
 			  	 String productStoreId = "";
-			  	 Timestamp shipDate = null;
-				 	try{
-			  		  productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
-			  		  shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate); 
-			  		  for(int i=0;i<shipmentIds.size();i++){
-			  			  String shipmentId = (String) shipmentIds.get(i);
-			  			  shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
-				  		  if(UtilValidate.isEmpty(shipment)){
-				  			  Debug.logError("shipment does not exists with Id: " + shipmentId, module);		  
-				  			  return ServiceUtil.returnError("shipment does not exists with Id: " + shipmentId);
-				  		  }
-			  			  shipDate = shipment.getTimestamp("estimatedShipDate");
-				  		  if(UtilValidate.isNotEmpty(shipmentIds)){
-				        	  List conditionList = FastList.newInstance();
-					    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
-					    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-					    	  List<GenericValue> returnHeader = delegator.findList("ReturnHeader", condition, null, null, null, false);
-					    	  if(UtilValidate.isNotEmpty(returnHeader)){
-					    		  returnIdList = EntityUtil.getFieldListFromEntityList(returnHeader, "returnId", true);
-					    		  boothId = ((GenericValue)EntityUtil.getFirst(returnHeader)).getString("originFacilityId");
-					    	  }
-					    	  dealer = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
-					  		  if(UtilValidate.isEmpty(dealer)){
-					  			  Debug.logError("dealer does not exists with Id: " + boothId, module);		  
-					  			  return ServiceUtil.returnError("dealer does not exists with Id: " + boothId);
-					  		  }
-					  		  ownerPartyId = dealer.getString("ownerPartyId");
-		    				  List<GenericValue> returnItems = delegator.findList("ReturnItem", EntityCondition.makeCondition("returnId", EntityOperator.IN, returnIdList), null, null, null, false);
-		    				  for(GenericValue eachReturnItem : returnItems){
-			    				  Map<String, Object> priceContext = FastMap.newInstance();
+				 try{
+					 productStoreId = (String)ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
+					 shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate);
+			  		 if(UtilValidate.isNotEmpty(shipmentIds)){
+			        	  List conditionList = FastList.newInstance();
+				    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+				    	  conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
+				    	  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				    	  List<GenericValue> returnHeaderItemList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", condition, null, null, null, false);
+				    	  if(UtilValidate.isNotEmpty(returnHeaderItemList)){
+				    		  returnIdList = EntityUtil.getFieldListFromEntityList(returnHeaderItemList, "returnId", true);
+				    	  }
+				    	  for(int i=0;i<returnIdList.size(); i++){
+				    		  String returnId = (String)returnIdList.get(i);
+				    		  List<GenericValue> returnItemList = EntityUtil.filterByCondition(returnHeaderItemList, EntityCondition.makeCondition("returnId", EntityOperator.EQUALS, returnId));
+				    		  for(GenericValue eachReturnItem : returnItemList){
+				    			  Map<String, Object> priceContext = FastMap.newInstance();
 				                  priceContext.put("userLogin", userLogin);   
 				                  priceContext.put("productStoreId", productStoreId);                    
 				                  priceContext.put("productId", eachReturnItem.get("productId"));
-				                  priceContext.put("partyId", ownerPartyId);
-				                  priceContext.put("facilityId", boothId); 
-				                  priceContext.put("priceDate", shipDate);
+				                  priceContext.put("partyId", eachReturnItem.get("ownerPartyId"));
+				                  priceContext.put("facilityId", eachReturnItem.get("originFacilityId")); 
+				                  priceContext.put("priceDate", eachReturnItem.getTimestamp("estimatedShipDate"));
 				                  Map priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);            			
 				                  if (ServiceUtil.isError(priceResult)) {
 				                       Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
 				                       return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
 				                  }  
 				                  BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
-				                  eachReturnItem.put("returnPrice", totalPrice);
-					    		  delegator.createOrStore(eachReturnItem);
-		    				  }	
-					      }
-			  		  }
+				                  BigDecimal basicPrice = (BigDecimal)priceResult.get("basicPrice");
+				                  List taxList = (List)priceResult.get("taxList");
+				                  BigDecimal vatPercent=BigDecimal.ZERO; 
+				                  BigDecimal vatAmount=BigDecimal.ZERO; 
+			                      for(int m=0;m<taxList.size(); m++){
+				               		 Map taxComp = (Map)taxList.get(m);
+				               		 String taxType= (String) taxComp.get("taxType");
+				               		 BigDecimal percentage = (BigDecimal) taxComp.get("percentage");
+				               		 BigDecimal amount = (BigDecimal) taxComp.get("amount");
+				               		 if(taxType.startsWith("VAT_")){
+				               			vatPercent = percentage;
+				               			vatAmount = amount;
+				               		 }
+			                      }
+			                      GenericValue returnItem = delegator.findOne("ReturnItem", UtilMisc.toMap("returnId",eachReturnItem.getString("returnId"),"returnItemSeqId",eachReturnItem.getString("returnItemSeqId")), false);
+			                      returnItem.set("returnPrice", totalPrice);
+			                      returnItem.set("returnBasicPrice", basicPrice);
+			                      returnItem.set("vatPercent", vatPercent);
+			                      returnItem.set("vatAmount", vatAmount);
+			                      returnItem.store();
+				    		  }
+				    	  }
+			  		 }
 				}catch(Exception e){
 					Debug.logError(e, module);
 					Debug.logError(e, "Problem in updating ReturnItem", module);	 		  		  

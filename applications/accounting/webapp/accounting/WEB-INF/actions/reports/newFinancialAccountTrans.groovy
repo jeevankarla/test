@@ -174,6 +174,8 @@ if (organizationPartyId) {
 		acctgTransId = "";
 		partyName = "";
 		paymentTypeDescription = "";
+		finAccountDescription = "";
+		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("paymentId"));
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			acctgTransIt = glAcctgTrialBalanceList[0];
 			acctgTransAndEntries = acctgTransIt.acctgTransAndEntries;
@@ -195,14 +197,18 @@ if (organizationPartyId) {
 					
 					finAccountId = "";
 					finAccount = [:];
-					
+					finAccountTransTypeId = "";
 					attrValue  = "";
 					finAccountTrans = [:];
+					finAccountTransType =[:];
 					if(UtilValidate.isEmpty(paymentId)){
 						finAccountTransAttr = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
 						if(UtilValidate.isNotEmpty(finAccountTransAttr)){
 							attrValue = finAccountTransAttr.attrValue;
 							finAccountTrans = delegator.findOne("FinAccountTrans", [finAccountTransId : attrValue], false);
+							finAccountTransTypeId = finAccountTrans.finAccountTransTypeId;
+							finAccountTransType = delegator.findOne("FinAccountTransType", [finAccountTransTypeId : finAccountTransTypeId], false);
+							finAccountDescription = finAccountTransType.description;
 							finAccountId = finAccountTrans.finAccountId;
 							finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
 							finAccountName = finAccount.finAccountName;
@@ -280,7 +286,7 @@ if (organizationPartyId) {
 							acctgTransEntryMap["partyId"] = finAccountId;
 							acctgTransEntryMap["partyName"] = finAccountName;
 						}
-						acctgTransEntryMap["description"] = "DEPOSIT";
+						acctgTransEntryMap["description"] = finAccountDescription;
 					}
 					acctgTransEntryMap["openingBalance"] = openingBalance;
 					acctgTransEntryMap["debitAmount"] = debitAmount;
@@ -322,11 +328,13 @@ if (organizationPartyId) {
 				}
 			}	
 		}		
+		
 		context.financialAcctgTransList = financialAcctgTransList;
         context.glAcctgTrialBalanceList = glAcctgTrialBalanceList;
 		context.paymentInvType = paymentInvType;
     }
 }
+
 //for each day in cash Book
 dayFinAccountTransList= [];
 getDayTot = "N";
@@ -361,7 +369,6 @@ financialAcctgTransList.each{ dayFinAccount ->
 		dayFinAccountTransList.add(tempDayTotalsMap);
 	}
 }
-dayFinAccountTransList = UtilMisc.sortMaps(dayFinAccountTransList, UtilMisc.toList("paymentId"));
 context.dayFinAccountTransList = dayFinAccountTransList;
 
 

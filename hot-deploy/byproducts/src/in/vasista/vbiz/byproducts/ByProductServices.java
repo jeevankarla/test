@@ -3562,7 +3562,20 @@ public class ByProductServices {
 	                		return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
 	                    }  
 	                    BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
-	                    
+	                    BigDecimal basicPrice = (BigDecimal)priceResult.get("basicPrice");
+	                    List taxList = (List)priceResult.get("taxList");
+	                    BigDecimal vatPercent=BigDecimal.ZERO; 
+	                    BigDecimal vatAmount=BigDecimal.ZERO; 
+	                    for(int m=0;m<taxList.size(); i++){
+		               		 Map taxComp = (Map)taxList.get(m);
+		               		 String taxType= (String) taxComp.get("taxType");
+		               		 BigDecimal percentage = (BigDecimal) taxComp.get("percentage");
+		               		 BigDecimal amount = (BigDecimal) taxComp.get("amount");
+		               		 if(taxType.startsWith("VAT_")){
+		               			vatPercent = percentage;
+		               			vatAmount = amount;
+		               		 }
+	                    }
 			    		GenericValue returnItem = delegator.makeValue("ReturnItem");
 			    		returnItem.put("returnReasonId", "RTN_DEFECTIVE_ITEM");
 			    		if(UtilValidate.isNotEmpty(returnReasonId)){
@@ -3575,6 +3588,9 @@ public class ByProductServices {
 			    		returnItem.put("returnTypeId", "RTN_REFUND");
 			    		returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
 			    		returnItem.put("returnPrice", totalPrice);
+			    		returnItem.put("returnBasicPrice", basicPrice);
+			    		returnItem.put("vatAmount", vatAmount);
+			    		returnItem.put("vatPercent", vatPercent);
    		    		    delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
 			    		delegator.create(returnItem);
 			    		totalPrice = totalPrice.multiply(quantity);
@@ -3632,6 +3648,20 @@ public class ByProductServices {
 	                       return ServiceUtil.returnError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));          	            
 	                  }  
 	                  BigDecimal totalPrice = (BigDecimal)priceResult.get("totalPrice");
+	                  BigDecimal basicPrice = (BigDecimal)priceResult.get("basicPrice");
+	                  List taxList = (List)priceResult.get("taxList");
+	                  BigDecimal vatPercent=BigDecimal.ZERO; 
+	                  BigDecimal vatAmount=BigDecimal.ZERO; 
+	                  for(int l=0;l<taxList.size(); l++){
+	               		 Map taxComp = (Map)taxList.get(l);
+	               		 String taxType= (String) taxComp.get("taxType");
+	               		 BigDecimal percentage = (BigDecimal) taxComp.get("percentage");
+	               		 BigDecimal amount = (BigDecimal) taxComp.get("amount");
+	               		 if(taxType.startsWith("VAT_")){
+	               			vatPercent = percentage;
+	               			vatAmount = amount;
+	               		 }
+	                  }
 	                  //Debug.log("calculated return items prices for product : "+totalPrice.intValue());
 	                  //Debug.log("calculated return items prices for product : "+totalReturnAmount.intValue());
 	                  GenericValue returnItem = delegator.makeValue("ReturnItem");
@@ -3646,6 +3676,9 @@ public class ByProductServices {
 		    		  returnItem.put("returnTypeId", "RTN_REFUND");
 		    		  returnItem.put("returnItemTypeId", "RET_FPROD_ITEM");
 		    		  returnItem.put("returnPrice", totalPrice);
+		    		  returnItem.put("returnBasicPrice", basicPrice);
+		    		  returnItem.put("vatAmount", vatAmount);
+		    		  returnItem.put("vatPercent", vatPercent);
 		    		  delegator.setNextSubSeqId(returnItem, "returnItemSeqId", 5, 1);
 		    		  delegator.create(returnItem);
 		    		  totalPrice = totalPrice.multiply(qty);

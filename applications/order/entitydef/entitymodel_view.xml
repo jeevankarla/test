@@ -1975,6 +1975,7 @@ under the License.
       <alias entity-alias="RI" name="productId"/>
       <alias entity-alias="RI" name="returnQuantity"/>
       <alias entity-alias="RI" name="returnPrice"/>
+      <alias entity-alias="RI" name="returnBasicPrice"/>
       <alias entity-alias="RI" name="vatPercent" />
       <alias entity-alias="RI" name="vatAmount"  />
       <alias entity-alias="RI" name="description"/>
