@@ -375,6 +375,15 @@
             <link target="InstBillingPeriodSearch"/>
         </menu-item>
     	<menu-item name="CustomPayments" title="Route Marketing Payment"> 
+    		<condition>
+				<or>
+					<if-has-permission permission="BYPRODUCTS_PMNTVIEW"/>
+					<if-has-permission permission="BYPRODUCTS_CASH"/>
+					<if-has-permission permission="BYPRODUCTS_CHEQUE"/>
+					<if-has-permission permission="BYPRODUCTS_CHALLAN"/>
+					<if-has-permission permission="PAYMENTSTATUS_CANCEL"/>
+				</or>
+            </condition>
             <link target="FindPaymentByMethod">
             	<parameter param-name="subTabItem" value="${subTabItem}"/>
             	<parameter param-name="paymentMethodTypeId" value="${paymentMethodTypeId}"/>
