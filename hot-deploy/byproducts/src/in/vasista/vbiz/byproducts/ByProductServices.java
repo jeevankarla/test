@@ -4103,7 +4103,6 @@ public class ByProductServices {
 		 //populating Vehicle Status.
 		Map vehicleTripInMap=FastMap.newInstance();
 		String vehicleId="";
-    	Debug.log("===shipmentId=="+shipmentId+"==routeId=="+routeId);
   		vehicleTripInMap.put("shipmentId",shipmentId);
   		vehicleTripInMap.put("routeId",routeId);
   		 Map vehcileResultMap=ByProductNetworkServices.getVehicleTrip(ctx,vehicleTripInMap);
@@ -4119,13 +4118,22 @@ public class ByProductServices {
 	    			 vehicleTripStatusMap.put("lastModifiedDate", UtilDateTime.nowTimestamp());
 	    			 vehicleTripStatusMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			        try {
-			        	 Map vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
+			        	Map vehicleTripStatusResult=null;
+			        	GenericValue vehicleTripStatus = delegator.findOne("VehicleTripStatus", UtilMisc.toMap("vehicleId", vehicleId,"sequenceNum",vehicleTrip.getString("sequenceNum"),"statusId","VEHICLE_CRATE_RTN"), false);
+			        	if(UtilValidate.isEmpty(vehicleTripStatus)){
+			        		 vehicleTripStatusResult= dispatcher.runSync("createVehicleTripStatus", vehicleTripStatusMap);
+			        	 }else{
+			        		 vehicleTripStatusResult= dispatcher.runSync("updateVehicleTripStatus", vehicleTripStatusMap);
+			        	 }
 			            if (ServiceUtil.isError(vehicleTripStatusResult)) {
 			  		  		String errMsg =  ServiceUtil.getErrorMessage(vehicleTripStatusResult);
 			  		  		Debug.logError(errMsg , module);
 			  		  	    return ServiceUtil.returnError("Error while Updating Status To VEHICLE_CRATE_RTN"+ vehicleId);   
 			  		  	}
 			        }catch (GenericServiceException e) {
+			            Debug.logError(e, "Error while Updating Status To VEHICLE_CRATE_RTN", module);
+			            return ServiceUtil.returnError(e.getMessage());
+			        }catch (Exception e) {
 			            Debug.logError(e, "Error while Updating Status To VEHICLE_CRATE_RTN", module);
 			            return ServiceUtil.returnError(e.getMessage());
 			        }
