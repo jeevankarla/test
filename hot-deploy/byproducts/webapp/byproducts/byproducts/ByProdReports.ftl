@@ -426,7 +426,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
           </tr>
            <tr class="alternate-row">
         	<form id="CashPaymentTranscationList" name="CashierPaymentTransactionList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentReceiptList</@ofbizUrl>">	
-      			<td width="34%">Cash Group Receipts Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
+      			<td width="34%">Cash PaymentGroup CheckList Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
       			<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
       			</td>
       			<td>
