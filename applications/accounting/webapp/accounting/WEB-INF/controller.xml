@@ -2588,6 +2588,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PaymentSearchResultsCsv"/>
     </request-map>
+    <request-map uri="DailyPaymentCheckListCsv.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DailyPaymentCheckListCSV"/>
+    </request-map>
     <request-map uri="AcctgTransSearchResultPdf.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AcctgTransSearchResultPdf"/>
@@ -3318,5 +3322,7 @@ under the License.
    <!-- Common request used for byProducts And Accountiing -->
    <view-map name="CashReceiptReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashReceiptReportPDF" content-type="application/pdf"/>
    <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="application/pdf" encoding="none"/>
+   <view-map name="DailyPaymentCheckListCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckListCSV" content-type="text/csv" encoding="none"/>
+   
     <!-- end of view mappings -->
 </site-conf>

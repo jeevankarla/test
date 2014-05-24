@@ -781,6 +781,24 @@
             </widgets>
         </section>
     </screen>
+    <screen name="DailyPaymentCheckListCSV">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>     
+                <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>    
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/paymentsCheckListReport.groovy"/>      
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/boothPaymentsCsv.groovy" />           
+            </actions>  
+            <widgets>						
+	        	<container>	
+			       <include-form name="DailyPaymentCheckListCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+		    	</container>
+		    </widgets>	          
+        </section>
+    </screen>
     <screen name="CashierPaymentCheckList">
         <section>
             <actions>

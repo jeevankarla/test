@@ -90,5 +90,18 @@
         <field name="paymentMethodTypeId" title="PaymentMethodType"><display/></field>        
         <field name="amount" title="AMOUNT"><display/></field>        
      </form>
+      <form name="DailyPaymentCheckListCSV" type="list" list-name="boothPaymentsCsvList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<!-- RECTDATE	TRSPTRID	ZONE	ROUTE	BOOTH	BNAME	ALLOTEE	CASHVALU -->  
+    	<field name="paymentId" title="Payment Id"><display/></field> 	
+    	<field name="routeId" title="Route Id"><display/></field> 
+    	<field name="Date" title="Date"><display /></field>
+    	<field name="facilityId" title="RetailerId"><display/></field>   	
+    	<field name="facilityName" title="RetailerName"><display/></field>
+    	<field name="createdByUserLogin" title="User Name"><display/></field>
+        <field name="paymentMethodTypeId" title="PaymentMethodType"><display/></field>  
+        <field name="issuingAuthority" title="BankName"><display/></field>  
+        <field name="amount" title="AMOUNT"><display/></field>        
+     </form>
     
 </forms>

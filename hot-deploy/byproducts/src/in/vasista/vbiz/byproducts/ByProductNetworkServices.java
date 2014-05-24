@@ -3401,6 +3401,9 @@ public class ByProductNetworkServices {
 	        	boothsPaymentsDetail = getCurrentDuesBoothPaidPayments( dctx , context);
 	        	return boothsPaymentsDetail;
 	        }
+	        if(!UtilValidate.isEmpty(context.get("fromDate"))){
+	        	fromDate = (Timestamp)context.get("fromDate");
+	        }
 	         Map boothRtInMap=UtilMisc.toMap("facilityId",facilityId);
 	         boothRtInMap.put("facilityIdsList",facilityIdsList);
 	         if(UtilValidate.isNotEmpty(context.get("facilityIdsList"))){//if not Empty Consider them only

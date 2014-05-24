@@ -30,6 +30,12 @@
 	</#if>
 	</script>	
 	<script type="text/javascript">
+	function appendParams(formName, action) {
+	var formId = "#" + formName;
+	jQuery(formId).attr("action", action);	
+	jQuery(formId).submit();
+    }
+
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'MM d, yy',
@@ -388,7 +394,11 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	  	    				<option value='${paymentMethod.paymentMethodTypeId}'>${paymentMethod.description}</option>
 						</#list> 
 						</select>
-					<input type="submit" value="Download" class="buttontext"/></td>
+					<#--><input type="submit" value="Download" class="buttontext"/>-->
+					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	      		    <input type="submit" value="TXT" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckList</@ofbizUrl>');" class="buttontext"/>
+					<input type="submit" value="CSV" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckListCsv.csv</@ofbizUrl>');" class="buttontext"/>
+					</td>
       		</form>	
         </tr>
         <tr class="alternate-row">
@@ -422,7 +432,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td>
       			    <input  type="hidden"  name="routeId" value="All"/>
 					<input type="submit" value="Download" class="buttontext"/></td>
-      		</form>	
           </tr>
            <tr class="alternate-row">
         	<form id="CashPaymentTranscationList" name="CashierPaymentTransactionList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentReceiptList</@ofbizUrl>">	
