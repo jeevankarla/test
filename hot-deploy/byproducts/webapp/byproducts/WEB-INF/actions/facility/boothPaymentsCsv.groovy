@@ -15,7 +15,28 @@ if(parameters.statusId){
 dctx = dispatcher.getDispatchContext();
 boothRouteIdsMap=context.boothRouteIdsMap;
 boothPaymentsCsvList =FastList.newInstance();
-
+reportTypeFlag=parameters.reportTypeFlag;
+if(UtilValidate.isNotEmpty(reportTypeFlag) && "DailyPaymentCheckList".equals(reportTypeFlag)){
+	boothPaymentsList=bankPaidMap.entrySet();
+	boothPaymentsList.each { boothPaymentEach ->
+		bankPaymentList=boothPaymentEach.getValue();
+		//boothPaymentsCsvList.addAll(bankPaymentList);
+		//eachBank Payments add to List
+		bankPaymentList.each{ boothPayment->
+			boothPaymentCsvMap =[:];
+		boothPaymentCsvMap["paymentId"] =boothPayment.paymentId;
+		boothPaymentCsvMap["routeId"] = boothRouteIdsMap.get(boothPayment.facilityId);
+		boothPaymentCsvMap["Date"] =UtilDateTime.toDateString(boothPayment.paymentDate,"dd MMM, yyyy");
+		boothPaymentCsvMap["facilityId"] = boothPayment.facilityId;
+		boothPaymentCsvMap["facilityName"] = boothPayment.facilityName;
+		boothPaymentCsvMap["createdByUserLogin"] =boothPayment.createdByUserLogin;
+		boothPaymentCsvMap["issuingAuthority"] =boothPayment.issuingAuthority;
+		boothPaymentCsvMap["paymentMethodTypeId"] = boothPayment.paymentMethodTypeId;
+		boothPaymentCsvMap["amount"] = (new BigDecimal(boothPayment.amount));
+		boothPaymentsCsvList.add(boothPaymentCsvMap);
+		}
+	}
+}else{
 	boothPaymentsList.each { boothPayment ->
 	boothPaymentCsvMap =[:];
 	boothDetails = (ByProductNetworkServices.getBoothDetails(dctx , UtilMisc.toMap("boothId",boothPayment.get("facilityId")))).get("boothDetails");
@@ -35,11 +56,9 @@ boothPaymentsCsvList =FastList.newInstance();
 		boothPaymentCsvMap["amount"] = (new BigDecimal(boothPayment.get("grandTotal")));
 		boothPaymentCsvMap["userId"] = null;
 	}
-	
-	
 	boothPaymentsCsvList.add(boothPaymentCsvMap);
 }
-
+}
 context.boothPaymentsCsvList = boothPaymentsCsvList;
 
 
