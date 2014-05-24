@@ -432,6 +432,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td>
       			    <input  type="hidden"  name="routeId" value="All"/>
 					<input type="submit" value="Download" class="buttontext"/></td>
+			</form>	
           </tr>
            <tr class="alternate-row">
         	<form id="CashPaymentTranscationList" name="CashierPaymentTransactionList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentReceiptList</@ofbizUrl>">	
