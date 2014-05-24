@@ -469,7 +469,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<input type="submit" value="Send SMS" class="buttontext"/></td>		
       		</form>
       	</tr>
-      	<tr>
+      <!--	<tr>
       	   <form id="sendIndentSmsBulk" name="sendIndentSmsBulk" method="post" action="<@ofbizUrl>sendIndentSmsBulk</@ofbizUrl>" target="_blank">	
       		  <td width="33%">Indent Bulk Sms</td>
       		    <td>
@@ -488,7 +488,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	   	   Date<input type="text" name="supplyDate" id="bulkSmsDate" size="15"/>
       	   	  <input type="submit" target="_blank" value="send" class="buttontext"/></td>
       	   </form>
-      	</tr>	
+      	</tr>	-->
       </table>
 	 </div>
     </div>
