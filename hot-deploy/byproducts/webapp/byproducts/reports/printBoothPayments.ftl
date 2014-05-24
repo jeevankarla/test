@@ -157,7 +157,7 @@ under the License.
               </td>
             <#--  <td><a class="buttontext" href="<@ofbizUrl>massPrintReceipt?paymentId=${payment.paymentId}</@ofbizUrl>">Print Receipt</a></td> 
               <td><a class="buttontext" href="javascript:setVoidPaymentParameters();">Cancel</a></td>   -->
-              <td><#if hasPaymentCancelPermission>
+              <td><#if hasPaymentCancelPermission && (payment.paymentMethodTypeId!="AXISHTOH_PAYIN")>
               			 <input id="submitButton" type="button"  onclick="javascript:setVoidPaymentParameters(this);" value="Cancel"/> 
               	  </#if>
               </td>                     
