@@ -3566,7 +3566,7 @@ public class ByProductServices {
 	                    List taxList = (List)priceResult.get("taxList");
 	                    BigDecimal vatPercent=BigDecimal.ZERO; 
 	                    BigDecimal vatAmount=BigDecimal.ZERO; 
-	                    for(int m=0;m<taxList.size(); i++){
+	                    for(int m=0;m<taxList.size(); m++){
 		               		 Map taxComp = (Map)taxList.get(m);
 		               		 String taxType= (String) taxComp.get("taxType");
 		               		 BigDecimal percentage = (BigDecimal) taxComp.get("percentage");
