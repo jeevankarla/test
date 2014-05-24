@@ -522,18 +522,18 @@ under the License.
         	<else>
         	    <if-compare operator="not-equals" value="FINACT_TRNS_CANCELED" field="finAccountTrans.statusId">
         	   <!-- if it is cash receipt payemnt and there is deposit transaction cancel here , error for other than cash receipt payments -->
-        	     <set field="isCashPayment" value="${groovy:org.ofbiz.accounting.util.UtilAccounting.isPaymentMethodType(payment ,'CASH')}"/>
-        	    <if-compare operator="equals" value="true" field="isCashPayment" type="Boolean">
+        	   <!--   <set field="isCashPayment" value="${groovy:org.ofbiz.accounting.util.UtilAccounting.isPaymentMethodType(payment ,'CASH')}"/>
+        	    <if-compare operator="equals" value="true" field="isCashPayment" type="Boolean"> -->
         			  <set field="setFinAccountTransStatusMap.finAccountTransId" from-field="payment.finAccountTransId" />
         		      <set field="setFinAccountTransStatusMap.statusId" value="FINACT_TRNS_CANCELED" />
         		      <call-service service-name="setFinAccountTransStatus" in-map-name="setFinAccountTransStatusMap"/>
-        	         <else>
+        	         <!-- <else>
         	             <add-error>
             				<fail-property resource="AccountingUiLabels" property="AccountingFinAccountTransactionIsNotCanceled"/>
             			</add-error>
             			<check-errors/>
         	         </else>
-        	    </if-compare>
+        	    </if-compare> -->
        		</if-compare>
         	</else>
         </if-compare>
