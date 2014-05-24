@@ -368,9 +368,10 @@
         
         <menu-item name="InstBillingPeriodSearch" title="Cr. Inst. Billing Config">
         	<condition>
-        		<and>
-        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-        		</and>        		
+                <or>
+					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
+					 <if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
+				</or>	 
         	</condition>         
             <link target="InstBillingPeriodSearch"/>
         </menu-item>
@@ -416,9 +417,10 @@
        </menu-item>
        --><menu-item name="facilityCustomTimePeriod" title="Cr. Inst. Billing">
         	<condition>
-        		<and>
-        			<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-        		</and>        		
+                <or>
+					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
+					 <if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
+				</or>	 
         	</condition>        
             <link target="facilityCustomTimePeriod">
             </link>
