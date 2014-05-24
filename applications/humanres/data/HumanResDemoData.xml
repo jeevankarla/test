@@ -82,7 +82,7 @@ under the License.
    
    
    <!--  Sample date-->
-    <AcctgFormula acctgFormulaId="DA_BGLR"  description="DA BGLR" formula="0.15*(${BASIC})" hasTable="N" isSlabBased="N" />
+    <AcctgFormula acctgFormulaId="DA_BGLR"  description="DA BGLR" formula="0.15*(${BASIC})*${ATTENDANCE}" hasTable="N" isSlabBased="N" />
     <AcctgFormula acctgFormulaId="DA_GULB"  description="DA GULB" formula="0.09*(${BASIC})" hasTable="N" isSlabBased="N" />
     <AcctgFormula acctgFormulaId="DA_BELL"  description="DA BGLR" formula="0.15*(${BASIC})" hasTable="N" isSlabBased="N" />
      
@@ -117,8 +117,8 @@ under the License.
      <PayrollBenDedRule payrollBenDedRuleId="205" ruleName="HRA rule bellary location" payHeadTypeId="PAYROL_BEN_HRA" fromDate="2001-01-01 12:00:00.0"/>
     <PayrollBenDedCond condValue="BELL" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="205"/>
     <PayHeadPriceAction acctgFormulaId="HRA_BELL" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="205" />
-     
-     
+    <PayrollAttendance partyId="100" customTimePeriodId="APRL_13" lossOfPayDays="2" totalDays="30"/>
+    
 <!-- PayHeadPriceAction
 	PayHeadPriceActionType
 	PayrollBenDedCond

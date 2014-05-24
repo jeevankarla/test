@@ -227,6 +227,7 @@
 	<SecurityPermission permissionId="BYPRODUCTS_CHEQUE" description="Special permission to show and collect cheque payments" />
 	<SecurityPermission permissionId="BYPRODUCTS_CHALLAN" description="Special permission to show and collect challan payments" />
 	<SecurityPermission permissionId="PAYMENTSTATUS_CANCEL" description="Special permission to cancel payment" />
+	<SecurityPermission permissionId="BYPRODUCTS_CRATRETRN" description="Special permission to enter Crate returns" />
 	
 	<SecurityGroupPermission groupId="BYPRODUCTS_CSHENTRY" permissionId="BYPRODUCTS_CASH"/>
 	<SecurityGroupPermission groupId="BYPRODUCTS_CSHENTRY" permissionId="PAYMENTSTATUS_CANCEL"/>
@@ -235,7 +236,8 @@
 	<SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="BYPRODUCTS_CHALLAN"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="PAYMENTSTATUS_CANCEL"/> 
     
-    <!-- instead of adding each group one Permission group added -->
+    <SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="PAYMENTSTATUS_CANCEL"/> 
+     <!-- instead of adding each group one Permission group added -->
      <SecurityGroup groupId="BYPROD_PAYMENT_WING" description="Route Marketing All Types of Payment  Entry"/>
      <SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CASH"/>
 	<SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CHALLAN"/>

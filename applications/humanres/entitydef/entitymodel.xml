@@ -539,7 +539,28 @@ under the License.
             <key-map field-name="approverPartyId" rel-field-name="partyId"/>
         </relation>
     </entity>
-    <entity entity-name="EmplLeaveStatus" package-name="org.ofbiz.humanres.employment">
+    <entity entity-name="PayrollAttendance"
+            package-name="org.ofbiz.humanres.employment"
+            title="Attendance Entry Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="customTimePeriodId" type="id-ne"/>
+        <field name="earnedLeave" type="fixed-point"/>
+        <field name="sickLeave" type="fixed-point"/>
+        <field name="medicalLeave" type="fixed-point"/>
+        <field name="meternityLeave" type="fixed-point"/>
+        <field name="compansatoryLeave" type="fixed-point"/>
+        <field name="lossOfPayDays" type="fixed-point"/>
+        <field name="totalDays" type="fixed-point"/>
+        <prim-key field="partyId"/>
+        <prim-key field="customTimePeriodId"/>
+        <relation type="one" fk-name="PAYROLL_PERIOD_CUST_TP" rel-entity-name="CustomTimePeriod">
+            <key-map field-name="customTimePeriodId"/>
+        </relation>
+         <relation type="one" fk-name="PAYROLL_PERIOD_PARTY" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+  </entity>
+   <entity entity-name="EmplLeaveStatus" package-name="org.ofbiz.humanres.employment">
     	<field name="partyId" type="id-ne"/>
         <field name="leaveTypeId" type="id-ne"/>
         <field name="leaveUomId" type="short-varchar"/>        
