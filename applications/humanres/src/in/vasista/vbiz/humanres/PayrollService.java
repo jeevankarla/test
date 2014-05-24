@@ -659,7 +659,7 @@ public class PayrollService {
 		        return ServiceUtil.returnSuccess(); 
 			}*/
 			
-			private static double fetchAttendance(DispatchContext dctx, Map<String, Object> context) 
+			private static Map<String, Object> fetchAttendance(DispatchContext dctx, Map<String, Object> context) 
 			throws GenericEntityException {
 				Delegator delegator = dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -669,7 +669,7 @@ public class PayrollService {
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				
 				String timePeriodId = (String) context.get("timePeriodId");
-				Map<String, Object> serviceResults;
+				Map<String, Object> serviceResults = ServiceUtil.returnSuccess();
 				BigDecimal attendance = BigDecimal.ONE;
 				BigDecimal lossOfPayDays = BigDecimal.ZERO;
 				List conditionList = UtilMisc.toList(
@@ -679,9 +679,11 @@ public class PayrollService {
 				GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",partyId, "customTimePeriodId",timePeriodId), false);
 				if(UtilValidate.isNotEmpty(payrollAttendance) && UtilValidate.isNotEmpty(payrollAttendance.get("totalDays")) && UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays"))){
 					attendance = ((payrollAttendance.getBigDecimal("totalDays")).subtract(payrollAttendance.getBigDecimal("lossOfPayDays"))).divide(payrollAttendance.getBigDecimal("totalDays"), 2, BigDecimal.ROUND_HALF_DOWN);
+					serviceResults.put("attendance", attendance.doubleValue());
+					serviceResults.put("noOfDays", (payrollAttendance.getBigDecimal("totalDays")).subtract(payrollAttendance.getBigDecimal("lossOfPayDays")).doubleValue());
 				}
-				 
-		        return attendance.doubleValue(); 
+				
+		        return serviceResults; 
 			}
 			
 			/**
@@ -1083,7 +1085,7 @@ public class PayrollService {
 	                	
 	                    List<GenericValue> payHeadPriceActions = delegator.findByAndCache("PayHeadPriceAction", UtilMisc.toMap("payrollBenDedRuleId", payHeadPriceRuleId));
 	                    for (GenericValue payHeadPriceAction: payHeadPriceActions) {
-	                        // yeah, finally here, perform the action, ie, modify the price
+	                        // yeah, finally here, perform the action, ie, modify the amount
 
 	                        if ("PRICE_FLAT".equals(payHeadPriceAction.getString("payHeadPriceActionTypeId"))) {
 	                            String formulaId = payHeadPriceAction.getString("acctgFormulaId");
@@ -1091,15 +1093,18 @@ public class PayrollService {
 	                            
 		    		                double basicSalary = fetchBasicSalaryInternal(dctx, employeeId);
 		    		        		Evaluator evltr = new Evaluator(dctx);
-		    		        		evltr.setFormulaIdAndSlabAmount(formulaId, basicSalary);
+		    		        		evltr.setFormulaIdAndSlabAmount(formulaId, modifyAmount.doubleValue());
 		    						HashMap<String, Double> variables = new HashMap<String, Double>();
 		    						Map formulaVaribules = evltr.getVariableValues();
-		    						//Debug.log("formulaVaribules======"+formulaVaribules);
 		    						double attendance = 1;
-		    						if(formulaVaribules.containsKey("ATTENDANCE")){
-		    							attendance = fetchAttendance(dctx ,context);
-		    							variables.put("ATTENDANCE", attendance);
+		    						if(formulaVaribules.containsKey("ATTENDANCE") || formulaVaribules.containsKey("NOOFDAYS")){
+		    							Map attendanceMap = fetchAttendance(dctx ,context);
+		    							variables.put("ATTENDANCE", (Double)attendanceMap.get("attendance"));
+		    							variables.put("NOOFDAYS", (Double)attendanceMap.get("noOfDays"));
+		    							double noOfDays = ((Double)attendanceMap.get("noOfDays")).doubleValue();
+		    							evltr.setFormulaIdAndSlabAmount(formulaId, noOfDays);
 		    						}
+		    						
 		    						variables.put("BASIC", basicSalary);
 		    						evltr.addVariableValues(variables);        		
 		    						modifyAmount = new BigDecimal( evltr.evaluate());

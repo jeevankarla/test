@@ -119,6 +119,17 @@ under the License.
     <PayHeadPriceAction acctgFormulaId="HRA_BELL" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="205" />
     <PayrollAttendance partyId="100" customTimePeriodId="APRL_13" lossOfPayDays="2" totalDays="30"/>
     
+     <AcctgFormula acctgFormulaId="DA_BELL"  description="DA BGLR" formula="0.15*(${BASIC})" hasTable="N" isSlabBased="N" />
+     
+	<AcctgFormula acctgFormulaId="WASH_BGLR"  description="Wash Allowance" isSlabBased="Y"/>
+    
+	<AcctgFormulaSlabs acctgFormulaId="WASH_BGLR" slabStart="0" slabEnd="30" formula="20*${NOOFDAYS}" description="1-30 days"/>
+        
+    <PayrollBenDedRule payrollBenDedRuleId="300" ruleName="Washing  rule for banglore location" payHeadTypeId="PAYROL_BEN_WASH" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="BGLR" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="300"/>
+    <PayHeadPriceAction acctgFormulaId="WASH_BGLR" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="300" />
+    
+   
 <!-- PayHeadPriceAction
 	PayHeadPriceActionType
 	PayrollBenDedCond
