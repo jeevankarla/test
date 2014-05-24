@@ -72,7 +72,7 @@
         <set from-field="nowTimestamp" field="newEntity.lastModifiedDate"/>
         <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
         <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
-        <create-value value-field="newEntity"/>
+        <create-value  or-store="true" value-field="newEntity"/>
     </simple-method>
     
      <simple-method method-name="updateVehicleTripStatus" short-description="Update Vehicle Trip Status">
