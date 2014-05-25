@@ -557,7 +557,7 @@ public class ByProductNetworkServices {
 	 
 	 public static List getByProdShipmentIds(Delegator delegator,Timestamp fromDate,Timestamp thruDate,List routeIds){
 			
-			List conditionList= FastList.newInstance(); 
+		 List conditionList= FastList.newInstance(); 
 			List shipmentList =FastList.newInstance();
 			List shipments = FastList.newInstance();
 			Timestamp dayBegin = UtilDateTime.nowTimestamp();
@@ -591,6 +591,40 @@ public class ByProductNetworkServices {
 			
 			return shipments;
 	}
+	 public static List getAllShipmentIds(Delegator delegator,Timestamp fromDate,Timestamp thruDate){
+			List conditionList= FastList.newInstance(); 
+			List shipmentList =FastList.newInstance();
+			List shipments = FastList.newInstance();
+			Timestamp dayBegin = UtilDateTime.nowTimestamp();
+			Timestamp dayEnd = UtilDateTime.getDayEnd(thruDate);
+			try{
+				List<GenericValue> shipmentTypeIds = delegator.findList("ShipmentType",EntityCondition.makeCondition("parentTypeId", EntityOperator.IN ,UtilMisc.toList("LMS_SHIPMENT","LMS_SHIPMENT_SUPPL","DIRECT_SHIPMENT")) , null , null, null, false);
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.IN , EntityUtil.getFieldListFromEntityList(shipmentTypeIds, "shipmentTypeId", true)));
+			}catch (Exception e) {
+				Debug.logError(e, "Exception while getting shipment ids ", module);		   
+			}
+			
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+			
+			if(!UtilValidate.isEmpty(fromDate)){
+				dayBegin = UtilDateTime.getDayStart(fromDate);
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,dayBegin));
+			}
+			
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,dayEnd));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
+			try {
+				shipmentList =delegator.findList("Shipment", condition, null , null, null, false);
+			}catch (Exception e) {
+				Debug.logError(e, "Exception while getting shipment ids ", module);		   
+			}
+			if(!UtilValidate.isEmpty(shipmentList)){
+				shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
+			}		
+			
+			return shipments;
+	}
+	 
 	   
 	 public static List getDayShipmentIds(Delegator delegator,Timestamp fromDate, Timestamp thruDate,String shipmentTypeId,List routeIds){
 			//TO DO:for now getting one shipment id  we need to get pm and am shipment id irrespective of Shipment type Id
@@ -4664,7 +4698,12 @@ Debug.logInfo("result= " + result, module);
 	            return ServiceUtil.returnError("thruDate cannot be empty");        	
 	        }           
 	        String subscriptionType = (String) context.get("subscriptionType");
-	        Boolean onlyVendorAndPTCBooths = (Boolean) context.get("onlyVendorAndPTCBooths");        
+	        Boolean onlyVendorAndPTCBooths = (Boolean) context.get("onlyVendorAndPTCBooths"); 
+	        
+	        boolean includeReturnOrders= Boolean.FALSE;//always excluding if externally not set
+	        if(context.get("includeReturnOrders") != null){
+	        	includeReturnOrders = (Boolean)context.get("includeReturnOrders");
+	        }
 	    	List<GenericValue> orderItems= FastList.newInstance();
 	    	Map productAttributes = new TreeMap<String, Object>();    
 	    	List productSubscriptionTypeList = FastList.newInstance();
@@ -4719,6 +4758,42 @@ Debug.logInfo("result= " + result, module);
 	        	if(!UtilValidate.isEmpty(shipmentIds)){        		
 	        		orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
 	        	}
+	        	//Returns Logic Starts here 
+	        	if(includeReturnOrders){
+	        		List returnConditionList= FastList.newInstance(); 
+		        	  returnConditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+		        	  if (!UtilValidate.isEmpty(facilityIds)) {
+		        		  returnConditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN , facilityIds));
+			            }  
+		        	  returnConditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
+		        	  EntityCondition returnCondition = EntityCondition.makeCondition(returnConditionList,EntityOperator.AND);
+		        	  List<GenericValue> returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondition, null, null, null, false);
+		        	  List<GenericValue> newReturnItemList = FastList.newInstance(); 
+		        	  for(GenericValue returnItem:returnItemsList){
+			        	  String boothId= returnItem.getString("originFacilityId");
+			        	  String productSubscriptionTypeId="CASH";
+			        	  String shipId=returnItem.getString("shipmentId");
+			        	  String productId=returnItem.getString("productId");
+			        	  GenericValue facility=delegator.findOne("Facility", UtilMisc.toMap("facilityId",boothId), false);
+			       		  if(UtilValidate.isNotEmpty(facility)){
+			       			  //lets override productSubscriptionTypeId based on facility category
+			       			 if(facility.getString("categoryTypeEnum").equals("SO_INST")){
+				       			  productSubscriptionTypeId = "SPECIAL_ORDER";
+				       		  }else if(facility.getString("categoryTypeEnum").equals("CR_INST")){
+				       			 productSubscriptionTypeId = "CREDIT";
+				       		  }
+			       		  }
+			       		  //to Get related Order for return 
+			       	      GenericValue returnHeaderOrderItem = EntityUtil.getFirst(EntityUtil.filterByAnd(orderItems, UtilMisc.toMap("productId", productId,"originFacilityId",boothId,"shipmentId",shipId,"productSubscriptionTypeId",productSubscriptionTypeId))); 
+			       	      //making Same record with  minus Quantity
+			       	      GenericValue newOrderReturnItem  = delegator.makeValue("OrderHeaderItemProductShipmentAndFacility");
+				       	 newOrderReturnItem.putAll(returnHeaderOrderItem);
+				       	 newOrderReturnItem.set("quantity",(returnItem.getBigDecimal("returnQuantity").negate()));
+				       	 newReturnItemList.add(newOrderReturnItem);
+		        	  }
+		        	  orderItems.addAll(newReturnItemList);
+	        	}//end of returns check
+	        	
 	    	} catch (GenericEntityException e) {
 	            Debug.logError(e, module);
 	        }
@@ -4760,7 +4835,7 @@ Debug.logInfo("result= " + result, module);
 	            	adjustmentOrderList.add(orderItem.getString("orderId"));
 	            }
 	            totalRevenue = totalRevenue.add(revenue);
-	            totalPacket = totalPacket.add(packetQuantity);
+	            totalPacket = totalPacket.add(packetQuantity);        
 	            BigDecimal vatAmount=ZERO;
 	            if(UtilValidate.isNotEmpty(orderItem.getBigDecimal("vatAmount"))){
 	             vatAmount  = orderItem.getBigDecimal("vatAmount"); 
@@ -4773,7 +4848,6 @@ Debug.logInfo("result= " + result, module);
 	    		BigDecimal snf = ZERO;
 	    		String productName = orderItem.getString("productName");
 				String productId = orderItem.getString("productId");
-				
 				Map prodAttrMap = (Map)productAttributes.get(orderItem.getString("productId"));
 	//Debug.logInfo("orderItem=" + orderItem, module); 
 				if (prodAttrMap != null) {
@@ -4851,15 +4925,15 @@ Debug.logInfo("result= " + result, module);
 					Map boothMap = (Map)boothTotals.get(boothId);
 					BigDecimal runningTotal = (BigDecimal)boothMap.get("total");
 					runningTotal = runningTotal.add(quantity);
+					boothMap.put("total", runningTotal);
+					
 					BigDecimal runningPacketTotal = (BigDecimal)boothMap.get("packetQuantity");
 					runningPacketTotal = runningPacketTotal.add(packetQuantity);
+					boothMap.put("packetQuantity", runningPacketTotal);
 					
-					boothMap.put("total", runningTotal);
 					BigDecimal runningTotalRevenue = (BigDecimal)boothMap.get("totalRevenue");
 					runningTotalRevenue = runningTotalRevenue.add(revenue);
 					boothMap.put("totalRevenue", runningTotalRevenue);
-					runningPacketTotal = runningPacketTotal.add(packetQuantity);
-					boothMap.put("packetQuantity", runningPacketTotal);
 					
 					BigDecimal runningVatRevenue = (BigDecimal)boothMap.get("vatRevenue");
 					runningVatRevenue = runningVatRevenue.add(vatRevenue);
@@ -5320,7 +5394,6 @@ Debug.logInfo("result= " + result, module);
 			totalFat = totalFat.setScale(decimals, rounding);    
 			totalSnf = totalSnf.setScale(decimals, rounding);   
 			totalVatRevenue = totalVatRevenue.setScale(decimals, rounding);
-			
 			/*// set scale
 	        for ( Map.Entry<String, Object> entry : zoneTotals.entrySet() ) {
 	        	Map<String, Object> zoneValue = (Map<String, Object>)entry.getValue();
@@ -5404,7 +5477,7 @@ Debug.logInfo("result= " + result, module);
 	        	tempVal = tempVal.setScale(decimals, rounding); 
 	        	supplyTypeValue.put("vatRevenue", tempVal);	
 	        	
-	        }	        
+	        }	      
 			Map<String, Object> result = FastMap.newInstance();        
 	        result.put("totalQuantity", totalQuantity);
 	        result.put("totalRevenue", totalRevenue);

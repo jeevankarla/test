@@ -395,7 +395,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</#list> 
 						</select>
 					<#--><input type="submit" value="Download" class="buttontext"/>-->
-					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	      		    <input type="submit" value="TXT" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckList</@ofbizUrl>');" class="buttontext"/>
 					<input type="submit" value="CSV" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckListCsv.csv</@ofbizUrl>');" class="buttontext"/>
 					</td>

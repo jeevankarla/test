@@ -24,15 +24,18 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.product.price.PriceServices;
 import in.vasista.vbiz.byproducts.ByProductReportServices;
 
+dctx=dispatcher.getDispatchContext();
 if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 	customTimePeriod =delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 	fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 	thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 	dayBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 	dayEnd = UtilDateTime.getDayEnd(thruDateTime , timeZone, locale);
+	context.fromDateTime = fromDateTime;
+	context.thruDateTime = thruDateTime;
 }
 
-if(UtilValidate.isNotEmpty(parameters.saleDate)){
+/*if(UtilValidate.isNotEmpty(parameters.saleDate)){
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	try {
 		fromDateTime=new java.sql.Timestamp(sdf.parse(parameters.saleDate).getTime());
@@ -44,44 +47,100 @@ if(UtilValidate.isNotEmpty(parameters.saleDate)){
 	dayEnd = UtilDateTime.getDayEnd(thruDateTime ,-1, timeZone, locale);
 	context.saleDate = fromDateTime;
 	context.supplyDate = dayBegin;
-}
-conditionList=[];
+}*/
+/*conditionList=[];
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_EQUAL , null));
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, "2093"));
-
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1074","S1187")));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
-boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);
+boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
+boothsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
 
-//boothsList = ByProductServices.getAllByproductBooths(delegator).get("boothsIdsList");
-if(UtilValidate.isNotEmpty(parameters.saleDate)){
-	boothTotalsMap = ByProductReportServices.getBoothSaleAndPaymentTotals(dispatcher.getDispatchContext(), ["userLogin":userLogin ,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd],true);
-}
+boothTotalsWithReturn=[:];
+periodBoothTotals=[:];
+List shipmentIds = ByProductNetworkServices.getAllShipmentIds(delegator, dayBegin, dayEnd);//include Adhoc SALE
 if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
-	boothTotalsMap = ByProductReportServices.getBoothSaleAndPaymentTotals(dispatcher.getDispatchContext(), ["userLogin":userLogin ,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd],false);
+	boothTotalsWithReturn = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
 }
-boothTotals = boothTotalsMap.get("boothTotalsMap");
+if(UtilValidate.isNotEmpty(boothTotalsWithReturn)){
+	boothTotals=boothTotalsWithReturn.get("boothTotals");
+}
+
+List<GenericValue> paymentsList = FastList.newInstance();
+conditionList=[];
+facilityIdsList=[];
+	paidPaymentInput=[:];
+	paidPaymentInput["fromDate"]=dayBegin;
+	paidPaymentInput["thruDate"]=dayEnd;
+	paidPaymentInput["paymentMethodTypeId"]="CASH_PAYIN";
+	paidPaymentInput["facilityIdsList"]=boothsList;
+	
+	boothPaidDetail=[:];
+	//Lets find each type of payment
+	boothCashPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
+	boothCashPaymentsList = boothCashPaidDetail["boothPaymentsList"];
+	boothCashRouteIdsMap= boothCashPaidDetail["boothRouteIdsMap"];
+	
+	paidPaymentInput["paymentMethodTypeId"]="CHEQUE_PAYIN";
+	boothChequePaidDetail=ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
+	boothChequePaymentsList = boothChequePaidDetail["boothPaymentsList"];
+	boothChequeRouteIdsMap= boothChequePaidDetail["boothRouteIdsMap"];
+	
+	paidPaymentInput["paymentMethodTypeId"]="CHALLAN_PAYIN";
+	boothChallanPaidDetail=ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
+	boothChallanPaymentsList = boothChallanPaidDetail["boothPaymentsList"];
+	boothChallanRouteIdsMap= boothChallanPaidDetail["boothRouteIdsMap"];
+	
 categoryTotalMap = [:];
 categorysList = [];
 categorysParloursList = [];
 Iterator boothTotIter = boothTotals.entrySet().iterator();
 while (boothTotIter.hasNext()) {
 	Map.Entry boothEntry = boothTotIter.next();
-	booth = boothEntry.getKey();
-	facility = delegator.findOne("Facility",[facilityId : booth], false);
-	categoryType = facility.categoryTypeEnum;
-	if((booth.toString()).startsWith("E")){
-		categoryType = "PARLOUR_EX";
+	boothId = boothEntry.getKey();
+	BigDecimal totalRevenue=BigDecimal.ZERO;
+	totalRevenue=boothEntry.getValue().getAt("totalRevenue");
+    cashAmount=0;
+    chequeAmount=0;
+    challanAmount=0;
+	boothCashPaymentsList.each{boothPayment->
+		if(boothId==boothPayment.get("facilityId")){
+			cashAmount+=boothPayment.get("amount");
+		}
 	}
-	if(categoryTotalMap.containsKey(categoryType)){
+	boothChequePaymentsList.each{boothPayment->
+		if(boothId==boothPayment.get("facilityId")){
+			chequeAmount+=boothPayment.get("amount");
+		}
+	}
+	boothChallanPaymentsList.each{boothPayment->
+		if(boothId==boothPayment.get("facilityId")){
+			challanAmount+=boothPayment.get("amount");
+		}
+	}
+	BigDecimal invoiceAmount = totalRevenue;
+	BigDecimal totalPaidAmnt=(cashAmount+chequeAmount+challanAmount);
+	BigDecimal netAmount =(BigDecimal) invoiceAmount.subtract(totalPaidAmnt);
+   boothTotalsMap=[:];
+   boothTotalsMap.put("facilityId", boothId);
+   boothTotalsMap.put("invoiceAmount", invoiceAmount);
+   boothTotalsMap.put("cashAmount", cashAmount);
+   boothTotalsMap.put("chequeAmount", chequeAmount);
+   boothTotalsMap.put("challanAmount", challanAmount);
+   boothTotalsMap.put("chequeRetnAmount", 0);
+   boothTotalsMap.put("netAmount", netAmount);
+   
+	facility = delegator.findOne("Facility",[facilityId : boothId], false);
+	categoryType = facility.categoryTypeEnum;
+		if(categoryTotalMap.containsKey(categoryType)){
 		tempCatList = categoryTotalMap.get(categoryType);
-		tempCatList.addAll(boothEntry.getValue());
+		tempCatList.addAll(boothTotalsMap);
 		categoryTotalMap.putAt(categoryType, tempCatList);
 	}else{
 		tempList = [];
-		tempList.add(boothEntry.getValue());
+		tempList.add(boothTotalsMap);
 		categoryTotalMap.putAt(categoryType, tempList);
 		categorysList.add(categoryType);
 	}
@@ -95,7 +154,6 @@ if(parloursOnly == "Y"){
 }else{
 	context.categorysList = categorysList;
 }
-//Debug.log("categorysParloursList--------------------------->"+categorysParloursList);
 
 
 
