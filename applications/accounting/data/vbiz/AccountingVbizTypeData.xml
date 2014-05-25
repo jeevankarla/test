@@ -661,6 +661,8 @@
     <RateType rateTypeId="HIGH_PAY_RATE" description="Highest Pay Rate"/>
     <RateType rateTypeId="LOW_PAY_RATE" description="Lowest Pay Rate"/>
     <InvoiceItemType invoiceItemTypeId="INV_TE_ITEM"/>
+    <InvoiceItemType invoiceItemTypeId="INCO_FINEPENALTY_CHQ"/>
+    
      
     <!--  Contra Entry GlAccount  -->
     <GlAccountType description="Contra Adjustment" glAccountTypeId="CONTRA_ADJUSTMENT" hasTable="N" parentTypeId=""/>
