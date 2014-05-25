@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ShipmentType description="RM Adhoc Shipment" hasTable="N" parentTypeId="" shipmentTypeId="RM_DIRECT_SHIPMENT"/>
+<ShipmentType description="Adhoc Shipment" hasTable="N" parentTypeId="" shipmentTypeId="DIRECT_SHIPMENT"/>
+<ShipmentType description="RM Adhoc Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="RM_DIRECT_SHIPMENT"/>
 <Enumeration enumId="RM_DIRECT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="RM_DIRECT_CHANNEL" description="Retail Marketing Direct Sales Channel" />
     
 
