@@ -4904,7 +4904,7 @@ public class ByProductServices {
 	        		return ServiceUtil.returnError("No Order Items available to Cacnel Shipment:" + shipmentId+" for BoothId:"+originFacilityId);
 	     		}else{ 	
 	     			try{
-		        		dispatcher.runSync("cancelLMSShipmentInternal", UtilMisc.toMap("shipmentId", shipmentId,"userLogin", userLogin));    		
+		        		dispatcher.runSync("cancelByProdShipmentInternal", UtilMisc.toMap("shipmentIds", UtilMisc.toList(shipmentId),"userLogin", userLogin));    		
 		        	}catch (GenericServiceException e) {
 		    			// TODO: handle exception
 		        		Debug.logError("Unable to get records from DataBase To cancel Shipment "+e, module);
