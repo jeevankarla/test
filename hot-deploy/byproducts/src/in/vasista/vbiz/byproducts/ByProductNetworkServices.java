@@ -7033,6 +7033,101 @@ Debug.logInfo("result= " + result, module);
 			 result.put("facilityPenalty", facilityPenalty);
 			 return result;
 		 }
+	    public static Map getChequePenaltyTotals(DispatchContext dctx, Timestamp fromDate, Timestamp thruDate, List facilityList, GenericValue userLogin) {
+			 Delegator delegator = dctx.getDelegator();
+			 LocalDispatcher dispatcher = dctx.getDispatcher();
+			 Map result = FastMap.newInstance();
+			 List boothsList = FastList.newInstance();
+			 if(UtilValidate.isEmpty(facilityList)){
+				 boothsList = (List)getAllBooths(delegator, null).get("boothsList");
+			 }
+			 else{
+				 boothsList.addAll(facilityList);
+			 }
+			 Map daywiseBoothTotals = FastMap.newInstance();
+			 int intervalDays = (UtilDateTime.getIntervalInDays(fromDate, thruDate)+1);
+			 List<GenericValue> invoices = null;
+			 Map penaltyPaymentReferences = FastMap.newInstance();
+			 Map facilityPenalty = FastMap.newInstance();
+			 Map facilityPenaltyDayWise = FastMap.newInstance();
+			 try{
+				 List returnChequeExpr = FastList.newInstance();
+				 returnChequeExpr.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_VOID"));
+				 returnChequeExpr.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CHEQUE_PAYIN"));
+		    	 returnChequeExpr.add(EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"));
+		    	 EntityCondition cond = EntityCondition.makeCondition(returnChequeExpr, EntityOperator.AND);
+		    	 List<GenericValue> returnPayments = delegator.findList("Payment", cond, UtilMisc.toSet("paymentId", "paymentRefNum", "amount"), null, null, false);
+		    	List canceldPaymentIds=(List)EntityUtil.getFieldListFromEntityList(returnPayments, "paymentId", true);
+		    	 if(UtilValidate.isNotEmpty(returnPayments)){
+		    		 for(GenericValue returns : returnPayments){
+		    			 Map tempMap = FastMap.newInstance();
+		    			 String paymentId = returns.getString("paymentId");
+		    			 String paymentRefNum = returns.getString("paymentRefNum");
+		    			 BigDecimal amount = (BigDecimal)returns.get("amount");
+		    			 tempMap.put("referenceNum", paymentRefNum);
+		    			 tempMap.put("amount", amount);
+		    			 penaltyPaymentReferences.put(paymentId, tempMap);
+		    		 }
+		    	 }
+				
+				 List conditionList = FastList.newInstance();
+		    	 conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "MIS_INCOME_IN"));
+		    	 conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.IN, canceldPaymentIds));
+	    		 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+	   			 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+	   			 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+		    	 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    		 invoices = delegator.findList("Invoice", condition, UtilMisc.toSet("invoiceId","invoiceDate","facilityId","referenceNumber"), null, null, false);
+	    		 
+	    		 if(UtilValidate.isNotEmpty(invoices)){
+					 List facilities = (List)EntityUtil.getFieldListFromEntityList(invoices, "facilityId", true);
+					 if(UtilValidate.isNotEmpty(facilities)){
+						 for(int i = 0 ;i<facilities.size();i++){
+							 String facilityId = (String)facilities.get(i);
+							 BigDecimal totalAmount=BigDecimal.ZERO;
+							 Map dayWisePenalty = FastMap.newInstance();
+							 List<GenericValue> facilityInvoices = EntityUtil.filterByCondition(invoices, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+							 Map dayPenalty = FastMap.newInstance();
+							 if(UtilValidate.isNotEmpty(facilityInvoices)){
+								 for(int k =0; k<intervalDays; k++){
+									 Timestamp supplyDate = UtilDateTime.addDaysToTimestamp(fromDate, k);
+									 Timestamp dayStart = 	UtilDateTime.getDayStart(supplyDate);
+									 Timestamp dayEnd = UtilDateTime.getDayEnd(supplyDate);
+									 List dayCond = FastList.newInstance();
+									 dayCond.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
+									 dayCond.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+									 List<GenericValue> dayPartyPenalty = (List)EntityUtil.filterByCondition(facilityInvoices, EntityCondition.makeCondition(dayCond));
+									 List invoiceDetail = FastList.newInstance();
+									 if(UtilValidate.isNotEmpty(dayPartyPenalty)){
+										 for(int j=0;j<dayPartyPenalty.size();j++){
+											 Map invoiceMap = FastMap.newInstance();
+											 GenericValue eachPartyPenalty = dayPartyPenalty.get(j);
+											 String invoiceId = eachPartyPenalty.getString("invoiceId");
+											 String paymentRefNum = eachPartyPenalty.getString("referenceNumber");
+											 BigDecimal amount = InvoiceWorker.getInvoiceTotal(delegator, invoiceId);
+											 totalAmount=totalAmount.add(amount);
+											 invoiceMap.put("amount", amount);
+											 invoiceMap.put("paymentId", paymentRefNum);
+											 invoiceDetail.add(invoiceMap);
+										 }
+										 dayPenalty.put(dayStart, invoiceDetail);
+									 }
+								 }
+							 }
+							 facilityPenaltyDayWise.put(facilityId, dayPenalty);
+							 facilityPenalty.put(facilityId, totalAmount);
+						 }
+					 }
+				}
+			 }catch(Exception e){
+				 Debug.logError(e, e.toString(), module);
+	             return ServiceUtil.returnError(e.toString());
+			 }
+			 result.put("returnPaymentReferences", penaltyPaymentReferences);
+			 result.put("facilityPenaltyDayWise", facilityPenaltyDayWise);
+	    	 result.put("facilityPenalty", facilityPenalty);
+			 return result;
+		 }
 	   
 	    public static Map<String, Object>  getItemIssuenceForShipments(DispatchContext dctx, Map<String, ? extends Object> context){
 		     Delegator delegator = dctx.getDelegator();

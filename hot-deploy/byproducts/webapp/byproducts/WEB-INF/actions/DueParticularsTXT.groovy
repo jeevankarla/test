@@ -52,7 +52,7 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_EQUAL , null));
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, "2093"));
-conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1074","S1187")));
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1074","S1187","S1002","C057")));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
 boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
@@ -67,7 +67,8 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 if(UtilValidate.isNotEmpty(boothTotalsWithReturn)){
 	boothTotals=boothTotalsWithReturn.get("boothTotals");
 }
-
+penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, dayBegin, dayEnd, boothsList, userLogin);
+facilityPenaltyMap = penaltyResult.get("facilityPenalty");
 List<GenericValue> paymentsList = FastList.newInstance();
 conditionList=[];
 facilityIdsList=[];
@@ -121,15 +122,22 @@ while (boothTotIter.hasNext()) {
 		}
 	}
 	BigDecimal invoiceAmount = totalRevenue;
+	BigDecimal chequePenality=BigDecimal.ZERO;
+	if(UtilValidate.isNotEmpty(facilityPenaltyMap.get(boothId))){
+		chequePenality=facilityPenaltyMap.get(boothId);
+	}
+	invoiceAmount=invoiceAmount.add(chequePenality);
+	Debug.log("invoiceAmount==="+invoiceAmount+"====chequePenality==="+chequePenality+"==invoiceAmount==="+invoiceAmount);
 	BigDecimal totalPaidAmnt=(cashAmount+chequeAmount+challanAmount);
 	BigDecimal netAmount =(BigDecimal) invoiceAmount.subtract(totalPaidAmnt);
    boothTotalsMap=[:];
    boothTotalsMap.put("facilityId", boothId);
-   boothTotalsMap.put("invoiceAmount", invoiceAmount);
+   boothTotalsMap.put("invoiceAmount", totalRevenue);
    boothTotalsMap.put("cashAmount", cashAmount);
    boothTotalsMap.put("chequeAmount", chequeAmount);
    boothTotalsMap.put("challanAmount", challanAmount);
-   boothTotalsMap.put("chequeRetnAmount", 0);
+   boothTotalsMap.put("chequeRetnAmount", chequePenality);
+   boothTotalsMap.put("totalPaid", totalPaidAmnt);
    boothTotalsMap.put("netAmount", netAmount);
    
 	facility = delegator.findOne("Facility",[facilityId : boothId], false);
