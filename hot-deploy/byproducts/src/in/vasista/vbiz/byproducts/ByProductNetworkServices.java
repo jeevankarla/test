@@ -5543,7 +5543,6 @@ Debug.logInfo("result= " + result, module);
 			Map result = ServiceUtil.returnSuccess();
 			List shipments = getByProdShipmentIds(delegator, fromDate, thruDate);
 			List conditionList = FastList.newInstance();
-			
 			try {
 				conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipments));
 				conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
@@ -5572,8 +5571,10 @@ Debug.logInfo("result= " + result, module);
 	        			for(GenericValue eachItem : returnItems){
 	        				BigDecimal unitPrice = eachItem.getBigDecimal("returnPrice");
 	        				BigDecimal retQty = eachItem.getBigDecimal("returnQuantity");
-	        				BigDecimal tempAmount = unitPrice.multiply(retQty);
-	        				creditAmount = creditAmount.add(tempAmount);
+	        				if(UtilValidate.isNotEmpty(unitPrice)){
+	        					BigDecimal tempAmount = unitPrice.multiply(retQty);
+		        				creditAmount = creditAmount.add(tempAmount);
+	        				}
 	        			}
 	        			if(creditAmount.compareTo(BigDecimal.ZERO)>0){
 	        				  Map paymentInputMap = FastMap.newInstance();
