@@ -482,7 +482,6 @@ public class ByProductChangeIndentServices {
 	  					//quantity = ByProductNetworkServices.convertCratesToPackets(dctx, UtilMisc.toMap("userLogin", userLogin, "productId", productId, "crateQuantity",crateQuantity));
   	    		  
 	  				}
-	  				  
 	  				  conditionList.clear();
 	  				  conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	  				  if(!productSubscriptionTypeId.equals("EMP_SUBSIDY")){
@@ -506,7 +505,6 @@ public class ByProductChangeIndentServices {
   							   killerCase = true;
 	  					   }
 	  				  }
-	  				  
 	  				  
 	  				  if(UtilValidate.isEmpty(subscriptionProductsList)){
 	  					  indentChanged = true;
@@ -550,9 +548,6 @@ public class ByProductChangeIndentServices {
 	  				  // subscription already exists
   				  
 	  				  boolean createFlag = true;
-	  				  if(productsList.contains(productId)){
-	  					  activeProdList.add(productId);
-	  				  }
 	  				  GenericValue subscriptionProduct = EntityUtil.getFirst(subscriptionProductsList);
 	  				  Timestamp extSubsDate = (Timestamp)subscriptionProduct.get("fromDate");
 	  				  if(extSubsDate.compareTo(UtilDateTime.getDayStart(effectiveDate)) != 0 ){
@@ -618,7 +613,7 @@ public class ByProductChangeIndentServices {
 						  }
 					  }
 	  			}//end of product Qty List
-
+	  			
 	  			List condList = FastList.newInstance();
 	  			Timestamp nextEffDay = UtilDateTime.addDaysToTimestamp(effectiveDate, 1);
 	  			if(routeChange || killerCase){
@@ -637,17 +632,25 @@ public class ByProductChangeIndentServices {
 			  	}
 	  			
 	  			if(enableContinuousIndent && !productSubscriptionTypeId.equalsIgnoreCase("EMP_SUBSIDY") && (routeChange || killerCase)){
+	  				
 	  				condList.clear();
 	  			   	condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
 	  	  			condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
-	  	  			condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
-	  	  			condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
+	  	  			condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+	  	  			condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)), 
+	  	  					EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)));
 	  	  			EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	  	  			List<GenericValue> getTodaysIndent = delegator.findList("SubscriptionProduct", cond, null, null, null, false);
+	  	  			List<GenericValue> endSubscriptionList = EntityUtil.filterByCondition(getTodaysIndent, EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+	  	  			for(GenericValue eachSubc : endSubscriptionList){
+	  	  				eachSubc.set("thruDate", UtilDateTime.getDayEnd(effectiveDate));
+	  	  				eachSubc.store();
+	  	  			}
+	  	  			
 	  	  			List<String> todayProductList = EntityUtil.getFieldListFromEntityList(getTodaysIndent, "productId", true);
 	  	  			List<String> nxtDayContIndentProd = FastList.newInstance();
 	  	  			for(String eachProductId : todayProductList){
-	  	  				if(contIndentProductList.contains(eachProductId)){
+	  	  				if(contIndentProductList.contains(eachProductId) && !nxtDayContIndentProd.contains(eachProductId)){
 	  	  					nxtDayContIndentProd.add(eachProductId);
 	  	  				}
 	  	  			}
