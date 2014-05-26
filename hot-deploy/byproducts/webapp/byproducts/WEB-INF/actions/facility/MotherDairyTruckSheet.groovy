@@ -63,6 +63,8 @@ canProductsList=ProductWorker.getProductsByCategory(delegator ,"CAN" ,null);
 crateProductsIdsList=EntityUtil.getFieldListFromEntityList(crateProductsList, "productId", false);
 canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "productId", false);
 shipments = [];
+tempRouteIdsLst=[];
+String subscriptionTypeId="";
 if(parameters.shipmentId){
 	if(parameters.shipmentId == "allRoutes"){
 		shipments = delegator.findByAnd("Shipment", [estimatedShipDate : estimatedDeliveryDateTime , shipmentTypeId : parameters.shipmentTypeId, statusId: "GENERATED"],["routeId"]);
@@ -76,6 +78,15 @@ if(parameters.shipmentId){
 		shipments.add(shipment);
 	}
 	
+}
+if(parameters.shipmentTypeId){
+	if((parameters.shipmentTypeId).equals("AM_SHIPMENT")){
+		subscriptionTypeId = "AM";
+	}else{
+		subscriptionTypeId = "PM";
+	}
+   result=ByProductNetworkServices.getRoutesByAMPM(dctx,UtilMisc.toMap("supplyType", subscriptionTypeId, "userLogin", userLogin));
+   tempRouteIdsLst = result.get("routeIdsList");
 }
 /*piecesPerCrate=[:];
 piecesPerCan=[:];
@@ -117,6 +128,14 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		shipId = (EntityUtil.getFirst(currentRouteShipment)).get("shipmentId");
 		orderHeader = delegator.findList("OrderHeader", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipId), UtilMisc.toSet("originFacilityId"), null, null, false);
 		boothsList = EntityUtil.getFieldListFromEntityList(orderHeader, "originFacilityId", true);
+		
+		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList));
+		conditionList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.IN, tempRouteIdsLst));
+		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	 
+		boothsList = delegator.findList("FacilityGroupAndMemberAndFacility",condition , null, ['sequenceNum','facilityName'], null, false);
+		boothsList = EntityUtil.orderBy(boothsList, ['sequenceNum']);
+		boothsList = EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", true);
 		tempShipList = [];
 		tempShipList.add(shipId);
 		routeShipmentMap.put(routeId, shipId);
