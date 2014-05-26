@@ -1684,10 +1684,15 @@ public class LmsServices {
 								       	tempfromDate = activeRate.getTimestamp("fromDate");
 								    	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))>0){
 								    		if(UtilValidate.isNotEmpty(thruDate)){
-								    		  activeRate.set("thruDate", thruDate);
+								    		   activeRate.set("thruDate", thruDate);
+								    		   isNewShpRtlr=false;
+								    		}else if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))!=0){
+								    			activeRate.set("rateAmount",rateAmount);
+								    			activeRate.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+								    			isNewShpRtlr=true;
 								    		}
 								       		activeRate.store();
-								       		isNewShpRtlr=false;
+								       		
 									    }
 								       	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))==0){
 								       		activeRate.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
