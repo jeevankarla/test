@@ -3994,6 +3994,7 @@ public class ByProductNetworkServices {
 	    	String invoiceItemTypeId = (String) context.get("invoiceItemTypeId"); 
 	    	String invoiceTypeId = (String) context.get("invoiceTypeId"); 
 	    	Timestamp  invoiceDateParameter=  (Timestamp)context.get("invoiceDate");
+	    	String description = (String) context.get("description"); 
 	    	
 	    	String referenceNumber = (String) context.get("referenceNumber"); 
 	    
@@ -4022,6 +4023,7 @@ public class ByProductNetworkServices {
 		    createInvoiceContext.put("facilityId", facilityId);
 		    createInvoiceContext.put("invoiceTypeId", invoiceTypeId);
 		    createInvoiceContext.put("referenceNumber", referenceNumber);
+		    createInvoiceContext.put("description", description);
 		    createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
 		    createInvoiceContext.put("userLogin", userLogin);
 		    
@@ -7028,9 +7030,10 @@ Debug.logInfo("result= " + result, module);
 	             return ServiceUtil.returnError(e.toString());
 			 }
 			 result.put("returnPaymentReferences", penaltyPaymentReferences);
-	    	 result.put("facilityPenalty", facilityPenalty);
+			 result.put("facilityPenalty", facilityPenalty);
 			 return result;
 		 }
+	   
 	    public static Map<String, Object>  getItemIssuenceForShipments(DispatchContext dctx, Map<String, ? extends Object> context){
 		     Delegator delegator = dctx.getDelegator();
 		        LocalDispatcher dispatcher = dctx.getDispatcher();
