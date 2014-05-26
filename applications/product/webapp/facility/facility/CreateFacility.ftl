@@ -103,7 +103,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-				    	if( !categoryTypeEnum != "CR_INST" && (lastName).length < 1 ) {
+				    	if( categoryTypeEnum != "CR_INST" && (lastName).length < 1 ) {
 					    	$('#lastName').css('background', 'yellow'); 
 					       	setTimeout(function () {
 					           	$('#lastName').css('background', 'white').focus(); 
