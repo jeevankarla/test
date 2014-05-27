@@ -291,7 +291,7 @@ under the License.
         -->
     </service>
     <service name="createAcctgTransEntry" default-entity-name="AcctgTransEntry" engine="simple"
-            location="component://accounting/script/org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTransEntry" auth="true">
+            location="component://accounting/script/org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="createAcctgTransEntry" auth="true" transaction-timeout="600">
         <description>Add an Entry to a AcctgTrans.  Will use baseCurrencyUomId in PartyAcctgPreference if no currencyUomId is in parameters.</description>
         <required-permissions join-type="OR">
         	<permission-service service-name="acctgTransactionPermissionCheck" main-action="CREATE"/>
