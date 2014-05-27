@@ -28,12 +28,12 @@ import in.vasista.vbiz.byproducts.ByProductReportServices;
 userLogin= context.userLogin;
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
-partyCode = parameters.partyCode;
+partyCode = parameters.boothId;
 dctx = dispatcher.getDispatchContext();
-def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
-	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate+" 00:00:00").getTime());
-	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate+" 00:00:00").getTime());
+	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
+	thruDateTime = new java.sql.Timestamp(sdf.parse(thruDate).getTime());
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }

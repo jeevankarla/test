@@ -96,6 +96,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("prodReturnDateId","thuDateId");
 		makeDatePicker("saleFromDateId","saleThruDateId");
 		makeDatePicker("vatFromDateId","vatThruDateId");
+		makeDatePicker("effFromDate","effThruDate");
 		makeDatePicker("smsNotify","");
 		makeDatePicker("CASHFromDateId","");
 		makeDatePicker("CashReceiptDateId","");
@@ -546,14 +547,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
       				<tr class="alternate-row">
 			      	   <form id="paymentOBandCB" name="paymentOBandCB" method="post" action="<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>" target="_blank">        
 			             <td>Partywise Ledger Abstract</td>
-			             <td width="80%" colspan='2'>
-			             From<@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="10" maxlength="22" id="EfffromDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-			             Thru<@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="10" maxlength="22" id="EffthruDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>                               
-			             </br>PTY Code <input type="text" name="partyCode" id="ptyCode" size="10" maxlength="22">
-			             <input type="submit" value="TXT" onClick="javascript:appendParams('paymentOBandCB', '<@ofbizUrl>PartywiseBalanceAbstract.txt</@ofbizUrl>');" class="buttontext"/>
-						 &nbsp;
-						 <input type="submit" value="PDF" onClick="javascript:appendParams('paymentOBandCB', '<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>');" class="buttontext"/>
-			             &nbsp;
+			             <td width="40%">From<input  type="text" size="10pt" id="effFromDate" readonly  name="fromDate"/>
+			      		 To<input  type="text" size="10pt" id="effThruDate" readonly  name="thruDate"/></td>
+			             <td width="40%"></br>Retailer Code <input type="text" name="boothId" id="boothId" size="10" maxlength="22">
+			             	<input type="submit" value="Download" class="buttontext"/>
 			             </td>
 			           </form>
 			        </tr>

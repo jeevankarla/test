@@ -1598,7 +1598,7 @@ public class ByProductNetworkServices {
 					// TODO: handle exception
 					Debug.logError(e, module);
 				}			
-			}		
+			}
 			exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));
 			// lets check the tenant configuration for enableSameDayPmEntry
 			// if not same day entry exclude prev day PM Sales invoices from opening balance
@@ -1646,6 +1646,7 @@ public class ByProductNetworkServices {
 			 }
 				
 			List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
+			
 			exprListForParameters.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN, dayBegin));
 			exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, invoiceStatusList));
 			exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("paidDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
@@ -1655,7 +1656,7 @@ public class ByProductNetworkServices {
 			try{			
 				boothOrdersList = delegator.findList("OrderHeaderFacAndItemBillingInv", paramCond, UtilMisc.toSet("invoiceId") ,null, findOptions, false);
 				//get Opening invoices before given sale date and added to boothOrderList
-				List<GenericValue> obInvoiceList = (List)getOpeningBalanceInvoices(dctx,UtilMisc.toMap("facilityIds",facilityIds,"thruDate", UtilDateTime.addDaysToTimestamp(dayBegin, -1),"isForCalOB","Y")).get("invoiceList");
+				List<GenericValue> obInvoiceList = (List)getOpeningBalanceInvoices(dctx,UtilMisc.toMap("facilityId",facilityId,"thruDate", UtilDateTime.addDaysToTimestamp(dayBegin, -1),"isForCalOB","Y")).get("invoiceList");
 				boothOrdersList.addAll(obInvoiceList);
 			}catch(GenericEntityException e){
 				Debug.logError(e, module);	
@@ -1685,12 +1686,11 @@ public class ByProductNetworkServices {
 				            return ServiceUtil.returnError(null, null, null, getInvoicePaymentInfoListResult);
 				        }
 						Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
-						BigDecimal outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");	
+						BigDecimal outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");
 						invoicePendingAmount = invoicePendingAmount.add(outstandingAmount);				
 						for( GenericValue pendingInvoice : pendingInvoiceList){							
 							invoicePendingAmount = invoicePendingAmount.add(pendingInvoice.getBigDecimal("amountApplied"));
 						}
-					
 					}catch(Exception e){
 						Debug.logError(e, module);	
 						return ServiceUtil.returnError(e.toString());
@@ -1738,7 +1738,8 @@ public class ByProductNetworkServices {
 			
 			List paymentList = new ArrayList(paymentSet);
 			for(int i =0 ; i< paymentList.size(); i++){
-				try{				
+				try{
+					
 					Map result = dispatcher.runSync("getPaymentNotApplied", UtilMisc.toMap("userLogin",userLogin,"paymentId",(String)paymentList.get(i)));
 					advancePaymentAmount = advancePaymentAmount.add((BigDecimal)result.get("unAppliedAmountTotal"));
 				}catch(GenericServiceException e){
@@ -5865,7 +5866,7 @@ Debug.logInfo("result= " + result, module);
 			List invoiceStatusList = UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF");		
 			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,invoiceStatusList));
 			
-			EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);				
+			EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);	
 			try{
 				pendingOBInvoiceList = delegator.findList("InvoiceAndFacility", cond, null ,null, null, false);
 			}catch (Exception e) {
