@@ -126,7 +126,8 @@ under the License.
            <display></display>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}"><display></display>
-        </field>        
+        </field> 
+        <field name="paymentDate"><display/></field>       
         <field name="instrumentDate"><display/></field>
          <field name="paymentRefNum"><display/></field>
         <field name="issuingAuthority"><display/></field>
