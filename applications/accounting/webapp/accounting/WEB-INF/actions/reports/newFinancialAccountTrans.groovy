@@ -41,7 +41,6 @@ if (organizationPartyId) {
     decimals = UtilNumber.getBigDecimalScale("ledger.decimals");
     rounding = UtilNumber.getBigDecimalRoundingMode("ledger.rounding");
     context.currentOrganization = delegator.findOne("PartyNameView", [partyId : organizationPartyId], false);
-    
 	glAccountId = null;
 	if (parameters.glAccountId) {
 		glAccountId = parameters.glAccountId;
@@ -51,11 +50,16 @@ if (organizationPartyId) {
         context.glAccount = glAccount;
     }
 	if (parameters.finAccountId) {
-		glAccountId = parameters.finAccountId;
-		glAccount = delegator.findOne("GlAccount", [glAccountId : glAccountId], false);
+		finAccountId=parameters.finAccountId;
+		finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);//to only showing postedGlAccountId
+		if(UtilValidate.isNotEmpty(finAccount.postToGlAccountId)){
+		postedGlAccount=finAccount.postToGlAccountId;
+		glAccount = delegator.findOne("GlAccount", [glAccountId : postedGlAccount], false);
+		glAccountId = glAccount.glAccountId;
 		isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
 		context.isDebitAccount = isDebitAccount;
 		context.glAccount = glAccount;
+		}
 	}
     currentTimePeriod = null;
     BigDecimal balanceOfTheAcctgForYear = BigDecimal.ZERO;
@@ -79,8 +83,8 @@ if (organizationPartyId) {
 	monthEnd = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
 	
 	fromDateStr = UtilDateTime.toDateString(effectiveDate ,"MMMM dd, yyyy");
+	fromDateTimestamp=UtilDateTime.getDayStart(effectiveDate);
 	context.put("fromDateStr",fromDateStr);
-
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
 	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_MONTH"));
@@ -111,7 +115,8 @@ if (organizationPartyId) {
             }
         }
     }
-    if (currentTimePeriod){
+	financialAcctgTransList = [];
+    if (currentTimePeriod && (UtilValidate.isNotEmpty(glAccountId))){
         context.currentTimePeriod = currentTimePeriod;
         customTimePeriodStartDate = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
         customTimePeriodEndDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(currentTimePeriod.fromDate), timeZone, locale);
@@ -126,7 +131,9 @@ if (organizationPartyId) {
             if ("ALL".equals(isPosted)) {
                 isPosted = "";
             }
-            acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal", 
+			/*acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal",
+				[customTimePeriodStartDate : fromDateTimestamp, customTimePeriodEndDate : UtilDateTime.getDayEnd(fromDateTimestamp), organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);*/
+			 acctgTransEntriesAndTransTotal = dispatcher.runSync("getAcctgTransEntriesAndTransTotal", 
                     [customTimePeriodStartDate : customTimePeriodStartDate, customTimePeriodEndDate : customTimePeriodEndDate, organizationPartyId : organizationPartyId, glAccountId : glAccountId, isPosted : isPosted, userLogin : userLogin]);
             totalOfYearToDateDebit = totalOfYearToDateDebit + acctgTransEntriesAndTransTotal.debitTotal;
             acctgTransEntriesAndTransTotal.totalOfYearToDateDebit = totalOfYearToDateDebit.setScale(decimals, rounding);
@@ -153,7 +160,7 @@ if (organizationPartyId) {
 		closingBalance = openingBalance;
 		totOpeningBalance = openingBalance;
 		totYearOpeningBalance = openingBalance;
-		financialAcctgTransList = [];
+	
 		
 		paymentInvType = [:];
 		
@@ -334,7 +341,6 @@ if (organizationPartyId) {
 		context.paymentInvType = paymentInvType;
     }
 }
-
 //for each day in cash Book
 dayFinAccountTransList= [];
 getDayTot = "N";

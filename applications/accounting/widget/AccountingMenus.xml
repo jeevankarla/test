@@ -1811,6 +1811,16 @@
 			<link target="findAdhocSalePayment">
 			</link>
 		 </menu-item>
+		  <menu-item name="FinAccntCashBook" title="Cash Book">
+          <condition>
+				<or>
+				 <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
+            	</or>            
+            </condition>
+			<link target="FinancialAccountingTransCASH">
+			<parameter param-name="organizationPartyId" value="Company"/>
+			</link>
+		 </menu-item>
 		  <menu-item name="CashierReports" title="CashReports">
           <condition>
 				<or>

@@ -2685,6 +2685,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinancialAccountingTrans"/>
     </request-map>
+      <request-map uri="FinancialAccountingTransCASH">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinancialAccountingTransCASH"/>
+    </request-map>
+    
     <request-map uri="FinancialAccountTrans.pdf">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FinancialAccountTransPdf"/>
@@ -2980,27 +2985,6 @@ under the License.
     <view-map name="PrintChecks" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintChecks" content-type="application/pdf" encoding="none"/>
     <view-map name="FindSalesInvoicesByDueDate" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindSalesInvoicesByDueDate"/>
     <view-map name="FindPurchaseInvoicesByDueDate" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPurchaseInvoicesByDueDate"/>
-	
-	
-	
-	
-	<view-map name="newReceipts" type="screen" page="component://accounting/widget/PaymentScreens.xml#newReceipts"/>
-	<view-map name="newPayablePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#newPayablePayment"/>
-	<view-map name="FindReceipts" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindReceipts"/>
-	<view-map name="FindReceivableInvoices" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindReceivableInvoices"/>
-	<view-map name="FindPayableInvoices" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPayableInvoices"/>
-	<view-map name="findCashReceipts" type="screen" page="component://accounting/widget/PaymentScreens.xml#findCashReceipts"/>
-	<view-map name="findCashPayblePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findCashPayblePayment"/>
-	<view-map name="PrintReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintReceipt" content-type="application/pdf" encoding="none"/>
-	<view-map name="findRouteCashPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
-	<view-map name="FindPaymentCashier" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
-	<view-map name="FindAdhocSalePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindAdhocSalePayment"/>
-	<view-map name="ShowCashierReports" type="screen" page="component://accounting/widget/PaymentScreens.xml#ShowCashierReports"/>
-	<!-- global Requests -->
-	<view-map name="CashierPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashierPaymentCheckList" content-type="application/pdf" encoding="none"/>
-	<view-map name="CashierPaymentReceiptList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashierPaymentReceiptList" content-type="application/pdf" encoding="none"/>
-	
-	 
 	
 	<!-- Budget  -->
 	 <view-map name="FindBudgets" type="screen" page="component://accounting/widget/BudgetScreens.xml#FindBudgets"/>
@@ -3319,6 +3303,24 @@ under the License.
 
     <view-map name="InvoiceSearchResultsCsv" type="screencsv" page="component://accounting/widget/InvoiceScreens.xml#InvoiceSearchResultsCsv" content-type="text/csv" encoding="none"/>
     <view-map name="InvoiceSearchResultPdf" type="screenfop" page="component://accounting/widget/InvoiceScreens.xml#InvoiceSearchResultPdf" content-type="application/pdf" encoding="none"/>
+    <!-- CashierPortal realted views -->
+    <view-map name="newReceipts" type="screen" page="component://accounting/widget/PaymentScreens.xml#newReceipts"/>
+	<view-map name="newPayablePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#newPayablePayment"/>
+	<view-map name="FindReceipts" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindReceipts"/>
+	<view-map name="FindReceivableInvoices" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindReceivableInvoices"/>
+	<view-map name="FindPayableInvoices" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPayableInvoices"/>
+	<view-map name="findCashReceipts" type="screen" page="component://accounting/widget/PaymentScreens.xml#findCashReceipts"/>
+	<view-map name="findCashPayblePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findCashPayblePayment"/>
+	<view-map name="PrintReceipt" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#PrintReceipt" content-type="application/pdf" encoding="none"/>
+	<view-map name="findRouteCashPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
+	<view-map name="FindPaymentCashier" type="screen" page="component://accounting/widget/PaymentScreens.xml#findRouteCashPayment"/>
+	<view-map name="FindAdhocSalePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindAdhocSalePayment"/>
+	<view-map name="ShowCashierReports" type="screen" page="component://accounting/widget/PaymentScreens.xml#ShowCashierReports"/>
+	 <view-map name="FinancialAccountingTransCASH" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialAccountingTransCASH"/>
+	<!-- global Requests -->
+	<view-map name="CashierPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashierPaymentCheckList" content-type="application/pdf" encoding="none"/>
+	<view-map name="CashierPaymentReceiptList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashierPaymentReceiptList" content-type="application/pdf" encoding="none"/>
+	
    <!-- Common request used for byProducts And Accountiing -->
    <view-map name="CashReceiptReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#CashReceiptReportPDF" content-type="application/pdf"/>
    <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="application/pdf" encoding="none"/>
