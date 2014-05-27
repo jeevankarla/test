@@ -101,6 +101,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("CASHFromDateId","");
 		makeDatePicker("CashReceiptDateId","");
 		makeDatePicker("DUCRFromDateId","DUCRThruDateId");
+		makeDatePicker("DueFromDateId","DueThruDateId");
+		
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -665,15 +667,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
     			<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
       				<tr class="alternate-row">
       					<form id="dueParticulars" name="dueParticulars" method="post" action="<@ofbizUrl>dueParticulars.txt</@ofbizUrl>" target="_blank">	
-      						<td>Due Particulars</td>
-      						<td >Time Period
-      							<select name="customTimePeriodId" class='h4'>
-                					<#list timePeriodList as timePeriod>    
-                  	    				<option value='${timePeriod.customTimePeriodId}'> ${(timePeriod.get("fromDate",locale))?if_exists} - ${(timePeriod.get("thruDate",locale))?if_exists}</option>
-                					</#list>            
-								</select>
-								<input type="submit" value="Download" class="buttontext"/>
-          					</td>       			
+      						<td width="25%">Due Particulars</td>
+							<td width="75%">From<input  type="text" size="18pt" id="DueFromDateId" readonly  name="fromDate"/>
+			      			To<input  type="text" size="18pt" id="DueThruDateId" readonly  name="thruDate"/></td>  
+							<td width="25%"><input type="submit" value="Download" class="buttontext"/></td>
       					</form>
       				</tr>
     			</table>
