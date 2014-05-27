@@ -35,6 +35,35 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 	context.thruDateTime = thruDateTime;
 }
 
+
+fromDateStr = parameters.fromDate;
+thruDateStr = parameters.thruDate;
+
+fromDateTime=UtilDateTime.nowTimestamp();
+thruDateTime=UtilDateTime.nowTimestamp();
+
+if (UtilValidate.isNotEmpty(fromDateStr)) {
+	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	try {
+		fromDateTime = new java.sql.Timestamp(sdf.parse(fromDateStr+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + fromDateStr, "");
+	}
+}
+if (UtilValidate.isNotEmpty(thruDateStr)) {
+	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	try {
+		thruDateTime = new java.sql.Timestamp(sdf.parse(thruDateStr+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + thruDateStr, "");
+	}
+}
+
+dayBegin = UtilDateTime.getDayStart(fromDateTime);
+dayEnd = UtilDateTime.getDayEnd(thruDateTime);
+Debug.log("===========dayBegin=="+dayBegin+"==dayEnd="+dayEnd);
+context.fromDateTime = fromDateTime;
+context.thruDateTime = thruDateTime;
 /*if(UtilValidate.isNotEmpty(parameters.saleDate)){
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	try {
@@ -56,14 +85,15 @@ conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN 
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
 boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
-boothsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
 
+boothsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
+boothTotals=[:];
 boothTotalsWithReturn=[:];
 periodBoothTotals=[:];
 List shipmentIds = ByProductNetworkServices.getAllShipmentIds(delegator, dayBegin, dayEnd);//include Adhoc SALE
-if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
-	boothTotalsWithReturn = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
-}
+
+boothTotalsWithReturn = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
+
 if(UtilValidate.isNotEmpty(boothTotalsWithReturn)){
 	boothTotals=boothTotalsWithReturn.get("boothTotals");
 }
@@ -127,7 +157,7 @@ while (boothTotIter.hasNext()) {
 		chequePenality=facilityPenaltyMap.get(boothId);
 	}
 	invoiceAmount=invoiceAmount.add(chequePenality);
-	Debug.log("invoiceAmount==="+invoiceAmount+"====chequePenality==="+chequePenality+"==invoiceAmount==="+invoiceAmount);
+	
 	BigDecimal totalPaidAmnt=(cashAmount+chequeAmount+challanAmount);
 	BigDecimal netAmount =(BigDecimal) invoiceAmount.subtract(totalPaidAmnt);
    boothTotalsMap=[:];
