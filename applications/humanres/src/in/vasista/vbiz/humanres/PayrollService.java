@@ -1,12 +1,14 @@
 package in.vasista.vbiz.humanres;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.math.BigDecimal;
@@ -457,11 +459,6 @@ public class PayrollService {
 		        
 				Map<String, Object> serviceResults;
 				
-				//get employee position details here
-				Map empPositionDetails = getEmployeePositionDetail(dctx, UtilMisc.toMap("employeeId",partyId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd));
-				String geoId = (String)empPositionDetails.get("geoId");
-				String emplPositionTypeId = (String)empPositionDetails.get("emplPositionTypeId");
-				
 				List conditionList = UtilMisc.toList(
 		                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 		        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
@@ -485,8 +482,6 @@ public class PayrollService {
 						payHeadCtx.put("timePeriodEnd", timePeriodEnd);
 						payHeadCtx.put("timePeriodId", timePeriodId);
 						payHeadCtx.put("employeeId", partyId);
-						payHeadCtx.put("emplPositionTypeId", emplPositionTypeId);
-						payHeadCtx.put("geoId", geoId);
 						Map<String, Object> result = calculatePayHeadAmount(dctx,payHeadCtx);
 						Debug.log("result========="+result);
 						if(UtilValidate.isNotEmpty(result)){
@@ -494,9 +489,9 @@ public class PayrollService {
 						}
 					}
 					
-					Map<String, Object> adjustment = adjustAmount(context,benefit.getBigDecimal("cost"), from, thru);			
-					input.put("quantity", adjustment.get("quantity"));
-					input.put("amount", adjustment.get("amount"));
+					//Map<String, Object> adjustment = adjustAmount(context,benefit.getBigDecimal("cost"), from, thru);			
+					input.put("quantity", BigDecimal.ONE);
+					input.put("amount", benefit.getBigDecimal("cost"));
 					
 					itemsList.add(input);
 				} 
@@ -520,11 +515,6 @@ public class PayrollService {
 				Map<String, Object> serviceResults;
 				Boolean isCalc = Boolean.FALSE;
 		        List itemsList = FastList.newInstance();
-		      //get employee position details here
-				Map empPositionDetails = getEmployeePositionDetail(dctx, UtilMisc.toMap("employeeId",partyId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd));
-				String geoId = (String)empPositionDetails.get("geoId");
-				String emplPositionTypeId = (String)empPositionDetails.get("emplPositionTypeId");
-				
 
 				List conditionList = UtilMisc.toList(
 		                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
@@ -553,8 +543,6 @@ public class PayrollService {
 						payHeadCtx.put("timePeriodEnd", timePeriodEnd);
 						payHeadCtx.put("timePeriodId", timePeriodId);
 						payHeadCtx.put("employeeId", partyId);
-						payHeadCtx.put("emplPositionTypeId", emplPositionTypeId);
-						payHeadCtx.put("geoId", geoId);
 						Map<String, Object> result = calculatePayHeadAmount(dctx,payHeadCtx);
 						Debug.log("result========="+result);
 						if(UtilValidate.isNotEmpty(result)){
@@ -562,10 +550,8 @@ public class PayrollService {
 						}
 					}
 					
-					Map<String, Object> adjustment = adjustAmount(context,deduction.getBigDecimal("cost"), from, thru);			
-					input.put("quantity", adjustment.get("quantity"));
-					BigDecimal amount = (BigDecimal)adjustment.get("amount");
-					input.put("amount", amount.negate());
+					input.put("quantity", BigDecimal.ONE);
+					input.put("amount", (deduction.getBigDecimal("cost")).negate());
 					itemsList.add(input);
 								
 				}	
@@ -670,17 +656,16 @@ public class PayrollService {
 				
 				String timePeriodId = (String) context.get("timePeriodId");
 				Map<String, Object> serviceResults = ServiceUtil.returnSuccess();
-				BigDecimal attendance = BigDecimal.ONE;
-				BigDecimal lossOfPayDays = BigDecimal.ZERO;
+				
 				List conditionList = UtilMisc.toList(
 		            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 				conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, timePeriodId));
 				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
 				GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",partyId, "customTimePeriodId",timePeriodId), false);
 				if(UtilValidate.isNotEmpty(payrollAttendance) && UtilValidate.isNotEmpty(payrollAttendance.get("totalDays")) && UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays"))){
-					attendance = ((payrollAttendance.getBigDecimal("totalDays")).subtract(payrollAttendance.getBigDecimal("lossOfPayDays"))).divide(payrollAttendance.getBigDecimal("totalDays"), 2, BigDecimal.ROUND_HALF_DOWN);
-					serviceResults.put("attendance", attendance.doubleValue());
-					serviceResults.put("noOfDays", (payrollAttendance.getBigDecimal("totalDays")).subtract(payrollAttendance.getBigDecimal("lossOfPayDays")).doubleValue());
+					serviceResults.put("lossOfPayDays", (payrollAttendance.getBigDecimal("lossOfPayDays")).doubleValue());
+					serviceResults.put("noOfAttendedDays", (payrollAttendance.getBigDecimal("noOfAttendedDays")).doubleValue());
+					serviceResults.put("noOfCalenderDays", (payrollAttendance.getBigDecimal("noOfCalenderDays")).doubleValue());
 				}
 				
 		        return serviceResults; 
@@ -944,13 +929,9 @@ public class PayrollService {
 					}
 					Timestamp timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 					Timestamp timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-					//get employee position details here
-					Map empPositionDetails = getEmployeePositionDetail(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd));       
 					Map payheadAmtCtx = FastMap.newInstance();
                     payheadAmtCtx.put("userLogin", userLogin);
                     payheadAmtCtx.put("employeeId", employeeId);
-                    payheadAmtCtx.put("geoId", empPositionDetails.get("geoId"));
-                    payheadAmtCtx.put("emplPositionTypeId", empPositionDetails.get("emplPositionTypeId"));
                     payheadAmtCtx.put("timePeriodStart", timePeriodStart);
                     payheadAmtCtx.put("timePeriodEnd", timePeriodEnd);
                     payheadAmtCtx.put("timePeriodId", customTimePeriodId);
@@ -990,8 +971,6 @@ public class PayrollService {
 		        GenericValue userLogin = (GenericValue) context.get("userLogin");
 		        String payHeadTypeId = (String) context.get("payHeadTypeId");
 		        String employeeId = (String) context.get("employeeId");
-		        String geoId = (String) context.get("geoId");
-		        String emplPositionTypeId = (String) context.get("emplPositionTypeId");
 		        String orgPartyId = (String) context.get("orgPartyId");
 		        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
@@ -1052,11 +1031,9 @@ public class PayrollService {
 				Map<String, Object> result = ServiceUtil.returnSuccess();	
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				String employeeId= (String) context.get("employeeId");
-				String emplPositionTypeId= (String) context.get("emplPositionTypeId");
 				Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
 				String timePeriodId = (String) context.get("timePeriodId");
-				String geoId= (String) context.get("geoId");
 				List<GenericValue> payHeadPriceRules= (List<GenericValue>) context.get("payHeadPriceRules");
           
 				 calcResults.put("amount", BigDecimal.ZERO);
@@ -1073,7 +1050,7 @@ public class PayrollService {
 	                List<GenericValue> payrollBenDedCondList = delegator.findByAndCache("PayrollBenDedCond", UtilMisc.toMap("payrollBenDedRuleId", payHeadPriceRuleId));
 	                for (GenericValue payrollBenDedCond : payrollBenDedCondList) {
                          
-	                    if (!checkPriceCondition(payrollBenDedCond,employeeId, emplPositionTypeId, geoId, delegator, nowTimestamp)) {
+	                    if (!checkPriceCondition(payrollBenDedCond,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd)) {
 	                        allTrue = false;
 	                        break;
 	                    }
@@ -1097,15 +1074,40 @@ public class PayrollService {
 		    						HashMap<String, Double> variables = new HashMap<String, Double>();
 		    						Map formulaVaribules = evltr.getVariableValues();
 		    						double attendance = 1;
-		    						if(formulaVaribules.containsKey("ATTENDANCE") || formulaVaribules.containsKey("NOOFDAYS")){
+		    						Set<String> varibuleKeySet = formulaVaribules.keySet();
+		    						if(varibuleKeySet.contains("NOOFCALENDERDAYS") || varibuleKeySet.contains("NOOFATTENDEDDAYS") || varibuleKeySet.contains("LOSSOFPAYDAYS")){
 		    							Map attendanceMap = fetchAttendance(dctx ,context);
-		    							variables.put("ATTENDANCE", (Double)attendanceMap.get("attendance"));
-		    							variables.put("NOOFDAYS", (Double)attendanceMap.get("noOfDays"));
-		    							double noOfDays = ((Double)attendanceMap.get("noOfDays")).doubleValue();
-		    							evltr.setFormulaIdAndSlabAmount(formulaId, noOfDays);
+		    							variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderdDays"));
+		    							variables.put("NOOFATTENDEDDAYS", (Double)attendanceMap.get("noOfAttendedDays"));
+		    							variables.put("LOSSOFPAYDAYS", (Double)attendanceMap.get("lossOfPayDays"));
+		    							
+		    							double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
+		    							evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
+		    						}
+		    						// this to support dependent benefit or deductions
+		    						ArrayList varibuleKeyList = new ArrayList(varibuleKeySet);
+		    						List payheadTypeIdsList = (List)((getPayheadTypes(dctx , context)).get("payheadTypeIdsList"));
+		    						Debug.log("*********** varibuleKeySet ================"+varibuleKeySet);
+		    						for(int i= 0;i<varibuleKeyList.size();i++){
+		    							String varibuleKey = (String)varibuleKeyList.get(i);
+		    							if(payheadTypeIdsList.contains(varibuleKey)){
+		    								Map payheadAmtCtx = FastMap.newInstance();
+		    			                    payheadAmtCtx.put("userLogin", userLogin);
+		    			                    payheadAmtCtx.put("employeeId", employeeId);
+		    			                   /* payheadAmtCtx.put("geoId", empPositionDetails.get("geoId"));
+		    			                    payheadAmtCtx.put("emplPositionTypeId", empPositionDetails.get("emplPositionTypeId"));*/
+		    			                    payheadAmtCtx.put("timePeriodStart", timePeriodStart);
+		    			                    payheadAmtCtx.put("timePeriodEnd", timePeriodEnd);
+		    			                    payheadAmtCtx.put("timePeriodId", timePeriodId);
+		    			                    payheadAmtCtx.put("payHeadTypeId", varibuleKey);
+		    				                Map<String, Object> innerCalcResults = calculatePayHeadAmount(dctx,payheadAmtCtx);
+		    								variables.put(varibuleKey, ((BigDecimal)innerCalcResults.get("amount")).doubleValue());
+			    						}
+		    							
 		    						}
 		    						
 		    						variables.put("BASIC", basicSalary);
+		    						Debug.log("variables=============="+variables);
 		    						evltr.addVariableValues(variables);        		
 		    						modifyAmount = new BigDecimal( evltr.evaluate());
 	                           }
@@ -1131,9 +1133,16 @@ public class PayrollService {
 	            
 	            return calcResults;
 	        }  
-	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond, String employeeId, String emplPositionTypeId, String geoId,
-	            Delegator delegator, Timestamp fromDate) throws GenericEntityException {
+	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond, String employeeId, DispatchContext dctx,Delegator delegator, Timestamp fromDate ,Timestamp thruDate) throws GenericEntityException {
 	        if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + payrollBenDedCond, module);
+	        
+	      //get employee position details here
+			Map empPositionDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate));
+			String geoId = (String)empPositionDetails.get("geoId");
+			String emplPositionTypeId = (String)empPositionDetails.get("emplPositionTypeId");
+			String departmentId = (String)empPositionDetails.get("departmentId");
+			String shiftType = (String)empPositionDetails.get("shiftType");
+			
 	        int compare = 0;
             Debug.log("checking condtion for ::"+payrollBenDedCond);
 	        if ("PAYHD_BEDE_EMPID".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
@@ -1147,6 +1156,18 @@ public class PayrollService {
 	        }else if ("PAYHD_BEDE_GEO".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(geoId)) {
 	                compare = geoId.compareTo(payrollBenDedCond.getString("condValue"));
+	            } else {
+	                compare = 1;
+	            }
+	        }else if ("PAYHD_BEDE_DEPT".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
+	            if (UtilValidate.isNotEmpty(departmentId)) {
+	                compare = departmentId.compareTo(payrollBenDedCond.getString("condValue"));
+	            } else {
+	                compare = 1;
+	            }
+	        }else if ("PAYHD_BEDE_SHIFT".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
+	            if (UtilValidate.isNotEmpty(shiftType)) {
+	                compare = shiftType.compareTo(payrollBenDedCond.getString("condValue"));
 	            } else {
 	                compare = 1;
 	            }
@@ -1173,7 +1194,7 @@ public class PayrollService {
 	        }
 	        return false;
 	    }
-	 public static Map<String, Object> getEmployeePositionDetail(DispatchContext dctx, Map<String, ? extends Object> context) {
+	 public static Map<String, Object> getEmployeePayrollCondParms(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 	        Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1198,7 +1219,7 @@ public class PayrollService {
 	        	if(UtilValidate.isNotEmpty(emplPositionAndFulfillment)){
 	        		result.put("emplPositionTypeId", emplPositionAndFulfillment.getString("emplPositionTypeId"));
 	        	}
-	        	//lets populate geoId based on employeement
+	        	//lets populate geoId based on employement
 	        	conditionList.clear();
 	        	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
 				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
@@ -1222,5 +1243,36 @@ public class PayrollService {
 	        // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
 	        return result;
 	    }
-	 
+	 public static Map<String, Object> getPayheadTypes(DispatchContext dctx, Map<String, ? extends Object> context) {
+
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String employeeId = (String) context.get("employeeId");
+	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+	        Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+	        Locale locale = (Locale) context.get("locale");
+	        FastList payheadTypeList = FastList.newInstance();
+	        FastList payheadTypeIdsList = FastList.newInstance();
+	        try{
+	        	
+	        	List<GenericValue> benefitTypes = delegator.findList("BenefitType",null, null,null, null, true);
+	        	List<GenericValue> deductionTypes = delegator.findList("DeductionType",null, null,null, null, true);
+	        	payheadTypeList.addAll(benefitTypes);
+	        	payheadTypeList.addAll(deductionTypes);
+	        	payheadTypeIdsList.addAll(EntityUtil.getFieldListFromEntityList(benefitTypes, "benefitTypeId", true));
+	        	payheadTypeIdsList.addAll(EntityUtil.getFieldListFromEntityList(deductionTypes, "deductionTypeId", true));
+	            
+	            } catch (GenericEntityException e) {
+	                Debug.logError(e, "Error getting payhead types", module);
+	                return ServiceUtil.returnError(e.toString());
+	            }
+	        //end of price rules
+
+	        result.put("payheadTypeList", payheadTypeList);
+	        result.put("payheadTypeIdsList", payheadTypeIdsList);
+	        return result;
+	    }
 }
