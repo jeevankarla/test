@@ -25,6 +25,9 @@ dctx = dispatcher.getDispatchContext();
 effectiveDate = null;
 thruEffectiveDate = null;
 
+dayBegin = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="routeQuantityAbstractReport"){
 		effectiveDateStr = parameters.supplyDate;
@@ -38,11 +41,12 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 		}else{
 			effectiveDate=UtilDateTime.nowTimestamp();
 		}
-		routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
+	   routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
+		dayBegin = UtilDateTime.getDayStart(effectiveDate);
+		dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 	}
 }
-dayBegin = UtilDateTime.getDayStart(effectiveDate);
-dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+
 // for sales Report
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="salesReport"){
@@ -70,12 +74,10 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
 			}
 		}
+		dayBegin = UtilDateTime.getDayStart(effectiveDate);
+		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
 	}
 }
-
-dayBegin = UtilDateTime.getDayStart(effectiveDate);
-dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
-
 
 productNames = [:];
 allProductsList = ByProductNetworkServices.getAllProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",effectiveDate));
@@ -130,7 +132,7 @@ context.putAt("adhocBoothPaymentMap", adhocBoothPaymentMap);
 //boothsList = EntityUtil.getFieldListFromEntityList(orderHeader, "originFacilityId", true);
 adhocBoothTotalsMap=[:];
 if(UtilValidate.isNotEmpty(adhocShipments)){
-	adhocDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:adhocShipments, fromDate:dayBegin, thruDate:dayEnd]);
+	adhocDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:adhocShipments, fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
 	if(UtilValidate.isNotEmpty(adhocDayTotals)){
 		adhocProductTotals=adhocDayTotals.get("productTotals");
 		adhocBoothTotalsMap=adhocDayTotals.get("boothTotals");
@@ -146,7 +148,7 @@ if(UtilValidate.isNotEmpty(adhocShipments)){
 context.putAt("adhocBoothTotals", adhocBoothTotalsMap);
 
 if(UtilValidate.isNotEmpty(amShipmentIds)){
-	amDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+	amDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
 	//Debug.log("==amDayTotals==="+amDayTotals);
 	if(UtilValidate.isNotEmpty(amDayTotals)){
 		amProductTotals=amDayTotals.get("productTotals");
@@ -154,7 +156,7 @@ if(UtilValidate.isNotEmpty(amShipmentIds)){
 }
 
 if(UtilValidate.isNotEmpty(pmShipmentIds)){
-	pmDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+	pmDayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds, fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
 	if(UtilValidate.isNotEmpty(pmDayTotals)){
 		pmProductTotals=pmDayTotals.get("productTotals");
 	}
@@ -163,7 +165,19 @@ totLmsQty=0;
 grandTotalRevenue=0;
 
 if(UtilValidate.isNotEmpty(shipmentIds)){
-	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+	  dayTotals=[:];
+	  if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="salesReport") {
+		 // Debug.log("=====NowInvoking Sales===");
+	     dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+		}
+	  if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag=="routeQuantityAbstractReport") {
+		  //Debug.log("=====NowInvoking SaleABSTRACT Report===");
+		  dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
+		 }
+	  if(UtilValidate.isEmpty(reportTypeFlag)) {
+		//  Debug.log("=====No Flag===");
+		  dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd]);
+		 }
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		prodTotals = dayTotals.get("productTotals");
 		grandTotalRevenue=dayTotals.get("totalRevenue");
@@ -239,7 +253,6 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 			context.putAt("milkSaleTotal", milkSaleTotal);
 			context.putAt("curdSaleTotal", curdSaleTotal);
 			
-			
 			Iterator mapIter = prodTotals.entrySet().iterator();		
 			while (mapIter.hasNext()) {
 				Map.Entry entry = mapIter.next();
@@ -309,7 +322,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
 				//if(UtilValidate.isNotEmpty(boothsList)){
 					if(UtilValidate.isNotEmpty(shipmentIds)){
-						amRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd]);
+						amRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
 						routeAmount=0;
 						routeTotQty=0;
 						if(UtilValidate.isNotEmpty(amRouteTotals)){
@@ -360,7 +373,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"PM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
 				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
 					if(UtilValidate.isNotEmpty(shipmentIds)){
-						pmRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd]);
+						pmRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
 						routeAmount=0;
 						routeTotQty=0;
 						if(UtilValidate.isNotEmpty(pmRouteTotals)){
