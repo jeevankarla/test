@@ -22,6 +22,7 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <#assign iaGtot = 0>
+<#assign returnGAmount = 0>
 <#assign caGtot = 0>
 <#assign cashGTot = 0>
 <#assign chqGTot = 0>
@@ -43,12 +44,12 @@ under the License.
 					<fo:block text-align="left" font-size="7pt" keep-together="always"  white-space-collapse="false">&#160;                                              ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block text-align="left" font-size="7pt" keep-together="always"  white-space-collapse="false">&#160;                                              ${uiLabelMap.KMFDairySubHeader}</fo:block>				
               		<fo:block text-align="left" font-size="7pt" keep-together="always"  white-space-collapse="false">&#160;                                              DAIRY PARTICULARS FOR DATE/MONTH :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd,MMM yy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd,MMM yy")}                                    ${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
-            		<fo:block font-size="7pt">----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+            		<fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
               		<fo:block>
                  	<fo:table border-width="1pt" border-style="dotted">
                  	<fo:table-column column-width="30pt"/>
             		<fo:table-column column-width="60pt"/> 
-               	    <fo:table-column column-width="120pt"/>
+               	    <fo:table-column column-width="110pt"/>
             		<fo:table-column column-width="70pt"/> 		
             		<fo:table-column column-width="72pt"/>
             		<fo:table-column column-width="70pt"/>
@@ -73,6 +74,10 @@ under the License.
 	                        </fo:table-cell>
 	                        <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">INVOICE</fo:block> 
+	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">AMOUNT</fo:block>   
+	                        </fo:table-cell>
+	                         <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">RETURN</fo:block> 
 	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">AMOUNT</fo:block>   
 	                        </fo:table-cell>
 	                         <fo:table-cell>
@@ -112,7 +117,7 @@ under the License.
 	                </fo:table-body>
 	               </fo:table>       
 	               </fo:block>
-              		<fo:block font-size="7pt">----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
@@ -133,7 +138,7 @@ under the License.
             		<#else>
             		<fo:table-column column-width="30pt"/>
             		<fo:table-column column-width="60pt"/> 
-               	    <fo:table-column column-width="120pt"/>
+               	    <fo:table-column column-width="110pt"/>
             		<fo:table-column column-width="70pt"/> 		
             		<fo:table-column column-width="72pt"/>
             		<fo:table-column column-width="70pt"/>
@@ -149,6 +154,7 @@ under the License.
 	                <#list categorysList as category>
 	                	
 	                	<#assign invTot = 0>
+	                	<#assign returnCatAmount = 0>
 	                	<#assign cashTot = 0>
 	                	<#assign chqTot = 0>
 	                	<#assign chqRetnTot = 0>
@@ -162,6 +168,7 @@ under the License.
 	                	<#list categoryTotalMap.get(category) as duedata>
                     	<#assign boothDetails = delegator.findOne("Facility", {"facilityId" : duedata.get("facilityId")?if_exists}, true)>
                     	<#assign invoiceAmount = duedata.get("invoiceAmount")>
+                    	<#assign returnAmount = duedata.get("returnAmount")>
                     	<#assign cashAmount = duedata.get("cashAmount")>
                     	<#assign chequeAmount = duedata.get("chequeAmount")>
                     	<#assign challanAmount = duedata.get("challanAmount")>
@@ -189,6 +196,12 @@ under the License.
 	                        	<#assign ia = invoiceAmount>
 	                        	<#assign invTot = invTot+ia>
 	                        	<#assign ia = 0>
+	                        </fo:table-cell>
+	                         <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${returnAmount?if_exists?string("##0.00")}</fo:block>  
+	                        	<#assign invRetn = returnAmount>
+	                        	<#assign returnCatAmount = returnCatAmount+invRetn>
+	                        	<#assign invRetn = 0>
 	                        </fo:table-cell>
 	                         <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${cashAmount?if_exists?string("##0.00")}</fo:block>  
@@ -255,7 +268,7 @@ under the License.
 	                <#if invTot!= 0>
 	                <fo:table-row>
                	     	<fo:table-cell>
-                            <fo:block font-size="7pt">----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
+                            <fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                 	
@@ -270,6 +283,12 @@ under the License.
 	                   			<#assign iaGtot = iaGtot+invTot>
 	                   			<#assign invTot = 0>
 	                    </fo:table-cell>
+	                      <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${returnCatAmount?if_exists?string("##0.00")}</fo:block>  
+	                   			<#assign returnGAmount = returnGAmount+returnCatAmount>
+	                   			<#assign returnCatAmount = 0>
+	                    </fo:table-cell>
+	                    
 	                    <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${cashTot?if_exists?string("##0.00")}</fo:block>  
 	                   			<#assign cashGTot = cashGTot+cashTot>
@@ -315,7 +334,7 @@ under the License.
                 	</fo:table-row>
                 	<fo:table-row>
                	     	<fo:table-cell>
-                            <fo:block font-size="7pt">----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
+                           <fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                 	</#if>
@@ -328,6 +347,9 @@ under the License.
 	                    <fo:table-cell/>
 	                    <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${iaGtot?if_exists?string("##0.00")}</fo:block>  
+	                    </fo:table-cell>
+	                      <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${returnGAmount?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
 	                    <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right" font-size="7pt" white-space-collapse="false">${cashGTot?if_exists?string("##0.00")}</fo:block>  
@@ -357,7 +379,7 @@ under the License.
                 	</fo:table-row>
                 	<fo:table-row>
                	     	<fo:table-cell>
-                            <fo:block font-size="7pt">----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
+                           <fo:block font-size="7pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                     </fo:table-body>

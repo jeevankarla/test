@@ -61,7 +61,6 @@ if (UtilValidate.isNotEmpty(thruDateStr)) {
 
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
-Debug.log("===========dayBegin=="+dayBegin+"==dayEnd="+dayEnd);
 context.fromDateTime = fromDateTime;
 context.thruDateTime = thruDateTime;
 /*if(UtilValidate.isNotEmpty(parameters.saleDate)){
@@ -88,15 +87,18 @@ boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);
 
 boothsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
 boothTotals=[:];
+returnBoothTotals=[:];
 boothTotalsWithReturn=[:];
 periodBoothTotals=[:];
 List shipmentIds = ByProductNetworkServices.getAllShipmentIds(delegator, dayBegin, dayEnd);//include Adhoc SALE
 
-boothTotalsWithReturn = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
-
+boothTotalsWithReturn = ByProductNetworkServices.getPeriodReturnTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd]);
 if(UtilValidate.isNotEmpty(boothTotalsWithReturn)){
-	boothTotals=boothTotalsWithReturn.get("boothTotals");
+	returnBoothTotals=boothTotalsWithReturn.get("boothTotals");
+	totalReturnAmnt=boothTotalsWithReturn.get("totalRevenue");
+	Debug.log("=====totalReturnAmnt===="+totalReturnAmnt);
 }
+boothTotals = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd, "facilityList", boothsList, "userLogin", userLogin)).get("boothInvoiceTotalMap");
 penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, dayBegin, dayEnd, boothsList, userLogin);
 facilityPenaltyMap = penaltyResult.get("facilityPenalty");
 List<GenericValue> paymentsList = FastList.newInstance();
@@ -127,12 +129,14 @@ facilityIdsList=[];
 categoryTotalMap = [:];
 categorysList = [];
 categorysParloursList = [];
+BigDecimal totaRETNAmount=BigDecimal.ZERO;
 Iterator boothTotIter = boothTotals.entrySet().iterator();
 while (boothTotIter.hasNext()) {
 	Map.Entry boothEntry = boothTotIter.next();
 	boothId = boothEntry.getKey();
 	BigDecimal totalRevenue=BigDecimal.ZERO;
-	totalRevenue=boothEntry.getValue().getAt("totalRevenue");
+	//totalRevenue=boothEntry.getValue().getAt("totalRevenue");
+	totalRevenue=boothEntry.getValue();
     cashAmount=0;
     chequeAmount=0;
     challanAmount=0;
@@ -156,13 +160,21 @@ while (boothTotIter.hasNext()) {
 	if(UtilValidate.isNotEmpty(facilityPenaltyMap.get(boothId))){
 		chequePenality=facilityPenaltyMap.get(boothId);
 	}
+	BigDecimal returnAmount=BigDecimal.ZERO;
+	
+	if(UtilValidate.isNotEmpty(returnBoothTotals.get(boothId))){
+		returnAmount=(returnBoothTotals.get(boothId)).get("totalRevenue");
+		totaRETNAmount=totaRETNAmount.add(returnAmount);
+		//invoiceAmount=invoiceAmount.add(returnAmount);
+	}
 	invoiceAmount=invoiceAmount.add(chequePenality);
 	
-	BigDecimal totalPaidAmnt=(cashAmount+chequeAmount+challanAmount);
+	BigDecimal totalPaidAmnt=(cashAmount+chequeAmount+challanAmount+returnAmount);
 	BigDecimal netAmount =(BigDecimal) invoiceAmount.subtract(totalPaidAmnt);
    boothTotalsMap=[:];
    boothTotalsMap.put("facilityId", boothId);
    boothTotalsMap.put("invoiceAmount", totalRevenue);
+   boothTotalsMap.put("returnAmount", returnAmount);
    boothTotalsMap.put("cashAmount", cashAmount);
    boothTotalsMap.put("chequeAmount", chequeAmount);
    boothTotalsMap.put("challanAmount", challanAmount);
@@ -192,7 +204,7 @@ if(parloursOnly == "Y"){
 }else{
 	context.categorysList = categorysList;
 }
-
+Debug.log("==========TOATRETNAMOUNTTT=="+totaRETNAmount);
 
 
 
