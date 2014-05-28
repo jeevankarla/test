@@ -77,7 +77,14 @@
         <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="false"/>
         <attribute name="thruDate" mode="IN" type="java.sql.Timestamp" optional="false"/>     
         <attribute type="Map" mode="OUT" name="ordersResult" optional="true"/>
-    </service>        
+    </service>   
+    
+    <service name="getAllRMFacilities" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.byproducts.POSApiServices" invoke="getAllRMFacilities">
+        <description>Service to get all the route marketing facilities/booths</description>     
+        <attribute type="Map" mode="OUT" name="facilitiesResult" optional="true"/>
+    </service>  
+             
         <!-- Payments API -->
      <service name="getBoothDues" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getBoothDues">

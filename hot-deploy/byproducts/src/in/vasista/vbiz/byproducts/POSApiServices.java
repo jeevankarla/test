@@ -616,4 +616,14 @@ Debug.logInfo("paymentResults:" + facilityPayments, module);
 Debug.logInfo("result:" + result, module);		 
     	return result;
     }        
+    
+    public static Map<String, Object> getAllRMFacilities(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map boothsDetails = ByProductNetworkServices.getAllBoothsDetails(dctx, UtilMisc.toMap("userLogin", userLogin));
+		Map result = FastMap.newInstance();  		
+		result.put("facilitiesResult", boothsDetails);
+Debug.logInfo("result:" + result, module);		 
+    	return result;
+    }            
 }
