@@ -550,7 +550,8 @@ under the License.
         <field name="meternityLeave" type="fixed-point"/>
         <field name="compansatoryLeave" type="fixed-point"/>
         <field name="lossOfPayDays" type="fixed-point"/>
-        <field name="totalDays" type="fixed-point"/>
+        <field name="noOfAttendedDays" type="fixed-point"/>
+        <field name="noOfCalenderdDays" type="fixed-point"/>
         <prim-key field="partyId"/>
         <prim-key field="customTimePeriodId"/>
         <relation type="one" fk-name="PAYROLL_PERIOD_CUST_TP" rel-entity-name="CustomTimePeriod">
