@@ -30,6 +30,8 @@ fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
 partyCode = parameters.boothId;
 dctx = dispatcher.getDispatchContext();
+fromDateTime = null;
+thruDateTime = null;
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(fromDate).getTime());
@@ -40,6 +42,7 @@ try {
 def sdf1 = new SimpleDateFormat("dd.MM.yyyy");
 
 fromDateTime = UtilDateTime.getDayStart(fromDateTime);
+dayBegin = UtilDateTime.getDayEnd(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
@@ -80,6 +83,7 @@ boothOBMap = new TreeMap();
 daywiseReceipts = ByProductNetworkServices.getByProductPaymentDetails(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", boothIdsList)).get("paymentDetails");
 invoiceResult = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin)).get("dayWisePartyInvoiceDetail");
 penaltyResult = ByProductNetworkServices.getByProductDaywisePenaltyTotals(dctx, fromDateTime, dayEnd, boothIdsList, userLogin);
+
 penalty = penaltyResult.get("facilityPenalty");
 returnPaymentReferences = penaltyResult.get("returnPaymentReferences");
 maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
@@ -233,6 +237,7 @@ if(boothIdsList){
 				else{
 					closingBalance = tempOB;
 				}
+				
 				tempDayBalanceMap.put("chequeNo", "");
 				tempDayBalanceMap.put("chequeDate", "");
 				tempDayBalanceMap.put("chequeReturn", "");
