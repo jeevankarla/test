@@ -49,8 +49,8 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 // for sales Report
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="salesReport"){
-		effectiveDateStr = parameters.saleFromDate;
-		thruEffectiveDateStr = parameters.saleThruDate;
+		effectiveDateStr = parameters.fromDate;
+		thruEffectiveDateStr = parameters.thruDate;
 		if (UtilValidate.isEmpty(effectiveDateStr)) {
 			effectiveDate = UtilDateTime.nowTimestamp();
 		}
@@ -77,9 +77,8 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
 	}
 }
-
-
-
+totalDays=UtilDateTime.getIntervalInDays(dayBegin,dayEnd);
+context.put("totalDays", totalDays+1);
 context.put("effectiveDateStr",effectiveDateStr);
 if(thruEffectiveDate){
 	context.put("thruEffectiveDateStr",thruEffectiveDateStr);

@@ -651,6 +651,31 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="CategoryWiseSalesReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" value="salesReport"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/RouteQuantityAbstract.groovy" />
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/productReturnsReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/byproducts/CategoryWiseSalesReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets> 
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="CashReceiptReportPDF">
 		<section>
 			<actions>

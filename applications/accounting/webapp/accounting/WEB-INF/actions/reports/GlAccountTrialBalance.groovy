@@ -75,7 +75,7 @@ if (organizationPartyId) {
         BigDecimal totalOfYearToDateCredit = BigDecimal.ZERO;
         isPosted = parameters.isPosted;
 
-        while (customTimePeriodEndDate <= currentTimePeriod.thruDate) {
+        while (customTimePeriodEndDate <= UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(currentTimePeriod.thruDate), 1)){
             if ("ALL".equals(isPosted)) {
                 isPosted = "";
             }

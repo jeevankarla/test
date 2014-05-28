@@ -102,6 +102,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("CashReceiptDateId","");
 		makeDatePicker("DUCRFromDateId","DUCRThruDateId");
 		makeDatePicker("DueFromDateId","DueThruDateId");
+		makeDatePicker("catSalesFromDateId","catSalesThruDateId")
+		
 		
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -286,11 +288,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	<tr>
       		<form id="SalesReport" name="SalesReport" method="post" action="<@ofbizUrl>salesReport.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Sales Report</td>
-      			<td width="33%">From<input  type="text" size="18pt" id="saleFromDateId" readonly  name="saleFromDate"/>
-      			<td width="33%">Thru<input  type="text" size="18pt" id="saleThruDateId" readonly  name="saleThruDate"/>
+      			<td width="33%">From<input  type="text" size="18pt" id="saleFromDateId" readonly  name="fromDate"/>
+      			<td width="33%">Thru<input  type="text" size="18pt" id="saleThruDateId" readonly  name="thruDate"/>
 				<input type="submit" value="Download" class="buttontext"/></td>       			
       		</form>
       	</tr>
+      	<tr class="alternate-row">
+			<form id="CategoryWiseSalesReport" name="CategoryWiseSalesReport" method="post" action="<@ofbizUrl>CategoryWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
+				<td>CategoryWise Sales Report</td>
+				<td width="33%">From<input  type="text" size="18pt" id="catSalesFromDateId" readonly  name="fromDate"/>
+	  			<td width="33%">To<input  type="text" size="18pt" id="catSalesThruDateId" readonly  name="thruDate"/>
+				<input type="submit" value="Download" class="buttontext"/></td>        			
+			</form>
+		</tr>
       	 <tr>
         	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallan.txt</@ofbizUrl>">	
       			<td width="34%">Dealer BankChallan Report </td>
