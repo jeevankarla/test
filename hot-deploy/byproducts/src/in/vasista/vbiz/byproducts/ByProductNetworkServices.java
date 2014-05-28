@@ -4789,10 +4789,15 @@ Debug.logInfo("result= " + result, module);
 			       		  //to Get related Order for return 
 			       	      GenericValue returnHeaderOrderItem = EntityUtil.getFirst(EntityUtil.filterByAnd(orderItems, UtilMisc.toMap("productId", productId,"originFacilityId",boothId,"shipmentId",shipId,"productSubscriptionTypeId",productSubscriptionTypeId))); 
 			       	      //making Same record with  minus Quantity
-			       	      GenericValue newOrderReturnItem  = delegator.makeValue("OrderHeaderItemProductShipmentAndFacility");
-				       	 newOrderReturnItem.putAll(returnHeaderOrderItem);
-				       	 newOrderReturnItem.set("quantity",(returnItem.getBigDecimal("returnQuantity").negate()));
-				       	 newReturnItemList.add(newOrderReturnItem);
+			       	      if(UtilValidate.isNotEmpty(returnHeaderOrderItem)){
+			       	    	GenericValue newOrderReturnItem  = delegator.makeValue("OrderHeaderItemProductShipmentAndFacility");
+					       	 newOrderReturnItem.putAll(returnHeaderOrderItem);
+					       	 newOrderReturnItem.set("quantity",(returnItem.getBigDecimal("returnQuantity").negate()));
+					       	 newReturnItemList.add(newOrderReturnItem);
+			       	      }
+				       	   if(UtilValidate.isEmpty(returnHeaderOrderItem)){
+				       		  Debug.logImportant("==InConsitentREcord=####==boothId=="+boothId+"==shipId=="+shipId+"==productSubscriptionTypeId="+productSubscriptionTypeId+"==productId="+productId,"");
+				       	   }
 		        	  }
 		        	  orderItems.addAll(newReturnItemList);
 	        	}//end of returns check
@@ -4869,6 +4874,7 @@ Debug.logInfo("result= " + result, module);
 				Map zone = (Map)boothZoneMap.get(orderItem.getString("originFacilityId"));
 				// Handle booth totals    			
 				String boothId = orderItem.getString("originFacilityId");
+				
 				if (boothTotals.get(boothId) == null) {
 					Map<String, Object> newMap = FastMap.newInstance();
 
@@ -5390,6 +5396,7 @@ Debug.logInfo("result= " + result, module);
 					supplyTypeMap.put("vatRevenue", runningVatRevenue); 
 					supplyTypeTotals.put(prodSubscriptionTypeId, supplyTypeMap);
 				}
+				//Debug.log("===INENDDDDDDD==boothId=="+boothId+"===productId=="+productId+"====OrderId=="+orderItem.getString("orderId")+"==qty=="+orderItem.getString("quantity"));
 			}
 			totalQuantity = totalQuantity.setScale(decimals, rounding);  
 			totalRevenue = totalRevenue.setScale(decimals, rounding);
