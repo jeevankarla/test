@@ -33,8 +33,16 @@
 	invoiceListMap=[:];
 	invoiceList=[];
 	periodBillingIds=[];
-
-		conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
+	
+	partyPONumMap = [:];
+	partyIdentification = delegator.findList("PartyIdentification", EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PO_NUMBER"), null, null, null, false);
+	
+	partyIdentification.each{eachPO ->
+		partyPONumMap.put(eachPO.partyId, eachPO.idValue);
+	}
+	context.partyPONumMap = partyPONumMap;
+	
+    conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"COM_CANCELLED"));
 	if(!((parameters.periodBillingId).equals("allInstitutions"))){
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, parameters.periodBillingId));
@@ -77,8 +85,17 @@
 	orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
 	
 	
+	if(UtilValidate.isNotEmpty(reportTypeFlag)){
+		if(reportTypeFlag=="instBillOfSale"){
+			orderItemsList = EntityUtil.filterByCondition(orderItemsList, EntityCondition.makeCondition("vatPercent", EntityOperator.LESS_THAN, BigDecimal.ONE));
+		}
+		if(reportTypeFlag=="enclosureOfTaxInvoice"){
+			orderItemsList = EntityUtil.filterByCondition(orderItemsList, EntityCondition.makeCondition("vatPercent", EntityOperator.GREATER_THAN, BigDecimal.ONE));
+		}
+
+	}
 	if(parameters.BOS && parameters.BOS=="billOfSale"){
-		orderItemsList = EntityUtil.filterByCondition(orderItemsList, EntityCondition.makeCondition("vatPercent", EntityOperator.LESS_THAN, BigDecimal.ONE));
+		
 	}
 	
 //	Debug.log("------------------orderItemsList--------------------- : "+orderItemsList);
