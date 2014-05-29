@@ -42,13 +42,13 @@ facilityIdsList. each {facilityId ->
 	
 	facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
 	BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
-	BigDecimal TaxrateAmount = rateAmount.divide(new BigDecimal(12.36), rounding);
+	BigDecimal basicRateAmount = rateAmount.divide(new BigDecimal(1.1236), rounding);
 	
 	tempMap =[:];
 	tempMap.put("boothId", boothFacilityId);
 	tempMap.put("facilityName", facilityName);
 	tempMap.put("rateAmount", rateAmount);
-	tempMap.put("TaxrateAmount", TaxrateAmount);
+	tempMap.put("basicRateAmount", basicRateAmount);
 	finalList.addAll(tempMap);
 }
 context.putAt("finalList", finalList);

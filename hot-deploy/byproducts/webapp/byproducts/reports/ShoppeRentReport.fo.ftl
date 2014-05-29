@@ -76,11 +76,11 @@ under the License.
                        		<#assign rateAmt=(rateAmt+shoppeRent.get("rateAmount"))>
                        		<#assign totAmt=shoppeRent.get("rateAmount")>
            					<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(shoppeRent.get("rateAmount")-shoppeRent.get("TaxrateAmount"))?if_exists?string("#0.00")}</fo:block>  
+	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(shoppeRent.get("basicRateAmount"))?if_exists?string("#0")}</fo:block>  
 	            			</fo:table-cell>
 	            			<#assign taxAmt=(taxAmt+shoppeRent.get("TaxrateAmount"))>
 	            			<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${shoppeRent.get("TaxrateAmount")?if_exists?string("#0.00")}</fo:block>  
+	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(totAmt-shoppeRent.get("basicRateAmount"))?if_exists?string("#0")}</fo:block>  
 	            			</fo:table-cell>
 	            			
 	           				<fo:table-cell>
