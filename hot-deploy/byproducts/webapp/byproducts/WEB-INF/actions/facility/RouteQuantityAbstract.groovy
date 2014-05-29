@@ -203,22 +203,23 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 			productCategoryMap = [:];
 			productValueMap.each{ productValue ->
 				if(UtilValidate.isNotEmpty(productValue)){
-					product = delegator.findOne("Product", [productId : productValue.getKey()], false);
+					currentProduct = productValue.getKey();
+					product = delegator.findOne("Product", [productId : currentProduct], false);
 					tempVariantMap =[:];
-					productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": productValue.getKey()]), null, null, null, false));
-					productId = productAssoc.productId;
+					productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct]), null, null, null, false));
+					virtualProductId =currentProduct;
 					if(UtilValidate.isNotEmpty(productAssoc)){
-						if(UtilValidate.isEmpty(tempVariantMap[productId])){
-							tempMap = [:];						
-							tempMap[productAssoc.productIdTo] = productValue.getValue().get("totalRevenue");
-							tempVariantMap[productId] = tempMap;
-						}else{
-							tempMap = [:];	
-							tempMap.putAll(tempVariantMap.get(productId));
-							tempMap[productAssoc.productIdTo] += productValue.getValue().get("totalRevenue");
-							tempVariantMap[productId] = tempMap;						
-						}
-					
+						virtualProductId = productAssoc.productId;
+					}
+					if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
+						tempMap = [:];
+						tempMap[currentProduct] = productValue.getValue().get("totalRevenue");
+						tempVariantMap[virtualProductId] = tempMap;
+					}else{
+						tempMap = [:];
+						tempMap.putAll(tempVariantMap.get(virtualProductId));
+						tempMap[currentProduct] += productValue.getValue().get("totalRevenue");
+						tempVariantMap[virtualProductId] = tempMap;
 					}
 					if("Milk".equals(product.primaryProductCategoryId)){
 						milkSaleTotal=milkSaleTotal+productValue.getValue().get("totalRevenue");
@@ -231,19 +232,19 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 					}else{
 						tempCatMap = [:];
 						tempCatMap.putAll(productCategoryMap[product.primaryProductCategoryId]);
-						if(UtilValidate.isEmpty(tempCatMap[productId])){
+						if(UtilValidate.isEmpty(tempCatMap[virtualProductId])){
 							tempMap = [:];
-							tempMap[productAssoc.productIdTo] = productValue.getValue().get("totalRevenue");
-							tempCatMap[productId] = tempMap;
+							tempMap[currentProduct] = productValue.getValue().get("totalRevenue");
+							tempCatMap[virtualProductId] = tempMap;
 						}else{
 							tempMap = [:];
-							tempMap.putAll(tempCatMap.get(productId));
-							if(UtilValidate.isEmpty(tempMap.get(productAssoc.productIdTo))){
-									tempMap[productAssoc.productIdTo] = productValue.getValue().get("totalRevenue");
+							tempMap.putAll(tempCatMap.get(virtualProductId));
+							if(UtilValidate.isEmpty(tempMap.get(currentProduct))){
+									tempMap[currentProduct] = productValue.getValue().get("totalRevenue");
 								}else{
-									tempMap[productAssoc.productIdTo] += productValue.getValue().get("totalRevenue");
+									tempMap[currentProduct] += productValue.getValue().get("totalRevenue");
 								}
-							tempCatMap[productId] = tempMap;
+							tempCatMap[virtualProductId] = tempMap;
 						}
 						productCategoryMap.put(product.primaryProductCategoryId,tempCatMap);
 					}
