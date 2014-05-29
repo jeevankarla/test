@@ -1008,14 +1008,14 @@
             </drop-down>
         </field>
         <field name="billOfSale" title="Bill of Sale" widget-style="buttontext" id-name="billOfSale" event="onclick" action="javascript:appendBillingParam(this);">
-            <hyperlink target="instBillOfSaleReport.txt" description="Bill of Sale" target-window="_blank" >
+            <hyperlink target="instBillOfSaleReport.pdf" description="Bill of Sale" target-window="_blank" >
                 <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
                	<parameter param-name="BOS" value="billOfSale"/>
             </hyperlink>
         </field>
          <field name="enclosureOfTaxInvoice" title="Enclosure OF Tax Invoice" widget-style="buttontext" id-name="enclosureOfTaxInvoice" event="onclick" action="javascript:appendBillingParam(this);">
-            <hyperlink target="enclosureOfTaxInvoice.txt" description="Tax Enclosure Report" target-window="_blank" >
+            <hyperlink target="enclosureOfTaxInvoice.pdf" description="Tax Enclosure Report" target-window="_blank" >
                 <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
             </hyperlink>
@@ -1027,7 +1027,7 @@
             </hyperlink>
         </field-->
         <field name="taxInvoice" title="Tax Invoice" widget-style="buttontext" id-name="taxInvoice" event="onclick" action="javascript:appendBillingParam(this);">
-            <hyperlink target="taxInvoiceReport.txt" description="Tax Invoice Report" target-window="_blank" >
+            <hyperlink target="taxInvoiceReport.pdf" description="Tax Invoice Report" target-window="_blank" >
                 <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                	<parameter param-name="periodTypeId" from-field="periodTypeId"/>
             </hyperlink>

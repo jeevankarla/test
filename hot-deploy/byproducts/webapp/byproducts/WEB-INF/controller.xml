@@ -172,16 +172,15 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DueParticularsTXT"/>
     </request-map>
-    <request-map uri="instBillOfSaleReport.txt">
+    <request-map uri="instBillOfSaleReport.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="InstBillOfSaleReportTXT"/>
     </request-map>
-    
-     <request-map uri="enclosureOfTaxInvoice.txt">
+     <request-map uri="enclosureOfTaxInvoice.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EnclosureOfTaxInvoiceReportTXT"/>
     </request-map>
-    <request-map uri="taxInvoiceReport.txt">
+    <request-map uri="taxInvoiceReport.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="TaxInvoiceReportTXT"/>
     </request-map>

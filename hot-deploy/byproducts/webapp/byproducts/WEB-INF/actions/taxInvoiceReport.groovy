@@ -82,7 +82,7 @@
 	shipmentIds.addAll(amShipmentIds);
 	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"PM");
 	shipmentIds.addAll(pmShipmentIds);
-	
+	vatProductIds=[:];
 	facilityMap=[:];
 	facilityIds.each{ eachFacilityId->
 		productMap = [:];
@@ -90,10 +90,12 @@
 		conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
 		conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
 		conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, eachFacilityId));
+		conditionList.add(EntityCondition.makeCondition("vatPercent", EntityOperator.GREATER_THAN, BigDecimal.ONE));
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
 		condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId"] as Set;
 		orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
+		List vatProductIds = EntityUtil.getFieldListFromEntityList(orderItemsList, "productId", true);
 		productTotalsMap = [:];
 		if(UtilValidate.isNotEmpty(orderItemsList)){
 			for (i = 0; i < orderItemsList.size(); i++) {
@@ -123,6 +125,7 @@
 		returnConditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 		returnConditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
 		returnConditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS ,eachFacilityId));
+		returnConditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN ,vatProductIds));//to get Only taxble products
 		returnConditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
 		returnCondition = EntityCondition.makeCondition(returnConditionList,EntityOperator.AND);
 		returnHeaderItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondition, null, null, null, false);
@@ -155,7 +158,7 @@
 		productMap.put("prodMap",productTotalsMap);
 		productMap.put("vatMap",vatMap);
 		productMap.put("returnMap",productReturnMap);
-		if (UtilValidate.isNotEmpty(productMap)) {
+		if (UtilValidate.isNotEmpty(productTotalsMap) || UtilValidate.isNotEmpty(productReturnMap)) {
 			facilityMap.put(eachFacilityId,productMap);
 		}
 	}
@@ -164,7 +167,7 @@
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,eachperiodBillingId));
 		cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		invoiceList = delegator.findList("Invoice", cond, ["invoiceId","invoiceDate","facilityId","partyId","periodBillingId"] as Set , ["-invoiceDate"], null, false);
+		invoiceList = delegator.findList("Invoice", cond, ["invoiceId","invoiceDate","facilityId","partyId","periodBillingId","dueDate"] as Set , ["-invoiceDate"], null, false);
 		if (UtilValidate.isNotEmpty(invoiceList)) {
 			invoice=EntityUtil.getFirst(invoiceList);
 			invoiceListMap.put(invoice.getString("facilityId"), invoice);
