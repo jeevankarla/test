@@ -2742,6 +2742,8 @@ public class ByProductNetworkServices {
 		    	while(boothIter.hasNext()) {
 		            GenericValue booth = boothIter.next();
 		            String vendorPhone = "";
+		            String latitude="";
+		            String longitude="";
 		        	String vendorName = PartyHelper.getPartyName(delegator, booth.getString("ownerPartyId"), false);
 		            Map<String, Object> getTelParams = FastMap.newInstance();
 		        	getTelParams.put("partyId", booth.getString("ownerPartyId"));
@@ -2760,6 +2762,11 @@ public class ByProductNetworkServices {
 	    			if (pmDetails != null) {
 	    				pmRouteId = (String)pmDetails.get("routeId");
 	    			}
+	    			GenericValue pt = booth.getRelatedOne("GeoPoint");
+					if (pt != null) {
+						latitude = pt.getString("latitude");
+						longitude = pt.getString("longitude");
+					}
 	    			
 			        Map<String, Object> boothDetails = FastMap.newInstance();
 			        boothDetails.put("facilityId", booth.getString("facilityId"));
@@ -2769,6 +2776,8 @@ public class ByProductNetworkServices {
 			        boothDetails.put("ownerPhone", vendorPhone);			        
 			        boothDetails.put("amRouteId", amRouteId);
 			        boothDetails.put("pmRouteId", pmRouteId);			        
+			        boothDetails.put("latitude", latitude);			        
+			        boothDetails.put("longitude", longitude);			        
 	    			
 			        boothsDetailsList.add(boothDetails);
 		    	}
