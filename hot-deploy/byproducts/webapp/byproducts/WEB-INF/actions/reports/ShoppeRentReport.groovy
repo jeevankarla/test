@@ -1,4 +1,5 @@
 import org.ofbiz.base.util.*;
+import java.math.RoundingMode;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtil;
 import java.text.SimpleDateFormat;
@@ -15,7 +16,7 @@ import org.ofbiz.network.LmsServices;
 import org.ofbiz.entity.util.EntityFindOptions;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
-
+rounding = RoundingMode.HALF_UP;
 customTimePeriod=delegator.findList("CustomTimePeriod", EntityCondition.makeCondition("customTimePeriodId", parameters.customTimePeriodId), null,null, null, false);
 dayStartfromDate=UtilDateTime.toTimestamp(customTimePeriod[0].fromDate);
 dayStartThruDate=UtilDateTime.toTimestamp(customTimePeriod[0].thruDate);
@@ -25,8 +26,8 @@ dayEnd = UtilDateTime.getDayEnd(dayStartThruDate, timeZone, locale);
 context.put("dayStartfromDate", dayStartfromDate);
 context.put("dayStartThruDate", dayStartThruDate);
 
-decimals = UtilNumber.getBigDecimalScale("ledger.decimals");
-rounding = UtilNumber.getBigDecimalRoundingMode("ledger.rounding");
+//decimals = UtilNumber.getBigDecimalScale("ledger.decimals");
+//rounding = UtilNumber.getBigDecimalRoundingMode("ledger.rounding");
 
 finalList =[];
 facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
@@ -42,7 +43,7 @@ facilityIdsList. each {facilityId ->
 	
 	facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
 	BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
-	BigDecimal basicRateAmount = rateAmount.divide(new BigDecimal(1.1236), rounding);
+	BigDecimal basicRateAmount = (rateAmount.divide(new BigDecimal(1.1236) , 0, rounding));
 	
 	tempMap =[:];
 	tempMap.put("boothId", boothFacilityId);

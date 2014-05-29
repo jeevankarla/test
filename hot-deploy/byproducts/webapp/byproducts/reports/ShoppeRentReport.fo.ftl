@@ -60,6 +60,8 @@ under the License.
                     <#assign rateAmt=0>
                     <#assign taxAmt=0>
                     <#assign totAmt=0>
+                    <#assign totRentAmt=0>
+                    <#assign totBasicAmt=0>
                     <#list finalList as shoppeRent>
                     <#if shoppeRent.get("rateAmount")!=0>
 					<#assign sno=sno+1>
@@ -76,13 +78,13 @@ under the License.
                        		<#assign rateAmt=(rateAmt+shoppeRent.get("rateAmount"))>
                        		<#assign totAmt=shoppeRent.get("rateAmount")>
            					<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(shoppeRent.get("basicRateAmount"))?if_exists?string("#0")}</fo:block>  
+	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(shoppeRent.get("basicRateAmount"))?if_exists?string("#0.00")}</fo:block>  
 	            			</fo:table-cell>
-	            			<#assign taxAmt=(taxAmt+shoppeRent.get("TaxrateAmount"))>
 	            			<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(totAmt-shoppeRent.get("basicRateAmount"))?if_exists?string("#0")}</fo:block>  
+	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${(totAmt-shoppeRent.get("basicRateAmount"))?if_exists?string("#0.00")}</fo:block>  
 	            			</fo:table-cell>
-	            			
+	            			<#assign totBasicAmt = totBasicAmt+shoppeRent.get("basicRateAmount")>
+	            			<#assign totRentAmt = totRentAmt+totAmt>
 	           				<fo:table-cell>
 		                		<fo:block  keep-together="always" text-align="right" white-space-collapse="false">${totAmt?if_exists?string("#0.00")}</fo:block>  
 		                	</fo:table-cell>
@@ -91,7 +93,7 @@ under the License.
 						</#list>
 						<fo:table-row>
 						<fo:table-cell>
-		            		<fo:block  keep-together="always">---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>  
+		            		<fo:block  keep-together="always">-----------------------------------------------------------------------------------------------------</fo:block>  
 		            	</fo:table-cell>
 				        </fo:table-row>
 				            <fo:table-row>
@@ -105,14 +107,19 @@ under the License.
                            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false">TOTALS</fo:block>  
                        		</fo:table-cell>
 	            			<fo:table-cell>
-		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(rateAmt-taxAmt)?if_exists?string("#0.00")}</fo:block>  
+		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(totBasicAmt)?if_exists?string("#0.00")}</fo:block>  
 		                	</fo:table-cell>
 	            			<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${taxAmt?if_exists?string("#0.00")}</fo:block>  
+	            				<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(totRentAmt-totBasicAmt)?if_exists?string("#0.00")}</fo:block>  
 	            			</fo:table-cell>
 	            			<fo:table-cell>
-		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${rateAmt?if_exists?string("#0.00")}</fo:block>  
+		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${totRentAmt?if_exists?string("#0.00")}</fo:block>  
 		                	</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>
+						<fo:table-cell>
+		            		<fo:block  keep-together="always">-----------------------------------------------------------------------------------------------------</fo:block>  
+		            	</fo:table-cell>
 				        </fo:table-row>
 				         <fo:table-row>	
 				            	<fo:table-cell>
