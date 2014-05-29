@@ -586,7 +586,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	  						<td >Time Period
 	  							<select name="customTimePeriodId" class='h4'>
 	            					<#list timePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.customTimePeriodId}</option>
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
 	            					</#list>            
 								</select>
 								<input type="submit" value="Download" class="buttontext"/>
