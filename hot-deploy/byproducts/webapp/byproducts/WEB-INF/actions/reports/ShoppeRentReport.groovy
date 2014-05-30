@@ -26,6 +26,8 @@ dayEnd = UtilDateTime.getDayEnd(dayStartThruDate, timeZone, locale);
 context.put("dayStartfromDate", dayStartfromDate);
 context.put("dayStartThruDate", dayStartThruDate);
 
+printDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "dd/MM/yyyy");
+context.printDate = printDate;
 //decimals = UtilNumber.getBigDecimalScale("ledger.decimals");
 //rounding = UtilNumber.getBigDecimalRoundingMode("ledger.rounding");
 
