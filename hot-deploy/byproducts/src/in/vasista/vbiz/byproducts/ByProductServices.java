@@ -2631,6 +2631,7 @@ public class ByProductServices {
 		  		  String facilityId = "";
 		  		  String amountStr = "";
 		  		  String issuingAuthority = "";
+		  		  String finAccountId = "";
 		  		  String paymentLocationId = "";
 		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
 		  		  BigDecimal amount = BigDecimal.ZERO;
@@ -2661,9 +2662,13 @@ public class ByProductServices {
 		  		  paymentLocationId = (EntityUtil.getFirst(faclityPartyList)).getString("facilityId");
 					
 		  		  if(paymentMethodTypeId.equals("CHALLAN_PAYIN")){
-		  			  if (paramMap.containsKey("issuingAuthority" + thisSuffix)) {
-		  				issuingAuthority = (String) paramMap.get("issuingAuthority" + thisSuffix);
+		  			  if (paramMap.containsKey("finAccountId" + thisSuffix)) {
+		  				finAccountId = (String) paramMap.get("finAccountId" + thisSuffix);
 			  		  }
+		  			  GenericValue finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId),false);
+	  				  if(UtilValidate.isNotEmpty(finAccount)){
+	  					  issuingAuthority = finAccount.getString("finAccountName");
+	  				  }
 		  			  if(UtilValidate.isEmpty(issuingAuthority)){
 			  				Map resultCtx = dispatcher.runSync("getFacilityFinAccountInfo", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
 				  			if(ServiceUtil.isError(resultCtx)){
@@ -2709,10 +2714,26 @@ public class ByProductServices {
 				  			return "error";
 	       				}
 	       				paymentIds.add(paymentResult.get("paymentId"));
+	       				if(paymentMethodTypeId.equals("CHALLAN_PAYIN")){
+		   			  		 Map finDepositCtx = FastMap.newInstance();
+		   				  	 finDepositCtx.put("userLogin", userLogin);
+		   				  	 finDepositCtx.put("paymentIds", UtilMisc.toList((String)paymentResult.get("paymentId")));
+		   				  	 finDepositCtx.put("finAccountId", finAccountId);
+		   				  	 finDepositCtx.put("transactionDate", paymentDate);
+		   				  	 Map resultDepositMap = dispatcher.runSync("depositWithdrawPayments", finDepositCtx);
+		   				  	 if(ServiceUtil.isError(resultDepositMap)){
+		       					Debug.logError("Problems in service depositWithdrawPayments", module);
+					  			request.setAttribute("_ERROR_MESSAGE_", "Error in service depositWithdrawPayments");
+					  			TransactionUtil.rollback();
+					  			return "error";
+		       				}
+	       				}
 		  		  }
+		  		  
 		  		  
 		  		 
 		  	 }//end of loop
+		  	  
 		  	 if(UtilValidate.isNotEmpty(paymentIds) && paymentIds.size() > 1 ){
 	    			Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", UtilMisc.toMap("paymentIds", paymentIds, "paymentGroupTypeId", "ROUTE_BATCH_PAYMENT", "userLogin", userLogin,"facilityId",routeFacilityId));
 		    		if(ServiceUtil.isError(resultCtx)){
@@ -2722,8 +2743,7 @@ public class ByProductServices {
 			  			return "error";
 		    		}
 		    		paymentGroupId = (String)resultCtx.get("paymentGroupId");
-	    	 } 
-		  	  
+	    	 }
 		  	 
 	  	  } catch (GenericEntityException e) {
 	  		  try {
@@ -3609,7 +3629,6 @@ public class ByProductServices {
 			  		  paymentInputMap.put("amount",totalReturnAmount.toString());
 			  		  paymentInputMap.put("useFifo",true);
 			  		  paymentInputMap.put("sendSMS",false);
-			  		  
 			  		  Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentInputMap);
 			  		  if(ServiceUtil.isError(paymentResult)){
 			  			  Debug.logError(paymentResult.toString(), module);
@@ -3723,7 +3742,6 @@ public class ByProductServices {
 		  		  paymentInputMap.put("amount",totalReturnAmount.toString());
 		  		  paymentInputMap.put("useFifo",true);
 		  		  paymentInputMap.put("sendSMS",false);
-		  		  
 		  		  Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentInputMap);
 		  		  if(ServiceUtil.isError(paymentResult)){
 		  			  Debug.logError(paymentResult.toString(), module);

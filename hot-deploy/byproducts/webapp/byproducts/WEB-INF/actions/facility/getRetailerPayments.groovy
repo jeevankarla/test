@@ -41,6 +41,7 @@ if(parameters.facilityId){
 	facilityId = context.facilityId;
 }
 isRetailer = false;
+isRoute = false;
 if(facilityId){
 	facility = delegator.findOne("Facility",[facilityId : facilityId], false);
 	if (facility == null) {
@@ -50,6 +51,9 @@ if(facilityId){
 	}
 	if(facility.facilityTypeId == "BOOTH"){
 		isRetailer = true;
+	}
+	if(facility.facilityTypeId == "ROUTE"){
+		isRoute = true;
 	}
 	/*else{
 		context.facilityId = facilityId
@@ -110,20 +114,28 @@ condList.add(EntityCondition.makeCondition("finAccountTypeId" ,EntityOperator.EQ
 condList.add(EntityCondition.makeCondition("ownerPartyId" ,EntityOperator.IN, paymentTypeParties));
 condList.add(EntityCondition.makeCondition("finAccountCode" ,EntityOperator.NOT_EQUAL, null));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-accountList = delegator.findList("FinAccount", cond, ["finAccountCode", "finAccountName", "ownerPartyId"] as Set, null, null ,false);
+accountList = delegator.findList("FinAccount", cond, ["finAccountId","finAccountCode", "finAccountName", "ownerPartyId"] as Set, null, null ,false);
 checkList = [];
 accountNameList = [];
 //JSONObject partyFinAccMap = new JSONObject();
 partyFinAccMap = [:];	
 accountList.each{ eachAcc ->
-	accCode = eachAcc.finAccountCode;
-	if(!checkList.contains(accCode)){
+	//accCode = eachAcc.finAccountCode;
+	/*if(!checkList.contains(accCode)){
 		checkList.add(accCode);
 		accountNameList.add(eachAcc);
-	}
-	partyFinAccMap.put(eachAcc.ownerPartyId,eachAcc.finAccountName);
+	}*/
+	partyFinAccMap.put(eachAcc.ownerPartyId,eachAcc);
 	
 }
+condList.clear();
+condList.add(EntityCondition.makeCondition("attrName" ,EntityOperator.EQUALS, "COLLECTION_ACCOUNT"));
+condList.add(EntityCondition.makeCondition("attrValue" ,EntityOperator.EQUALS, "Y"));
+cond1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+accountAttrList = delegator.findList("FinAccountAttribute", cond1, ["finAccountId"] as Set, null, null ,false);
+finAccountIds = EntityUtil.getFieldListFromEntityList(accountAttrList, "finAccountId", true);
+accountNameList = delegator.findList("FinAccount", EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIds), null,null,null,false);
+
 context.partyFinAccMap = partyFinAccMap;
 accountNameFacilityIds = [];
 if(parameters.finAccountCode != "AllBanks"){
@@ -145,7 +157,6 @@ if(hideSearch == "N" || stopListing){
 		boothRouteIdsMap=boothsPaymentsDetail["boothRouteIdsMap"];
 	}
 	else {
-		
 		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);
 		boothTempPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	}
@@ -185,8 +196,21 @@ if(hideSearch == "N" || stopListing){
 					}
 				}
 			}
-			
-			if(paymentMethodTypeId == "CHALLAN_PAYIN" && parameters.finAccountCode != "AllBanks"){
+			if(paymentMethodTypeId == "CASH_PAYIN" && isRoute){
+				facilityGroup = delegator.findList("FacilityGroupMember", EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, parameters.facilityId), ["facilityId"] as Set, ["sequenceNum"], null, false);
+				facilityGroupSequenceIds = EntityUtil.getFieldListFromEntityList(facilityGroup, "facilityId", true);
+				orderedPayList = [];
+				facilityGroupSequenceIds.each{ eachSeqFacId ->
+					boothPaymentsInnerList.each{eachPayEntry ->
+						if(eachPayEntry.facilityId == eachSeqFacId){
+							orderedPayList.addAll(eachPayEntry);
+						}
+					}
+				}
+				boothPaymentsInnerList.clear();
+				boothPaymentsInnerList.addAll(orderedPayList);
+			}
+			if(paymentMethodTypeId == "CHALLAN_PAYIN" && parameters.finAccountCode != "AllBanks" && !parameters.facilityId){
 				accountNameFacilityIds.each{ eachRetailer ->
 					if(!exclList.contains(eachRetailer)){
 						tempMap = [:];
@@ -205,14 +229,24 @@ if(hideSearch == "N" || stopListing){
 			boothsPaymentsDetail["invoicesTotalAmount"] =invoicesTotalAmount;
 			boothsPaymentsDetail["invoicesTotalDueAmount"] =invoicesTotalDueAmount;
 		}
-		
 	}
 	if(statusId == "PAID"){
 		boothPaymentsList = boothsPaymentsDetail["paymentsList"];
 		if(paymentMethodTypeId == "CHALLAN_PAYIN"){
+			
 			axisBankPayments = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:"AXISHTOH_PAYIN" , paymentIds : paymentIds]);
 			axisHostTotalAmount+=axisBankPayments["invoicesTotalAmount"];
 			axisPaymentsList = axisBankPayments["paymentsList"];
+			if(parameters.finAccountCode != "AllBanks"){
+				tempPaidList = [];
+				boothPaymentsList.each{eachEntry ->
+					if(accountNameFacilityIds.contains(eachEntry.facilityId)){
+						tempPaidList.addAll(eachEntry);
+					}
+				}
+				boothPaymentsList.clear();
+				boothPaymentsList.addAll(tempPaidList);
+			}
 			boothPaymentsList.addAll(axisPaymentsList);
 		}
 	}

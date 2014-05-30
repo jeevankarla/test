@@ -4306,7 +4306,6 @@ public class ByProductNetworkServices {
 			
 			if (!UtilValidate.isEmpty(boothOrdersList)) {
 				List invoiceIds = EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", false);
-				
 				String tempFacilityId = "";		
 				Map tempPayment = FastMap.newInstance();
 				
@@ -4393,7 +4392,7 @@ public class ByProductNetworkServices {
 							tempPayment.put("totalDue", outstandingAmount.add((BigDecimal)tempPayment.get("totalDue")));
 						}
 							
-					}					
+					}	
 					if((i == boothOrdersList.size()-1)){						
 						boothPaymentsList.add(tempPayment);					
 					}
@@ -5640,7 +5639,8 @@ Debug.logInfo("result= " + result, module);
 	        			GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paidId),false);
 	        			String payType = payment.getString("paymentMethodTypeId");
 	        			String status = payment.getString("statusId");
-	        			if(payType.equals("CREDITNOTE_PAYIN") && !status.equals("PMNT_VOID")){
+	        			BigDecimal amt = payment.getBigDecimal("amount");
+	        			if(payType.equals("CREDITNOTE_PAYIN") && !status.equals("PMNT_VOID") && (amt.compareTo(BigDecimal.ZERO)>0)){
 	        				createNote = Boolean.FALSE;
 	        			}
 	        		}
@@ -6394,7 +6394,7 @@ Debug.logInfo("result= " + result, module);
 	                return ServiceUtil.returnError(null, null, null, paymentResult);
 	            }
 	            paymentId = (String)paymentResult.get("paymentId");
-	            }catch (Exception e) {
+	        }catch (Exception e) {
 	            Debug.logError(e, e.toString(), module);
 	            return ServiceUtil.returnError(e.toString());
 	        }       
@@ -6418,7 +6418,7 @@ Debug.logInfo("result= " + result, module);
 			 result.put("statusFlag", "PAID");
 			 result.put("hideSearch", "N");
 	        return result;
-	    }  
+	    }
 	    /**
 	     * Make booth payments
 	     * @param ctx the dispatch context
@@ -6859,8 +6859,9 @@ Debug.logInfo("result= " + result, module);
 	    	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, "Company")));
 	    	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
 	    	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate)));
+	    	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "CREDITNOTE_PAYIN")));
 	    	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_RECEIVED"),EntityOperator.OR, 
-	    			 	EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_VOID")));
+	    			 	EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_VOID"), EntityOperator.AND, EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"))));
 	    	 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	 try{
 	    		 payments = delegator.findList("Payment", condition, null, UtilMisc.toList("facilityId", "paymentDate"), null, false);
@@ -6891,11 +6892,12 @@ Debug.logInfo("result= " + result, module);
 	    					 String paymentMethodTypeId = facilityPayment.getString("paymentMethodTypeId");
 							 dataMap.put("paymentRefNum", paymentRefNum);
 	    					 dataMap.put("issuingAuthority", issuingAuthority);
+	    					 dataMap.put("paymentMethodTypeId", paymentMethodTypeId);
 	    					 dataMap.put("issuingAuthorityBranch", issuingAuthorityBranch);
-	    					 if(paymentMethodTypeId.equalsIgnoreCase("CASH_PAYIN")){
-	    						 dataMap.put("chequeDate", "");
-	    					 }else{
+	    					 if(paymentMethodTypeId.equalsIgnoreCase("CHEQUE_PAYIN") ){
 	    						 dataMap.put("chequeDate", chequeDate);
+	    					 }else{
+	    						 dataMap.put("chequeDate", "");
 	    					 }
 	    					 dataMap.put("amount", amount);
 	    					 if(dayPaymentDetail.containsKey(paymentDate)){
@@ -7006,7 +7008,7 @@ Debug.logInfo("result= " + result, module);
 	   	 						Map tempDetail = (Map)invDetail.get(boothId);
 	   	 						BigDecimal tempAmount = (BigDecimal)tempDetail.get("amount");
 	   	 						String tempInvoiceId = (String) tempDetail.get("invoiceId");
-	   	 						tempDetail.put("invoiceId", tempInvoiceId+", "+invoiceId);
+	   	 						tempDetail.put("invoiceId", tempInvoiceId+","+invoiceId);
 	   	 						tempDetail.put("amount", amount.add(tempAmount));
 	   	 						invDetail.put(boothId, tempDetail);
 	   	 					}

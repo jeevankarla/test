@@ -42,7 +42,7 @@ try {
 def sdf1 = new SimpleDateFormat("dd.MM.yyyy");
 
 fromDateTime = UtilDateTime.getDayStart(fromDateTime);
-dayBegin = UtilDateTime.getDayEnd(fromDateTime);
+dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
@@ -75,10 +75,24 @@ if(partyCode){
 	boothIdsList.add(partyCode);
 }
 
+paymentMethodDescriptionMap = [:];
+paymentTypeList = delegator.findList("PaymentMethodType", null,null,null,null,true);
+paymentTypeList.each{eachMethod ->
+	paymentMethodDescriptionMap.put(eachMethod.paymentMethodTypeId, eachMethod.description);
+}
+
+
 context.facilityDesc = facilityDesc;
 boothSummary = [:];
 partyWiseLedger = [:];
 boothOBMap = new TreeMap();
+
+shipmentIds = [];
+amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
+shipmentIds.addAll(amShipmentIds);
+pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
+shipmentIds.addAll(pmShipmentIds);
+boothWiseReturnTotal = ByProductNetworkServices.getPeriodReturnTotals(dctx, [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd, facilityIds:boothIdsList]).get("dayWiseBoothWiseTotals");
 
 daywiseReceipts = ByProductNetworkServices.getByProductPaymentDetails(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", boothIdsList)).get("paymentDetails");
 invoiceResult = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin)).get("dayWisePartyInvoiceDetail");
@@ -114,6 +128,15 @@ if(boothIdsList){
 				openingBalance = closingBalance;
 			}
 			invoiceId = "";
+			tempOB = openingBalance;
+			returnProdCheckDate = UtilDateTime.toDateString(startingDate, "yyyy-MM-dd");
+			prodReturnAmt = 0;
+			if(boothWiseReturnTotal.get(returnProdCheckDate)){
+				eachBoothReturnTotal = boothWiseReturnTotal.get(returnProdCheckDate);
+				if(eachBoothReturnTotal){
+					prodReturnAmt = eachBoothReturnTotal.get(eachBooth);
+				}
+			}
 			if(invoiceResult.get(dayStart)){
 				tempDaySale = invoiceResult.get(dayStart);
 				if(tempDaySale && tempDaySale.get(eachBooth)){
@@ -121,7 +144,7 @@ if(boothIdsList){
 					invoiceId = (tempDaySale.get(eachBooth)).get("invoiceId");
 				}
 			}
-			tempOB = openingBalance;
+			
 			receiptAmt = [:];
 			
 			if(daywiseReceipts.get(eachBooth)){
@@ -139,6 +162,7 @@ if(boothIdsList){
 			tempDayBalanceMap.put("openingBalance", tempOB);
 			tempDayBalanceMap.put("invoiceId", invoiceId);
 			tempDayBalanceMap.put("saleAmount", saleAmt);
+			tempDayBalanceMap.put("prodReturnAmt", prodReturnAmt);
 			
 			if(receiptAmt){
 				if(receiptAmt.get("payment")){
@@ -147,12 +171,16 @@ if(boothIdsList){
 					for(i=0;i<payments.size();i++){
 						eachPayment = payments.get(i);
 						chequeDate = eachPayment.get("chequeDate");
+						payType = eachPayment.get("paymentMethodTypeId");
 						chequeNo = eachPayment.get("paymentRefNum");
 						if(!chequeNo){
-							chequeNo = "CASH";
+							chequeNo = "";
 							chequeDate = "";
 						}
-						
+						if(payType != "CHEQUE_PAYIN"){
+							chequeNo = paymentMethodDescriptionMap.get(payType);
+							chequeDate = "";
+						}
 						if(chequeDate){
 							chequeDate = UtilDateTime.toDateString(chequeDate, "dd.MM.yyyy")	
 						}
@@ -175,6 +203,7 @@ if(boothIdsList){
 							tempMap.put("invoiceId", "");
 							tempMap.put("saleAmt", 0);
 							tempMap.putAt("receipts", amount);
+							tempMap.put("prodReturnAmount", 0);
 							tempMap.putAt("chequeDate", chequeDate);
 							tempMap.putAt("chequeNo", chequeNo);
 							tempMap.putAt("chequeReturn", "");
@@ -217,6 +246,7 @@ if(boothIdsList){
 							tempMap.put("invoiceId", "");
 							tempMap.put("saleAmt", 0);
 							tempMap.putAt("receipts", returnAmount);
+							tempMap.put("prodReturnAmount", 0);
 							tempMap.putAt("chequeDate", chequeDate);
 							tempMap.putAt("chequeNo", chequeNo);
 							tempMap.putAt("chequeReturn", "");
@@ -262,6 +292,7 @@ if(boothIdsList){
 		openBal = 0;
 		total_Sale = 0;
 		total_Receipt = 0;
+		total_ProdReturn = 0;
 		total_Penalty = 0;
 		total_returnAmt = 0;
 		tempPaymentDetailList = [];
@@ -279,6 +310,11 @@ if(boothIdsList){
 			total_Sale = total_Sale+salAmt;
 			payment = eachItem.get("receipts");
 			invId = eachItem.get("invoiceId");
+			prodReturnAmt = eachItem.get("prodReturnAmt");
+			if(!prodReturnAmt){
+				prodReturnAmt = 0;
+			}
+			total_ProdReturn = total_ProdReturn+prodReturnAmt;
 			total_Receipt = total_Receipt+payment
 			cheqDate = eachItem.get("chequeDate");
 			cheqNo = eachItem.get("chequeNo");
@@ -316,6 +352,7 @@ if(boothIdsList){
 			tempMap.put("invoiceId", invId);
 			tempMap.put("saleAmount", salAmt);
 			tempMap.put("receipts", payment);
+			tempMap.put("prodReturnAmt", prodReturnAmt);
 			tempMap.put("chequeDate", cheqDate);
 			tempMap.put("chequeNo", cheqNo);
 			returnChequeDate = "";
@@ -346,7 +383,7 @@ if(boothIdsList){
 						}
 					}
 					if(counterFlag == 0){
-						closeBal = tempOpenBal+salAmt-payment+returnAmt+penaltyAmount;
+						closeBal = tempOpenBal+salAmt-payment+returnAmt+penaltyAmount-prodReturnAmt;
 						tempMap.put("chequeReturn", referenceNum);
 						tempMap.put("penaltyAmt", penaltyAmount);
 						tempMap.put("returnAmt", returnAmt);
@@ -361,6 +398,7 @@ if(boothIdsList){
 						newTempMap.put("invoiceId", "");
 						newTempMap.put("saleAmount", 0);
 						newTempMap.put("receipts", 0);
+						newTempMap.put("prodReturnAmount", 0);
 						newTempMap.put("chequeDate", "");
 						newTempMap.put("chequeNo", "");
 						newTempMap.put("chequeReturn", referenceNum);
@@ -374,7 +412,7 @@ if(boothIdsList){
 			}
 			else{
 				if(counterFlag == 0){
-					closeBal = tempOpenBal+salAmt-payment;
+					closeBal = tempOpenBal+salAmt-payment-prodReturnAmt;
 					tempMap.put("chequeReturn", "");
 					tempMap.put("penaltyAmt", penAmt);
 					tempMap.put("returnAmt", retAmt);
@@ -388,6 +426,7 @@ if(boothIdsList){
 					newTempMap.put("openingBalance", "");
 					newTempMap.put("invoiceId", "");
 					newTempMap.put("saleAmount", 0);
+					newTempMap.put("prodReturnAmount", 0);
 					newTempMap.put("receipts", payment);
 					newTempMap.put("chequeDate", cheqDate);
 					newTempMap.put("chequeNo", cheqNo);
@@ -403,6 +442,7 @@ if(boothIdsList){
 		}
 		grandTotalMap.put("totalSale", total_Sale);
 		grandTotalMap.put("totalReceipt", total_Receipt);
+		grandTotalMap.put("totalProdReturn", total_ProdReturn);
 		grandTotalMap.put("periodCB", closeBal);
 		grandTotalMap.put("totalReturn", total_returnAmt);
 		grandTotalMap.put("totalPenalty", total_Penalty);

@@ -106,9 +106,9 @@ under the License.
             	methodTypeId = methodType;
             	var appendStr = "";
             	if(methodTypeId == "CHALLAN_PAYIN"){
-            		var bankObj = $(domObj).find("#issuingAuthority");
-            		var bankName = $(bankObj).val();
-            		appendStr += "<input type=hidden name=issuingAuthority_o_"+index+" value='"+bankName+"' />";
+            		var bankObj = $(domObj).find("#finAccountId");
+            		var finAccId = $(bankObj).val();
+            		appendStr += "<input type=hidden name=finAccountId_o_"+index+" value='"+finAccId+"' />";
             	} 
             	appendStr += "<input type=hidden name=facilityId_o_"+index+" value="+boothId+" />";
             	appendStr += "<input type=hidden name=amount_o_"+index+" value="+amt+" />";
@@ -257,8 +257,8 @@ under the License.
               		<#assign selectVal = partyFinAccMap.get(payment.facilityId)>	
               	</#if>
               	
-          		<td><select name='issuingAuthority' id='issuingAuthority' class='h4'>
-					<#if accountNameList?has_content><#list accountNameList as eachBank><option value='${eachBank.finAccountName?if_exists}' <#if selectVal?has_content && selectVal == eachBank.finAccountName>selected</#if>>${eachBank.finAccountName?if_exists}</option></#list></#if>            
+          		<td><select name='finAccountId' id='finAccountId' class='h4'>
+					<#if accountNameList?has_content><#list accountNameList as eachBank><option value='${eachBank.finAccountId?if_exists}' <#if selectVal?has_content && selectVal.finAccountCode == eachBank.finAccountCode>selected</#if>>${eachBank.finAccountName?if_exists}</option></#list></#if>            
 				</select></td>
           	  </#if>
               <#if parameters.paymentMethodTypeId != "CHEQUE_PAYIN">
