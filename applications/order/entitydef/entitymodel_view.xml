@@ -150,6 +150,7 @@ under the License.
       <alias entity-alias="OH" name="productStoreId"/>
       <alias entity-alias="OH" name="salesChannelEnumId"/>
       <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="externalId"/>
       <alias entity-alias="OI" name="orderItemSeqId"/>
       <alias entity-alias="OH" name="productSubscriptionTypeId"/>
       <alias entity-alias="OH" name="originFacilityId"/>

@@ -81,7 +81,7 @@
 	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
 	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId", "vatPercent"] as Set;
+	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","externalId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId", "vatPercent"] as Set;
 	orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
 	
 	
@@ -154,6 +154,7 @@
 				tempMap.shipmentTypeId = eachEntry.shipmentTypeId;
 				tempMap.productId = eachEntry.productId;
 				tempMap.orderId=eachEntry.orderId;
+				tempMap.externalId=eachEntry.externalId;
 				tempMap.quantity = eachEntry.quantity;
 				tempMap.productName=eachEntry.productName;
 				tempMap.unitListPrice = eachEntry.unitListPrice;
