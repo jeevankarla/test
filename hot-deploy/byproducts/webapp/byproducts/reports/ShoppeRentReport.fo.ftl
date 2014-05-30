@@ -20,7 +20,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
+            <fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-left=".8in" margin-right=".3in" margin-top=".5in">
                 <fo:region-body margin-top="1.9in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -134,14 +134,43 @@ under the License.
 				            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Certification : This is certified that the above ${sno} milk shopee have to pay shopee rent for the Month of ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")} </fo:block>  
 				            	</fo:table-cell>
 				        </fo:table-row>
-				         <fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
+				        <fo:table-row>	
 				            	<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				            	</fo:table-cell>
 				        </fo:table-row>
+						<fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            		</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            		</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            		</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+										        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+						
+										        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+										        				        
 				        <fo:table-row>
 				            	<fo:table-cell>
 				            		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Prepared By    			  		  	BVB I/C				        	   Preauditor			          MANAGER (Mktg)</fo:block>  
