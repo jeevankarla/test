@@ -484,4 +484,29 @@ public class FinAccountServices {
 
         return result;
     }
+    public static Map<String, Object> setMassFinAccountTransStatus(DispatchContext dctx, Map<String, Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        List finAccountTransIdsList =  (List)context.get("finAccountTransIds");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String  statusId=(String)context.get("statusId");
+        Map finAccountTransMap = UtilMisc.toMap("statusId",statusId);
+            finAccountTransMap.put("userLogin", userLogin);
+            for(int i = 0; i < finAccountTransIdsList.size(); i++){
+           	 String finAccountTransId = (String) finAccountTransIdsList.get(i);
+           	 finAccountTransMap.put("finAccountTransId", finAccountTransId);
+           try {
+           	Map finAccountTransMapResult=dispatcher.runSync("setFinAccountTransStatus", finAccountTransMap);
+               if (ServiceUtil.isError(finAccountTransMapResult)){
+     		  		String errMsg =  ServiceUtil.getErrorMessage(finAccountTransMapResult);
+     		  		Debug.logError(errMsg , module);
+     		  	    return ServiceUtil.returnError("setFinAccountTransStatus  having Problem for" + finAccountTransId);    
+     		  	}
+           } catch (GenericServiceException e) {
+               Debug.logError(e, "setFinAccountTransStatus  having Problem for", module);
+               return ServiceUtil.returnError(e.getMessage());
+           } 
+         } 
+        return ServiceUtil.returnSuccess("Status Change Successfully for Selected FinAccountTransactions");
+    }
 }

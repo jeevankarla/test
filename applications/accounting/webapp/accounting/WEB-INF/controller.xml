@@ -2065,6 +2065,12 @@ under the License.
         <response name="success" type="view" value="FindFinAccountTrans"/>
         <response name="error" type="view" value="FindFinAccountTrans"/>
     </request-map>
+     <request-map uri="setMassFinAccountTransStatus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="setMassFinAccountTransStatus"/>
+        <response name="success" type="view"  value="FindFinAccountTrans"/>
+        <response name="error" type="view" value="FindFinAccountTrans"/>
+    </request-map>
     <request-map uri="FinancialAccountReconciliation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinancialAccountReconciliation"/>

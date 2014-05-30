@@ -78,6 +78,20 @@ function getFinAccountTransRunningTotalAndBalances() {
     }
 }
 -->
+function toggleFinAccntTransId(master) {
+        var finTransactions = jQuery("#listFinAccTra :checkbox[name='finAccntTransIds']");
+        jQuery.each(finTransactions, function() {
+            this.checked = master.checked;
+        });
+    }
+    function getFinAccountTransInfo() {
+    var finAccountTansList=[];
+        $('.chkFinTransId:checked').each(function() {
+        var finAccountTrnsId=$(this).val();
+        $('#massCancelFinTrans').append('<input type="hidden" name="finAccountTransIds" value="'+finAccountTrnsId+'" />');
+        });
+        }
+
 </script>
 
 <div class="screenlet screenlet-body">
@@ -88,6 +102,13 @@ function getFinAccountTransRunningTotalAndBalances() {
         <span class="label" id="showFinAccountTransRunningTotal"></span>
       </div>
     </#if>
+   <form name="massCancelFinTrans" id="massCancelFinTrans"  method="post" action="setMassFinAccountTransStatus">
+      <div align="right">
+       <input type="submit" value="Mass Cancel"  class="buttontext" id="MassCancaltionId" name="MassCancaltionName" onclick="javascript:getFinAccountTransInfo();" />
+        <input name="statusId" type="hidden" value="FINACT_TRNS_CANCELED"/>
+         <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
+       </div>
+     </form>
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal?exists>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>
       <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
@@ -142,6 +163,9 @@ function getFinAccountTransRunningTotalAndBalances() {
           <#if ((glReconciliationId?has_content && glReconciliationId == "_NA_") && (glReconciliations?has_content && finAccountTransList?has_content)) || !grandTotal?exists>
             <th>${uiLabelMap.CommonSelectAll} <input name="selectAll" type="checkbox" value="N" id="checkAllTransactions" onclick="javascript:togglefinAccountTransId(this);"/></th>
           </#if>
+           <th align="right">${uiLabelMap.CommonSelectAll} 
+           <input type="checkbox" id="checkAllInvoices" name="finAccountTransIdsList" onchange="javascript:toggleFinAccntTransId(this);" />
+           </th>
         </tr>
         <#-- Header Ends-->
         <#assign alt_row = false>
@@ -256,16 +280,22 @@ function getFinAccountTransRunningTotalAndBalances() {
             <td><#if status?has_content>${status.description?if_exists}</#if></td>
             <td>${finAccountTrans.comments?if_exists}</td>
             <#if grandTotal?exists>
+                <#assign contra = ""/>
+          		<#if finAccountTrans.reasonEnumId?has_content>                         
+                     <#assign contra = finAccountTrans.reasonEnumId?if_exists />                        
+                </#if>
               <td><!-- to avoid cancel of contra FinAccount transaction -->
-              		<#assign contra = ""/>
-              		<#if finAccountTrans.reasonEnumId?has_content>                         
-                         <#assign contra = finAccountTrans.reasonEnumId?if_exists />                        
-                    </#if>
                 <#if ((finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId != 'WITHDRAWAL' &&  contra !='FATR_CONTRA') ||
                        (finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId == 'WITHDRAWAL' && contra !='FATR_CONTRA' && companyCheck == 'COMPANY_CHECK'))>
                   <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">${uiLabelMap.CommonCancel}</a>
                 </#if>
               </td>
+              <td align="right">
+               <#if ((finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId != 'WITHDRAWAL' &&  contra !='FATR_CONTRA') ||
+                       (finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId == 'WITHDRAWAL' && contra !='FATR_CONTRA' && companyCheck == 'COMPANY_CHECK'))>
+               <input type="checkbox" id="finAccountTransId_${finAccountTrans.finAccountTransId}" class="chkFinTransId" name="finAccntTransIds" value="${finAccountTrans.finAccountTransId}" />
+               </#if>
+               </td>
             </#if>
             <input name="finAccountTransId_o_${finAccountTrans_index}" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="organizationPartyId_o_${finAccountTrans_index}" type="hidden" value="${defaultOrganizationPartyId}"/>
@@ -290,6 +320,7 @@ function getFinAccountTransRunningTotalAndBalances() {
         </#list>
       </table>
     </form>
+    
     <#list finAccountTransList as finAccountTrans>
       <form name="removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}" method="post" action="<@ofbizUrl>removeFinAccountTransFromReconciliation</@ofbizUrl>">
         <input name="finAccountTransId" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
