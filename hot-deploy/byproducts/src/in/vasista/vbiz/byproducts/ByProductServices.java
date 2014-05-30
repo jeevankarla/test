@@ -3926,6 +3926,7 @@ public class ByProductServices {
 				    	  String refNum = "CR_PB_"+periodBillingId;
 				    	  GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
 				    	  invoice.set("referenceNumber",refNum);
+				    	  invoice.set("dueDate",dayStartThruDate);//reset Billing EndDate as invoiceDue date
 				    	  invoice.set("periodBillingId",periodBillingId);
 				    	  invoice.store();
 			    	  }
