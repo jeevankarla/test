@@ -715,6 +715,11 @@ under the License.
         <response name="success" type="view" value="EditAcctgTrans"/>
         <response name="error" type="view" value="EditAcctgTrans"/>
     </request-map>
+    <request-map uri="postBulkAcctg">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="postBulkAcctg"/>
+        <response name="success" type="view" value="FindAcctgTrans"/>
+    </request-map>
     <request-map uri="updateAcctgTrans">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateAcctgTrans"/>

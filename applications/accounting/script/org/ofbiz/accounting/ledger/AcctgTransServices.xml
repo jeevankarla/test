@@ -450,7 +450,37 @@ under the License.
         </else>
         </if-compare>
     </simple-method>
-
+    
+     <simple-method method-name="postBulkAcctg" short-description="post bulk AcctgTrans">
+     	 <entity-condition entity-name="AcctgTransAndEntries" list="transactions" distinct="true">
+                <condition-list>
+                    <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.organizationPartyId"/>
+                    <condition-expr field-name="acctgTransTypeId" operator="equals" from-field="parameters.acctgTransTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
+                    <condition-expr field-name="isPosted" operator="equals" value="N"/>
+                    <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
+                    <condition-expr field-name="paymentId" operator="equals" from-field="parameters.paymentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="productId" operator="equals" from-field="parameters.productId" ignore-if-empty="true"/>
+                    <condition-expr field-name="workEffortId" operator="equals" from-field="parameters.workEffortId" ignore-if-empty="true"/>
+                    <condition-expr field-name="shipmentId" operator="equals" from-field="parameters.shipmentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="acctgTransId" operator="equals" from-field="parameters.acctgTransId" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="finAccountTransId" operator="equals" from-field="parameters.finAccountTransId" ignore-if-empty="true"/>
+                </condition-list>
+                <select-field field-name="acctgTransId"/>
+            </entity-condition>
+        <if-not-empty field="transactions">        	       	
+	        <iterate entry="acctgTransaction" list="transactions">        	
+	        	<set field="postAcctgTransMap.acctgTransId" from-field="acctgTransaction.acctgTransId"/>	        	
+	        	<call-service service-name="postAcctgTrans" in-map-name="postAcctgTransMap"/>        	
+	        </iterate>
+        </if-not-empty>
+         <set field="nooftransactions" value="${groovy: return(transactions.size())}" type="Integer"/>
+         <set field="warningMessage[]" value="The accounting transaction [${nooftransactions}] has been posted."/>
+        <field-to-result field="warningMessage" result-name="successMessageList"/>
+    </simple-method>
     <simple-method method-name="getAcctgTransEntriesAndTransTotal" short-description="Calculate total of credit and debit and difference between both for passed party and group rollup parties">
         <call-simple-method method-name="getGlArithmeticSettingsInline" xml-resource="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml"/>
         <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>

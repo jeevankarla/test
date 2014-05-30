@@ -180,6 +180,28 @@
 											operator="equals" value="Y" />
 									</condition>
 									<widgets>
+									    <section>
+									        <condition>
+									             <if-has-permission permission="ACCTGTRANS" action="_BULKPOST"/>
+									        </condition>
+									         <widgets>
+									              <container>
+													<link text="${uiLabelMap.BulkPostEntries}" style="buttontext"
+														target="postBulkAcctg">
+														<parameter param-name="organizationPartyId" />
+														<parameter param-name="acctgTransTypeId" from-field="parameters.acctgTransTypeId"/>
+														<parameter param-name="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>
+														<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
+														<parameter param-name="isPosted" from-field="parameters.isPosted"/>
+														<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
+														<parameter param-name="paymentId" from-field="parameters.paymentId"/>
+														<parameter param-name="fromDate" from-field="parameters.fromDate"/>
+														<parameter param-name="thruDate" from-field="parameters.thruDate"/>
+													    <parameter param-name="finAccountTransId" from-field="parameters.finAccountTransId"/>
+													</link> 
+													</container>
+									         </widgets>
+									    </section>
 										<screenlet title="${uiLabelMap.AccountingAcctgTrans}">
 											<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
 												target="AcctgTransSearchResultsCsv.csv">
@@ -212,6 +234,7 @@
 										</screenlet>
 									</widgets>
 								</section>
+								
 							</widgets>
 							<fail-widgets>
 								<label style="h3"

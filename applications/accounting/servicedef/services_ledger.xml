@@ -377,7 +377,9 @@ under the License.
         	<permission-service service-name="acctgTransactionPermissionCheck" main-action="EDIT_INTERNAL"/>
         	<permission-service service-name="acctgTransactionPermissionCheck" main-action="EDIT"/>
         </required-permissions>
-         
+         <auto-attributes mode="IN" entity-name="AcctgTransAndEntries" optional="true"></auto-attributes>
+         <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
     <service name="closeFinancialTimePeriod" default-entity-name="CustomTimePeriod" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="closeFinancialTimePeriod" auth="true">

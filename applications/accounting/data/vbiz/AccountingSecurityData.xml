@@ -209,5 +209,11 @@ under the License.
      <SecurityGroupPermission groupId="ACCTG_VIEW" permissionId="ACCOUNTING_VIEW"/>
      <SecurityGroupPermission groupId="ACCTG_VIEW" permissionId="ACCOUNTING_COMM_VIEW"/>
      
+      <!--this is Special permissoinId to post Bulk Accounting transactions. this will used when the migration time only  -->
+	<SecurityPermission description="To post bulk Accounting transactions" permissionId="ACCTGTRANS_BULKPOST"/>
+	   <!-- Security Group to manage all Accounting operations -->
+    <SecurityGroup description="bulk Accounting transactions post" groupId="ACCTGTRANSBULKPOST"/>
+    <SecurityGroupPermission groupId="ACCTGTRANSBULKPOST" permissionId="ACCTGTRANS_BULKPOST"/>
+	
      
 </entity-engine-xml>
