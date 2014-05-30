@@ -34,7 +34,7 @@ under the License.
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;              UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                                                     Print Date :</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                                                     Print Date :${printDate?if_exists}</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                     LIST OF SHOPPEES TO PAY RENT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")}   </fo:block>
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==================================================================================================</fo:block> 
