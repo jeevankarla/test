@@ -231,6 +231,7 @@ under the License.
             orderId = The orderId to associate the invoice with
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="createInvoiceForOrder" engine="java"

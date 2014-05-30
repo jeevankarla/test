@@ -1074,7 +1074,7 @@ public class ByProductServices {
             
             	try{
             		if(UtilValidate.isEmpty(excludeInvoiceForFacilityIds) || (UtilValidate.isNotEmpty(excludeInvoiceForFacilityIds) && !excludeInvoiceForFacilityIds.contains(facilityId))){
-            			resultMap = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"userLogin", userLogin));
+            			resultMap = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"eventDate",estimatedDeliveryDate,"userLogin", userLogin));
                 		if (ServiceUtil.isError(resultMap)) {
                             Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(resultMap), module);
                     		return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(resultMap));          	            
