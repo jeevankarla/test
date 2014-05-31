@@ -583,14 +583,17 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	  				<tr class="alternate-row">
 	  					<form id="ShoppeRentReport" name="ShoppeRentReport" method="post" action="<@ofbizUrl>ShoppeRentReport.pdf</@ofbizUrl>" target="_blank">	
 	  						<td>Shoppe Rent Report</td>
-	  						<td >Time Period
+	  						<td >Period
 	  							<select name="customTimePeriodId" class='h4'>
 	            					<#list timePeriodList as timePeriod>    
 	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
 	            					</#list>            
 								</select>
-								<input type="submit" value="Download" class="buttontext"/>
-	      					</td>       			
+	      					</td>
+	      					<td>
+	      						<input type="submit" value="Download" class="buttontext"/>
+	      					</td>
+	      					       			
 	  					</form>
 	  				</tr>
 			        <tr class="alternate-row">
