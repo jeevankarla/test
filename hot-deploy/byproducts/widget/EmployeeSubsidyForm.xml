@@ -84,9 +84,17 @@
         		<field-map field-name="facilityId" from-field="facilityId"/>
         		<select-field field-name="facilityName"/>
         	</entity-one>
+        	 
+            <entity-and entity-name="PartyRelationship" list="PartyRelationship" filter-by-date="true">
+                <field-map field-name="partyIdTo" from-field="partyId"/>
+            </entity-and>
+        	<set field="UnionCode" from-field="PartyRelationship[0].partyIdFrom" type="Object"/>
+        	<entity-one entity-name="PartyGroup">
+        		<field-map field-name="partyId" from-field="UnionCode"/>
+        		<select-field field-name="groupName"/>
+        	</entity-one>
+        	<set field="UnionName" from-field="groupName"/>
         	<set field="facilityName" from-field="facilityName"/>
-        	<set field="UnitName" default-value="" />
-        	<set field="UnitCode" default-value=""/>
         </row-actions>
        
     	<field name="firstName" title="Employee Name" ><display description="${firstName},${lastName}" ></display></field> 
@@ -95,7 +103,8 @@
         <field name="facilityName" title="Retailer Name">
         <display description="${facilityName}" ></display>
       </field>  
-        <field name="UnitName" title="Union / Unit Name"><display/></field>
-    	<field name="UnitCode" title="Union / Unit Code"><display/></field>
+        <field name="UnionName" title="Union / Unit Name"><display description="${UnionName}" ></display></field>
+    	<field name="UnionCode" title="Union / Unit Code"><display description="${UnionCode}" ></display>
+      </field>  
     </form>
 </forms>
