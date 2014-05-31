@@ -202,7 +202,7 @@ def populateDailyIndentDetail(quotaResult){
 			
 			//newDailyIndent.store();
 			for(GenericValue product :productList){
-				if(UtilValidate.isEmpty(indentValue.get(product.get("productId")))){
+				if(UtilValidate.isEmpty(indentValue.get(product.get("productId"))) || (UtilValidate.isNotEmpty(indentValue.get(product.get("productId"))) && indentValue.get(product.get("productId")) ==0)){
 					continue;
 				}
 				GenericValue newDailyIndentDetail = delegator.makeValue("Dailyindentdetail");
