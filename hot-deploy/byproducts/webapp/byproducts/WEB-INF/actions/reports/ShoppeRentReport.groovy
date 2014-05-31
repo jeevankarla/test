@@ -32,7 +32,10 @@ context.printDate = printDate;
 //rounding = UtilNumber.getBigDecimalRoundingMode("ledger.rounding");
 
 finalList =[];
-facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
+facilityIdsList =[];
+facilityList= (ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, "SHP_RTLR" ,dayBegin)).get("boothActiveList");
+facilityIdsList = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
+//facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
 facilityIdsList. each {facilityId ->
 	facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
 	boothFacilityId = facilityDetails.get("facilityId");
