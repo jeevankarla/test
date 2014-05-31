@@ -31,6 +31,7 @@ under the License.
 ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
  <#if productCategoryMap?has_content> 
  <#assign grandTotalNetValue = 0>
+ <#assign grandTotalNetQty = 0>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
@@ -38,7 +39,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                     <fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">CATEGORY WISE SALES STATEMENT From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
               		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
               		<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
-              		<fo:block font-weight="bold" font-size="10pt">ProductCode			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ProductName   								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Amount          &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Average Amount</fo:block>
+              		<fo:block font-weight="bold" font-size="10pt">ProductCode			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ProductName   								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Quantity          &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Average Quantity    &#160;&#160;&#160;&#160;&#160;&#160;Total Amount</fo:block>
             		<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
@@ -54,9 +55,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 		                    	<#assign prodCategoryDetails = productCategoryMap.entrySet()>
 		                    	<#list prodCategoryDetails as prodCategory>
 		                    	<#if prodCategory.getKey()=="Milk">
+		                    	<#assign productCategory = delegator.findOne("Product", {"productId" : prodCategory.getKey()}, true)?if_exists/>
 		                    		<fo:table-row>
 	                        			<fo:table-cell>
-	                            			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${prodCategory.getKey()}</fo:block>  
+	                            			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${productCategory.description?if_exists}</fo:block>  
 	                        			</fo:table-cell>
 		                        	</fo:table-row>
 		                        	<fo:table-row>
@@ -68,9 +70,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 		                    		<#assign productDetails = prodCategory.getValue().entrySet()>
 		                    			<#list productDetails as prod>
 		                    				<#assign catProdDetails = prod.getValue().entrySet()>
+		                    				<#assign prodSubCat = delegator.findOne("Product", {"productId" : prod.getKey()}, true)?if_exists/>
 	                    			<fo:table-row>
 	                        			<fo:table-cell>
-	                            			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${prod.getKey()}</fo:block>  
+	                            			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${prodSubCat.get("description")?if_exists}</fo:block>  
 	                        			</fo:table-cell>
 		                        	</fo:table-row>
 		                        	<fo:table-row>
@@ -78,18 +81,23 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 	                            			<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                        			</fo:table-cell>
 		                        	</fo:table-row>
-		                        	<#assign totalSaleValue = 0>
-						 			<#assign totalReturnValue = 0>
 									<#assign totalNetValue = 0>
-						 			<#assign totalVatValue = 0>
+						 			<#assign totalNetQty = 0>
 						 					<#list catProdDetails as catProd>
 		                    				 <#assign product = delegator.findOne("Product", {"productId" : catProd.getKey()}, true)?if_exists/>
-		                    				 <#assign saleValue = (catProd.getValue())?if_exists>
+		                    				 <#assign saleValue = (catProd.getValue().get("revenue"))?if_exists>
+		                    				 <#assign saleQuantity = (catProd.getValue().get("quantity"))?if_exists>
 		                    				 <#assign returnValue = (productReturnMap[product.productId].get("returnPrice"))?if_exists>
+		                    				 <#assign returnQty = (productReturnMap[product.productId].get("returnQtyLtrs"))?if_exists>
 		                    				  <#if returnValue?has_content>
 		                    				 	<#assign netValue = (saleValue-returnValue)?if_exists>
 		                    				 <#else>
 		                    				 	<#assign netValue = (saleValue?if_exists)>
+		                    				 </#if>
+		                    				 <#if returnQty?has_content>
+		                    				 	<#assign netQty = (saleQuantity-returnQty)?if_exists>
+		                    				 <#else>
+		                    				 	<#assign netQty = (saleQuantity?if_exists)>
 		                    				 </#if>
 											<fo:table-row>
 												<fo:table-cell>
@@ -98,12 +106,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 			                        			<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${product.description?if_exists}</fo:block>  
 			                        			</fo:table-cell>
+			                        			<#assign totalNetQty = (totalNetQty + netQty?if_exists)>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${netQty?if_exists?string("#0.00")}</fo:block>  
+			                        			</fo:table-cell>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false"><#if (totalDays!=0)>${(netQty/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+			                        			</fo:table-cell>
 			                        			<#assign totalNetValue = (totalNetValue + netValue?if_exists)>
 			                        			<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${netValue?if_exists?string("#0.00")}</fo:block>  
-			                        			</fo:table-cell>
-			                        			<fo:table-cell>
-			                            			<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false"><#if (totalDays!=0)>${(netValue/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
 			                        			</fo:table-cell>
 			                        		</fo:table-row>
 			                        		<#assign serialNo = serialNo+1>
@@ -120,12 +132,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 	                        			<fo:table-cell>
 	                            			<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="10pt" white-space-collapse="false">&lt;SUB TOTAL&gt;</fo:block>  
 	                        			</fo:table-cell>
+	                        			<#assign grandTotalNetQty = (grandTotalNetQty + totalNetQty?if_exists)>
+	                        			<fo:table-cell>
+	                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="10pt" white-space-collapse="false">${totalNetQty?if_exists?string("#0.00")}</fo:block>  
+	                        			</fo:table-cell>
+	                        			<fo:table-cell>
+	                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="10pt" white-space-collapse="false"><#if (totalDays!=0)>${(totalNetQty/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+	                        			</fo:table-cell>
 	                        			<#assign grandTotalNetValue = (grandTotalNetValue + totalNetValue?if_exists)>
 	                        			<fo:table-cell>
 	                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="10pt" white-space-collapse="false">${totalNetValue?if_exists?string("#0.00")}</fo:block>  
-	                        			</fo:table-cell>
-	                        			<fo:table-cell>
-	                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="10pt" white-space-collapse="false"><#if (totalDays!=0)>${(totalNetValue/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
 	                        			</fo:table-cell>
 		                        	</fo:table-row>
 		                        	<fo:table-row>
@@ -143,10 +159,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                             			<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">GRAND TOTAL</fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${grandTotalNetValue?if_exists?string("#0.00")}</fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${grandTotalNetQty?if_exists?string("#0.00")}</fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false"><#if (totalDays!=0)>${(grandTotalNetValue/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false"><#if (totalDays!=0)>${(grandTotalNetQty/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+                        			</fo:table-cell>
+                        			<fo:table-cell>
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false">${grandTotalNetValue?if_exists?string("#0.00")}</fo:block>  
                         			</fo:table-cell>
 		                        </fo:table-row>
 		                        <fo:table-row>
@@ -159,13 +178,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 	                            			<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
 	                        			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">Average Milk Sales Per Day</fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">Average Milk Sales Per Day(Qty)</fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
                             			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false"><#if (totalDays!=0)>${(milkSaleTotal/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false"><#if (totalDays!=0)>${(milkAverageTotal/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
                         			</fo:table-cell>
 		                        </fo:table-row>
 		                        <fo:table-row>
@@ -173,13 +192,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 	                            			<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
 	                        			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">Average Curd Sales Per Day</fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="left" font-size="12pt" white-space-collapse="false">Average Curd Sales Per Day(Qty)</fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
                             			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false"></fo:block>  
                         			</fo:table-cell>
                         			<fo:table-cell>
-                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false"><#if (totalDays!=0)>${(curdSaleTotal/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
+                            			<fo:block  keep-together="always" font-weight="bold" text-align="right" font-size="12pt" white-space-collapse="false"><#if (totalDays!=0)>${(curdAverageTotal/totalDays)?if_exists?string("#0.00")}</#if></fo:block>  
                         			</fo:table-cell>
 		                        </fo:table-row>
 		                         <fo:table-row>

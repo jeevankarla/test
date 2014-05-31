@@ -165,6 +165,9 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 		returnProductList.add(productReturnMap);
 	}
 }
+
+milkReturnQty = 0;
+curdReturnQty = 0;
 productReturnMap = [:];
 returnProducts = EntityUtil.getFieldListFromEntityList(returnHeaderItemsList, "productId", true);
 if(UtilValidate.isNotEmpty(returnProducts)){
@@ -173,15 +176,20 @@ if(UtilValidate.isNotEmpty(returnProducts)){
 			prodTotalQty = 0;
 			returnPrice = 0;
 			product = delegator.findOne("Product", ["productId" : eachProduct], true);
+			productCategoryId = product.primaryProductCategoryId;
 			returnQtyIncluded = product.quantityIncluded;
-			
 			retTempMap = [:];
 			returnProdList.each{ eachProdReturnItem ->
 				prodTotalQty = prodTotalQty+eachProdReturnItem.returnQuantity;
 				if(eachProdReturnItem.returnPrice){
 					returnPrice = returnPrice+(eachProdReturnItem.returnQuantity*eachProdReturnItem.returnPrice);
 				}
-				
+				if("Milk".equals(productCategoryId)){
+					milkReturnQty = milkReturnQty+((eachProdReturnItem.returnQuantity)*returnQtyIncluded);
+				}
+				if("Curd".equals(productCategoryId)){
+					curdReturnQty = curdReturnQty+((eachProdReturnItem.returnQuantity)*returnQtyIncluded);
+				}
 			}
 			retTempMap.returnQuantity = prodTotalQty;
 			retTempMap.returnPrice = returnPrice;
@@ -190,6 +198,8 @@ if(UtilValidate.isNotEmpty(returnProducts)){
 	}
 }
 returnProductList = UtilMisc.sortMaps(returnProductList, UtilMisc.toList("routeId"));
+context.put("milkReturnQty",milkReturnQty);
+context.put("curdReturnQty",curdReturnQty);
 context.put("productReturnMap",productReturnMap);
 context.put("saleProductReturnMap",saleProductReturnMap);
 context.put("returnProductList",returnProductList);

@@ -197,7 +197,8 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 			context.putAt("grandProdTotals", prodTotals);
 			
 			//for category wise sales report
-			
+			milkAverageTotal = 0;
+			curdAverageTotal = 0;
 			milkSaleTotal = 0;
 			curdSaleTotal = 0;
 			productCategoryMap = [:];
@@ -213,19 +214,26 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 					}
 					if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
 						tempMap = [:];
-						tempMap[currentProduct] = productValue.getValue().get("totalRevenue");
+						tempProdMap = [:];
+						tempProdMap["quantity"] = productValue.getValue().get("total");
+						tempProdMap["revenue"] = productValue.getValue().get("totalRevenue");
+						tempMap[currentProduct] = tempProdMap;
 						tempVariantMap[virtualProductId] = tempMap;
 					}else{
 						tempMap = [:];
+						productQtyMap = [:];
 						tempMap.putAll(tempVariantMap.get(virtualProductId));
-						tempMap[currentProduct] += productValue.getValue().get("totalRevenue");
+						productQtyMap.putAll(tempMap);
+						productQtyMap["quantity"] += productValue.getValue().get("total");
+						productQtyMap["revenue"] += productValue.getValue().get("totalRevenue");
+						tempMap[currentProduct] = productQtyMap;
 						tempVariantMap[virtualProductId] = tempMap;
 					}
 					if("Milk".equals(product.primaryProductCategoryId)){
-						milkSaleTotal=milkSaleTotal+productValue.getValue().get("totalRevenue");
+						milkSaleTotal=milkSaleTotal+productValue.getValue().get("total");
 					}
 					if("Curd".equals(product.primaryProductCategoryId)){
-						curdSaleTotal=curdSaleTotal+productValue.getValue().get("totalRevenue");
+						curdSaleTotal=curdSaleTotal+productValue.getValue().get("total");
 					}
 					if(UtilValidate.isEmpty(productCategoryMap[product.primaryProductCategoryId])){
 						productCategoryMap.put(product.primaryProductCategoryId,tempVariantMap);
@@ -234,15 +242,24 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 						tempCatMap.putAll(productCategoryMap[product.primaryProductCategoryId]);
 						if(UtilValidate.isEmpty(tempCatMap[virtualProductId])){
 							tempMap = [:];
-							tempMap[currentProduct] = productValue.getValue().get("totalRevenue");
+							tempProdMap = [:];
+							tempProdMap["quantity"] = productValue.getValue().get("total");
+							tempProdMap["revenue"] = productValue.getValue().get("totalRevenue");
+							tempMap[currentProduct] = tempProdMap;
 							tempCatMap[virtualProductId] = tempMap;
 						}else{
 							tempMap = [:];
 							tempMap.putAll(tempCatMap.get(virtualProductId));
-							if(UtilValidate.isEmpty(tempMap.get(currentProduct))){
-									tempMap[currentProduct] = productValue.getValue().get("totalRevenue");
+								if(UtilValidate.isEmpty(tempMap.get(currentProduct))){
+									currentTempMap = [:];
+									currentTempMap["quantity"] = productValue.getValue().get("total");
+									currentTempMap["revenue"] = productValue.getValue().get("totalRevenue");
+									tempMap[currentProduct] = currentTempMap;
 								}else{
-									tempMap[currentProduct] += productValue.getValue().get("totalRevenue");
+									currentTempMap = [:];
+									currentTempMap["quantity"] += productValue.getValue().get("total");
+									currentTempMap["revenue"] += productValue.getValue().get("totalRevenue");
+									tempMap[currentProduct] = currentTempMap;
 								}
 							tempCatMap[virtualProductId] = tempMap;
 						}
@@ -250,9 +267,21 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 					}
 				}
 			}
+			milkReturnTotal = context.get("milkReturnQty");
+			curdReturnTotal = context.get("curdReturnQty");
+			if(UtilValidate.isNotEmpty(milkReturnTotal)){
+				milkAverageTotal = milkAverageTotal+(milkSaleTotal-milkReturnTotal);
+			}else{
+				milkAverageTotal = milkSaleTotal;
+			}
+			if(UtilValidate.isNotEmpty(curdReturnTotal)){
+				curdAverageTotal = curdAverageTotal+(curdSaleTotal-curdReturnTotal);
+			}else{
+				curdAverageTotal = curdSaleTotal;
+			}
 			context.putAt("productCategoryMap", productCategoryMap);
-			context.putAt("milkSaleTotal", milkSaleTotal);
-			context.putAt("curdSaleTotal", curdSaleTotal);
+			context.putAt("milkAverageTotal", milkAverageTotal);
+			context.putAt("curdAverageTotal", curdAverageTotal);
 			
 			Iterator mapIter = prodTotals.entrySet().iterator();		
 			while (mapIter.hasNext()) {
