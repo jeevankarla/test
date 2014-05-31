@@ -6403,7 +6403,7 @@ Debug.logInfo("result= " + result, module);
 			 if(sendSMS){
 				 try{
 					 GenericValue tenantConfigEnablePaymentSms = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enablePaymentSms"), true);
-					 if (UtilValidate.isNotEmpty(tenantConfigEnablePaymentSms) && (tenantConfigEnablePaymentSms.getString("propertyValue")).equals("Y") && UtilValidate.isNotEmpty(paymentMethodType) && paymentMethodType.equals("CASH_PAYIN")) {
+					 if (UtilValidate.isNotEmpty(tenantConfigEnablePaymentSms) && (tenantConfigEnablePaymentSms.getString("propertyValue")).equals("Y")) {
 						 enablePaymentSms = Boolean.TRUE;
 						}
 				 }catch (GenericEntityException e) {
