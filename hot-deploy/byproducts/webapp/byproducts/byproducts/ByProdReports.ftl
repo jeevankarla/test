@@ -372,13 +372,13 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td width='33%'>Route <input type="text" name="routeId" id="routeId" size="5" maxlength="5"/><input type="submit" value="Download" class="buttontext"/></td>       			
       		</form>
       	</tr>
-      	<tr>
+     <#-- 	<tr>
       		<form id="PaymentReport" name="PaymentReport" method="post" action="<@ofbizUrl>bankRemittanceStatement.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Bank Remittances</td>
       			<td width="33%">Remit Dt<@htmlTemplate.renderDateTimeField name="remittanceDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="9" maxlength="22" id="remittanceDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>       			
       			<td width="33%">Pmt Dt<@htmlTemplate.renderDateTimeField name="paymentDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="9" maxlength="22" id="paymentDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><input type="submit" value="Download" class="buttontext"/></td>
       		</form>
-      	</tr>
+      	</tr> -->
       	<tr class="alternate-row">
         	<form id="DailyPaymentCheckList" name="DailyPaymentCheckList" method="post"  target="_blank" action="<@ofbizUrl>DailyPaymentCheckList</@ofbizUrl>">	
       			<td width="34%">Daily Payments Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/>
