@@ -20,41 +20,44 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-left=".8in" margin-right=".3in" margin-top=".5in">
-                <fo:region-body margin-top="1.9in"/>
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
+                <fo:region-body margin-top="0.1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
+        
         ${setRequestAttribute("OUTPUT_FILENAME", "channelWiseDespatch.txt")}
-         <#if finalList?has_content> 
-       	        <fo:page-sequence master-reference="main">	
-		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
+        
+       	        <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
+       	                	
+		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
+		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;              UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;    UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                                                     Print Date :${printDate?if_exists}</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                              Print Date :${printDate?if_exists}</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                     LIST OF SHOPPEES TO PAY RENT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")}   </fo:block>
-              			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==================================================================================================</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">SLNO 		BVB CODE 			BVB NAME 																	RENT AMOUNT 					TAX AMOUNT 					TOTAL 				REMARKS</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==================================================================================================</fo:block> 
-		        	</fo:static-content>	        	
-		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">		
+                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;         LIST OF SHOPPEES TO PAY RENT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")}   </fo:block>
+              			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">SL   BVB	   BVB 										       RENT	      TAX  		   TOTAL 				REMARKS</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">NO   CODE   NAME 									       AMOUNT 	   AMOUNT 		&#160; 				&#160;</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
+		           	
+		        	 <#if finalList?has_content> 	
             	<fo:block>
                  	<fo:table>
-                    <fo:table-column column-width="60pt"/>
-                    <fo:table-column column-width="80pt"/> 
-               	    <fo:table-column column-width="170pt"/>
-            		<fo:table-column column-width="90pt"/> 	
-            		<fo:table-column column-width="90pt"/>	
-            		<fo:table-column column-width="110pt"/>
-            		<fo:table-column column-width="90pt"/>
-            		<fo:table-column column-width="90pt"/>
-            		<fo:table-column column-width="90pt"/>
-            		<fo:table-column column-width="90pt"/>
-            		<fo:table-column column-width="90pt"/>
+                    <fo:table-column column-width="35pt"/>
+                    <fo:table-column column-width="55pt"/> 
+               	    <fo:table-column column-width="120pt"/>
+            		<fo:table-column column-width="80pt"/> 	
+            		<fo:table-column column-width="70pt"/>	
+            		<fo:table-column column-width="75pt"/>
+            		<fo:table-column column-width="75pt"/>
+            		<fo:table-column column-width="75pt"/>
+            		<fo:table-column column-width="75pt"/>
+            		<fo:table-column column-width="75pt"/>
+            		<fo:table-column column-width="75pt"/>
                     <fo:table-body>
                     <#assign sno=0>
                     <#assign rateAmt=0>
@@ -131,7 +134,8 @@ under the License.
 				        </fo:table-row>
 				        <fo:table-row>	
 				            <fo:table-cell>
-				            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Certification : This is certified that the above ${sno} milk shopee have to pay shopee rent for the Month of ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")} </fo:block>  
+				            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Certification : This is certified that the above ${sno} milk shopee have to pay shopee rent </fo:block> 
+				            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">for the Month of ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")} </fo:block>  
 				            	</fo:table-cell>
 				        </fo:table-row>
 				        <fo:table-row>	
@@ -173,7 +177,7 @@ under the License.
 										        				        
 				        <fo:table-row>
 				            	<fo:table-cell>
-				            		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Prepared By    			  		  	BVB I/C				        	   Preauditor			          MANAGER (Mktg)</fo:block>  
+				            		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Prepared By    	    BVB I/C			    Preauditor	       MANAGER (Mktg)</fo:block>  
 				            	</fo:table-cell>
 				            </fo:table-row>
 	                </fo:table-body>

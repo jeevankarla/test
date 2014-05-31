@@ -22,8 +22,8 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-left="1in" margin-right=".3in" margin-bottom=".3in" margin-top=".5in">
-        <fo:region-body margin-top="1.3in"/>
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="8in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".5in">
+        <fo:region-body margin-top="1.5in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -37,19 +37,20 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">${uiLabelMap.KMFDairySubHeader}</fo:block>
                     <fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">CATEGORY WISE SALES STATEMENT From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
-              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
-              		<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
-              		<fo:block font-weight="bold" font-size="10pt">ProductCode			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ProductName   								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Quantity          &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Average Quantity    &#160;&#160;&#160;&#160;&#160;&#160;Total Amount</fo:block>
-            		<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;Print Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}        ${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
+              		<fo:block font-size="10pt">--------------------------------------------------------------------------------------</fo:block>
+              		<fo:block font-weight="bold" font-size="10pt">Product		          &#160;&#160; Product  								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160; &#160;&#160;&#160;&#160;&#160; &#160;               Total         &#160;&#160;&#160;&#160;  Average   &#160;&#160;&#160;  Total</fo:block>
+              		<fo:block font-weight="bold" font-size="10pt">Code			          &#160; &#160;&#160;&#160;  Name   								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160; &#160; &#160; &#160;&#160;&#160;&#160; &#160;              Quantity        &#160;     Quantity    &#160;&#160; Amount</fo:block>
+            		<fo:block font-size="10pt">--------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
                     <fo:table>
-				    <fo:table-column column-width="10%"/>
+				    <fo:table-column column-width="12%"/>
+			        <fo:table-column column-width="15%"/>
+			        <fo:table-column column-width="40%"/>
 			        <fo:table-column column-width="12%"/>
-			        <fo:table-column column-width="35%"/>
-			        <fo:table-column column-width="18%"/>
-			        <fo:table-column column-width="18%"/>
+			        <fo:table-column column-width="15%"/>
                     <fo:table-body>
                     <#assign serialNo = 1>
 		                    	<#assign prodCategoryDetails = productCategoryMap.entrySet()>
@@ -63,7 +64,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 		                        	</fo:table-row>
 		                        	<fo:table-row>
 	                        			<fo:table-cell>
-	                            			<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                            			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
 	                        			</fo:table-cell>
 		                        	</fo:table-row>
 		                        	</#if>
@@ -78,7 +79,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 		                        	</fo:table-row>
 		                        	<fo:table-row>
 	                        			<fo:table-cell>
-	                            			<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                            			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
 	                        			</fo:table-cell>
 		                        	</fo:table-row>
 									<#assign totalNetValue = 0>
@@ -122,7 +123,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 			                        	</#list>
 			                        	<fo:table-row>
 		                        			<fo:table-cell>
-		                            			<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
+		                            			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
 		                        			</fo:table-cell>
 		                        	</fo:table-row>
 	                    			<fo:table-row>
@@ -146,7 +147,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 		                        	</fo:table-row>
 		                        	<fo:table-row>
 	                        			<fo:table-cell>
-	                            			<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	                            			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
 	                        			</fo:table-cell>
 		                        </fo:table-row>
 		                        </#list>
@@ -170,7 +171,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 		                        </fo:table-row>
 		                        <fo:table-row>
                         			<fo:table-cell>
-                            			<fo:block font-size="10pt">---------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                            			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
                         			</fo:table-cell>
 		                        </fo:table-row>
 		                        <fo:table-row>
