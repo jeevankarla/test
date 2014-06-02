@@ -28,20 +28,22 @@ under the License.
         </fo:layout-master-set>
         
         ${setRequestAttribute("OUTPUT_FILENAME", "channelWiseDespatch.txt")}
-        
-       	        <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
-       	                	
+        <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
+        <fo:static-content flow-name="xsl-region-before">
+              		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
+              		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
+            </fo:static-content>		    	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
 		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;    UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                              Print Date :${printDate?if_exists}</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${printDate?if_exists}</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;         LIST OF SHOPPEES TO PAY RENT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")}   </fo:block>
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">SL   BVB	   BVB 										       RENT	      TAX  		   TOTAL 				REMARKS</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">NO   CODE   NAME 									       AMOUNT 	   AMOUNT 		&#160; 				&#160;</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">SL   BVB	   BVB 										       RENT	       TAX  		   TOTAL 				REMARKS</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">NO   CODE   NAME 									       AMOUNT 	    AMOUNT 		&#160; 				&#160;</fo:block> 
 		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
 		           	
 		        	 <#if finalList?has_content> 	
@@ -51,8 +53,8 @@ under the License.
                     <fo:table-column column-width="55pt"/> 
                	    <fo:table-column column-width="120pt"/>
             		<fo:table-column column-width="80pt"/> 	
-            		<fo:table-column column-width="70pt"/>	
-            		<fo:table-column column-width="75pt"/>
+            		<fo:table-column column-width="80pt"/>	
+            		<fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="75pt"/>
             		<fo:table-column column-width="75pt"/>
             		<fo:table-column column-width="75pt"/>
