@@ -155,6 +155,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
     
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
       <#if security.hasEntityPermission("BYPRODUCTS", "_MKTREPOR", session)>
+      <#--
 	       <tr>
 	        	<form id="nextDayIndentCollection" name="nextDayIndentCollection" method="post"  target="_blank" action="<@ofbizUrl>IndentManualCollection</@ofbizUrl>">	
 	      			<td width="34%">NextDay Manual Indent Collection </td>
@@ -167,7 +168,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</#list>  
 						<input type="submit" value="Download" class="buttontext"/></td>
 	      		</form>	
-	        </tr>
+	        </tr> -->
 	        <tr class="alternate-row">
       	   <form id="RouteQuantityAbst" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>routeWiseQtyAbstract.txt</@ofbizUrl>" target="_blank">	
       		  <td width="33%">Route Wise Sales Abst</td>
@@ -176,6 +177,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	   	  <td width="33%"><input type="submit" target="_blank" value="Download" class="buttontext"/></td>
       	   </form>
       	</tr>
+      	<#--
       	<tr>
       		<form id="routeIndentReport" name="routeIndentReport" method="post" action="<@ofbizUrl>routewiseIndentReport.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Total Indent</td>
@@ -183,8 +185,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td width="33%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>
       	</tr>
-      
-      <!--	<tr>
+      	<tr>
       	   <form id="DeliveryNoteCumGatePassReport" name="DeliveryNoteCumGatePassReport" method="post" action="<@ofbizUrl>deliveryNoteCumGatePassReport.txt</@ofbizUrl>" target="_blank">	
       		  <td width="33%">Delivery Note-Cum GatePass</td>
       		  <td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="deliveryNoteGatePassSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><input type="hidden" name="shipmentTypeId" value="BYPRODUCTS"></td>
@@ -212,21 +213,21 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			
       	  </form>
          </tr> 	
-         <!-- <tr>
+         <#-- <tr>
             <form id="CategoryWiseSales" name="CategoryWiseSales" method="post" action="<@ofbizUrl>categoryWiseSales.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Category Wise Sales</td>
       			<td width="33%">From<input  type="text" size="18pt" id="cwsFromDateId" readonly  name="cwsFromDate"/>
       			<td width="33%">Thru<input  type="text" size="18pt" id="cwsThruDateId" readonly  name="cwsThruDate"/>
       		    <input type="submit" value="Download" class="buttontext"/></td>
       	  </form>
-         </tr> 	-->
+         </tr> 
        <tr>
       		<form id="indentVsDispatchReport" name="indentVsDispatchReport" method="post" action="<@ofbizUrl>IndentVsDispatchReport.pdf</@ofbizUrl>" target="_blank">	
       			<td width="34%">Indent vs Despatch</td>
       			<td width="33%">From<@htmlTemplate.renderDateTimeField name="indentDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="indentDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>       			
       			<td width="33%">Thru<@htmlTemplate.renderDateTimeField name="indentThruDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="indentThruDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/><input type="submit" value="Download" class="buttontext"/></td>
       		</form>
-      	</tr> 
+      	</tr> 	-->
       	 <tr class="alternate-row">
         	<form id="TruckSheetCorrectionsReport" name="TruckSheetCorrectionsReport" method="post"  target="_blank" action="<@ofbizUrl>TruckSheetCorrectionsReport</@ofbizUrl>">	
       			<td width="34%">TruckSheet Corrections Report </td>
@@ -366,6 +367,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
         </tr>
      </#if>
      <#if security.hasEntityPermission("BYPRODUCTS", "_ACTGRPRT", session)> 
+     <#--
           <tr  class="alternate-row">
       		<form id="routeChequeValue" name="routeChequeValue" method="post" action="<@ofbizUrl>routeChequeValue.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Route Abstract for Cheque &amp; Value</td>
@@ -373,7 +375,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td width='33%'>Route <input type="text" name="routeId" id="routeId" size="5" maxlength="5"/><input type="submit" value="Download" class="buttontext"/></td>       			
       		</form>
       	</tr>
-     <#-- 	<tr>
+      	<tr>
       		<form id="PaymentReport" name="PaymentReport" method="post" action="<@ofbizUrl>bankRemittanceStatement.txt</@ofbizUrl>" target="_blank">	
       			<td width="34%">Bank Remittances</td>
       			<td width="33%">Remit Dt<@htmlTemplate.renderDateTimeField name="remittanceDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="9" maxlength="22" id="remittanceDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td>       			
