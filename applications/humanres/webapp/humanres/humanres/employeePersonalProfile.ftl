@@ -162,6 +162,17 @@ under the License.
                         <fo:block><#if employeeProfile.emailAddress?has_content><#noescape>${employeeProfile.emailAddress}</#noescape></#if></fo:block>
                     </fo:table-cell>
                 </fo:table-row>
+                <fo:table-row height="14px" space-start=".15in">
+                    <fo:table-cell number-columns-spanned="2">
+                        <fo:block text-align="left">Location Geo</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell/>
+                    <fo:table-cell/>
+                    <fo:table-cell/>
+                    <fo:table-cell text-align="left" number-columns-spanned="2">
+                        <fo:block><#if employeeProfile.locationGeoId?has_content><#noescape>${employeeProfile.locationGeoId}</#noescape></#if></fo:block>
+                    </fo:table-cell>
+                </fo:table-row>
                  <fo:table-row height="14px" space-start=".15in">
                     <fo:table-cell number-columns-spanned="2">
                         <fo:block text-align="left">postalAddress</fo:block>

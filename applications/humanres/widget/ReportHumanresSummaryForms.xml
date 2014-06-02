@@ -68,6 +68,7 @@
 		<field name="totalYearsWorkExperience" title-area-style="tableheadwide"><display description="${totalYearsWorkExperience}"/></field>		
 		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
 		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>
+		<field name="locationGeoId" title="Location Geo" title-area-style="tableheadwide"><display description="${locationGeoId}"/></field>
 		<field name="postalAddress" title-area-style="tableheadwide"><display description="${postalAddress}"/></field>
 	</form>
 	<form name="ListDeductionTypes" type="list" list-name="deductionTypeList"
@@ -141,7 +142,8 @@
 		<field name="employementFrom" title-area-style="tableheadwide"><display description="${fromDate}"/></field>
 		<field name="employeePosition" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${description}" key-field-name="emplPositionTypeId"></display-entity></field>
 		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
-		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>		
+		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>
+		<field name="locationGeoId" title="Location Geo" title-area-style="tableheadwide"><display description="${locationGeoId}"/></field>		
 	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">

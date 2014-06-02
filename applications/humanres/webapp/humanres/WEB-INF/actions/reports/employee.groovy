@@ -27,22 +27,21 @@ List employeeList =[];
 List internalOrgs=[];
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
 if(orgId != null){
-	Set fieldToSelect = UtilMisc.toSet("partyIdTo", "firstName" ,"middleName","lastName" ,"fromDate");
 	internalOrgs = delegator.findByAnd("PartyRelationshipAndDetail", [partyIdFrom : orgId, partyRelationshipTypeId : "GROUP_ROLLUP"],["groupName"]);
 	internalOrgs.each { internalOrg ->
 		 condList = exprBldr.AND() {
         EQUALS(partyIdFrom: internalOrg.partyIdTo)
         EQUALS(roleTypeIdTo: "EMPLOYEE")        
     }
-		depEmployeeList= delegator.findList("EmploymentAndPerson", condList, fieldToSelect, null,  null, false);		
+		depEmployeeList= delegator.findList("EmploymentAndPerson", condList, null, null,  null, false);		
 		employeeListInner.addAll(depEmployeeList);	
 	}
 	condList = exprBldr.AND() {
         EQUALS(partyIdFrom: orgId )
         EQUALS(roleTypeIdTo: "EMPLOYEE") 
-        }
+    }
       
-	employeeListInner.addAll(delegator.findList("EmploymentAndPerson", condList,fieldToSelect, null, null, false));
+	employeeListInner.addAll(delegator.findList("EmploymentAndPerson", condList,null, null, null, false));
 	employeeListInner.each{ employee ->
 		Map contactDetailsMap=[:];
 		List conditionList=[];
@@ -59,9 +58,8 @@ if(orgId != null){
         EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
 		List<GenericValue> employeePositionList = delegator.findList("EmplPosition", condition, null, null, null, false);
 		if(employeePositionList){
-		contactDetailsMap.employeePosition=(employeePositionList.get(0)).emplPositionId;
+			contactDetailsMap.employeePosition=(employeePositionList.get(0)).emplPositionId;
 		}
-		
 		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: employee.partyIdTo, userLogin: userLogin]);
 		contactDetailsMap.phoneNumber = partyTelephone.contactNumber;
 		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: employee.partyIdTo, userLogin: userLogin]);
@@ -71,8 +69,6 @@ if(orgId != null){
 		employeeSub.putAll(employee);
 		employeeSub.putAll(contactDetailsMap);
 		employeeList.add(employeeSub);
-		
-	
 	}
 	
 }

@@ -19,8 +19,8 @@ under the License.
 <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
-      <fo:simple-page-master master-name="main" page-height="11in" page-width="12in"
-        margin-top="0.3in" margin-bottom="1in" margin-left=".3in" margin-right=".5in">
+      <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
+        margin-top="0.3in" margin-bottom="1in" margin-left=".3in" margin-right=".3in">
           <fo:region-body margin-top=".2in"/>
           <fo:region-before extent=".5in"/>
           <fo:region-after extent=".5in"/>
@@ -34,34 +34,51 @@ under the License.
           <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
             <fo:block >            
 			<fo:table table-layout="fixed" width="100%" >
-			<fo:table-column column-width="1.5in"/>
-			<fo:table-column column-width="2in"/>
-			<fo:table-column column-width="2in"/>
-			<fo:table-column column-width="2.4in"/>
-			<fo:table-column column-width="1.6in"/>
-			<fo:table-column column-width="2in"/>
-					<fo:table-header border-style="solid" font-weight="bold" font-size="14pt">					
-						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Employee Id </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Name</fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Employement From </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Employee Position </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Phone Num </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Email Address </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
+			<fo:table-column column-width="60pt"/>
+			<fo:table-column column-width="140pt"/>
+			<fo:table-column column-width="80pt"/>
+			<fo:table-column column-width="80pt"/>
+			<fo:table-column column-width="60pt"/>
+			<fo:table-column column-width="120pt"/>
+			<fo:table-column column-width="80pt"/>
+					<fo:table-header border-style="solid" font-weight="bold" font-size="8pt">					
+						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Employee Id </fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Name</fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Employement From </fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Employee Position </fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Phone Num </fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Email Address </fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> Location Geo </fo:block></fo:table-cell>
 					</fo:table-header>
 					<fo:table-body >
 					<#list employeeList as employee >
-					<fo:table-row border-style="solid">
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("partyIdTo")?if_exists} </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("firstName")}  ${employee.get("lastName")}</fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("fromDate")} </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<#assign empPositionTyp = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : employee.get("employeePosition")}, true)>
-  						<#if empPositionTyp?has_content>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${empPositionTyp.description} </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<#else>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("employeePosition")} </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
+					<fo:table-row border-style="solid" font-size="8pt">	
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("partyIdTo")?if_exists} </fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("firstName")?if_exists}  ${employee.get("lastName")?if_exists}</fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("fromDate")?if_exists} </fo:block></fo:table-cell>
+  						<#if employee.get("employeePosition")?has_content>
+  							<#assign empPositionTyp = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : employee.get("employeePosition")?has_content}, true)>
   						</#if>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("phoneNumber")} </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("emailAddress")} </fo:block><fo:block linefeed-treatment="preserve"> &#xA;</fo:block></fo:table-cell>
+  						<#if empPositionTyp?has_content>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${empPositionTyp.description?if_exists} </fo:block></fo:table-cell>
+  						<#else>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"><#if employee.get("employeePosition")?has_content> ${employee.get("employeePosition")}</#if> </fo:block></fo:table-cell>
+  						</#if>
+  						<#if employee.get("phoneNumber")?has_content>
+  							<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("phoneNumber")} </fo:block></fo:table-cell>
+  						<#else>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"></fo:block></fo:table-cell>
+  						</#if>
+  						<#if employee.get("emailAddress")?has_content>
+  							<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("emailAddress")} </fo:block></fo:table-cell>
+  						<#else>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"></fo:block></fo:table-cell>
+  						</#if>
+						<#if employee.get("locationGeoId")?has_content>
+  							<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("locationGeoId")} </fo:block></fo:table-cell>
+  						<#else>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"></fo:block></fo:table-cell>
+  						</#if>
 					</fo:table-row>
 					</#list>
 				</fo:table-body>
