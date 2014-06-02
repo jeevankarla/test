@@ -218,7 +218,7 @@ if(hideSearch == "N" || stopListing){
 						tempMap.routeId = "";
 						tempMap.paymentMethodTypeDesc = paymentMethodDesc;
 						tempMap.grandTotal = 0;
-						tempMap.totalDue = 0
+						tempMap.totalDue = 0;
 						tempMap.supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 						boothPaymentsInnerList.add(tempMap);
 					}	
@@ -257,7 +257,7 @@ if(hideSearch == "N" || stopListing){
 				isRetailerExists = true;
 			}
 		}
-		if(!isRetailerExists){
+		if(!isRetailerExists && paymentMethodTypeId == "CASH_PAYIN"){
 			tempMap = [:];
 			tempMap.facilityId = facilityId;
 			tempMap.routeId = "";
