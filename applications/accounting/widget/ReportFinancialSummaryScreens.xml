@@ -2862,7 +2862,6 @@
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
-				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/dayWiseFinancialAccountTrans.groovy" />
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
 					result-map="permResult">

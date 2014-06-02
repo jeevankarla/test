@@ -82,22 +82,23 @@ if (organizationPartyId) {
 	monthBegin = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
 	monthEnd = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
 	
+	dayBegin = UtilDateTime.getDayStart(effectiveDate);
+	dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+	
 	fromDateStr = null;
 	fromDateStr = UtilDateTime.toDateString(effectiveDate ,"MMMM dd, yyyy");
 	fromDateTimestamp=UtilDateTime.getDayStart(effectiveDate);
 	context.put("fromDateStr",fromDateStr);
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
-	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_MONTH"));
-	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(monthBegin)));
-	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(monthEnd)));
+	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_YEAR"));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(dayBegin)));
+	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(dayEnd)));
 	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	customTimePeriodList = delegator.findList("CustomTimePeriod", condition, null, null, null, true);
-	
 	if(UtilValidate.isNotEmpty(customTimePeriodList)){
 		finAccountCustomTimePeriodId = customTimePeriodList[0].customTimePeriodId;
 	}
-	
     if (finAccountCustomTimePeriodId) {
         currentTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : finAccountCustomTimePeriodId], false);
         previousTimePeriodResult = dispatcher.runSync("getPreviousTimePeriod", 
@@ -111,29 +112,7 @@ if (organizationPartyId) {
 				context.openingBalance = glAccountHistory.endingBalance;
                 balanceOfTheAcctgForYear = glAccountHistory.endingBalance;
             } else {
-				financialAcctgTransList = context.get("financialAcctgTransList");
-				if(UtilValidate.isNotEmpty(financialAcctgTransList)){
-					for(k=0; k<financialAcctgTransList.size(); k++){
-						dayWiseTotal = [:];
-						dayWiseTotal = financialAcctgTransList[k];
-						transDateStr = dayWiseTotal.transactionDate;
-						if(transDateStr != null){
-							def sdf = new SimpleDateFormat("MMMM dd, yyyy");
-							try {
-								transDate = new java.sql.Timestamp(sdf.parse(transDateStr+" 00:00:00").getTime());
-							} catch (ParseException e) {
-								Debug.logError(e, "Cannot parse date string: " + transDateStr, "");
-							}
-							compareDate = UtilDateTime.addDaysToTimestamp(fromDateTimestamp, -1);
-							if(compareDate == transDate){
-								context.openingBalance = dayWiseTotal.closingBalance;
-								openingBalance = dayWiseTotal.closingBalance;
-							}
-						}
-					}
-				}else{
-					context.openingBalance = BigDecimal.ZERO;
-				}
+				context.openingBalance = BigDecimal.ZERO;
             }
         }
     }
@@ -184,9 +163,7 @@ if (organizationPartyId) {
 		totOpeningBalance = openingBalance;
 		totYearOpeningBalance = openingBalance;
 	
-		
 		paymentInvType = [:];
-		
 		
 		prevDateStr = null;
 		dayTotalDebit = BigDecimal.ZERO;
@@ -207,9 +184,9 @@ if (organizationPartyId) {
 		finAccountDescription = "";
 		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("paymentId"));
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
-			acctgTransIt = glAcctgTrialBalanceList[0];
-			acctgTransAndEntries = acctgTransIt.acctgTransAndEntries;
-			if(UtilValidate.isNotEmpty(acctgTransAndEntries)){
+			for(i=0; i<glAcctgTrialBalanceList.size(); i++){
+				acctgTransIt = glAcctgTrialBalanceList[i];
+				acctgTransAndEntries = glAcctgTrialBalanceList[i].acctgTransAndEntries;
 				for(j=0; j<acctgTransAndEntries.size(); j++){
 					acctgTransEntry = acctgTransAndEntries[j];
 					openingBalance = closingBalance;
@@ -356,13 +333,13 @@ if (organizationPartyId) {
 					financialAcctgTransList.add(tempTransTotalsMap);
 				}
 			}	
-		}		
-		
+		}	
+    }
 		context.financialAcctgTransList = financialAcctgTransList;
         context.glAcctgTrialBalanceList = glAcctgTrialBalanceList;
 		context.paymentInvType = paymentInvType;
-    }
 }
+
 //for each day in cash Book
 dayFinAccountTransList= [];
 getDayTot = "N";
