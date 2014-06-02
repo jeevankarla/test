@@ -36,7 +36,7 @@ under the License.
               <td>${partyBenefit.payGradeName}</td>
               <#if partyBenefit.amount?has_content>
               <td><@ofbizCurrency amount= partyBenefit.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td> 
-              <#assign grossSalary = (grossSalary + partyBenefit.amount)>    
+              <#assign grossSalary = (grossSalary + partyBenefit.amount?if_exists)>    
               </#if>         
             </tr>
             <#assign alt_row = !alt_row>
@@ -55,7 +55,7 @@ under the License.
               <td>${partyDeduction.payGradeName}</td>
               <#if partyDeduction.amount?has_content>
               <td><@ofbizCurrency amount=partyDeduction.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td> 
-              <#assign totalDeductions = (totalDeductions + partyDeduction.amount)>  
+              <#assign totalDeductions = (totalDeductions + partyDeduction.amount?if_exists)>  
                </#if>          
             </tr>
             <#assign alt_row = !alt_row>
