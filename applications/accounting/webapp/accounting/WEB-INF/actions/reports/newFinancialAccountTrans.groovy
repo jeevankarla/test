@@ -82,6 +82,7 @@ if (organizationPartyId) {
 	monthBegin = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
 	monthEnd = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
 	
+	fromDateStr = null;
 	fromDateStr = UtilDateTime.toDateString(effectiveDate ,"MMMM dd, yyyy");
 	fromDateTimestamp=UtilDateTime.getDayStart(effectiveDate);
 	context.put("fromDateStr",fromDateStr);
@@ -109,12 +110,34 @@ if (organizationPartyId) {
 				openingBalance = glAccountHistory.endingBalance;
 				context.openingBalance = glAccountHistory.endingBalance;
                 balanceOfTheAcctgForYear = glAccountHistory.endingBalance;
-				
             } else {
-                context.openingBalance = BigDecimal.ZERO;
+				financialAcctgTransList = context.get("financialAcctgTransList");
+				if(UtilValidate.isNotEmpty(financialAcctgTransList)){
+					for(k=0; k<financialAcctgTransList.size(); k++){
+						dayWiseTotal = [:];
+						dayWiseTotal = financialAcctgTransList[k];
+						transDateStr = dayWiseTotal.transactionDate;
+						if(transDateStr != null){
+							def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+							try {
+								transDate = new java.sql.Timestamp(sdf.parse(transDateStr+" 00:00:00").getTime());
+							} catch (ParseException e) {
+								Debug.logError(e, "Cannot parse date string: " + transDateStr, "");
+							}
+							compareDate = UtilDateTime.addDaysToTimestamp(fromDateTimestamp, -1);
+							if(compareDate == transDate){
+								context.openingBalance = dayWiseTotal.closingBalance;
+								openingBalance = dayWiseTotal.closingBalance;
+							}
+						}
+					}
+				}else{
+					context.openingBalance = BigDecimal.ZERO;
+				}
             }
         }
     }
+	
 	financialAcctgTransList = [];
     if (currentTimePeriod && (UtilValidate.isNotEmpty(glAccountId))){
         context.currentTimePeriod = currentTimePeriod;
@@ -190,7 +213,6 @@ if (organizationPartyId) {
 				for(j=0; j<acctgTransAndEntries.size(); j++){
 					acctgTransEntry = acctgTransAndEntries[j];
 					openingBalance = closingBalance;
-					
 					paymentId = acctgTransEntry.paymentId;
 					payment = delegator.findOne("Payment", [paymentId : paymentId], false);
 					if(UtilValidate.isNotEmpty(payment)){
