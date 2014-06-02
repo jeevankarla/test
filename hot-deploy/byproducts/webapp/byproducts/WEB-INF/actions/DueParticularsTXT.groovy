@@ -76,11 +76,11 @@ context.thruDateTime = thruDateTime;
 	context.saleDate = fromDateTime;
 	context.supplyDate = dayBegin;
 }*/
-/*conditionList=[];
-conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
+conditionList=[];
+/*conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_EQUAL , null));
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, "2093"));
-conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1074","S1187","S1002","C057")));
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1000","B80902","B00503")));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
 boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
@@ -96,7 +96,6 @@ boothTotalsWithReturn = ByProductNetworkServices.getPeriodReturnTotals(dispatche
 if(UtilValidate.isNotEmpty(boothTotalsWithReturn)){
 	returnBoothTotals=boothTotalsWithReturn.get("boothTotals");
 	totalReturnAmnt=boothTotalsWithReturn.get("totalRevenue");
-	Debug.log("=====totalReturnAmnt===="+totalReturnAmnt);
 }
 boothTotals = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd, "facilityList", boothsList, "userLogin", userLogin)).get("boothInvoiceTotalMap");
 penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, dayBegin, dayEnd, boothsList, userLogin);
@@ -114,6 +113,9 @@ facilityIdsList=[];
 	//Lets find each type of payment
 	boothCashPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
 	boothCashPaymentsList = boothCashPaidDetail["boothPaymentsList"];
+	boothCashPaymentsList.each{boothPayment->
+	}
+	//Debug.log("=====boothCashPaymentsList======="+boothCashPaymentsList);
 	boothCashRouteIdsMap= boothCashPaidDetail["boothRouteIdsMap"];
 	
 	paidPaymentInput["paymentMethodTypeId"]="CHEQUE_PAYIN";
@@ -131,6 +133,8 @@ categorysList = [];
 categorysParloursList = [];
 BigDecimal totaRETNAmount=BigDecimal.ZERO;
 Iterator boothTotIter = boothTotals.entrySet().iterator();
+
+
 while (boothTotIter.hasNext()) {
 	Map.Entry boothEntry = boothTotIter.next();
 	boothId = boothEntry.getKey();
@@ -141,17 +145,17 @@ while (boothTotIter.hasNext()) {
     chequeAmount=0;
     challanAmount=0;
 	boothCashPaymentsList.each{boothPayment->
-		if(boothId==boothPayment.get("facilityId")){
+		if(boothId.equalsIgnoreCase(boothPayment.get("facilityId"))){
 			cashAmount+=boothPayment.get("amount");
 		}
 	}
 	boothChequePaymentsList.each{boothPayment->
-		if(boothId==boothPayment.get("facilityId")){
+		if(boothId.equalsIgnoreCase(boothPayment.get("facilityId"))){
 			chequeAmount+=boothPayment.get("amount");
 		}
 	}
 	boothChallanPaymentsList.each{boothPayment->
-		if(boothId==boothPayment.get("facilityId")){
+		if(boothId.equalsIgnoreCase(boothPayment.get("facilityId"))){
 			challanAmount+=boothPayment.get("amount");
 		}
 	}
@@ -171,7 +175,14 @@ while (boothTotIter.hasNext()) {
 	
 	BigDecimal totalPaidAmnt=(cashAmount+chequeAmount+challanAmount+returnAmount);
 	BigDecimal netAmount =(BigDecimal) invoiceAmount.subtract(totalPaidAmnt);
-   boothTotalsMap=[:];
+	BigDecimal openingBalance=BigDecimal.ZERO;
+	boothTotalsMap=[:];
+	if(reportTypeFlag=="DuesAbstractReport"){
+	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:boothId])).get("openingBalance");
+	boothTotalsMap.put("openingBalance", openingBalance);
+	netAmount=netAmount.add(openingBalance);
+	}
+	
    boothTotalsMap.put("facilityId", boothId);
    boothTotalsMap.put("invoiceAmount", totalRevenue);
    boothTotalsMap.put("returnAmount", returnAmount);
@@ -204,7 +215,6 @@ if(parloursOnly == "Y"){
 }else{
 	context.categorysList = categorysList;
 }
-Debug.log("==========TOATRETNAMOUNTTT=="+totaRETNAmount);
 
 
 

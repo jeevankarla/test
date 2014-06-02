@@ -102,6 +102,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("CashReceiptDateId","");
 		makeDatePicker("DUCRFromDateId","DUCRThruDateId");
 		makeDatePicker("DueFromDateId","DueThruDateId");
+		makeDatePicker("DueAbsFromDateId","DueAbsThruDateId");
 		makeDatePicker("catSalesFromDateId","catSalesThruDateId")
 		
 		
@@ -680,9 +681,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
     			<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
       				<tr class="alternate-row">
       					<form id="dueParticulars" name="dueParticulars" method="post" action="<@ofbizUrl>dueParticulars.txt</@ofbizUrl>" target="_blank">	
-      						<td width="25%">Due Particulars</td>
+      						<td width="25%">Due Particulars<input  type="hidden"  value="DuesParticulers"   name="reportTypeFlag"/></td>
 							<td width="75%">From<input  type="text" size="18pt" id="DueFromDateId" readonly  name="fromDate"/>
 			      			To<input  type="text" size="18pt" id="DueThruDateId" readonly  name="thruDate"/></td>  
+							<td width="25%"><input type="submit" value="Download" class="buttontext"/></td>
+      					</form>
+      				</tr>
+      				<tr class="alternate-row">
+      					<form id="DuesAbstractReport" name="DuesAbstractReport" method="post" action="<@ofbizUrl>dueParticulars.pdf</@ofbizUrl>" target="_blank">	
+      						<td width="25%">Dues Abstract Report with OB
+      						<input  type="hidden"  value="DuesAbstractReport"   name="reportTypeFlag"/></td>
+							<td width="75%">From<input  type="text" size="18pt" id="DueAbsFromDateId" readonly  name="fromDate"/>
+			      			To<input  type="text" size="18pt" id="DueAbsThruDateId" readonly  name="thruDate"/></td>  
 							<td width="25%"><input type="submit" value="Download" class="buttontext"/></td>
       					</form>
       				</tr>

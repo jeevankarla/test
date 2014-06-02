@@ -172,6 +172,11 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="DueParticularsTXT"/>
     </request-map>
+      <request-map uri="dueParticulars.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="dueParticularsPDF"/>
+    </request-map>
+    
     <request-map uri="instBillOfSaleReport.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="InstBillOfSaleReportTXT"/>
@@ -936,6 +941,7 @@
     <view-map name="LookupProductByCategory" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupProductByCategory"/>
     <view-map name="SubscriptionIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SubscriptionIndent"/>
     <view-map name="DueParticularsTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="text/plain"/>
+    <view-map name="dueParticularsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="application/pdf"/><!-- withOB -->
     <view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
     
     <view-map name="DailyPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckList" content-type="text/plain" encoding="none"/>
