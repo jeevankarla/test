@@ -593,6 +593,12 @@ under the License.
         <response name="success" type="view" value="FindPayrollBilling"/>
         <response name="error" type="view" value="FindPayrollBilling"/>
     </request-map>
+    <request-map uri="cancelPayrollBilling">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPayrollBilling"/>
+        <response name="success" type="view" value="FindPayrollBilling"/>
+        <response name="error" type="view" value="FindPayrollBilling"/>
+    </request-map>
     
     <request-map uri="BenefitDeductionCalculator">
         <security https="true" auth="true"/>

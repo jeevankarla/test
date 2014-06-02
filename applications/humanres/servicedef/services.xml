@@ -1193,5 +1193,9 @@ under the License.emplpunch
         <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
         <attribute name="periodBillingId" mode="INOUT" type="String"></attribute>
     </service>
-   
+    <service name="cancelPayrollBilling"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelPayrollBilling" auth="true">
+        <description>Cancel Payroll Billing</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
+    </service>
 </services>

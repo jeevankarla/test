@@ -33,7 +33,6 @@ if(partyId != null  && UtilValidate.isNotEmpty(partyId)){
 		EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	   depEmployeeList= delegator.findList("EmploymentAndPerson", condition, null, conditionList = UtilMisc.toList("-fromDate"),  null, false);
-	   
 	   if(depEmployeeList){
 		   partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
 		   contactDetailsMap.phoneNumber = partyTelephone.contactNumber;
@@ -41,14 +40,9 @@ if(partyId != null  && UtilValidate.isNotEmpty(partyId)){
 		   contactDetailsMap.emailAddress = partyEmail.emailAddress;
 		   partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId: partyId, userLogin: userLogin]);
 		   contactDetailsMap.postalAddress = partyPostalAddress.address1+partyPostalAddress.address2+partyPostalAddress.city+"-"+partyPostalAddress.postalCode;
-	  
 		   contactDetailsMap.putAll(depEmployeeList.get(0));
 	   }
 	   employeeProfileList.add( contactDetailsMap);
-	   
-   
- 
-   
 }
 if(orgId != null && (partyId == null || UtilValidate.isEmpty(partyId))){
 	List employeeListInner=[];
@@ -66,12 +60,9 @@ if(orgId != null && (partyId == null || UtilValidate.isEmpty(partyId))){
 		EQUALS(roleTypeIdTo: "EMPLOYEE")
 		}
 	  
-	employeeListInner.addAll(delegator.findList("EmploymentAndPerson", condList, null, null, null, false));
-	employeeListInner.each{ employee ->
-		
+		employeeListInner.addAll(delegator.findList("EmploymentAndPerson", condList, null, null, null, false));
+		employeeListInner.each{ employee ->
 		Map employeeSub=[:];		
-	
-		
 		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: employee.partyIdTo, userLogin: userLogin]);
 		contactDetailsMap.phoneNumber = partyTelephone.contactNumber;
 		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: employee.partyIdTo, userLogin: userLogin]);
@@ -89,5 +80,20 @@ if(orgId != null && (partyId == null || UtilValidate.isEmpty(partyId))){
 employeeProfileList = UtilMisc.sortMaps(employeeProfileList, UtilMisc.toList("partyIdTo"));
 context.employeeProfileList=employeeProfileList;
 context.employeeId = partyId;
+
 context.partyIdFrom = orgId;
 context.orgParties=employeeProfileList.partyIdTo;
+
+orgPartyId = null;
+payrollHeaderList = delegator.findList("PayrollHeader",EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, parameters.periodBillingId) , null, null, null, false);
+if(UtilValidate.isNotEmpty(payrollHeaderList)){
+	payrollHeader = payrollHeaderList[0];
+	if(UtilValidate.isNotEmpty(payrollHeader)){
+		orgPartyId = payrollHeader.partyId;
+	}
+}
+parameters.partyId=orgPartyId;
+
+
+
+

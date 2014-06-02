@@ -392,7 +392,8 @@
 		         <field-map field-name="billingTypeId" value="PAYROLL_BILL"/>
 		         <order-by field-name="-createdDate"/>
 		    </entity-and>
-			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>	
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>
+			<set field="partyId" value="${partyId}"/>
 		</actions>
 		<field name="periodBillingId">
 			<display description="${periodBillingId}" />
@@ -400,9 +401,21 @@
 		<field name="customTimePeriodId">
 			<display/>
 		</field>
-		<field name="statusId">
-			<display/>
-		</field>
+		<field name="statusId" title = "Status">
+          <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+		<field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
+		<hyperlink target="cancelPayrollBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+        </hyperlink>
+        </field>
+         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="PaySlip Report" widget-style="buttontext" >
+            <hyperlink target="PrintPaySlipsPdf.pdf" description="PaySlip Report" target-window="_BLANK">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+        		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        		<parameter param-name="partyId" value="${partyId}"/>
+            </hyperlink>
+        </field> 
 	</form>
 	<form name="createBenefitDeductionCalculator" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="calculateEmployeeBenefitDeduction">
        	<field name="employeeId">

@@ -230,6 +230,44 @@ public class PayrollService {
 				return result;
 		
 			}
+			public static Map<String, Object>  cancelPayrollBilling(DispatchContext dctx, Map<String, ? extends Object> context)  {
+		    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				Map<String, Object> result = FastMap.newInstance();	
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				String periodBillingId = (String) context.get("periodBillingId");
+				GenericValue periodBilling = null;
+		    	try {
+		    		try {
+						periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+					} catch (GenericEntityException e1) {
+						Debug.logError(e1,"Error While Finding PeriodBilling");
+						return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
+					}
+		    		List<GenericValue> payrollHeaderList = delegator.findList("PayrollHeader", EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId), null, null, null, false);
+		    		if(UtilValidate.isNotEmpty(payrollHeaderList)){
+		    			List payrollHeaderIds = EntityUtil.getFieldListFromEntityList(payrollHeaderList, "payrollHeaderId", false);
+		    			if(UtilValidate.isNotEmpty(payrollHeaderIds)){
+		    				List<GenericValue> payrollHeaderItemList = delegator.findList("PayrollHeaderItem", EntityCondition.makeCondition("payrollHeaderId", EntityOperator.IN, payrollHeaderIds), null, null, null, false);
+		    				if(UtilValidate.isNotEmpty(payrollHeaderItemList)){
+		    	    		    delegator.removeAll(payrollHeaderItemList);
+		    	    		}
+		    			}
+		    			periodBilling.set("statusId", "COM_CANCELLED");
+		    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+						periodBilling.store();
+		    		}else{
+		    			periodBilling.set("statusId", "CANCEL_FAILED");
+		    			periodBilling.store();
+		    		}
+		    	}catch (GenericEntityException e) {
+		    		 Debug.logError(e, module);
+		             return ServiceUtil.returnError("Failed to find payrollHeaderItemList " + e);
+				} 
+				result = ServiceUtil.returnSuccess("PayRoll Billing Successfully Cancelled..");
+				return result;
+		}// end of service
 			private static double fetchBasicSalaryInternal(DispatchContext dctx, String partyId) {
 				double result = 0;
 		        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -732,7 +770,6 @@ public class PayrollService {
 			        }
 			       if(UtilValidate.isNotEmpty(serviceResults.get("itemsList"))){
 			    	   itemsList.addAll((List)serviceResults.get("itemsList"));
-			    	   
 			       }
 				} 
 				catch(GenericEntityException e) {
