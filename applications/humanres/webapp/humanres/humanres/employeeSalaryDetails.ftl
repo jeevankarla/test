@@ -34,8 +34,10 @@ under the License.
           <#list partyBenefitList as partyBenefit>           
             <tr<#if alt_row> class="alternate-row"</#if>>
               <td>${partyBenefit.payGradeName}</td>
-              <td><@ofbizCurrency amount=partyBenefit.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td> 
-              <#assign grossSalary = (grossSalary + partyBenefit.amount)>             
+              <#if partyBenefit.amount?has_content>
+              <td><@ofbizCurrency amount= partyBenefit.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td> 
+              <#assign grossSalary = (grossSalary + partyBenefit.amount)>    
+              </#if>         
             </tr>
             <#assign alt_row = !alt_row>
           </#list>
@@ -51,8 +53,10 @@ under the License.
           <#list partyDeductionList as partyDeduction>           
             <tr<#if alt_row> class="alternate-row"</#if>>
               <td>${partyDeduction.payGradeName}</td>
+              <#if partyDeduction.amount?has_content>
               <td><@ofbizCurrency amount=partyDeduction.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td> 
-              <#assign totalDeductions = (totalDeductions + partyDeduction.amount)>             
+              <#assign totalDeductions = (totalDeductions + partyDeduction.amount)>  
+               </#if>          
             </tr>
             <#assign alt_row = !alt_row>
           </#list>

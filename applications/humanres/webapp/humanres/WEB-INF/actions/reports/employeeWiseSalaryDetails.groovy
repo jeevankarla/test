@@ -34,56 +34,60 @@ Map party=[:];
 List<GenericValue> payHistory=[];
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
 if(partyId != null && UtilValidate.isNotEmpty(partyId)){
-				List conditionList=[];
-				dctx = dispatcher.getDispatchContext();
-				party.partyId=partyId;
-				BasicSalary = InvoicePayrolWorker.fetchBasicSalary(dctx,party);
-				payGrade=delegator.findOne("PayGrade",[payGradeId : "BASIC_PAY"],false);
-				partyBenefitList.add([ payGradeName : payGrade.payGradeName  , amount : BasicSalary.amount]);
-				salaryDetailsListCsv.add([ payGradeName :  payGrade.payGradeName , amount : BasicSalary.amount]);
-				totalSalary=BasicSalary.amount;
-				conditionList = UtilMisc.toList(
-                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
-        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
-        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp())));
-        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
-		List<GenericValue> partyBenefits = delegator.findList("PartyBenefit", condition, null, null, null, false);
-		
-		if(partyBenefits){
-			
-			partyBenefits.each{ partyBenefit ->
-			benefitType=partyBenefit.getRelatedOne("BenefitType");
-			partyBenefitList.add([ payGradeName : benefitType.description , amount : partyBenefit.cost]);
-			salaryDetailsListCsv.add([ payGradeName :  benefitType.description , 
+	List conditionList=[];
+	dctx = dispatcher.getDispatchContext();
+	party.partyId=partyId;
+	BasicSalary = InvoicePayrolWorker.fetchBasicSalary(dctx,party);
+	payGrade=delegator.findOne("PayGrade",[payGradeId : "BASIC_PAY"],false);
+	if (UtilValidate.isNotEmpty(payGrade)) {
+		partyBenefitList.add([ payGradeName : payGrade.payGradeName  , amount : BasicSalary.amount]);
+		salaryDetailsListCsv.add([ payGradeName :  payGrade.payGradeName , amount : BasicSalary.amount]);
+		if (UtilValidate.isNotEmpty(BasicSalary.amount)) {
+			totalSalary=BasicSalary.amount;
+		}
+	}
+	
+	conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp())));
+	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	List<GenericValue> partyBenefits = delegator.findList("PartyBenefit", condition, null, null, null, false);
+	if (UtilValidate.isNotEmpty(partyBenefits)) {
+		partyBenefits.each{ partyBenefit ->
+		benefitType=partyBenefit.getRelatedOne("BenefitType");
+			partyBenefitList.add([payGradeName : benefitType.description , amount : partyBenefit.cost]);
+			salaryDetailsListCsv.add([payGradeName :  benefitType.description ,
 			amount : partyBenefit.cost]);
-			totalSalary=totalSalary+partyBenefit.cost;
+			if (UtilValidate.isNotEmpty(partyBenefit.cost)) {
+				totalSalary=totalSalary+partyBenefit.cost;
 			}
 		}
-		conditionList = UtilMisc.toList(
-                EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
-        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp())));
-        condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  				
-		List<GenericValue> partyDeductions = delegator.findList("PayrollPreference",condition, null, null, null, false);
-		
-		if(partyDeductions){			
-			partyDeductions.each{ partyDeduction ->
-			deductionType=partyDeduction.getRelatedOne("DeductionType");
-			partyDeductionList.add([ payGradeName : deductionType.description, 
-			amount : partyDeduction.flatAmount]);
-			salaryDetailsListCsv.add([ payGradeName : deductionType.description , 
-			amount : partyDeduction.flatAmount]);
-			totalSalary=totalSalary+partyDeduction.flatAmount;			
+	}
+	conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+    conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+    conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+    		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp())));
+    condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
+	List<GenericValue> partyDeductions = delegator.findList("PartyDeduction",condition, null, null, null, false);
+	if (UtilValidate.isNotEmpty(partyDeductions)) {			
+		partyDeductions.each{ partyDeduction ->
+		deductionType=partyDeduction.getRelatedOne("DeductionType");
+		partyDeductionList.add([ payGradeName : deductionType.description, 
+		amount : partyDeduction.cost]);
+		salaryDetailsListCsv.add([ payGradeName : deductionType.description , 
+		amount : partyDeduction.cost]);
+			if (UtilValidate.isNotEmpty(partyDeduction.cost)) {
+				totalSalary=totalSalary+partyDeduction.cost;
 			}
-		}		
-	   salaryDetailsList.add( partyBenefitList : partyBenefitList , partyDeductionList : partyDeductionList);    
-    }
+		}
+	}		
+   salaryDetailsList.add( partyBenefitList : partyBenefitList , partyDeductionList : partyDeductionList);    
+}
     
-    context.employeeId = partyId;
-	context.salaryDetailsList = salaryDetailsList;
-	context.salaryDetailsListCsv = salaryDetailsListCsv;
-	context.partyBenefitList = partyBenefitList;
-	context.partyDeductionList = partyDeductionList;	
+context.employeeId = partyId;
+context.salaryDetailsList = salaryDetailsList;
+context.salaryDetailsListCsv = salaryDetailsListCsv;
+context.partyBenefitList = partyBenefitList;
+context.partyDeductionList = partyDeductionList;	
 
