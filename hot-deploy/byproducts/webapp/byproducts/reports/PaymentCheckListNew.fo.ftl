@@ -21,9 +21,9 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
-                     margin-left="1in" margin-right="1in">
-                <fo:region-body margin-top="1.3in"/>
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
+                     margin-left=".3in" margin-right=".3in">
+                <fo:region-body margin-top="0.9in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -32,81 +32,82 @@ under the License.
         <#assign totalPaymentAmont = 0>  
         <#assign chequeNo=0>   
         <fo:page-sequence master-reference="main">
-        	<fo:static-content flow-name="xsl-region-before">
+        	<fo:static-content flow-name="xsl-region-before" font-size="6pt">
         	
         		<fo:block text-align="center" keep-together="always">VST_ASCII-015</fo:block>
-        		<fo:block text-align="left" white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/>                 MOTHER DAIRY</fo:block>
-        		<fo:block text-align="center" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")}  UserLogin:${userLogin.get("userLoginId")}</fo:block>	 	 	  
+        		<fo:block text-align="left" white-space-collapse="false">${uiLabelMap.CommonPage}:<fo:page-number/>  MOTHER DAIRY</fo:block>
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")} ,UserLogin:${userLogin.get("userLoginId")}</fo:block>	 	 	  
         		<#if unDepositedCheques?exists>
         		 <#if unDepositedCheques=="TRUE" >
-        		 <fo:block text-align="center" keep-together="always">   UnDeposited Cheques List</fo:block>
+        		 <fo:block text-align="left" keep-together="always">    UnDeposited Cheques List</fo:block>
         		 <#else>
-        		  <fo:block text-align="center" keep-together="always">  Deposited Cheques List</fo:block>
+        		  <fo:block text-align="left" keep-together="always">   Deposited Cheques List</fo:block>
         		 </#if>
         		<#else>
-        		<fo:block text-align="center" keep-together="always">   Payments CheckList</fo:block>
+        		<fo:block text-align="left" keep-together="always">    Payments CheckList</fo:block>
         		</#if>
         		 <fo:block font-family="Courier,monospace"  >                
                 <fo:table >
-                       <fo:table-column column-width="30pt"/>
-                    <fo:table-column column-width="60pt"/>
-                    <fo:table-column column-width="60pt"/>                
-                    <fo:table-column column-width="120pt"/>
-                    <fo:table-column column-width="60pt"/>
-                    <fo:table-column column-width="65pt"/>
-                    <fo:table-column column-width="60pt"/>  
+                        <fo:table-column column-width="20pt"/>
+                    <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="35pt"/>                
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="40pt"/>  
                     <fo:table-body> 
                      <fo:table-row >
 	                           <fo:table-cell >	
-	                             <fo:block text-align="left" keep-together="always" font-size="7pt" >---------------------------------------------------------------------------------------------------------------</fo:block>
+	                              <fo:block text-align="left" keep-together="always"  >------------------------------------------------------------------------</fo:block>
 	                            </fo:table-cell>
 	                   </fo:table-row>
                      <fo:table-row >
 	                           <fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt">S.No</fo:block>                               
+	                            	<fo:block text-align="left" keep-together="always" >S.No</fo:block>                               
 	                            </fo:table-cell>
 	                        	<fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt">Route</fo:block>    
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt">&#160;Code</fo:block>                            
+	                            	<fo:block text-align="left" keep-together="always" >Route</fo:block>    
+	                            	<fo:block text-align="left" keep-together="always" >&#160;Code</fo:block>                            
 	                            </fo:table-cell>
 	                        	<fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt">Retailer</fo:block>    
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt">&#160;Code</fo:block>                                  
+	                            	<fo:block text-align="left" keep-together="always" >Retailer</fo:block>    
+	                            	<fo:block text-align="left" keep-together="always" >&#160;Code</fo:block>                                  
 	                            </fo:table-cell>	
 	                        	<fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt">Retailer</fo:block>    
-	                            	<fo:block text-align="left" keep-together="always" font-size="7pt">&#160;Name</fo:block>                                
+	                            	<fo:block text-align="left" keep-together="always" >Retailer</fo:block>    
+	                            	<fo:block text-align="left" keep-together="always" >&#160;Name</fo:block>                                
 	                            </fo:table-cell>		                                                    
 	                            <fo:table-cell >
-	                            	<fo:block text-align="left" font-size="7pt">CHEQUE</fo:block>	
-	                            	<fo:block text-align="left"  font-size="7pt">&#160; No.</fo:block>	                               
+	                            	<fo:block text-align="left" >CHEQUE</fo:block>	
+	                            	<fo:block text-align="left"  >&#160; No.</fo:block>	                               
 	                            </fo:table-cell>	                            
 	                            <fo:table-cell >
-	                            	<fo:block text-align="left" font-size="7pt">PaymentDATE</fo:block>	                               
+	                               <fo:block text-align="left" >PAYMENT</fo:block>	 
+	                            	<fo:block text-align="left" >DATE</fo:block>	                               
 	                            </fo:table-cell>
 	                            <fo:table-cell >
-	                            	<fo:block text-align="right" font-size="7pt">Amount</fo:block>	                               
+	                            	<fo:block text-align="right" >Amount</fo:block>	                               
 	                            </fo:table-cell>	
 	                        </fo:table-row>
 	                         <fo:table-row >
 	                           <fo:table-cell >	
-	                           <fo:block text-align="left" keep-together="always" font-size="7pt" >---------------------------------------------------------------------------------------------------------------</fo:block>
+	                           <fo:block text-align="left" keep-together="always"  >------------------------------------------------------------------------</fo:block>
 	                            </fo:table-cell>
 	                       </fo:table-row>
                     </fo:table-body>
                    </fo:table>
                   </fo:block>
         	</fo:static-content>
-            <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-            	 <fo:block font-family="Courier,monospace"  font-size="7pt">                
+            <fo:flow flow-name="xsl-region-body" font-family="Helvetica" font-size="6pt" >
+            	 <fo:block font-family="Courier,monospace"  >                
                 <fo:table >
-                      <fo:table-column column-width="30pt"/>
-                    <fo:table-column column-width="60pt"/>
-                    <fo:table-column column-width="60pt"/>                
-                    <fo:table-column column-width="120pt"/>
-                    <fo:table-column column-width="60pt"/>
-                    <fo:table-column column-width="65pt"/>
-                    <fo:table-column column-width="60pt"/>                
+                       <fo:table-column column-width="20pt"/>
+                    <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="35pt"/>                
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="40pt"/>
+                    <fo:table-column column-width="30pt"/>
+                    <fo:table-column column-width="40pt"/>           
                     <fo:table-body> 
                     <fo:table-row><fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell></fo:table-row>    
 	                     <#assign boothPaidCheckList= bankPaidMap.entrySet()>
@@ -140,13 +141,13 @@ under the License.
 		            			<#assign partyId=checkListReport.partyIdFrom>
 		            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 		            			</#if>     
-		            			<fo:block text-align="left" >${partyName?if_exists}</fo:block>                          
+		            			<fo:block text-align="left" >${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(partyName?if_exists)),16)}</fo:block>                          
 	                            </fo:table-cell>	
 	                        	<fo:table-cell >	
 	                            	<fo:block text-align="left" >${checkListReport.paymentRefNum?if_exists}</fo:block>                               
 	                            </fo:table-cell>		                                                    
 	                            <fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(checkListReport.paymentDate, "dd-MM-yyyy")}</fo:block>                               
+	                            	<fo:block text-align="left" keep-together="always">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(checkListReport.paymentDate, "dd-MMM")}</fo:block>                               
 	                            </fo:table-cell>
 	                            <#--
 	                             <fo:table-cell >
@@ -166,7 +167,7 @@ under the License.
 	                        <#if bankPaidDetails.getKey()!="noBankName">
 	                        <fo:table-row >
 	                           <fo:table-cell >	
-	                           <fo:block text-align="left" keep-together="always" font-size="7pt" >---------------------------------------------------------------------------------------------------------------</fo:block>
+	                           <fo:block text-align="left" keep-together="always"  >------------------------------------------------------------------------</fo:block>
 	                            </fo:table-cell>
 	                       </fo:table-row>
 	                        <fo:table-row >
@@ -194,7 +195,7 @@ under the License.
 	                        </fo:table-row>
 	                        <fo:table-row >
 	                           <fo:table-cell >	
-	                           <fo:block text-align="left" keep-together="always" font-size="7pt" >---------------------------------------------------------------------------------------------------------------</fo:block>
+	                            <fo:block text-align="left" keep-together="always"  >------------------------------------------------------------------------</fo:block>
 	                            </fo:table-cell>
 	                       </fo:table-row>
 	                       </#if>
