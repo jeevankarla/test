@@ -425,7 +425,7 @@ public class LmsServices {
 					return ServiceUtil.returnError("lastName is missing");
 				}
 				Object tempInput = "PARTY_ENABLED";
-				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "statusId", tempInput);
+				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "statusId", tempInput,"partyId",facilityId);
 				resultMap = dispatcher.runSync("createPerson", input);
 				if (ServiceUtil.isError(resultMap)) {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -438,7 +438,7 @@ public class LmsServices {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
 					return ServiceUtil.returnError("groupName is missing");
 				}
-				input = UtilMisc.toMap("groupName",context.get("groupName"));
+				input = UtilMisc.toMap("groupName",context.get("groupName"),"partyId",facilityId);
 				resultMap = dispatcher.runSync("createPartyGroup", input);
 				if (ServiceUtil.isError(resultMap)) {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
