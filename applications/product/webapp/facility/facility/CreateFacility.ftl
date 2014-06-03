@@ -3,7 +3,10 @@
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.js</@ofbizContentUrl>"></script>
 
 
-<script type="text/javascript">
+<script type="application/javascript">
+var amRouteList = ${StringUtil.wrapString(amRouteList)}
+var pmRouteList = ${StringUtil.wrapString(pmRouteList)}
+
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'MM d, yy',
@@ -42,6 +45,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 		}
 	}
     $(document).ready(function(){
+    
       	jQuery("#marginOnMilk").parent().parent().hide();
 		jQuery("#marginOnProduct").parent().parent().hide();
     	jQuery("#rateAmount").parent().parent().hide();	
@@ -55,6 +59,8 @@ function makeDatePicker(fromDateId ,thruDateId){
                 		var facilityId = $("#facilityId").val();
                 		var facilityName = $("#facilityName").val();
                 		var parentFacilityId=jQuery("[name='"+"parentFacilityId"+"']").val();
+                		var amRoute=$( "#amRoute option:selected" ).val()
+                		var pmRoute=$( "#pmRoute option:selected" ).val()
                 		var categoryTypeEnum =$( "#categoryTypeEnum option:selected" ).val();
                 	    if( (facilityId).length < 1 ) {
 					    	$('#facilityId').css('background', 'yellow'); 
@@ -63,10 +69,14 @@ function makeDatePicker(fromDateId ,thruDateId){
 					       	}, 800);
 					    	return false;
 				    	}
-				    	if( (parentFacilityId).length < 1 ) {
-					    	$('#0_lookupId_parentFacilityId').css('background', 'yellow'); 
+				    	 if( (amRoute).length < 1 &&(pmRoute).length < 1) {
+					    	$('#amRoute').css('background', 'yellow'); 
 					       	setTimeout(function () {
-					           	$('#0_lookupId_parentFacilityId').css('background', 'white').focus(); 
+					           	$('#amRoute').css('background', 'white').focus(); 
+					       	}, 800);
+					       	$('#pmRoute').css('background', 'yellow'); 
+					       	setTimeout(function () {
+					           	$('#pmRoute').css('background', 'white').focus(); 
 					       	}, 800);
 					    	return false;
 				    	}
@@ -193,24 +203,28 @@ function makeDatePicker(fromDateId ,thruDateId){
 						      	<input type="text" name="facilityId" id="facilityId" size="18" maxlength="60" autocomplete="off" value="${emailAddress?if_exists}"/>
 						    </td>
 						</tr>
-				        <!--<tr>
-				        <td>&nbsp;</td>
-					    <td  align='left' valign='middle' nowrap="nowrap" ><div class='h3'>${uiLabelMap.ProductFacilityTypeId}</div></td>
-					     <td>&nbsp;</td>
-	       	  			 <td valign='middle'>
-						      <select name="facilityTypeId">
-						        <option selected="selected" value='${facilityType.facilityTypeId?if_exists}'>${facilityType.get("description",locale)?if_exists}</option>
-						        <option value='${facilityType.facilityTypeId?if_exists}'>----</option>
-						        <#list facilityTypes as nextFacilityType>
-						          <option value='${nextFacilityType.facilityTypeId?if_exists}'>${nextFacilityType.get("description",locale)?if_exists}</option>
-						        </#list>
-						      </select>
-					    </td>
- 						 </tr>-->
  						 <tr>
-						    <td class="label"><b> Route Id*</b></td>
+						    <td class="label"><b>AM Route*</b></td>
 						    <td>
-						       <@htmlTemplate.lookupField value="${facility.parentFacilityId?if_exists}" formName="EditBoothForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility" size="18"/>
+						     <select name="amRoute" id="amRoute">
+						     <option selected="selected" value='${facility.parentFacilityId?if_exists}'></option>
+						     <option value=""></option>  
+						     <#list amRouteList as eachRoute>
+						     <option value='${eachRoute.facilityId?if_exists}' >${eachRoute.facilityId?if_exists}</option>
+						     </#list>
+						     </select>
+	        				 </td>
+						</tr>
+						<tr>
+						    <td class="label"><b>PM Route*</b></td>
+						    <td>
+						     <select name="pmRoute" id="pmRoute">
+						     <option selected="selected" value='${facility.parentFacilityId?if_exists}'></option>
+						     <option value=""></option>  
+						     <#list pmRouteList as eachRoute>
+						     <option value='${eachRoute.facilityId?if_exists}' >${eachRoute.facilityId?if_exists}</option>
+						     </#list>
+						     </select>
 	        				 </td>
 						</tr>
 						<tr>
@@ -379,6 +393,12 @@ function makeDatePicker(fromDateId ,thruDateId){
 									      	<input type="text" name="contactNumber" id="contactNumber" size="30" maxlength="60" autocomplete="off"/>
 									    </td>
 									</tr>-->
+									<tr>
+									    <td class="label"><b>Country Code</b></td>
+									    <td>
+									      	<input type="text" name="countryCode" id="countryCode" size="5" maxlength="60" autocomplete="off" />
+									    </td>
+									</tr>
 									<tr>
 									    <td class="label"><b>Mobile Number</b></td>
 									    <td>

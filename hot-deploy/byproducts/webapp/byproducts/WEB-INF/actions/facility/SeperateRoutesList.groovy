@@ -49,3 +49,5 @@ JSONObject facilityItemsJSON = new JSONArray();
 facilityItemsJSON.putAt("AM_SHIPMENT", amRouteList) ;
 facilityItemsJSON.putAt("PM_SHIPMENT", pmRouteList) ;	
 context.facilityItemsJSON = facilityItemsJSON;
+context.amRouteList = amRouteList;
+context.pmRouteList = pmRouteList;

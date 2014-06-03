@@ -44,6 +44,7 @@ context.facilityId = facilityId;
 if (facility && facility.ownerPartyId) {
 partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: facility.ownerPartyId, userLogin: userLogin]);
 context.mobileNumber = partyTelephone.contactNumber;
+context.countryCode = partyTelephone.countryCode;
 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId: facility.ownerPartyId, userLogin: userLogin]);
 context.partyPostalAddress = partyPostalAddress;
 context.address1 = partyPostalAddress.address1;
@@ -83,6 +84,7 @@ context.areaUomList = delegator.findList("Uom", EntityCondition.makeCondition([u
 Timestamp fromDate=UtilDateTime.toTimestamp(facility.openedDate);
 
 BigDecimal rateAmount=null;
+
 if (UtilValidate.isNotEmpty(facilityId)) {
 	dayBegin = UtilDateTime.getDayStart(fromDate);
 	Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
@@ -91,6 +93,8 @@ if (UtilValidate.isNotEmpty(facilityId)) {
 	inputRateAmt.put("fromDate",dayBegin);
 	inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
 	condList=[];
+	groupMemberList=[];
+	boothsList=[];
 	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS,facilityId));
 	condList.add(EntityCondition.makeCondition("rateTypeId", EntityOperator.EQUALS,"SHOPEE_RENT"));
 	condList.add(EntityCondition.makeCondition("rateCurrencyUomId", EntityOperator.EQUALS, "INR"));
@@ -104,6 +108,34 @@ if (UtilValidate.isNotEmpty(facilityId)) {
 		GenericValue validFacilityRate= EntityUtil.getFirst(facilityRate);
 		 rateAmount=(BigDecimal)validFacilityRate.get("rateAmount");
 	}
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+		condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		cond1=EntityCondition.makeCondition(condList,EntityOperator.AND);
+
+	    groupMemberList = delegator.findList("FacilityGroupMember",cond1 , null, null, null, false);
+		groupMemberList = EntityUtil.getFieldListFromEntityList(groupMemberList, "facilityGroupId", true);
+		
+		condList.clear();
+	    condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, groupMemberList));
+		condList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, "AM_RT_GROUP"));
+		condition=EntityCondition.makeCondition(condList,EntityOperator.AND);
+	 
+		boothsList = delegator.findList("FacilityGroupAndMemberAndFacility",condition , null, null, null, false);
+		boothsList = EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", true);
+		if (UtilValidate.isNotEmpty(boothsList)) {
+		 context.amRoute=boothsList.get(0);
+		}
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, groupMemberList));
+		condList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, "PM_RT_GROUP"));
+		condition=EntityCondition.makeCondition(condList,EntityOperator.AND);
+	 
+		boothsList = delegator.findList("FacilityGroupAndMemberAndFacility",condition , null, null, null, false);
+		boothsList = EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", true);
+		if (UtilValidate.isNotEmpty(boothsList)) {
+		 context.pmRoute=boothsList.get(0);
+		}
 	
 }
 context.rateAmount=rateAmount;

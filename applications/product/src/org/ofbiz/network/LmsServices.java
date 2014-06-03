@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -338,7 +339,7 @@ public class LmsServices {
 		String lastName = null;
 		
 		String facilityId = (String) context.get("facilityId");
-		String parentFacilityId = (String) context.get("parentFacilityId");
+		String parentFacilityId = "";
 		String categoryTypeEnum = (String) context.get("categoryTypeEnum");
 		String groupName = (String) context.get("groupName");
 		firstName = (String) context.get("firstName");
@@ -349,6 +350,7 @@ public class LmsServices {
 		String email = (String) context.get("emailAddress");
 		String mobileNumber = (String) context.get("mobileNumber");
 		String contactNumber =(String)context.get("contactNumber");
+		String countryCode = (String) context.get("countryCode");
 		BigDecimal securityDeposit =(BigDecimal)context.get("securityDeposit");
 		String openedDateStr =(String)context.get("openedDate");
 		String fDateStr =(String)context.get("fDateStr");
@@ -356,12 +358,14 @@ public class LmsServices {
 		String marginOnMilk =(String)context.get("marginOnMilk");
 		String marginOnProduct =(String)context.get("marginOnProduct");
 		String fdrNumber =(String)context.get("fdrNumber");
+		String amRoute =(String)context.get("amRoute");
+		String pmRoute =(String)context.get("pmRoute");
 		BigDecimal rateAmount =(BigDecimal)context.get("rateAmount");
 		Map<String, Object> resultMap = FastMap.newInstance();
 		Map<String, Object> input = FastMap.newInstance();
 		Map<String, Object> outMap = FastMap.newInstance();
 		Timestamp openedDate=null;
-		GenericValue parentFacility;
+		GenericValue parentFacility=null;
 		GenericValue facility;
 		try {
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
@@ -369,15 +373,24 @@ public class LmsServices {
 				Debug.logError("Booth Id Already Exists!", module);
 				return ServiceUtil.returnError("Booth Id Already Exists!");
 			}
-			if(parentFacilityId == null){
-				Debug.logError("Please Enter 'Parent Facility Id", module);
-				return ServiceUtil.returnError("Please Enter 'Parent Facility Id'");
+			if(amRoute == null  && pmRoute == null ){
+				Debug.logError("Please Enter 'AM' or 'PM' Route", module);
+				return ServiceUtil.returnError("Please Enter 'AM' or 'PM' Route");
 			}
-			parentFacility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", parentFacilityId), false);
-			if(UtilValidate.isEmpty(parentFacility)){
-				Debug.logError("Invalid Route Id", module);
-				return ServiceUtil.returnError("Invalid Route Id");
-			}
+			if(UtilValidate.isNotEmpty(amRoute)){
+				parentFacility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", amRoute), false);
+				if(UtilValidate.isEmpty(parentFacility)){
+					Debug.logError("Invalid Route Id: " + amRoute, "");
+					return ServiceUtil.returnError("Invalid Route Id "+amRoute);
+				}
+			 }
+			if(UtilValidate.isNotEmpty(pmRoute)){
+				parentFacility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", pmRoute), false);
+				if(UtilValidate.isEmpty(pmRoute)){
+					Debug.logError("Invalid Route Id: " + pmRoute, "");
+					return ServiceUtil.returnError("Invalid Route Id "+pmRoute);
+				}
+			 } 
 			if(!(parentFacility.getString("facilityTypeId")).equals("ROUTE")){
 				Debug.logError("Incorrect Route Id", module);
 				return ServiceUtil.returnError("Incorrect Route Id");
@@ -474,10 +487,14 @@ public class LmsServices {
 			 }
 			// create phone number
 			if (UtilValidate.isNotEmpty(mobileNumber)){
+				if (UtilValidate.isEmpty(countryCode)){
+					countryCode	="91";
+				}
 	            input.clear();
 	            input.put("userLogin", userLogin);
 	            input.put("contactNumber",mobileNumber);
 	            input.put("contactMechPurposeTypeId","PRIMARY_PHONE");
+	            input.put("countryCode",countryCode);	
 	            input.put("partyId", ownerPartyId);
 	            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
 	            if(ServiceUtil.isError(outMap)){
@@ -520,11 +537,11 @@ public class LmsServices {
 				Debug.logError("Name of the Booth is Missing", module);
 			   	return ServiceUtil.returnError("Name of the Booth is Missing");
 			 }
-			 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", ownerPartyId, "openedDate", openedDate, "facilityId", facilityId, "facilityTypeId", "BOOTH", "parentFacilityId", parentFacilityId, "categoryTypeEnum", categoryTypeEnum,"facilityName", (String)context.get("facilityName"), "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
+			 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", ownerPartyId, "openedDate", openedDate, "facilityId", facilityId, "facilityTypeId", "BOOTH","categoryTypeEnum", categoryTypeEnum,"facilityName", (String)context.get("facilityName"), "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
 			 boolean isSeqNumNumeric=(StringUtils.isNumeric(facilityId));
 			 
 			 if(isSeqNumNumeric){		 
-				 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", ownerPartyId, "openedDate",openedDate, "facilityId", facilityId, "facilityTypeId", "BOOTH", "parentFacilityId", parentFacilityId, "categoryTypeEnum", categoryTypeEnum,"sequenceNum", facilityId,"facilityName", (String)context.get("facilityName"), "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
+				 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", ownerPartyId, "openedDate",openedDate, "facilityId", facilityId, "facilityTypeId", "BOOTH", "categoryTypeEnum", categoryTypeEnum,"sequenceNum", facilityId,"facilityName", (String)context.get("facilityName"), "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
 			 }
 			 resultMap =  dispatcher.runSync("createFacility", input);
 			 if (ServiceUtil.isError(resultMap)) {
@@ -533,40 +550,49 @@ public class LmsServices {
              }
 			 String resultFacilityId = (String) resultMap.get("facilityId");
 			 
-			 /*enableLmsPmSales = delegator.findOne("TenantConfiguration", [propertyTypeEnumId:"LMS", propertyName:"enableLmsPmSales"], true);
-			 if (enableLmsPmSales && enableLmsPmSales.propertyValue == "Y") {
-			 	context.enableLmsPmSales = true;
-			 }*/
-			 Boolean enableLmsPmSalesEntry = Boolean.FALSE;
-				try{
-					 GenericValue tenantConfigEnableLmsPmSales = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableLmsPmSales"), false);
-					 if (UtilValidate.isNotEmpty(tenantConfigEnableLmsPmSales) && (tenantConfigEnableLmsPmSales.getString("propertyValue")).equals("Y")) {
-						 enableLmsPmSalesEntry = Boolean.TRUE;
+				 if(UtilValidate.isNotEmpty(amRoute)){
+					newSubscription.set("subscriptionTypeId", "AM");
+					try{
+					    delegator.createSetNextSeqId(newSubscription);
+					}catch (GenericEntityException e) {
+						Debug.logError(e, module);
+						return ServiceUtil.returnError("Error while creating  subscription" + e);	
 					}
-				 }catch (GenericEntityException e) {
-					// TODO: handle exception
-					 Debug.logError(e, module);
-				}
-			 if(enableLmsPmSalesEntry){
-				 newSubscription.set("subscriptionTypeId", "AM");
-				 delegator.createSetNextSeqId(newSubscription);
-				 newSubscription.set("subscriptionTypeId", "PM");
-				 delegator.createSetNextSeqId(newSubscription);
-			 }else{
-				 delegator.createSetNextSeqId(newSubscription);
-			 }
-			 if(UtilValidate.isNotEmpty(parentFacilityId)){
-			    Map tempMap = FastMap.newInstance();
-	        	tempMap.put("facilityId", facilityId);
-	        	tempMap.put("facilityGroupId", parentFacilityId);
-	        	tempMap.put("fromDate", openedDate);
-	        	tempMap.put("userLogin", userLogin);
-	        	resultMap = dispatcher.runSync("addFacilityToGroup", tempMap);
-	        	if(ServiceUtil.isError(resultMap)){
-	        		Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
-                 return resultMap;
-	        	}
-			 }
+					 Map tempMap = FastMap.newInstance();
+			        	tempMap.put("facilityId", facilityId);
+			        	tempMap.put("facilityGroupId", amRoute);
+			        	tempMap.put("fromDate", openedDate);
+			        	tempMap.put("userLogin", userLogin);
+			        	resultMap = dispatcher.runSync("addFacilityToGroup", tempMap);
+			        	if(ServiceUtil.isError(resultMap)){
+			        		Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+		                 return resultMap;
+			        	}
+			        	parentFacilityId=amRoute;
+				 }
+				 if(UtilValidate.isNotEmpty(pmRoute)){
+						newSubscription.set("subscriptionTypeId", "PM");
+						try{
+						    delegator.createSetNextSeqId(newSubscription);
+						}catch (GenericEntityException e) {
+							Debug.logError(e, module);
+							return ServiceUtil.returnError("Error while creating  subscription" + e);	
+						}
+						 Map tempMap = FastMap.newInstance();
+				        	tempMap.put("facilityId", facilityId);
+				        	tempMap.put("facilityGroupId", pmRoute);
+				        	tempMap.put("fromDate", openedDate);
+				        	tempMap.put("userLogin", userLogin);
+				        	resultMap = dispatcher.runSync("addFacilityToGroup", tempMap);
+				        	if(ServiceUtil.isError(resultMap)){
+				        		Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+			                 return resultMap;
+				        	}
+				        	 if(UtilValidate.isEmpty(parentFacilityId)){
+				                 parentFacilityId=pmRoute;
+				        	}
+				 }
+			 
 			 if (UtilValidate.isNotEmpty(categoryTypeEnum)&& categoryTypeEnum.equals("SHP_RTLR")){
 				  input.clear();
 				  input = UtilMisc.toMap("userLogin", userLogin, "fromDate",openedDate,"facilityId", facilityId,
@@ -651,7 +677,7 @@ public class LmsServices {
 		    	Debug.logError("Please Enter 'Facility Id'", module);
 		    	return ServiceUtil.returnError("Please Enter 'Facility Id'");
 		    }
-		    if(parentFacilityId == null){
+		    /*if(parentFacilityId == null){
 		    	Debug.logError("Please Enter 'Parent Facility Id'", module);
 		    	return ServiceUtil.returnError("Please Enter 'Parent Facility Id'");
 		    }
@@ -663,7 +689,7 @@ public class LmsServices {
 			if(!(parentFacility.getString("facilityTypeId")).equals("ZONE")){
 				Debug.logError("Incorrect Zone Id", module);
 				return ServiceUtil.returnError("Incorrect Zone Id");
-			}
+			}*/
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
 			if(UtilValidate.isNotEmpty(facility)){
 				Debug.logError("Route Id Already Exists!", module);
@@ -1548,7 +1574,7 @@ public class LmsServices {
 		address2 = (String) context.get("address2");
 		String email = (String) context.get("emailAddress");
 		String mobileNumber = (String) context.get("mobileNumber");
-		String contactNumber =(String)context.get("contactNumber");
+		String countryCode = (String) context.get("countryCode");
 		Timestamp openedDate=(Timestamp)context.get("openedDate");
 		Timestamp closedDate =(Timestamp)context.get("closedDate");
 		String marginOnMilk =(String)context.get("marginOnMilk");
@@ -1562,6 +1588,8 @@ public class LmsServices {
 		BigDecimal rateAmount =(BigDecimal)context.get("rateAmount");
 		String city=(String)context.get("city");
 		String reopen =(String)context.get("reopen");
+		String amRoute =(String)context.get("amRoute");
+		String pmRoute =(String)context.get("pmRoute");
 		GenericValue parentFacility;
 		GenericValue facility;
 		boolean updateFlag=false;
@@ -1569,11 +1597,11 @@ public class LmsServices {
 		 boolean isSeqNumNumeric=(StringUtils.isNumeric(facilityId));
 		
 		 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "openedDate",openedDate,"closedDate",closedDate, "facilityId", facilityId, "facilityTypeId", (String)context.get("facilityTypeId"), 
-				 "parentFacilityId", parentFacilityId, "categoryTypeEnum", categoryTypeEnum,"facilityName", (String)context.get("facilityName"),"useEcs", (String)context.get("useEcs"),
+				 "categoryTypeEnum", categoryTypeEnum,"facilityName", (String)context.get("facilityName"),"useEcs", (String)context.get("useEcs"),
 				 "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
 	
 		 if(isSeqNumNumeric){		 
-			 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "openedDate",openedDate, "facilityId", facilityId, "facilityTypeId", "BOOTH", "parentFacilityId", parentFacilityId,
+			 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "openedDate",openedDate, "facilityId", facilityId, "facilityTypeId", "BOOTH", 
 					 "categoryTypeEnum", categoryTypeEnum,"sequenceNum", facilityId,"facilityName", (String)context.get("facilityName"),"useEcs", (String)context.get("useEcs"),
 					 "description", (String)context.get("description"),"securityDeposit", (BigDecimal)context.get("securityDeposit"));
 		 }
@@ -1731,6 +1759,14 @@ public class LmsServices {
 				} 
 			  }
 			}
+			if (UtilValidate.isNotEmpty(amRoute)||UtilValidate.isNotEmpty(pmRoute)){
+				 input = UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId, "amRoute", amRoute,"pmRoute",pmRoute,"fromDate",openedDate,"thruDate",closedDate);
+				 resultMap =updateFacilityGroupMember(dctx,input);
+				 if (ServiceUtil.isError(resultMap)) {
+					 Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+	                 return resultMap;
+	             }
+			}
 		   if (UtilValidate.isNotEmpty(address1)){
 			    input.clear();
 	        	input.put("partyId", partyId);
@@ -1780,6 +1816,9 @@ public class LmsServices {
 		     }
 		     // update phone number
 	        if (UtilValidate.isNotEmpty(mobileNumber)){
+	        	if (UtilValidate.isEmpty(countryCode)){
+					countryCode	="91";
+				}
 	        	input.clear();
 	        	input.put("partyId", partyId);
 	        	input.put("userLogin", userLogin); 
@@ -1790,9 +1829,10 @@ public class LmsServices {
 	            }
 	            if (UtilValidate.isNotEmpty(outMap)){
 		        	  if (outMap.containsKey("contactNumber") ){
-		        		   if(!outMap.get("contactNumber").equals(mobileNumber) ){
+		        		   if(!outMap.get("contactNumber").equals(mobileNumber) || !outMap.get("countryCode").equals(countryCode)){
 					            input.clear();
 					            input.put("userLogin", userLogin);
+					            input.put("countryCode",countryCode);
 					            input.put("contactNumber",mobileNumber);
 					            input.put("contactMechId", outMap.get("contactMechId"));
 					            input.put("partyId", partyId);
@@ -1805,7 +1845,8 @@ public class LmsServices {
 		        	  }else{
 							    input.clear();
 					            input.put("userLogin", userLogin);
-					            input.put("contactNumber",contactNumber);
+					            input.put("countryCode",countryCode);
+					            input.put("contactNumber",mobileNumber);
 					            input.put("contactMechTypeId","TELECOM_NUMBER");
 					            input.put("contactMechPurposeTypeId", "PRIMARY_PHONE");
 					            input.put("partyId", partyId);
@@ -1818,41 +1859,6 @@ public class LmsServices {
 			          }
 	            }
 	          } 
-	        /*if (UtilValidate.isNotEmpty(contactNumber)){
-	        	input.clear();
-	        	input.put("partyId", partyId);
-	        	input.put("userLogin", userLogin);
-	        	input.put("contactMechPurposeTypeId", "PHONE_HOME");
-	            outMap = dispatcher.runSync("getPartyTelephone", input);
-		           if (UtilValidate.isNotEmpty(outMap)){
-		        	  if (outMap.containsKey("contactNumber") ){
-		        	     if (!outMap.get("contactNumber").equals(contactNumber) ){ 
-				            input.clear();
-				            input.put("userLogin", userLogin);
-				            input.put("contactNumber",contactNumber);
-				            input.put("contactMechId", outMap.get("contactMechId"));
-				            input.put("partyId", partyId);
-				            outMap = dispatcher.runSync("updatePartyTelecomNumber", input);
-				            if(ServiceUtil.isError(outMap)){
-				           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
-				           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
-				            }
-					    }
-		        	  }
-		            else{
-			            input.clear();
-			            input.put("userLogin", userLogin);
-			            input.put("contactNumber",contactNumber);
-			            input.put("contactMechPurposeTypeId","PHONE_HOME");
-			            input.put("partyId", partyId);
-			            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
-			            if(ServiceUtil.isError(outMap)){
-			           	 	Debug.logError("failed service create party contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
-			           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
-			            }
-		            }
-		          }
-		        } */
 	     // update  email
 	            if (UtilValidate.isNotEmpty(email)){
 	            	input.clear();
@@ -1898,4 +1904,201 @@ public class LmsServices {
 		} 
 		return result;		
 }
+   public static Map<String, Object> updateFacilityGroupMember(DispatchContext ctx,Map<String, Object> context) {
+       Map<String, Object> finalResult = FastMap.newInstance();
+       Map<String, Object> result = FastMap.newInstance();
+       Delegator delegator = ctx.getDelegator();
+       LocalDispatcher dispatcher = ctx.getDispatcher();
+       Locale locale = (Locale) context.get("locale");
+       String facilityId = (String) context.get("facilityId");
+       String amRoute = (String) context.get("amRoute");
+       String pmRoute = (String) context.get("pmRoute");
+      
+       Timestamp thruDate = (Timestamp) context.get("thruDate");
+       List<GenericValue> facilityGroupMemList = FastList.newInstance();
+       List<GenericValue>  boothsList= FastList.newInstance();
+       List<GenericValue> activeFacilityGroupMem = FastList.newInstance();
+       List<GenericValue> futureFacilityRate = FastList.newInstance();
+       List facilityGroupList = FastList.newInstance();
+       List<GenericValue> amRoutelist =FastList.newInstance();
+       List<GenericValue> pmRoutelist =FastList.newInstance();
+       GenericValue userLogin = (GenericValue) context.get("userLogin");
+       GenericValue amRt =null;
+       GenericValue pmRt =null;
+       List amRoutelst =null;
+       List pmRoutelst=null;
+       Timestamp tempfromDate=null;
+       String tempfacAmGroupId=null;
+       String tempfacPmGroupId=null;
+       List condList = FastList.newInstance();
+       
+       boolean isNewFacilityGroupMem = true;
+       if(UtilValidate.isNotEmpty(thruDate)){
+       	thruDate=UtilDateTime.getDayEnd(thruDate);
+       }
+       Timestamp fromDate=UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+       EntityCondition condition=null;
+			try {
+				condList.clear();
+				condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+				condList.add(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS, null));
+				EntityCondition cond3=EntityCondition.makeCondition(condList,EntityOperator.AND);
+				 facilityGroupMemList = delegator.findList("FacilityGroupMember",  cond3, null, UtilMisc.toList("fromDate"), null, false);
+				 if(UtilValidate.isNotEmpty(facilityGroupMemList)){
+				    activeFacilityGroupMem = EntityUtil.filterByDate(facilityGroupMemList, fromDate);
+				    facilityGroupList = EntityUtil.getFieldListFromEntityList(facilityGroupMemList, "facilityGroupId", true);
+				 }
+				 if(UtilValidate.isNotEmpty(amRoute)){
+					    if(UtilValidate.isNotEmpty(facilityGroupList)){
+						    condList.clear();
+						    condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityGroupList));
+						    condList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, "AM_RT_GROUP"));
+							condition=EntityCondition.makeCondition(condList,EntityOperator.AND);
+							boothsList = delegator.findList("FacilityGroupAndMemberAndFacility",condition , null, UtilMisc.toList("fromDate"), null, false);
+							if(UtilValidate.isNotEmpty(boothsList)){
+							      amRoutelst= EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", true);
+							        condList.clear();
+									condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+									condList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.IN, amRoutelst));
+									
+									EntityCondition cond=EntityCondition.makeCondition(condList,EntityOperator.AND);
+									amRoutelist = delegator.findList("FacilityGroupMember", cond, null, UtilMisc.toList("fromDate"), null, false);
+							
+							}
+							if(UtilValidate.isNotEmpty(amRoutelist)){
+								 amRt =EntityUtil.getFirst(amRoutelist);
+							}
+					 }
+				 }
+				 if(UtilValidate.isNotEmpty(pmRoute)){
+						if(UtilValidate.isNotEmpty(facilityGroupList)){
+							condList.clear();
+							condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityGroupList));
+							condList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, "PM_RT_GROUP"));
+							
+							EntityCondition condition1=EntityCondition.makeCondition(condList,EntityOperator.AND);
+							
+							boothsList.clear();
+							boothsList = delegator.findList("FacilityGroupAndMemberAndFacility",condition1 , null, null, null, false);
+							if(UtilValidate.isNotEmpty(boothsList)){
+								pmRoutelst= EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", true);
+								condList.clear();
+								condList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.IN, pmRoutelst));
+								condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+								EntityCondition cond1=EntityCondition.makeCondition(condList,EntityOperator.AND);
+							
+								pmRoutelist = delegator.findList("FacilityGroupMember",  cond1, null, UtilMisc.toList("fromDate"), null, false);
+							}
+						
+							if(UtilValidate.isNotEmpty(pmRoutelist)){
+								pmRt =EntityUtil.getFirst(pmRoutelist);
+							}
+					 }
+				 }
+				 if(UtilValidate.isNotEmpty(amRt)){
+				       	tempfacAmGroupId= (String) amRt.get("facilityGroupId");
+				       	if(!tempfacAmGroupId.equals(amRoute) ){
+				       		amRt.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+				       		amRt.store();
+				       	}
+				 }
+					 if(UtilValidate.isNotEmpty(pmRt)){
+				       	tempfacPmGroupId= (String) pmRt.get("facilityGroupId");
+				       	if(!tempfacPmGroupId.equals(pmRoute)){
+				       		pmRt.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+				       		pmRt.store();
+				       	}
+					 }
+					    GenericValue newEntity = delegator.makeValue("FacilityGroupMember");
+					    newEntity.set("facilityId", facilityId);
+		    	        newEntity.set("fromDate", fromDate);
+		    	        newEntity.set("thruDate", thruDate);
+					if(UtilValidate.isNotEmpty(amRoute)){
+						condList.clear();
+						condList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, amRoute));
+						condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+						EntityCondition cond1=EntityCondition.makeCondition(condList,EntityOperator.AND);
+					
+						List<GenericValue> amlist = delegator.findList("FacilityGroupMember",  cond1, null, UtilMisc.toList("fromDate"), null, false);
+						if(UtilValidate.isEmpty(amlist)){
+							 newEntity.set("facilityGroupId", amRoute);
+							 try {
+									delegator.create(newEntity);
+								}catch (GenericEntityException e) {
+									Debug.logError("Error in creating Facility Group Member: "+amRoute+ "\t"+e.toString(),module);
+									return ServiceUtil.returnError(e.getMessage());
+								}
+								condList.clear();
+								condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, "AM"));
+								condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+								EntityCondition cond2=EntityCondition.makeCondition(condList,EntityOperator.AND);
+								List<GenericValue> amSubscriptionList = delegator.findList("Subscription",  cond1, null, UtilMisc.toList("fromDate"), null, false);
+								if(UtilValidate.isEmpty(amSubscriptionList)){
+									GenericValue newSubscription = delegator.makeValue("Subscription");
+									newSubscription.put("facilityId", facilityId);
+									newSubscription.set("subscriptionTypeId", "AM");
+									try{
+									    delegator.createSetNextSeqId(newSubscription);
+									}catch (GenericEntityException e) {
+										Debug.logError(e, module);
+										return ServiceUtil.returnError("Error while creating  subscription" + e);	
+									}
+								}
+			       		 }else{
+			       			
+			       			    amlist = EntityUtil.filterByAnd(amlist, UtilMisc.toMap("fromDate", fromDate));
+			       			    amRt.clear();	
+			       			    if(UtilValidate.isNotEmpty(amlist)){
+							    amRt =EntityUtil.getFirst(amlist);
+								amRt.set("thruDate", null);
+								amRt.store();
+			       			    }
+							}
+					}
+					if(UtilValidate.isNotEmpty(pmRoute)){
+						condList.clear();
+						condList.add(EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, pmRoute));
+						condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+						EntityCondition cond1=EntityCondition.makeCondition(condList,EntityOperator.AND);
+						List<GenericValue> pmlist = delegator.findList("FacilityGroupMember",  cond1, null, UtilMisc.toList("fromDate"), null, false);
+						if(UtilValidate.isEmpty(pmlist)){
+							newEntity.set("facilityGroupId", pmRoute);
+							try {
+								delegator.create(newEntity);
+							}catch (GenericEntityException e) {
+								Debug.logError("Error in creating Facility Group Member: "+pmRoute+ "\t"+e.toString(),module);
+								return ServiceUtil.returnError(e.getMessage());
+							}
+							condList.clear();
+							condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, "PM"));
+							condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+							EntityCondition cond2=EntityCondition.makeCondition(condList,EntityOperator.AND);
+							List<GenericValue> pmSubscriptionList = delegator.findList("Subscription",  cond1, null, UtilMisc.toList("fromDate"), null, false);
+							if(UtilValidate.isEmpty(pmSubscriptionList)){
+								GenericValue newSubscription = delegator.makeValue("Subscription");
+								newSubscription.put("facilityId", facilityId);
+								newSubscription.set("subscriptionTypeId", "PM");
+								try{
+								    delegator.createSetNextSeqId(newSubscription);
+								}catch (GenericEntityException e) {
+									Debug.logError(e, module);
+									return ServiceUtil.returnError("Error while creating  subscription" + e);	
+								}
+							}
+						}else{
+							pmlist = EntityUtil.filterByAnd(pmlist, UtilMisc.toMap("fromDate", fromDate));
+							pmRt.clear();	
+							if(UtilValidate.isNotEmpty(pmlist)){
+								pmRt =EntityUtil.getFirst(pmlist);
+								pmRt.set("thruDate", null);
+								pmRt.store();
+							}
+						}
+					}
+			}catch (GenericEntityException e) {
+				Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());
+			} 
+		return result;
+   }
 }

@@ -17,7 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <script>
-	
+var amRouteList = ${StringUtil.wrapString(amRouteList)}
+var pmRouteList = ${StringUtil.wrapString(pmRouteList)}
       function setClosedDateNull(){      
       	$('#closedDate').val(''); 
       	$('#reopen').val('Y');     
@@ -91,12 +92,30 @@ under the License.
           </td>
         </tr>  
   </#if>
-  <tr>
-    <td class="label">${uiLabelMap.FormFieldTitle_parentFacilityId}</td>
-    <td>
-      <@htmlTemplate.lookupField value="${facility.parentFacilityId?if_exists}" formName="EditFacilityForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility"/>
-    </td>
-  </tr>
+      <tr>
+		    <td class="label"><b>AM Route*</b></td>
+		    <td>
+		     <select name="amRoute" id="amRoute">
+		     <option selected="selected" value="${amRoute?if_exists}">${amRoute?if_exists}</option>
+		     <option value=""></option>  
+		     <#list amRouteList as eachRoute>
+		     <option value='${eachRoute.facilityId?if_exists}' >${eachRoute.facilityId?if_exists}</option>
+		     </#list>
+		     </select>
+			 </td>
+	</tr>
+		<tr>
+		    <td class="label"><b>PM Route*</b></td>
+		    <td>
+		     <select name="pmRoute" id="pmRoute">
+		     <option selected="selected" value='${pmRoute?if_exists}'>${pmRoute?if_exists}</option>
+		     <option value=""></option>  
+		     <#list pmRouteList as eachRoute>
+		     <option value='${eachRoute.facilityId?if_exists}' <#if "${eachRoute.facilityId}" == pmRoute?if_exists>selected="selected"</#if>>${eachRoute.facilityId?if_exists}</option>
+		     </#list>
+		     </select>
+			 </td>
+	  </tr>
   <tr>
     <td class="label">${uiLabelMap.ProductFacilityOwner}</td>
     <td>
@@ -124,6 +143,10 @@ under the License.
     <td class="label">Phone Number</td>
     <td><input type="text" name="contactNumber" value="${contactNumber?if_exists}"  maxlength="10" /></td>
   </tr> -->
+  <tr>
+	<td class="label"><b>Country Code</b></td>
+	  <td><input type="text" name="countryCode" id="countryCode" value="${countryCode?if_exists}" size="5" maxlength="60" autocomplete="off" /></td>
+  </tr>
   <tr>
     <td class="label">Mobile Number</td>
     <td><input type="text" name="mobileNumber" value="${mobileNumber?if_exists}"  maxlength="10" /></td>
