@@ -3606,9 +3606,9 @@ public class ByProductNetworkServices {
 			EntityCondition condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 			List paymentsList = FastList.newInstance();
 			//order by condition will change basing on requirement;
-			List<String> orderBy = UtilMisc.toList("-lastModifiedDate");
+			List<String> orderBy = UtilMisc.toList("facilityId","-lastModifiedDate");
 			if(orderByBankName){
-				orderBy = UtilMisc.toList("issuingAuthority","-lastModifiedDate");
+				orderBy = UtilMisc.toList("issuingAuthority","facilityId","-lastModifiedDate");
 			}
 			try {                                       
 				paymentsList = delegator.findList("PaymentAndFacility", condition, null,orderBy , null, false);			
@@ -7604,7 +7604,7 @@ Debug.logInfo("result= " + result, module);
 			    Timestamp saleDate = UtilDateTime.nowTimestamp();
 			    Delegator delegator = dctx.getDelegator();
 			    Map<String, String> facilityPartyMap = FastMap.newInstance();
-			    Map<String, List> fieldStaffAndFacility = FastMap.newInstance();
+			    Map<String, List> partyAndFacilityList = FastMap.newInstance();
 			    if(UtilValidate.isNotEmpty(context.get("saleDate"))){
 			    	saleDate = (Timestamp)context.get("saleDate");
 			    }
@@ -7621,20 +7621,28 @@ Debug.logInfo("result= " + result, module);
 				 }
 			   
 			    EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);	
-			    Debug.log("====condition===="+condition);
 			    try {
 			    	facilityPartyList =delegator.findList("FacilityFacilityPartyAndPerson", condition, null , null, null, false);
 			    	facilityPartyList = EntityUtil.filterByDate(facilityPartyList, saleDate);
 			    	for(GenericValue facilityParty : facilityPartyList){
 			    		List tempFacilityList = FastList.newInstance();
+			    		String routeId= (String)facilityParty.getString("facilityId");
 			    		if(facilityParty.getString("facilityTypeId").equals("ROUTE")){
 			    			facilityPartyMap.put(facilityParty.getString("facilityId"), facilityParty.getString("partyId"));
+			    		}
+			    		if(UtilValidate.isNotEmpty(partyAndFacilityList.get(facilityParty.getString("partyId")))){
+			    			List facilityList = partyAndFacilityList.get(facilityParty.getString("partyId"));
+			    			facilityList.add(routeId);
+			    			partyAndFacilityList.put(facilityParty.getString("partyId"), facilityList);
+			    		}else{
+			    			partyAndFacilityList.put(facilityParty.getString("partyId"), UtilMisc.toList(routeId));
 			    		}
 			    	}
 				}catch (Exception e) {
 					Debug.logError(e, "Exception while getting FaclityParty ", module);		   
 				}
 				result.put("facilityPartyMap", facilityPartyMap);
+				result.put("partyAndFacilityList", partyAndFacilityList);
 				return result;
 		}
 
