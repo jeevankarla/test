@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".1in" margin-right=".1in">
-        <fo:region-body margin-top="2in"/>
+        <fo:region-body margin-top="2.8in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -34,13 +34,15 @@ under the License.
         <#assign SNO=0> 
         <#if printPaymentsList?has_content> 
         <#list printPaymentsList as paymentListReport>
-<fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
-			<fo:static-content flow-name="xsl-region-before">
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
+           <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="14pt" font-family="Courier,monospace">					
+		    	<fo:static-content flow-name="xsl-region-before">
+		    	   <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
+			       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
+					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  &#160;&#160;   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>
-                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
+                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>-------------------------------------------------------------------------</fo:block>
-              		<fo:block >Received with thanks the ${reportType} of Cash													&#160;&#160;&#160;&#160;${reportType}- CSH</fo:block>
+              		<fo:block >&#160;&#160;&#160;&#160;&#160; Received with thanks the ${reportType} of Cash													&#160;&#160;&#160;&#160;${reportType}- CSH</fo:block>
             		<#assign  partyName="">
             			
             		<fo:block><fo:table>
@@ -58,7 +60,7 @@ under the License.
                        			</fo:table-cell>
                        			</#if>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left">Receipt Number:${paymentListReport.paymentId?if_exists}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right">Receipt Number:${paymentListReport.paymentId?if_exists}&#160;&#160;&#160;</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>	
                      <fo:table-row>
@@ -66,38 +68,35 @@ under the License.
                             		<fo:block  text-align="left"  ></fo:block>  
                        			</fo:table-cell>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right">Receipt Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy")}</fo:block>  
                        			</fo:table-cell>
                     </fo:table-row>		
                      </fo:table-body>
                       </fo:table>
             		</fo:block>
             		<fo:block>-------------------------------------------------------------------------</fo:block>
-            		<fo:block >Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Party Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;Amount</fo:block>
+            		<fo:block >&#160;&#160;&#160;Receipt Id													&#160;&#160;&#160;&#160;&#160;&#160;&#160;Description 								&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Party Code			&#160;&#160;&#160;&#160;&#160;&#160;&#160;Amount</fo:block>
             		<fo:block>-------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="130pt"/>
-                    <fo:table-column column-width="135pt"/>
-                    <fo:table-column column-width="90pt"/>
+                    <fo:table-column column-width="165pt"/>
+                    <fo:table-column column-width="165pt"/>
                     <fo:table-column column-width="140pt"/> 
-            		<fo:table-column column-width="300pt"/>
                     <fo:table-body>
                     		<#assign totalAmount = 0>
 							<fo:table-row>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  white-space-collapse="false">${paymentListReport.paymentId?if_exists}</fo:block>  
+                            		<fo:block  text-align="left"  white-space-collapse="false">&#160;&#160;&#160;${paymentListReport.paymentId?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<#if paymentListReport.partyIdFrom?exists>
             			<#assign partyId=paymentListReport.partyIdFrom>
             			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
             			</#if>
                 				<fo:table-cell>
-                				
                             		<fo:block  keep-together="always" text-align="left">${partyName}</fo:block>  
-                       			
                        			</fo:table-cell>
                        			
                        			<fo:table-cell>
@@ -112,7 +111,7 @@ under the License.
             				     <fo:table-cell>
                     				<fo:block></fo:block>
                					</fo:table-cell>
-               					<fo:table-cell number-columns-spanned="3">
+               					<fo:table-cell number-columns-spanned="2">
                					<fo:block>${paymentListReport.comments?if_exists}</fo:block>
                					</fo:table-cell>
 		  					</fo:table-row>
@@ -123,7 +122,7 @@ under the License.
 		  					</fo:table-row>
             				<fo:table-row>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false">Total Amount</fo:block>  
+                            		<fo:block  keep-together="always" text-align="center"  white-space-collapse="false">Total Amount</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  white-space-collapse="false"></fo:block>  
@@ -141,8 +140,8 @@ under the License.
                					</fo:table-cell>
 		  					</fo:table-row>
 						  	<fo:table-row>
-			                   	<fo:table-cell>
-                   					<fo:block white-space-collapse="false" keep-together="always">(In Words: ${paymentListReport.amountWords} only)</fo:block>
+			                   	<fo:table-cell number-columns-spanned="4">
+                   					<fo:block white-space-collapse="false" keep-together="always">&#160;&#160;&#160;(In Words: ${paymentListReport.amountWords} only)</fo:block>
 			                   	</fo:table-cell>
 						  	</fo:table-row>
 						  	<fo:table-row>
@@ -162,7 +161,7 @@ under the License.
 		  					</fo:table-row>
 						  	<fo:table-row>
 			                   <fo:table-cell>
-			                        	<fo:block keep-together="always">SUPDT/DMF/AM                     &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Cashier</fo:block>
+			                        	<fo:block keep-together="always">&#160;&#160;SUPDT/DMF/AM                     &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Cashier</fo:block>
 			                   </fo:table-cell>
 						  	</fo:table-row>
 		              </fo:table-body>

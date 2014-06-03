@@ -141,6 +141,7 @@ public class UtilNumber {
         + "    90: ninety[->>];\n"
         + "    100: << hundred[ >>];\n"
         + "    1000: << thousand[ >>];\n"
+        + "    100,000: << lakh[ >>];\n"//Newly added insted of Changing it Many places
         + "    1,000,000: << million[ >>];\n"
         + "    1,000,000,000: << billion[ >>];\n"
         + "    1,000,000,000,000: << trillion[ >>];\n"
