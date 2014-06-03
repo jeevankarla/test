@@ -244,4 +244,8 @@
 	<SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CHEQUE"/>
 	<SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="PAYMENTSTATUS_CANCEL"/>
 	
+	 <SecurityPermission description="All 'VNDR MRGN' permissions with restriction on download of Margin/billing Reports." permissionId="VNDRMRGN_VIEW"/>
+	<SecurityGroup description="View Margin/billing Report permissions with restriction on download" groupId="VNDRMRGNVIEW"/>    
+    <SecurityGroupPermission groupId="VNDRMRGNVIEW" permissionId="VNDRMRGN_VIEW"/>
+	
 </entity-engine-xml>
