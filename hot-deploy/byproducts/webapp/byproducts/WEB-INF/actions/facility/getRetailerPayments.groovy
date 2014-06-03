@@ -97,7 +97,8 @@ if(parameters.paymentIds){
 }
 
 
-partyProfileDefault = delegator.findList("PartyProfileDefault", null, UtilMisc.toSet("defaultPayMeth", "partyId"), null, null, false);
+partyProfileDefault = delegator.findList("PartyProfileDefault", null, null, null, null, false);
+partyProfileDefault = EntityUtil.filterByDate(partyProfileDefault, UtilDateTime.nowTimestamp());
 paymentTypeParties = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "partyId", true);
 paymentTypes = EntityUtil.getFieldListFromEntityList(partyProfileDefault, "defaultPayMeth", true);
 paymentMethodType = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, paymentTypes), null, null, null, false);
@@ -257,7 +258,7 @@ if(hideSearch == "N" || stopListing){
 				isRetailerExists = true;
 			}
 		}
-		if(!isRetailerExists && paymentMethodTypeId == "CASH_PAYIN"){
+		if(!isRetailerExists){
 			tempMap = [:];
 			tempMap.facilityId = facilityId;
 			tempMap.routeId = "";
