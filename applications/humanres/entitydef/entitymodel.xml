@@ -576,7 +576,7 @@ under the License.
         <field name="meternityLeave" type="fixed-point"/>
         <field name="compansatoryLeave" type="fixed-point"/> -->
         <field name="noOfAttendedDays" type="fixed-point"/>
-        <field name="noOfCalenderdDays" type="fixed-point"/>
+        <field name="noOfCalenderDays" type="fixed-point"/>
          <field name="noOfLeaveDays" type="fixed-point"/>
         <field name="lossOfPayDays" type="fixed-point"/>
         <prim-key field="partyId"/>
@@ -1317,7 +1317,6 @@ under the License.
 	  <prim-key field="PunchType"/>
     </entity>
     <entity entity-name="EmplDailyAttendanceDetail" package-name="org.ofbiz.humanres.position"	title="Empl PUnch Type">
-	  <field name="" type="id-ne"/>
 	  <field name="partyId" type="id-ne"/>
 	  <field name="date" type="date"/>
 	  <field name="seqId" type="id-ne"></field>
@@ -1437,9 +1436,9 @@ under the License.
       <field name="payrollBenDedRuleId" type="id-ne"></field>
       <field name="payHeadPriceActionSeqId" type="id-ne"></field>
       <field name="payHeadPriceActionTypeId" type="id-ne"></field>
+      <field name="customPriceCalcService" type="id-vlong"></field>  
       <field name="acctgFormulaId" type="id"></field>   
       <field name="amount" type="fixed-point"></field>
-      <field name="rateCode" type="short-varchar"></field>
       <prim-key field="payrollBenDedRuleId"/>
       <prim-key field="payHeadPriceActionSeqId"/>
       <relation type="one" fk-name="PYH_PCACT_TYPE" rel-entity-name="PayHeadPriceActionType">

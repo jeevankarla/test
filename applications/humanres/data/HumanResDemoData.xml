@@ -41,18 +41,7 @@ under the License.
     
     
     <!--  -->
-    <EnumerationType description="Payhead Price Parent Enum Type" enumTypeId="PYHD_PRICE" hasTable="N" parentTypeId=""/>
-    <EnumerationType description="Payhead Price Input Parameter" enumTypeId="PYHD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PYHD_PRICE"/>
-    <Enumeration description="Location" enumCode="PAYHD_BEDE_GEO" enumId="PAYHD_BEDE_GEO" sequenceId="01" enumTypeId="PYHD_PRICE_IN_PARAM"/>
-    <Enumeration description="PositionType" enumCode="PAYHD_BEDE_POS" enumId="PAYHD_BEDE_POS" sequenceId="02" enumTypeId="PYHD_PRICE_IN_PARAM"/>
-    <Enumeration description="Employee" enumCode="PAYHD_BEDE_EMPID" enumId="PAYHD_BEDE_EMPID" sequenceId="03" enumTypeId="PYHD_PRICE_IN_PARAM"/>
     
-    
-    
-    
-    
-    <PayHeadPriceActionType payHeadPriceActionTypeId="PRICE_FLAT"/>
-    <PayHeadPriceActionType payHeadPriceActionTypeId="PRICE_FORMU"/>
      
     <AcctgFormula acctgFormulaId="DA"  description="DA" formula="0.8*(${BASIC})" hasTable="N" isSlabBased="N" />
     <AcctgFormula acctgFormulaId="HRA" createdStamp="2013-09-16 11:14:10.0" createdTxStamp="2013-09-16 11:14:10.0" description="HRA" formula="0.3*(${BASIC})" hasTable="N" isSlabBased="N"/>
@@ -81,8 +70,8 @@ under the License.
      
    
    
-   <!--  Sample date-->
-    <AcctgFormula acctgFormulaId="DA_BGLR"  description="DA BGLR" formula="0.15*(${BASIC})*${ATTENDANCE}" hasTable="N" isSlabBased="N" />
+   <!--  Sample data-->
+    <AcctgFormula acctgFormulaId="DA_BGLR"  description="DA BGLR" formula="0.15*(${BASIC})+${PAYROL_BEN_HRA}" hasTable="N" isSlabBased="N" />
     <AcctgFormula acctgFormulaId="DA_GULB"  description="DA GULB" formula="0.09*(${BASIC})" hasTable="N" isSlabBased="N" />
     <AcctgFormula acctgFormulaId="DA_BELL"  description="DA BGLR" formula="0.15*(${BASIC})" hasTable="N" isSlabBased="N" />
      
@@ -129,7 +118,35 @@ under the License.
     <PayrollBenDedCond condValue="BGLR" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="300"/>
     <PayHeadPriceAction acctgFormulaId="WASH_BGLR" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="300" />
     
+    <PayrollBenDedRule payrollBenDedRuleId="301" ruleName="shift condition " payHeadTypeId="PAYROL_BEN_SHIFT" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="BGLR" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="301"/>
+    <PayHeadPriceAction customPriceCalcService="calculateShiftBasePayHeadAmount" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_SERVICE" payrollBenDedRuleId="301" />
+    
+    
+    <PayrollBenDedRule payrollBenDedRuleId="302" ruleName="first shift condition " payHeadTypeId="PAYROL_BEN_SHIFT" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="SHIFT_01" inputParamEnumId="PAYHD_BEDE_SHIFT" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="302"/>
+    <PayHeadPriceAction amount="8" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="302" />
+     
+    <PayrollBenDedRule payrollBenDedRuleId="303" ruleName="second shift condition " payHeadTypeId="PAYROL_BEN_SHIFT" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="SHIFT_02" inputParamEnumId="PAYHD_BEDE_SHIFT" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="303"/>
+    <PayHeadPriceAction amount="7" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="303" />
+    
+    <PayrollBenDedRule payrollBenDedRuleId="304" ruleName="night shift condition " payHeadTypeId="PAYROL_BEN_SHIFT" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="SHIFT_NIGHT" inputParamEnumId="PAYHD_BEDE_SHIFT" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="304"/>
+    <PayHeadPriceAction amount="10" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="304" />
+    
+    
+    <AcctgFormula acctgFormulaId="CONVEYANCE_CNV1"  description="Conveyance Cnv1" formula="(11*80)/${NOOFCALENDERDAYS}" hasTable="N" isSlabBased="N" />
+    
+    <PayrollBenDedRule payrollBenDedRuleId="305" ruleName="Conveyance condition" payHeadTypeId="PAYROL_BEN_CONVEY" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="BGLR" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="305"/>
+    <PayHeadPriceAction customPriceCalcService="calculateShiftBasePayHeadAmount" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_SERVICE" payrollBenDedRuleId="305" />
    
+    
+    <PayrollBenDedRule payrollBenDedRuleId="306" ruleName="Conveyance condition " payHeadTypeId="PAYROL_BEN_CONVEY" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="CNV1" inputParamEnumId="PAYHD_BEDE_OTHER" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="306"/>
+    <PayHeadPriceAction acctgFormulaId="CONVEYANCE_CNV1" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="306" />
+    
 <!-- PayHeadPriceAction
 	PayHeadPriceActionType
 	PayrollBenDedCond

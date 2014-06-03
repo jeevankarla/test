@@ -1155,23 +1155,8 @@ under the License.emplpunch
         <description>Delete an ProductPriceAction</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <!-- 
-     <service name="getPartyBenefitCost" engine="simple" auth="true" invoke="getPartyBenefitCost" 
-        location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml">
-        <description>Calculate cost for the given benefit type</description>
-        <attribute name="benefitTypeId" mode="IN" type="String"/> 
-        <attribute name="partyId" mode="IN" type="String"/>                    
-        <attribute name="amount" type="String" mode="OUT" optional="false"/>        
-    </service> 
-    
-     <service name="getPartyDeductionAmount" engine="simple" auth="true" invoke="getPartyDeductionAmount" 
-        location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml">
-        <description>Calculate amunt for the given deduction type</description>
-        <attribute name="deductionTypeId" mode="IN" type="String"/> 
-        <attribute name="partyId" mode="IN" type="String"/>                    
-        <attribute name="amount" type="String" mode="OUT" optional="false"/>        
-    </service>      -->    
-	  <service name="getPayHeadAmount" engine="java" auth="true" invoke="getPayHeadAmount" 
+   
+ <service name="getPayHeadAmount" engine="java" auth="true" invoke="getPayHeadAmount" 
         location="in.vasista.vbiz.humanres.PayrollService">
         <description>Calculate amunt for the given payhead type</description>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
@@ -1179,6 +1164,17 @@ under the License.emplpunch
         <attribute name="customTimePeriodId" mode="IN" type="String"/>
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>        
     </service> 
+    
+    <service name="calculateShiftBasePayHeadAmount" engine="java" auth="true" invoke="calculateShiftBasePayHeadAmount" 
+        location="in.vasista.vbiz.humanres.PayrollService" validate="false">
+        <description>Calculate amunt for the given payhead type</description>
+        <attribute name="payHeadTypeId" mode="IN" type="String"/> 
+        <attribute name="employeeId" mode="IN" type="String"/> 
+        <attribute name="customTimePeriodId" mode="IN" type="String"/>
+        <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>        
+    </service> 
+    
+    
 	<service name="createPayrollBilling"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="createPayrollBilling" auth="true">
         <description>Create an ProductPriceRule</description>
