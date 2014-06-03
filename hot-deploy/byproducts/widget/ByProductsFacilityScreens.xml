@@ -11,6 +11,7 @@
                 <set field="tabButtonItem" value="facility" />
                 <set field="subTabButtonItem" value="facility"/>                
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/FindFacility.groovy"/>
+                <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/SeperateRoutesList.groovy" />
             </actions>           
             <widgets>
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -280,6 +281,8 @@
 				<set field="subTabButtonItem" value="EditFacility"/>
 				<set field="FacilityTypeFlag" from-field="parameters.FacilityTypeFlag"/>
                 <script location="component://product/webapp/facility/WEB-INF/actions/facility/EditFacility.groovy"/>
+                <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/SeperateRoutesList.groovy" />
+     
             </actions>
             <widgets>
                 <section>
@@ -342,6 +345,8 @@
                                         <set field="dependentKeyName" value="geoId"/>
                                         <set field="descName" value="geoName"/>
                                         <set field="selectedDependentOption" value="_none_"/>
+                                        <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/SeperateRoutesList.groovy" />
+     
                                     </actions>
                                     
                                    <widgets>
@@ -368,6 +373,19 @@
                                                <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
                                
                                                <include-form name="EditRouteForm" location="component://product/widget/facility/FacilityForms.xml"/>
+                                               <!-- <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
+ -->                                       </widgets>
+                                      </section>  
+                                       <section>
+                                           <condition>
+						                        <if-compare operator="equals" value="transportation" field="FacilityTypeFlag" />
+					                       </condition>
+					                       <widgets>
+                                               <include-menu name="FacilityTabBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                               <label style="h1">New Transportation</label>
+                                               <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                               
+                                               <include-form name="EditTransportationForm" location="component://product/widget/facility/FacilityForms.xml"/>
                                                <!-- <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
  -->                                       </widgets>
                                       </section>  
