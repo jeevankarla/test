@@ -802,7 +802,8 @@
             </actions>            
             <widgets>            	
 				<platform-specific> 
-                     <xsl-fo><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckListNew.fo.ftl"/></xsl-fo>
+				  <xsl-fo><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckListNewPDF.fo.ftl"/></xsl-fo> 
+                    <!--  <xsl-fo><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckListNew.fo.ftl"/></xsl-fo> -->
                 </platform-specific>				
             </widgets>
         </section>
