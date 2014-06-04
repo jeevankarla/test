@@ -168,6 +168,10 @@ if(UtilValidate.isNotEmpty(filterProductSale)){
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, filterProductSale));
 	returnCondition.add(EntityCondition.makeCondition("productId", EntityOperator.IN, filterProductSale));
 }
+if(UtilValidate.isNotEmpty(parameters.partyId)){
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.partyId));
+	returnCondition.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.partyId));
+}
 if(subscriptionTypeId && subscriptionTypeId != "All"){
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
 	returnCondition.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
