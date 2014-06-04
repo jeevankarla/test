@@ -507,6 +507,33 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="employmentAppSourceTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="HolidayCalendar"
+            package-name="org.ofbiz.humanres.employment"
+            title="Holiday calender Entity">
+        <field name="customTimePeriodId" type="id-ne"/>
+         <field name="organizationPartyId" type="id-ne"/>
+        <field name="holiDayDate" type="date-time"/>
+        <field name="description" type="description"/>
+        <field name="createdByUserLogin" type="id-vlong"></field>
+		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		<field name="createdDate" type="date-time"></field>      
+      	<field name="lastModifiedDate" type="date-time"></field>
+      	<prim-key field="customTimePeriodId"/>
+        <prim-key field="organizationPartyId"/>
+        <prim-key field="holiDayDate"/>
+        <relation type="one" fk-name="HC_CUST_TP" rel-entity-name="CustomTimePeriod">
+            <key-map field-name="customTimePeriodId"/>
+        </relation>
+        <relation type="one" fk-name="HC_ORGPTY" rel-entity-name="Party">
+			<key-map field-name="organizationPartyId" rel-field-name="partyId" />
+		</relation>
+		  <relation type="one" fk-name="HC_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+     <relation type="one" fk-name="HC_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+  </entity>
     <entity entity-name="EmplLeave"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Entity">
@@ -565,19 +592,15 @@ under the License.
             <key-map field-name="customTimePeriodId"/>
         </relation>
     </entity>
-    <entity entity-name="PayrollAttendance"
+   <entity entity-name="PayrollAttendance"
             package-name="org.ofbiz.humanres.employment"
             title="Attendance Entry Entity">
         <field name="partyId" type="id-ne"/>
         <field name="customTimePeriodId" type="id-ne"/>
-       <!--  <field name="earnedLeave" type="fixed-point"/>
-        <field name="sickLeave" type="fixed-point"/>
-        <field name="medicalLeave" type="fixed-point"/>
-        <field name="meternityLeave" type="fixed-point"/>
-        <field name="compansatoryLeave" type="fixed-point"/> -->
         <field name="noOfAttendedDays" type="fixed-point"/>
         <field name="noOfCalenderDays" type="fixed-point"/>
-         <field name="noOfLeaveDays" type="fixed-point"/>
+        <field name="noOfLeaveDays" type="fixed-point"/>
+        <field name="noOfAttendedHoliDays" type="fixed-point"/>
         <field name="lossOfPayDays" type="fixed-point"/>
         <prim-key field="partyId"/>
         <prim-key field="customTimePeriodId"/>
@@ -705,6 +728,7 @@ under the License.
             package-name="org.ofbiz.humanres.employment"
             title="Pay Grade Entity">
       <field name="payGradeId" type="id-ne"></field>
+      <field name="seqId" type="id"></field>
       <field name="payGradeName" type="name"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="payGradeId"/>
