@@ -34,17 +34,14 @@ under the License.
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
             </fo:static-content>		    	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
-		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;    UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${printDate?if_exists}</fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;         LIST OF SHOPPEES TO PAY RENT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")}   </fo:block>
+		        	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;    UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${printDate?if_exists}</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;         LIST OF SHOPPEES TO PAY RENT FOR THE MONTH OF ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayStartfromDate, "MMMM-yyyy")}   </fo:block>
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">SL   BVB	   BVB 										       RENT	       TAX  		   TOTAL 				REMARKS</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">NO   CODE   NAME 									       AMOUNT 	    AMOUNT 		&#160; 				&#160;</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">SL   BVB	   BVB 										       RENT	       TAX  		   TOTAL 				REMARKS</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">NO   CODE   NAME 									       AMOUNT 	    AMOUNT 		&#160; 				&#160;</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"   white-space-collapse="false">========================================================================</fo:block> 
 		           	
 		        	 <#if finalList?has_content> 	
             	<fo:block>
@@ -146,7 +143,16 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				            	</fo:table-cell>
 				        </fo:table-row>
-						
+						<fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
 						<fo:table-row>	
 				            	<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
