@@ -107,6 +107,19 @@
 				</section>
 				<section>
 					<condition>
+						<if-compare operator="equals" value="ContractorWiseDTCAbstract" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+							<html-template	location="component://byproducts/webapp/byproducts/transporter/contractorMarginAbstract.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				
+				<section>
+					<condition>
 						<if-compare operator="equals" value="trnsptMarginReport" field="reportTypeFlag" />
 					</condition>
 					<widgets>

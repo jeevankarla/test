@@ -203,6 +203,12 @@ import java.text.SimpleDateFormat;
 				if(customTimePeriod == null){
 					generationFailed = true;
 				}
+				Map<String, Object> updateRecvoryRes=updateFacilityRecvory(dctx , UtilMisc.toMap("customTimePeriodId", customTimePeriodId,"periodBillingId",periodBillingId,"userLogin",userLogin));
+				if (ServiceUtil.isError(updateRecvoryRes)) {
+		    		generationFailed = true;
+	                Debug.logWarning("There was an error while populating updateRecvory: " + ServiceUtil.getErrorMessage(updateRecvoryRes), module);
+	        		return ServiceUtil.returnError("There was an error while populating updateRecvory: " + ServiceUtil.getErrorMessage(updateRecvoryRes));          	            
+	            } 
 				Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 				Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 				
@@ -1226,7 +1232,8 @@ import java.text.SimpleDateFormat;
 		        for (int k = 0; k <= (totalDays); k++) {
 					supplyDate = UtilDateTime.addDaysToTimestamp(monthBegin, k);
 					Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(ctx, UtilMisc.toMap("saleDate",supplyDate)).get("facilityPartyMap");
-					 shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,null);	//get Day Shipments
+					 //we have to change this shipmentIds helper
+					shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,null);	//get Day Shipments
 					 for (int i = 0; i <(shipmentIds.size()); i++) {
 						  String shipmentId=shipmentIds.get(i);
 							conditionList.clear();
@@ -1334,16 +1341,15 @@ import java.text.SimpleDateFormat;
 		    			facilityRecovery.put("recoveryTypeId", recoveryTypeId); 
 		    			facilityRecovery.put("amount", amount);
 		    			facilityRecovery.put("createdDate", UtilDateTime.nowTimestamp());
-		    			facilityRecovery.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			//facilityRecovery.put("lastModifiedDate", UtilDateTime.nowTimestamp());
 		    			facilityRecovery.put("createdByUserLogin", userLogin.get("userLoginId"));
-		    			facilityRecovery.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 		    			facilityRecovery.create();    
 		            }
 		    		else {  
 		    			facilityRecovery.clear();
 		    			facilityRecovery.set("amount", amount);
-		    			facilityRecovery.set("createdDate", UtilDateTime.nowTimestamp());
-		    			facilityRecovery.set("createdByUserLogin", userLogin.get("userLoginId"));
+		    			//facilityRecovery.set("createdDate", UtilDateTime.nowTimestamp());
+		    			//facilityRecovery.set("createdByUserLogin", userLogin.get("userLoginId"));
 		    			facilityRecovery.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 		    			facilityRecovery.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	    			    facilityRecovery.store();
@@ -1354,6 +1360,104 @@ import java.text.SimpleDateFormat;
 		        result = ServiceUtil.returnSuccess("Transporter Recovery Created Sucessfully");	        
 		        return result;
 		    }  
+		    
+		    public static Map<String, Object> getFacilityRecvoryForPeriodBilling(DispatchContext dctx, Map<String, Object> context) {
+				List conditionList= FastList.newInstance(); 
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+		        Delegator delegator = dctx.getDelegator();
+		        Map<String, Object> result = ServiceUtil.returnSuccess();
+				String periodBillingId = (String) context.get("periodBillingId");
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				Map<String, Object> facilityRecoveryInfoMap = new HashMap<String, Object>();
+	        	//String facilityId= null;
+				List<String> facilityIdsList=FastList.newInstance();
+				if(!UtilValidate.isEmpty(periodBillingId)){
+					conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        	try{
+		        		List<GenericValue> facilityRecoveryList = FastList.newInstance();
+		        		facilityRecoveryList = delegator.findList("FacilityRecovery", condition, null,null, null, false);	 
+			        	facilityIdsList = EntityUtil.getFieldListFromEntityList(facilityRecoveryList, "facilityId", false);
+			        		
+			        	List<GenericValue>	allFaclityCrateFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CRATES"));
+			        	List<GenericValue>	allFaclityCanFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CANS"));
+			        	List<GenericValue>	allFaclityOtherFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.LIKE, "FINES_%"));
+
+	                	if(!UtilValidate.isEmpty(facilityIdsList)){
+	                		for(String facilityId : facilityIdsList){
+	                			Map<String, Object> facilityFineTempMap = FastMap.newInstance();
+	                			BigDecimal crateFineAmount = BigDecimal.ZERO;  
+	                			BigDecimal canFineAmount = BigDecimal.ZERO;
+	                			BigDecimal otherFinesAmount=BigDecimal.ZERO;
+	                			BigDecimal totalFineAmount = BigDecimal.ZERO;
+	                			List<GenericValue>	faclityCrateFinesList=EntityUtil.filterByCondition(allFaclityCrateFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	                			List<GenericValue>	faclityCanFinesList=EntityUtil.filterByCondition(allFaclityCanFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	                			List<GenericValue>	faclityOtherFinesList=EntityUtil.filterByCondition(allFaclityOtherFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+	                			Debug.log("=====faclityCrateFinesList=="+faclityCrateFinesList);
+	                			Debug.log("=====faclityCanFinesList=="+faclityCanFinesList);
+	                			Debug.log("=====faclityOtherFinesList=="+faclityOtherFinesList);
+	                			for(GenericValue facilityRecCrate : faclityCrateFinesList){
+	                				crateFineAmount=crateFineAmount.add(facilityRecCrate.getBigDecimal("amount"));
+	                			}
+	                			for(GenericValue facilityRecCan : faclityCanFinesList){
+	                				canFineAmount=canFineAmount.add(facilityRecCan.getBigDecimal("amount"));
+	                			}
+	                			for(GenericValue facilityRecOther : faclityOtherFinesList){
+	                				otherFinesAmount=otherFinesAmount.add(facilityRecOther.getBigDecimal("amount"));
+	                			}
+	                			totalFineAmount=totalFineAmount.add(crateFineAmount);
+	                			totalFineAmount=totalFineAmount.add(canFineAmount);
+	                			totalFineAmount=totalFineAmount.add(otherFinesAmount);
+	                			
+	                			facilityFineTempMap.put("cratesFine",crateFineAmount); 
+	                			facilityFineTempMap.put("cansFine",canFineAmount);
+	                			facilityFineTempMap.put("othersFine",otherFinesAmount);
+	                			facilityFineTempMap.put("totalFine",totalFineAmount);
+	                			
+	                			facilityRecoveryInfoMap.put(facilityId, facilityFineTempMap);
+	                			
+	                		}
+	                	}
+		        	}catch(GenericEntityException e){
+		        		Debug.logError(e, module);
+		        	}
+				}			
+				result.put("facilityRecoveryInfoMap",facilityRecoveryInfoMap);
+	        	return result;
+			}
+		    public static Map<String, Object> updateFacilityRecvory(DispatchContext dctx, Map<String, Object> context) {
+				List conditionList= FastList.newInstance(); 
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+		        Delegator delegator = dctx.getDelegator();
+		        Map<String, Object> result = ServiceUtil.returnSuccess();
+				String periodBillingId = (String) context.get("periodBillingId");
+				String customTimePeriodId = (String) context.get("customTimePeriodId");
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				Map<String, Object> facilityRecoveryInfoMap = new HashMap<String, Object>();
+	        	//String facilityId= null;
+				List<String> facilityIdsList=FastList.newInstance();
+				if(UtilValidate.isNotEmpty(periodBillingId) &&(UtilValidate.isNotEmpty(customTimePeriodId))){
+					conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        	try{
+		        		List<GenericValue> facilityRecoveryList = FastList.newInstance();
+		        		facilityRecoveryList = delegator.findList("FacilityRecovery", condition, null,null, null, false);	 
+
+	                	if(!UtilValidate.isEmpty(facilityRecoveryList)){
+	                		for(GenericValue facilityRecovery : facilityRecoveryList){
+	                			facilityRecovery.set("periodBillingId",periodBillingId);
+	                			facilityRecovery.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    		    			facilityRecovery.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	                			facilityRecovery.store();
+	                		}
+	                	}
+		        	}catch(GenericEntityException e){
+		        		Debug.logError(e, module);
+		        	}
+				}			
+				result.put("facilityRecoveryInfoMap",facilityRecoveryInfoMap);
+	        	return result;
+			}
 	}
 
 

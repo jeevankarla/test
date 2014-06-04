@@ -24,9 +24,12 @@
      <Enumeration description="LMS Transporter Margin Period Billing" enumCode="PB_LMS_TRSPT_MRGN" enumId="PB_LMS_TRSPT_MRGN" sequenceId="02" enumTypeId="PBILLING_TYPE"/>
      
      <EnumerationType enumTypeId="FAC_RECVRY" /> 
-     <Enumeration description="Facility Crates" enumId="CRATES"  enumTypeId="FAC_RECVRY"/>
-     <Enumeration description="Facility Cans"   enumId="CANS" enumTypeId="FAC_RECVRY"/>
-     <Enumeration description="Facility Fines or Penalties" enumId="FINES_PENALTIES" enumTypeId="FAC_RECVRY"/>
+     <Enumeration sequenceId="01" description="Crates Fine" enumId="CRATES"  enumTypeId="FAC_RECVRY"/>
+     <Enumeration  sequenceId="02"  description="Cans Fine"   enumId="CANS" enumTypeId="FAC_RECVRY"/>
+     <Enumeration sequenceId="03" description="Security Fines" enumId="FINES_SECURITY" enumTypeId="FAC_RECVRY"/>
+     <Enumeration sequenceId="04" description="Cash Short Remit Fines" enumId="FINES_CSH_SHORT" enumTypeId="FAC_RECVRY"/>
+     <Enumeration sequenceId="05"  description="Recovery Of Transport Cost" enumId="FINES_TRNS_COST" enumTypeId="FAC_RECVRY"/>
+      <Enumeration sequenceId="06"  description="Fines Penalties-Others" enumId="FINES_PENALTIES" enumTypeId="FAC_RECVRY"/>
      
      <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Adjustment Vehicle Short Payment screen"/>
     

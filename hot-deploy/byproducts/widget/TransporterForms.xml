@@ -28,25 +28,40 @@ under the License.
           <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}" />
         </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
-        <field name="TransporterMarginAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Transporter Margin Abstract" target-window="_blank">
+        <field name="RouteWiseDTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target="GenerateTrnsptMarginReport.txt" description="RouteWise DTC Abstract" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="transporterMarginAbstract"/>                                  
             </hyperlink>
-        </field>        
-       	<field name="transporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Transporter Margin Report" target-window="_blank">
+        </field> 
+       	<field name="RouteWiseDTCDayWise" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Route Wise DTC DayWise" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="trnsptMarginReport"/>                                  
             </hyperlink>
-        </field>        
+        </field>  
+         <field name="ContractorWiseDTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Contractor Wise DTC Abstract" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="ContractorWiseDTCAbstract"/>                                  
+            </hyperlink>
+        </field>   
+        <field name="DTCReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
+            <hyperlink target="GenerateTrnsptMarginReport.txt" description="DTC Report" target-window="_blank">
+              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+                  <parameter param-name="reportTypeFlag"  value="DTCReport"/>                                  
+            </hyperlink>
+        </field>       
         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelTransporterMarginReport" description="${uiLabelMap.CommonCancel}" target-window="_blank">
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>
         </field> 
+        <!--  
         <field name="MakeAdjustments" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
             <hyperlink target="transporterMarginAdjustments" description="Make Transporter Adjustments">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
@@ -58,14 +73,8 @@ under the License.
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
             </hyperlink>
-         </field>  
-         <field name="DTCReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="DTC Report" target-window="_blank">
-              	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
-              	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
-                  <parameter param-name="reportTypeFlag"  value="DTCReport"/>                                  
-            </hyperlink>
-        </field>         
+         </field>  -->
+              
     </form>
     <form name="GenerateTransporterMarginReport" type="single" target="createTransporterMarginReport" header-row-style="header-row" 
 		default-table-style="basic-table" >
@@ -97,13 +106,21 @@ under the License.
            	 	</entity-options>
 			</drop-down>
 		</field>
-		<field name="recoveryTypeId" title="Recovery Type" >
+		 <field name="recoveryTypeId" title="Recovery Type">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="FAC_RECVRY"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+		<!-- <field name="recoveryTypeId" title="Recovery Type" >
         	<drop-down>
         		<option key="CRATES" description="Crates"/>
         		<option key="CANS" description="Cans"/>
         		<option key="FINES_PENALTIES" description="Fines/Penalties"/>
         	</drop-down>
-		</field>
+		</field> -->
 		<field name="amount" title="Amount(Rs)"><text/></field>
 		<field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit">
             <submit/>
@@ -123,13 +140,21 @@ under the License.
            	 	</entity-options>
 			</drop-down>
 		 </field>
-		 <field name="recoveryTypeId" title="Recovery Type" >
+		 <field name="recoveryTypeId" title="Recovery Type">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="FAC_RECVRY"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+		<!--  <field name="recoveryTypeId" title="Recovery Type" >
         	<drop-down>
         		<option key="CRATES" description="Crates"/>
         		<option key="CANS" description="Cans"/>
         		<option key="FINES_PENALTIES" description="Fines/Penalties"/>
         	</drop-down>
-		</field>
+		</field> -->
 		<field name="amount" title="Amount(Rs)"><text/></field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>

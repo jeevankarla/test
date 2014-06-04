@@ -23,6 +23,13 @@ import java.util.Map;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.network.LmsServices;
+import in.vasista.vbiz.byproducts.TransporterServices;
+
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+
+
+
+dctx = dispatcher.getDispatchContext();
 periodBillingId = null;
 if(parameters.periodBillingId){
 	periodBillingId = parameters.periodBillingId;
@@ -39,12 +46,16 @@ context.put("thruDateTime",thruDateTime);
 dctx = dispatcher.getDispatchContext();
 monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
+Map partyFacilityMap=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",monthBegin)).get("partyAndFacilityList");
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.EQUALS , monthBegin));
+//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01","S02","S03")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 EntityFindOptions findOptions = new EntityFindOptions();
 routesList = delegator.findList("FacilityAndCommission",condition,["facilityId"]as Set, UtilMisc.toList("parentFacilityId","facilityId"),findOptions,false);
+routeIdsList = EntityUtil.getFieldListFromEntityList(routesList, "facilityId", false);
+
 routeMarginMap =[:];
 masterList=[];
 grTotalMap =[:];
@@ -68,7 +79,12 @@ routesList.each{ route ->
 	TransporterMarginReportList.add(dayTotalsMap);
 	transporterMargins[route.facilityId]=TransporterMarginReportList;
 }
-facilityCommissionList = delegator.findList("FacilityCommission",EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId) , null, ["commissionDate"], null, false);
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
+//conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.EQUALS , monthBegin));
+//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01","S02","S03")));
+condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+facilityCommissionList = delegator.findList("FacilityCommission",condition , null, ["commissionDate"], null, false);
 
 if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	facilityCommissionList.each { facilityCommission ->
@@ -143,3 +159,10 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 }
 masterList.add(transporterMargins);
 context.put("masterList", masterList);
+facRecoveryMap=[:];
+
+facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"userLogin",userLogin));
+facRecoveryMap=facilityRecoveryResult.get("facilityRecoveryInfoMap");
+context.put("facilityRecoveryInfoMap", facRecoveryMap);
+context.put("partyFacilityMap", partyFacilityMap);
+

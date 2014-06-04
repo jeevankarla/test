@@ -80,8 +80,9 @@ under the License.
 						<#assign facilityCode = daywiseTrnsptEntry.getValue().get("facilityCode")?if_exists>
 		                   <fo:table-row>
 			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt">CONTRACTOR NAME/Contractor Code:${partyName}/${partyCode}</fo:block>
-			                         <fo:block  text-indent="15pt">PERIOD &#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd-MMM-yyyy")}  &#160;&#160;&#160; TO &#160;&#160;&#160; ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime,"dd-MMM-yyyy")}</fo:block>
+			                         <fo:block  text-indent="15pt">CONTRACTOR NAME:${partyName}</fo:block>
+			                          <fo:block  text-indent="15pt">CONTRACTOR CODE:${partyCode}</fo:block>
+			                         <fo:block  text-indent="15pt">PERIOD:&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd-MMM-yyyy")}&#160;&#160;TO&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime,"dd-MMM-yyyy")}</fo:block>
 			                         <fo:block  text-indent="15pt">DISTRIBUTION CHARGES GROSS(Rs): ${grTotRtAmt.toEngineeringString()?if_exists}</fo:block>
 			                         <fo:block  text-indent="15pt">ADDITIONAL PAYMENT:</fo:block>
 			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
@@ -116,13 +117,14 @@ under the License.
 					        <fo:table-row>
 			                   <fo:table-cell>
 			                         <fo:block  text-indent="15pt">CRATES Recovery</fo:block>
+			                          <fo:block  text-indent="15pt">CANS Recovery</fo:block>
 			                          <fo:block  text-indent="15pt">FINE &amp; OTHERS</fo:block>
-			                          <fo:block  text-indent="15pt">NIL</fo:block>
 			                  </fo:table-cell>
+			                  	<#assign facRecvoryMap=facilityRecoveryInfoMap.get(trnsptMarginValues.getKey())?if_exists>
 			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt"></fo:block>
-			                         <fo:block  text-indent="15pt"></fo:block>
-			                         <fo:block  text-indent="15pt"></fo:block>
+			                         <fo:block text-align="right"  text-indent="15pt"><#if facRecvoryMap?has_content>${facRecvoryMap.get("cratesFine")?if_exists?string("#0.0")}</#if></fo:block>
+			                          <fo:block text-align="right" text-indent="15pt"><#if facRecvoryMap?has_content>${facRecvoryMap.get("cansFine")?if_exists?string("#0.0")}</#if></fo:block>
+			                         <fo:block  text-align="right" text-indent="15pt"><#if facRecvoryMap?has_content>${facRecvoryMap.get("othersFine")?if_exists?string("#0.0")}</#if></fo:block>
 			                  </fo:table-cell>
 		                     </fo:table-row>
 		                     <fo:table-row>
@@ -134,8 +136,13 @@ under the License.
 			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			                  </fo:table-cell>
 			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt">TOTAL DEDUCTION</fo:block>
-			                         <fo:block  text-indent="15pt">NET PAYABLE</fo:block>
+			                   <#assign totalDeduction=0>
+			                   <#if facRecvoryMap?has_content>
+			                   <#assign totalDeduction=facRecvoryMap.get("totalFine")?if_exists>
+			                   </#if>
+			                   <#assign netAmount=(grTotRtAmt-totalDeduction)>
+			                         <fo:block text-align="right" text-indent="15pt">TOTAL DEDUCTION:<#if facRecvoryMap?has_content>${facRecvoryMap.get("totalFine")?if_exists?string("#0.0")}</#if></fo:block>
+			                         <fo:block text-align="right"  text-indent="15pt">NET PAYABLE:${netAmount?string("#0.0")}</fo:block>
 			                  </fo:table-cell>
 		                     </fo:table-row>
 		                     </fo:table-body>
@@ -147,7 +154,8 @@ under the License.
 			              <fo:table-body>
 			              <fo:table-row>
 						  <fo:table-cell>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">  Rupees</fo:block>
+						   <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmount?string("#0.0")), "%rupees-and-paise", locale).toUpperCase()>
+                   					<fo:block white-space-collapse="false" keep-together="always">(In Words: ${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
 							</fo:table-cell>
 							</fo:table-row>		
 				          <fo:table-row>
@@ -214,7 +222,7 @@ under the License.
 				<fo:page-sequence master-reference="main">
 			    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 			       		 <fo:block font-size="14pt">
-			            	${uiLabelMap.OrderNoOrderFound}.
+			            	${uiLabelMap.OrderNoOrderFound}
 			       		 </fo:block>
 			    	</fo:flow>
 				</fo:page-sequence>
