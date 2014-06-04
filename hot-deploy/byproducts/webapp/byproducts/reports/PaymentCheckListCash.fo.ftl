@@ -23,19 +23,19 @@ under the License.
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
                      margin-left="1in" margin-right="1in">
-                <fo:region-body margin-top="1.2in"/>
+                <fo:region-body margin-top="1.35in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "paychlst.txt")}
         <#assign totalPaymentAmont = 0>  
-        <fo:page-sequence master-reference="main">
+        <fo:page-sequence master-reference="main" font-family="Courier,monospace" font-weight="13pt">
         	<fo:static-content flow-name="xsl-region-before">
         	<#-- 
         		<fo:block text-align="center" keep-together="always">VST_ASCII-015</fo:block> -->
         		<fo:block text-align="left" font-size="10pt" keep-together="always">${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
-        		<fo:block text-align="center" font-size="12pt"  white-space-collapse="false"> MOTHER DAIRY, KMF UNIT</fo:block>
+        		<fo:block text-align="center"   white-space-collapse="false"> MOTHER DAIRY, KMF UNIT</fo:block>
         		<fo:block text-align="center" keep-together="always" font-size="11pt" white-space-collapse="false"> UserLogin:${userLogin.get("userLoginId")} ,Time: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMM d, yyyy HH:mm:ss")} </fo:block>	 	 	  
         		<fo:block text-align="center" keep-together="always" font-size="11pt" > Cash Payment CheckList Report For Cash On Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "dd-MM-yyyy")}</fo:block>
         		 <fo:block font-family="Courier,monospace"  >                
@@ -54,26 +54,26 @@ under the License.
 	                   </fo:table-row>
                      <fo:table-row >
 	                           <fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-size="12pt">S.No</fo:block>                               
+	                            	<fo:block text-align="left" keep-together="always" >S.No</fo:block>                               
 	                            </fo:table-cell>
 	                             <fo:table-cell >	
-	                             <fo:block text-align="left" keep-together="always" font-size="12pt">Payment</fo:block>    
-	                            	<fo:block text-align="left" keep-together="always" font-size="12pt">&#160;Id</fo:block>
+	                             <fo:block text-align="left" keep-together="always" >Payment</fo:block>    
+	                            	<fo:block text-align="left" keep-together="always" >&#160;Id</fo:block>
 	                            </fo:table-cell>
 	                        	<fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-size="12pt">Route</fo:block>    
-	                            	<fo:block text-align="left" keep-together="always" font-size="12pt">&#160;Code</fo:block>                            
+	                            	<fo:block text-align="left" keep-together="always" >Route</fo:block>    
+	                            	<fo:block text-align="left" keep-together="always" >&#160;Code</fo:block>                            
 	                            </fo:table-cell>
 	                        	<fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-size="12pt">Retailer/Party</fo:block>    
-	                            	<fo:block text-align="left" keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;Code</fo:block>                                  
+	                            	<fo:block text-align="left" keep-together="always" >Retailer/Party</fo:block>    
+	                            	<fo:block text-align="left" keep-together="always" >&#160;&#160;&#160;Code</fo:block>                                  
 	                            </fo:table-cell>	
 	                        	<fo:table-cell >	
-	                            	<fo:block text-align="left" keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;Retailer/Party</fo:block>    
-	                            	<fo:block text-align="left" keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Name</fo:block>                                
+	                            	<fo:block text-align="left" keep-together="always" >&#160;&#160;&#160;&#160;Retailer/Party</fo:block>    
+	                            	<fo:block text-align="left" keep-together="always" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Name</fo:block>                                
 	                            </fo:table-cell>
 	                            <fo:table-cell >
-	                            	<fo:block text-align="right" font-size="12pt">Amount</fo:block>	                               
+	                            	<fo:block text-align="right" >Amount</fo:block>	                               
 	                            </fo:table-cell>	
 	                        </fo:table-row>
 	                         <fo:table-row >
@@ -86,14 +86,14 @@ under the License.
                   </fo:block>
         	</fo:static-content>
             <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-            	 <fo:block font-family="Courier,monospace"  font-size="12pt">                
+            	 <fo:block font-family="Courier,monospace"  >                
                 <fo:table >
-                        <fo:table-column column-width="35pt"/>
+                       <fo:table-column column-width="35pt"/>
                     <fo:table-column column-width="65pt"/>
                      <fo:table-column column-width="85pt"/>
                     <fo:table-column column-width="85pt"/>                
                     <fo:table-column column-width="180pt"/>
-                    <fo:table-column column-width="90pt"/>             
+                    <fo:table-column column-width="90pt"/>            
                     <fo:table-body> 
                     <fo:table-row><fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell></fo:table-row>    
 	                      <#if routeCheckListReportList?has_content>
