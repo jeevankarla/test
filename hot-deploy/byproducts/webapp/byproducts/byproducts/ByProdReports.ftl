@@ -418,7 +418,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       		</form>	
         </tr>
         <tr class="alternate-row">
-        	<form id="DailyUndepositedCheckList" name="DailyUndepositedCheckList" method="post"  target="_blank" action="<@ofbizUrl>DailyPaymentCheckList</@ofbizUrl>">	
+        	<form id="DailyUndepositedCheckList" name="DailyUndepositedCheckList" method="post"  target="_blank" action="<@ofbizUrl>DailyPaymentCheckList.pdf</@ofbizUrl>">	
       			<td width="34%">Daily Undeposited/Deposited Cheques Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/>
       			<input  type="hidden"  name="paymentMethodTypeId"   value="CHEQUE_PAYIN"   />
       			<input  type="hidden" name="routeId"  value="All" />
