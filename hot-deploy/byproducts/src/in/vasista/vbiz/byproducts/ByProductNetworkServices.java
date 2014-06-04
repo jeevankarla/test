@@ -7143,14 +7143,37 @@ Debug.logInfo("result= " + result, module);
 			 Map penaltyPaymentReferences = FastMap.newInstance();
 			 Map facilityPenalty = FastMap.newInstance();
 			 Map facilityPenaltyDayWise = FastMap.newInstance();
+			 List chequeReturnDetails = FastList.newInstance();
 			 try{
 				 List returnChequeExpr = FastList.newInstance();
 				 returnChequeExpr.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_VOID"));
 				 returnChequeExpr.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CHEQUE_PAYIN"));
 		    	 returnChequeExpr.add(EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"));
 		    	 EntityCondition cond = EntityCondition.makeCondition(returnChequeExpr, EntityOperator.AND);
-		    	 List<GenericValue> returnPayments = delegator.findList("Payment", cond, UtilMisc.toSet("paymentId", "paymentRefNum", "amount"), null, null, false);
-		    	List canceldPaymentIds=(List)EntityUtil.getFieldListFromEntityList(returnPayments, "paymentId", true);
+		    	 List<GenericValue> returnPayments = delegator.findList("Payment", cond, null, UtilMisc.toList("facilityId"), null, false);
+		    	 List canceldPaymentIds=(List)EntityUtil.getFieldListFromEntityList(returnPayments, "paymentId", true);
+		    	 
+		    	 List customCondList = FastList.newInstance();
+		    	 customCondList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		    	 customCondList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		    	 EntityCondition retCond = EntityCondition.makeCondition(customCondList, EntityOperator.AND);
+		    	 List<GenericValue> returnChequeList = EntityUtil.filterByCondition(returnPayments, retCond);
+		    	 
+		    	 if(UtilValidate.isNotEmpty(returnChequeList)){
+		    		 for(GenericValue returns : returnChequeList){
+		    			 Map detailMap = FastMap.newInstance();
+		    			 detailMap.put("referenceNum", returns.getString("paymentRefNum"));
+		    			 detailMap.put("facilityId", returns.getString("facilityId"));
+		    			 detailMap.put("paymentId", returns.getString("paymentId"));
+		    			 detailMap.put("paymentDate", returns.getTimestamp("paymentDate"));
+		    			 detailMap.put("comments", returns.getString("comments"));
+		    			 detailMap.put("issuingAuthority", returns.getString("issuingAuthority"));
+		    			 detailMap.put("cancelDate", returns.getTimestamp("cancelDate"));
+		    			 detailMap.put("amount", returns.getBigDecimal("amount"));
+		    			 chequeReturnDetails.add(detailMap);
+		    		 }
+		    	 }
+		    	 
 		    	 if(UtilValidate.isNotEmpty(returnPayments)){
 		    		 for(GenericValue returns : returnPayments){
 		    			 Map tempMap = FastMap.newInstance();
@@ -7216,6 +7239,7 @@ Debug.logInfo("result= " + result, module);
 				 Debug.logError(e, e.toString(), module);
 	             return ServiceUtil.returnError(e.toString());
 			 }
+			 result.put("chequeReturnDetails", chequeReturnDetails);
 			 result.put("returnPaymentReferences", penaltyPaymentReferences);
 			 result.put("facilityPenaltyDayWise", facilityPenaltyDayWise);
 	    	 result.put("facilityPenalty", facilityPenalty);

@@ -717,6 +717,11 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindPaymentByMethod"/>    	
     </request-map>
+    <request-map uri="FindInstitutionPayment">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindInstitutionPayment"/>    	
+    </request-map>
+    
     <request-map uri="FindChequeReturns">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindChequeReturns"/>    	
@@ -769,6 +774,7 @@
     	<response name="success" type="view" value="FindBoothPayments"/>
     	<response name="error" type="view" value="FindBoothPayments"/>       	
     </request-map>
+    
     <request-map uri="createChequePayment">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createChequePayment"/>   	
@@ -812,6 +818,7 @@
         <response name="success" type="view" value="EditFacility"/>
         <response name="error" type="view" value="EditFacility"/>
     </request-map>
+    
   <request-map uri="createNewFacility"><security https="true" auth="true"/>
       <response name="success" type="view" value="createNewFacility"/>
   </request-map>
@@ -876,6 +883,10 @@
     <request-map uri="ShoppeRentReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="ShoppeRentReportPDF"/>
+    </request-map>
+    <request-map uri="chequeReturnReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="chequeReturnReportPDF"/>
     </request-map>
     <request-map uri="MonthlyVatReport.txt">
      <security https="true" auth="true"/>
@@ -943,6 +954,7 @@
     <view-map name="DueParticularsTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="text/plain"/>
     <view-map name="dueParticularsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="application/pdf"/><!-- withOB -->
     <view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
+    <view-map name="chequeReturnReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#chequeReturnReportPDF" content-type="application/pdf"/>
     
     <view-map name="DailyPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckList" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintBoothPayments" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintBoothPayments"/>
@@ -1061,6 +1073,7 @@
  <view-map name="createFacilityRate" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createFacilityRate"/>
  <!-- Payment views -->
  <view-map name="FindPaymentByMethod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentByMethod"/>
+ <view-map name="FindInstitutionPayment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindInstitutionPayment"/>
  <view-map name="FindChequeReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindChequeReturns"/>	
 <view-map name="LookupVehicle" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupVehicle"/> 
  
