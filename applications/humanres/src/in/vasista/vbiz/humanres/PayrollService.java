@@ -853,7 +853,7 @@ public class PayrollService {
 		        String customTimePeriodId = (String)context.get("customTimePeriodId");
 		        Locale locale = (Locale) context.get("locale");
 		        BigDecimal amount = BigDecimal.ZERO;
-		        
+		        Debug.log("In getPayHeadAmount ####################"+payHeadTypeId);
 		        try{
 		        	GenericValue customTimePeriod;
 					try {
@@ -872,6 +872,7 @@ public class PayrollService {
                     payheadAmtCtx.put("timePeriodId", customTimePeriodId);
                     payheadAmtCtx.put("payHeadTypeId", payHeadTypeId);
 	                Map<String, Object> calcResults = calculatePayHeadAmount(dctx,payheadAmtCtx);
+	                Debug.log("calcResults in calculatePayHeadAmount ############################"+calcResults);
 	                result.putAll(calcResults);
 		                
 		            } catch (Exception e) {
@@ -912,21 +913,23 @@ public class PayrollService {
 				String timePeriodId = (String) context.get("timePeriodId");
 		        Locale locale = (Locale) context.get("locale");
 		        BigDecimal amount = BigDecimal.ZERO;
-		        
+		        Debug.log("In calculatePayHeadAmount ##################################"+payHeadTypeId);
 		        try{
 			           		         
 		        	    Map makePayHedPrice = FastMap.newInstance();
 		        	    makePayHedPrice.put("userLogin",userLogin);
 		        	    makePayHedPrice.put("payHeadTypeId",payHeadTypeId);
 		        	    makePayHedPrice.put("fromDate",timePeriodStart);
-		        	    
+		        	    Debug.log("makePayHedPrice ######"+makePayHedPrice);
 		                List<GenericValue> allBenDedPriceRules = makePayHeadPriceRuleList(dctx, makePayHedPrice);
+		                Debug.log("allBenDedPriceRules ######"+allBenDedPriceRules);
 		                allBenDedPriceRules = EntityUtil.filterByDate(allBenDedPriceRules, true);
 	               
 	                    Map priceResultRuleCtx = FastMap.newInstance();
 	                    priceResultRuleCtx.putAll(context);
 	                    priceResultRuleCtx.put("payHeadPriceRules", allBenDedPriceRules);
 	                    Map<String, Object> calcResults = calcPriceResultFromRules(dctx,priceResultRuleCtx);
+	                    Debug.log("calcResults ######"+calcResults);
 	                    result.putAll(calcResults);
 		            } catch (GenericEntityException e) {
 		                Debug.logError(e, "Error getting rules from the database while calculating price", module);
@@ -946,6 +949,7 @@ public class PayrollService {
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			String payHeadTypeId= (String) context.get("payHeadTypeId");
 			Timestamp fromDate = (Timestamp) context.get("fromDate");
+			Debug.log("In makePayHeadPriceRuleList############"+payHeadTypeId);
 	        EntityCondition condition = EntityCondition.makeCondition("payHeadTypeId", EntityOperator.EQUALS,payHeadTypeId); 				
         	payHeadPriceRules = delegator.findList("PayrollBenDedRule", condition, null, null, null, true);
             if (payHeadPriceRules == null) payHeadPriceRules = FastList.newInstance();
@@ -970,6 +974,7 @@ public class PayrollService {
 				 calcResults.put("amount", BigDecimal.ZERO);
                 Timestamp nowTimestamp =  UtilDateTime.nowTimestamp();
                 List priceInfos = FastList.newInstance();
+                Debug.log("In calcPriceResultFromRules ######################");
                 if(UtilValidate.isEmpty(payHeadPriceRules)){
                 	Debug.logImportant("no rules found for given payheadType", module);
                     return calcResults;

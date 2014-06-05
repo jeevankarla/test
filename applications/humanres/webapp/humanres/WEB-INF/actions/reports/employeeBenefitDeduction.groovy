@@ -42,6 +42,7 @@ if(UtilValidate.isNotEmpty(benefitType)){
 
 if(UtilValidate.isNotEmpty(payHeadTypeId)){
 	payHeadAmount = dispatcher.runSync("getPayHeadAmount", [employeeId: employeeId, customTimePeriodId: customTimePeriodId,payHeadTypeId: payHeadTypeId,userLogin: userLogin]);
+	Debug.log("payHeadTypeId ######################"+payHeadTypeId+"payHeadAmount ######"+payHeadAmount);
 	amount = payHeadAmount.amount;
 }
 benefitDeductionList = [];
@@ -56,6 +57,7 @@ if(UtilValidate.isNotEmpty(benefitTypeDescription)){
 if(UtilValidate.isNotEmpty(amount)){
 	tempMap["amount"]=amount;
 	tempMap["priceInfos"]=payHeadAmount.priceInfos;
+	Debug.log("tempMap ######################"+tempMap);
 	benefitDeductionList.add(tempMap);
 	context.put("benefitDeductionList",benefitDeductionList);
 }
