@@ -594,35 +594,12 @@ under the License.
         </field>
         <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
-    <form name="FinancialAccountTransForMonth" type="single" target="FinancialAccountTransForMonth">
+    <form name="FinancialAccountTransForMonth" type="single" target="${formTargetRequest}">
         <field name="fromDate" title="Date"><date-time type="timestamp"/></field>
         <field name="organizationPartyId"><hidden/></field>
         <field name="finAccountId" title="Financial Account">
         	<drop-down allow-empty="false">
                 <list-options list-name="financialAccnt" key-name="finAccountId" description="${finAccountName}"/>
-            </drop-down>
-            <!-- <drop-down>
-                <entity-options entity-name="GlAccountOrganizationAndClass" description="${glAccountId} ${accountName}">
-                    <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
-                    <entity-order-by field-name="glAccountId"/>
-                </entity-options>
-            </drop-down> -->
-        </field>
-        <field name="isPosted">
-            <drop-down>
-                <option description="${uiLabelMap.CommonYes}" key="Y"/>
-                <option description="${uiLabelMap.CommonNo}" key="N"/>
-                <option description="${uiLabelMap.CommonAll}" key="ALL"/>
-            </drop-down>
-        </field>
-        <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
-    </form>
-    <form name="FinancialAccountingTransCASH" type="single" target="FinancialAccountingTransCASH">
-        <field name="fromDate" title="Date"><date-time type="timestamp"/></field>
-        <field name="organizationPartyId"><hidden/></field>
-        <field name="finAccountId" title="Financial Account">
-        	<drop-down allow-empty="false" >
-                <list-options list-name="financialAccnt" key-name="finAccountId"  description="${finAccountName}"/>
             </drop-down>
             <!-- <drop-down>
                 <entity-options entity-name="GlAccountOrganizationAndClass" description="${glAccountId} ${accountName}">

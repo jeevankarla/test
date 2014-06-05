@@ -2625,84 +2625,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="FinancialAccountingTrans">
-		<section>
-			<actions>
-				<entity-one value-field="Name" entity-name="PartyGroup">
-					<field-map field-name="partyId" value="${parameters.organizationPartyId}"/>
-					<select-field field-name="groupName"/>
-				</entity-one>
-				<set field="titleProperty" value="FinancialAccountingTrans" />
-				<set field="labelTitleProperty" value="Financial Accounting Trans" />
-				<set field="tabButtonItem" value="OrganizationAccountingReports" />
-				<set field="tabButtonItem2" value="FinancialAccountingTrans" />
-				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
-				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/FinancialAccountTrans.groovy" />
-				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetApplicableFinancialAccntIds.groovy" />
-				<service service-name="basicGeneralLedgerPermissionCheck"
-					result-map="permResult">
-					<field-map field-name="mainAction" value="REPORTS" />
-				</service>
-				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
-			</actions>
-			<widgets>
-				<section>
-					<condition>
-						<if-compare operator="equals" value="true"
-							field="hasReportsEditPermission" />
-					</condition>
-					<widgets>
-						<decorator-screen name="CommonOrganizationAccountingReportsDecorator"
-							location="${parameters.mainDecoratorLocation}">
-							<decorator-section name="body">
-								<!-- <screenlet title="${uiLabelMap.AccountingGlAccountTrialBalance}">
-									<include-form name="FinancialAccountTrans"
-										location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
-								</screenlet> -->
-								<screenlet title="Gl Account Trail Balance For Month">
-									<include-form name="FinancialAccountTransForMonth"
-										location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
-								</screenlet>
-								<section>
-									<condition>
-										<or>
-											<not>
-												<if-empty field="parameters.glAccountId" />
-											</not>
-											<not>
-												<if-empty field="parameters.timePeriod" />
-											</not>
-											<not>
-												<if-empty field="parameters.isPosted" />
-											</not>
-										</or>
-									</condition>
-									<widgets>
-										<screenlet title="${uiLabelMap.AccountingGlAccountTrialBalance}">
-											<platform-specific>
-												<html>
-													<html-template
-														location="component://accounting/webapp/accounting/reports/FinancialAccountTrans.ftl" />
-												</html>
-											</platform-specific>
-										</screenlet>
-									</widgets>
-								</section>
-							</decorator-section>
-						</decorator-screen>
-					</widgets>
-					<fail-widgets>
-						<decorator-screen name="main-decorator"
-							location="${parameters.mainDecoratorLocation}">
-							<decorator-section name="body">
-								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
-							</decorator-section>
-						</decorator-screen>
-					</fail-widgets>
-				</section>
-			</widgets>
-		</section>
-	</screen>
+	
 	<screen name="FinancialAccountTransPdf">
 		<section>
 			<actions>
@@ -3682,7 +3605,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="FinancialAccountingTransCASH">
+	<screen name="FinancialAccountingTrans">
 		<section>
 			<actions>
 				<entity-one value-field="Name" entity-name="PartyGroup">
@@ -3691,16 +3614,15 @@
 				</entity-one>
 				<set field="titleProperty" value="FinancialAccountingTrans" />
 				<set field="labelTitleProperty" value="Financial Accounting Trans" />
-			    <set field="tabButtonItem" value="FinAccntCashBook" />
+				<set field="tabButtonItem" value="OrganizationAccountingReports" />
 				<set field="tabButtonItem2" value="FinancialAccountingTrans" />
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
-				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
-				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetApplicableFinancialAccntIds.groovy" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="REPORTS" />
 				</service>
 				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<set field="formTargetRequest" value="FinancialAccountingTrans" />
 			</actions>
 			<widgets>
 				<section>
@@ -3709,14 +3631,57 @@
 							field="hasReportsEditPermission" />
 					</condition>
 					<widgets>
-						  <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+						<decorator-screen name="CommonOrganizationAccountingReportsDecorator"
+							location="${parameters.mainDecoratorLocation}">
 							<decorator-section name="body">
+							<include-screen name="FinancialAccountingTransInner"/>
+							</decorator-section>
+						</decorator-screen>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="FinancialAccountingTransInner">
+		<section>
+			<actions>
+				<entity-one value-field="Name" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="${parameters.organizationPartyId}"/>
+					<select-field field-name="groupName"/>
+				</entity-one>
+				<set field="titleProperty" value="FinancialAccountingTrans" />
+				<set field="labelTitleProperty" value="Financial Accounting Trans" />
+				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetApplicableFinancialAccntIds.groovy" />
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<set field="formTargetRequest"    from-field="formTargetRequest" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
 								<!-- <screenlet title="${uiLabelMap.AccountingGlAccountTrialBalance}">
 									<include-form name="FinancialAccountTrans"
 										location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 								</screenlet> -->
 								<screenlet title="Gl Account Trail Balance For Month">
-									<include-form name="FinancialAccountingTransCASH"
+									<include-form name="FinancialAccountTransForMonth"
 										location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 								</screenlet>
 								<section>
@@ -3738,12 +3703,55 @@
 											<platform-specific>
 												<html>
 													<html-template
-														location="component://accounting/webapp/accounting/reports/newFinancialAccountTrans.ftl" />
+													location="component://accounting/webapp/accounting/reports/newFinancialAccountTrans.ftl" />
+														<!-- location="component://accounting/webapp/accounting/reports/FinancialAccountTrans.ftl" /> -->
 												</html>
 											</platform-specific>
 										</screenlet>
 									</widgets>
 								</section>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="FinancialAccountingTransCASH">
+		<section>
+			<actions>
+				<entity-one value-field="Name" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="${parameters.organizationPartyId}"/>
+					<select-field field-name="groupName"/>
+				</entity-one>
+				<set field="titleProperty" value="FinancialAccountingTrans" />
+				<set field="labelTitleProperty" value="Financial Accounting Trans" />
+			    <set field="tabButtonItem" value="FinAccntCashBook" />
+				<set field="tabButtonItem2" value="FinancialAccountingTrans" />
+				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<set field="formTargetRequest"    value="FinancialAccountingTransCASH" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+						  <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+							<decorator-section name="body">
+							<include-screen name="FinancialAccountingTransInner"/>
 							</decorator-section>
 						</decorator-screen>
 					</widgets>
