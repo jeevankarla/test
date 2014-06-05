@@ -4399,7 +4399,7 @@ public class ByProductServices {
 				   	     List condList = FastList.newInstance();
 				   	     condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
 				   	     condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, tempFacId));
-				   	     condList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+				   	     /*condList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));*/
 				   	     EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 				   	     List<GenericValue> subscription = delegator.findList("Subscription", cond, UtilMisc.toSet("subscriptionId"), null, null ,false);
 				   	     subscription = EntityUtil.filterByDate(subscription,fromDate);
@@ -4475,7 +4475,7 @@ public class ByProductServices {
         	 List condList = FastList.newInstance();
 	   	     condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
 	   	     condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-	   	     condList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
+	   	     /*condList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));*/
 	   	     EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	   	     List<GenericValue> subscription = delegator.findList("Subscription", cond, UtilMisc.toSet("subscriptionId"), null, null ,false);
 		    	subscription = EntityUtil.filterByDate(subscription, fromDate); 
