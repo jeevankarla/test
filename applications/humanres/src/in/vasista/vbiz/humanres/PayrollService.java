@@ -928,6 +928,7 @@ public class PayrollService {
 	                    Map priceResultRuleCtx = FastMap.newInstance();
 	                    priceResultRuleCtx.putAll(context);
 	                    priceResultRuleCtx.put("payHeadPriceRules", allBenDedPriceRules);
+	                    Debug.log("priceResultRuleCtx ####################### ######"+priceResultRuleCtx);
 	                    Map<String, Object> calcResults = calcPriceResultFromRules(dctx,priceResultRuleCtx);
 	                    Debug.log("calcResults ######"+calcResults);
 	                    result.putAll(calcResults);
@@ -999,6 +1000,7 @@ public class PayrollService {
      	                        break;
      	                    }
                          }
+                         Debug.log("###allTrue each#########"+allTrue+"==================="+payrollBenDedCond);
                          condsDescription.append("[");
      	                GenericValue inputParamEnum = payrollBenDedCond.getRelatedOneCache("InputParamEnumeration");
 
@@ -1011,13 +1013,14 @@ public class PayrollService {
      	                condsDescription.append("] ");
 	                    
 	                }
-	                
+	                Debug.log("allTrue #############################################"+allTrue);
 	                // if all true, perform all actions
 	                BigDecimal modifyAmount = BigDecimal.ZERO;
 	                if (allTrue) {
 	                	StringBuilder priceInfoDescription = new StringBuilder();
 	                	Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, employeeId);
 	                    List<GenericValue> payHeadPriceActions = delegator.findByAndCache("PayHeadPriceAction", UtilMisc.toMap("payrollBenDedRuleId", payHeadPriceRuleId));
+	                    Debug.log("payHeadPriceActions ######################################"+payHeadPriceActions.size());
 	                    for (GenericValue payHeadPriceAction: payHeadPriceActions) {
 	                        // yeah, finally here, perform the action, ie, modify the amount
 	     	                    priceInfoDescription.append(condsDescription.toString());
@@ -1025,7 +1028,7 @@ public class PayrollService {
 	     	                    priceInfoDescription.append("type:");
 	     	                    priceInfoDescription.append(payHeadPriceAction.getString("payHeadPriceActionTypeId"));
 	     	                    priceInfoDescription.append("]\n");
-	     	                    
+	     	                    Debug.log(payHeadPriceAction+"########payHeadPriceAction ############");
 	                        if ("PRICE_FLAT".equals(payHeadPriceAction.getString("payHeadPriceActionTypeId"))) {
 	                            String formulaId = payHeadPriceAction.getString("acctgFormulaId");
 	                            if (UtilValidate.isNotEmpty(formulaId)) {
