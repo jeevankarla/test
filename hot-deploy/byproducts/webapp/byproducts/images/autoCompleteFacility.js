@@ -1,6 +1,6 @@
 
 $(function() {
-       $("#boothId").autocomplete({ source: boothsList }).keydown(function(e){
+       $('input[name=boothId]').autocomplete({ source: boothsList }).keydown(function(e){
     	   $.ui.autocomplete.filter = function (array, term) { 
                var matcher = new RegExp($.ui.autocomplete.escapeRegex(term), "i");
                return $.grep(array, function (value) {
@@ -9,15 +9,15 @@ $(function() {
            };
 
 			if (e.keyCode === 13){
-		      	 $('#boothId').autocomplete('close');
-		      	 if( typeof $("#boothId").val() != "undefined"   && $("#boothId").val() != ""){ 
+		      	 $('input[name=boothId]').autocomplete('close');
+		      	 if( typeof $("input[name=boothId]").val() != "undefined"   && $("input[name=boothId]").val() != ""){ 
 		      	 }
 				return false;
 			}
 		});
        // booth auto Complete
-     $('#boothId').keypress(function (e) {
-			$("#boothId").autocomplete({ source: boothsList ,filterOpt : ""});	
+     $('input[name=boothId]').keypress(function (e) {
+			$('input[name=boothId]').autocomplete({ source: boothsList ,filterOpt : ""});	
 			$.ui.autocomplete.filter = function (array, term) { 
                 var matcher = new RegExp($.ui.autocomplete.escapeRegex(term), "i");
                 return $.grep(array, function (value) {
