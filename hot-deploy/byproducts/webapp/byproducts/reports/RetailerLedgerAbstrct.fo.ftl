@@ -37,7 +37,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 <#if boothSalesMap?has_content>	
    <#assign boothsSaleList= boothSalesMap.entrySet()>
     <#list boothsSaleList as boothSaleEntry>
-<fo:page-sequence master-reference="main" force-page-count="no-force">					
+<fo:page-sequence master-reference="main" font-family="Courier,monospace"  force-page-count="no-force">					
 			<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace"> <#assign lineNumber = 5> 
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                           UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 				<#assign facilityNumberInPage = 0>
@@ -45,13 +45,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
               	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
             	 <fo:block text-align="center" font-size="10pt">
             	 <fo:table  table-layout="fixed"   font-size="10pt">                
-				                 <fo:table-column column-width="65pt"/>
- 						  		<fo:table-column column-width="65pt"/>
+				                 <fo:table-column column-width="70pt"/>
+ 						  		<fo:table-column column-width="70pt"/>
  						  		<fo:table-column column-width="50pt"/>
- 						   	    <fo:table-column column-width="60pt"/>
+ 						   	    <fo:table-column column-width="70pt"/>
  						   	    <fo:table-column column-width="150pt"/>
- 						   	    <fo:table-column column-width="60pt"/>
- 						   	     <fo:table-column column-width="60pt"/>
+ 						   	    <fo:table-column column-width="70pt"/>
+ 						   	     <fo:table-column column-width="70pt"/>
 				                <fo:table-body>
 				                  <fo:table-row >  
   							           <fo:table-cell >
@@ -64,7 +64,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
                                 	        <fo:block  text-align="left" white-space-collapse="false" keep-together="always">Shift</fo:block>
                             	          </fo:table-cell>	
 		                                  <fo:table-cell >
-                                	         <fo:block  white-space-collapse="false" text-align="center">Qty</fo:block>
+                                	         <fo:block  white-space-collapse="false" text-align="right">Qty&#160;&#160;</fo:block>
                             	         </fo:table-cell>
 				                      	<fo:table-cell >
 	                                	         <fo:block  white-space-collapse="false" text-align="left">ProductName</fo:block>
@@ -81,16 +81,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			    </fo:block>       
             	<fo:block>---------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			    </fo:static-content>
-			<fo:flow flow-name="xsl-region-body" font-family="Helvetica" font-size="10pt">
+			<fo:flow flow-name="xsl-region-body"  font-size="10pt">
 			<fo:block>	
             				 <fo:table  table-layout="fixed">                
-				                <fo:table-column column-width="65pt"/>
- 						  		<fo:table-column column-width="65pt"/>
+				                <fo:table-column column-width="70pt"/>
+ 						  		<fo:table-column column-width="70pt"/>
  						  		<fo:table-column column-width="50pt"/>
- 						   	    <fo:table-column column-width="60pt"/>
+ 						   	    <fo:table-column column-width="70pt"/>
  						   	    <fo:table-column column-width="150pt"/>
- 						   	    <fo:table-column column-width="60pt"/>
- 						   	     <fo:table-column column-width="60pt"/>
+ 						   	    <fo:table-column column-width="70pt"/>
+ 						   	     <fo:table-column column-width="70pt"/>
 				                <fo:table-body>
 				                 <fo:table-row>
 			                        <fo:table-cell>
@@ -139,10 +139,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                          <fo:block text-align="left"   keep-together="always">${eachDayDeatils.getKey()}</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
-			                          <fo:block text-align="right"  >${productEntry.getValue().get("packetQuantity")}</fo:block>
+			                          <fo:block text-align="right"  >${productEntry.getValue().get("packetQuantity")}&#160;&#160;</fo:block>
 			                        </fo:table-cell>
 			                        <fo:table-cell>
-			                          <fo:block text-align="right"  >${productDeatils.get("brandName")}</fo:block>
+			                          <fo:block text-align="left"  >&#160;${productDeatils.get("brandName")}</fo:block>
 			                        </fo:table-cell>
 			                         <fo:table-cell>
 			                          <fo:block text-align="right"  >${productEntry.getValue().get("totalRevenue")}</fo:block>
@@ -154,6 +154,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                       </#list>
 			                       </#if>
 			                      </#list>
+			                       <fo:table-row>
+			                         <fo:table-cell>
+			                       <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
+ 				                      </fo:table-cell>
+			                      </fo:table-row>
 			                        <fo:table-row  >
 			                        <fo:table-cell>
 			                          <fo:block text-align="right"  ></fo:block>
@@ -176,6 +181,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                        <fo:table-cell>
 			                          <fo:block text-align="right" >${daySaleEntry.getValue().get("PaidAmt")}</fo:block>
 			                        </fo:table-cell>
+			                      </fo:table-row>
+			                       <fo:table-row>
+			                         <fo:table-cell>
+			                       <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
+ 				                      </fo:table-cell>
 			                      </fo:table-row>
 			                       <fo:table-row>
 			                        <fo:table-cell>
@@ -202,15 +212,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                      </fo:table-row>
 			                      <fo:table-row>
 			                         <fo:table-cell>
-			                       <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
+			                       <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------------------------</fo:block>
  				                      </fo:table-cell>
 			                      </fo:table-row>
  				           </#list> 
 	                     </fo:table-body>
                       </fo:table>
        </fo:block>
-   
- <fo:block font-family="Courier,monospace" font-size="9pt">-------------------------------------------------------------------------------------------------</fo:block>
   </fo:flow>						        	
 </fo:page-sequence>
   </#list> 
