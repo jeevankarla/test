@@ -151,5 +151,7 @@ under the License.
     <ServerHitType description="View" hitTypeId="VIEW"/>
     <ServerHitType description="Entity" hitTypeId="ENTITY"/>
     <ServerHitType description="Service" hitTypeId="SERVICE"/>
+    <ServerHitType description="XML RPC" hitTypeId="XMLRPC"/>
+    
 
 </entity-engine-xml>

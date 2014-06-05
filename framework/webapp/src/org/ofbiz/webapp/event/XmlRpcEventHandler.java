@@ -29,13 +29,14 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
+import java.net.InetAddress;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
-
+import java.util.Enumeration;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcHandler;
 import org.apache.xmlrpc.XmlRpcRequest;
@@ -48,9 +49,12 @@ import org.apache.xmlrpc.server.XmlRpcHttpServerConfig;
 import org.apache.xmlrpc.server.XmlRpcNoSuchHandlerException;
 import org.apache.xmlrpc.util.HttpUtil;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
@@ -60,6 +64,9 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
+
+import java.sql.Timestamp;
+import javax.servlet.http.HttpSession;
 
 /**
  * XmlRpcEventHandler
@@ -89,11 +96,80 @@ public class XmlRpcEventHandler extends XmlRpcHttpServer implements EventHandler
         }
     }
 
+    void saveHit(Map<String, Object> context) {
+        String apiHitId = delegator.getNextSeqId("ApiHit");   	
+        GenericValue apiHit = delegator.makeValue("ApiHit");
+        apiHit.set("apiHitId", apiHitId);
+        apiHit.set("contentId", context.get("webappName")+ "." + context.get("serviceName"));
+        apiHit.set("hitTypeId", context.get("XMLRPC"));
+        apiHit.set("userLoginId", context.get("userLoginId"));
+        try {
+            InetAddress address = InetAddress.getLocalHost();
+
+            if (address != null) {
+            	apiHit.set("serverIpAddress", address.getHostAddress());
+            	apiHit.set("serverHostName", address.getHostName());
+            } else {
+                Debug.logError("Unable to get localhost internet address, was null", module);
+            }
+        } catch (java.net.UnknownHostException e) {
+            Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
+        }        
+        apiHit.set("webappName", context.get("webappName"));
+        apiHit.set("initialLocale", context.get("initialLocale"));
+        apiHit.set("initialRequest", context.get("initialRequest"));
+        apiHit.set("initialReferrer", context.get("initialReferrer"));
+        apiHit.set("initialUserAgent", context.get("initialUserAgent"));
+        apiHit.set("clientIpAddress", context.get("clientIpAddress"));
+        apiHit.set("clientHostName", context.get("clientHostName"));
+        apiHit.set("clientUser", context.get("clientUser"));
+        apiHit.set("clientIpIspName", context.get("clientIpIspName"));
+        apiHit.set("clientIpPostalCode", context.get("clientIpPostalCode"));
+        apiHit.set("clientIpStateProvGeoId", context.get("clientIpStateProvGeoId"));
+        apiHit.set("clientIpCountryGeoId", context.get("clientIpCountryGeoId"));
+        Timestamp startDateTime = (Timestamp)context.get("startDateTime");
+        Timestamp endDateTime = (Timestamp)context.get("endDateTime");        
+        apiHit.set("startDateTime", startDateTime);
+        apiHit.set("endDateTime", endDateTime);
+        apiHit.set("totalTimeMillis", Long.valueOf(endDateTime.getTime() - startDateTime.getTime()));
+        // ::TODO:: verify transaction/multi-threading safety      
+        try {
+            apiHit.create();
+        } catch (GenericEntityException e) {
+            Debug.logWarning("Error saving ApiHit: " + e.toString(), module);
+        }
+    }
+    
     /**
      * @see org.ofbiz.webapp.event.EventHandler#invoke(ConfigXMLReader.Event, ConfigXMLReader.RequestMap, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
-        String report = request.getParameter("echo");
+
+    	HttpSession session = request.getSession();
+        Map<String, Object> apiHitMap = FastMap.newInstance();
+        String webappName = (String) session.getAttribute("_WEBAPP_NAME_");
+        apiHitMap.put("webappName", webappName);        
+        String initialRequest = (String) session.getAttribute("_CLIENT_REQUEST_");
+        apiHitMap.put("initialRequest", initialRequest.length() > 250 ? initialRequest.substring(0, 250) : initialRequest);        
+        String initialReferrer = (String) session.getAttribute("_CLIENT_REFERER_");
+        apiHitMap.put("initialReferrer", initialReferrer.length() > 250 ? initialReferrer.substring(0, 250) : initialReferrer);        
+        String initialUserAgent = (String) session.getAttribute("_CLIENT_USER_AGENT_");
+        apiHitMap.put("initialUserAgent", initialUserAgent.length() > 250 ? initialUserAgent.substring(0, 250) : initialUserAgent);        
+        Locale initialLocaleObj = (Locale) session.getAttribute("_CLIENT_LOCALE_");
+        String initialLocale = initialLocaleObj != null ? initialLocaleObj.toString() : "";
+        apiHitMap.put("initialLocale", initialLocale);        
+        String clientIpAddress = (String)session.getAttribute("_CLIENT_REMOTE_ADDR_");
+        apiHitMap.put("clientIpAddress", clientIpAddress);        
+        String clientHostName = (String)session.getAttribute("_CLIENT_REMOTE_HOST_");
+        apiHitMap.put("clientHostName", clientHostName);        
+        String clientUser = (String)session.getAttribute("_CLIENT_REMOTE_USER_");   
+        apiHitMap.put("clientUser", clientUser);        
+        if (UtilValidate.isEmpty(webappName)) {
+            Debug.logInfo(new Exception(), "The webappName was empty, somehow the initial request settings were missing.", module);
+        }
+        ServiceRpcHandler serviceHandler = (ServiceRpcHandler)this.getHandlerMapping();
+        serviceHandler.setApiHitMap(apiHitMap);
+    	String report = request.getParameter("echo");
         if (report != null) {
             StringBuilder buf = new StringBuilder();
             try {
@@ -126,13 +202,15 @@ public class XmlRpcEventHandler extends XmlRpcHttpServer implements EventHandler
             }
         } else {
             try {
+            	
                 this.execute(this.getXmlRpcConfig(request), new HttpStreamConnection(request, response));
             } catch (XmlRpcException e) {
                 Debug.logError(e, module);
                 throw new EventHandlerException(e.getMessage(), e);
             }
         }
-
+//Debug.logInfo("apiHitMap:" + apiHitMap, module);
+        saveHit(apiHitMap);
         return null;
     }
 
@@ -251,10 +329,20 @@ public class XmlRpcEventHandler extends XmlRpcHttpServer implements EventHandler
 
     class ServiceRpcHandler extends AbstractReflectiveHandlerMapping implements XmlRpcHandler {
 
+        Map<String, Object> apiHitMap = FastMap.newInstance();
+   	
         public ServiceRpcHandler() {
             this.setAuthenticationHandler(new OfbizRpcAuthHandler());
         }
 
+        public void setApiHitMap(Map<String, Object> hitMap) {
+        	apiHitMap = hitMap;
+        }
+        
+        public Map<String, Object> getApiHitMap() {
+        	return apiHitMap;
+        }
+        
         @Override
         public XmlRpcHandler getHandler(String method) throws XmlRpcNoSuchHandlerException, XmlRpcException {
             ModelService model = null;
@@ -296,6 +384,11 @@ public class XmlRpcEventHandler extends XmlRpcHttpServer implements EventHandler
                 context.put("login.password", password);
             }
 
+            // capture hit details
+            apiHitMap.put("userLoginId", context.get("login.username"));
+            apiHitMap.put("serviceName", serviceName);
+            apiHitMap.put("startDateTime", UtilDateTime.nowTimestamp());
+            
             // add the locale to the context
             context.put("locale", Locale.getDefault());
             
@@ -317,7 +410,7 @@ public class XmlRpcEventHandler extends XmlRpcHttpServer implements EventHandler
                 Debug.logError(ServiceUtil.getErrorMessage(resp), module);
                 throw new XmlRpcException(ServiceUtil.getErrorMessage(resp));
             }
-
+            apiHitMap.put("endDateTime", UtilDateTime.nowTimestamp());
             // return only definied parameters
             return model.makeValid(resp, ModelService.OUT_PARAM, false, null);
         }

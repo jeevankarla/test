@@ -120,6 +120,33 @@ under the License.
       <field name="description" type="description"></field>
       <prim-key field="hitTypeId"/>
     </entity>
+    <entity entity-name="ApiHit" package-name="org.ofbiz.webapp.visit" never-cache="true" title="Api Hit Entity">
+      <field name="apiHitId" type="id-ne"></field>
+      <field name="contentId" type="id-vlong-ne"></field>
+      <field name="hitTypeId" type="id-ne"></field>
+        <field name="userLoginId" type="id-vlong"></field>
+        <field name="serverIpAddress" type="id"></field>
+        <field name="serverHostName" type="long-varchar"></field>
+        <field name="webappName" type="short-varchar"></field>
+        <field name="initialLocale" type="short-varchar"></field>
+        <field name="initialRequest" type="url"></field>
+        <field name="initialReferrer" type="url"></field>
+        <field name="initialUserAgent" type="long-varchar"></field>
+        <field name="clientIpAddress" type="short-varchar"></field>
+        <field name="clientHostName" type="long-varchar"></field>
+        <field name="clientUser" type="short-varchar"></field>
+        <field name="clientIpIspName" type="short-varchar"></field>
+        <field name="clientIpPostalCode" type="short-varchar"></field>
+        <field name="clientIpStateProvGeoId" type="id"></field>
+        <field name="clientIpCountryGeoId" type="id"></field>     
+      <field name="startDateTime" type="date-time"></field>
+      <field name="endDateTime" type="date-time"></field>
+      <field name="totalTimeMillis" type="numeric"></field>
+      <prim-key field="apiHitId"/>
+      <relation type="one" fk-name="API_HIT_TYPE" rel-entity-name="ServerHitType">
+        <key-map field-name="hitTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="UserAgent"
             package-name="org.ofbiz.webapp.visit"
             title="User Agent Entity">
