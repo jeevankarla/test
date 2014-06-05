@@ -1380,6 +1380,7 @@ public class PayrollService {
             result.put("shiftDetailMap" ,shiftDetailMap);
             result.put("availedCanteenDetailMap" , availedCanteenDetailMap);
             result.put("availedVehicleDays" , availedVehicleDays);
+Debug.log("getEmployeePayrollAttendance result:" + result);
 	    
 	        return result;
 	    }
