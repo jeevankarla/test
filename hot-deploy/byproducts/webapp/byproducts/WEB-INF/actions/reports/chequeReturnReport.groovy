@@ -39,7 +39,7 @@ if (UtilValidate.isEmpty(parameters.thruDate)) {
 else{
 	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 	try {
-		thruEffectiveDate = new java.sql.Timestamp(sdf.parse(parameters.thruDate+" 00:00:00").getTime());
+		thruDate = new java.sql.Timestamp(sdf.parse(parameters.thruDate+" 00:00:00").getTime());
 	}catch (ParseException e) {
 		Debug.logError(e, "Cannot parse date string: " + parameters.thruDate, "");
 	}

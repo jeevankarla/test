@@ -96,7 +96,7 @@ under the License.
                            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
                        		</fo:table-cell>
                        		<fo:table-cell>
-                           		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false" font-weight="bold" font-size="10pt">T * O * T * A * L</fo:block>  
+                           		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false" font-weight="bold" font-size="10pt">TOTAL</fo:block>  
                        		</fo:table-cell>
 	            			<fo:table-cell>
 		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false"></fo:block>  
