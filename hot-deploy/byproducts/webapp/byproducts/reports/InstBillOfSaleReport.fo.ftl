@@ -269,6 +269,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 				</fo:table>
 			</fo:block>
 			<fo:block >
+				<#assign noOfCrReturns=05>	
 				<fo:table>
 					<fo:table-column column-width="78pt"/>
 					<fo:table-column column-width="50pt"/>
@@ -290,20 +291,20 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 					 <#assign finalTotalAmnt=0>
 
 	              	<#assign orderItemsList= itemlst.getValue()?if_exists>	
-						<#list orderItemsList as eachItem>
+					<#list orderItemsList as eachItem>
+						<#if eachItem.get("shipmentTypeId")=="AM_SHIPMENT_SUPPL" || eachItem.get("shipmentTypeId")=="AM_SHIPMENT">  
+						 <#assign shipmentTypeId="M">        		
+		                 	<#elseif eachItem.get("shipmentTypeId")=="PM_SHIPMENT_SUPPL" || eachItem.get("shipmentTypeId")=="PM_SHIPMENT">
+		              	 <#assign shipmentTypeId="E">   
+	              	    </#if>
+						<#assign returnsList =itemsReturnListMap.entrySet()>
 						
-					<#if eachItem.get("shipmentTypeId")=="AM_SHIPMENT_SUPPL" || eachItem.get("shipmentTypeId")=="AM_SHIPMENT">  
-					 <#assign shipmentTypeId="M">        		
-	                 	<#elseif eachItem.get("shipmentTypeId")=="PM_SHIPMENT_SUPPL" || eachItem.get("shipmentTypeId")=="PM_SHIPMENT">
-	              	 <#assign shipmentTypeId="E">   
-              	    </#if>
-			<#assign noOfCrReturns=0>	
-			<#assign returnsList =itemsReturnListMap.entrySet()>
-				<#assign noOfCrReturns=noOfCrReturns+1>	
-    		   <#if (noOfCrReturns==40) >
-    			<fo:block  break-after="page"></fo:block>
-    			<#assign noOfCrReturns=0>
-    		  </#if>
+						  <#assign noOfCrReturns=noOfCrReturns+1>	<#--pageSkip if number of lines more than 31 -->
+			    		   <#if (noOfCrReturns==31) >
+			    		    <fo:table-row><fo:table-cell><fo:block  page-break-after="always"></fo:block></fo:table-cell></fo:table-row> 
+			    			<#assign noOfCrReturns=0>
+			    		  </#if>
+			    		  
 						<#assign quantity=eachItem.get("quantity")>
 						<#assign unitListPrice=eachItem.get("unitListPrice")>
 						<#assign amount=(quantity)*(unitListPrice)>
@@ -436,7 +437,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			              <fo:table-body>
 			              <fo:table-row>
 						  <fo:table-cell>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="15pt">Amount in Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(totalAmount?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()} ONLY  </fo:block>
+								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="15pt">Amount in Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmount?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()} ONLY  </fo:block>
 							</fo:table-cell>
 							</fo:table-row>	
 							
