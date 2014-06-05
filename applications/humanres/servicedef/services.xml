@@ -1162,7 +1162,9 @@ under the License.emplpunch
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
         <attribute name="employeeId" mode="IN" type="String"/> 
         <attribute name="customTimePeriodId" mode="IN" type="String"/>
-        <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>        
+        <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>
+                
     </service> 
     
     <service name="calculateShiftBasePayHeadAmount" engine="java" auth="true" invoke="calculateShiftBasePayHeadAmount" 
@@ -1171,7 +1173,8 @@ under the License.emplpunch
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
         <attribute name="employeeId" mode="IN" type="String"/> 
         <attribute name="customTimePeriodId" mode="IN" type="String"/>
-        <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>        
+        <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>       
     </service> 
     
     

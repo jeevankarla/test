@@ -109,7 +109,8 @@ under the License.
     <PayrollAttendance partyId="100" customTimePeriodId="APRL_13" lossOfPayDays="2" totalDays="30"/>
     
      <AcctgFormula acctgFormulaId="DA_BELL"  description="DA BGLR" formula="0.15*(${BASIC})" hasTable="N" isSlabBased="N" />
-     
+    
+    <!-- no of days and slab based --> 
 	<AcctgFormula acctgFormulaId="WASH_BGLR"  description="Wash Allowance" isSlabBased="Y"/>
     
 	<AcctgFormulaSlabs acctgFormulaId="WASH_BGLR" slabStart="0" slabEnd="30" formula="20*${NOOFDAYS}" description="1-30 days"/>
@@ -122,7 +123,7 @@ under the License.
     <PayrollBenDedCond condValue="BGLR" inputParamEnumId="PAYHD_BEDE_GEO" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="301"/>
     <PayHeadPriceAction customPriceCalcService="calculateShiftBasePayHeadAmount" amount="" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_SERVICE" payrollBenDedRuleId="301" />
     
-    
+    <!-- shift based -->
     <PayrollBenDedRule payrollBenDedRuleId="302" ruleName="first shift condition " payHeadTypeId="PAYROL_BEN_SHIFT" fromDate="2001-01-01 12:00:00.0"/>
     <PayrollBenDedCond condValue="SHIFT_01" inputParamEnumId="PAYHD_BEDE_SHIFT" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="302"/>
     <PayHeadPriceAction amount="8" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="302" />
@@ -146,7 +147,23 @@ under the License.
     <PayrollBenDedRule payrollBenDedRuleId="306" ruleName="Conveyance condition " payHeadTypeId="PAYROL_BEN_CONVEY" fromDate="2001-01-01 12:00:00.0"/>
     <PayrollBenDedCond condValue="CNV1" inputParamEnumId="PAYHD_BEDE_OTHER" operatorEnumId="PRC_EQ" payrollBenDedCondSeqId="01" payrollBenDedRuleId="306"/>
     <PayHeadPriceAction acctgFormulaId="CONVEYANCE_CNV1" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="306" />
+   
+    <!-- grade based (Group Savings)  -->
+    <PayrollBenDedRule payrollBenDedRuleId="307" ruleName="Group Savings Linked Ins. Scheme" payHeadTypeId="PAYROL_DD_GR_SAVG" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="01" inputParamEnumId="PAYHD_BEDE_GRADE" operatorEnumId="PRC_LTE" payrollBenDedCondSeqId="01" payrollBenDedRuleId="307"/>
+    <PayHeadPriceAction amount="72.00" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="307" />
     
+   
+    <PayrollBenDedRule payrollBenDedRuleId="308" ruleName="Group Savings Linked Ins. Scheme" payHeadTypeId="PAYROL_DD_GR_SAVG" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="02" inputParamEnumId="PAYHD_BEDE_GRADE" operatorEnumId="PRC_GTE" payrollBenDedCondSeqId="01" payrollBenDedRuleId="308"/>
+    <PayrollBenDedCond condValue="08" inputParamEnumId="PAYHD_BEDE_GRADE" operatorEnumId="PRC_LTE" payrollBenDedCondSeqId="02" payrollBenDedRuleId="308"/>
+    <PayHeadPriceAction amount="144.00" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="308" />
+     
+    <PayrollBenDedRule payrollBenDedRuleId="309" ruleName="Group Savings Linked Ins. Scheme" payHeadTypeId="PAYROL_DD_GR_SAVG" fromDate="2001-01-01 12:00:00.0"/>
+    <PayrollBenDedCond condValue="09" inputParamEnumId="PAYHD_BEDE_GRADE" operatorEnumId="PRC_GTE" payrollBenDedCondSeqId="01" payrollBenDedRuleId="309"/>
+    <PayrollBenDedCond condValue="12" inputParamEnumId="PAYHD_BEDE_GRADE" operatorEnumId="PRC_LTE" payrollBenDedCondSeqId="02" payrollBenDedRuleId="309"/>
+    <PayHeadPriceAction amount="216.00" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="309" />
+     
 <!-- PayHeadPriceAction
 	PayHeadPriceActionType
 	PayrollBenDedCond

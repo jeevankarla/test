@@ -460,6 +460,10 @@
 		<field name="payHeadTypeId" title="Benefit/Deduction Type">
 			<display/>
 		</field>
+		<field name="priceInfos" title="Price Calc Info">
+			<display></display>
+		</field>
+		
 		<field name="amount">
 			<display/>
 		</field>

@@ -55,6 +55,7 @@ if(UtilValidate.isNotEmpty(benefitTypeDescription)){
 }
 if(UtilValidate.isNotEmpty(amount)){
 	tempMap["amount"]=amount;
+	tempMap["priceInfos"]=payHeadAmount.priceInfos;
 	benefitDeductionList.add(tempMap);
 	context.put("benefitDeductionList",benefitDeductionList);
 }

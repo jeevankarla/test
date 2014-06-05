@@ -39,6 +39,7 @@ under the License.
     <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="PARTYMGR_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRES_EMPLOYEE" permissionId="OFBTOOLS_VIEW"/>
     
+     <PeriodType description="Attendane Month" periodTypeId="ATTENDANCE_MONTH" periodLength="1" uomId="TF_mon"/>
     
     <EnumerationType description="Payhead Price Parent Enum Type" enumTypeId="PYHD_PRICE" hasTable="N" parentTypeId=""/>
     <EnumerationType description="Payhead Price Input Parameter" enumTypeId="PYHD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PYHD_PRICE"/>
@@ -47,7 +48,8 @@ under the License.
     <Enumeration description="Employee" enumCode="PAYHD_BEDE_EMPID" enumId="PAYHD_BEDE_EMPID" sequenceId="03" enumTypeId="PYHD_PRICE_IN_PARAM"/>
     <Enumeration description="Department" enumCode="PAYHD_BEDE_DEPT" enumId="PAYHD_BEDE_DEPT" sequenceId="04" enumTypeId="PYHD_PRICE_IN_PARAM"/>
     <Enumeration description="Shift" enumCode="PAYHD_BEDE_SHIFT" enumId="PAYHD_BEDE_SHIFT" sequenceId="05" enumTypeId="PYHD_PRICE_IN_PARAM"/>
-    <Enumeration description="other conditions(vehicle ...)" enumCode="PAYHD_BEDE_OTHER" enumId="PAYHD_BEDE_OTHER" sequenceId="06" enumTypeId="PYHD_PRICE_IN_PARAM"/>
+    <Enumeration description="Paygrade" enumCode="PAYHD_BEDE_GRADE" enumId="PAYHD_BEDE_GRADE" sequenceId="06" enumTypeId="PYHD_PRICE_IN_PARAM"/>
+    <Enumeration description="other conditions(vehicle ...)" enumCode="PAYHD_BEDE_OTHER" enumId="PAYHD_BEDE_OTHER" sequenceId="07" enumTypeId="PYHD_PRICE_IN_PARAM"/>
    
     <PayHeadPriceActionType payHeadPriceActionTypeId="PRICE_FLAT"/>
     <PayHeadPriceActionType payHeadPriceActionTypeId="PRICE_SERVICE"/>
