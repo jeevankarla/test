@@ -82,6 +82,30 @@ under the License.
         }
     }
 //]]>
+
+function setVoidPaymentParameters(currentPayment){
+      
+    	jQuery(currentPayment).attr( "disabled", "disabled");
+    	var currentEle = jQuery(currentPayment);
+    	formName=document.forms['cancelPayment'];
+    	var domObj = $(currentEle).parent().parent();
+        var rowObj = $(domObj).html();
+        var method = $(domObj).find("#paymentMethodTypeId");
+        var payment = $(domObj).find("#paymentId");
+        var methodValue = $(method).val();
+        var payId = $(payment).val(); 
+         var ifCancel = confirm("Are You Sure To Cancel ReceiptId:"+payId);
+		   if(!ifCancel){
+		location.reload(true);
+		   return false;
+		   }
+        var appendStr = "<input type=hidden name=paymentMethodTypeId value="+methodValue+" />";  
+        $("#cancelPayment").append(appendStr);  
+    	appendStr = "<input type=hidden name=paymentId value="+payId+" />";    		
+	    $("#cancelPayment").append(appendStr); 
+	    $("#cancelPayment").submit();	
+    
+    }
 </script>
 <#if payments?has_content>
   <#assign paymentList  =  payments.getCompleteList() />
@@ -90,8 +114,15 @@ under the License.
 <#if paymentList?has_content && (parameters.noConditionFind)?if_exists == 'Y'>
   <div>
     <span class="label">Total Payments :${paymentList?size}</span>  
-    
   </div>
+  
+  <#if isCashierPortalScreen?has_content>
+    <form name="cancelPayment" id="cancelPayment"  method="post" action="voidCashPayment">
+  <#else>
+   <form name="cancelPayment" id="cancelPayment"  method="post" action="voidPayment">
+  </#if>
+ 
+  </form>
   <form name="listPayments" id="listPayments"  method="post" action="">
     <div align="right">
    <!--   <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
@@ -127,6 +158,9 @@ under the License.
           <td>Effective Date</td>
           <td>Amount</td> 
           <td>Amt To Apply</td> 
+         <#if hasPaymentCancelPermission?has_content && nowDate?has_content>
+          <td>Cancel</td> 
+           </#if>
           <td>PrintReceipt</td>
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>
         </tr>
@@ -136,7 +170,9 @@ under the License.
         <#list paymentList as payment>
         	<#assign amountToApply = Static["org.ofbiz.accounting.payment.PaymentWorker"].getPaymentNotApplied(delegator, payment.paymentId)>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a class="buttontext" href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.get("paymentId")}</a></td>
+              <td><a class="buttontext" href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.get("paymentId")}</a>
+              <input type="hidden" name="paymentId" id="paymentId" value="${payment.paymentId?if_exists}">
+              </td>
               <td><#if payment.paymentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.paymentDate ,"dd/MM/yyyy HH:mm:ss")}</#if></td>              
               <td>${(payment.facilityId)?if_exists}</td>
               <td>
@@ -144,6 +180,7 @@ under the License.
                 ${paymentType.description?default(payment.paymentTypeId)}
               </td>
               <td>
+              	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${payment.paymentMethodTypeId?if_exists}"> 
                 <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId}, true) />
                 ${paymentMethodType.description?default(payment.paymentMethodTypeId)}
               </td>              
@@ -156,6 +193,16 @@ under the License.
               <td><#if payment.effectiveDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.effectiveDate ,"dd/MM/yyyy")}</#if></td>              
               <td><@ofbizCurrency amount=payment.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=amountToApply isoCode=defaultOrganizationPartyCurrencyUomId/></td>
+             
+              <#if hasPaymentCancelPermission?has_content && nowDate?has_content && payment.effectiveDate?has_content>
+              <#assign paymentDateCompare= Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.effectiveDate ,"yyyy-MM-dd")>
+              <td>
+              <#if nowDate==paymentDateCompare  && payment.statusId!="PMNT_VOID">
+              <input id="submitButton" type="button"  onclick="javascript:return setVoidPaymentParameters(this);" value="Cancel"/>  
+              </#if>
+              </td>
+               </#if>
+             
               <td>
               	<a target="_blank" class="buttontext" href="<@ofbizUrl>printReceipt.pdf?paymentIds=${payment.paymentId}</@ofbizUrl>" >
               		PrintReceipt

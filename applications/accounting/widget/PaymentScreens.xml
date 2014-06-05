@@ -733,7 +733,13 @@ under the License.
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
+                <set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                 <set field="isCashierPortalScreen" value="YES"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+                <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
                 
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>

@@ -2283,6 +2283,13 @@ under the License.
         <response name="success" type="view" value="paymentOverview"/>
         <response name="error" type="view" value="paymentOverview"/>
     </request-map>
+     <request-map uri="voidCashPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="voidPayment"/>
+        <response name="success" type="view" value="findCashReceipts"/>
+        <response name="error" type="view" value="findCashReceipts"/>
+    </request-map>
+    
     <request-map uri="voidPaymentPettyCash">
         <security https="true" auth="true"/>
         <event type="service" invoke="voidPayment"/>

@@ -94,7 +94,8 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>        
-        <field name="instrumentDate"><display/></field>
+     <!--    <field name="instrumentDate"><display/></field> -->
+        <field name="paymentDate"><display/></field>
         <field name="currencyUomId"><hidden/></field>
         <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
 <!--        <field name="amountToApply"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>-->
