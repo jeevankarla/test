@@ -46,6 +46,35 @@
     <SecurityPermission description="Byproducts Component Reports Permission." permissionId="BYPRODUCTS_REPORTS"/>
     <SecurityPermission description="Byproducts Component Reports Permission." permissionId="BYPRODREPORTS_VIEW"/>
     
+    <SecurityPermission description="Mobile indent entry Permission." permissionId="MOB_INDENT_VIEW"/>	
+    <SecurityPermission description="Mobile indent entry Permission." permissionId="MOB_INDENT_EDIT"/>
+    <SecurityPermission description="Mobile order view Permission." permissionId="MOB_ORDER_VIEW"/>
+    <SecurityPermission description="Mobile payment view Permission." permissionId="MOB_PAYMENT_VIEW"/>
+    <SecurityPermission description="Mobile catalog view Permission." permissionId="MOB_CATALOG_VIEW"/>
+    <SecurityPermission description="Mobile facilities view Permission." permissionId="MOB_FACILITY_VIEW"/>
+    <SecurityPermission description="Mobile retailer dashboard permission." permissionId="MOB_RTLR_DB_VIEW"/>
+    <SecurityPermission description="Mobile retailer dashboard permission." permissionId="MOB_SREP_DB_VIEW"/>
+    
+    
+    <SecurityGroup description="Mobile retailer" groupId="MOBILE_RETAILER"/>
+    <SecurityGroupPermission groupId="MOBILE_RETAILER" permissionId="MOB_INDENT_VIEW"/>
+    <SecurityGroupPermission groupId="MOBILE_RETAILER" permissionId="MOB_INDENT_EDIT"/>    
+    <SecurityGroupPermission groupId="MOBILE_RETAILER" permissionId="MOB_ORDER_VIEW"/>
+    <SecurityGroupPermission groupId="MOBILE_RETAILER" permissionId="MOB_PAYMENT_VIEW"/>
+    <SecurityGroupPermission groupId="MOBILE_RETAILER" permissionId="MOB_CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="MOBILE_RETAILER" permissionId="MOB_RTLR_DB_VIEW"/>
+    
+    
+    <SecurityGroup description="Mobile sales rep" groupId="MOBILE_SALESREP"/>
+    <SecurityGroupPermission groupId="MOBILE_SALESREP" permissionId="MOB_INDENT_VIEW"/>
+    <SecurityGroupPermission groupId="MOBILE_SALESREP" permissionId="MOB_INDENT_EDIT"/>     
+    <SecurityGroupPermission groupId="MOBILE_SALESREP" permissionId="MOB_ORDER_VIEW"/>
+    <SecurityGroupPermission groupId="MOBILE_SALESREP" permissionId="MOB_PAYMENT_VIEW"/>
+    <SecurityGroupPermission groupId="MOBILE_SALESREP" permissionId="MOB_CATALOG_VIEW"/>    
+    <SecurityGroupPermission groupId="MOBILE_SALESREP" permissionId="MOB_FACILITY_VIEW"/>    
+    <SecurityGroupPermission groupId="MOBILE_SALESREP" permissionId="MOB_SREP_DB_VIEW"/>    
+    
+
     <!-- Indent Admin Group -->
     
     <SecurityGroup description="ByProducts Indent admin group" groupId="BYPROD_INDENT_ADMIN"/>

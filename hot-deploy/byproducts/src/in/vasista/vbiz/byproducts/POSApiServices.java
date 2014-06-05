@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,6 +28,8 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.security.Security;
+
 
 public class POSApiServices {
 
@@ -300,12 +303,18 @@ Debug.logInfo(infoString, module);
     
     public static Map<String, Object> getProductPrices(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
-    	GenericValue userLogin = (GenericValue) context.get("userLogin");
     	String boothId = (String) context.get("boothId");
 		if (UtilValidate.isEmpty(boothId)) {
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
-		}	    	
+		}	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_CATALOG", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to view catalog!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }		
   		GenericValue facility = null;
   		try{
   			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",boothId),false);
@@ -326,12 +335,20 @@ Debug.logInfo(infoString, module);
 
     public static Map<String, Object> getFacilityIndent(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
-    	GenericValue userLogin = (GenericValue) context.get("userLogin");
     	String facilityId = (String) context.get("facilityId");
 		if (UtilValidate.isEmpty(facilityId)) {
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
-		}	    	
+		}	
+		
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_INDENT", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to view indent!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }
+        
     	Timestamp supplyDate = (Timestamp) context.get("supplyDate");
     	String supplyDateStr= "";
     	if(UtilValidate.isNotEmpty(supplyDate)){
@@ -364,6 +381,15 @@ Debug.logInfo("indentResults:" + indentMap, module);
     public static Map<String, Object> processChangeIndent(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
+		
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_INDENT", "_EDIT", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to update indent!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }		
+		
 		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context
 				.get("indentItems");
 		String infoString = "processChangeIndent:: indentItems: " + indentItems;
@@ -376,7 +402,6 @@ Debug.logInfo(infoString, module);
 		Map result = ServiceUtil
 				.returnSuccess("Indent items successfully processed.");
 		Map<String, Object> indentResults = FastMap.newInstance();
-		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String boothId = (String) context.get("boothId");
 		if (UtilValidate.isEmpty(boothId)) {
 			Debug.logError("Empty facility Id", module);
@@ -525,12 +550,19 @@ Debug.logInfo("accountSummary:" + facilityLedgerMap, module);
     
     public static Map<String, Object> getFacilityPayments(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
-    	GenericValue userLogin = (GenericValue) context.get("userLogin");
     	String facilityId = (String) context.get("facilityId");
 		if (UtilValidate.isEmpty(facilityId)) {
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
-		}	    	
+		}	 
+		
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_PAYMENT", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch payments!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }		
     	Timestamp fromDate = (Timestamp) context.get("fromDate");
 		if (UtilValidate.isEmpty(fromDate)) {
 			Debug.logError("Empty fromDate", module);
@@ -556,12 +588,18 @@ Debug.logInfo("paymentResults:" + facilityPayments, module);
     
     public static Map<String, Object> getFacilityOrders(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
-    	GenericValue userLogin = (GenericValue) context.get("userLogin");
     	String facilityId = (String) context.get("facilityId");
 		if (UtilValidate.isEmpty(facilityId)) {
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
-		}	    	
+		}	 
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_ORDER", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch orders!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }		
     	Timestamp fromDate = (Timestamp) context.get("fromDate");
 		if (UtilValidate.isEmpty(fromDate)) {
 			Debug.logError("Empty fromDate", module);
@@ -619,7 +657,13 @@ Debug.logInfo("result:" + result, module);
     
     public static Map<String, Object> getAllRMFacilities(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
-    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_FACILITY", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch facilities!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }    	
 		Map boothsDetails = ByProductNetworkServices.getAllBoothsDetails(dctx, UtilMisc.toMap("userLogin", userLogin));
 		Map result = FastMap.newInstance();  		
 		result.put("facilitiesResult", boothsDetails);
