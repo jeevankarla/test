@@ -49,10 +49,45 @@ dayEnd = UtilDateTime.getDayEnd(thruDate);
 context.periodFromDate = UtilDateTime.toDateString(dayBegin, "dd/MM/yyyy");
 context.periodThruDate = UtilDateTime.toDateString(dayEnd, "dd/MM/yyyy");
 
-penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, dayBegin, dayEnd, [], userLogin);
+dateType = parameters.dateType;
+penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd, "userLogin", userLogin, "dateType", dateType));
 chequeReturnDetails = penaltyResult.get("chequeReturnDetails");
-context.chequeReturnList = chequeReturnDetails;
+paymentIds = [];
+chequeReturnMap = [:];
+chequeReturnDetails.each{eachReturn ->
+	
+	paymentIds.add(eachReturn.paymentId);
+	
+	if(chequeReturnMap.get(eachReturn.facilityId)){
+		existTempList = [];
+		existTempList = chequeReturnMap.get(eachReturn.facilityId);
+		existTempList.add(eachReturn);
+		chequeReturnMap.put(eachReturn.facilityId, existTempList);
+	}else{
+		tempList = [];
+		tempList.add(eachReturn);
+		chequeReturnMap.put(eachReturn.facilityId, tempList);
+	}
+}
+condList  = [];
+condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+finAccount = delegator.findList("FinAccount", cond, null, null, null, false);
 
+finAccountMap = [:];
+
+finAccount.each{eachAccount ->
+	finAccountMap.put(eachAccount.finAccountId, eachAccount.finAccountName);
+}
+finAccountTrans = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds), null, null, null, false);
+finTransMap = [:];
+finAccountTrans.each{eachTrans ->
+	finTransMap.put(eachTrans.paymentId, finAccountMap.get(eachTrans.finAccountId));
+}
+
+context.chequeReturnMap = chequeReturnMap;
+context.finTransMap = finTransMap;
 
 
  	

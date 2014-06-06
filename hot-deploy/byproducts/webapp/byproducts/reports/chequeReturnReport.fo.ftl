@@ -28,127 +28,174 @@ under the License.
         </fo:layout-master-set>
         
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeReturnReport.txt")}
-        <#if chequeReturnList?has_content>
+        <#if chequeReturnMap?has_content>
         <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
         <fo:static-content flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"></fo:block>
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
             </fo:static-content>		    	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
-		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size="11pt">&#160;            KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
+		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size="10pt">&#160;            KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;       UNIT : MOTHER DAIRY , G.K.V.K POST, YELAHANKA, BANGALORE -560065.</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;       STATEMENT OF CHEQUES DISHONOURED FOR THE PERIOD: ${periodFromDate?if_exists} - ${periodThruDate?if_exists}</fo:block>
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="10pt" font-weight="bold">SL AGENT-CODE  AGENT-NAME        CHQ-NUM  CHQ-DATE    AMOUNT      REMARKS</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="9pt" font-weight="bold">CODE      AGENT-NAME           BANK      CHQ-NUM  CHQ-DATE     AMOUNT   DISHONOUR   REMARKS</fo:block> 
 		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
 		           	
             	<fo:block>
                  	<fo:table>
-                    <fo:table-column column-width="25pt"/>
-                    <fo:table-column column-width="65pt"/> 
+                    <fo:table-column column-width="55pt"/> 
                	    <fo:table-column column-width="110pt"/>
+            		<fo:table-column column-width="60pt"/>
             		<fo:table-column column-width="55pt"/> 	
-            		<fo:table-column column-width="50pt"/>	
+            		<fo:table-column column-width="35pt"/>	
             		<fo:table-column column-width="65pt"/>
-            		<fo:table-column column-width="140pt"/>
+            		<fo:table-column column-width="45pt"/>
+            		<fo:table-column column-width="80pt"/>
                     <fo:table-body>
-                    <#assign sno=0>
-                    	<#assign totalReturn = 0>
-                    	<#list chequeReturnList as eachReturn>
-                    	<#assign sno=sno+1>
-            			<fo:table-row>
-               				<fo:table-cell>
-                           		<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="10pt">&#160;${sno}</fo:block>  
-                       		</fo:table-cell>
-                       		<fo:table-cell>
-                           		<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="10pt">${eachReturn.get("facilityId")?if_exists}</fo:block>  
-                       		</fo:table-cell>
-                       		<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : eachReturn.get("facilityId")}, false)>
-                       		<fo:table-cell>
-                           		<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="10pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facilityDetails.get("facilityName")?if_exists)),18)}</fo:block>  
-                       		</fo:table-cell>
-           					<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="10pt">${eachReturn.get("referenceNum")?if_exists}</fo:block>  
-	            			</fo:table-cell>
-	            			<fo:table-cell>
-                           		<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="10pt"> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachReturn.get("paymentDate"), "dd-MMM")}</fo:block>  
-                       		</fo:table-cell>
-	            			<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="10pt">${eachReturn.get("amount")?if_exists?string("#0.00")}</fo:block>  
-	            			</fo:table-cell>
-	           				<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="center" white-space-collapse="true" font-size="9pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachReturn.get("comments")?if_exists)),18)}</fo:block>  
-	            			</fo:table-cell>
-	            			<#assign totalReturn = totalReturn+eachReturn.get("amount")>
-						</fo:table-row>
+                    <#assign totalReturn = 0>
+                    <#assign facilityReturns = chequeReturnMap.entrySet()>
+                    <#list facilityReturns as eachFacilityReturn>
+                    	<#assign returnEntries = eachFacilityReturn.getValue()>
+                    	<#assign subTotal = 0>
+                    	<#list returnEntries as eachReturn>
+            				<fo:table-row>
+               					<fo:table-cell>
+                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="9pt">&#160;${eachReturn.get("facilityId")?if_exists}</fo:block>  
+                       			</fo:table-cell>
+                       			<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : eachReturn.get("facilityId")}, false)>
+                       			<fo:table-cell>
+                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facilityDetails.get("facilityName")?if_exists)),15)}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(finTransMap.get(eachReturn.get("paymentId"))?if_exists)),4)}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="9pt">${eachReturn.get("referenceNum")?if_exists}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachReturn.get("paymentDate"), "dd-MMM")}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${eachReturn.get("amount")?if_exists?string("#0.00")}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachReturn.get("cancelDate"), "dd-MMM")}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachReturn.get("comments")?if_exists)),10)}</fo:block>  
+                       			</fo:table-cell>
+                       			<#assign subTotal = subTotal+eachReturn.get("amount")>
+                       			<#assign totalReturn = totalReturn+eachReturn.get("amount")>
+							</fo:table-row>
 						</#list>
 						<fo:table-row>
+							<fo:table-cell>
+		            			<fo:block  keep-together="always">-----------------------------------------------------------------------</fo:block>  
+		            		</fo:table-cell>
+				    	</fo:table-row>
+				    	<fo:table-row>
+			            	<fo:table-cell>
+	                   			<fo:block  keep-together="always" text-align="left" white-space-collapse="false"></fo:block>  
+	               			</fo:table-cell>
+			           		<fo:table-cell>
+			               		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
+			           		</fo:table-cell>
+			           		<fo:table-cell>
+			               		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false" font-weight="bold" font-size="9pt">Sub Total</fo:block>  
+			           		</fo:table-cell>
+			    			<fo:table-cell>
+			            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
+			            	</fo:table-cell>
+			    			<fo:table-cell>
+			    				<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
+			    			</fo:table-cell>
+			    			<fo:table-cell>
+			            		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false" font-weight="bold" font-size="9pt">${subTotal?if_exists?string("#0.00")}</fo:block>  
+			            	</fo:table-cell>
+			            	<fo:table-cell>
+			            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
+			            	</fo:table-cell>
+			            	<fo:table-cell>
+			            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
+			            	</fo:table-cell>
+		        		</fo:table-row>
+				    	<fo:table-row>
+							<fo:table-cell>
+		            			<fo:block  keep-together="always">-----------------------------------------------------------------------</fo:block>  
+		            		</fo:table-cell>
+				    	</fo:table-row>
+					</#list>
+					<fo:table-row>
 						<fo:table-cell>
 		            		<fo:block  keep-together="always">-----------------------------------------------------------------------</fo:block>  
 		            	</fo:table-cell>
-				        </fo:table-row>
-				            <fo:table-row>
-				            	<fo:table-cell>
-                           		<fo:block  keep-together="always" text-align="left" white-space-collapse="false"></fo:block>  
-                       		</fo:table-cell>
-                       		<fo:table-cell>
-                           		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
-                       		</fo:table-cell>
-                       		<fo:table-cell>
-                           		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false" font-weight="bold" font-size="10pt">TOTAL</fo:block>  
-                       		</fo:table-cell>
-	            			<fo:table-cell>
-		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false"></fo:block>  
-		                	</fo:table-cell>
-	            			<fo:table-cell>
-	            				<fo:block  keep-together="always" text-align="right"  white-space-collapse="false"></fo:block>  
-	            			</fo:table-cell>
-	            			<fo:table-cell>
-		                		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false" font-weight="bold" font-size="10pt">${totalReturn?if_exists?string("#0.00")}</fo:block>  
-		                	</fo:table-cell>
-		                	<fo:table-cell>
-		                		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
-		                	</fo:table-cell>
-				        </fo:table-row>
-				        <fo:table-row>
-						<fo:table-cell>
-		            		<fo:block  keep-together="always">-----------------------------------------------------------------------</fo:block>  
+				    </fo:table-row>
+		            <fo:table-row>
+		            	<fo:table-cell>
+                   			<fo:block  keep-together="always" text-align="left" white-space-collapse="false"></fo:block>  
+               			</fo:table-cell>
+		           		<fo:table-cell>
+		               		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
+		           		</fo:table-cell>
+		           		<fo:table-cell>
+		               		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false" font-weight="bold" font-size="9pt">Grand Total</fo:block>  
+		           		</fo:table-cell>
+		    			<fo:table-cell>
+		            		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false"></fo:block>  
 		            	</fo:table-cell>
-				        </fo:table-row>
-				        
-				        <fo:table-row>	
-				            <fo:table-cell>
-				            		<fo:block  keep-together="always" text-align="left" font-size="9pt" white-space-collapse="false">NOTE: The collection of above should be made and remitted to cashier only in form of D.D or Cash</fo:block> 
-				            		<fo:block  keep-together="always" text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>  
-				            	</fo:table-cell>
-				        </fo:table-row>
-				       <fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
-						<fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
-						
-						<fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
-				        <fo:table-row>
-				            	<fo:table-cell>
-				            		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-size="9pt">&#160;                                                                                                                                        MF/GMF</fo:block>
-				            	</fo:table-cell>
-				         </fo:table-row>
-				         <fo:table-row>
-				            	<fo:table-cell>
-				            		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-size="9pt">&#160;                                                                                                                                           MOTHERDAIRY</fo:block>  
-				            	</fo:table-cell>
-				         </fo:table-row>
+		    			<fo:table-cell>
+		    				<fo:block  keep-together="always" text-align="right"  white-space-collapse="false"></fo:block>  
+		    			</fo:table-cell>
+		    			<fo:table-cell>
+		            		<fo:block  keep-together="always" text-align="right"  white-space-collapse="false" font-weight="bold" font-size="9pt">${totalReturn?if_exists?string("#0.00")}</fo:block>  
+		            	</fo:table-cell>
+		            	<fo:table-cell>
+		            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
+		            	</fo:table-cell>
+		            	<fo:table-cell>
+		            		<fo:block  keep-together="always" text-align="left"  white-space-collapse="false"></fo:block>  
+		            	</fo:table-cell>
+		        	</fo:table-row>
+			        <fo:table-row>
+					<fo:table-cell>
+	            		<fo:block  keep-together="always">-----------------------------------------------------------------------</fo:block>  
+	            	</fo:table-cell>
+			        </fo:table-row>
+			        
+			        <fo:table-row>	
+			            <fo:table-cell>
+			            		<fo:block  keep-together="always" text-align="left" font-size="9pt" white-space-collapse="false">NOTE: The collection of above should be made and remitted to cashier only in form of D.D or Cash</fo:block> 
+			            		<fo:block  keep-together="always" text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>  
+			            	</fo:table-cell>
+			        </fo:table-row>
+			       <fo:table-row>	
+			            	<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+			            	</fo:table-cell>
+			        </fo:table-row>
+					<fo:table-row>	
+			            	<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+			            	</fo:table-cell>
+			        </fo:table-row>
+					
+					<fo:table-row>	
+			            	<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+			            	</fo:table-cell>
+			        </fo:table-row>
+			        <fo:table-row>
+			            	<fo:table-cell>
+			            		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-size="9pt">&#160;                                                                                                                                        MF/GMF</fo:block>
+			            	</fo:table-cell>
+			         </fo:table-row>
+			         <fo:table-row>
+			            	<fo:table-cell>
+			            		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-size="9pt">&#160;                                                                                                                                           MOTHERDAIRY</fo:block>  
+			            	</fo:table-cell>
+			         </fo:table-row>
 	                </fo:table-body>
                 </fo:table>
             </fo:block> 		

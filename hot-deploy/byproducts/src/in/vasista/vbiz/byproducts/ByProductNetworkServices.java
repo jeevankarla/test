@@ -7126,10 +7126,15 @@ Debug.logInfo("result= " + result, module);
 			 result.put("facilityPenalty", facilityPenalty);
 			 return result;
 		 }
-	    public static Map getChequePenaltyTotals(DispatchContext dctx, Timestamp fromDate, Timestamp thruDate, List facilityList, GenericValue userLogin) {
+	    public static Map getChequePenaltyTotals(DispatchContext dctx, Map<String, ? extends Object> context) {
 			 Delegator delegator = dctx.getDelegator();
 			 LocalDispatcher dispatcher = dctx.getDispatcher();
 			 Map result = FastMap.newInstance();
+			 Timestamp fromDate = (Timestamp)context.get("fromDate");
+			 Timestamp thruDate = (Timestamp)context.get("thruDate");
+			 List facilityList = (List)context.get("facilityList");
+			 String dateType = (String)context.get("dateType");       
+			 GenericValue userLogin = (GenericValue) context.get("userLogin");
 			 List boothsList = FastList.newInstance();
 			 if(UtilValidate.isEmpty(facilityList)){
 				 boothsList = (List)getAllBooths(delegator, null).get("boothsList");
@@ -7154,8 +7159,14 @@ Debug.logInfo("result= " + result, module);
 		    	 List canceldPaymentIds=(List)EntityUtil.getFieldListFromEntityList(returnPayments, "paymentId", true);
 		    	 
 		    	 List customCondList = FastList.newInstance();
-		    	 customCondList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-		    	 customCondList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		    	 if(UtilValidate.isNotEmpty(dateType) && dateType.equals("BOUNCE_DATE")){
+		    		 customCondList.add(EntityCondition.makeCondition("cancelDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			    	 customCondList.add(EntityCondition.makeCondition("cancelDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			    	 	
+		    	 }else{
+		    		 customCondList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			    	 customCondList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		    	 }
 		    	 EntityCondition retCond = EntityCondition.makeCondition(customCondList, EntityOperator.AND);
 		    	 List<GenericValue> returnChequeList = EntityUtil.filterByCondition(returnPayments, retCond);
 		    	 

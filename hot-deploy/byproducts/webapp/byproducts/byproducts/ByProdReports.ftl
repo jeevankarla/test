@@ -96,6 +96,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("prodReturnDateId","thuDateId");
 		makeDatePicker("saleFromDateId","saleThruDateId");
 		makeDatePicker("chequeFromDateId","chequeThruDateId");
+		makeDatePicker("FDRDateId","");
 		makeDatePicker("vatFromDateId","vatThruDateId");
 		makeDatePicker("effFromDate","effThruDate");
 		makeDatePicker("smsNotify","");
@@ -299,11 +300,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	<tr>
       		<form id="ChequeReturnsReport" name="ChequeReturnsReport" method="post" action="<@ofbizUrl>chequeReturnReport.pdf</@ofbizUrl>" target="_blank">	
       			<td width="34%">Cheque Returns Report</td>
-      			<td width="33%">From<input  type="text" size="18pt" id="chequeFromDateId" readonly  name="fromDate"/>
-      			<td width="33%">Thru<input  type="text" size="18pt" id="chequeThruDateId" readonly  name="thruDate"/>
+      			<td width="33%">By<select name="dateType"><option value="PAYMENT_DATE">Payment Date</option><option value="BOUNCE_DATE">Bounce Date</option></select>
+      			<td width="33%">From<input  type="text" size="18pt" id="chequeFromDateId" readonly  name="fromDate"/>Thru<input  type="text" size="18pt" id="chequeThruDateId" readonly  name="thruDate"/>
 				<input type="submit" value="Download" class="buttontext"/></td>       			
       		</form>
       	</tr>
+      	<#--<tr>
+      		<form id="DuesFDRReport" name="DuesFDRReport" method="post" action="<@ofbizUrl>duesDiffFDR.pdf</@ofbizUrl>" target="_blank">	
+      			<td width="34%">Dues in excess of FDR</td>
+      			<td width="33%">Date<input  type="text" size="18pt" id="FDRDateId" readonly  name="effectiveDate"/>
+				<input type="submit" value="Download" class="buttontext"/></td>       			
+      		</form>
+      	</tr>-->
       	<tr class="alternate-row">
 			<form id="CategoryWiseSalesReport" name="CategoryWiseSalesReport" method="post" action="<@ofbizUrl>CategoryWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
 				<td>CategoryWise Sales Report</td>
