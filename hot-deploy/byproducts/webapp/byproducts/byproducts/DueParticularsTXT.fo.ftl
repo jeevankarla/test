@@ -544,7 +544,7 @@ under the License.
 	                        </fo:table-cell>
 	                        <fo:table-cell>
 	                        <#if openingCatBalance &lt; 0 >
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${duedata.get("openingBalance")?if_exists?string("##0.00")}</fo:block>  
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(duedata.get("openingBalance")*-1)?if_exists?string("##0.00")}</fo:block>  
 								<#assign catCrOB =catCrOB+openingBalance>
 							<#else>
 								<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">0.00</fo:block>
