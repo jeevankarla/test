@@ -164,7 +164,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashReceiptReport.pdf")}
 					 </fo:flow>
 					 </fo:page-sequence>
 					 </#list>
-			  <#else>
+			<#else>
 	    	<fo:page-sequence master-reference="main">
 			<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 				<fo:block font-size="14pt">

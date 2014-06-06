@@ -712,7 +712,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
       						<input  type="hidden"  value="DuesAbstractReport"   name="reportTypeFlag"/></td>
 							<td width="75%">From<input  type="text" size="18pt" id="DueAbsFromDateId" readonly  name="fromDate"/>
 			      			To<input  type="text" size="18pt" id="DueAbsThruDateId" readonly  name="thruDate"/></td>  
-							<td width="25%"><input type="submit" value="Download" class="buttontext"/></td>
+							<td width="25%">Category:<select name="categoryTypeEnum" id="categoryTypeEnum" class='h4'>
+							<option value="">All Types</option>
+		                		<#list categoryTypeList as categoryType>    
+		                  	    	<option value='${categoryType.enumId}'>
+			                    		${categoryType.description}
+			                        </option>
+		                		</#list>            
+							</select><input type="submit" value="Download" class="buttontext"/></td>
       					</form>
       				</tr>
     			</table>

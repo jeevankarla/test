@@ -38,7 +38,8 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
-
+categoryTypeEnum=parameters.categoryTypeEnum;
+context.categoryTypeEnum = categoryTypeEnum;
 fromDateTime=UtilDateTime.nowTimestamp();
 thruDateTime=UtilDateTime.nowTimestamp();
 
@@ -80,12 +81,12 @@ conditionList=[];
 /*conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_EQUAL , null));
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, "2093"));
-conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1000","B80902","B00503")));
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1000","B80902","B00503","S1023","S1056","S1027")));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
 boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
 
-boothsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
+boothsList=ByProductNetworkServices.getAllBooths(delegator,categoryTypeEnum).get("boothsList");
 boothTotals=[:];
 returnBoothTotals=[:];
 boothTotalsWithReturn=[:];

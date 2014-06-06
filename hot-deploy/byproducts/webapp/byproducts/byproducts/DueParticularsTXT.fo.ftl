@@ -23,6 +23,8 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <#assign iaGtot = 0>
 <#assign grandOpeningBalance = 0>
+<#assign grandDrOB = 0>
+<#assign grandCrOB = 0>
 <#assign returnGAmount = 0>
 <#assign caGtot = 0>
 <#assign cashGTot = 0>
@@ -45,7 +47,7 @@ under the License.
   </#if>
   <#if (reportTypeFlag=="DuesAbstractReport")>            	
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-bottom="1in" margin-left=".3in" margin-right="0.5in">
+	<fo:simple-page-master master-name="main" page-height="10in" page-width="13in"  margin-bottom="1in" margin-left=".1in" >
          <fo:region-body margin-top="1.2in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -208,7 +210,7 @@ under the License.
 	                        	<#assign invTot = invTot+ia>
 	                        	<#assign ia = 0>
 	                        </fo:table-cell>
-	                         <fo:table-cell>
+	                        <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${returnAmount?if_exists?string("##0.00")}</fo:block>  
 	                        	<#assign invRetn = returnAmount>
 	                        	<#assign returnCatAmount = returnCatAmount+invRetn>
@@ -244,7 +246,7 @@ under the License.
 	                        	<#assign totalCatPaidAmnt = totalCatPaidAmnt+totalPaidAmnt>
 	                        	<#assign totalPaidAmnt = 0>
 	                        </fo:table-cell>
-	                         <#--
+	                        <#--
 	                        <fo:table-cell>
 	                        <#if netAmount &lt; 0 >
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netAmount?if_exists?string("##0.00")}</fo:block>  
@@ -255,7 +257,6 @@ under the License.
 								<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">0.00</fo:block>
 							</#if>	            
 	                        </fo:table-cell>
-	                        
 	                        <fo:table-cell>
 	                        <#if netAmount &gt; 0 >
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netAmount?if_exists?string("##0.00")}</fo:block>  
@@ -265,7 +266,7 @@ under the License.
 							<#else>
 								<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">0.00</fo:block>
 							</#if>  
-	                        </fo:table-cell>-->
+	                        </fo:table-cell> --> 
 	                        <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netAmount?if_exists?string("##0.00")}</fo:block>  
 	                       		<#assign balNetamnt = netAmount>
@@ -324,7 +325,6 @@ under the License.
 	                    		<#assign totalCatPaidGAmnt = totalCatPaidGAmnt+totalCatPaidAmnt>
 	                   			<#assign totalCatPaidAmnt = 0>
 	                    </fo:table-cell>
-	                    
 	                    <#--
 	                    <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${eatot?if_exists?string("##0.00")}</fo:block>  
@@ -335,7 +335,8 @@ under the License.
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${satot?if_exists?string("##0.00")}</fo:block>  
 	                    		<#assign saGtot = saGtot+satot>
 	                   			<#assign satot = 0>
-	                    </fo:table-cell> -->
+	                    </fo:table-cell> --> 
+	                    
 	                    <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netBalTot?if_exists?string("##0.00")}</fo:block>  
 	                   			<#assign netBalGrandTot = netBalGrandTot+netBalTot>
@@ -376,16 +377,16 @@ under the License.
 	                     <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${totalCatPaidGAmnt?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
-	                    <#--
-	                    <fo:table-cell>
+	                    <#-- 
+	                     <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${eaGtot?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
 	                      <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${saGtot?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell> -->
-	                    <fo:table-cell>
+	                   <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netBalGrandTot?if_exists?string("##0.00")}</fo:block>  
-	                    </fo:table-cell>    
+	                    </fo:table-cell>
                 	</fo:table-row>
                 	<fo:table-row>
                	     	<fo:table-cell>
@@ -403,8 +404,8 @@ under the License.
 			<fo:static-content font-size="10pt" flow-name="xsl-region-before">
 					<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160;   ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160;   ${uiLabelMap.KMFDairySubHeader}</fo:block>				
-              		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160;   DAIRY PARTICULARS FOR DATE/MONTH :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd,MMM yy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd,MMM yy")}           ${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
-            		<fo:block >----------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160; <#if categoryTypeEnum?exists && categoryTypeEnum?has_content>  	<#assign enumeration = delegator.findOne("Enumeration", {"enumId" : categoryTypeEnum}, true)>${enumeration.description?if_exists}<#else>ALL </#if> DUES ABSTRACT FOR DATE/MONTH :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd,MMM yy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd,MMM yy")}           ${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
+            		<fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
               		<fo:block>
                  	<fo:table border-width="1pt" >
                  	<fo:table-column column-width="40pt"/>
@@ -412,6 +413,7 @@ under the License.
                	    <fo:table-column column-width="140pt"/>
             		<fo:table-column column-width="100pt"/> 		
             		<fo:table-column column-width="100pt"/>
+            	   <fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
@@ -432,10 +434,19 @@ under the License.
 	                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">RETAILER</fo:block> 
 	                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">NAME</fo:block>   
 	                        </fo:table-cell>
+	                          <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">OPENING</fo:block> 
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">Dr&#160;&#160;</fo:block>   
+	                        </fo:table-cell>
+	                          <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">OPENING</fo:block> 
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">Cr&#160;&#160;</fo:block>   
+	                        </fo:table-cell>
+	                        <#-->
 	                           <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">OPENING</fo:block> 
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">BALANCE</fo:block>   
-	                        </fo:table-cell>
+	                        </fo:table-cell> -->
 	                        <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">INVOICE</fo:block> 
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">AMOUNT</fo:block>   
@@ -444,25 +455,26 @@ under the License.
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">TOT-PAID</fo:block> 
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">AMOUNT</fo:block>   
 	                        </fo:table-cell>
-	                        <#--
+	                      
+	                      
 	                         <fo:table-cell>
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">EXCESS</fo:block> 
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">AMOUNT</fo:block>   
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">CLOSING</fo:block> 
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">Dr&#160;&#160;</fo:block>   
 	                        </fo:table-cell>
-	                         <fo:table-cell>
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">SHORT</fo:block> 
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">AMOUNT</fo:block>   
-	                        </fo:table-cell>-->
-	                        
+	                           <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">CLOSING</fo:block> 
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">Cr&#160;&#160;</fo:block>   
+	                        </fo:table-cell>
+	                        <#--
 	                         <fo:table-cell>
 	                              <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">CLOSING</fo:block> 
 	                              <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">BALANCE</fo:block> 
-	                        </fo:table-cell>
+	                        </fo:table-cell>-->
 	                 </fo:table-row>
 	                </fo:table-body>
 	               </fo:table>       
 	               </fo:block>
-              		<fo:block >----------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body" font-size="10pt"  font-family="Courier,monospace">		
             	<fo:block>
@@ -470,7 +482,8 @@ under the License.
             		<fo:table-column column-width="40pt"/>
             		<fo:table-column column-width="80pt"/> 
                	    <fo:table-column column-width="140pt"/>
-            		<fo:table-column column-width="100pt"/> 		
+            		<fo:table-column column-width="100pt"/> 	
+            			<fo:table-column column-width="100pt"/>	
             		<fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
             		<fo:table-column column-width="100pt"/>
@@ -485,6 +498,8 @@ under the License.
 	                	
 	                	<#assign invTot = 0>
 	                	<#assign openingCatBalance=0>
+	                	<#assign catDrOB = 0>
+                        <#assign catCrOB = 0>
 	                	<#assign returnCatAmount = 0>
 	                	<#assign cashTot = 0>
 	                	<#assign chqTot = 0>
@@ -509,7 +524,7 @@ under the License.
 						<#if !(invoiceAmount == 0)>
 	                	<fo:table-row>
                     		<fo:table-cell>
-	                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">${temp?if_exists}</fo:block>  
+	                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">${temp?if_exists}.</fo:block>  
 	                        </fo:table-cell>
 	                        <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">${duedata.get("facilityId")?if_exists}</fo:block>  
@@ -517,12 +532,25 @@ under the License.
 	                        <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(boothDetails.get("facilityName")?if_exists)),29)}</fo:block>  
 	                        </fo:table-cell>
+	                        <#assign openingBalance = duedata.get("openingBalance")>
+	                        <#assign openingCatBalance = openingCatBalance+openingBalance>
 	                         <fo:table-cell>
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${duedata.get("openingBalance")?if_exists?string("##0.00")}</fo:block>  
-	                        	<#assign openingBalance = duedata.get("openingBalance")>
-	                        	<#assign openingCatBalance = openingCatBalance+openingBalance>
-	                        	<#assign openingBalance = 0>
+	                    	 <#if openingBalance &gt; 0 >
+	                    	   <#assign catDrOB = catDrOB+openingBalance>
+	                    	<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${duedata.get("openingBalance")?if_exists?string("##0.00")}</fo:block>
+	                    	<#else>
+							<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">0.00</fo:block>
+						    </#if>  
 	                        </fo:table-cell>
+	                        <fo:table-cell>
+	                        <#if openingCatBalance &lt; 0 >
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${duedata.get("openingBalance")?if_exists?string("##0.00")}</fo:block>  
+								<#assign catCrOB =catCrOB+openingBalance>
+							<#else>
+								<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">0.00</fo:block>
+							</#if>  
+	                        </fo:table-cell>
+	                       <#assign openingBalance = 0>
 	                        <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${invoiceAmount?if_exists?string("##0.00")}</fo:block>  
 	                        	<#assign ia = invoiceAmount>
@@ -535,19 +563,7 @@ under the License.
 	                        	<#assign totalCatPaidAmnt = totalCatPaidAmnt+totalPaidAmnt>
 	                        	<#assign totalPaidAmnt = 0>
 	                        </fo:table-cell>
-	                         <#--
-	                        <fo:table-cell>
-	                        <#if netAmount &lt; 0 >
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netAmount?if_exists?string("##0.00")}</fo:block>  
-								<#assign ea = netAmount>
-	                        	<#assign eatot = eatot+ea>
-	                        	<#assign ea = 0>
-							<#else>
-								<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">0.00</fo:block>
-							</#if>	            
-	                        </fo:table-cell>
-	                        
-	                        <fo:table-cell>
+                           <fo:table-cell>
 	                        <#if netAmount &gt; 0 >
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netAmount?if_exists?string("##0.00")}</fo:block>  
 								<#assign sa = netAmount>
@@ -556,13 +572,24 @@ under the License.
 							<#else>
 								<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">0.00</fo:block>
 							</#if>  
-	                        </fo:table-cell>-->
+	                        </fo:table-cell>
+	                        <fo:table-cell>
+	                        <#if netAmount &lt; 0 >
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(-1*netAmount)?if_exists?string("##0.00")}</fo:block>  
+								<#assign ea = netAmount>
+	                        	<#assign eatot = eatot+ea>
+	                        	<#assign ea = 0>
+							<#else>
+								<fo:block  keep-together="always" text-align="right"  white-space-collapse="false">0.00</fo:block>
+							</#if>	            
+	                        </fo:table-cell>
+	                          <#--
 	                        <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netAmount?if_exists?string("##0.00")}</fo:block>  
 	                       		<#assign balNetamnt = netAmount>
 	                        	<#assign netBalTot = netBalTot+balNetamnt>
 	                        	<#assign balNetamnt = 0>
-	                        </fo:table-cell>
+	                        </fo:table-cell> -->
 	                    </fo:table-row> 
 	                    <#assign temp = temp+1>
 	                    </#if>
@@ -570,21 +597,32 @@ under the License.
 	                <#if invTot!= 0>
 	                <fo:table-row>
                	     	<fo:table-cell>
-                            <fo:block >----------------------------------------------------------------------------------------------------------------</fo:block>        
+                            <fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                 	
                 	<fo:table-row>
                	     	<fo:table-cell>
-                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false"> ${category}  TOTAL </fo:block>        
+                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false"> <#if category?exists>  	<#assign enumeration = delegator.findOne("Enumeration", {"enumId" : category}, true)>${enumeration.description?if_exists}<#else>ALL </#if> TOTAL </fo:block>        
                         </fo:table-cell>
 	                    <fo:table-cell/>
 	                    <fo:table-cell/>
+	                     <fo:table-cell>
+	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${catDrOB?if_exists?string("##0.00")}</fo:block>  
+	                    		<#assign grandDrOB = grandDrOB+catDrOB>
+	                   			<#assign catDrOB = 0>
+	                    </fo:table-cell> 
+	                      <fo:table-cell>
+	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${catCrOB?if_exists?string("##0.00")}</fo:block>  
+	                    		<#assign grandCrOB = grandCrOB+catCrOB>
+	                   			<#assign catCrOB = 0>
+	                    </fo:table-cell>
+	                    <#--
                          <fo:table-cell>
                             <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${openingCatBalance?if_exists?string("##0.00")}</fo:block>  
                         	<#assign grandOpeningBalance = grandOpeningBalance+openingCatBalance>
                         	<#assign openingCatBalance = 0>
-                        </fo:table-cell>
+                        </fo:table-cell>-->
 	                    <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${invTot?if_exists?string("##0.00")}</fo:block>  
 	                   			<#assign iaGtot = iaGtot+invTot>
@@ -595,27 +633,26 @@ under the License.
 	                    		<#assign totalCatPaidGAmnt = totalCatPaidGAmnt+totalCatPaidAmnt>
 	                   			<#assign totalCatPaidAmnt = 0>
 	                    </fo:table-cell>
-	                    
-	                    <#--
-	                    <fo:table-cell>
-	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${eatot?if_exists?string("##0.00")}</fo:block>  
-	                    		<#assign eaGtot = eaGtot+eatot>
-	                   			<#assign eatot = 0>
-	                    </fo:table-cell>
 	                    <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${satot?if_exists?string("##0.00")}</fo:block>  
 	                    		<#assign saGtot = saGtot+satot>
 	                   			<#assign satot = 0>
-	                    </fo:table-cell> -->
+	                    </fo:table-cell> 
+	                      <fo:table-cell>
+	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(-1*eatot)?if_exists?string("##0.00")}</fo:block>  
+	                    		<#assign eaGtot = eaGtot+eatot>
+	                   			<#assign eatot = 0>
+	                    </fo:table-cell>
+	                     <#--
 	                    <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netBalTot?if_exists?string("##0.00")}</fo:block>  
 	                   			<#assign netBalGrandTot = netBalGrandTot+netBalTot>
 	                   			<#assign netBalTot = 0>
-	                    </fo:table-cell>    
+	                    </fo:table-cell>    -->
                 	</fo:table-row>
                 	<fo:table-row>
                	     	<fo:table-cell>
-                           <fo:block >----------------------------------------------------------------------------------------------------------------</fo:block>        
+                           <fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                 	</#if>
@@ -626,29 +663,35 @@ under the License.
                         </fo:table-cell>
 	                    <fo:table-cell/>
 	                    <fo:table-cell/>
-	                       <fo:table-cell>
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${grandOpeningBalance?if_exists?string("##0.00")}</fo:block>  
+	                    <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${grandDrOB?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
+	                      <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${grandCrOB?if_exists?string("##0.00")}</fo:block>  
+	                    </fo:table-cell>
+	                    <#-->
+	                    <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${grandOpeningBalance?if_exists?string("##0.00")}</fo:block>  
+	                    </fo:table-cell>-->
 	                    <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${iaGtot?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
 	                     <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${totalCatPaidGAmnt?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
-	                    <#--
-	                    <fo:table-cell>
-	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${eaGtot?if_exists?string("##0.00")}</fo:block>  
-	                    </fo:table-cell>
 	                      <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${saGtot?if_exists?string("##0.00")}</fo:block>  
-	                    </fo:table-cell> -->
-	                    <fo:table-cell>
+	                    </fo:table-cell> 
+	                      <fo:table-cell>
+	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(-1*eaGtot)?if_exists?string("##0.00")}</fo:block>  
+	                    </fo:table-cell>
+	                    <#-- <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netBalGrandTot?if_exists?string("##0.00")}</fo:block>  
-	                    </fo:table-cell>    
+	                    </fo:table-cell>  -->  
                 	</fo:table-row>
                 	<fo:table-row>
                	     	<fo:table-cell>
-                           <fo:block >----------------------------------------------------------------------------------------------------------------</fo:block>        
+                           <fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                     </fo:table-body>

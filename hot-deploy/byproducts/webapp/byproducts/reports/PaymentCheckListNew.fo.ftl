@@ -200,7 +200,7 @@ under the License.
 	                       </fo:table-row>
 	                       </#if>
 	                      </#list>
-	                      <fo:table-row >
+	                     <fo:table-row >
 	                            <fo:table-cell >	
 	                            	<fo:block text-align="left" keep-together="always">&#160;</fo:block>                               
 	                            </fo:table-cell>

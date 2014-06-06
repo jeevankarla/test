@@ -15,10 +15,11 @@
                 	<order-by field-name="-thruDate"/>
                 </entity-condition>
                 <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
-                	<condition-list combine="and">
+                	<condition-list combine="or">
                 		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
-                		<!-- <condition-expr field-name="enumId" operator="equals" value="SO_INST"/>
-                		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/> -->                 	 
+                		 <condition-expr field-name="enumId" operator="equals" value="SHP_RTLR"/>
+                		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/>   
+                		<condition-expr field-name="enumId" operator="equals" value="SCT_RTLR"/>  
                 	</condition-list>
                 </entity-condition>
                  <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
@@ -90,11 +91,12 @@
                 	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
                 	<order-by field-name="-thruDate"/>
                 </entity-condition>
-                <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
-                	<condition-list combine="and">
-                		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
-                		<!-- <condition-expr field-name="enumId" operator="equals" value="SO_INST"/>
-                		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/> -->                 	 
+                 <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
+                	<condition-list combine="or">
+                		<!-- <condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/> -->
+                		 <condition-expr field-name="enumId" operator="equals" value="SHP_RTLR"/>
+                		<condition-expr field-name="enumId" operator="equals" value="CR_INST"/>   
+                		<condition-expr field-name="enumId" operator="equals" value="SCT_RTLR"/>  
                 	</condition-list>
                 </entity-condition>
                  <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
