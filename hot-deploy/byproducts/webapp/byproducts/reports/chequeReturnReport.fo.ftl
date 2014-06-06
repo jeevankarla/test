@@ -84,7 +84,7 @@ under the License.
                            			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachReturn.get("cancelDate"), "dd-MMM")}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachReturn.get("comments")?if_exists)),10)}</fo:block>  
+                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachReturn.get("comments")?if_exists)),12)}</fo:block>  
                        			</fo:table-cell>
                        			<#assign subTotal = subTotal+eachReturn.get("amount")>
                        			<#assign totalReturn = totalReturn+eachReturn.get("amount")>
