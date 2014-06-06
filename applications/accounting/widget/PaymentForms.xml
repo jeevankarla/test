@@ -693,7 +693,8 @@ under the License.
     </form>
     <form name="NewCashReceipt" type="single" target="createCashReceipt" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
+      <!--   <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field> -->
+         <field name="statusId"><hidden value="PMNT_RECEIVED"/></field>
         <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
         <field name="createdDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="lastModifiedDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
@@ -764,7 +765,8 @@ under the License.
         <field name="createdByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>  
         <field name="lastModifiedByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>   	
         <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
-        <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
+      <!--   <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field> -->
+        <field name="statusId"><hidden value="PMNT_SENT"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:(document.NewPaymentOut.action = 'Payment'),(document.NewPaymentOut.submit())">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
