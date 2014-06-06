@@ -99,7 +99,8 @@ if(UtilValidate.isNotEmpty(boothTotalsWithReturn)){
 	totalReturnAmnt=boothTotalsWithReturn.get("totalRevenue");
 }
 boothTotals = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd, "facilityList", boothsList, "userLogin", userLogin)).get("boothInvoiceTotalMap");
-penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, dayBegin, dayEnd, boothsList, userLogin);
+inputMap = [];
+penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd,"facilityList", boothsList, "userLogin", userLogin));
 facilityPenaltyMap = penaltyResult.get("facilityPenalty");
 List<GenericValue> paymentsList = FastList.newInstance();
 conditionList=[];
