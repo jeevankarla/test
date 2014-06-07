@@ -66,29 +66,51 @@ if (organizationPartyId) {
 	openingBalance = BigDecimal.ZERO;
 	
 	finAccountCustomTimePeriodId = null;
-	effectiveDate = null;
-	effectiveDateStr = parameters.fromDate;
-	if (UtilValidate.isEmpty(effectiveDateStr)) {
-		effectiveDate = UtilDateTime.nowTimestamp();
+	effectiveFromDate = null;
+	effectiveThruDate = null;
+	effectiveFromDateStr = parameters.fromDate;
+	effectiveThruDateStr = parameters.thruDate;
+	
+	if (UtilValidate.isEmpty(effectiveFromDateStr)) {
+		effectiveFromDate = UtilDateTime.nowTimestamp();
 	}
 	else{
 		def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
+			effectiveFromDate = new java.sql.Timestamp(sdf.parse(effectiveFromDateStr+" 00:00:00").getTime());
 		} catch (ParseException e) {
-			Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
+			Debug.logError(e, "Cannot parse date string: " + effectiveFromDateStr, "");
 		}
 	}
-	monthBegin = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
-	monthEnd = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(effectiveDate), timeZone, locale);
 	
-	dayBegin = UtilDateTime.getDayStart(effectiveDate);
-	dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+	if (UtilValidate.isEmpty(effectiveThruDateStr)) {
+		effectiveThruDate = effectiveFromDate;
+	}
+	else{
+		def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			effectiveThruDate = new java.sql.Timestamp(sdf.parse(effectiveThruDateStr+" 00:00:00").getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + effectiveThruDateStr, "");
+		}
+	}
+	
+	monthBegin = UtilDateTime.getMonthStart(UtilDateTime.toTimestamp(effectiveFromDate), timeZone, locale);
+	monthEnd = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(effectiveThruDate), timeZone, locale);
+	
+	dayBegin = UtilDateTime.getDayStart(effectiveFromDate);
+	dayEnd = UtilDateTime.getDayEnd(effectiveThruDate);
 	
 	fromDateStr = null;
-	fromDateStr = UtilDateTime.toDateString(effectiveDate ,"MMMM dd, yyyy");
-	fromDateTimestamp=UtilDateTime.getDayStart(effectiveDate);
+	fromDateStr = UtilDateTime.toDateString(effectiveFromDate ,"MMMM dd, yyyy");
+	fromDateTimestamp=UtilDateTime.getDayStart(effectiveFromDate);
 	context.put("fromDateStr",fromDateStr);
+	
+	thruDateStr = null;
+	thruDateStr = UtilDateTime.toDateString(effectiveThruDate ,"MMMM dd, yyyy");
+	thruDateTimestamp=UtilDateTime.getDayEnd(effectiveThruDate);
+	context.put("thruDateStr",thruDateStr);
+	
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
 	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_YEAR"));
@@ -320,10 +342,12 @@ if (organizationPartyId) {
 			
 				totClosingBalance = (totOpeningBalance+(acctgTransIt.debitTotal)-(acctgTransIt.creditTotal));
 				
-				if( ((acctgTransIt.debitTotal) == 0) && ((acctgTransIt.creditTotal) == 0) ){
+				
+				/*if( ((acctgTransIt.debitTotal) == 0) && ((acctgTransIt.creditTotal) == 0) ){
 				}else{
 					acctgTransTotals = [:];
 					acctgTransTotals["paymentId"] = "MONTH TOTAL";
+					acctgTransTotals["date"] = transactionDate;
 					acctgTransTotals["openingBalance"] = totOpeningBalance;
 					acctgTransTotals["debitAmount"] = acctgTransIt.debitTotal;
 					acctgTransTotals["creditAmount"] = acctgTransIt.creditTotal;
@@ -331,7 +355,7 @@ if (organizationPartyId) {
 					tempTransTotalsMap = [:];
 					tempTransTotalsMap.putAll(acctgTransTotals);
 					financialAcctgTransList.add(tempTransTotalsMap);
-				}
+				}*/
 			}	
 		}	
     }
@@ -345,7 +369,21 @@ dayFinAccountTransList= [];
 getDayTot = "N";
 financialAcctgTransList.each{ dayFinAccount ->
 	dayFinAccountMap = [:];
-	if(context.get("fromDateStr") == dayFinAccount.transactionDate){
+	
+	transactionDate = null;
+	transactionDateStr = dayFinAccount.transactionDate;
+	if(transactionDateStr != null){
+		def sdf1 = new SimpleDateFormat("MMMM dd, yyyy");
+		try {
+			transactionDate = new java.sql.Timestamp(sdf1.parse(transactionDateStr+" 00:00:00").getTime());
+		} catch (ParseException e) {
+			Debug.logError(e, "Cannot parse date string: " + transactionDateStr, "");
+		}
+	}
+	transactionDateBegin = UtilDateTime.getDayStart(transactionDate);
+	transactionDateEnd = UtilDateTime.getDayEnd(transactionDate);
+	
+	if((dayBegin <= transactionDateBegin) && (dayEnd >= transactionDateEnd)){
 		getDayTot = "Y";
 		dayFinAccountMap["transactionDate"] = dayFinAccount.transactionDate;
 		dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
@@ -373,12 +411,8 @@ financialAcctgTransList.each{ dayFinAccount ->
 		tempDayTotalsMap.putAll(dayFinAccountMap);
 		dayFinAccountTransList.add(tempDayTotalsMap);
 	}
+	context.dayFinAccountTransList = dayFinAccountTransList;
 }
-context.dayFinAccountTransList = dayFinAccountTransList;
-
-
-
-
 
 
 

@@ -595,7 +595,8 @@ under the License.
         <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
     <form name="FinancialAccountTransForMonth" type="single" target="${formTargetRequest}">
-        <field name="fromDate" title="Date"><date-time type="timestamp"/></field>
+        <field name="fromDate" title="From Date"><date-time type="timestamp"/></field>
+        <field name="thruDate" title="Thru Date"><date-time type="timestamp"/></field>
         <field name="organizationPartyId"><hidden/></field>
         <field name="finAccountId" title="Financial Account">
         	<drop-down allow-empty="false">

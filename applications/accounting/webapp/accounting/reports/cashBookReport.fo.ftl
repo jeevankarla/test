@@ -40,18 +40,22 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 					<#assign finAccountId=parameters.finAccountId>
 		          <#assign finAccountDetails = delegator.findOne("FinAccount", {"finAccountId" : finAccountId}, true)>
-                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160; ${(finAccountDetails.finAccountName)?if_exists} Book For ${fromDateStr}:	</fo:block>
+                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;&#160; ${(finAccountDetails.finAccountName)?if_exists} Book From ${fromDateStr} To ${thruDateStr}	</fo:block>
               		<fo:block>
 	                 	<fo:table border-style="solid">
-	                    <fo:table-column column-width="120pt"/>
 	                    <fo:table-column column-width="80pt"/>
-	                    <fo:table-column column-width="140pt"/>  
-	               	    <fo:table-column column-width="100pt"/>
-	            		<fo:table-column column-width="80pt"/> 		
+	                    <fo:table-column column-width="90pt"/>
+	                    <fo:table-column column-width="80pt"/>  
+	               	    <fo:table-column column-width="110pt"/>
+	            		<fo:table-column column-width="90pt"/> 		
+	            		<fo:table-column column-width="90pt"/>
 	            		<fo:table-column column-width="80pt"/>
-	            		<fo:table-column column-width="100pt"/>
+	            		<fo:table-column column-width="90pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
+	                    		<fo:table-cell border-style="solid">
+                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Date</fo:block>  
+                       			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">PaymentId/Type </fo:block>  
                        			</fo:table-cell>
@@ -81,13 +85,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
                  	<fo:table border-style="solid">
-                    <fo:table-column column-width="120pt"/>
                     <fo:table-column column-width="80pt"/>
-                    <fo:table-column column-width="140pt"/> 
-               	    <fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="80pt"/> 		
+                    <fo:table-column column-width="90pt"/>
+                    <fo:table-column column-width="80pt"/> 
+               	    <fo:table-column column-width="110pt"/>
+            		<fo:table-column column-width="90pt"/> 		
+            		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="80pt"/>
-            		<fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="90pt"/>
                     <fo:table-body>
                     	<#assign lineNo = 0>
                     	<#list dayFinAccountTransList as finAcctngDetails>
@@ -101,6 +106,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign partyName = (finAcctngDetails.get("partyName")?if_exists)/>
 	                		<#assign description = (finAcctngDetails.get("description")?if_exists)/>
 								<fo:table-row border-style="solid">
+									<fo:table-cell border-style="solid">
+	                            		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"> 
+                                             ${transactionDate?if_exists}
+                                      </fo:block>  
+	                       			</fo:table-cell>
 									<#if ((paymentId)?has_content)>
 										<#if (paymentId != "DAY TOTAL")>
 		                       			<fo:table-cell border-style="solid">
@@ -203,13 +213,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 			            		<fo:block  keep-together="always">Cashier/Accounts Asst</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Asst/Dpty Manager(Finance)</fo:block>  
+			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Asst/Dpty Manager(Finance)</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre.Audit</fo:block>  
+			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre.Audit</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;MF/GMF</fo:block>  
+			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;MF/GMF</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
                     </fo:table-body>
