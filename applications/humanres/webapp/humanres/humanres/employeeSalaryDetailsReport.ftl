@@ -33,7 +33,9 @@ under the License.
         <#assign totalDeductions=0>
         <#-- if the Party benefits -->
         <#list partyBenefitList as partyBenefit>
-            <#assign grossSalary = (grossSalary + partyBenefit.amount)>          
+        	<#if partyBenefit.amount?has_content>
+            <#assign grossSalary = (grossSalary + partyBenefit.amount)>
+             </#if>               
                 <fo:table-row height="14px" space-start=".15in">
                     <fo:table-cell number-columns-spanned="2">
                         <fo:block text-align="left">${partyBenefit.payGradeName}</fo:block>
@@ -61,7 +63,9 @@ under the License.
         </fo:table-row>
          <#-- if the Party benefits -->
         <#list partyDeductionList as partyDeduction>
-            <#assign totalDeductions = (totalDeductions + partyDeduction.amount)>          
+            <#if partyDeduction.amount?has_content>
+            <#assign totalDeductions = (totalDeductions + partyDeduction.amount)>      
+                </#if>
                 <fo:table-row height="14px" space-start=".15in">
                     <fo:table-cell number-columns-spanned="2">
                         <fo:block text-align="left">${partyDeduction.payGradeName}</fo:block>
@@ -87,7 +91,7 @@ under the License.
            </fo:table-cell>
            <fo:table-cell text-align="right" border-top-style="solid" border-top-width="thin" border-top-color="black" number-columns-spanned="2" font-weight="bold">
               <fo:block text-align="right">
-                 <@ofbizCurrency amount=(grossSalary-totalDeductions) isoCode=defaultOrganizationPartyCurrencyUomId/>
+                 <@ofbizCurrency amount=(grossSalary+totalDeductions) isoCode=defaultOrganizationPartyCurrencyUomId/>
               </fo:block>
            </fo:table-cell>
         </fo:table-row>

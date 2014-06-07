@@ -952,8 +952,18 @@
 										location="component://humanres/widget/ReportHumanresSummaryForms.xml" />									
 							</screenlet>
 							<screenlet title="${uiLabelMap.EmployeeWiseSalaryDetails}">	
-		              			<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsCsv}" style="button" target="EmployeeWiseSalaryDetailsCsv.csv?employeeId=${employeeId}"/>
-								<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsPdf}" style="button" target="EmployeeWiseSalaryDetailsPdf.pdf?employeeId=${employeeId}"/>
+								<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsCsv}" style="button"
+									target="EmployeeWiseSalaryDetailsCsv.csv">
+									<parameter param-name="employeeId"
+										from-field="employeeId" />
+									<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+								</link>
+								<link text="${uiLabelMap.EmployeeWiseSalaryDetailsExportAsPdf}" style="button"
+									target="EmployeeWiseSalaryDetailsPdf.pdf">
+									<parameter param-name="employeeId"
+										from-field="employeeId" />
+									<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+								</link>
 								<platform-specific>
 		                       		 <html><html-template location="component://humanres/webapp/humanres/humanres/employeeSalaryDetails.ftl"/></html>
 		                     	</platform-specific>

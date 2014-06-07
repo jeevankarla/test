@@ -53,9 +53,9 @@ under the License.
 					<fo:table-body >
 					<#list employeeList as employee >
 					<fo:table-row border-style="solid" font-size="8pt">	
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("partyIdTo")?if_exists} </fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("firstName")?if_exists}  ${employee.get("lastName")?if_exists}</fo:block></fo:table-cell>
-  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="center"> ${employee.get("fromDate")?if_exists} </fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="left"> ${employee.get("partyIdTo")?if_exists} </fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="left"> ${employee.get("firstName")?if_exists}  ${employee.get("lastName")?if_exists}</fo:block></fo:table-cell>
+  						<fo:table-cell border-style="solid"><fo:block keep-together="always" text-align="left"> ${employee.get("fromDate")?if_exists} </fo:block></fo:table-cell>
   						<#if employee.get("employeePosition")?has_content>
   							<#assign empPositionTyp = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : employee.get("employeePosition")?has_content}, true)>
   						</#if>

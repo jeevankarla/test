@@ -67,7 +67,7 @@ under the License.
         </tr>
         <tr<#if alt_row> class="alternate-row"</#if>>
             <td>Net Salary</td>
-            <td><@ofbizCurrency amount=(grossSalary-totalDeductions) isoCode=defaultOrganizationPartyCurrencyUomId/></td>              
+            <td><@ofbizCurrency amount=(grossSalary+totalDeductions) isoCode=defaultOrganizationPartyCurrencyUomId/></td>              
         </tr>
       </#list>
     </table>
