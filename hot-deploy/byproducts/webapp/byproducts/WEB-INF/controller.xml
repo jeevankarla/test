@@ -176,6 +176,10 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="dueParticularsPDF"/>
     </request-map>
+    <request-map uri="duesDiffFDR.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="duesFDRReportPDF"/>
+    </request-map>
     
     <request-map uri="instBillOfSaleReport.pdf">
     	<security https="true" auth="true"/>
@@ -955,6 +959,7 @@
     <view-map name="dueParticularsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="application/pdf"/><!-- withOB -->
     <view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
     <view-map name="chequeReturnReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#chequeReturnReportPDF" content-type="application/pdf"/>
+    <view-map name="duesFDRReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#duesFDRReportPDF" content-type="application/pdf"/>
     
     <view-map name="DailyPaymentCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckList" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintBoothPayments" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintBoothPayments"/>

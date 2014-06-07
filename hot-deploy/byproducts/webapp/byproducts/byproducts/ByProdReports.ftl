@@ -148,7 +148,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 </div>
 </#if>
 <#if screenFlag?exists && screenFlag.equals("DailyReports")  && (security.hasEntityPermission("BYPRODUCTS", "_DAILREPOR", session) || security.hasEntityPermission("ACCOUNTING", "_CASHIER", session))>
-<div class="lefthalf">
+<div class="full">
 <div class="screenlet">
     <div class="screenlet-title-bar">
       <h2><center>Daily Reports</center></h2>
@@ -172,13 +172,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      		</form>	
 	        </tr> -->
 	        <tr class="alternate-row">
-      	   <form id="RouteQuantityAbst" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>routeWiseQtyAbstract.txt</@ofbizUrl>" target="_blank">	
-      		  <td width="33%">Route Wise Sales Abst</td>
-      		  <td width="33%">Date<input  type="text" size="18pt" id="rtSupplyDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      		  <input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br></td>
-      	   	  <td width="33%"><input type="submit" target="_blank" value="Download" class="buttontext"/></td>
-      	   </form>
-      	</tr>
+	      	   	<form id="RouteQuantityAbst" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>routeWiseQtyAbstract.txt</@ofbizUrl>" target="_blank">	
+	      		  <td width="30%">Route Wise Sales Abstract</td>
+	      		  <td width="15%">Date<input  type="text" size="18pt" id="rtSupplyDate" readonly  name="supplyDate"/>
+	      		  <td width="15%"><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br></td>
+	      		  <td width="15%"></td>
+	      		  <td width="15%"></td>
+	      	   	  <td width="10%"><input type="submit" target="_blank" value="Download" class="buttontext"/></td>
+	      	   </form>
+      		</tr>
       	<#--
       	<tr>
       		<form id="routeIndentReport" name="routeIndentReport" method="post" action="<@ofbizUrl>routewiseIndentReport.txt</@ofbizUrl>" target="_blank">	
@@ -201,17 +203,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	   </form>
       	</tr> -->
       
-      	 <tr>
+      	 <tr class="alternate-row">
             <form id="BoothWiseSales" name="BoothWiseSales" method="post" action="<@ofbizUrl>boothWiseSales.csv</@ofbizUrl>" target="_blank">	
-      			<td width="34%">Booth Wise Sales</td>
-      			<td width="33%">From<input  type="text" size="18pt" id="bsFromDateId" readonly  name="bsFromDate"/>
-      			<td width="33%">Thru<input  type="text" size="18pt" id="bsThruDateId" readonly  name="bsThruDate"/>
-      			Type 
-					<select name='subscriptionTypeId' class='h4'>
+      			<td width="30%">Booth Wise Sales</td>
+      			<td width="15%">From<input  type="text" size="18pt" id="bsFromDateId" readonly  name="bsFromDate"/>
+      			<td width="15%">Thru<input  type="text" size="18pt" id="bsThruDateId" readonly  name="bsThruDate"/>
+      			<td width="15%">Type 
+					<select name='subscriptionTypeId'>
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
 					</select>
-				    <input type="submit" value="Download" class="buttontext"/></td> 
+				</td>
+				<td width="15%">&#160;</td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
       			
       	  </form>
          </tr> 	
@@ -232,154 +236,154 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	</tr> 	-->
       	 <tr class="alternate-row">
         	<form id="TruckSheetCorrectionsReport" name="TruckSheetCorrectionsReport" method="post"  target="_blank" action="<@ofbizUrl>TruckSheetCorrectionsReport</@ofbizUrl>">	
-      			<td width="34%">TruckSheet Corrections Report </td>
-      			<td width="30%">Date<input  type="text" size="18pt" id="RouteTrCorrDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      			<td width="30%">TruckSheet Corrections Report </td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="RouteTrCorrDate" readonly  name="supplyDate"></td>
       			<#--><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br> -->
-      			</td>			
-      			<td width="36%">Route 
-				 <select name="routeId" class='h4'>
-				<option value='All-Routes'>All</option>
-					<#list routesList as route>    
-  	    				<option value='${route}'>${route}</option>
-					</#list> 
+      			<td width="15%">Route 
+				 	<select name="routeId" class='h4'>
+						<option value='All-Routes'>All</option>
+						<#list routesList as route>    
+  	    					<option value='${route}'>${route}</option>
+						</#list> 
 					</select>
-					Type 
-					<select name='subscriptionTypeId' class='h4'>
-					<option value='ALL'>All</option>
-					<option value='AM'>AM</option>
-					<option value='PM'>PM</option>
-					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="submit" value="Download" class="buttontext"/></td>
+				</td>	
+				<td width="15%">Type 
+					<select name='subscriptionTypeId'>
+						<option value='ALL'>All</option>
+						<option value='AM'>AM</option>
+						<option value='PM'>PM</option>
+					</select>
+				</td>
+				<td width="15%"></td>	
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>
-        <tr>
+        <tr class="alternate-row">
         	<form id="TruckSheetDetailReport" name="TruckSheetDetailReport" method="post"  target="_blank" action="<@ofbizUrl>TruckSheetDetailReport.csv</@ofbizUrl>">	
-      			<td width="34%">TruckSheet Detail Report </td>
-      			<td width="30%">Date<input  type="text" size="18pt" id="RouteTrDetDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      			<td width="30%">TruckSheet Detail Report </td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="RouteTrDetDate" readonly  name="supplyDate"/>
       			<#--><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br> -->
       			</td>			
-      			<td width="36%">Route 
-				 
-					Type 
+      			<td width="15%">Route Type 
 					<select name='subscriptionTypeId' class='h4'>
 					<option value='ALL'>All</option>
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
-					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="submit" value="Download" class="buttontext"/></td>
+					</select>
+				</td>
+				<td width="15%"></td>
+				<td width="15%"></td>	
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>
-        <tr>
+        <tr class="alternate-row">
       		<form id="ProductReturnsReport" name="ProductReturnsReport" method="post" action="<@ofbizUrl>productReturnsReport.txt</@ofbizUrl>" target="_blank">	
-      			<td width="34%">Product Returns Report</td>
-      			<td width="33%">Date<input  type="text" size="18pt" id="prodReturnDateId" readonly  name="prodReturnDate"/>
-      			<td width="36%">Route 
-				 <select name="routeId" class='h4'>
-				<option value='All-Routes'>All</option>
-					<#list routesList as route>    
-  	    				<option value='${route}'>${route}</option>
-					</#list> 
+      			<td width="30%">Product Returns Report</td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="prodReturnDateId" readonly  name="prodReturnDate"/></td>
+      			<td width="15%">Route 
+				 	<select name="routeId" class='h4'>
+						<option value='All-Routes'>All</option>
+						<#list routesList as route>    
+  	    					<option value='${route}'>${route}</option>
+						</#list> 
 					</select>
-					Type 
+				</td>
+				<td width="15%">Type 
 					<select name='subscriptionTypeId' class='h4'>
 					<option value='ALL'>All</option>
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
-					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="submit" value="Download" class="buttontext"/></td>
+					</select>
+				</td>
+				<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>
       	</tr> 
-      	<tr>
+      	<tr class="alternate-row">
       		<form id="SalesReport" name="SalesReport" method="post" action="<@ofbizUrl>salesReport.txt</@ofbizUrl>" target="_blank">	
-      			<td width="34%">Sales Report</td>
-      			<td width="33%">From<input  type="text" size="18pt" id="saleFromDateId" readonly  name="fromDate"/>
-      			<td width="33%">Thru<input  type="text" size="18pt" id="saleThruDateId" readonly  name="thruDate"/>
-				<input type="submit" value="Download" class="buttontext"/></td>       			
+      			<td width="30%">Sales Report</td>
+      			<td width="15%">From<input  type="text" size="18pt" id="saleFromDateId" readonly  name="fromDate"/></td>
+      			<td width="15%">Thru<input  type="text" size="18pt" id="saleThruDateId" readonly  name="thruDate"/></td>
+      			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="15%"><input type="submit" value="Download" class="buttontext"/></td>       			
       		</form>
       	</tr>
-      	<tr>
-      		<form id="ChequeReturnsReport" name="ChequeReturnsReport" method="post" action="<@ofbizUrl>chequeReturnReport.pdf</@ofbizUrl>" target="_blank">	
-      			<td width="34%">Cheque Returns Report</td>
-      			<td width="33%">By<select name="dateType"><option value="PAYMENT_DATE">Payment Date</option><option value="BOUNCE_DATE">Bounce Date</option></select>
-      			<td width="33%">From<input  type="text" size="18pt" id="chequeFromDateId" readonly  name="fromDate"/>Thru<input  type="text" size="18pt" id="chequeThruDateId" readonly  name="thruDate"/>
-				<input type="submit" value="Download" class="buttontext"/></td>       			
-      		</form>
-      	</tr>
-      	<#--<tr>
-      		<form id="DuesFDRReport" name="DuesFDRReport" method="post" action="<@ofbizUrl>duesDiffFDR.pdf</@ofbizUrl>" target="_blank">	
-      			<td width="34%">Dues in excess of FDR</td>
-      			<td width="33%">Date<input  type="text" size="18pt" id="FDRDateId" readonly  name="effectiveDate"/>
-				<input type="submit" value="Download" class="buttontext"/></td>       			
-      		</form>
-      	</tr>-->
+      	
       	<tr class="alternate-row">
 			<form id="CategoryWiseSalesReport" name="CategoryWiseSalesReport" method="post" action="<@ofbizUrl>CategoryWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
-				<td>CategoryWise Sales Report</td>
-				<td width="33%">From<input  type="text" size="18pt" id="catSalesFromDateId" readonly  name="fromDate"/>
-	  			<td width="33%">To<input  type="text" size="18pt" id="catSalesThruDateId" readonly  name="thruDate"/>
-				<input type="submit" value="Download" class="buttontext"/></td>        			
+				<td width="30%">CategoryWise Sales Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="catSalesFromDateId" readonly  name="fromDate"/></td>
+	  			<td width="15%">To<input  type="text" size="18pt" id="catSalesThruDateId" readonly  name="thruDate"/></td>
+	  			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
 			</form>
 		</tr>
-      	 <tr>
+      	 <tr class="alternate-row">
         	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallan.txt</@ofbizUrl>">	
-      			<td width="34%">Dealer BankChallan Report </td>
-      			<td width="33%">
-      			Date<input  type="text" size="18pt" id="DBCFromDateId" readonly  name="supplyDate"/>
+      			<td width="30%">Dealer BankChallan Report </td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="DBCFromDateId" readonly  name="supplyDate"/></td>
       			<#-->
       			<td width="33%">Date<@htmlTemplate.renderDateTimeField name="supplyDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="bankChallanSupplyDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></td> -->
-      			<td width="33%">Route 
-				<select name="routeId" class='h4'><option value='All-Routes'>All-Routes</option>
+      			<td width="15%">Route <select name="routeId" class='h4'><option value='All-Routes'>All-Routes</option>
 					<#list routesList as route>    
   	    				<option value='${route}'>${route}</option>
 					</#list>  
 					</select>
-					<input type="submit" value="Download" class="buttontext"/></td>
+				</td>
+				<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>  
         </#if>
         <#if security.hasEntityPermission("BYPRODUCTS", "_DISREPORT", session)>
         <tr class="alternate-row">
         	<form id="IndentAbstractReport" name="IndentAbstractReport" method="post"  target="_blank" action="<@ofbizUrl>IndentAbstractReport</@ofbizUrl>">	
-      			<td width="34%">RouteWise Indent Abstract Report </td>
-      			<td width="30%">Date<input  type="text" size="18pt" id="RouteIndentAbstDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      			<input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br>
+      			<td width="30%">RouteWise Indent Abstract Report </td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="RouteIndentAbstDate" readonly  name="supplyDate"/></td>
+      			<td width="15%"><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br>
       			</td>			
-      			<td width="36%">Route 
-				 <select name="routeId" class='h4'>
-				<option value='All-Routes'>All</option>
-					<#list routesList as route>    
+      			<td width="15%">Route 
+				 	<select name="routeId" class='h4'>
+						<option value='All-Routes'>All</option>
+						<#list routesList as route>    
   	    				<option value='${route}'>${route}</option>
-					</#list> 
+						</#list> 
 					</select>
-					Type 
+				</td>
+				<td width="15%">Type 
 					<select name='subscriptionTypeId' class='h4'>
 					<option value=''>All</option>
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
-					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="submit" value="Download" class="buttontext"/></td>
+					</select>
+				</td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>
         <tr class="alternate-row">
         	<form id="ProductIndentAbstractReport" name="ProductIndentAbstractReport" method="post"  target="_blank" action="<@ofbizUrl>ProductIndentAbstractReport</@ofbizUrl>">	
-      			<td width="34%">Product Indent Abstract Report</td>
-      			<td width="30%">Date<input  type="text" size="18pt" id="ProductIndentAbstDate" readonly  name="supplyDate"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      			<input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br>
-      			</td>			
-      			<td width="36%">Route 
-				 <select name="routeId" class='h4'>
-				<option value='All-Routes'>All</option>
+      			<td width="30%">Product Indent Abstract Report</td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="ProductIndentAbstDate" readonly  name="supplyDate"/></td>
+      			<td width="15%"><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only</td>
+      			<td width="15%">Route 
+				 	<select name="routeId" class='h4'>
+					<option value='All-Routes'>All</option>
 					<#list routesList as route>    
   	    				<option value='${route}'>${route}</option>
 					</#list> 
 					</select>
-					Type 
+				</td>
+				<td width="15%">Type 
 					<select name='subscriptionTypeId' class='h4'>
 					<option value=''>All</option>
 					<option value='AM'>AM</option>
 					<option value='PM'>PM</option>
-					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="submit" value="Download" class="buttontext"/></td>
+					</select>
+				</td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>
      </#if>
@@ -401,16 +405,16 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	</tr> -->
       	<tr class="alternate-row">
         	<form id="DailyPaymentCheckList" name="DailyPaymentCheckList" method="post"  target="_blank" action="<@ofbizUrl>DailyPaymentCheckList</@ofbizUrl>">	
-      			<td width="34%">Daily Payments Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/>
-      			<input  type="hidden"  value="All"   name="routeId"/>
-      			 </td>
-      			<td>
-      			Date<input  type="text" size="18pt" id="CLRFromDateId" readonly  name="paymentDate"/>
-      			SearchBy 
-				<select name="searchBy" class='h4'>
-				<option value='findByCreatedDate'>EntryDate</option>
-				<option value='findByPaymentDate'>PaymentDate</option>
+      			<td width="30%">Daily Payments Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/>
+      				<input  type="hidden"  value="All"   name="routeId"/>
+      			</td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="CLRFromDateId" readonly  name="paymentDate"/></td>
+      			<td width="15%">SearchBy 
+					<select name="searchBy" class='h4'>
+					<option value='findByCreatedDate'>EntryDate</option>
+					<option value='findByPaymentDate'>PaymentDate</option>
 					</select>
+				</td>
       			<#-->
       			Route 
 				<select name="routeId" class='h4'>
@@ -419,65 +423,66 @@ function makeDatePicker1(fromDateId ,thruDateId){
   	    				<option value='${route}'>${route}</option>
 					</#list>  
 					</select> -->
-      			</td>
-      			<td >
-					PaymentType 
+      			<td width="15%">PaymentType 
 					<select name="paymentMethodTypeId" class='h4'>
 						<#list paymentMethodList as paymentMethod>   
 	  	    				<option value='${paymentMethod.paymentMethodTypeId}'>${paymentMethod.description}</option>
 						</#list> 
-						</select>
+					</select>
+				</td>
+				<td width="15%"></td>
 					<#--><input type="submit" value="Download" class="buttontext"/>-->
-					  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	      		    <input type="submit" value="PDF" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckList.pdf</@ofbizUrl>');" class="buttontext"/>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckList.pdf</@ofbizUrl>');" class="buttontext"/>
 					<input type="submit" value="CSV" onClick="javascript:appendParams('DailyPaymentCheckList', '<@ofbizUrl>DailyPaymentCheckListCsv.csv</@ofbizUrl>');" class="buttontext"/>
 					</td>
       		</form>	
         </tr>
         <tr class="alternate-row">
         	<form id="DailyUndepositedCheckList" name="DailyUndepositedCheckList" method="post"  target="_blank" action="<@ofbizUrl>DailyPaymentCheckList.pdf</@ofbizUrl>">	
-      			<td width="34%">Daily Undeposited/Deposited Cheques Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/>
-      			<input  type="hidden"  name="paymentMethodTypeId"   value="CHEQUE_PAYIN"   />
-      			<input  type="hidden" name="routeId"  value="All" />
-      			 </td>
-      			<td>
-      			From Date<input  type="text" size="18pt" id="DUCRFromDateId" readonly  name="paymentDate"/>
-      			Thru Date<input  type="text" size="18pt" id="DUCRThruDateId" readonly  name="thruDate"/>
+      			<td width="30%">Daily Undeposited/Deposited Cheques Report<input  type="hidden"  value="DailyPaymentCheckList"   name="reportTypeFlag"/>
+      				<input  type="hidden"  name="paymentMethodTypeId"   value="CHEQUE_PAYIN"   />
+      				<input  type="hidden" name="routeId"  value="All" />
       			</td>
-      			<td >Type
-				<select name="unDepositedCheques" class='h4'>
-				<option value='TRUE'>UnDeposited</option>
-				<option value='FALSE'>Deposited</option>
+      			<td width="15%">From<input  type="text" size="18pt" id="DUCRFromDateId" readonly  name="paymentDate"/></td>
+	      		<td width="15%">Thru<input  type="text" size="18pt" id="DUCRThruDateId" readonly  name="thruDate"/></td>
+      			<td width="15%">Type
+					<select name="unDepositedCheques" class='h4'>
+						<option value='TRUE'>UnDeposited</option>
+						<option value='FALSE'>Deposited</option>
 					</select>
-					<input type="submit" value="Download" class="buttontext"/></td>
+				</td>
+				<td width="15%"></td>
+				<td width="10"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>
      </#if>
       	 <#if security.hasEntityPermission("ACCOUNTING", "_CASHIER", session)>
         <tr class="alternate-row">
         	<form id="CashPaymentCheckList" name="CashierPaymentCheckList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentCheckList</@ofbizUrl>">	
-      			<td width="34%">Cash Payment CheckList Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
-      			<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
+      			<td width="30%">Cash Payment CheckList Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
+      				<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
       			</td>
-      			<td>
-      			Date<input  type="text" size="18pt" id="CASHFromDateId" readonly  name="paymentDate"/>
-      			</td>
-      			<td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="CASHFromDateId" readonly  name="paymentDate"/></td>
+      			<td width="15%">
       			    <input  type="hidden"  name="routeId" value="All"/>
-					<input type="submit" value="Download" class="buttontext"/></td>
+      			</td>
+      			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			</form>	
           </tr>
            <tr class="alternate-row">
         	<form id="CashPaymentTranscationList" name="CashierPaymentTransactionList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentReceiptList</@ofbizUrl>">	
-      			<td width="34%">Cash PaymentGroup CheckList Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
-      			<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
+      			<td width="30%">Cash PaymentGroup CheckList Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
+      				<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
       			</td>
-      			<td>
-      			Date<input  type="text" size="18pt" id="CashReceiptDateId" readonly  name="paymentDate"/>
-      			</td>
-      			<td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="CashReceiptDateId" readonly  name="paymentDate"/></td>
+      			<td width="15%">
       			    <input  type="hidden"  name="routeId" value="All"/>
-					<input type="submit" value="Download" class="buttontext"/></td>
+      			</td>
+      			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
           </tr>
          </#if>
@@ -494,7 +499,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
     <div class="screenlet-body">
     
       <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
-       <tr>
+       <tr class="alternate-row">
       		<form id="sendSMSNotify" name="sendSMSNotify" method="post" action="<@ofbizUrl>sendSMSNotification</@ofbizUrl>">	
       			<td width="34%">Product Sale Notification SMS</td>
       			<td width="30%">Date<input  type="text" size="18pt" id="smsNotify" readOnly  name="supplyDate"/></td>
@@ -534,7 +539,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 </#if>
 
 <#if screenFlag?exists && screenFlag.equals("MonthlyReports") && security.hasEntityPermission("BYPRODUCTS", "_MNTHREPOR", session)>
-<div class="lefthalf">
+<div class="full">
 
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -542,11 +547,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
     </div>
     <div class="screenlet-body">
     	
-    	<div class="screenlet">
-    		<div class="screenlet-title-bar">
-      			<h3>Other Reports</h3>
-    		</div>
-    		<div class="screenlet-body">
     			<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
     			  <#-- 
       				<tr>
@@ -578,52 +578,100 @@ function makeDatePicker1(fromDateId ,thruDateId){
       				</tr> -->
       				<tr class="alternate-row">
 			      	   <form id="paymentOBandCB" name="paymentOBandCB" method="post" action="<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>" target="_blank">        
-			             <td>Partywise Ledger Abstract</td>
-			             <td width="40%">From<input  type="text" size="10pt" id="effFromDate" readonly  name="fromDate"/>
-			      		 To<input  type="text" size="10pt" id="effThruDate" readonly  name="thruDate"/></td>
-			             <td width="40%"></br>Retailer Code <input type="text" name="boothId" id="boothId" size="10" maxlength="22">
-			             	<input type="submit" value="Download" class="buttontext"/>
-			             </td>
+			             <td width="30%">Partywise Ledger Abstract</td>
+			             <td width="15%">From<input  type="text" size="10pt" id="effFromDate" readonly  name="fromDate"/></td>
+			      		 <td width="15%">Thru<input  type="text" size="10pt" id="effThruDate" readonly  name="thruDate"/></td>
+			             <td width="15%">Retailer Code <input type="text" name="boothId" id="boothId" size="10" maxlength="22"></td>
+			             <td width="15%"></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr>
 			        
 			        <tr class="alternate-row">
 			      	   <form id="RetailerLedgerAbstract" name="RetailerLedgerAbstract" method="post" action="<@ofbizUrl>RetailerLedgerAbstract.pdf</@ofbizUrl>" target="_blank">        
-			             <td>Retailer Ledger Abstract(Incl Products)</td>
-			             <td width="40%" >
-			             	From<input  type="text" size="10pt" id="RLAFromDateId" readonly  name="fromDate"/>
-					        To<input  type="text" size="10pt" id="RLAThruDateId"  readonly name="thruDate"/>
-			             </td>
-			             <td width="40%" >
-			             </br>Retailer Code <input type="text" name="boothId" id="boothId" size="10" maxlength="22">
-			             <input type="submit" value="Download" class="buttontext"/>
-			             </td>
+			             <td width="30%">Retailer Ledger Abstract(Incl Products)</td>
+			             <td width="15%" >From<input  type="text" size="10pt" id="RLAFromDateId" readonly  name="fromDate"/></td>
+					     <td width="15%">Thru<input  type="text" size="10pt" id="RLAThruDateId"  readonly name="thruDate"/></td>
+			             <td width="15%">Retailer Code <input type="text" name="boothId" id="boothId" size="10" maxlength="22"></td>
+			             <td width="15%"></td>
+			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
 			        </tr> 
 	  				<tr class="alternate-row">
 	  					<form id="ShoppeRentReport" name="ShoppeRentReport" method="post" action="<@ofbizUrl>ShoppeRentReport.pdf</@ofbizUrl>" target="_blank">	
-	  						<td>Shoppe Rent Report</td>
-	  						<td >Period
+	  						<td width="30%">Shoppe Rent Report</td>
+	  						<td width="15%">Period
 	  							<select name="customTimePeriodId" class='h4'>
 	            					<#list timePeriodList as timePeriod>    
 	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
 	            					</#list>            
 								</select>
 	      					</td>
-	      					<td>
-	      						<input type="submit" value="Download" class="buttontext"/>
-	      					</td>
-	      					       			
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 	  					</form>
 	  				</tr>
+	  				<tr class="alternate-row">
+      					<form id="ChequeReturnsReport" name="ChequeReturnsReport" method="post" action="<@ofbizUrl>chequeReturnReport.pdf</@ofbizUrl>" target="_blank">	
+	      					<td width="30%">Cheque Returns Report</td>
+	      					<td width="15%">From<input  type="text" size="18pt" id="chequeFromDateId" readonly  name="fromDate"/></td>
+	      					<td width="15%">Thru<input  type="text" size="18pt" id="chequeThruDateId" readonly  name="thruDate"/></td>
+	      					<td width="15%">By<select name="dateType"><option value="PAYMENT_DATE">Payment Date</option><option value="BOUNCE_DATE">Bounce Date</option></select></td>
+	      					<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>       			
+	      				</form>
+      				</tr>
+      				<tr class="alternate-row">
+      					<form id="DuesFDRReport" name="DuesFDRReport" method="post" action="<@ofbizUrl>duesDiffFDR.pdf</@ofbizUrl>" target="_blank">	
+      						<td width="30%">Dues in excess of FDR</td>
+      						<td width="15%">Date<input  type="text" size="18pt" id="FDRDateId" readonly  name="effectiveDate"/></td>
+      						<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>       			
+      					</form>
+      				</tr>
 			        <tr class="alternate-row">
 						<form id="MonthlyVatReport" name="MonthlyVatReport" method="post" action="<@ofbizUrl>MonthlyVatReport.txt</@ofbizUrl>" target="_blank">	
-							<td>Vat Returns Report</td>
-							<td width="33%">From<input  type="text" size="18pt" id="vatFromDateId" readonly  name="fromDate"/>
-			      			<td width="33%">To<input  type="text" size="18pt" id="vatThruDateId" readonly  name="thruDate"/>
-							<input type="submit" value="Download" class="buttontext"/></td>        			
+							<td width="30%">Vat Returns Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="vatFromDateId" readonly  name="fromDate"/></td>
+			      			<td width="15%">Thru<input  type="text" size="18pt" id="vatThruDateId" readonly  name="thruDate"/></td>
+							<td width="15%"></td>
+	      					<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
 						</form>
 					</tr>
+					<tr class="alternate-row">
+      					<form id="dueParticulars" name="dueParticulars" method="post" action="<@ofbizUrl>dueParticulars.txt</@ofbizUrl>" target="_blank">	
+      						<td width="30%">Due Particulars<input  type="hidden"  value="DuesParticulers"   name="reportTypeFlag"/></td>
+							<td width="15%">From<input  type="text" size="18pt" id="DueFromDateId" readonly  name="fromDate"/></td>
+			      			<td width="15%">Thru<input  type="text" size="18pt" id="DueThruDateId" readonly  name="thruDate"/></td>
+			      			<td width="15%"></td>
+	      					<td width="15%"></td>  
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+      					</form>
+      				</tr>
+      				<tr class="alternate-row">
+      					<form id="DuesAbstractReport" name="DuesAbstractReport" method="post" action="<@ofbizUrl>dueParticulars.pdf</@ofbizUrl>" target="_blank">	
+      						<td width="30%">Dues Abstract Report with OB
+      							<input  type="hidden"  value="DuesAbstractReport"   name="reportTypeFlag"/></td>
+							<td width="15%">From<input  type="text" size="18pt" id="DueAbsFromDateId" readonly  name="fromDate"/></td>
+			      			<td width="15%">Thru<input  type="text" size="18pt" id="DueAbsThruDateId" readonly  name="thruDate"/></td>
+			      			<td width="15%">Category:<select name="categoryTypeEnum" id="categoryTypeEnum" class='h4'>
+								<option value="">All Types</option>
+		                		<#list categoryTypeList as categoryType>    
+		                  	    	<option value='${categoryType.enumId}'>
+			                    		${categoryType.description}
+			                        </option>
+		                		</#list>            
+								</select>
+			      			</td>
+	      					<td width="15%"></td>  
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+      					</form>
+      				</tr>
 			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	
@@ -643,7 +691,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			
       			</table>
     		</div>
-    	</div>
     	
     	<#--
       	
@@ -692,40 +739,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			</table>
       		</div>
       	</div>-->
-      	<div class="screenlet">
-    		<div class="screenlet-title-bar">
-      			<h3>Misc Reports</h3>
-    		</div>
-    		<div class="screenlet-body">
-    			<table class="basic-table hover-bar h3" style="border-spacing: 0 10px;">
-      				<tr class="alternate-row">
-      					<form id="dueParticulars" name="dueParticulars" method="post" action="<@ofbizUrl>dueParticulars.txt</@ofbizUrl>" target="_blank">	
-      						<td width="25%">Due Particulars<input  type="hidden"  value="DuesParticulers"   name="reportTypeFlag"/></td>
-							<td width="75%">From<input  type="text" size="18pt" id="DueFromDateId" readonly  name="fromDate"/>
-			      			To<input  type="text" size="18pt" id="DueThruDateId" readonly  name="thruDate"/></td>  
-							<td width="25%"><input type="submit" value="Download" class="buttontext"/></td>
-      					</form>
-      				</tr>
-      				<tr class="alternate-row">
-      					<form id="DuesAbstractReport" name="DuesAbstractReport" method="post" action="<@ofbizUrl>dueParticulars.pdf</@ofbizUrl>" target="_blank">	
-      						<td width="25%">Dues Abstract Report with OB
-      						<input  type="hidden"  value="DuesAbstractReport"   name="reportTypeFlag"/></td>
-							<td width="75%">From<input  type="text" size="18pt" id="DueAbsFromDateId" readonly  name="fromDate"/>
-			      			To<input  type="text" size="18pt" id="DueAbsThruDateId" readonly  name="thruDate"/></td>  
-							<td width="25%">Category:<select name="categoryTypeEnum" id="categoryTypeEnum" class='h4'>
-							<option value="">All Types</option>
-		                		<#list categoryTypeList as categoryType>    
-		                  	    	<option value='${categoryType.enumId}'>
-			                    		${categoryType.description}
-			                        </option>
-		                		</#list>            
-							</select><input type="submit" value="Download" class="buttontext"/></td>
-      					</form>
-      				</tr>
-    			</table>
-    		</div>
-    	</div>  	
-	</div>
+      	
 </div>
 </div>
 </#if>

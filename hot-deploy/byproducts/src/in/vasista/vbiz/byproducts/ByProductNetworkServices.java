@@ -2791,6 +2791,86 @@ public class ByProductNetworkServices {
 	    	} 			
 			return result;
 		}		
+		public static Map<String, Object> getFacilityFixedDeposit(DispatchContext dctx,Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+		    String facilityId = (String) context.get("facilityId");
+		    Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Map<String, Object> result = FastMap.newInstance(); 
+		    List facilityList = FastList.newInstance();
+		    List conditionList = FastList.newInstance();
+		    Map facilityFDMap = FastMap.newInstance();
+		    if(UtilValidate.isEmpty(facilityId)){
+	    		 facilityList = (List)getAllBooths(delegator, null).get("boothsList");
+			}
+		    if(UtilValidate.isEmpty(effectiveDate)){
+		    	effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		    }
+		    //Debug.log("facilityList ########################"+facilityList);
+			try {
+				if(UtilValidate.isNotEmpty(facilityId)){
+					conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+				}
+				if(UtilValidate.isNotEmpty(facilityList)){
+					conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityList));
+				}
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
+				conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				//Debug.log("condition ################################"+condition);
+				List<GenericValue> facilityFDs = delegator.findList("FacilityFixedDeposit", condition, null, null, null, false);
+				Debug.log("facilityFDs ################################"+facilityFDs.size());
+				List<String> boothIds = EntityUtil.getFieldListFromEntityList(facilityFDs, "facilityId", true);
+		        
+		        for(String boothId : boothIds){
+		        	List<GenericValue> eachBoothFDRs = EntityUtil.filterByCondition(facilityFDs, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
+		        	for(GenericValue eachBoothData : eachBoothFDRs){
+		        		if(facilityFDMap.containsKey(boothId)){
+		        			Map tempFDRDetail = FastMap.newInstance();
+		        			tempFDRDetail = (Map)facilityFDMap.get(boothId);
+		        			List FDREntries = (List)tempFDRDetail.get("FDRDetail");
+		        			BigDecimal totalAmt = BigDecimal.ZERO;
+		        			BigDecimal extTotAmt = (BigDecimal)tempFDRDetail.get("totalAmount");
+		        			Map tempMap = FastMap.newInstance();
+		        			tempMap.put("facilityId", eachBoothData.getString("facilityId"));
+		        			tempMap.put("fdrNumber", eachBoothData.getString("fdrNumber"));
+		        			tempMap.put("bankName", eachBoothData.getString("bankName"));
+		        			tempMap.put("branchName", eachBoothData.getString("branchName"));
+		        			tempMap.put("amount", eachBoothData.getBigDecimal("amount"));
+		        			tempMap.put("fromDate", eachBoothData.getTimestamp("fromDate"));
+		        			tempMap.put("thruDate", eachBoothData.getTimestamp("thruDate"));
+		        			FDREntries.add(tempMap);
+		        			totalAmt = extTotAmt.add(eachBoothData.getBigDecimal("amount"));
+		        			tempFDRDetail.put("FDRDetail", FDREntries);
+		        			tempFDRDetail.put("totalAmount", totalAmt);
+		        			facilityFDMap.put(boothId, tempFDRDetail);
+		        			
+		        		}else{
+		        			Map FDRDetail = FastMap.newInstance();
+		        			List tempList = FastList.newInstance();
+		        			Map tempMap = FastMap.newInstance();
+		        			tempMap.put("facilityId", eachBoothData.getString("facilityId"));
+		        			tempMap.put("fdrNumber", eachBoothData.getString("fdrNumber"));
+		        			tempMap.put("bankName", eachBoothData.getString("bankName"));
+		        			tempMap.put("branchName", eachBoothData.getString("branchName"));
+		        			tempMap.put("amount", eachBoothData.getBigDecimal("amount"));
+		        			tempMap.put("fromDate", eachBoothData.getTimestamp("fromDate"));
+		        			tempMap.put("thruDate", eachBoothData.getTimestamp("thruDate"));
+		        			tempList.add(tempMap);
+		        			FDRDetail.put("FDRDetail", tempList);
+		        			FDRDetail.put("totalAmount", eachBoothData.getBigDecimal("amount"));
+		        			facilityFDMap.put(boothId, FDRDetail);
+		        		}
+		        	}
+		        }
+			}catch (Exception e) {
+	    		Debug.logError(e, "Problem fetching facility fixed deposits", module);
+	    		return ServiceUtil.returnError(e.getMessage());
+	    	}
+			result.put("FacilityFDRDetail",facilityFDMap);
+			return result;
+		}
 		
 		public static Map<String, Object> getAllActiveOrInactiveBooths(Delegator delegator,String categoryTypeEnum, Timestamp dateMoment){
 		    Map<String, Object> result = FastMap.newInstance(); 

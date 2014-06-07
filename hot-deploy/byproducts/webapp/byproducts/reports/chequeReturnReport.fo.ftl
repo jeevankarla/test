@@ -21,7 +21,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"  margin-left=".3in" margin-right=".3in" margin-top=".5in" margin-bottom="0.5in">
-                <fo:region-body margin-top="0.1in"/>
+                <fo:region-body margin-top="1.5in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -30,19 +30,18 @@ under the License.
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeReturnReport.txt")}
         <#if chequeReturnMap?has_content>
         <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
-        <fo:static-content flow-name="xsl-region-before">
+        		<fo:static-content flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"></fo:block>
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-            </fo:static-content>		    	
-		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
-		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size="10pt">&#160;            KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;       UNIT : MOTHER DAIRY , G.K.V.K POST, YELAHANKA, BANGALORE -560065.</fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
-                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;       STATEMENT OF CHEQUES DISHONOURED FOR THE PERIOD: ${periodFromDate?if_exists} - ${periodThruDate?if_exists}</fo:block>
-              			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="9pt" font-weight="bold">CODE      AGENT-NAME           BANK      CHQ-NUM  CHQ-DATE     AMOUNT   DISHONOUR   REMARKS</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
-		           	
+		        	<fo:block text-align="center" font-weight="bold" font-size="10pt">KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
+                    <fo:block text-align="center" font-size="10pt" font-weight="bold">&#160;       UNIT : MOTHER DAIRY , G.K.V.K POST, YELAHANKA, BANGALORE -560065.</fo:block>
+                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
+                    <fo:block text-align="center" font-size="10pt" font-weight="bold">&#160;       STATEMENT OF CHEQUES DISHONOURED FOR THE PERIOD: ${periodFromDate?if_exists} - ${periodThruDate?if_exists}</fo:block>
+              		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
+		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="9pt" font-weight="bold">CODE      AGENT-NAME           BANK      CHQ-NUM  CHQ-DATE     AMOUNT   DISHONOUR   REMARKS</fo:block> 
+		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
+		        </fo:static-content>
+		        <fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="55pt"/> 
