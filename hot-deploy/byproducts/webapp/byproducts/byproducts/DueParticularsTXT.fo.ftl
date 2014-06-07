@@ -543,7 +543,7 @@ under the License.
 						    </#if>  
 	                        </fo:table-cell>
 	                        <fo:table-cell>
-	                        <#if openingCatBalance &lt; 0 >
+	                        <#if openingBalance &lt; 0 >
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(duedata.get("openingBalance")*-1)?if_exists?string("##0.00")}</fo:block>  
 								<#assign catCrOB =catCrOB+openingBalance>
 							<#else>
@@ -613,7 +613,7 @@ under the License.
 	                   			<#assign catDrOB = 0>
 	                    </fo:table-cell> 
 	                      <fo:table-cell>
-	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${catCrOB?if_exists?string("##0.00")}</fo:block>  
+	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(catCrOB*-1)?if_exists?string("##0.00")}</fo:block>  
 	                    		<#assign grandCrOB = grandCrOB+catCrOB>
 	                   			<#assign catCrOB = 0>
 	                    </fo:table-cell>
@@ -667,7 +667,7 @@ under the License.
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${grandDrOB?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
 	                      <fo:table-cell>
-	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${grandCrOB?if_exists?string("##0.00")}</fo:block>  
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${(grandCrOB*-1)?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
 	                    <#-->
 	                    <fo:table-cell>
