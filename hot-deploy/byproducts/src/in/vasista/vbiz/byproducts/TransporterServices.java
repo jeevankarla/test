@@ -43,19 +43,16 @@
 	import org.ofbiz.service.ModelService;
 	import org.ofbiz.service.ServiceUtil;
 
-import java.util.List;
-import java.util.Map;
+	import java.util.List;
+	import java.util.Map;
 	import java.util.TimeZone;
 	import java.util.Locale;
 	
 	import org.ofbiz.network.LmsServices;
-
 	import in.vasista.vbiz.byproducts.SalesHistoryServices;
+    import java.text.SimpleDateFormat;
 
-
-import java.text.SimpleDateFormat;
-
-	public class TransporterServices {
+ 	public class TransporterServices {
 		
 		public static final String module = TransporterServices.class.getName();
 
@@ -295,7 +292,8 @@ import java.text.SimpleDateFormat;
 							
 							supplyDate = UtilDateTime.addDaysToTimestamp(monthBegin, k);
 							
-							List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,route);	//route Specific shipments.
+							//List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,route);	//route Specific shipments.
+							List shipmentIds = ByProductNetworkServices.getByProdShipmentIds(delegator, supplyDate, supplyDate,UtilMisc.toList(route));//this will give Today AM+PM as SALE
 							conditionList.clear();
 							conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
 							EntityCondition vhCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -392,22 +390,30 @@ import java.text.SimpleDateFormat;
 					} 
 					periodBilling.store();	
 					
+					Map facilityRecoveryResultMap =(Map) getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"userLogin",userLogin));
+					Map partyWiseRecvoryMap=(Map)facilityRecoveryResultMap.get("partyRecoveryInfoMap");
 					Map transporterTradeResultMap=getTransporterTotalsForPeriodBilling(dctx, UtilMisc.toMap("periodBillingId",(Object)periodBillingId));
 					//Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("routeTradingMap");
-					Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
+					Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
 					
-					if(UtilValidate.isNotEmpty(totalRouteTradingTotalMap)){
-					Iterator routeMarginsIter = totalRouteTradingTotalMap.entrySet().iterator();
+					if(UtilValidate.isNotEmpty(totalPartyTradingTotalMap)){
+					Iterator partyMarginsIter = totalPartyTradingTotalMap.entrySet().iterator();
 					
-					while (routeMarginsIter.hasNext()) {
-						Map.Entry routeEntry = (Entry) routeMarginsIter.next();	
+					while (partyMarginsIter.hasNext()) {
+						Map.Entry partyEntry = (Entry) partyMarginsIter.next();	
 						String invoiceId="";
 						//String facilityId = (String) routeEntry.getKey();	
-						String partyIdTo = (String) routeEntry.getKey();	
-						Map routeValues = (Map) routeEntry.getValue();
-						BigDecimal totalMargin = (BigDecimal) routeValues.get("totalMargin");
+						
+						String partyIdTo = (String) partyEntry.getKey();	
+						Map partyWiseValues = (Map) partyEntry.getValue();
+						BigDecimal totalMargin = (BigDecimal) partyWiseValues.get("totalMargin");
 						BigDecimal quantity = BigDecimal.ONE;
-						Debug.log("===partyIdTo==="+partyIdTo+"=====");
+						BigDecimal totalFine = BigDecimal.ZERO;
+						if(UtilValidate.isNotEmpty(partyWiseRecvoryMap) && UtilValidate.isNotEmpty(partyWiseRecvoryMap.get(partyIdTo))){
+							Map partyFinesMap=(Map)partyWiseRecvoryMap.get(partyIdTo);
+							totalFine=(BigDecimal)partyFinesMap.get("totalFine");
+						}
+						Debug.log("===partyIdTo==="+partyIdTo+"=====Fine="+totalFine+"===Commission="+totalMargin);
 						/*GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId) ,false);
 						String partyIdTo = facilityDetail.getString("ownerPartyId");*/
 						// heree Invoice Raised by Transporter
@@ -446,6 +452,12 @@ import java.text.SimpleDateFormat;
 				                    	generationFailed = true;
 				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
 				                    }
+				                    //Fines Item
+				                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_RECOVERY_ITEM","quantity",quantity,"amount", totalFine.negate(),"userLogin", userLogin));
+				                    if (ServiceUtil.isError(result)) {
+				                    	generationFailed = true;
+				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
+				                    }
 				                    //for TDS Commission.
 				                   /* BigDecimal tdsMargin= totalMargin.divide(new BigDecimal(10));//for tax
 				                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "TDS_194H","quantity",quantity,"amount", tdsMargin,"userLogin", userLogin));
@@ -453,6 +465,32 @@ import java.text.SimpleDateFormat;
 				                    	generationFailed = true;
 				    	                Debug.logWarning("There was an error while creating  the TDS InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
 				                    }*/
+				                    Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+				    	             invoiceCtx.put("userLogin", userLogin);
+				    	             invoiceCtx.put("statusId","INVOICE_APPROVED");
+				    	             try{
+				    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+				    	             	if (ServiceUtil.isError(invoiceResult)) {
+				    	             		Debug.logError(invoiceResult.toString(), module);
+				    	                     return ServiceUtil.returnError(null, null, null, invoiceResult);
+				    	                 }	             	
+				    	             }catch(GenericServiceException e){
+				    	             	 Debug.logError(e, e.toString(), module);
+				    	                 return ServiceUtil.returnError(e.toString());
+				    	             }  
+				    	             //set to Ready for Posting
+				    	             invoiceCtx.put("userLogin", userLogin);
+				    	             invoiceCtx.put("statusId","INVOICE_READY");
+				    	             try{
+				    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+				    	             	if (ServiceUtil.isError(invoiceResult)) {
+				    	             		Debug.logError(invoiceResult.toString(), module);
+				    	                     return ServiceUtil.returnError(null, null, null, invoiceResult);
+				    	                 }	             	
+				    	             }catch(GenericServiceException e){
+				    	             	 Debug.logError(e, e.toString(), module);
+				    	                 return ServiceUtil.returnError(e.toString());
+				    	             }  
 				            }
 						
 					}//end of while
@@ -550,10 +588,10 @@ import java.text.SimpleDateFormat;
 				}
 				
 			try{
-				List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
+				List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
 				  conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS,  "TRSPT_MRGN_"+periodBillingId));
 				  
-			     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "TRANSPORTER_OUT"));
+			     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_DIS_OUT"));
 			    /* conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
 			     conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));*/
 	             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED")); 
@@ -1126,15 +1164,20 @@ import java.text.SimpleDateFormat;
 	                			BigDecimal totalMargin = BigDecimal.ZERO;  
 	                			BigDecimal totalDue = BigDecimal.ZERO;
 	                			Map<String, Object> marginDuesMap = FastMap.newInstance();
+	                			Map<String, Object> partyTempMap = FastMap.newInstance();
 	                			BigDecimal totalMarginAmount = BigDecimal.ZERO; 
 	                			BigDecimal totalDueAmount = BigDecimal.ZERO;
+	                			BigDecimal partyCommAmount = BigDecimal.ZERO; 
+	                			BigDecimal partyDueAmount = BigDecimal.ZERO;
 	                			routeId = (String)eachRoute.get("facilityId");
 	                			partyId = (String)eachRoute.get("partyId");
 	                			if(!UtilValidate.isEmpty(eachRoute.get("totalAmount"))){
 	                				totalMargin = (BigDecimal)eachRoute.get("totalAmount");
+	                				partyCommAmount=totalMargin;
 	                			}    
 	                			if(!UtilValidate.isEmpty(eachRoute.get("dues"))){
 	                				totalDue = (BigDecimal)eachRoute.get("dues");
+	                				partyDueAmount=totalDue;
 	                			}                			
 	                			if(routeTradingMap.containsKey(routeId)){
 	                				BigDecimal margin = BigDecimal.ZERO; 
@@ -1155,20 +1198,20 @@ import java.text.SimpleDateFormat;
 	                			}
 	                			//populating partyCommission Map
 	                			if(partyTradingMap.containsKey(partyId)){
-	                				BigDecimal margin = BigDecimal.ZERO; 
-	                				BigDecimal due = BigDecimal.ZERO;
-	                				marginDuesMap = (Map)partyTradingMap.get(partyId);
-	                				margin = (BigDecimal)marginDuesMap.get("totalMargin");
-	                				due = (BigDecimal)marginDuesMap.get("totalDue");
-	                				totalMarginAmount = margin.add(totalMargin);
-	                				totalDueAmount = due.add(totalDue);
-	                				marginDuesMap.put("totalMargin",totalMarginAmount); 
-	                				marginDuesMap.put("totalDue",totalDueAmount);
-	                				partyTradingMap.put(partyId,marginDuesMap);              				
+	                				BigDecimal partyMargin = BigDecimal.ZERO; 
+	                				BigDecimal partyDue = BigDecimal.ZERO;
+	                				partyTempMap = (Map)partyTradingMap.get(partyId);
+	                				partyMargin = (BigDecimal)partyTempMap.get("totalMargin");
+	                				partyDue = (BigDecimal)partyTempMap.get("totalDue");
+	                				partyCommAmount = partyCommAmount.add(partyMargin);
+	                				partyDueAmount = partyDueAmount.add(partyDue);
+	                				partyTempMap.put("totalMargin",partyCommAmount); 
+	                				partyTempMap.put("totalDue",partyDueAmount);
+	                				partyTradingMap.put(partyId,partyTempMap);              				
 	                			}else{
-	                				marginDuesMap.put("totalMargin",totalMargin); 
-	                				marginDuesMap.put("totalDue", totalDue);
-	                				partyTradingMap.put(partyId, marginDuesMap);
+	                				partyTempMap.put("totalMargin",partyCommAmount); 
+	                				partyTempMap.put("totalDue", partyDueAmount);
+	                				partyTradingMap.put(partyId, partyTempMap);
 	                			}
 	                			
 	                		}
@@ -1233,7 +1276,8 @@ import java.text.SimpleDateFormat;
 					supplyDate = UtilDateTime.addDaysToTimestamp(monthBegin, k);
 					Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(ctx, UtilMisc.toMap("saleDate",supplyDate)).get("facilityPartyMap");
 					 //we have to change this shipmentIds helper
-					shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,null);	//get Day Shipments
+				     shipmentIds = ByProductNetworkServices.getByProdShipmentIds(delegator, supplyDate, supplyDate);//this will give Today AM+PM as SALE
+					//shipmentIds =ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(supplyDate, "yyyy-MM-dd HH:mm:ss"),null,null);	//get Day Shipments
 					 for (int i = 0; i <(shipmentIds.size()); i++) {
 						  String shipmentId=shipmentIds.get(i);
 							conditionList.clear();
@@ -1302,8 +1346,12 @@ import java.text.SimpleDateFormat;
 							}else{
 								 GenericValue updateVehicleTrip=EntityUtil.getFirst(vehicleTrpList);
 								 String routeId=updateVehicleTrip.getString("originFacilityId");
+								 if(UtilValidate.isNotEmpty(routeId)){//rewrite with upperCase
+									 routeId=routeId.toUpperCase(locale);
+								 }
 								 try{ updateVehicleTrip.set("partyId",facilityParty.get(routeId));
-									 updateVehicleTrip.set("lastUpdatedStamp", UtilDateTime.nowTimestamp());
+								      updateVehicleTrip.set("originFacilityId",routeId);
+									  updateVehicleTrip.set("lastUpdatedStamp", UtilDateTime.nowTimestamp());
 								      updateVehicleTrip.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 									   updateVehicleTrip.store(); 
 								    }catch(GenericEntityException e){
@@ -1367,8 +1415,14 @@ import java.text.SimpleDateFormat;
 		        Delegator delegator = dctx.getDelegator();
 		        Map<String, Object> result = ServiceUtil.returnSuccess();
 				String periodBillingId = (String) context.get("periodBillingId");
+				
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				Map<String, Object> facilityRecoveryInfoMap = new HashMap<String, Object>();
+				Map<String, Object> partyRecoveryInfoMap = new HashMap<String, Object>();
+				Timestamp monthBegin =UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+				if(UtilValidate.isNotEmpty((Timestamp) context.get("fromDate"))){
+					monthBegin=(Timestamp) context.get("fromDate");
+				}
 	        	//String facilityId= null;
 				List<String> facilityIdsList=FastList.newInstance();
 				if(!UtilValidate.isEmpty(periodBillingId)){
@@ -1393,9 +1447,6 @@ import java.text.SimpleDateFormat;
 	                			List<GenericValue>	faclityCrateFinesList=EntityUtil.filterByCondition(allFaclityCrateFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	                			List<GenericValue>	faclityCanFinesList=EntityUtil.filterByCondition(allFaclityCanFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	                			List<GenericValue>	faclityOtherFinesList=EntityUtil.filterByCondition(allFaclityOtherFinesList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-	                			Debug.log("=====faclityCrateFinesList=="+faclityCrateFinesList);
-	                			Debug.log("=====faclityCanFinesList=="+faclityCanFinesList);
-	                			Debug.log("=====faclityOtherFinesList=="+faclityOtherFinesList);
 	                			for(GenericValue facilityRecCrate : faclityCrateFinesList){
 	                				crateFineAmount=crateFineAmount.add(facilityRecCrate.getBigDecimal("amount"));
 	                			}
@@ -1423,6 +1474,33 @@ import java.text.SimpleDateFormat;
 		        	}
 				}			
 				result.put("facilityRecoveryInfoMap",facilityRecoveryInfoMap);
+				Map<String, Object> partyFacilityMap=(Map<String, Object>)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",monthBegin)).get("partyAndFacilityList");
+				  for ( Map.Entry<String, Object> entry : partyFacilityMap.entrySet() ) {
+					     String  partyId=(String)entry.getKey();
+			        	List<String> partyFacilityList = (List<String>)entry.getValue();
+			        	Map<String, Object> partyFineTempMap = FastMap.newInstance();
+			        	BigDecimal crateFineAmount = BigDecimal.ZERO;  
+            			BigDecimal canFineAmount = BigDecimal.ZERO;
+            			BigDecimal otherFinesAmount=BigDecimal.ZERO;
+            			BigDecimal totalFineAmount = BigDecimal.ZERO;
+            			
+			        	 for(String faclityId:partyFacilityList){//adding each party Total fines which are having Routes
+			        		 if(UtilValidate.isNotEmpty(facilityRecoveryInfoMap.get(faclityId))){
+			        			Map facilityFineMap=(Map)facilityRecoveryInfoMap.get(faclityId);
+			        			crateFineAmount=crateFineAmount.add((BigDecimal)facilityFineMap.get("cratesFine"));
+			        			canFineAmount=canFineAmount.add((BigDecimal)facilityFineMap.get("cansFine"));
+			        			otherFinesAmount=otherFinesAmount.add((BigDecimal)facilityFineMap.get("othersFine"));
+			        			totalFineAmount=totalFineAmount.add((BigDecimal)facilityFineMap.get("totalFine"));
+			        		 }
+			        	 }
+		        	    partyFineTempMap.put("cratesFine",crateFineAmount); 
+            			partyFineTempMap.put("cansFine",canFineAmount);
+            			partyFineTempMap.put("othersFine",otherFinesAmount);
+            			partyFineTempMap.put("totalFine",totalFineAmount);
+            			
+            			partyRecoveryInfoMap.put(partyId, partyFineTempMap);
+				  }
+				  result.put("partyRecoveryInfoMap",partyRecoveryInfoMap);
 	        	return result;
 			}
 		    public static Map<String, Object> updateFacilityRecvory(DispatchContext dctx, Map<String, Object> context) {
@@ -1433,7 +1511,6 @@ import java.text.SimpleDateFormat;
 				String periodBillingId = (String) context.get("periodBillingId");
 				String customTimePeriodId = (String) context.get("customTimePeriodId");
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
-				Map<String, Object> facilityRecoveryInfoMap = new HashMap<String, Object>();
 	        	//String facilityId= null;
 				List<String> facilityIdsList=FastList.newInstance();
 				if(UtilValidate.isNotEmpty(periodBillingId) &&(UtilValidate.isNotEmpty(customTimePeriodId))){
@@ -1455,7 +1532,6 @@ import java.text.SimpleDateFormat;
 		        		Debug.logError(e, module);
 		        	}
 				}			
-				result.put("facilityRecoveryInfoMap",facilityRecoveryInfoMap);
 	        	return result;
 			}
 	}

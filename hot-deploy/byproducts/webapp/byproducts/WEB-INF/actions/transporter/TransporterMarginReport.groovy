@@ -161,8 +161,12 @@ masterList.add(transporterMargins);
 context.put("masterList", masterList);
 facRecoveryMap=[:];
 
-facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"userLogin",userLogin));
+facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"userLogin",userLogin));
 facRecoveryMap=facilityRecoveryResult.get("facilityRecoveryInfoMap");
+partyRecoveryInfoMap=facilityRecoveryResult.get("partyRecoveryInfoMap");
+
+//facilityRecoveryResultRes = TransporterServices.getTransporterTotalsForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId));
+//Debug.log("=====partyTradingMap===="+facilityRecoveryResultRes.get("partyTradingMap"));
 context.put("facilityRecoveryInfoMap", facRecoveryMap);
 context.put("partyFacilityMap", partyFacilityMap);
 

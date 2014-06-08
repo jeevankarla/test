@@ -4881,14 +4881,16 @@ Debug.logInfo("result= " + result, module);
 
 	//Debug.logInfo("productAttributes=" + productAttributes, module);
 	        	if (UtilValidate.isEmpty(shipmentIds)){
-	        		shipmentIds = getShipmentIds(delegator, fromDate, thruDate);
+	        		shipmentIds = getByProdShipmentIds(delegator, fromDate, thruDate);//this will give Today AM+PM as SALE
+	        		//shipmentIds = getShipmentIds(delegator, fromDate, thruDate);
 	           	}
 	    		
 	        	// lets populate sales date shipmentId Map
 	        	int intervalDays = (UtilDateTime.getIntervalInDays(fromDate, thruDate))+1;
 	        	for(int i=0 ; i< intervalDays ; i++){
 	        		Timestamp saleDate = UtilDateTime.addDaysToTimestamp(fromDate, i);
-	        		List dayShipments = getShipmentIds(delegator, saleDate, saleDate);
+	        		//List dayShipments = getShipmentIds(delegator, saleDate, saleDate);
+	        		List dayShipments = getByProdShipmentIds(delegator, saleDate, saleDate);//this will give Today AM+PM as SALE
 	        		for(int j=0 ; j< dayShipments.size() ; j++){
 	        			dayShipmentMap.put((String)dayShipments.get(j), UtilDateTime.toDateString(saleDate ,"yyyy-MM-dd"));
 	        		}

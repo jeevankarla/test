@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-	<Party partyId="TAX1" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="INR" description="Commissioner- Income Tax" statusId="PARTY_ENABLED"/>   
-	 <PartyRole partyId="TAX1" roleTypeId="TAX_AUTHORITY"/>   
+	<Party partyId="TAX1" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="INR" description="Commissioner- Income Tax" statusId="PARTY_ENABLED"/>
+	<PartyRole partyId="TAX1" roleTypeId="TAX_AUTHORITY"/>   
 	<PartyGroup partyId="TAX1"   groupName="Commissioner- Income Tax" />
 	
 	 <!-- VNDRMRGN Admin permissions -->
@@ -33,10 +32,17 @@
      
      <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Adjustment Vehicle Short Payment screen"/>
     
+    <GlAccount accountCode="409006" accountName="RECOVERY/FINES/PENALTIES - DTC"  description="RECOVERY/FINES/PENALTIES - DTC" glAccountClassId="REVENUE" glAccountId="409006" glResourceTypeId="MONEY" parentGlAccountId="409000" postedBalance="0.00"/>
+	<GlAccount accountCode="681009" accountName="D.T.C - CONTRACTORS - SACHET"  description="D.T.C - CONTRACTORS - SACHET" glAccountClassId="SGA_EXPENSE" glAccountId="681009" glResourceTypeId="MONEY" parentGlAccountId="681000" postedBalance="0.00"/> 
+	
 	<PaymentType paymentTypeId="EXPENSE_PAYOUT" parentTypeId="DISBURSEMENT" hasTable="N" description="Expense Pay-out" />
 	<InvoiceType description="Sales and Distribution Expenses" hasTable="N" invoiceTypeId="SALES_DIS_OUT" parentTypeId="PURCHASE_INVOICE" paymentTypeId="EXPENSE_PAYOUT"/>
-	<InvoiceItemType invoiceItemTypeId="DTC_ROUTE" parentTypeId="" hasTable="N" description="Transporter Commission" />
+	
+	<InvoiceItemType invoiceItemTypeId="DTC_ROUTE"  hasTable="N"  description="Transporter Commission" defaultGlAccountId="681009" />
 	<InvoiceItemTypeMap invoiceItemMapKey="SD_DTC_ROUTE" invoiceTypeId="SALES_DIS_OUT" invoiceItemTypeId="DTC_ROUTE" />
+	
+	<InvoiceItemType invoiceItemTypeId="DTC_RECOVERY_ITEM" parentTypeId="DTC_ROUTE" hasTable="N" description="RECOVERY/FINES/PENALTIES - DTC" defaultGlAccountId="409006" />
+	<InvoiceItemTypeMap invoiceItemMapKey="INC_RECOVERY_MAP" invoiceTypeId="SALES_DIS_OUT" invoiceItemTypeId="DTC_RECOVERY_ITEM" />
    
      <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="COM_CANCELLED" statusTypeId="COM_EVENT_STATUS"/>
      <StatusItem description="Cancel Inprocess" sequenceId="79" statusCode="CANCEL_INPROCESS" statusId="CANCEL_INPROCESS" statusTypeId="COM_EVENT_STATUS"/>
