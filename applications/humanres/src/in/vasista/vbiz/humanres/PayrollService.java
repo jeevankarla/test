@@ -379,8 +379,10 @@ public class PayrollService {
 				if (propFlag) {
 					// loss of pay days adjustment
 					BigDecimal lossOfPayDays = (BigDecimal)context.get("lossOfPayDays");
-					BigDecimal payDays = periodDays.subtract(lossOfPayDays);
-					amount = amount.multiply(payDays).divide(BigDecimal.valueOf(payrollPeriodDays), 0, BigDecimal.ROUND_HALF_UP);
+					if(UtilValidate.isNotEmpty(lossOfPayDays)){
+						BigDecimal payDays = periodDays.subtract(lossOfPayDays);
+						amount = amount.multiply(payDays).divide(BigDecimal.valueOf(payrollPeriodDays), 0, BigDecimal.ROUND_HALF_UP);
+					}
 				}
 				Map result = UtilMisc.toMap("amount", amount);
 				result.put("quantity", BigDecimal.ONE);	
@@ -1504,4 +1506,54 @@ Debug.log("getEmployeePayrollAttendance result:" + result);
 	        result.put("payheadTypeIdsList", payheadTypeIdsList);
 	        return result;
 	    }
+	 public static Map<String, Object> createorUpdateEmployeeDailyAttendance(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String partyId = (String) context.get("partyId");
+	        String availedVehicleAllowance = (String)context.get("availedVehicleAllowance");
+	        String availedCanteen = (String)context.get("availedCanteen");
+	        String shiftType = (String)context.get("shiftType");
+	        Timestamp timePeriodStart = (Timestamp)context.get("fromDate");
+	        Locale locale = (Locale) context.get("locale");
+	        Map result = ServiceUtil.returnSuccess();
+	        
+			try {
+				List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+		        conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , UtilDateTime.toSqlDate(timePeriodStart)));
+		    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+				List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
+				if(UtilValidate.isEmpty(emplDailyAttendanceDetailList)){
+					GenericValue newEntity = delegator.makeValue("EmplDailyAttendanceDetail");
+					newEntity.set("partyId", partyId);
+					newEntity.set("date", UtilDateTime.toSqlDate(timePeriodStart));
+					newEntity.set("availedVehicleAllowance", availedVehicleAllowance);
+					newEntity.set("availedCanteen", availedCanteen);
+					newEntity.set("shiftType", shiftType);
+			        try {		
+			        	delegator.setNextSubSeqId(newEntity, "seqId", 5, 1);
+			        	delegator.create(newEntity);
+			        } catch (Exception e) {
+			        	Debug.logError("", module);
+			            return ServiceUtil.returnError(e.getMessage());
+			        }
+				}else{	
+					for (int i = 0; i < emplDailyAttendanceDetailList.size(); ++i) {
+						GenericValue employDetails = emplDailyAttendanceDetailList.get(i);
+						employDetails.set("partyId",employDetails.getString("partyId"));
+						employDetails.set("availedVehicleAllowance", availedVehicleAllowance);
+						employDetails.set("availedCanteen", availedCanteen);
+						employDetails.set("shiftType", shiftType);
+						employDetails.store();
+					}
+				}
+					
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+	        result = ServiceUtil.returnSuccess("Successfully Updated!!");
+	        return result;
+	    }//end of service
 }

@@ -610,7 +610,20 @@ under the License.
         <response name="success" type="view" value="BenefitDeductionCalculator"/>
         <response name="error" type="view" value="BenefitDeductionCalculator"/>
     </request-map>
-    
+    <request-map uri="EmployeeDailyAttendance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeDailyAttendance"/>
+    </request-map>
+    <request-map uri="createEmployeeDailyAttendance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createEmployeeDailyAttendance"/>
+    </request-map>
+    <request-map uri="createorUpdateEmployeeDailyAttendance">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createorUpdateEmployeeDailyAttendance"/>
+        <response name="success" type="view" value="EmployeeDailyAttendance"/>
+        <response name="error" type="view" value="EmployeeDailyAttendance"/>
+    </request-map>
    <!-- ================Employee Position Group==================================== -->
     <request-map uri="FindEmplPositions">
         <security https="true" auth="true"/>
@@ -1556,13 +1569,13 @@ under the License.
  <view-map name="PaySheet" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySheet"/>
  <view-map name="EmployeeContactDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetails"/>
  <view-map name="EmployeeContactDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetailsCsv" content-type="text/csv" encoding="none"/>
-	<view-map name="EmployeeContactDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetailsPdf" content-type="application/pdf" encoding="none"/>
+ <view-map name="EmployeeContactDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetailsPdf" content-type="application/pdf" encoding="none"/>
  
  <view-map name="PaySlipEmployeeWise" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySlipEmployeeWise"/>
  <view-map name="PrintPaySlipsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPaySlipsPdf" content-type="application/pdf" encoding="none"></view-map>
  <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>
-  <view-map name="EmployeeWiseSalaryDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsCsv" content-type="text/csv" encoding="none"/>
-	<view-map name="EmployeeWiseSalaryDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsPdf" content-type="application/pdf" encoding="none"/>
+ <view-map name="EmployeeWiseSalaryDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsCsv" content-type="text/csv" encoding="none"/>
+ <view-map name="EmployeeWiseSalaryDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsPdf" content-type="application/pdf" encoding="none"/>
 
  <view-map name="EmployeeBankDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetails"/> 
  <view-map name="EmployeeBankDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetailsPdf" content-type="application/pdf" encoding="none"/>
@@ -1580,7 +1593,8 @@ under the License.
  <view-map name="TDSchallan" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSchallan" content-type="application/pdf" encoding="none"/>
  <view-map name="FindPayrollBilling" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#FindPayrollBilling"/>
  <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
- 
+ <view-map name="EmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeDailyAttendance"/>
+ <view-map name="createEmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#createEmployeeDailyAttendance"/>
  <view-map name="PFReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFReport"/>
  <view-map name="ESIReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIReport"/>
  <view-map name="TDSReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSReport"/>

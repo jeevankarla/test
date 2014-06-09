@@ -1156,7 +1156,7 @@ under the License.emplpunch
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
    
- <service name="getPayHeadAmount" engine="java" auth="true" invoke="getPayHeadAmount" 
+ 	<service name="getPayHeadAmount" engine="java" auth="true" invoke="getPayHeadAmount" 
         location="in.vasista.vbiz.humanres.PayrollService">
         <description>Calculate amunt for the given payhead type</description>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
@@ -1164,7 +1164,6 @@ under the License.emplpunch
         <attribute name="customTimePeriodId" mode="IN" type="String"/>
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>
-                
     </service> 
     
     <service name="calculateShiftBasePayHeadAmount" engine="java" auth="true" invoke="calculateShiftBasePayHeadAmount" 
@@ -1176,7 +1175,6 @@ under the License.emplpunch
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>       
     </service> 
-    
     
 	<service name="createPayrollBilling"  engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="createPayrollBilling" auth="true">
@@ -1196,5 +1194,14 @@ under the License.emplpunch
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="cancelPayrollBilling" auth="true">
         <description>Cancel Payroll Billing</description>
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
+    </service>
+    <service name="createorUpdateEmployeeDailyAttendance"  engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createorUpdateEmployeeDailyAttendance" auth="true">
+        <description>Create Or Update Employee Allowence</description>
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="availedVehicleAllowance" mode="IN" type="String" optional="true"/>
+        <attribute name="availedCanteen" mode="IN" type="String" optional="true"/>
+        <attribute name="shiftType" mode="IN" type="String" optional="true"/>
     </service>
 </services>

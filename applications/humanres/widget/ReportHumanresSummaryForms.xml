@@ -148,7 +148,16 @@
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">
 			<lookup target-form-name="LookupEmployeeName"/>
-		</field> 		      
+		</field>
+		<field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field> 		      
        <field name="view" title="${uiLabelMap.CommonView}"><submit/></field>
     </form>
 	<form name="EmployeeWiseSalaryDetails" type="list"
@@ -467,6 +476,61 @@
 		<field name="amount">
 			<display/>
 		</field>
-	</form>  
+	</form>
+	<form name="createEmployeeDailyAttendance" type="single" target="createorUpdateEmployeeDailyAttendance" header-row-style="header-row" 
+		default-table-style="basic-table" >
+		<field name="partyId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+		<field name="fromDate" title="Date"><date-time/></field>
+		<field name="availedVehicleAllowance" title="Vehicle Allowance" >
+        	<drop-down>
+        		<option key="Y" description="Yes"/>
+        		<option key="N" description="No"/>
+        	</drop-down>
+		</field>
+		<field name="availedCanteen" title="Canteen Allowance" >
+        	<drop-down>
+        		<option key="Y" description="Yes"/>
+        		<option key="N" description="No"/>
+        	</drop-down>
+		</field>
+		<field name="shiftType" title="Shift Type">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="EMPL_REC_SHT"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+		<field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+    <form name="FindEmployeeDailyAttendance" type="single" paginate-target="createEmployeeDailyAttendance" header-row-style="header-row" default-table-style="basic-table" >
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+       	<field name="partyId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+       	<field name="fromDate" title="Date"><date-time/></field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="ListEmployeeDailyAttendance" type="list" list-name="listIt" odd-row-style="alternate-row" 
+      default-entity-name="EmplDailyAttendanceDetail" default-table-style="basic-table hover-bar" >
+    	<actions>    	
+    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="EmplDailyAttendanceDetail"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> 
+        </actions>
+    	<field name="partyId" title="Employee"><display/></field>    	
+        <field name="date" title="Date" ><display/></field>
+        <field name="availedVehicleAllowance" title="Vehicle Allowance"><display/></field>
+    	<field name="availedCanteen" title="Canteen Allowance"><display/></field>
+    	<field name="shiftType" title="Shift Type"><display/></field>
+    </form>  
 </forms>
         
