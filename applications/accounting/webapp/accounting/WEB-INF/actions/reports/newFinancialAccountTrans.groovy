@@ -197,6 +197,7 @@ if (organizationPartyId) {
 		isMonthEnd = "N";
 		
 		partyId = "";
+		accTransPartyId = "";
 		paymentId = "";
 		finAccountName = "";
 		finAccountTransId = "";
@@ -217,9 +218,13 @@ if (organizationPartyId) {
 					if(UtilValidate.isNotEmpty(payment)){
 						partyId = payment.partyIdFrom;
 					}
+					if(UtilValidate.isEmpty(paymentId)){
+						accTransPartyId = acctgTransEntry.partyId;
+					}
 					if(partyId == "Company"){
 						partyId = payment.partyIdTo;
 					}
+					
 					finAccountTransId = acctgTransEntry.finAccountTransId;
 					acctgTransId = acctgTransEntry.acctgTransId;
 					
@@ -251,7 +256,6 @@ if (organizationPartyId) {
 						if(UtilValidate.isNotEmpty(paymentType)){
 							paymentTypeDescription = paymentType.description;
 						}
-						
 					}
 					
 					// Prepare List for CSV
@@ -310,8 +314,8 @@ if (organizationPartyId) {
 						acctgTransEntryMap["description"] = paymentTypeDescription;
 					}else{
 						acctgTransEntryMap["paymentId"] = acctgTransId;
+						acctgTransEntryMap["partyId"] = accTransPartyId;
 						if(UtilValidate.isNotEmpty(finAccountId)){
-							acctgTransEntryMap["partyId"] = finAccountId;
 							acctgTransEntryMap["partyName"] = finAccountName;
 						}
 						acctgTransEntryMap["description"] = finAccountDescription;
