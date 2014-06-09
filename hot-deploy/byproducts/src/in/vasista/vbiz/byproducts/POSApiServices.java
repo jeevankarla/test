@@ -35,272 +35,33 @@ public class POSApiServices {
 
     public static final String module = POSApiServices.class.getName();
 
-	
-    /**
-     * Create POS Order
-     * @param ctx the dispatch context
-     * @param context 
+    /*
+     * Security check to make userLogin partyId must equal facility owner party Id if the user
+     * is a retailer (has MOB_RTLR_DB_VIEW). If user is a sales rep (MOB_SREP_DB_VIEW permission), 
+     * then we just return true.
      */
-    public static Map<String, Object> createPOSOrder(DispatchContext ctx, Map<String, ? extends Object> context) {
-    	Delegator delegator = ctx.getDelegator();
 
-		LocalDispatcher dispatcher = ctx.getDispatcher();
-		List<Map<String, Object>> orderItems = (List<Map<String, Object>>) context.get("orderItems");
-		String infoString = "createPOSOrder:: orderItems: " + orderItems;
-Debug.logInfo(infoString, module);
-		if (orderItems.isEmpty()) {
-			Debug.logError("No order items found; " + infoString, module);
-			return ServiceUtil.returnError("No order items found; " + infoString);	   
-		}	
-		Map result = ServiceUtil.returnSuccess("Order items successfully processed.");
-		Map<String, Object> orderResults = FastMap.newInstance();
+    static boolean hasFacilityAccess(DispatchContext dctx, Map<String, ? extends Object> context) {  
+        Security security = dctx.getSecurity();
+
     	GenericValue userLogin = (GenericValue) context.get("userLogin");
-    	String boothId = (String) context.get("boothId");
-    	Timestamp saleDate = (Timestamp) context.get("saleDate");
-		if (UtilValidate.isEmpty(boothId)) {
-			Debug.logError("Empty facility Id", module);
-			return ServiceUtil.returnError("Empty facility Id" + infoString);	   
-		}	    	
-  		GenericValue facility = null;
-  		try{
-  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",boothId),false);
-  		}catch(GenericEntityException e){
-  			Debug.logWarning("Error fetching facility " +boothId + " " +  e.getMessage(), module);
-			return ServiceUtil.returnError("Error fetching facility " + boothId);	   
-  		}
-  		String categoryTypeEnum = (String)facility.get("categoryTypeEnum");
-  		if(!categoryTypeEnum.equals("PARLOUR")){
-  			Debug.logWarning("Facility not a parlour [" +boothId + "]", module);
-			return ServiceUtil.returnError("Facility not a parlour [" +boothId + "]");			
-  		}    	
-    	
+    	GenericValue facility = (GenericValue) context.get("facility");
 
-		Map<String, Object> inputParamMap = FastMap.newInstance();
-		inputParamMap.put("userLogin", userLogin);
-  		Map prodQuant = FastMap.newInstance();			
-		for (int i = 0; i < orderItems.size(); ++i) {	
-			Map orderItem = orderItems.get(i);
-		  	String productId = (String)orderItem.get("productId");
-		  	int quantityInt = ((Integer)orderItem.get("qty")).intValue();
-		  	BigDecimal quantity = BigDecimal.valueOf(quantityInt);
-		  	prodQuant.put(productId, quantity);		  	
-		}
-  		if(UtilValidate.isEmpty(prodQuant)){
-  			Debug.logError("No Products to Process for Order", module);
-			return ServiceUtil.returnError("No Products to Process for Order");
-  		}		
-  		inputParamMap.put("facilityId", boothId);
-  		inputParamMap.put("productPriceTypeId", "PM_RC_P");
-  		//::TODO::
-	  	inputParamMap.put("supplyDate", saleDate);
-	  	inputParamMap.put("prodQuant", prodQuant);	  	
-Debug.logInfo("Before calling processParlorSalesOrder inputParamMap:" + inputParamMap, module);
-	  	try {
-	  		Map<String, Object> serviceResult = dispatcher.runSync("processParlorSalesOrder", inputParamMap);
-			if(ServiceUtil.isError(serviceResult)){
-				Debug.logError("ERROR in processParlorSalesOrder service; " + (String)serviceResult.get("errorMessage") , module);
-				return ServiceUtil.returnError((String)serviceResult.get("errorMessage"));
-			}
-			orderResults.put("orderId", serviceResult.get("orderId"));		
-		} catch (GenericServiceException e) {
-			Debug.logError(e, "Trouble calling processParlorSalesOrder service; " + e.getMessage(), module);
-			return ServiceUtil.returnError(e.getMessage());
-
-		}
-		result.put("orderResults", orderResults);		
-		return result; 
+        if (security.hasEntityPermission("MOB_SREP_DB", "_VIEW", userLogin)) {
+            return true;
+        } 		
+        if (security.hasEntityPermission("MOB_RTLR_DB", "_VIEW", userLogin)) {
+        	if (userLogin != null && userLogin.get("partyId") != null) {
+        		String userLoginParty = (String)userLogin.get("partyId");
+        		String ownerParty = (String)facility.get("ownerPartyId");
+        		if (userLoginParty.equals(ownerParty)) {
+        			return true;
+        		}
+        	}
+        } 		
+    	return false;
     }
-    
-    /**
-     * Create POS Order
-     * @param ctx the dispatch context
-     * @param context 
-     */
-    public static Map<String, Object> cancelPOSOrder(DispatchContext ctx, Map<String, ? extends Object> context) {
-    	Delegator delegator = ctx.getDelegator();
-
-		LocalDispatcher dispatcher = ctx.getDispatcher();
-		Map<String, Object> cancelResults = FastMap.newInstance();
-		Map result = ServiceUtil.returnSuccess("Order successfully cancelled.");
-
-    	GenericValue userLogin = (GenericValue) context.get("userLogin");
-    	String boothId = (String) context.get("boothId");
-		if (UtilValidate.isEmpty(boothId)) {
-			Debug.logError("Empty facility Id", module);
-			return ServiceUtil.returnError("Empty facility Id");	   
-		}	    	
-  		GenericValue facility = null;
-  		try{
-  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",boothId),false);
-  		}catch(GenericEntityException e){
-  			Debug.logWarning("Error fetching facility " +boothId + " " +  e.getMessage(), module);
-			return ServiceUtil.returnError("Error fetching facility " + boothId);	   
-  		}  		
-		Map<String, Object> inputParamMap = FastMap.newInstance();
-		inputParamMap.put("userLogin", userLogin);  
-		inputParamMap.put("productStoreId", boothId);  
-		inputParamMap.put("statusId", ""); //::TODO::  		
-		inputParamMap.put("orderId", (String) context.get("orderId"));  
-	  	try {
-	  		Map<String, Object> serviceResult = dispatcher.runSync("cancelParlorSalesOrder", inputParamMap);
-			if(ServiceUtil.isError(serviceResult)){
-				Debug.logError("ERROR in cancelParlorSalesOrder service; " + (String)serviceResult.get("errorMessage") , module);
-				return ServiceUtil.returnError((String)serviceResult.get("errorMessage"));
-			}
-			cancelResults.put("orderId", serviceResult.get("orderId"));					
-		} catch (GenericServiceException e) {
-			Debug.logError(e, "Trouble calling cancelParlorSalesOrder service; " + e.getMessage(), module);
-			return ServiceUtil.returnError(e.getMessage());
-
-		}		
-		result.put("cancelResults", cancelResults);		
-		
-		return result;
-
-    }
-    
-    /**
-     * ::TODO:: This is a temp copy-n-paste from ByProductService.  We need to refactor the method
-     * so that the core logic is callable from any client (web, xmlrpc, etc)
-     */
-    public static Map<String, Object> createSubscriptionIndent(DispatchContext ctx, Map<String, ? extends Object> context) {
-    	Delegator delegator = ctx.getDelegator();
-
-		LocalDispatcher dispatcher = ctx.getDispatcher();
-		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context.get("indentItems");
-		String infoString = "createSubscriptionIndent:: indentItems: " + indentItems;
-Debug.logInfo(infoString, module);
-		if (indentItems.isEmpty()) {
-			Debug.logError("No order items found; " + infoString, module);
-			return ServiceUtil.returnError("No indent items found; " + infoString);	   
-		}	
-		Map result = ServiceUtil.returnSuccess("Indent items successfully processed.");
-		Map<String, Object> indentResults = FastMap.newInstance();
-    	GenericValue userLogin = (GenericValue) context.get("userLogin");
-    	String boothId = (String) context.get("boothId");
-		if (UtilValidate.isEmpty(boothId)) {
-			Debug.logError("Empty facility Id", module);
-			return ServiceUtil.returnError("Empty facility Id" + infoString);	   
-		}	    	
-    	Timestamp supplyDate = (Timestamp) context.get("supplyDate");
-  		GenericValue facility = null;
-  		try{
-  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",boothId),false);
-  		}catch(GenericEntityException e){
-  			Debug.logWarning("Error fetching facility " +boothId + " " +  e.getMessage(), module);
-			return ServiceUtil.returnError("Error fetching facility " + boothId);	   
-  		}  		
-		Map<String, Object> inputParamMap = FastMap.newInstance();
-		inputParamMap.put("userLogin", userLogin);  
-		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
-  		Timestamp effectiveDate = supplyDate; 	  	      
-  		String destinationFacilityId = null;
-  		String productSubscriptionTypeId = null;
-  		String routeId = "1"; //::TODO::
-  		GenericValue newValue = null;
-  		String subscriptionId = null;
-  		boolean beganTransaction = false;
-  		try{
-  			beganTransaction = TransactionUtil.begin();
-	  		productSubscriptionTypeId = "CASH_BYPROD";
-			List conditionList = UtilMisc.toList(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));
-			conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, "BYPRODUCTS"));
-			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);      	
-			List<GenericValue> subscription = null;
-			try {
-				subscription = delegator.findList("Subscription", condition, null, null, null, false);
-			}catch (GenericEntityException e1) {
-				Debug.logError(e1, module);
-				TransactionUtil.rollback();
-				return ServiceUtil.returnError(e1.getMessage());				  
-			}
-			subscription = EntityUtil.filterByDate(subscription, effectiveDate);
-			if(UtilValidate.isNotEmpty(subscription)){
-				if(subscription.size() == 1){
-					GenericValue subscribe = subscription.get(0);
-					subscriptionId =  subscribe.getString("subscriptionId");
-				}
-			}
-			if(UtilValidate.isEmpty(subscriptionId)){
-				Debug.logError("There are no 'active subscriptions' for Party Code  :"+boothId, module);
-				TransactionUtil.rollback();
-				return ServiceUtil.returnError("There are no 'active subscriptions' for Party Code  :"+boothId);				  
-			}
-			conditionList.clear();
-			conditionList = UtilMisc.toList(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
-			conditionList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, productSubscriptionTypeId));
-			conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
-			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.getDayStart(effectiveDate)));
-			conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.getDayEnd(effectiveDate)));
-			EntityCondition condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			try{
-				List subscriptionprodList = delegator.findList("SubscriptionProduct", condition1, null, null, null, false);
-				if(UtilValidate.isNotEmpty(subscriptionprodList)){
-					int rows_deleted = delegator.removeAll(subscriptionprodList);
-					Debug.log(rows_deleted+" rows deleted from subscription entity");
-				}
-			}catch (GenericEntityException e1) {
-				Debug.logError(e1, module);
-				TransactionUtil.rollback();
-				return ServiceUtil.returnError(e1.getMessage());				  
-			}	
-	  		Map prodQuant = FastMap.newInstance();			
-			for (int i = 0; i < indentItems.size(); ++i) {	
-				Map indentItem = indentItems.get(i);
-			  	String productId = (String)indentItem.get("productId");
-			  	int quantityInt = ((Integer)indentItem.get("qty")).intValue();
-			  	BigDecimal quantity = BigDecimal.valueOf(quantityInt);
-			  	prodQuant.put(productId, quantity);		  				  	
-		  		if(UtilValidate.isEmpty(quantity)){
-		  			Debug.logError("quantity is empty for the product "+productId, module);
-			  		TransactionUtil.rollback();
-					return ServiceUtil.returnError("quantity is empty for the product "+productId);				  
-			    }			  			  		  
-		  		if(quantity.compareTo(BigDecimal.ZERO)>0  && UtilValidate.isNotEmpty(productId)){	    
-		  			newValue = delegator.makeValue("SubscriptionProduct");
-		  			newValue.set("productId", productId);
-		  			newValue.set("quantity", quantity);
-		  			newValue.set("fromDate", UtilDateTime.getDayStart(effectiveDate));
-		  			newValue.set("thruDate", UtilDateTime.getDayEnd(effectiveDate));		  				
-		  			newValue.set("subscriptionId", subscriptionId);
-		  			newValue.set("productSubscriptionTypeId", productSubscriptionTypeId);
-		  			newValue.set("sequenceNum", routeId);
-		  			newValue.set("destinationFacilityId", destinationFacilityId);
-		  			newValue.put("createdByUserLogin",userLogin.get("userLoginId"));
-		  			newValue.put("createdDate",nowTimeStamp);   
-		  			newValue.put("lastModifiedByUserLogin",userLogin.get("userLoginId"));
-		  			newValue.put("lastModifiedDate",nowTimeStamp); 		  				
-		  			try {
-		  				delegator.create(newValue);
-			  		} catch (GenericEntityException e) {
-			  			Debug.logError("Error in storing Indent for Product : "+productId+ "\t"+e.toString(),module);
-					  	TransactionUtil.rollback();
-						return ServiceUtil.returnError("Error in storing Indent for Product : "+productId+ "\t"+e.toString());				  
-			  		}
-		  		  }
-			}//end of loop	
-  		} catch (GenericEntityException e) {
-  			try {
-  				// only rollback the transaction if we started one...
-  				TransactionUtil.rollback(beganTransaction, "Error saving subscription product", e);
-  			} catch (GenericEntityException e2) {
-  				Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
-	  		}
-	  		Debug.logError("An entity engine error occurred while saving  subscription indent", module);
-	  		return ServiceUtil.returnError("An entity engine error occurred while saving  subscription indent: "+e.toString());				  	  		  
-  		}
-	    // only commit the transaction if we started one... this will throw an exception if it fails
-  		try {
-  			TransactionUtil.commit(beganTransaction);
-  		} catch (GenericEntityException e) {
-  			Debug.logError(e, "Could not commit transaction for entity engine error occurred while saving subscription product", module);
-  			return ServiceUtil.returnError("Could not commit transaction for entity engine error occurred while saving subscription product: "+e.toString());				  	  		  
-  		}
-  		indentResults.put("numIndentItems", indentItems.size());
-  		result.put("indentResults", indentResults);		
-  		return result; 
-	}    
-    
+	    
     public static Map<String, Object> getProductPrices(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
     	String boothId = (String) context.get("boothId");
@@ -308,6 +69,13 @@ Debug.logInfo(infoString, module);
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
 		}	
+  		GenericValue facility = null;
+  		try{
+  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",boothId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching facility " +boothId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching facility " + boothId);	   
+  		} 		
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
         Security security = dctx.getSecurity();
         // security check
@@ -315,13 +83,12 @@ Debug.logInfo(infoString, module);
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to view catalog!", module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");
         }		
-  		GenericValue facility = null;
-  		try{
-  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",boothId),false);
-  		}catch(GenericEntityException e){
-  			Debug.logWarning("Error fetching facility " +boothId + " " +  e.getMessage(), module);
-			return ServiceUtil.returnError("Error fetching facility " + boothId);	   
-  		}  
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "facility", facility))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access facility: " + boothId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }
+ 
 		Map result = FastMap.newInstance();  		
     	Map priceResult = ByProductReportServices.getByProductPricesForFacility(dctx, 
     			UtilMisc.toMap("userLogin", userLogin, "facilityId", boothId, "productCategoryId", "INDENT"));
@@ -340,7 +107,13 @@ Debug.logInfo(infoString, module);
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
 		}	
-		
+  		GenericValue facility = null;
+  		try{
+  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",facilityId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching facility " +facilityId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching facility " + facilityId);	   
+  		} 		
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
         Security security = dctx.getSecurity();
         // security check
@@ -348,17 +121,21 @@ Debug.logInfo(infoString, module);
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to view indent!", module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");
         }
-        
-    	Timestamp supplyDate = (Timestamp) context.get("supplyDate");
-    	String supplyDateStr= "";
-    	if(UtilValidate.isNotEmpty(supplyDate)){
-    		supplyDateStr = UtilDateTime.toDateString(supplyDate, "dd MMMMM, yyyy");
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "facility", facility))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access facility: " + facilityId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }        
+    	Timestamp amSupplyDate = (Timestamp) context.get("supplyDate");
+    	String amSupplyDateStr= "";
+    	if(UtilValidate.isNotEmpty(amSupplyDate)){
+    		amSupplyDateStr = UtilDateTime.toDateString(amSupplyDate, "dd MMMMM, yyyy");
     	}
 		Map indentMap = FastMap.newInstance();  
 		Map<String, Object> inputParamMap = FastMap.newInstance();
 		inputParamMap.put("userLogin", userLogin);  
 		inputParamMap.put("boothId", facilityId);  
-		inputParamMap.put("supplyDate", supplyDateStr); 
+		inputParamMap.put("supplyDate", amSupplyDateStr); 
 		inputParamMap.put("subscriptionTypeId", "AM"); 	
 		inputParamMap.put("productSubscriptionTypeId", "CASH"); 
 Debug.logInfo("inputParamMap:" + inputParamMap, module);		 		
@@ -366,12 +143,19 @@ Debug.logInfo("inputParamMap:" + inputParamMap, module);
 		if(!ServiceUtil.isError(indentResultsAM)){
 			indentMap.put("AM", indentResultsAM.get("changeIndentProductList"));
 		}  
+		Timestamp pmSupplyDate = UtilDateTime.addDaysToTimestamp(amSupplyDate, -1);
+    	String pmSupplyDateStr= "";
+    	if(UtilValidate.isNotEmpty(pmSupplyDate)){
+    		pmSupplyDateStr = UtilDateTime.toDateString(pmSupplyDate, "dd MMMMM, yyyy");
+    	}		
+		inputParamMap.put("supplyDate", pmSupplyDateStr);     	
 		inputParamMap.put("subscriptionTypeId", "PM"); 			
     	Map indentResultsPM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);
 		if(!ServiceUtil.isError(indentResultsPM)){
 			indentMap.put("PM", indentResultsPM.get("changeIndentProductList"));
 		}  
-		
+		indentMap.put("amSupplyDate", UtilDateTime.toDateString(amSupplyDate,"yyyy-MM-dd"));
+		indentMap.put("pmSupplyDate", UtilDateTime.toDateString(pmSupplyDate,"yyyy-MM-dd"));		
 		Map result = FastMap.newInstance();  		
 		result.put("indentResults", indentMap);
 Debug.logInfo("indentResults:" + indentMap, module);		 
@@ -381,7 +165,19 @@ Debug.logInfo("indentResults:" + indentMap, module);
     public static Map<String, Object> processChangeIndent(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
-		
+		String boothId = (String) context.get("boothId");
+		if (UtilValidate.isEmpty(boothId)) {
+			Debug.logError("Empty facility Id", module);
+			return ServiceUtil.returnError("Empty facility Id " + boothId);
+		}	
+		GenericValue facility = null;
+		try {
+			facility = delegator.findOne("Facility", UtilMisc.toMap(
+					"facilityId", boothId), false);
+		} catch (GenericEntityException e) {
+			Debug.logWarning("Error fetching facility " + boothId + " " + e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching facility " + boothId);
+		}		
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
         Security security = dctx.getSecurity();
         // security check
@@ -389,7 +185,12 @@ Debug.logInfo("indentResults:" + indentMap, module);
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to update indent!", module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");
         }		
-		
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "facility", facility))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access facility: " + boothId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        } 
+        
 		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context
 				.get("indentItems");
 		String infoString = "processChangeIndent:: indentItems: " + indentItems;
@@ -402,11 +203,7 @@ Debug.logInfo(infoString, module);
 		Map result = ServiceUtil
 				.returnSuccess("Indent items successfully processed.");
 		Map<String, Object> indentResults = FastMap.newInstance();
-		String boothId = (String) context.get("boothId");
-		if (UtilValidate.isEmpty(boothId)) {
-			Debug.logError("Empty facility Id", module);
-			return ServiceUtil.returnError("Empty facility Id" + infoString);
-		}
+
 		Timestamp supplyDate = (Timestamp) context.get("supplyDate");
 		String subscriptionTypeId = (String) context.get("subscriptionTypeId");
 		String shipmentTypeId = subscriptionTypeId + "_SHIPMENT";
@@ -414,15 +211,6 @@ Debug.logInfo(infoString, module);
 		String routeChangeFlag = "";
 		Map boothDetails = (Map) (ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "userLogin", userLogin))).get("boothDetails");
 		String sequenceNum = (String) boothDetails.get("routeId"); // ::TODO:: for now fix to default route
-		GenericValue facility = null;
-		try {
-			facility = delegator.findOne("Facility", UtilMisc.toMap(
-					"facilityId", boothId), false);
-		} catch (GenericEntityException e) {
-			Debug.logWarning("Error fetching facility " + boothId + " " + e.getMessage(), module);
-			return ServiceUtil.returnError("Error fetching facility " + boothId);
-		}
-
 		List<GenericValue> subscriptionList = FastList.newInstance();
 		GenericValue subscription = null;
 		try {
@@ -498,7 +286,20 @@ Debug.logInfo(infoString, module);
 		if (UtilValidate.isEmpty(facilityId)) {
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
-		}	    	
+		}	
+  		GenericValue facility = null;
+  		try{
+  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",facilityId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching facility " +facilityId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching facility " + facilityId);	   
+  		} 		
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "facility", facility))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access facility: " + facilityId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        } 		
+		
     	Timestamp fromDate = (Timestamp) context.get("fromDate");
     	Timestamp thruDate = (Timestamp) context.get("thruDate");
 		BigDecimal obAmount = BigDecimal.ZERO;    	
@@ -555,14 +356,26 @@ Debug.logInfo("accountSummary:" + facilityLedgerMap, module);
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
 		}	 
-		
+  		GenericValue facility = null;
+  		try{
+  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",facilityId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching facility " +facilityId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching facility " + facilityId);	   
+  		} 		
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
         Security security = dctx.getSecurity();
         // security check
         if (!security.hasEntityPermission("MOB_PAYMENT", "_VIEW", userLogin)) {
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch payments!", module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");
-        }		
+        }
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "facility", facility))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access facility: " + facilityId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        } 	
+        
     	Timestamp fromDate = (Timestamp) context.get("fromDate");
 		if (UtilValidate.isEmpty(fromDate)) {
 			Debug.logError("Empty fromDate", module);
@@ -592,14 +405,27 @@ Debug.logInfo("paymentResults:" + facilityPayments, module);
 		if (UtilValidate.isEmpty(facilityId)) {
 			Debug.logError("Empty facility Id", module);
 			return ServiceUtil.returnError("Empty facility Id");	   
-		}	 
+		}	
+  		GenericValue facility = null;
+  		try{
+  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",facilityId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching facility " +facilityId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching facility " + facilityId);	   
+  		} 			
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
         Security security = dctx.getSecurity();
         // security check
         if (!security.hasEntityPermission("MOB_ORDER", "_VIEW", userLogin)) {
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch orders!", module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");
-        }		
+        }	
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "facility", facility))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access facility: " + facilityId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        } 
+        
     	Timestamp fromDate = (Timestamp) context.get("fromDate");
 		if (UtilValidate.isEmpty(fromDate)) {
 			Debug.logError("Empty fromDate", module);
