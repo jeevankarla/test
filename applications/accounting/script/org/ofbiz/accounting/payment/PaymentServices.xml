@@ -50,7 +50,11 @@ under the License.
             </else>
         </if-empty>
         <field-to-result field="payment.paymentId" result-name="paymentId"/>
-
+         <set field="subTabItemTemp" from-field="parameters.subTabItem"  /><!-- using for NonRoute PaymentScreen -->
+        <set field="paymentMethodTypeIdTemp" from-field="parameters.paymentMethodTypeId"  />
+         <field-to-result field="subTabItemTemp" result-name="subTabItem"/>
+         <field-to-result field="paymentMethodTypeIdTemp" result-name="paymentMethodTypeId"/>
+          
         <if-not-empty field="parameters.paymentMethodId">
             <entity-one entity-name="PaymentMethod" value-field="paymentMethod">
                 <field-map field-name="paymentMethodId" from-field="parameters.paymentMethodId"/>

@@ -2879,6 +2879,18 @@ under the License.
         <response name="success" type="request-redirect-noparam" value="findCashPayblePayment"/>
         <response name="error" type="request-redirect-noparam" value="findCashPayblePayment"/>
     </request-map>
+    <request-map uri="createNonRouteReceipt">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPayment"/>
+        <response name="success" type="request-redirect-noparam"  value="FindPaymentNonRoute">
+           <redirect-parameter name="paymentMethodTypeId"/>
+        	<redirect-parameter name="subTabItem" value="ChequePayment"/>
+        </response>
+        <response name="error" type="request-redirect-noparam"  value="FindPaymentNonRoute">
+            <redirect-parameter name="paymentMethodTypeId"/>
+        	<redirect-parameter name="subTabItem"/>
+        </response>
+    </request-map>
      <request-map uri="newPayablePayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newPayablePayment"/>

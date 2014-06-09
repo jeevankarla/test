@@ -30,7 +30,9 @@ under the License.
         <description>Create a Payment.  If a paymentMethodId is supplied, paymentMethodTypeId is gotten from paymentMethod.  Otherwise, it must be supplied.  If no
         paymentMethodTypeId and no paymentMethodId is supplied, then an error will be returned. </description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <auto-attributes include="pk" mode="INOUT" optional="true"/>        
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>   
+        <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"></attribute> <!-- USING FOR NON ROUTE PAYMENT SCREEN -->
+         <attribute name="subTabItem" mode="INOUT" type="String" optional="true"></attribute>     
         <override name="paymentTypeId" optional="false"/>
         <override name="partyIdFrom" optional="false"/>
         <override name="partyIdTo" optional="false"/>

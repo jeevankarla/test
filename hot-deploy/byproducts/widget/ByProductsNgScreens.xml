@@ -2717,4 +2717,139 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="FindPaymentNonRoute">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Non Route Recipts Search"/>
+                <set field="tabButtonItem" value="NonRouteCustomPayments"/>
+                <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
+                <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.paymentMethodTypeId}"/>
+                 <set field="subTabItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                 <set field="isCashierPortalScreen" value="YES"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+                <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
+            </actions>
+            <widgets>
+                  <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="NonRoutePaymentSubTabBar"/>
+                        <section>
+                            <widgets>
+                               <include-screen name="FindPaymentNonRouteInner" />
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="FindPaymentNonRouteInner">
+      <section>
+            <actions>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                 <set field="isCashierPortalScreen" value="YES"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+                <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
+                
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+            </actions>
+            <widgets>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar" >
+                                            <link target="NewNonRouteReceipt"  text="Create New Receipt" style="buttontext create" > 
+                                            <parameter param-name="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" />
+                                             <parameter param-name="subTabItem" value="${parameters.subTabItem}" />
+                                            </link>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options" > 
+                                        <include-form name="FindPaymentNonRoute" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+            </widgets>
+        </section>
+    </screen>     
+    	<screen name="NewNonRouteReceipt">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Cash Recipts Search"/>
+                <set field="tabButtonItem" value="NonRouteCustomPayments"/>
+                <set field="subTabButtonItem" value="${parameters.subTabItem}" default-value="${context.subTabItem}"/>
+                <set field="paymentMethodTypeId" value="${parameters.paymentMethodTypeId}" default-value="${context.subTabItem}"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="nowDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                 <set field="isCashierPortalScreen" value="YES"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+                <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
+            </actions>
+            <widgets>
+                  <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="NonRoutePaymentSubTabBar"/>
+                        <section>
+                            <widgets>
+                               <include-screen name="NewNonRouteReceiptInner" />
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewNonRouteReceiptInner">
+        <section>
+            <actions>
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                	<section>
+                  	<widgets>
+                  		 <screenlet title="New  Receipt">
+		               <include-form name="NewNonRouteReceipt" location="component://accounting/widget/PaymentForms.xml"/>
+		                 </screenlet>
+                      </widgets>
+              	</section>
+            </widgets>
+        </section>
+    </screen>
 </screens>

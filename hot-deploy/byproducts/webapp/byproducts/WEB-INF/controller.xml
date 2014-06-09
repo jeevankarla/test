@@ -721,6 +721,14 @@
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindPaymentByMethod"/>    	
     </request-map>
+      <request-map uri="FindPaymentNonRoute">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="FindPaymentNonRoute"/>    	
+    </request-map>
+     <request-map uri="NewNonRouteReceipt">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="NewNonRouteReceipt"/>    	
+    </request-map>
     <request-map uri="FindInstitutionPayment">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindInstitutionPayment"/>    	
@@ -1088,6 +1096,7 @@
  <view-map name="FindChequeReturns" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindChequeReturns"/>	
 <view-map name="LookupVehicle" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupVehicle"/> 
  
- 
+ <view-map name="FindPaymentNonRoute" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentNonRoute"/>
+ <view-map name="NewNonRouteReceipt" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#NewNonRouteReceipt"/>
     
 </site-conf>

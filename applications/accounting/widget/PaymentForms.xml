@@ -853,7 +853,6 @@ under the License.
             </drop-down>
         </field>
          <field name="paymentMethodTypeId"><hidden value="CASH_PAYIN"/></field>
-        
     </form>
      <form name="findCashPayblePayment" type="single" target="findCashPayblePayment" extends="FindNonRoutePayments" extends-resource="component://accounting/widget/PaymentForms.xml">
        <field name="parentTypeId"><hidden value="DISBURSEMENT"/></field>
@@ -865,5 +864,67 @@ under the License.
            </drop-down>
        </field>
          <field name="paymentMethodTypeId"><hidden value="CASH_PAYOUT"/></field>
-   </form>
+     </form>
+      <form name="FindPaymentNonRoute" type="single" target="FindPaymentNonRoute" extends="FindNonRoutePayments" extends-resource="component://accounting/widget/PaymentForms.xml">
+        <field name="parentTypeId"><hidden value="RECEIPT"/></field>
+        <field name="paymentTypeId" position="1">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentType" description="${description}">
+                    <entity-constraint name="parentTypeId" value="RECEIPT"/>
+                </entity-options>
+            </drop-down>
+        </field>
+         <field name="paymentMethodTypeId" ><hidden   value="${paymentMethodTypeId}"/></field>
+         <field name="subTabItem" ><hidden   value="${subTabItem}"/></field>
+    </form>
+     <form name="NewNonRouteReceipt" type="single" target="createNonRouteReceipt" default-map-name="payment"
+        header-row-style="header-row" default-table-style="basic-table">
+      <!--   <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field> -->
+         <field name="statusId"><hidden value="PMNT_RECEIVED"/></field>
+          <field name="subTabItem"><hidden value="${subTabButtonItem}" ></hidden></field>
+        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+        <field name="paymentPurposeType"><hidden value="NON_ROUTE_MKTG"></hidden></field>
+        <field name="createdDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
+        <field name="lastModifiedDate" ><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
+        <field name="createdByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>  
+        <field name="lastModifiedByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>   	
+        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                	<entity-constraint name="partyId" operator="equals" value="Company"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyIdFrom" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="PaymentType">
+                    <entity-constraint name="parentTypeId" value="RECEIPT"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentMethodType"  description="${description}">
+                	<entity-constraint name="paymentMethodTypeId" operator="like" value="%${paymentMethodTypeId}%"/>
+                    <entity-order-by field-name="description"/>                   
+                </entity-options>
+            </drop-down>
+        </field>
+         <field name="paymentDate" position="1" title="${uiLabelMap.paymentDate}"><date-time type="timestamp" ></date-time></field>
+          <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>
+       <!--  <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field> 
+       <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>   -->     
+        <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
+       <field name="comments" position="2"><text size="70"/></field>
+        <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
+        <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
+        <field position="1" name="createButton" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>
