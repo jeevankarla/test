@@ -323,10 +323,12 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		</tr>
 		<tr class="alternate-row">
 			<form id="FieldOfficerWiseSalesReport" name="FieldOfficerWiseSalesReport" method="post" action="<@ofbizUrl>FieldOfficerWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
-				<td>Field Officer wise Sales Report</td>
-				<td width="33%">From<input  type="text" size="18pt" id="fwsFromDateId" readonly  name="fromDate"/>
-	  			<td width="33%">To<input  type="text" size="18pt" id="fwsThruDateId" readonly  name="thruDate"/>
-				<input type="submit" value="Download" class="buttontext"/></td>        			
+				<td width="30%">Field Officer wise Sales Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="fwsFromDateId" readonly  name="fromDate"/></td>
+	  			<td width="15%">To<input  type="text" size="18pt" id="fwsThruDateId" readonly  name="thruDate"/></td>
+	  			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
 			</form>
 		</tr>
       	 <tr class="alternate-row">
