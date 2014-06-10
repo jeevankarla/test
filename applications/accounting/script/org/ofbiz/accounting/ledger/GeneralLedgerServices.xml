@@ -656,6 +656,18 @@ under the License.
     <simple-method method-name="closeFinancialTimePeriod" short-description="Close a financial CustomTimePeriod">
         <entity-one entity-name="CustomTimePeriod" value-field="customTimePeriod"/>
         <set field="openTimePeriodCondition.isClosed" value="N"/>
+        <set field="isFiscalPeriod" type="Boolean" value="false"/>
+        <if-compare operator="contains" value="FISCAL_" field="customTimePeriod.periodTypeId" >
+             <set field="isFiscalPeriod" type="Boolean" value="true"/>
+        </if-compare>
+        <if-compare operator="equals" field="isFiscalPeriod" type="Boolean" value="false">
+             <log level="always" message="is not fiscal*************"></log>
+             <set field="updateCustomTimePeriodInMap.customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
+	         <set field="updateCustomTimePeriodInMap.organizationPartyId" from-field="customTimePeriod.organizationPartyId"/>
+	         <set field="updateCustomTimePeriodInMap.isClosed" value="Y"/>
+	         <call-service service-name="updateCustomTimePeriod" in-map-name="updateCustomTimePeriodInMap"/>
+	         <return response-code="success"/>
+        </if-compare>
         <get-related value-field="customTimePeriod" relation-name="ChildCustomTimePeriod" list="openChildTimePeriods" map="openTimePeriodCondition"/>
         <iterate list="openChildTimePeriods" entry="openChildTimePeriod">
             <add-error><fail-message message="Cannot close time period [${customTimePeriod.customTimePeriodId}] because the child time period ${openChildTimePeriod.periodName} [${openChildTimePeriod.customTimePeriodId}] is not closed."/></add-error>

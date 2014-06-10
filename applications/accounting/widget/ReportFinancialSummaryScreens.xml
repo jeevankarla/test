@@ -402,24 +402,8 @@
 					from-field="partyIds" />
 			</entity-condition>
 			<set field="partyIds[]" from-field="organizationPartyId" />
-
-			<entity-condition entity-name="GlAccountAndHistoryTotals"
-				filter-by-date="false" list="glAccountAndHistories">
-				<condition-list>
-					<condition-expr field-name="organizationPartyId"
-						operator="in" from-field="partyIds" />
-					<condition-expr field-name="customTimePeriodId"
-						operator="equals" from-field="parameters.customTimePeriodId" />
-				</condition-list>
-				<select-field field-name="glAccountId" />
-				<select-field field-name="parentGlAccountId" />
-				<select-field field-name="accountCode" />
-				<select-field field-name="accountName" />
-				<select-field field-name="totalPostedDebits" />
-				<select-field field-name="totalPostedCredits" />
-				<select-field field-name="totalEndingBalance" />
-				<order-by field-name="accountCode" />
-			</entity-condition>
+			 <script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
 			<script
 				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
 			<script
@@ -512,7 +496,7 @@
 			</entity-condition>
 			<set field="partyIds[]" from-field="organizationPartyId" />
 
-			<entity-condition entity-name="GlAccountAndHistoryTotals"
+			<!-- <entity-condition entity-name="GlAccountAndHistoryTotals"
 				filter-by-date="false" list="glAccountAndHistories">
 				<condition-list>
 					<condition-expr field-name="organizationPartyId"
@@ -522,19 +506,22 @@
 				</condition-list>
 				<select-field field-name="glAccountId" />
 				<select-field field-name="parentGlAccountId" />
+				<select-field field-name="glAccountClassId" />
 				<select-field field-name="accountCode" />
 				<select-field field-name="accountName" />
 				<select-field field-name="totalPostedDebits" />
 				<select-field field-name="totalPostedCredits" />
 				<select-field field-name="totalEndingBalance" />
 				<order-by field-name="accountCode" />
-			</entity-condition>
+			</entity-condition> -->
+			 <script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
 			<entity-one value-field="customTimePeriod" entity-name="CustomTimePeriod">
 				<field-map field-name="customTimePeriodId" value="${parameters.customTimePeriodId}" />
 			</entity-one>
 			
 			<script
-				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceorgNames.groovy" />
 			<script
 				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceDrillDown.groovy" />
 		</actions>
@@ -582,7 +569,7 @@
 				</entity-condition>
 				<set field="partyIds[]" from-field="organizationPartyId" />
 				<script
-					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
+					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceorgNames.groovy" />
 				<entity-condition entity-name="GlAccountAndHistoryTotals"
 					filter-by-date="false" list="grandTotalPosted">
 					<condition-list>
@@ -668,8 +655,8 @@
 				</entity-condition>
 				<set field="partyIds[]" from-field="organizationPartyId" />
 				<script
-					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
-				<entity-condition entity-name="GlAccountAndHistoryTotals"
+					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceorgNames.groovy" />
+				<!-- <entity-condition entity-name="GlAccountAndHistoryTotals"
 					filter-by-date="false" list="grandTotalPosted">
 					<condition-list>
 						<condition-expr field-name="organizationPartyId"
@@ -679,7 +666,8 @@
 					</condition-list>
 					<select-field field-name="totalPostedDebits" />
 					<select-field field-name="totalPostedCredits" />
-				</entity-condition>
+				</entity-condition> -->
+				 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
 				<set field="grandTotalPostedRecord" from-field="grandTotalPosted[0]" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
 					result-map="permResult">
@@ -734,8 +722,8 @@
 				</entity-condition>
 				<set field="partyIds[]" from-field="organizationPartyId" />
 				<script
-					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
-				<entity-condition entity-name="GlAccountAndHistoryTotals"
+					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceorgNames.groovy" />
+				<!-- <entity-condition entity-name="GlAccountAndHistoryTotals"
 					filter-by-date="false" list="grandTotalPosted">
 					<condition-list>
 						<condition-expr field-name="organizationPartyId"
@@ -745,7 +733,9 @@
 					</condition-list>
 					<select-field field-name="totalPostedDebits" />
 					<select-field field-name="totalPostedCredits" />
-				</entity-condition>
+				</entity-condition> -->
+				 <script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
 				<set field="grandTotalPostedRecord" from-field="grandTotalPosted[0]" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
 					result-map="permResult">

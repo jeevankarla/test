@@ -709,23 +709,12 @@ under the License.
     <form name="TrialBalanceReport" type="list" list-name="glAccountAndHistories"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="GlAccountAndHistoryTotals" filter-by-date="false" list="glAccountAndHistories">
-                <condition-list>
-                    <condition-expr field-name="organizationPartyId" operator="in" from-field="partyIds"/>
-                    <condition-expr field-name="customTimePeriodId" operator="equals" from-field="parameters.customTimePeriodId"/>
-                </condition-list>
-                <select-field field-name="glAccountId"/>
-                <select-field field-name="accountCode"/>
-                <select-field field-name="accountName"/>
-                <select-field field-name="totalPostedDebits"/>
-                <select-field field-name="totalPostedCredits"/>
-                <select-field field-name="totalEndingBalance"/>
-                <order-by field-name="accountCode"/>
-            </entity-condition>
+           <script
+				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
         </actions>
-        <row-actions>
-            <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits}" type="BigDecimal"/>
-        </row-actions>
+        <!-- <row-actions>
+            <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
+        </row-actions> -->
         <field name="accountCode">
             <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
@@ -733,6 +722,8 @@ under the License.
             </hyperlink>
         </field>
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
+         <field name="openingD" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="openingC" widget-style="tabletextright"><display  type="currency" currency="${currencyUomId}"/></field>
         <field name="totalPostedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits}" type="currency" currency="${currencyUomId}"/></field>
         <field name="totalPostedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${totalPostedCredits}" type="currency" currency="${currencyUomId}"/></field>
         <field name="totalEndingBalance" title="${uiLabelMap.AccountingEndingBalance}" widget-style="tabletextright"><display description="${totalEndingBalance}" type="currency" currency="${currencyUomId}"/></field>

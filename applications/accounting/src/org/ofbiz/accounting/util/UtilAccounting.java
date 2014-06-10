@@ -26,7 +26,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.accounting.AccountingException;
+import org.ofbiz.accounting.period.PeriodServices;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -40,6 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 
 public class UtilAccounting {
@@ -177,6 +180,74 @@ public class UtilAccounting {
         	totalNetIncome = totalNetIncome.add(amount);            
     	}
         return totalNetIncome;
+    }    
+    public static Map getLastClosedGlBalance(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericEntityException {
+    	Delegator delegator = dctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	String organizationPartyId =(String)context.get("organizationPartyId");
+    	String customTimePeriodId = (String)context.get("customTimePeriodId");
+    	String lastClosedPeriodId = null;
+    	List<GenericValue>  openingGlHistory = FastList.newInstance();
+    	GenericValue lastClosedPeriod =null;
+        // Carry over any retained earnings from last closed time period
+        if (customTimePeriodId != null) {
+            GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);   
+            /*GenericValue retainedEarningsAccountHistory = delegator.findOne("GlAccountHistory", UtilMisc.toMap("organizationPartyId", organizationPartyId, "customTimePeriodId", lastClosedTimePeriod.getString("customTimePeriodId"), "glAccountId", retainedEarningsAccount.getString("glAccountId")), false);
+            if (retainedEarningsAccountHistory != null) {
+            	totalNetIncome = totalNetIncome.add(retainedEarningsAccountHistory.getBigDecimal("endingBalance"));
+            } */ 
+            Map lastClosedCtx = FastMap.newInstance();
+            lastClosedCtx.put("organizationPartyId", organizationPartyId);
+            lastClosedCtx.put("periodTypeId", customTimePeriod.getString("periodTypeId"));
+            lastClosedCtx.put("findDate", customTimePeriod.getDate("fromDate"));
+            lastClosedCtx.put("onlyFiscalPeriods", Boolean.TRUE);
+            
+            Map lastClosedPeriodResult = PeriodServices.findLastClosedDate(dctx, lastClosedCtx);
+            lastClosedPeriod = (GenericValue)lastClosedPeriodResult.get("lastClosedTimePeriod");
+            if(UtilValidate.isNotEmpty(lastClosedPeriod)){
+            	lastClosedPeriodId = lastClosedPeriod.getString("customTimePeriodId");
+            	if(UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(lastClosedPeriod.getDate("thruDate")) ,UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"))) != 1){
+            		Map result = FastMap.newInstance();
+                	result.put("openingGlHistory", openingGlHistory);
+                    return result;
+        		}
+            }
+           
+         
+        }
+    	if(UtilValidate.isNotEmpty(lastClosedPeriodId)){
+    		
+    		GenericValue assetGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","ASSET"), true);
+    		List assetAccountClassIds = getDescendantGlAccountClassIds(assetGlAccountClass);
+    		
+    		GenericValue contraAssetGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","CONTRA_ASSET"), true);
+    		List contraAssetAccountClassIds = getDescendantGlAccountClassIds(contraAssetGlAccountClass);
+    		
+    		GenericValue liabilityGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","LIABILITY"), true);
+    		List liabilityAccountClassIds = getDescendantGlAccountClassIds(liabilityGlAccountClass);
+    		
+    		
+    		GenericValue equityGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","EQUITY"), true);
+    		List equityAccountClassIds = getDescendantGlAccountClassIds(equityGlAccountClass);
+    		
+    		
+    		
+    		List condList = FastList.newInstance();
+    		condList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,organizationPartyId));
+    		condList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,lastClosedPeriodId));
+    		List orCondList = FastList.newInstance();
+    		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,assetAccountClassIds)));
+    		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,contraAssetAccountClassIds)));
+    		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,liabilityAccountClassIds)));
+    		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,equityAccountClassIds)));
+    		condList.add(EntityCondition.makeCondition(orCondList,EntityOperator.OR));
+    		
+    		openingGlHistory = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND),
+                    null,null, null, false);
+    	}
+    	Map result = FastMap.newInstance();
+    	result.put("openingGlHistory", openingGlHistory);
+        return result;
     }    
 
     /**

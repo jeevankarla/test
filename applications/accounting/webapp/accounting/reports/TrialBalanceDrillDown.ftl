@@ -16,15 +16,15 @@
 
 	</style>
 		<div style="width:960px;float:left;">
-			<div class="grid-header" style="width:80%">
+			<div class="grid-header" style="width:90%">
 				<label>Trial Balance</label>
                 <span style="float:right" class="ui-icon ui-icon-search" title="Toggle search panel" onclick="toggleFilterRow()"></span>
 			</div>
-			<div id="myGrid" style="width:80%;height:700px;">
+			<div id="myGrid" style="width:90%;height:700px;">
 			      <label>Trial Balance</label>
 			</div>
 			
-			<div id="pager" style="width:80%;height:20px;"></div>
+			<div id="pager" style="width:90%;height:20px;"></div>
 			<br>
 			
 		
@@ -62,11 +62,13 @@
 		var columns = [
 			{id:"sel", name:"#", field:"num", behavior:"select", cssClass:"cell-selection", width:20, cannotTriggerInsert:true, resizable:false, unselectable:true },
 			{id:"glAccountId", name:"Glaccount ID", field:"glAccountId", width:100, minWidth:100, cssClass:"cell-title", sortable:true},
-			{id:"parentGlAccountId", name:"Parent Glaccount ID", field:"parentGlAccountId", width:130, minWidth:130, cssClass:"cell-title", sortable:true},
+			{id:"glAccountClassId", name:"Parent Glaccount ID", field:"glAccountClassId", width:130, minWidth:130, cssClass:"cell-title", sortable:true},
 			{id:"accountName", name:"Account Name", field:"accountName", width:130, minWidth:130, cssClass:"cell-title", sortable:true},
-			{id:"totalPostedDebits", name:"Dr", field:"totalPostedDebits", width:130, minWidth:130, cssClass:"cell-title",  sortable:true},
-			{id:"totalPostedCredits", name:"Cr", field:"totalPostedCredits", width:130, minWidth:130, cssClass:"cell-title", sortable:true},
-			{id:"totalEndingBalance", name:"Ending Balance", field:"totalEndingBalance", width:130, minWidth:130, cssClass:"cell-title", sortable:true},
+			{id:"openingD", name:"Opening D", field:"openingD", width:100, minWidth:100, cssClass:"cell-title",  sortable:true},
+			{id:"openingC", name:"Opening C", field:"openingC", width:100, minWidth:100, cssClass:"cell-title", sortable:true},
+			{id:"totalPostedDebits", name:"Dr", field:"totalPostedDebits", width:100, minWidth:100, cssClass:"cell-title",  sortable:true},
+			{id:"totalPostedCredits", name:"Cr", field:"totalPostedCredits", width:100, minWidth:100, cssClass:"cell-title", sortable:true},
+			{id:"totalEndingBalance", name:"Ending Balance", field:"totalEndingBalance", width:100, minWidth:100, cssClass:"cell-title", sortable:true},
 						
 		];
 
@@ -86,7 +88,7 @@
         
            dataView.groupBy(
                 function (row) {
-                	return row["parentGlAccountId"];
+                	return row["glAccountClassId"];
                 },
                 function (g) {
                 	var rows = g.rows;

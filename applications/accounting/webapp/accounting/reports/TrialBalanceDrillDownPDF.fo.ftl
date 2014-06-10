@@ -1,7 +1,7 @@
  <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 	<fo:layout-master-set>
-		<fo:simple-page-master master-name="main" page-height="8.27in"  page-width="11.29in" 
+		<fo:simple-page-master master-name="main" page-height="8.27in"  page-width="14.29in" 
 		 margin-top="0.3in" margin-bottom=".3in" 
 		 margin-left=".3in" margin-right=".3in">
 			<fo:region-body margin-top="2.1in" />
@@ -122,9 +122,11 @@
 					margin-left=".3in" margin-right=".2in">
 					<fo:table-column column-width="12%" />
 						<fo:table-column column-width="27%" />
-						<fo:table-column column-width="12%" />
-						<fo:table-column column-width="12%" />
-						<fo:table-column column-width="12%" />
+						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="8%" />
 					<fo:table-body>
 						<fo:table-row>
 							<fo:table-cell border-style="solid">
@@ -134,6 +136,14 @@
 							<fo:table-cell border-style="solid">
 								<fo:block text-align="center" font-family="Courier,monospace"
 									font-weight="bold" font-size="12pt">Account Name</fo:block>
+							</fo:table-cell>
+							<fo:table-cell border-style="solid">
+								<fo:block text-align="center" white-space-collapse="false"
+									font-size="10pt" font-weight="bold" keep-together="always">Opening D</fo:block>
+							</fo:table-cell>
+							<fo:table-cell border-style="solid">
+								<fo:block text-align="center" white-space-collapse="false"
+									font-size="10pt" font-weight="bold" keep-together="always">Opening C</fo:block>
 							</fo:table-cell>
 							<fo:table-cell border-style="solid">
 								<fo:block text-align="center" white-space-collapse="false"
@@ -159,9 +169,11 @@
 						margin-left=".3in" margin-right=".2in">
 						<fo:table-column column-width="12%" />
 						<fo:table-column column-width="27%" />
-						<fo:table-column column-width="12%" />
-						<fo:table-column column-width="12%" />
-						<fo:table-column column-width="12%" />
+						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="8%" />
+						<fo:table-column column-width="8%" />
 						<fo:table-body>
      					<#assign serialNo = 0>
      					<#assign trileBalanceListReport =trillDownTrialBalanceMap.entrySet()>
@@ -170,11 +182,19 @@
      					  <fo:table-row>
 								<fo:table-cell border-style="solid">
 									<fo:block text-align="center" font-weight="bold"
-										font-family="Courier,monospace" font-size="10pt">${trailBalance.getKey()}</fo:block>
+										font-family="Courier,monospace" font-size="10pt">${trailBalance.getKey()?if_exists}</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
 									<fo:block text-align="left" font-weight="bold"
 										font-family="Courier,monospace" font-size="10pt"> ${parentGlNameMap.get(trailBalance.getKey())?if_exists}</fo:block>
+								</fo:table-cell>
+								<fo:table-cell border-style="solid">
+									<fo:block text-align="right" font-weight="bold"
+										font-family="Courier,monospace" font-size="10pt">${trailBalance.getValue().get("openingD")?string("#0.00")}</fo:block>
+								</fo:table-cell>
+								<fo:table-cell border-style="solid">
+									<fo:block text-align="right" font-weight="bold"
+										font-family="Courier,monospace" font-size="10pt">${trailBalance.getValue().get("openingC")?string("#0.00")}</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
 									<fo:block text-align="right" font-weight="bold"
@@ -195,11 +215,19 @@
 	     					<fo:table-row>
 								<fo:table-cell border-style="solid">
 									<fo:block text-align="center" font-family="Courier,monospace"
-										font-size="10pt">${subGlTrailBalance.accountCode}</fo:block>
+										font-size="10pt">${subGlTrailBalance.accountCode?if_exists}</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
 									<fo:block text-align="left" font-family="Courier,monospace"
-										font-size="10pt">${subGlTrailBalance.accountName} </fo:block>
+										font-size="10pt">${subGlTrailBalance.accountName?if_exists} </fo:block>
+								</fo:table-cell>
+								<fo:table-cell border-style="solid">
+									<fo:block text-align="right" font-family="Courier,monospace"
+										font-size="10pt">${subGlTrailBalance.openingD?string("#0.00")}</fo:block>
+								</fo:table-cell>
+								<fo:table-cell border-style="solid">
+									<fo:block text-align="right" font-family="Courier,monospace"
+										font-size="10pt">${subGlTrailBalance.openingC?string("#0.00")}</fo:block>
 								</fo:table-cell>
 								<fo:table-cell border-style="solid">
 									<fo:block text-align="right" font-family="Courier,monospace"

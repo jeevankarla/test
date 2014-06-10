@@ -41,48 +41,50 @@ parentGlNameMap=[:];
 
 if (glAccountAndHistories) {
    i = 0;
+   List trailBalParentGlAccount = delegator.findList("GlAccountClass", EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, glAccountAndHistories.glAccountClassId), null, null, null, false);
+   trailBalParentGlAccount.each{ parentGl ->
+	   parentGlJson.put(parentGl.glAccountClassId , parentGl.description);
+	   parentGlNameMap[parentGl.glAccountClassId]=parentGl.description;
+   }
    glAccountAndHistories.each { accValue ->
 	   JSONObject obj = new JSONObject();
 	   id = "id_" + i++;
 	   obj.put("id", id);
 	   obj.putAll(accValue);
-	   obj.put("totalEndingBalance", (accValue.totalPostedDebits- accValue.totalPostedCredits));
+	   //obj.put("totalEndingBalance", (accValue.totalPostedDebits- accValue.totalPostedCredits));
 	   obj.put("currencySymbol", com.ibm.icu.util.Currency.getInstance("INR").getSymbol(locale));
 	   jsonTrialBalanceData.add(obj);
-	   parentGlAccountId=accValue.parentGlAccountId;
-	   if(UtilValidate.isEmpty(trillDownTrialBalanceMap.get(parentGlAccountId))){
+	   glAccountClassId=accValue.glAccountClassId;
+	   if(UtilValidate.isEmpty(trillDownTrialBalanceMap.get(glAccountClassId))){
 		   innerGlmap=[:];
 		   innerGlmap["debit"]=accValue.totalPostedDebits;
 		   innerGlmap["credit"]=accValue.totalPostedCredits;
-		   innerGlmap["endingBal"]=(accValue.totalPostedDebits- accValue.totalPostedCredits);
+		   innerGlmap["openingD"]=accValue.openingD;
+		   innerGlmap["openingC"]=accValue.openingC;
+		   innerGlmap["endingBal"]=((accValue.totalPostedDebits+accValue.openingD)- (accValue.totalPostedCredits+accValue.openingC));
 		   List<GenericValue> accValueList=FastList.newInstance();
 		   accValueList.add(accValue);
 		   innerGlmap["chaildGlList"]=accValueList;
-		   trillDownTrialBalanceMap[parentGlAccountId]=innerGlmap;
-	   }else if(UtilValidate.isNotEmpty(trillDownTrialBalanceMap.get(parentGlAccountId))){
-	         updateInnerGlMap=(Map)trillDownTrialBalanceMap.get(parentGlAccountId);
+		   trillDownTrialBalanceMap[glAccountClassId]=innerGlmap;
+	   }else if(UtilValidate.isNotEmpty(trillDownTrialBalanceMap.get(glAccountClassId))){
+	         updateInnerGlMap=(Map)trillDownTrialBalanceMap.get(glAccountClassId);
 			 updateInnerGlMap["debit"]+=accValue.totalPostedDebits;
 			 updateInnerGlMap["credit"]+=accValue.totalPostedCredits;
-			 updateInnerGlMap["endingBal"]+=(accValue.totalPostedDebits- accValue.totalPostedCredits);
+			 updateInnerGlMap["endingBal"]+=((accValue.totalPostedDebits+accValue.openingD)- (accValue.totalPostedCredits+accValue.openingC));
 			 List<GenericValue> accValueUpdateList=FastList.newInstance();
 			accValueUpdateList= updateInnerGlMap["chaildGlList"];
 			accValueUpdateList.add(accValue);
 			 updateInnerGlMap["chaildGlList"]=accValueUpdateList;
-			 trillDownTrialBalanceMap[parentGlAccountId]=updateInnerGlMap;
+			 trillDownTrialBalanceMap[glAccountClassId]=updateInnerGlMap;
 	   }
    }
-List trailBalParentGlAccount = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountId", EntityOperator.IN, glAccountAndHistories.parentGlAccountId), null, null, null, false);
-   trailBalParentGlAccount.each{ parentGl ->
-	   parentGlJson.put(parentGl.glAccountId , parentGl.accountName);
-	   parentGlNameMap[parentGl.glAccountId]=parentGl.accountName;
-   }
+
 }
 
 
 context.put("jsonTrialBalanceData", jsonTrialBalanceData.toString());
 context.put("parentGlJson", parentGlJson.toString());
 //using for pdf report
+//Debug.log("trillDownTrialBalanceMap============="+trillDownTrialBalanceMap);
 context.put("trillDownTrialBalanceMap", trillDownTrialBalanceMap);
 context.put("parentGlNameMap", parentGlNameMap);
-
-
