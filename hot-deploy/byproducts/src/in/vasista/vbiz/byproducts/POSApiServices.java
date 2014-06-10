@@ -520,4 +520,43 @@ Debug.logInfo("result:" + result, module);
 Debug.logInfo("result:" + result, module);		 
     	return result;
     }            
+    
+
+    public static Map<String, Object> getFacilityDues(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+    	String facilityId = (String) context.get("boothId");
+		if (UtilValidate.isEmpty(facilityId)) {
+			Debug.logError("Empty facility Id", module);
+			return ServiceUtil.returnError("Empty facility Id");	   
+		}	
+  		GenericValue facility = null;
+  		try{
+  			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId",facilityId),false);
+  		}catch(GenericEntityException e){
+  			Debug.logWarning("Error fetching facility " +facilityId + " " +  e.getMessage(), module);
+			return ServiceUtil.returnError("Error fetching facility " + facilityId);	   
+  		} 			
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!hasFacilityAccess(dctx, UtilMisc.toMap("userLogin", userLogin, "facility", facility))) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + 
+            		userLogin.get("userLoginId") + " attempt to access facility: " + facilityId, module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");        	
+        }     
+		Map svcResult = FastMap.newInstance(); 
+		try {
+			svcResult = dispatcher.runSync("getBoothDues", context);
+			if (ServiceUtil.isError(svcResult)) {
+				String errMsg = ServiceUtil.getErrorMessage(svcResult);
+				Debug.logError(errMsg, module);
+				return ServiceUtil.returnError(errMsg);
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Problem fetching dues for booth " + facilityId, module);
+			return ServiceUtil.returnError("Problem fetching dues for booth " + facilityId);
+		}	
+		return svcResult;   
+    }
 }
