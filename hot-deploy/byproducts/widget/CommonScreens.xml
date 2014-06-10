@@ -135,14 +135,16 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-                                    <not><if-empty field="party"/></not>
-                                </and>
+                     <section>
+                       <condition>
+                         <and>
+                               <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                                <not><if-empty field="party"/></not>
+                                <if-has-permission permission="BYPRODUCTS" action="_VIEW"/>
+                            </and>
                             </condition>
                             <widgets>
+                            	 <include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="ByProductFacilityTabBar"/>                            
                                 <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileTabBar"/>
                             </widgets>
                         </section>
