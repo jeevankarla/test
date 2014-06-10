@@ -23,8 +23,8 @@
     <EnumerationType description="Shoppee Rent" enumTypeId="SHOPEE_RENT" />
     <Enumeration description="Shoppee Rent" enumCode="SHOPEE_RENT" enumId="SHOPEE_RENT" enumTypeId="SHOPEE_RENT"/>
 
-<ContactList contactListId="SMS_ALLOWED_TST_LST" contactListName="Allowed test list" contactListTypeId="ANNOUNCEMENT" contactMechTypeId="TELECOM_NUMBER" ownerPartyId="10030" singleUse="N"/>
-    <TenantConfiguration propertyName="mobileAMIndentEndTime" propertyValue="17:30" propertyTypeEnumId="LMS" description="Cut off time for accepting mobile AM indents"/>
+	<ContactList contactListId="SMS_ALLOWED_TST_LST" contactListName="Allowed test list" contactListTypeId="ANNOUNCEMENT" contactMechTypeId="TELECOM_NUMBER" ownerPartyId="10030" singleUse="N"/>
+    <TenantConfiguration propertyName="mobileAMIndentEndTime" propertyValue="17:00" propertyTypeEnumId="LMS" description="Cut off time for accepting mobile AM indents"/>
     <TenantConfiguration propertyName="mobilePMIndentEndTime" propertyValue="09:30" propertyTypeEnumId="LMS" description="Cut off time for accepting mobile PM indents"/>
 
 </entity-engine-xml>

@@ -190,6 +190,31 @@ Debug.logInfo("indentResults:" + indentMap, module);
             		userLogin.get("userLoginId") + " attempt to access facility: " + boothId, module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");        	
         } 
+		Timestamp supplyDate = (Timestamp) context.get("supplyDate");
+		String subscriptionTypeId = (String) context.get("subscriptionTypeId");        
+        // Next check for indent cut-off times, if configured
+		try{
+			GenericValue tenantConfigMobileIndentEndTime = null;
+			if (subscriptionTypeId.equals("AM")) {
+				tenantConfigMobileIndentEndTime = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","mobileAMIndentEndTime"), false);
+			} else if (subscriptionTypeId.equals("PM")) {
+				tenantConfigMobileIndentEndTime = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","mobilePMIndentEndTime"), false);			
+			}
+			if (UtilValidate.isNotEmpty(tenantConfigMobileIndentEndTime)) {
+				// e.g. 09:30 or 17:00
+				 String tenantConfigMobileIndentEndTimeStr = tenantConfigMobileIndentEndTime.getString("propertyValue");
+				 String currentTimeStr = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "HH:mm");
+				 if (currentTimeStr.compareTo(tenantConfigMobileIndentEndTimeStr) > 0) {
+			            Debug.logWarning("**** Indent cutoff time exceeded [" + currentTimeStr + " > " + 
+			            		tenantConfigMobileIndentEndTimeStr + "]", module);
+			            return ServiceUtil.returnError("Indent cutoff time exceeded [" + currentTimeStr + " > " + 
+			            		tenantConfigMobileIndentEndTimeStr + "]");					 
+				 }
+			}
+		 }catch (GenericEntityException e) {
+			// TODO: handle exception
+			 Debug.logError(e, module);
+		}        
         
 		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context
 				.get("indentItems");
@@ -204,8 +229,7 @@ Debug.logInfo(infoString, module);
 				.returnSuccess("Indent items successfully processed.");
 		Map<String, Object> indentResults = FastMap.newInstance();
 
-		Timestamp supplyDate = (Timestamp) context.get("supplyDate");
-		String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+
 		String shipmentTypeId = subscriptionTypeId + "_SHIPMENT";
 		String productSubscriptionTypeId = "CASH";
 		String routeChangeFlag = "";

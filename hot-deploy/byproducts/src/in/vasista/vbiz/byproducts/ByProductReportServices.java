@@ -1038,6 +1038,7 @@ public class ByProductReportServices {
 	        		if (UtilValidate.isNotEmpty(priceResult)) {
 						BigDecimal totalAmount = (BigDecimal)priceResult.get("totalPrice");
 						BigDecimal basicPrice = (BigDecimal)priceResult.get("basicPrice");
+						BigDecimal mrpPrice = (BigDecimal)priceResult.get("mrpPrice");						
 						List<GenericValue> taxList = (List)priceResult.get("taxList");
 						BigDecimal BED = BigDecimal.ZERO;
 						BigDecimal VAT = BigDecimal.ZERO;
@@ -1084,6 +1085,7 @@ public class ByProductReportServices {
 						priceCatMap.put("BEDSECCESS", BEDSECCESS);
 						priceCatMap.put("BED", BED);
 						priceCatMap.put("basicPrice", basicPrice);
+						priceCatMap.put("mrpPrice", mrpPrice);						
 						priceCatMap.put("totalAmount", totalAmount);
 						priceCatMap.put("vatPercentage", vatPercentage);
 						priceCatMap.put("bedPercentage", bedCessPercent);

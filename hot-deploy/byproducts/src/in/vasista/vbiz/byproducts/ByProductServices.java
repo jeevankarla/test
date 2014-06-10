@@ -2184,13 +2184,23 @@ public class ByProductServices {
 		        Debug.logError(e, "An error occurred while getting the product prices", module);
 		    }
 		    productPrices = EntityUtil.filterByDate(productPrices, priceDate);
+		    
+		    // fetch the mrp price
+		    BigDecimal mrpPrice = BigDecimal.ZERO;
+			List<GenericValue> mrpProdPrices = EntityUtil.filterByCondition(productPrices, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, "MRP_PRICE"));
+		    if (!UtilValidate.isEmpty(mrpProdPrices)) {
+		    	GenericValue mrpProdPrice = EntityUtil.getFirst(mrpProdPrices);
+		    	if (mrpProdPrice != null) {
+		    		mrpPrice = mrpProdPrice.getBigDecimal("price");
+		    	}
+		    }
+		    
 			List<GenericValue> prodPrices = EntityUtil.filterByCondition(productPrices, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, productPriceTypeId+"_%"));
 		    if (UtilValidate.isEmpty(prodPrices)) {
 		    	return ServiceUtil.returnError("Missing price for '" + productId + "' [" + productPriceTypeId + "]");            	
 		    }
-		    
+		    	
 		    GenericValue resultPrice;
-		    
 			resultPrice = EntityUtil.getFirst(prodPrices);
 			if (prodPrices != null && prodPrices.size() > 1) {
 				if (Debug.infoOn()) Debug.logInfo("There is more than one price with the currencyUomId " + currencyDefaultUomId + " and productId " + productId + ", using the latest found with price: " + resultPrice.getBigDecimal("price"), module);
@@ -2250,6 +2260,7 @@ public class ByProductServices {
 	    BigDecimal totalPrice = basicPrice.add(totalTaxAmt);
 	    
 	    result.put("basicPrice", basicPrice);
+	    result.put("mrpPrice", mrpPrice);	    
 	    result.put("price", price);
 	    result.put("totalPrice", totalPrice);
 	    result.put("taxList", taxDetailList);
