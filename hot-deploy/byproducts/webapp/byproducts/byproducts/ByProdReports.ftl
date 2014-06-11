@@ -310,17 +310,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<td width="15%"><input type="submit" value="Download" class="buttontext"/></td>       			
       		</form>
       	</tr>
-      	
-      	<tr class="alternate-row">
-			<form id="CategoryWiseSalesReport" name="CategoryWiseSalesReport" method="post" action="<@ofbizUrl>CategoryWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
-				<td width="30%">CategoryWise Sales Report</td>
-				<td width="15%">From<input  type="text" size="18pt" id="catSalesFromDateId" readonly  name="fromDate"/></td>
-	  			<td width="15%">To<input  type="text" size="18pt" id="catSalesThruDateId" readonly  name="thruDate"/></td>
-	  			<td width="15%"></td>
-      			<td width="15%"></td>
-				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
-			</form>
-		</tr>
 		<tr class="alternate-row">
 			<form id="FieldOfficerWiseSalesReport" name="FieldOfficerWiseSalesReport" method="post" action="<@ofbizUrl>FieldOfficerWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">Field Officer wise Sales Report</td>
@@ -349,7 +338,18 @@ function makeDatePicker1(fromDateId ,thruDateId){
       		</form>	
         </tr>  
         </#if>
-        <#if security.hasEntityPermission("BYPRODUCTS", "_DISREPORT", session)>
+        <#if security.hasEntityPermission("BYPRODUCTS", "_DISREPORT", session) || security.hasEntityPermission("BYPRODUCTS", "_MKTREPOR", session)>
+        	
+      	<tr class="alternate-row">
+			<form id="CategoryWiseSalesReport" name="CategoryWiseSalesReport" method="post" action="<@ofbizUrl>CategoryWiseSalesReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">CategoryWise Sales Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="catSalesFromDateId" readonly  name="fromDate"/></td>
+	  			<td width="15%">To<input  type="text" size="18pt" id="catSalesThruDateId" readonly  name="thruDate"/></td>
+	  			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
+			</form>
+		</tr>
         <tr class="alternate-row">
         	<form id="IndentAbstractReport" name="IndentAbstractReport" method="post"  target="_blank" action="<@ofbizUrl>IndentAbstractReport</@ofbizUrl>">	
       			<td width="30%">RouteWise Indent Abstract Report </td>
