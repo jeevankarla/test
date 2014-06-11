@@ -1613,7 +1613,7 @@ public class ByProductNetworkServices {
 				 Debug.logError(e, module);
 			}		 
 			//get all invoices for this facility that either haven't been paid  or  have been paid after the opening balance date
-			 if(!enableSameDayPmEntry){			 
+			/* if(!enableSameDayPmEntry){			 
 				 Timestamp prevDay = UtilDateTime.addDaysToTimestamp(dayBegin, -1);
 				 List prevshipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(prevDay, "yyyy-MM-dd HH:mm:ss"),"PM");
 				 if(UtilValidate.isNotEmpty(prevshipmentIds)){			 
@@ -1641,9 +1641,9 @@ public class ByProductNetworkServices {
 					 exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, null));
 				 }
 				 
-			 }else{
+			 }else{*/
 				 exprListForParameters.add(EntityCondition.makeCondition("shipmentId", EntityOperator.NOT_EQUAL, null));
-			 }
+			// }
 				
 			List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
 			
@@ -1676,7 +1676,7 @@ public class ByProductNetworkServices {
 					exprList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));				
 					exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR,EntityCondition.makeCondition("paidDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
 					exprList.add(EntityCondition.makeCondition("pmPaymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
-					EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);				
+					EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);		
 					try{			
 						pendingInvoiceList = delegator.findList("InvoiceAndApplAndPayment", cond, null ,null, null, false);		        
 					// no payment applications then add invoice total amount to OB or unapplied amount.										
@@ -6034,7 +6034,7 @@ Debug.logInfo("result= " + result, module);
 				exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));	
 			}
 			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList(obInvoiceType, "SHOPEE_RENT", "MIS_INCOME_IN")));		
-			List invoiceStatusList = UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF");		
+			List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");		
 			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,invoiceStatusList));
 			
 			EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);	
