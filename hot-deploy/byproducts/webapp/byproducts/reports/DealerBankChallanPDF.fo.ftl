@@ -42,9 +42,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 		    		 <#assign noOfbooths=noOfbooths+1>	
         	          <#assign facilityId = boothSaleMap.getKey()>
         	           <#assign finDetail =  facilityBankMap.get(facilityId)?if_exists>
+        	           <#assign accNumber=""> <#assign bankName="">
+        	          <#if finDetail?has_content >
         	         	<#assign accNumber = finDetail.get('accountCode')?if_exists>
         	         	<#assign bankName = finDetail.get('bankName')?if_exists>
-        	         
+        	           </#if>
         	          <#assign facility = delegator.findOne("Facility", {"facilityId" :facilityId}, true)>
         	           <#assign boothSaleDetails = boothSaleMap.getValue()>
         	                    
