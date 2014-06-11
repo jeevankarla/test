@@ -2276,7 +2276,7 @@
 		<field name="acctgFormulaId" type="id-ne"></field>
 		<field name="hasTable" type="indicator"></field>
 		<field name="description" type="description"></field>
-		<field name="formula" type="long-varchar"></field>
+		<field name="formula" type="very-long"></field>
 		<field name="isSlabBased" type="indicator"></field>
 		<prim-key field="acctgFormulaId" />
 	</entity>
