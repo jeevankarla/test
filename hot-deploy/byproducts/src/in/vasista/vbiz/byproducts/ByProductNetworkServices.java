@@ -2731,6 +2731,12 @@ public class ByProductNetworkServices {
 			Map<String, Object> result = FastMap.newInstance(); 
 		    List boothsDetailsList = FastList.newInstance();
 		    List conditionList = FastList.newInstance();
+		    // get fieldstaff map
+		    Map<String, String> facilityFieldStaffMap = FastMap.newInstance();
+		    Map<String, Object> facilityFieldStaffResult = getFacilityFieldStaff(dctx, context);
+		    if (facilityFieldStaffResult != null && facilityFieldStaffResult.get("facilityFieldStaffMap") != null) {
+		    	facilityFieldStaffMap =  (Map<String, String>)facilityFieldStaffResult.get("facilityFieldStaffMap");
+		    }
 			try {
 				conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
 				if(UtilValidate.isNotEmpty(categoryTypeEnum)){
@@ -2741,6 +2747,7 @@ public class ByProductNetworkServices {
 		        Iterator<GenericValue> boothIter = booths.iterator();
 		    	while(boothIter.hasNext()) {
 		            GenericValue booth = boothIter.next();
+		            String boothId = booth.getString("facilityId");
 		            String vendorPhone = "";
 		            String latitude="";
 		            String longitude="";
@@ -2754,11 +2761,15 @@ public class ByProductNetworkServices {
 		            } 
 		            String amRouteId = "";
 		            String pmRouteId = "";
-		            Map amDetails = (Map)(getBoothRoute(dctx, UtilMisc.toMap("boothId", booth.getString("facilityId"), "subscriptionTypeId", "AM", "userLogin", userLogin))).get("boothDetails");
+		            String salesRep = ""; 
+		            if (facilityFieldStaffMap.get(boothId) != null) {
+			        	salesRep = PartyHelper.getPartyName(delegator, (String)facilityFieldStaffMap.get(boothId), false);		            	
+		            }
+		            Map amDetails = (Map)(getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", "AM", "userLogin", userLogin))).get("boothDetails");
 	    			if (amDetails != null) {
 	    				amRouteId = (String)amDetails.get("routeId");
 	    			}
-		            Map pmDetails = (Map)(getBoothRoute(dctx, UtilMisc.toMap("boothId", booth.getString("facilityId"), "subscriptionTypeId", "PM", "userLogin", userLogin))).get("boothDetails");
+		            Map pmDetails = (Map)(getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", "PM", "userLogin", userLogin))).get("boothDetails");
 	    			if (pmDetails != null) {
 	    				pmRouteId = (String)pmDetails.get("routeId");
 	    			}
@@ -2769,11 +2780,12 @@ public class ByProductNetworkServices {
 					}
 	    			
 			        Map<String, Object> boothDetails = FastMap.newInstance();
-			        boothDetails.put("facilityId", booth.getString("facilityId"));
+			        boothDetails.put("facilityId", boothId);
 			        boothDetails.put("facilityName", booth.getString("facilityName"));
 			        boothDetails.put("category", booth.getString("categoryTypeEnum"));
 			        boothDetails.put("ownerName", vendorName);
-			        boothDetails.put("ownerPhone", vendorPhone);			        
+			        boothDetails.put("ownerPhone", vendorPhone);	
+			        boothDetails.put("salesRep", salesRep);			        			        
 			        boothDetails.put("amRouteId", amRouteId);
 			        boothDetails.put("pmRouteId", pmRouteId);			        
 			        boothDetails.put("latitude", latitude);			        
