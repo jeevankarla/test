@@ -1212,8 +1212,7 @@ under the License.emplpunch
   <service name="fetchLastPunch" engine="java" invoke="fetchLastPunch" location="in.vasista.vbiz.humanres.PunchService" auth="true" export="true">
         <description>fetch punch</description>
        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
-      <auto-attributes include="pk" mode="INOUT" optional="true"/>
-      <auto-attributes include="nonpk" mode="INOUT" optional="true"/>
+      <attribute name="deviceId" mode="IN" optional="true" type="String"/>
       <attribute name="punchEntry" mode="OUT" type="Map" optional="true"></attribute>
   </service>
 </services>

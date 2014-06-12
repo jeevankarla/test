@@ -99,9 +99,20 @@ public class PunchService {
 		try {
 			EntityFindOptions efo = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, 1, 1, true);
 			//efo.setFetchSize(1);
-			List<GenericValue> emplPunchRaw = delegator.findList("EmplPunchRaw", null, null, UtilMisc.toList("-createdDateTime"),efo, false);
+			EntityCondition cond = null;
+			if(UtilValidate.isNotEmpty(context.get("deviceId"))){
+				cond = EntityCondition.makeCondition("deviceId", EntityOperator.EQUALS,context.get("deviceId"));
+			}
+			List<GenericValue> emplPunchRaw = delegator.findList("EmplPunchRaw", cond, null, UtilMisc.toList("-createdDateTime"),efo, false);
 			//Debug.log("emplPunchRaw===="+emplPunchRaw);
-			result.put("punchEntry", EntityUtil.getFirst(emplPunchRaw));
+			Map  punchEntryMap = FastMap.newInstance();
+			GenericValue punchEntry =  EntityUtil.getFirst(emplPunchRaw);
+			if(UtilValidate.isNotEmpty(punchEntry)){
+				punchEntryMap.put("partyId", punchEntry.getString("partyId"));
+				punchEntryMap.put("deviceId", punchEntry.getString("deviceId"));
+				punchEntryMap.put("punchDateTime", punchEntry.getTimestamp("punchDateTime"));
+			}
+			result.put("punchEntry", punchEntryMap);
         } catch (Exception e) {
 	   Debug.logError(e, module);
 	   return ServiceUtil.returnError(e.getMessage());
