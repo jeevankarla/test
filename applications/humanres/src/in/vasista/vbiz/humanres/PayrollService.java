@@ -93,7 +93,7 @@ public class PayrollService {
 					Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId,"userLogin", userLogin);
 					runSACOContext.put("partyIdFrom", partyIdFrom);
 					runSACOContext.put("partyId", partyId);
-					dispatcher.runAsync("generatePayrollBilling", runSACOContext);
+					dispatcher.runAsync("generatePayrollBilling", runSACOContext,false);
 					if(ServiceUtil.isError(result)){
        					Debug.logError("Problems in service Parol Header", module);
 			  			return ServiceUtil.returnError("Problems in service Parol Header");
@@ -124,8 +124,10 @@ public class PayrollService {
 				Locale locale = Locale.getDefault();
 				GenericValue periodBilling = null;
 				String customTimePeriodId = null;
-				boolean generationFailed = false;		
+				boolean generationFailed = false;
+				boolean beganTransaction = false;
 				try{
+					beganTransaction = TransactionUtil.begin(72000);
 					try {
 						periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 						customTimePeriodId = periodBilling.getString("customTimePeriodId");
@@ -137,6 +139,7 @@ public class PayrollService {
 					try {
 						customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
 					} catch (GenericEntityException e1) {
+						 TransactionUtil.rollback();
 						Debug.logError(e1,"Error While Finding Customtime Period");
 				    	periodBilling.set("statusId", "GENERATION_FAIL");
 						periodBilling.store();
@@ -226,7 +229,7 @@ public class PayrollService {
 					return ServiceUtil.returnError("Error While generating PeriodBilling" + e);
 			}
 			result.put("periodBillingId", periodBillingId);
-				return result;
+			return result;
 		
 			}
 			public static Map<String, Object>  cancelPayrollBilling(DispatchContext dctx, Map<String, ? extends Object> context)  {
@@ -267,45 +270,55 @@ public class PayrollService {
 				result = ServiceUtil.returnSuccess("PayRoll Billing Successfully Cancelled..");
 				return result;
 		}// end of service
-			private static  Map<String, Object> fetchBasicSalaryAndGrade(DispatchContext dctx, String partyId) {
-				double amount = 0;
-		        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-		        Delegator delegator = dctx.getDelegator();
-		        FastMap result = FastMap.newInstance();
-		        try {
-		            List conditionList = UtilMisc.toList(
-		                    EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
-		            conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
-		            conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
-		            EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);        	
-		            // sort by -fromDate to get the newest (largest) first, just in case there is more than one, should not happen but...
-		            List<GenericValue> payHistory = delegator.findList("PayHistory", condition, null, UtilMisc.toList("-fromDate"), null, false);
-		            if (payHistory.size() > 0) {
+			private static  Map<String, Object> fetchBasicSalaryAndGrade(DispatchContext dctx, Map context) {
+				 	GenericValue userLogin = (GenericValue) context.get("userLogin");
+			        String payHeadTypeId = (String) context.get("payHeadTypeId");
+			        String employeeId = (String) context.get("employeeId");
+			        String orgPartyId = (String) context.get("orgPartyId");
+			        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+					Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+					String timePeriodId = (String) context.get("timePeriodId");
+					double amount = 0;
+			        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+			        Delegator delegator = dctx.getDelegator();
+			        FastMap result = FastMap.newInstance();
+			        try {
+			            List conditionList = UtilMisc.toList(
+			                    EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
+			            conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart));
+			            conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, timePeriodEnd)));
+			            EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);        	
+			            // sort by -fromDate to get the newest (largest) first, just in case there is more than one, should not happen but...
+			            List<GenericValue> payHistory = delegator.findList("PayHistory", condition, null, UtilMisc.toList("-fromDate"), null, false);
+			            if(UtilValidate.isEmpty(payHistory)){
+			            	result.put("amount", amount);
+			            	result.put("payGradeId", -1);
+			            	Debug.logWarning("Zero PayHistory records for partyId '" + employeeId + "'", module);            	
+			            	return result;
+			            }
 		            	GenericValue row = payHistory.get(0);
 		            	String payGradeId = row.getString("payGradeId");
 		            	String salaryStepSeqId = row.getString("salaryStepSeqId");
 		            	GenericValue salaryStep = delegator.findOne("SalaryStep", UtilMisc.toMap(
 		            			"payGradeId", payGradeId, "salaryStepSeqId", salaryStepSeqId), false);
-		            	
-		            	GenericValue payGrade = delegator.findOne("PayGrade", UtilMisc.toMap(
+		            	if(UtilValidate.isEmpty(salaryStep)){
+			            	Debug.logError("Invalid SalaryStep record ::"+UtilMisc.toMap(
+			            			"payGradeId", payGradeId, "salaryStepSeqId", salaryStepSeqId), module);
+			            	
+			            	return ServiceUtil.returnError("Invalid SalaryStep record ::"+UtilMisc.toMap(
+		            			"payGradeId", payGradeId, "salaryStepSeqId", salaryStepSeqId));
+		            	}
+		                amount = salaryStep.getDouble("amount");
+		                GenericValue payGrade = delegator.findOne("PayGrade", UtilMisc.toMap(
 		            			"payGradeId", payGradeId), true);
 		            	result.put("payGradeId", payGrade.get("seqId"));
-		                if (salaryStep != null) {
-		                    amount = salaryStep.getDouble("amount");
-		                }else {
-		    	            Debug.logWarning("Zero SalaryStep records for partyId '" + partyId + "'", module);
-		                }
 		                result.put("amount", amount);
-		            }
-		            else {
-		                Debug.logWarning("Zero PayHistory records for partyId '" + partyId + "'", module);            	
-		            }
-		        }
-		        catch (GenericEntityException e) {
-		            Debug.logError(e, "Error retrieving PayHistory records for partyId '" + partyId + "'", module);
-		        }        
-		        return result;
-			}
+			        }
+			        catch (GenericEntityException e) {
+			            Debug.logError(e, "Error retrieving PayHistory records for partyId '" + employeeId + "'", module);
+			        }        
+			        return result;
+		}
 			
 	public static String fetchInvoiceItemTypeDescription(DispatchContext dctx, String itemTypeId) 
 			throws GenericEntityException {
@@ -527,8 +540,9 @@ public class PayrollService {
 				Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");        
 				Map<String, Object> serviceResults;
-				Boolean isCalc = Boolean.FALSE;
-		        List itemsList = FastList.newInstance();
+				List itemsList = FastList.newInstance();
+				/*Boolean isCalc = Boolean.FALSE;
+		        
 		        
 				List conditionList = UtilMisc.toList(
 		                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
@@ -553,7 +567,13 @@ public class PayrollService {
 		            input.put("amount", adjustment.get("amount"));
 					itemsList.add(input);
 					
-		        } 
+		        } */
+				context.put("employeeId", partyId);
+				Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
+				Map input = UtilMisc.toMap("payrollItemTypeId", "PAYROL_BEN_SALARY");
+			    input.put("quantity", BigDecimal.ONE);
+	            input.put("amount", fetchBasicSalaryAndGradeMap.get("amount"));
+				itemsList.add(input);
 		        Map<String, Object> results = ServiceUtil.returnSuccess();
 				results.put("itemsList", itemsList);
 				return results; 
@@ -1049,7 +1069,7 @@ public class PayrollService {
 	                BigDecimal modifyAmount = BigDecimal.ZERO;
 	                if (allTrue) {
 	                	StringBuilder priceInfoDescription = new StringBuilder();
-	                	Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, employeeId);
+	                	Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
 	                    List<GenericValue> payHeadPriceActions = delegator.findByAndCache("PayHeadPriceAction", UtilMisc.toMap("payrollBenDedRuleId", payHeadPriceRuleId));
 	                    Debug.log("payHeadPriceActions ######################################"+payHeadPriceActions.size());
 	                    for (GenericValue payHeadPriceAction: payHeadPriceActions) {
@@ -1326,7 +1346,7 @@ public class PayrollService {
 	            
 	            result.put("vehicleType", employeeDetail.getString("vehicleType"));
 	            // get pay grade here
-	            Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, employeeId);
+	            Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
 	            result.put("payGradeId", (String)fetchBasicSalaryAndGradeMap.get("payGradeId"));
 	            
 	            } catch (GenericEntityException e) {
