@@ -703,6 +703,54 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="CratesAndCansReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" value="cratesAndCansReport"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/CratesAndCansReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/byproducts/CratesAndCansReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets> 
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="CratesAndCansDayWiseReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" value="cratesAndCansReport"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/CratesAndCansReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/byproducts/CratesAndCansDayWiseReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets> 
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="CashReceiptReportPDF">
 		<section>
 			<actions>

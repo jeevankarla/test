@@ -107,6 +107,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("DueAbsFromDateId","DueAbsThruDateId");
 		makeDatePicker("catSalesFromDateId","catSalesThruDateId")
 		makeDatePicker("fwsFromDateId","fwsThruDateId");
+		makeDatePicker("cacFromDateId","cacThruDateId");
+		makeDatePicker("cacdFromDateId","cacdThruDateId");
 		
 		
 		
@@ -315,6 +317,26 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<td width="30%">Field Officer wise Sales Report</td>
 				<td width="15%">From<input  type="text" size="18pt" id="fwsFromDateId" readonly  name="fromDate"/></td>
 	  			<td width="15%">To<input  type="text" size="18pt" id="fwsThruDateId" readonly  name="thruDate"/></td>
+	  			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
+			</form>
+		</tr>
+		<tr class="alternate-row">
+			<form id="CratesAndCansReport" name="CratesAndCansReport" method="post" action="<@ofbizUrl>CratesAndCansReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Crates And Cans Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="cacFromDateId" readonly  name="fromDate"/></td>
+	  			<td width="15%">To<input  type="text" size="18pt" id="cacThruDateId" readonly  name="thruDate"/></td>
+	  			<td width="15%"></td>
+      			<td width="15%"></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
+			</form>
+		</tr>
+		<tr class="alternate-row">
+			<form id="CratesAndCansDayWiseReport" name="CratesAndCansDayWiseReport" method="post" action="<@ofbizUrl>CratesAndCansDayWiseReport.pdf</@ofbizUrl>" target="_blank">	
+				<td width="30%">Crates And Cans Detailed Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="cacdFromDateId" readonly  name="fromDate"/></td>
+	  			<td width="15%">To<input  type="text" size="18pt" id="cacdThruDateId" readonly  name="thruDate"/></td>
 	  			<td width="15%"></td>
       			<td width="15%"></td>
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
