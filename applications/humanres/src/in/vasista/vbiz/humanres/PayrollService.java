@@ -572,7 +572,7 @@ public class PayrollService {
 				Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
 				Map input = UtilMisc.toMap("payrollItemTypeId", "PAYROL_BEN_SALARY");
 			    input.put("quantity", BigDecimal.ONE);
-	            input.put("amount", fetchBasicSalaryAndGradeMap.get("amount"));
+	            input.put("amount",new BigDecimal((Double)fetchBasicSalaryAndGradeMap.get("amount")));
 				itemsList.add(input);
 		        Map<String, Object> results = ServiceUtil.returnSuccess();
 				results.put("itemsList", itemsList);
