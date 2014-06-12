@@ -52,6 +52,18 @@
      <InvoiceItemType description="TDS on Commission or Brokerage (Sec. 194 H)" hasTable="N" invoiceItemTypeId="TDS_194H" parentTypeId="" defaultGlAccountId="217113" taxAuthPartyId="TAX1"/>
        <!-- end of  transporter margin related -->
     <TenantConfiguration propertyName="setVehicleStatusFinal" propertyValue="N" propertyTypeEnumId="LMS" description="SetVehcileTripStatus to Final or Not"/>
+     <!-- TRNSMRGN Admin permissions -->
+    <SecurityGroup description="All 'TRNS MRGN(DTC)' permissions like create,cancel " groupId="TRNSMRGNADMIN"/>    
+    <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="TRNSMRGN_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_ADMIN"/>
+    <!-- TRNSMRGN View permissions -->
+    <SecurityGroup description=" 'TRNS MRGN(DTC)' permissions with restriction on download of VendorMarginMainReport" groupId="TRNSMRGNVIEW"/>    
+    <SecurityGroupPermission groupId="TRNSMRGNVIEW" permissionId="TRNSMRGN_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_VIEW"/>
+    
+    
+    
+    
     
     <CustomTimePeriod customTimePeriodId="MAR-1-31" periodTypeId="MARGIN_MONTH" periodNum="3" periodName="March(1-31)" fromDate="2014-03-01" thruDate="2014-03-31" isClosed="N"  organizationPartyId="Company"/>
     <CustomTimePeriod customTimePeriodId="APR-1-31" periodTypeId="MARGIN_MONTH" periodNum="4" periodName="April(1-30)" fromDate="2014-04-01" thruDate="2014-04-30" isClosed="N"  organizationPartyId="Company"/>
