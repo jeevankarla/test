@@ -107,17 +107,12 @@ shipmentIds = [];
 	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
 	shipmentIds.addAll(pmShipmentIds);
 	
-/*else{
-	shipmentIds  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
-}
-amShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"AM");
-pmShipmentIds = ByProductNetworkServices.getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"PM");*/
 //getADHOC shipments 
-List adhocShipments  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
+List adhocShipments=ByProductNetworkServices.getShipmentIdsByType(delegator , dayBegin,dayEnd,"RM_DIRECT_SHIPMENT");
+//List adhocShipments  = ByProductNetworkServices.getShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),"RM_DIRECT_SHIPMENT",null);
 if(UtilValidate.isNotEmpty(adhocShipments)){
 	shipmentIds.addAll(adhocShipments);
 }
-
 amProductTotals=[:];
 pmProductTotals=[:];
 
