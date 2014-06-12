@@ -9,7 +9,7 @@
 				<set field="tabButtonItem" value="TransporterMargins" />
 				<set field="tabButtonItem2" value="TransporterMargins" />
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
-                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>                
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/> 
                 <entity-condition list="listVendorReports" entity-name="PeriodBilling">
                 	<condition-list combine="and">
                 		<condition-expr field-name="billingTypeId" operator="equals" value="PB_LMS_VNDR_MRGN"/>
@@ -142,10 +142,56 @@
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
-				</section>							
+				</section>
 			</widgets>
 		</section>
 	</screen>
+	<screen name="SendTransporterMarginSMS">
+        <section>
+            <actions>
+                <set field="titleProperty" value="TransporterBilling"/>
+				<set field="tabButtonItem" value="TransporterMargins" />
+				<set field="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/transporter/TransporterMarginReport.groovy" /> 
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/transporter/TransporterMarginReportSms.groovy" />
+            </actions>
+           <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template	location="component://byproducts/webapp/byproducts/transporter/smsReport.fo.ftl" /></xsl-fo>
+                </platform-specific>
+            </widgets>          
+        </section>
+    </screen>
+    <screen name="DTCCostReport">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/transporter/DTCCostReport.groovy" />
+			</actions>
+           <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template	location="component://byproducts/webapp/byproducts/transporter/DTCCostReport.fo.ftl" /></xsl-fo>
+                </platform-specific>
+            </widgets>          
+        </section>
+    </screen>
+    <screen name="DTCCostReportCSV">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/transporter/DTCCostReport.groovy" />
+			</actions>
+           <widgets>
+				<include-form name="DTCCostReportCsv" location="component://byproducts/widget/TransporterForms.xml" />
+            </widgets>          
+        </section>
+    </screen>
 	 <screen name="FinesAndPenalties">
         <section>
             <actions>

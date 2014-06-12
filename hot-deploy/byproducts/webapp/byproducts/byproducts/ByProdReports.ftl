@@ -676,6 +676,23 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
 						</form>
 					</tr>
+					 <tr class="alternate-row">
+						<form id="DTCCostReport" name="DTCCostReport" method="post" action="<@ofbizUrl>DTCCostReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">DTC Cost Report</td>
+							<td width="15%">Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list timePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>            
+								</select>
+	      					</td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('DTCCostReport', '<@ofbizUrl>DTCCostReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							<input type="submit" value="CSV" onClick="javascript:appendParams('DTCCostReport', '<@ofbizUrl>DTCCostReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+						</form>
+					</tr>
 					<tr class="alternate-row">
       					<form id="dueParticulars" name="dueParticulars" method="post" action="<@ofbizUrl>dueParticulars.txt</@ofbizUrl>" target="_blank">	
       						<td width="30%">Due Particulars<input  type="hidden"  value="DuesParticulers"   name="reportTypeFlag"/></td>

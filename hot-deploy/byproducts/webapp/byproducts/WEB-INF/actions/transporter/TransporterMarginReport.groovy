@@ -86,6 +86,7 @@ conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperato
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, ["commissionDate"], null, false);
 
+routeSmsMap=[:];
 if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	facilityCommissionList.each { facilityCommission ->
 		facilityId = facilityCommission.facilityId;
@@ -153,8 +154,13 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		if(UtilValidate.isNotEmpty(facilityCommission.dues)){
 			routeValueMap["pendingDue"] = ((new BigDecimal(facilityCommission.dues)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		totalsMap["grTotpendingDue"] += ((new BigDecimal(facilityCommission.dues)).setScale(2,BigDecimal.ROUND_HALF_UP));
-
 		}		
+		// for transporter SMS
+		if(UtilValidate.isEmpty(routeSmsMap[facilityId])){
+			routeSmsMap[facilityId] = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+		}else{
+			routeSmsMap[facilityId] += ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+		}
 	}
 }
 masterList.add(transporterMargins);
@@ -165,8 +171,39 @@ facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(
 facRecoveryMap=facilityRecoveryResult.get("facilityRecoveryInfoMap");
 partyRecoveryInfoMap=facilityRecoveryResult.get("partyRecoveryInfoMap");
 
+// for transporter SMS 
+finalMap = [:];
+if(UtilValidate.isNotEmpty(routeSmsMap)){
+	Iterator mapIter = routeSmsMap.entrySet().iterator();
+	while (mapIter.hasNext()) {
+		Map.Entry entry = mapIter.next();
+		 netAmount = BigDecimal.ZERO;
+		 totalFine = BigDecimal.ZERO;
+		 routeId = entry.getKey();
+		 routeAmount = entry.getValue();
+		 if(UtilValidate.isNotEmpty(facRecoveryMap.get(routeId))){
+			 facilityRecvry = facRecoveryMap.get(routeId);
+			 if(UtilValidate.isNotEmpty(facilityRecvry.totalFine)){
+				 totalFine = facilityRecvry.totalFine;
+				 netAmount = (routeAmount-totalFine);
+			 }
+		 }else{
+		 	netAmount = routeAmount;
+		 }
+		 if(netAmount!=0){
+			 tempMap = [:];
+			 tempMap["routeAmount"] = routeAmount;
+			 tempMap["totalFine"] = totalFine;
+			 tempMap["netAmount"] = netAmount;
+			 tempTempMap = [:];
+			 tempTempMap.putAll(tempMap);
+			 finalMap.put(routeId,tempTempMap);
+		 }
+	}
+}
+context.put("finalMap",finalMap);
+
 //facilityRecoveryResultRes = TransporterServices.getTransporterTotalsForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId));
 //Debug.log("=====partyTradingMap===="+facilityRecoveryResultRes.get("partyTradingMap"));
 context.put("facilityRecoveryInfoMap", facRecoveryMap);
 context.put("partyFacilityMap", partyFacilityMap);
-

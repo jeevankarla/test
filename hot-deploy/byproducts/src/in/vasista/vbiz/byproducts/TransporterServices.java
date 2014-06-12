@@ -50,7 +50,7 @@
 	
 	import org.ofbiz.network.LmsServices;
 	import in.vasista.vbiz.byproducts.SalesHistoryServices;
-    import java.text.SimpleDateFormat;
+	import java.text.SimpleDateFormat;
 
  	public class TransporterServices {
 		
@@ -1534,6 +1534,83 @@
 				}			
 	        	return result;
 			}
-	}
+		    public static Map<String, Object>  cancelTranporterRecovery(DispatchContext dctx, Map<String, ? extends Object> context)  {
+		    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				Map<String, Object> result = FastMap.newInstance();	
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				String facilityId = (String) context.get("facilityId");
+		    	String customTimePeriodId = (String) context.get("customTimePeriodId");
+		    	String recoveryTypeId = (String)context.get("recoveryTypeId");
+		    	GenericValue customTimePeriod = null;
+		    	try {
+		    		try {
+						customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+					} catch (GenericEntityException e1) {
+						Debug.logError(e1,"Error While Finding CustomTimePeriod");
+						return ServiceUtil.returnError("Error While Finding CustomTimePeriod" + e1);
+					}
+					GenericValue facilityRecovery = delegator.findOne("FacilityRecovery", UtilMisc.toMap("facilityId", facilityId, "customTimePeriodId", customTimePeriodId, "recoveryTypeId",recoveryTypeId), false);
+					if(UtilValidate.isNotEmpty(facilityRecovery)){
+						delegator.removeValue(facilityRecovery);    
+		            }
+		    	}catch (GenericEntityException e) {
+		    		 Debug.logError(e, module);
+		             return ServiceUtil.returnError("Failed to find facilityRecovery " + e);
+				} 
+				result = ServiceUtil.returnSuccess("FacilityRecovery Successfully Cancelled..");
+				return result;
+		}// end of service
+		    
+		    
+		    
+		    public static Map<String, Object>  sendTransporterMarginSMS(DispatchContext dctx, Map<String, Object> context)  {
+		        LocalDispatcher dispatcher = dctx.getDispatcher();	
+		        Delegator delegator = dctx.getDelegator();
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        String facilityId = (String) context.get("facilityId");
+		        String customTimePeriodId = (String) context.get("customTimePeriodId");
+		        BigDecimal routeAmount = (BigDecimal)context.get("routeAmount");
+		        BigDecimal totalFine = (BigDecimal)context.get("totalFine");
+		        BigDecimal netAmount = (BigDecimal)context.get("netAmount");
+		        String fromDate = null;
+		        String thruDate = null;
+		        Map<String, Object> serviceResult;
+		        Map<String, Object> userServiceResult;
+		        String countryCode = "91";
+		        String contactNumberTo = null;
+		        try {
+			        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+		        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+		        		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+		        		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+					    fromDate = (UtilDateTime.toDateString(fromDateTime, "MMMdd")).toString();
+					    thruDate = (UtilDateTime.toDateString(thruDateTime, "MMMdd yyyy")).toString();
+		        	}
+		        }catch (GenericEntityException e) {
+	               Debug.logError(e, module);
+	               return ServiceUtil.returnError(e.getMessage());
+				}
+		        try {
+		        	// Send SMS notification to list
+		        	String text = "Transporter Margin for Period(" +fromDate+"-"+thruDate+") : For Route: " + facilityId + "  Is Sale Amount Rs:" +
+		        	routeAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
+					"  Total Fines Rs: " +
+					totalFine.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) +
+					" Total Net Amount Rs: " +  
+					netAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
+					"  Msg sent by Milkosoft.";
+					Debug.logInfo("Sms text: " + text, module);
+					Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
+						"text", text, "userLogin", userLogin);
+					dispatcher.runAsync("sendSmsToContactListNoCommEvent", sendSmsContext);
+				}
+				catch (GenericServiceException e) {
+					Debug.logError(e, "Error calling sendSmsToContactListNoCommEvent service", module);
+					return ServiceUtil.returnError(e.getMessage());			
+				} 
+		        return ServiceUtil.returnSuccess("Sms successfully sent!");		
+		 }
+}
 
 

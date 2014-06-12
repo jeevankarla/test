@@ -37,4 +37,20 @@
         <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
         <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>              
     </service>
+    <service name="cancelTranporterRecovery" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="cancelTranporterRecovery">
+        <description>Cancel Transporter Recovery based on Fines and Penalties</description>        
+        <attribute name="facilityId" mode="IN" type="String" optional="false"/>   
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/> 
+        <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/> 
+    </service>
+    <service name="sendTransporterMarginSMS" engine="java" auth="true" 
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="sendTransporterMarginSMS">
+        <description>Send Transporter Margin SMS</description>        
+       	<attribute name="facilityId" mode="IN" type="String" optional="false"/>   
+        <attribute name="routeAmount" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="totalFine" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="netAmount" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>  
+    </service>
     </services>

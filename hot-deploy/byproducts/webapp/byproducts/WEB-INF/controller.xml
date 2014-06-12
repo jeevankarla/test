@@ -684,6 +684,9 @@
      <request-map uri="GenerateTrnsptMarginReport.txt"><security https="true" auth="true"/>
         <response name="success" type="view" value="GenerateTrnsptMarginReportTXT"/>
     </request-map>
+    <request-map uri="sendTransporterMarginSMS"><security https="true" auth="true"/>
+        <response name="success" type="view" value="sendTransporterMarginSMS"/>
+    </request-map>
     <request-map uri="FinesAndPenalties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinesAndPenalties"/>
@@ -695,6 +698,13 @@
      <request-map uri="createTransporterRecovery">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createTransporterRecovery"/>
+        <response name="success" type="request" value="FinesAndPenalties"/>
+        <response name="failed" type="view" value="FinesAndPenalties"/>
+        <response name="error" type="view" value="FinesAndPenalties"/>
+    </request-map>
+    <request-map uri="cancelTranporterRecovery">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelTranporterRecovery"/>
         <response name="success" type="request" value="FinesAndPenalties"/>
         <response name="failed" type="view" value="FinesAndPenalties"/>
         <response name="error" type="view" value="FinesAndPenalties"/>
@@ -904,6 +914,14 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="MonthlyVatReportTXT"/>
     </request-map>
+    <request-map uri="DTCCostReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="DTCCostReport"/>
+    </request-map>
+    <request-map uri="DTCCostReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="DTCCostReportCSV"/>
+    </request-map>
     <request-map uri="CategoryWiseSalesReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CategoryWiseSalesReport"/>
@@ -1091,6 +1109,9 @@
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
    <view-map name="GenerateTrnsptMarginReportTXT" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#GenerateTrnsptMarginReportTXT" content-type="text/plain"/>
+   <view-map name="sendTransporterMarginSMS" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#SendTransporterMarginSMS" content-type="application/pdf"/>
+   <view-map name="DTCCostReport" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCCostReport" content-type="application/pdf"/>
+   <view-map name="DTCCostReportCSV" type="screencsv" page="component://byproducts/widget/TransporterScreens.xml#DTCCostReportCSV" content-type="text/csv"/>
    <view-map name="FinesAndPenalties" type="screen" page="component://byproducts/widget/TransporterScreens.xml#FinesAndPenalties"/>
    <view-map name="CreateNewFineorPenalty" type="screen" page="component://byproducts/widget/TransporterScreens.xml#CreateNewFineorPenalty"/>
    

@@ -55,12 +55,19 @@ under the License.
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="DTCReport"/>                                  
             </hyperlink>
-        </field>       
+        </field>
         <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelTransporterMarginReport" description="${uiLabelMap.CommonCancel}" target-window="_blank">
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>
-        </field> 
+        </field>
+         <field name="transporterMarginSMS" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)" title="Send Sms">
+            <hyperlink target="sendTransporterMarginSMS" description="Send Sms" target-window="_blank">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+              	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
+            </hyperlink>
+        </field>
+         
         <!--  
         <field name="MakeAdjustments" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;">
             <hyperlink target="transporterMarginAdjustments" description="Make Transporter Adjustments">
@@ -92,6 +99,15 @@ under the License.
 		<field name="submitButton" title="${uiLabelMap.Generate}" widget-style="smallSubmit">
             <submit/>
         </field>
+    </form>
+    <form name="DTCCostReportCsv" type="list" list-name="dtcCostReportCsvList" view-size="99999">
+        <field name="route" title="Route No"><display/></field>
+        <field name="routeSaleQty" title="Total Sales"><display/></field>
+        <field name="averageSaleQty" title="Average Sales"><display/></field>
+        <field name="routeFacilitySize" title="Distance Per Day"><display/></field>
+        <field name="routeFacilityRate" title="Rate"><display/></field>
+        <field name="payment" title="Cost Per Day"><display/></field>
+        <field name="cost" title="Cost/Litre"><display/></field>
     </form>
     <form name="createNewFineorPenalty" type="single" target="createTransporterRecovery" header-row-style="header-row" 
 		default-table-style="basic-table" >
@@ -168,11 +184,22 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service> 
         </actions>
-    	<field name="facilityId" title="Facility"><display/></field>    	
-        <field name="customTimePeriodId" title="CustomTimePeriod" ><display/></field>
-        <field name="recoveryTypeId" title="RecoveryType"><display/></field>
+    	<field name="facilityId" title="Route No"><display/></field>    	
+        <field name="customTimePeriodId" title="Time Period">
+        	<display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMdd&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMdd yyyy&quot;);}"/>
+        </field>
+        <field name="recoveryTypeId" title = "RecoveryType">
+          <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
+        </field>
     	<field name="amount" title="Amount(Rs)"><display/></field>
     	<field name="createdByUserLogin" title="User Name"><display/></field>
     	<field name="createdDate" title="createdDate"><display/></field>
+    	<field name="cancel" widget-style="buttontext cancel">
+		<hyperlink target="cancelTranporterRecovery" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+        	<parameter param-name="facilityId" from-field="facilityId"/>
+        	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        	<parameter param-name="recoveryTypeId" from-field="recoveryTypeId"/>
+        </hyperlink>
+        </field>
     </form>
    </forms>
