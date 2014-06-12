@@ -472,7 +472,8 @@ Debug.logInfo("paymentResults:" + facilityPayments, module);
 
 		if(UtilValidate.isNotEmpty(amShipmentIds)){
 			Map dayTotals = ByProductNetworkServices.getPeriodTotals(dctx, 
-					UtilMisc.toMap("facilityIds", UtilMisc.toList(facilityId), "shipmentIds", amShipmentIds,"fromDate", fromDateStart, "thruDate", thruDateEnd));
+					UtilMisc.toMap("facilityIds", UtilMisc.toList(facilityId), "shipmentIds", amShipmentIds,
+							"fromDate", fromDateStart, "thruDate", thruDateEnd, "includeReturnOrders", true));
 			if(UtilValidate.isNotEmpty(dayTotals)){
 				amBoothDayTotals = (Map)dayTotals.get("dayWiseTotals");
 			}
@@ -481,7 +482,8 @@ Debug.logInfo("paymentResults:" + facilityPayments, module);
 		//pmShipments
 		if(UtilValidate.isNotEmpty(pmShipmentIds)){
 			Map dayTotals = ByProductNetworkServices.getPeriodTotals(dctx, 
-					UtilMisc.toMap("facilityIds", UtilMisc.toList(facilityId), "shipmentIds", pmShipmentIds,"fromDate", fromDateStart, "thruDate", thruDateEnd));
+					UtilMisc.toMap("facilityIds", UtilMisc.toList(facilityId), "shipmentIds", pmShipmentIds,
+							"fromDate", fromDateStart, "thruDate", thruDateEnd, "includeReturnOrders", true));
 			if(UtilValidate.isNotEmpty(dayTotals)){
 				pmBoothDayTotals = (Map)dayTotals.get("dayWiseTotals");
 			}
