@@ -292,7 +292,7 @@ public class PayrollService {
 			            List<GenericValue> payHistory = delegator.findList("PayHistory", condition, null, UtilMisc.toList("-fromDate"), null, false);
 			            if(UtilValidate.isEmpty(payHistory)){
 			            	result.put("amount", amount);
-			            	result.put("payGradeId", -1);
+			            	result.put("payGradeId", "-1");
 			            	Debug.logWarning("Zero PayHistory records for partyId '" + employeeId + "'", module);            	
 			            	return result;
 			            }
