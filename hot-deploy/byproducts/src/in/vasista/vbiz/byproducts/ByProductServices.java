@@ -832,10 +832,6 @@ public class ByProductServices {
         if (UtilValidate.isEmpty(salesChannel)) {
         	salesChannel = "BYPROD_SALES_CHANNEL";
         }      
-        boolean invokeSettleInvoice= Boolean.TRUE;
-        if(context.get("invokeSettleInvoice") != null){
-        	invokeSettleInvoice = (Boolean)context.get("invokeSettleInvoice");
-        }
         if (UtilValidate.isEmpty(subscriptionProductsList)) {
             //Debug.logInfo("No subscription to create orders, finished", module);
             return resultMap;
@@ -1091,8 +1087,10 @@ public class ByProductServices {
                			 
            	         }catch (GenericEntityException e) {
            				 Debug.logError(e, module);
-           				 
            			}
+           	      if(context.get("enableAdvancePaymentApp") != null){
+           	    	enableAdvancePaymentApp = (Boolean)context.get("enableAdvancePaymentApp");
+                  }
            	      if(enableAdvancePaymentApp){
 	        		   Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", resultMap.get("invoiceId"));
 	    	             invoiceCtx.put("userLogin", userLogin);
@@ -1108,13 +1106,11 @@ public class ByProductServices {
 	    	                 return ServiceUtil.returnError(e.toString());
 	    	             }  
 	    	          // apply invoice if any adavance payments from this  party
-	    	          if(invokeSettleInvoice){//for Adhoc Sale we  should not invoke
 		     				Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
 		     				if (ServiceUtil.isError(resultPaymentApp)) {						  
 		     	        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
 		     	               return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
 		     		        }
-	    	           }
 	        		}//end of advance payment appl   
             	}
     		          
@@ -4833,7 +4829,7 @@ public class ByProductServices {
 	 	 processChangeIndentHelperCtx.put("shipmentId", shipmentId);
 	 	 processChangeIndentHelperCtx.put("estimatedDeliveryDate", effectiveDate);
 	 	 processChangeIndentHelperCtx.put("salesChannel", salesChannel);
-	 	 processChangeIndentHelperCtx.put("invokeSettleInvoice",  Boolean.FALSE);
+	 	 processChangeIndentHelperCtx.put("enableAdvancePaymentApp",  Boolean.FALSE);
 	 	
 	 	 String orderId = null;
 	 	 String invoiceId = null;
