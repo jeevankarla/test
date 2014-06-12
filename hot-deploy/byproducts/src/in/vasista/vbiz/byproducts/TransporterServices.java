@@ -1593,13 +1593,13 @@
 				}
 		        try {
 		        	// Send SMS notification to list
-		        	String text = "Transporter Margin for Period(" +fromDate+"-"+thruDate+") : For Route: " + facilityId + "  Is Sale Amount Rs:" +
+		        	String text = "DTC Bill Generated for Route : " + facilityId+"("+fromDate+"-"+thruDate+"):"+ "  Gross Amount Rs:" +
 		        	routeAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
-					"  Total Fines Rs: " +
+					" ; Fines Rs: " +
 					totalFine.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) +
-					" Total Net Amount Rs: " +  
+					" ; Net Amount Rs: " +  
 					netAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
-					"  Msg sent by Milkosoft.";
+					" ; Automated Message From Milkosoft.";
 					Debug.logInfo("Sms text: " + text, module);
 					Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
 						"text", text, "userLogin", userLogin);
