@@ -108,16 +108,21 @@ facilityIdsList=[];
 	paidPaymentInput=[:];
 	paidPaymentInput["fromDate"]=dayBegin;
 	paidPaymentInput["thruDate"]=dayEnd;
-	paidPaymentInput["paymentMethodTypeId"]="CASH_PAYIN";
 	paidPaymentInput["facilityIdsList"]=boothsList;
 	
 	boothPaidDetail=[:];
 	//Lets find each type of payment
+	boothCashPaymentsList=[];
+	boothChequePaymentsList=[];
+	boothChallanPaymentsList=[];
+	boothAllPaymentsList=[];
+	if(reportTypeFlag=="DuesAbstractReport"){//All types without payment Type
+	boothAllPaymentDeatil=ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);//get All types of Payments
+	boothAllPaymentsList=boothAllPaymentDeatil["boothPaymentsList"];
+	}else{
+	paidPaymentInput["paymentMethodTypeId"]="CASH_PAYIN";
 	boothCashPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
 	boothCashPaymentsList = boothCashPaidDetail["boothPaymentsList"];
-	boothCashPaymentsList.each{boothPayment->
-	}
-	//Debug.log("=====boothCashPaymentsList======="+boothCashPaymentsList);
 	boothCashRouteIdsMap= boothCashPaidDetail["boothRouteIdsMap"];
 	
 	paidPaymentInput["paymentMethodTypeId"]="CHEQUE_PAYIN";
@@ -129,7 +134,8 @@ facilityIdsList=[];
 	boothChallanPaidDetail=ByProductNetworkServices.getBoothPaidPayments( dctx , paidPaymentInput);
 	boothChallanPaymentsList = boothChallanPaidDetail["boothPaymentsList"];
 	boothChallanRouteIdsMap= boothChallanPaidDetail["boothRouteIdsMap"];
-	
+	}
+
 categoryTotalMap = [:];
 categorysList = [];
 categorysParloursList = [];
@@ -143,9 +149,16 @@ while (boothTotIter.hasNext()) {
 	BigDecimal totalRevenue=BigDecimal.ZERO;
 	//totalRevenue=boothEntry.getValue().getAt("totalRevenue");
 	totalRevenue=boothEntry.getValue();
+	paymentAmount=0;
     cashAmount=0;
     chequeAmount=0;
     challanAmount=0;
+	
+	boothAllPaymentsList.each{ boothPayment->
+		if(boothId.equalsIgnoreCase(boothPayment.get("facilityId"))){
+			paymentAmount+=boothPayment.get("amount");
+		}
+	}
 	boothCashPaymentsList.each{boothPayment->
 		if(boothId.equalsIgnoreCase(boothPayment.get("facilityId"))){
 			cashAmount+=boothPayment.get("amount");
@@ -174,8 +187,8 @@ while (boothTotIter.hasNext()) {
 		//invoiceAmount=invoiceAmount.add(returnAmount);
 	}
 	invoiceAmount=invoiceAmount.add(chequePenality);
+	BigDecimal totalPaidAmnt=(paymentAmount+cashAmount+chequeAmount+challanAmount+returnAmount);
 	
-	BigDecimal totalPaidAmnt=(cashAmount+chequeAmount+challanAmount+returnAmount);
 	BigDecimal netAmount =(BigDecimal) invoiceAmount.subtract(totalPaidAmnt);
 	BigDecimal openingBalance=BigDecimal.ZERO;
 	boothTotalsMap=[:];
