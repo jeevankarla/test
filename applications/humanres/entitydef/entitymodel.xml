@@ -601,6 +601,10 @@ under the License.
         <field name="noOfCalenderDays" type="fixed-point"/>
         <field name="noOfLeaveDays" type="fixed-point"/>
         <field name="noOfAttendedHoliDays" type="fixed-point"/>
+        <field name="noOfAttendedSsDays" type="fixed-point"/><!-- no.of attended second saturday -->
+        <field name="noOfAttendedWeeklyOffDays" type="fixed-point"/>
+        <field name="noOfCompoffAvailed" type="fixed-point"/>
+        
         <field name="lossOfPayDays" type="fixed-point"/>
         <prim-key field="partyId"/>
         <prim-key field="customTimePeriodId"/>
@@ -1359,6 +1363,7 @@ under the License.
 	  <field name="shiftType" type="id-ne"/>
 	  <field name="availedVehicleAllowance" type="indicator"/>
 	  <field name="availedCanteen" type="indicator"/>
+	   <field name="isOnField" type="indicator"/>
 	  <prim-key field="partyId"/>
 	  <prim-key field="date"/>
 	  <prim-key field="seqId"/>
