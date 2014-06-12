@@ -1578,9 +1578,9 @@ public class ByProductNetworkServices {
 			 }			
 		    if(enableSoCrPmntTrack){
 				//exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","SPECIAL_ORDER","CREDIT")));
-				exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH") , EntityOperator.OR , EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, categoryTypeEnumList)));
+				exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("EMP_SUBSIDY","CASH")) , EntityOperator.OR , EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, categoryTypeEnumList)));
 		    }else{
-		    	exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.EQUALS, "CASH") , EntityOperator.OR , EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, categoryTypeEnumList)));
+		    	exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN,UtilMisc.toList("EMP_SUBSIDY","CASH")) , EntityOperator.OR , EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.IN, categoryTypeEnumList)));
 			}
 		    exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.NOT_EQUAL, "CARD"));
 			
@@ -2315,7 +2315,6 @@ public class ByProductNetworkServices {
 	        String estimatedShipDateStr = (String)context.get("estimatedShipDate");	
 	        String shipmentId = (String) context.get("shipmentId"); 
 	        String shipmentTypeId = (String) context.get("shipmentTypeId"); 
-	        
 	        String routeId = (String) context.get("routeId");
 	        String tripId = (String) context.get("tripId");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -2336,8 +2335,13 @@ public class ByProductNetworkServices {
 	    		
 	        //estimatedShipDate=Timestamp.valueOf(estimatedShipDateStr);
 	       
+	       List<String> shipmentIds =FastList.newInstance();
+	       if(UtilValidate.isNotEmpty( context.get("shipmentIds"))){
+	    	   shipmentIds=(List<String>) context.get("shipmentIds");
+	       }
+	    	   
+	      
 	        Map resultMap = FastMap.newInstance();
-	        List<String> shipmentIds = FastList.newInstance();
 	        List<String> routeIdsList = FastList.newInstance();
 	        List conditionList = FastList.newInstance();
 	    	Map	productTotals =  FastMap.newInstance();
@@ -2381,8 +2385,12 @@ public class ByProductNetworkServices {
 	    	}*/
 	    
 	    	if(!isComparsionFaild){
+	    		for(String shipId:shipmentIds){
+    			 GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId",shipId) , false);
+	        		estimatedShipDate=shipment.getTimestamp("estimatedShipDate");
+	        		routeId=shipment.getString("routeId");
 	    		Map vehicleTripInMap=FastMap.newInstance();
-	    		vehicleTripInMap.put("shipmentId",shipmentId);
+	    		vehicleTripInMap.put("shipmentId",shipId);
 	    		vehicleTripInMap.put("routeId",routeId);
 	    		 Map vehcileResultMap=getVehicleTrip(dctx,vehicleTripInMap);
 	    		 GenericValue vehicleTrip=(GenericValue)vehcileResultMap.get("vehicleTrip");
@@ -2408,40 +2416,7 @@ public class ByProductNetworkServices {
 				            return ServiceUtil.returnError(e.getMessage());
 				        }
 		    		 }
-	    		/*
-	    	   conditionList.clear();
-				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-				conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(dayBegin)));
-				conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(dayEnd)));
-				if (UtilValidate.isNotEmpty(shipmentIds)) {
-					conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
-				}
-				// conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, shipmentTypeId));
-				EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				List shipmentOrderItemsList = delegator.findList("OrderHeader", condition, null, null, null, false);
-				Set orderIdsSet = new HashSet(EntityUtil.getFieldListFromEntityList(shipmentOrderItemsList, "orderId", true));
-				boothOrderIdsList = new ArrayList(orderIdsSet);
-				
-				for (Object orderId : boothOrderIdsList) {
-		            try{        
-		        		resultMap = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"userLogin", userLogin));
-		        		if (ServiceUtil.isError(resultMap)) {
-		                    Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(resultMap), module);
-		            		return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(resultMap));          	            
-		                } 
-						Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)resultMap.get("invoiceId"),"userLogin", userLogin));
-						if (ServiceUtil.isError(resultPaymentApp)) {						  
-			        	   Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
-			               return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
-				        }				           
-				          
-		            }catch (Exception e) {
-		                Debug.logError(e, module);
-		            } 
-		            resultMap.put("orderId", orderId);
-		        
-				}//end of OrderIteration */
-				
+	    		}//for close
 	    	   }//if close
 	 	      }
            }catch (Exception e) {
