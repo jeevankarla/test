@@ -1389,12 +1389,12 @@
 		    			facilityRecovery.put("recoveryTypeId", recoveryTypeId); 
 		    			facilityRecovery.put("amount", amount);
 		    			facilityRecovery.put("createdDate", UtilDateTime.nowTimestamp());
-		    			//facilityRecovery.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			facilityRecovery.put("lastModifiedDate", UtilDateTime.nowTimestamp());
 		    			facilityRecovery.put("createdByUserLogin", userLogin.get("userLoginId"));
 		    			facilityRecovery.create();    
 		            }
 		    		else {  
-		    			facilityRecovery.clear();
+		    			
 		    			facilityRecovery.set("amount", amount);
 		    			//facilityRecovery.set("createdDate", UtilDateTime.nowTimestamp());
 		    			//facilityRecovery.set("createdByUserLogin", userLogin.get("userLoginId"));
