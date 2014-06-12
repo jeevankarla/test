@@ -77,8 +77,8 @@
         <menu-item name="TransporterMargins" title="TransporterBilling">
             <condition>
                 <or>
-					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
-					 <if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
+					<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
+					<if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
 				</or>	 
             </condition>
 			<link target="TransporterMargins"></link>
