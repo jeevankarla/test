@@ -381,7 +381,7 @@ public class PaymentWorker {
             }
             String text =   "Received your ";
             	if(UtilValidate.isNotEmpty(payment.get("paymentMethodTypeId"))){
-                	if((payment.getString("paymentMethodTypeId")).contains("CHALLAN")){
+                	if((payment.getString("paymentMethodTypeId")).contains("CHALLAN") || (payment.getString("paymentMethodTypeId")).contains("AXISHTOH_PAYIN")){
                 		text += "challan payment(ref#"+payment.getString("paymentId") +") amount of Rs. "+payment.get("amount");
                 	}
                 	if((payment.getString("paymentMethodTypeId")).contains("CASH")){
