@@ -39,17 +39,16 @@
 							</condition>
 							<widgets>
 								<container style="button-bar">
-								<!-- 	<link target="GenerateVendorMarginReport" text="Generate Vendor Margin Report" style="buttontext create">
-										<parameter param-name="billingTypeId" value="PB_LMS_VNDR_MRGN"/>
-									</link> -->
+									<section>
+									<condition>	
+									<if-has-permission permission="TRNSMRGN" action="_ADMIN">
+									</if-has-permission></condition>
+									<widgets>
 									<link target="GenerateTransporterMarginReport" text="Generate Transporter Margin Billing" style="buttontext create">				
 										<parameter param-name="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
-									</link>
+									</link></widgets>
+									</section>
 								</container>
-							<!-- 	<screenlet title="Vendor Margin Reports">				
-									<include-form name="ListVendorReports" location="component://product/widget/facility/FacilityForms.xml" />
-								</screenlet> -->
-								
 								<screenlet title="Transporter Margin Billing Reports">				
 									<include-form name="ListTransporterReports" location="component://byproducts/widget/TransporterForms.xml" />
 								</screenlet>
@@ -71,6 +70,12 @@
             <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<section>
+                    	<condition > 
+                    	 <or>
+                    	<if-has-permission permission="TRNSMRGN" action="_ADMIN"></if-has-permission>
+                    	<if-has-permission permission="FACILITY" action="_ADMIN"></if-has-permission>	
+                    	</or>
+                    	</condition>
 							<widgets>
 								 <screenlet title="New TransporterMargin Billing">
                     				<include-form location="component://byproducts/widget/TransporterForms.xml" name="GenerateTransporterMarginReport"/>
@@ -244,6 +249,7 @@
 			   <set field="titleProperty" value="TransporterBilling"/>              
 			   <set field="tabButtonItem" value="TransporterMargins" />	
 			   <set field="tabButtonItem2" value="FinesAndPenalties"/> 
+			    <set field="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
             </actions>           
             <widgets>
             <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
