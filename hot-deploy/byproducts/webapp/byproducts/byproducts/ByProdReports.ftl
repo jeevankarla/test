@@ -635,7 +635,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	  						<td width="30%">Shoppe Rent Report</td>
 	  						<td width="15%">Period
 	  							<select name="customTimePeriodId" class='h4'>
-	            					<#list timePeriodList as timePeriod>    
+	            					<#list shopeeTimePeriodList as timePeriod>    
 	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
 	            					</#list>            
 								</select>
