@@ -841,7 +841,7 @@
 				<widgets>
 					<platform-specific>
 						<xsl-fo>
-							<html-template location="component://humanres/webapp/humanres/humanres/payRollReport.fo.ftl" />
+							<html-template location="component://humanres/webapp/humanres/humanres/PayRollReport.fo.ftl" />
 						</xsl-fo>
 					</platform-specific>
 				</widgets>
