@@ -63,13 +63,14 @@ function changeRowColor(){
         	$(resParent).css("background-color", "green");
         }
 	    */
-	    
+	 var chkBox=$('#bulkCheckBox'); 
+	 $(chkBox).css("text-align","right");
 	
 	var tableObj = $('#_col table tr');
 	$(tableObj).each( function( index, element ){
-	    var result = $(this).find("td:contains('Returned')");
+	    var result = $(this).find("td:contains('Finalized')");
 	    var compText=$.trim($(result).text());
-	    if (compText==("Returned")){
+	    if (compText==("Finalized")){
 	    	 $(this).css("background-color", "#77BA72");
 	    }else if(compText==("CratesReturned")){
 	    	 $(this).css("background-color", "#98928F");
@@ -80,7 +81,25 @@ function changeRowColor(){
 	
    // 
 }
-
+ function checkAllRouteStatus(master){
+	 var shipIds = $('input[name="bulkStatusChange"]');
+    jQuery.each(shipIds, function() {
+         this.checked = master.checked;
+     });
+	
+ }
+ function getAllRouteShipments(){
+	 var shipIdsList = $('input[name=bulkStatusChange]:checked');
+	 if(shipIdsList.size() <=0) {
+	 alert("Please Select at least One Vehicle..!")
+		 return false;
+	 }
+      jQuery.each(shipIdsList, function() {
+    	 var shipmentId=$(this).val();
+    	  $('#ListSubmitBulk').append('<input type="hidden" name="shipmentIds" value="'+shipmentId+'" />');
+     });
+      jQuery('#ListSubmitBulk').submit();
+ }
 
 
 

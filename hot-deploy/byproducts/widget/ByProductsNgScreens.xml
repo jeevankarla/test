@@ -2509,7 +2509,9 @@
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                     <decorator-section name="body">  
  							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/facility/vehicleStatusFind.ftl"></html-template></html></platform-specific>
-						<screenlet title="VehicleStatus List">				
+						<screenlet title="VehicleStatus List">	
+						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/facility/vehicleBulkSubmitForm.ftl"></html-template></html></platform-specific>
+						<!-- 	<include-form name="submitBulkStatus" location="component://byproducts/widget/ByProductsNgForms.xml" />	 -->	
 						<include-form name="ListVehicleStatus" location="component://byproducts/widget/ByProductsNgForms.xml" />
 						</screenlet>		
 												

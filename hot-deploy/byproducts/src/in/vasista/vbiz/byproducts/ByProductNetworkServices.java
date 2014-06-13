@@ -2424,7 +2424,7 @@ public class ByProductNetworkServices {
 				return ServiceUtil.returnError(e.toString());
            }
        	//result.put("routeProductList", routeProductList);
-          Map result = ServiceUtil.returnSuccess("Finalization Done successfully for Vehicle "+vehicleId+" and Vehicle chnaged to Return Status");
+          Map result = ServiceUtil.returnSuccess("Finalization Done successfully !");
 		return result;
 	 	}
 		public static Map<String, Object>  compareOrdersAndItemIssuence(DispatchContext dctx, Map<String, ? extends Object> context){

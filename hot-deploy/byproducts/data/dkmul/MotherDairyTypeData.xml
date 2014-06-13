@@ -19,6 +19,6 @@
     <StatusItem description="CratesReturned" sequenceId="2" statusCode="CRATE_RTN" statusId="VEHICLE_CRATE_RTN" statusTypeId="VEHICLE_STATUS"/>
     <StatusItem description="Products Returned" sequenceId="3" statusCode="PROD_RTN" statusId="VEHICLE_PROD_RTN" statusTypeId="VEHICLE_STATUS"/>
     <StatusItem description="Confirmed" sequenceId="4" statusCode="Not yet Returned" statusId="VEHICLE_NTRTN" statusTypeId="VEHICLE_STATUS"/>
-    <StatusItem description="Returned" sequenceId="5" statusCode="RETURNED" statusId="VEHICLE_RETURNED" statusTypeId="VEHICLE_STATUS"/>
+    <StatusItem description="Finalized" sequenceId="5" statusCode="RETURNED" statusId="VEHICLE_RETURNED" statusTypeId="VEHICLE_STATUS"/>
    
 </entity-engine-xml>
