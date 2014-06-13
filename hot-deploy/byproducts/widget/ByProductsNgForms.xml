@@ -1123,8 +1123,8 @@
         <field name="thruDate"><date-time/></field>
 	    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit/></field>       
     </form>
-    <form name="ListVehicleStatus" type="list" list-name="vehicleTripStatusList"   paginate-target="VehicleStatus" id="VehicleStatusListId"
-    		 header-row-style="header-row-2"  default-table-style="basic-table hover-bar" separate-columns="true">
+    <form name="ListVehicleStatus" type="list" list-name="vehicleTripStatusList"    paginate-target="VehicleStatus" id="VehicleStatusListId"
+    		 header-row-style="header-row-2"  default-table-style="basic-table hover-bar" separate-columns="true" paginate="false" >
          <row-actions>
             <entity-one entity-name="Shipment" value-field="shipment">
         		<field-map field-name="shipmentId" value="${shipmentId}" />
@@ -1142,7 +1142,7 @@
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
          <field name="changedDate" title="createdDate" ><display description="${estimatedStartDate}" /></field>
-          <field name="Update Status"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"    widget-style="buttontext">
+          <field name="UpdateStatus"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"    widget-style="buttontext">
             <hyperlink target="VehicleStatusChange"  description="Update Status" target-window="_blank">
                 <parameter param-name="statusId"  />
                 <parameter param-name="facilityId" value="${originFacilityId}"/>
@@ -1150,7 +1150,9 @@
                  <parameter param-name="vehicleId"/>
             </hyperlink>
         </field>
+        <field name="bulkStatusChange"  title="Select" use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;" > <check all-checked="false" > <option key="${shipmentId}" description=" "  ></option></check> </field>
     </form>
+    
      <form name="ListVehicleCratesReturn" type="list" list-name="routeVehicleCratesList"  paginate="false"  id="VehicleStatusListId"  
     		 header-row-style="header-row-2"  default-table-style="basic-table hover-bar"  separate-columns="true" target="createReturnCrate"  use-row-submit="true" >
          <row-actions>
