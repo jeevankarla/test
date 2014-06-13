@@ -76,17 +76,21 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			itemCond = EntityCondition.makeCondition(itemConList,EntityOperator.AND);
 			payRollHeaderItemsList = delegator.findList("PayrollHeaderItem", itemCond, null, null, null, false);
 			if(UtilValidate.isNotEmpty(payRollHeaderItemsList)){
-				
-				payRollHeaderItemsList.each{payRollHeaderItem->
+				tempAmount =0;
+				payRollHeaderItemsList.each{ payRollHeaderItem->
 					payrollHeaderItemTypeId=payRollHeaderItem.get("payrollHeaderItemTypeId");
 					amount=payRollHeaderItem.get("amount");
+					if(amount >0){
+						tempAmount +=amount;
+					}
+					
 					if(UtilValidate.isEmpty(payRollItemsMap.get(payrollHeaderItemTypeId))){
 						payRollItemsMap[payrollHeaderItemTypeId]=amount;
 					}else{
 						payRollItemsMap[payrollHeaderItemTypeId]+=amount;
 					}
 				}
-				if(UtilValidate.isNotEmpty(payRollItemsMap)){
+				if(UtilValidate.isNotEmpty(payRollItemsMap) || tempAmount !=0){
 					payRollMap.put(payrollHeaderId,payRollItemsMap);
 				}
 			}
