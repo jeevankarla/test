@@ -99,6 +99,10 @@
                 		<condition-expr field-name="enumId" operator="equals" value="SCT_RTLR"/>  
                 	</condition-list>
                 </entity-condition>
+                  <entity-condition list="shopeeTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="SALES_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
                  <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
 					<condition-list combine="or">
                 		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
