@@ -23,6 +23,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.product.price.PriceServices;
 import in.vasista.vbiz.byproducts.ByProductReportServices;
+import org.ofbiz.base.util.Debug;
 
 dctx=dispatcher.getDispatchContext();
 if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
@@ -59,7 +60,7 @@ if (UtilValidate.isNotEmpty(thruDateStr)) {
 		Debug.logError(e, "Cannot parse date string: " + thruDateStr, "");
 	}
 }
-
+boothsList=[];
 dayBegin = UtilDateTime.getDayStart(fromDateTime);
 dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDateTime = fromDateTime;
@@ -77,11 +78,12 @@ context.thruDateTime = thruDateTime;
 	context.saleDate = fromDateTime;
 	context.supplyDate = dayBegin;
 }*/
-conditionList=[];
-/*conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
+
+/*conditionList=[];
+conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_EQUAL , null));
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, "2093"));
-conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1000","B80902","B00503","S1023","S1056","S1027")));
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1103","S1169")));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
 boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
@@ -93,11 +95,11 @@ boothTotalsWithReturn=[:];
 periodBoothTotals=[:];
 List shipmentIds = ByProductNetworkServices.getAllShipmentIds(delegator, dayBegin, dayEnd);//include Adhoc SALE
 
-boothTotalsWithReturn = ByProductNetworkServices.getPeriodReturnTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd]);
+/*boothTotalsWithReturn = ByProductNetworkServices.getPeriodReturnTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,facilityIds:UtilMisc.toList(boothsList),fromDate:dayBegin, thruDate:dayEnd]);
 if(UtilValidate.isNotEmpty(boothTotalsWithReturn)){
 	returnBoothTotals=boothTotalsWithReturn.get("boothTotals");
 	totalReturnAmnt=boothTotalsWithReturn.get("totalRevenue");
-}
+}*/
 boothTotals = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd, "facilityList", boothsList, "userLogin", userLogin)).get("boothInvoiceTotalMap");
 inputMap = [];
 penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd,"facilityList", boothsList, "userLogin", userLogin));
@@ -143,12 +145,15 @@ BigDecimal totaRETNAmount=BigDecimal.ZERO;
 Iterator boothTotIter = boothTotals.entrySet().iterator();
 
 
-while (boothTotIter.hasNext()) {
+boothsList.each{  boothId->
+/*while (boothTotIter.hasNext()) {
 	Map.Entry boothEntry = boothTotIter.next();
-	boothId = boothEntry.getKey();
+	boothId = boothEntry.getKey();*/
 	BigDecimal totalRevenue=BigDecimal.ZERO;
 	//totalRevenue=boothEntry.getValue().getAt("totalRevenue");
-	totalRevenue=boothEntry.getValue();
+	if(UtilValidate.isNotEmpty(boothTotals.get(boothId))){
+		totalRevenue=boothTotals.get(boothId);
+	}
 	paymentAmount=0;
     cashAmount=0;
     chequeAmount=0;
@@ -180,15 +185,17 @@ while (boothTotIter.hasNext()) {
 		chequePenality=facilityPenaltyMap.get(boothId);
 	}
 	BigDecimal returnAmount=BigDecimal.ZERO;
-	
-	if(UtilValidate.isNotEmpty(returnBoothTotals.get(boothId))){
+	/*if(UtilValidate.isNotEmpty(returnBoothTotals.get(boothId))){
 		returnAmount=(returnBoothTotals.get(boothId)).get("totalRevenue");
 		totaRETNAmount=totaRETNAmount.add(returnAmount);
 		//invoiceAmount=invoiceAmount.add(returnAmount);
-	}
+		
+	}*/
+	
+	
 	invoiceAmount=invoiceAmount.add(chequePenality);
 	BigDecimal totalPaidAmnt=(paymentAmount+cashAmount+chequeAmount+challanAmount+returnAmount);
-	
+	//Debug.log("=returnAann==####"+returnAmount+"=paymentAmount="+paymentAmount+"=totalPaidAmnt="+totalPaidAmnt+"===BoothId="+boothId);
 	BigDecimal netAmount =(BigDecimal) invoiceAmount.subtract(totalPaidAmnt);
 	BigDecimal openingBalance=BigDecimal.ZERO;
 	boothTotalsMap=[:];
@@ -207,19 +214,20 @@ while (boothTotIter.hasNext()) {
    boothTotalsMap.put("chequeRetnAmount", chequePenality);
    boothTotalsMap.put("totalPaid", totalPaidAmnt);
    boothTotalsMap.put("netAmount", netAmount);
-   
+   if(openingBalance!=0|| totalPaidAmnt!=0 || totalRevenue!=0 ){
 	facility = delegator.findOne("Facility",[facilityId : boothId], false);
 	categoryType = facility.categoryTypeEnum;
 		if(categoryTotalMap.containsKey(categoryType)){
 		tempCatList = categoryTotalMap.get(categoryType);
 		tempCatList.addAll(boothTotalsMap);
 		categoryTotalMap.putAt(categoryType, tempCatList);
-	}else{
-		tempList = [];
-		tempList.add(boothTotalsMap);
-		categoryTotalMap.putAt(categoryType, tempList);
-		categorysList.add(categoryType);
-	}
+		}else{
+			tempList = [];
+			tempList.add(boothTotalsMap);
+			categoryTotalMap.putAt(categoryType, tempList);
+			categorysList.add(categoryType);
+		}
+   }	
 }
 
 categorysParloursList.add("PARLOUR");
