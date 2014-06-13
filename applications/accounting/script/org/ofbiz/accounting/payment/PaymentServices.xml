@@ -98,6 +98,15 @@ under the License.
         		</if-compare-field>
            </else>          
         </if-empty>
+          <!-- set the currency if none is already set -->
+        <if-empty field="payment.currencyUomId">
+            <property-to-field resource="general" property="currency.uom.id.default" field="defaultCurrency"/>
+            <set field="payment.currencyUomId" from-field="defaultCurrency"/>
+        </if-empty>
+        <if-empty field="payment.actualCurrencyUomId">
+            <property-to-field resource="general" property="currency.uom.id.default" field="defaultCurrency"/>
+            <set field="payment.actualCurrencyUomId" from-field="defaultCurrency"/>
+        </if-empty>
         
         <set from-field="userLogin.userLoginId" field="payment.createdByUserLogin"/>
         <set from-field="nowTimestamp" field="payment.createdDate"/>

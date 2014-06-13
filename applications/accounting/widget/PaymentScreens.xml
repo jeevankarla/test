@@ -375,9 +375,9 @@ under the License.
                                 		<if-compare operator="equals" value="true" field="hasPaymentAppEditPermission"/>
                                 	</condition>
                                 	<widgets>                                	
-                                <screenlet title="${uiLabelMap.AccountingApplyPaymentoTo}">
+                               <!--  <screenlet title="${uiLabelMap.AccountingApplyPaymentoTo}">
                                    <include-form name="addPaymentApplication" location="component://accounting/widget/PaymentForms.xml"/>
-                                </screenlet>
+                                </screenlet> -->
                                 </widgets>
                              </section>
                             </widgets>
