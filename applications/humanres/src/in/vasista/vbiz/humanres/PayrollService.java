@@ -1201,18 +1201,9 @@ public class PayrollService {
 	                }
 	                calcResults.put("amount", modifyAmount);
 	            }
-	            
-/*
-	            calcResults.put("basePrice", price);
-	            calcResults.put("price", price);
-	            calcResults.put("listPrice", listPrice);
-	            calcResults.put("defaultPrice", defaultPrice);
-	            calcResults.put("averageCost", averageCost);
-	            calcResults.put("orderItemPriceInfos", orderItemPriceInfos);
-	            calcResults.put("isSale", Boolean.valueOf(isSale));
-	            calcResults.put("validPriceFound", Boolean.valueOf(validPriceFound));*/
-	            calcResults.put("priceInfos", priceInfos);
-	            return calcResults;
+
+            calcResults.put("priceInfos", priceInfos);
+            return calcResults;
 	        }  
 	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond, String employeeId,DispatchContext dctx,Delegator delegator, Timestamp fromDate ,Timestamp thruDate , Map condParms) throws GenericEntityException {
 	        if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + payrollBenDedCond, module);
@@ -1232,7 +1223,11 @@ public class PayrollService {
 				 otherCond = (String)condParms.get("otherCond");
 	        }else{
 	        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate));
-				geoId = (String)empPositionDetails.get("geoId");
+	        	if(ServiceUtil.isError(empPositionDetails)){
+	            	Debug.logError(ServiceUtil.getErrorMessage(empPositionDetails), module);
+	                return false;
+	            }
+	        	geoId = (String)empPositionDetails.get("geoId");
 				emplPositionTypeId = (String)empPositionDetails.get("emplPositionTypeId");
 				departmentId = (String)empPositionDetails.get("departmentId");
 				shiftTypeId = (String)empPositionDetails.get("shiftTypeId");
@@ -1347,6 +1342,10 @@ public class PayrollService {
 	            result.put("vehicleType", employeeDetail.getString("vehicleType"));
 	            // get pay grade here
 	            Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
+	            if(ServiceUtil.isError(fetchBasicSalaryAndGradeMap)){
+	            	Debug.logError(ServiceUtil.getErrorMessage(fetchBasicSalaryAndGradeMap), module);
+	                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(fetchBasicSalaryAndGradeMap));
+	            }
 	            result.put("payGradeId", (String)fetchBasicSalaryAndGradeMap.get("payGradeId"));
 	            
 	            } catch (GenericEntityException e) {
@@ -1562,6 +1561,10 @@ public class PayrollService {
 	        	}
 	        	if(payHeadTypeId.equals("PAYROL_BEN_CONVEY")){
 		        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd));
+		        	if(ServiceUtil.isError(empPositionDetails)){
+		            	Debug.logError(ServiceUtil.getErrorMessage(empPositionDetails), module);
+		                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(empPositionDetails));
+			         }
 		        	String vehicleType = (String)empPositionDetails.get("vehicleType");
 		        	if(UtilValidate.isNotEmpty(vehicleType)){
 		        		Map condParms = FastMap.newInstance();
