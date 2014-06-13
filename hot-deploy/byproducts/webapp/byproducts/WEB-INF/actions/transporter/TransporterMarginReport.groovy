@@ -41,6 +41,10 @@ facilityCommissionList = [];
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+fromDateStr = UtilDateTime.toDateString(fromDateTime,"MMM(dd-");
+thruDateStr = UtilDateTime.toDateString(thruDateTime,"dd),yyyy");
+context.put("fromDateStr",fromDateStr);
+context.put("thruDateStr",thruDateStr);
 context.put("fromDateTime",fromDateTime);
 context.put("thruDateTime",thruDateTime);
 dctx = dispatcher.getDispatchContext();
@@ -87,6 +91,7 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, ["commissionDate"], null, false);
 
 routeSmsMap=[:];
+dtcBankMap = [:];
 if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	facilityCommissionList.each { facilityCommission ->
 		facilityId = facilityCommission.facilityId;
@@ -155,11 +160,33 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 			routeValueMap["pendingDue"] = ((new BigDecimal(facilityCommission.dues)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		totalsMap["grTotpendingDue"] += ((new BigDecimal(facilityCommission.dues)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		}		
-		// for transporter SMS
-		if(UtilValidate.isEmpty(routeSmsMap[facilityId])){
-			routeSmsMap[facilityId] = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+		
+		// for transporter SMS DTC Bank Report
+		if(UtilValidate.isEmpty(dtcBankMap[facilityId])){
+			tempMap = [:];
+			tempMap["amount"] = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+			if(UtilValidate.isNotEmpty(partyName)){
+				tempMap["facilityName"] = partyName;
+			}
+			if(UtilValidate.isNotEmpty(facility.facilityCode)){
+				tempMap["facilityCode"] = facility.facilityCode;
+			}
+			if(UtilValidate.isNotEmpty(facility.panId)){
+				tempMap["facilityPan"] = facility.panId;
+			}
+			if(UtilValidate.isNotEmpty(facility.finAccountCode) && "FNACT_ACTIVE".equals(facility.statusId)){
+				tempMap["facilityFinAccount"] = facility.finAccountCode;
+			}
+			dtcBankMap[facilityId] = tempMap;
 		}else{
-			routeSmsMap[facilityId] += ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+			Map tempMap = FastMap.newInstance();
+			tempMap.putAll(dtcBankMap.get(facilityId));
+			totAmount = 0 ;
+			totAmount = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+			if(UtilValidate.isNotEmpty(totAmount) && totAmount!=0){
+				tempMap["amount"] += totAmount;
+			}
+			dtcBankMap[facilityId] = tempMap;
 		}
 	}
 }
@@ -171,16 +198,20 @@ facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(
 facRecoveryMap=facilityRecoveryResult.get("facilityRecoveryInfoMap");
 partyRecoveryInfoMap=facilityRecoveryResult.get("partyRecoveryInfoMap");
 
-// for transporter SMS 
+// for transporter SMS  and DTC Bank Report
 finalMap = [:];
-if(UtilValidate.isNotEmpty(routeSmsMap)){
-	Iterator mapIter = routeSmsMap.entrySet().iterator();
+if(UtilValidate.isNotEmpty(dtcBankMap)){
+	Iterator mapIter = dtcBankMap.entrySet().iterator();
 	while (mapIter.hasNext()) {
 		Map.Entry entry = mapIter.next();
 		 netAmount = BigDecimal.ZERO;
 		 totalFine = BigDecimal.ZERO;
 		 routeId = entry.getKey();
-		 routeAmount = entry.getValue();
+		 routeAmount = entry.getValue().get("amount");
+		 facilityPan = entry.getValue().get("facilityPan");
+		 facilityName = entry.getValue().get("facilityName");
+		 facilityCode = entry.getValue().get("facilityCode");
+		 facilityFinAccount = entry.getValue().get("facilityFinAccount");
 		 if(UtilValidate.isNotEmpty(facRecoveryMap.get(routeId))){
 			 facilityRecvry = facRecoveryMap.get(routeId);
 			 if(UtilValidate.isNotEmpty(facilityRecvry.totalFine)){
@@ -192,9 +223,27 @@ if(UtilValidate.isNotEmpty(routeSmsMap)){
 		 }
 		 if(netAmount!=0){
 			 tempMap = [:];
-			 tempMap["routeAmount"] = routeAmount;
-			 tempMap["totalFine"] = totalFine;
-			 tempMap["netAmount"] = netAmount;
+			 if(UtilValidate.isNotEmpty(routeAmount)){
+				 tempMap["routeAmount"] = routeAmount;
+			 }
+			 if(UtilValidate.isNotEmpty(totalFine)){
+				  tempMap["totalFine"] = totalFine;
+			 }
+			 if(UtilValidate.isNotEmpty(netAmount)){
+				  tempMap["netAmount"] = netAmount;
+			 }
+			 if(UtilValidate.isNotEmpty(facilityName)){
+				 tempMap["facilityName"] = facilityName;
+			 }
+			 if(UtilValidate.isNotEmpty(facilityCode)){
+				 tempMap["facilityCode"] = facilityCode;
+			 }
+			 if(UtilValidate.isNotEmpty(facilityPan)){
+				 tempMap["facilityPan"] = facilityPan;
+			 }
+			 if(UtilValidate.isNotEmpty(facilityFinAccount)){
+				 tempMap["facilityFinAccount"] = facilityFinAccount;
+			 }
 			 tempTempMap = [:];
 			 tempTempMap.putAll(tempMap);
 			 finalMap.put(routeId,tempTempMap);
@@ -202,7 +251,7 @@ if(UtilValidate.isNotEmpty(routeSmsMap)){
 	}
 }
 context.put("finalMap",finalMap);
-
+Debug.log("finalMap======="+finalMap);
 //facilityRecoveryResultRes = TransporterServices.getTransporterTotalsForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId));
 //Debug.log("=====partyTradingMap===="+facilityRecoveryResultRes.get("partyTradingMap"));
 context.put("facilityRecoveryInfoMap", facRecoveryMap);
