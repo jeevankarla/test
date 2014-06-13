@@ -206,7 +206,7 @@ boothsList.each{  boothId->
 	}
 	
    boothTotalsMap.put("facilityId", boothId);
-   boothTotalsMap.put("invoiceAmount", totalRevenue);
+   boothTotalsMap.put("invoiceAmount", totalRevenue+chequePenality);
    boothTotalsMap.put("returnAmount", returnAmount);
    boothTotalsMap.put("cashAmount", cashAmount);
    boothTotalsMap.put("chequeAmount", chequeAmount);
