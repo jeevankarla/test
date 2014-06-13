@@ -63,20 +63,22 @@ function changeRowColor(){
         	$(resParent).css("background-color", "green");
         }
 	    */
-	 var chkBox=$('#bulkCheckBox'); 
-	 $(chkBox).css("text-align","right");
+	
 	
 	var tableObj = $('#_col table tr');
 	$(tableObj).each( function( index, element ){
 	    var result = $(this).find("td:contains('Finalized')");
 	    var compText=$.trim($(result).text());
+		$(this).css("background-color", "#FFCC88");//initlly set to this color
 	    if (compText==("Finalized")){
-	    	 $(this).css("background-color", "#77BA72");
-	    }else if(compText==("CratesReturned")){
-	    	 $(this).css("background-color", "#98928F");
-	    }else{
-	    	$(this).css("background-color", "#FFCC88");
+	    	 $(this).css("background-color", "#77BA72");//if finalized then reset
 	    }
+	    var resultCR = $(this).find("td:contains('CratesReturned')");
+	    var compTextCr=$.trim($(resultCR).text());
+	    if(compTextCr==("CratesReturned")){
+	    	 $(this).css("background-color", "#98928F");// if Crates returned 
+	    } 
+	   
 	});
 	
    // 

@@ -1150,7 +1150,7 @@
                  <parameter param-name="vehicleId"/>
             </hyperlink>
         </field>
-        <field name="bulkStatusChange"  title="Select" use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;" > <check all-checked="false" > <option key="${shipmentId}" description=" "  ></option></check> </field>
+        <field name="bulkStatusChange"  title="Select"  use-when="&quot;${statusId}&quot;==&quot;VEHICLE_CRATE_RTN&quot;" > <check all-checked="false" > <option key="${shipmentId}" description=" "  ></option></check> </field>
     </form>
     
      <form name="ListVehicleCratesReturn" type="list" list-name="routeVehicleCratesList"  paginate="false"  id="VehicleStatusListId"  

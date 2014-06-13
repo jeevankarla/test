@@ -19,7 +19,7 @@ under the License.
   <form name="submitBulkStatus" id="ListSubmitBulk"  method="post" action="FinalizeOrders">
     <div align="right" >  
       <input type="checkbox" id="bulkCheckBox" name="submitBulkStatus" onchange="javascript:checkAllRouteStatus(this);"/>   
-      <input id="submitButton" type="button"  onclick="javascript:getAllRouteShipments();" value="BulkUpdate"/>
+      <input id="submitButton" type="button"  onclick="javascript:getAllRouteShipments();" value="Bulk Finalize"/>
       
     </div>
     
