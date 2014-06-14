@@ -308,11 +308,20 @@ public class PayrollService {
 			            	return ServiceUtil.returnError("Invalid SalaryStep record ::"+UtilMisc.toMap(
 		            			"payGradeId", payGradeId, "salaryStepSeqId", salaryStepSeqId));
 		            	}
-		                amount = salaryStep.getDouble("amount");
-		                GenericValue payGrade = delegator.findOne("PayGrade", UtilMisc.toMap(
+		            	GenericValue payGrade = delegator.findOne("PayGrade", UtilMisc.toMap(
 		            			"payGradeId", payGradeId), true);
 		            	result.put("payGradeId", payGrade.get("seqId"));
-		                result.put("amount", amount);
+		            	
+		                amount = salaryStep.getDouble("amount");
+		                
+		            	//adjust basic here
+		                Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
+		                context.put("lossOfPayDays",employeePayrollAttedance.get("lossOfPayDays"));
+		            	Timestamp from = row.getTimestamp("fromDate");
+			            Timestamp thru = row.getTimestamp("thruDate");
+			            context.put("proportionalFlag", "Y");
+			            Map<String, Object> adjustment = adjustAmount(context,salaryStep.getBigDecimal("amount"), from, thru);
+		                result.put("amount", ((BigDecimal)adjustment.get("amount")).doubleValue());
 			        }
 			        catch (GenericEntityException e) {
 			            Debug.logError(e, "Error retrieving PayHistory records for partyId '" + employeeId + "'", module);
@@ -391,7 +400,7 @@ public class PayrollService {
 				//amount = amount.divide(BigDecimal.valueOf(payrollPeriodDays), 2, BigDecimal.ROUND_HALF_UP);	//::TODO:: re-visit	
 				if (propFlag) {
 					// loss of pay days adjustment
-					BigDecimal lossOfPayDays = (BigDecimal)context.get("lossOfPayDays");
+					BigDecimal lossOfPayDays = new BigDecimal((Double)context.get("lossOfPayDays"));
 					if(UtilValidate.isNotEmpty(lossOfPayDays)){
 						BigDecimal payDays = periodDays.subtract(lossOfPayDays);
 						amount = amount.multiply(payDays).divide(BigDecimal.valueOf(payrollPeriodDays), 0, BigDecimal.ROUND_HALF_UP);
@@ -1041,12 +1050,12 @@ public class PayrollService {
 	                for (GenericValue payrollBenDedCond : payrollBenDedCondList) {
 	                	
                          if(UtilValidate.isNotEmpty(condParms)){
-                        	 if (!checkPriceCondition(payrollBenDedCond,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,condParms)) {
+                        	 if (!checkPriceCondition(payrollBenDedCond,userLogin,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,condParms)) {
      	                        allTrue = false;
      	                        break;
      	                    }
                          }else{
-                        	 if (!checkPriceCondition(payrollBenDedCond,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,null)) {
+                        	 if (!checkPriceCondition(payrollBenDedCond, userLogin ,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,null)) {
      	                        allTrue = false;
      	                        break;
      	                    }
@@ -1205,7 +1214,7 @@ public class PayrollService {
             calcResults.put("priceInfos", priceInfos);
             return calcResults;
 	        }  
-	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond, String employeeId,DispatchContext dctx,Delegator delegator, Timestamp fromDate ,Timestamp thruDate , Map condParms) throws GenericEntityException {
+	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond,GenericValue userLogin, String employeeId,DispatchContext dctx,Delegator delegator, Timestamp fromDate ,Timestamp thruDate , Map condParms) throws GenericEntityException {
 	        if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + payrollBenDedCond, module);
 	        
 	      //get Employee Payroll Cond Parms details here
@@ -1222,7 +1231,7 @@ public class PayrollService {
 				 shiftTypeId = (String)condParms.get("shiftTypeId");
 				 otherCond = (String)condParms.get("otherCond");
 	        }else{
-	        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate));
+	        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("userLogin",userLogin,"employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate));
 	        	if(ServiceUtil.isError(empPositionDetails)){
 	            	Debug.logError(ServiceUtil.getErrorMessage(empPositionDetails), module);
 	                return false;
