@@ -204,14 +204,32 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/transporter/TransporterMarginReport.groovy" /> 
 			</actions>
-           <widgets>
-                <platform-specific>
-                    <xsl-fo><html-template	location="component://byproducts/webapp/byproducts/transporter/DTCBankReport.fo.ftl" /></xsl-fo>
-                </platform-specific>
-            </widgets>          
-        </section>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="DTCBankReport" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+	                    <xsl-fo><html-template	location="component://byproducts/webapp/byproducts/transporter/DTCBankReport.fo.ftl" /></xsl-fo>
+	                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="DTCTransporterReport" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+	                    <xsl-fo><html-template	location="component://byproducts/webapp/byproducts/transporter/DTCTransporterBankReport.fo.ftl" /></xsl-fo>
+	                </platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
     </screen>
 	 <screen name="FinesAndPenalties">
         <section>

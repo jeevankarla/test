@@ -251,7 +251,6 @@ if(UtilValidate.isNotEmpty(dtcBankMap)){
 	}
 }
 context.put("finalMap",finalMap);
-Debug.log("finalMap======="+finalMap);
 //facilityRecoveryResultRes = TransporterServices.getTransporterTotalsForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId));
 //Debug.log("=====partyTradingMap===="+facilityRecoveryResultRes.get("partyTradingMap"));
 context.put("facilityRecoveryInfoMap", facRecoveryMap);
