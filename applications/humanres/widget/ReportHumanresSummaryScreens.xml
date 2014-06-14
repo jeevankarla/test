@@ -881,7 +881,32 @@
          </widgets> -->
 	</section>
 </screen>
-	<screen name="EmployeeBankDetails">
+<screen name="PrintPayrollSummary">
+	<section>
+		<actions>
+           	 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+             <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+             <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+             <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+             <set field="footerImageUrl" value="/images/ProcessedbyVasista.gif"/>
+       		<set field="parameters.partyIdFrom" from-field="parameters.partyId"/>
+       		<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>       		
+            <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>      
+   		</actions> 
+		<widgets>
+			<section>                                                      
+				<widgets>
+					<platform-specific>
+						<xsl-fo>
+							<html-template location="component://humanres/webapp/humanres/humanres/PayRollSummaryReport.fo.ftl" />
+						</xsl-fo>
+					</platform-specific>
+				</widgets>
+			</section>
+		</widgets>	
+	</section>
+</screen>
+<screen name="EmployeeBankDetails">
 	<section>
 		<actions>
 			<set field="tabButtonItem" value="EmployeeBankDetails" />

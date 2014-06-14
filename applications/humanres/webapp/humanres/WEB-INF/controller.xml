@@ -1336,9 +1336,14 @@ under the License.
         <response name="success" type="view" value="PaySlipEmployeeWise"/>
     </request-map>
     <request-map uri="PrintPaySlipsPdf.pdf">
-    <security https="true" auth="true"/>
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="PrintPaySlipsPdf"/>
         <response name="error" type="view" value="PrintPaySlipsPdf"></response>
+    </request-map>
+    <request-map uri="PrintPayrollSummary.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="PrintPayrollSummary"/>
+        <response name="error" type="view" value="PrintPayrollSummary"></response>
     </request-map>
     <request-map uri="EmployeeWiseSalaryDetails">
        <security https="true" auth="true"/>
@@ -1573,6 +1578,7 @@ under the License.
  
  <view-map name="PaySlipEmployeeWise" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySlipEmployeeWise"/>
  <view-map name="PrintPaySlipsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPaySlipsPdf" content-type="application/pdf" encoding="none"></view-map>
+ <view-map name="PrintPayrollSummary" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPayrollSummary" content-type="application/pdf" encoding="none"></view-map>
  <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>
  <view-map name="EmployeeWiseSalaryDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsCsv" content-type="text/csv" encoding="none"/>
  <view-map name="EmployeeWiseSalaryDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsPdf" content-type="application/pdf" encoding="none"/>

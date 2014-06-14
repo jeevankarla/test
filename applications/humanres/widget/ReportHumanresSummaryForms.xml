@@ -421,12 +421,19 @@
         </hyperlink>
         </field>
          <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="PaySlip Report" widget-style="buttontext" >
-            <hyperlink target="PrintPaySlipsPdf.pdf" description="PaySlip Report" target-window="_BLANK">
+            <hyperlink target="PrintPaySlipsPdf.pdf" description="PaySlip Report"  target-window="_BLANK">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
         		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
         		<parameter param-name="partyId" value="${partyId}"/>
             </hyperlink>
         </field> 
+         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="PaySlip Summary" widget-style="buttontext" >
+            <hyperlink target="PrintPayrollSummary.pdf" description="Payroll Summary"  target-window="_BLANK">
+             	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+        		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+        		<parameter param-name="partyId" value="${partyId}"/>
+            </hyperlink>
+        </field>         
 	</form>
 	<form name="createBenefitDeductionCalculator" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="calculateEmployeeBenefitDeduction">
        	<field name="employeeId">

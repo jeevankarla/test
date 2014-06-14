@@ -56,7 +56,8 @@ if(UtilValidate.isNotEmpty(deductionTypeList)){
 dedTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypeList, "deductionTypeId", true);
 context.dedTypeIds=dedTypeIds;
 context.dedDescMap=dedDescMap;
-payRollMap=FastMap.newInstance();
+Map payRollMap=FastMap.newInstance();
+Map payRollSummaryMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
 	periodBillingId = periodBillDetails.get("periodBillingId");
@@ -89,6 +90,14 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 					}else{
 						payRollItemsMap[payrollHeaderItemTypeId]+=amount;
 					}
+					//payroll Summary Map
+					
+					if(UtilValidate.isEmpty(payRollSummaryMap.get(payrollHeaderItemTypeId))){
+						payRollSummaryMap[payrollHeaderItemTypeId]=amount;
+					}else{
+						payRollSummaryMap[payrollHeaderItemTypeId]+=amount;
+					}
+					
 				}
 				if(UtilValidate.isNotEmpty(payRollItemsMap) || tempAmount !=0){
 					payRollMap.put(payrollHeaderId,payRollItemsMap);
@@ -98,4 +107,5 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	}
 	
 }
+context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
