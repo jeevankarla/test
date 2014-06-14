@@ -38,19 +38,19 @@ under the License.
                     <fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
                     <fo:block text-align="center" font-size="10pt" font-weight="bold">&#160;       STATEMENT OF CHEQUES DISHONOURED FOR THE PERIOD: ${periodFromDate?if_exists} - ${periodThruDate?if_exists}</fo:block>
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
-		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="9pt" font-weight="bold">CODE      AGENT-NAME           BANK      CHQ-NUM  CHQ-DATE     AMOUNT   DISHONOUR   REMARKS</fo:block> 
+		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" font-size="9pt" font-weight="bold">CODE      AGENT-NAME         BANK    CHQ-NUM    CHQ-DATE      AMOUNT    DISHONOUR   REMARKS</fo:block> 
 		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">========================================================================</fo:block> 
 		        </fo:static-content>
 		        <fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="55pt"/> 
-               	    <fo:table-column column-width="110pt"/>
-            		<fo:table-column column-width="60pt"/>
-            		<fo:table-column column-width="55pt"/> 	
-            		<fo:table-column column-width="35pt"/>	
-            		<fo:table-column column-width="65pt"/>
-            		<fo:table-column column-width="45pt"/>
+               	    <fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="50pt"/>
+            		<fo:table-column column-width="50pt"/> 	
+            		<fo:table-column column-width="55pt"/>	
+            		<fo:table-column column-width="70pt"/>
+            		<fo:table-column column-width="55pt"/>
             		<fo:table-column column-width="80pt"/>
                     <fo:table-body>
                     <#assign totalReturn = 0>
@@ -74,13 +74,13 @@ under the License.
                            			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="9pt">${eachReturn.get("referenceNum")?if_exists}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachReturn.get("paymentDate"), "dd-MMM")}</fo:block>  
+                           			<fo:block  keep-together="always" text-align="left" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachReturn.get("paymentDate"), "dd/MM/yy")}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                            			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${eachReturn.get("amount")?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachReturn.get("cancelDate"), "dd-MMM")}</fo:block>  
+                           			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachReturn.get("cancelDate"), "dd/MM/yy")}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                            			<fo:block  keep-together="always" text-align="right" white-space-collapse="false" font-size="9pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachReturn.get("comments")?if_exists)),12)}</fo:block>  
