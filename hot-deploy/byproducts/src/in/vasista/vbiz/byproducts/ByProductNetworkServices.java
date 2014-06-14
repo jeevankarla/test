@@ -4310,7 +4310,17 @@ public class ByProductNetworkServices {
 			}catch (GenericEntityException e) {
 					// TODO: handle exception
 					Debug.logError(e, module);
-			 }			
+			 }	
+			boolean enableOBInvoiceTrack = Boolean.TRUE;//For OB invoices Consideration
+			try{
+				 GenericValue tenantConfigEnableOBTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableOBInvoiceForDueAndPayment"), true);
+				 if (UtilValidate.isNotEmpty(tenantConfigEnableOBTrack) && (tenantConfigEnableOBTrack.getString("propertyValue")).equals("N")) {
+					 enableOBInvoiceTrack = Boolean.FALSE;
+				 	} 
+			}catch (GenericEntityException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+			 }	
 		    if(enableSoCrPmntTrack){
 				exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.IN, UtilMisc.toList("CASH","SPECIAL_ORDER","CREDIT")));
 			}else{
@@ -4366,8 +4376,11 @@ public class ByProductNetworkServices {
 				Debug.logError(e, module);	
 				return ServiceUtil.returnError(e.toString());
 			}
+			
+		   if(enableOBInvoiceTrack){
 			List<GenericValue> obInvoiceList = (List)getOpeningBalanceInvoices(dctx,UtilMisc.toMap("facilityId",facilityId,"fromDate", fromDate ,"thruDate" , thruDate)).get("invoiceList");
 			boothOrdersList.addAll(obInvoiceList);
+			 }
 			boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("originFacilityId","-estimatedDeliveryDate"));
 			Map<String, Object> totalAmount =FastMap.newInstance();
 			
@@ -5984,6 +5997,11 @@ Debug.logInfo("result= " + result, module);
 		    List<GenericValue> pendingOBInvoiceList =  FastList.newInstance();
 			List exprList = FastList.newInstance();
 			List categoryTypeEnumList = UtilMisc.toList("SO_INST","CR_INST");
+			// this flag enables to get all opening balance invoices if it is paid or not to calculate opening balance for facility 
+			boolean isForCalOB = Boolean.FALSE;
+			if(UtilValidate.isNotEmpty(context.get("isForCalOB")) && ((String)context.get("isForCalOB")).equals("Y")){
+				isForCalOB = Boolean.TRUE;
+			}
 			boolean enableSoCrPmntTrack = Boolean.FALSE;
 			try{
 				 GenericValue tenantConfigEnableSoCrPmntTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableSoCrPmntTrack"), true);
@@ -6009,7 +6027,11 @@ Debug.logInfo("result= " + result, module);
 				exprList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));	
 			}
 			exprList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList(obInvoiceType, "SHOPEE_RENT", "MIS_INCOME_IN")));		
-			List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");		
+			
+			List invoiceStatusList = UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF");
+			if(isForCalOB){//for get Opening Balance it should Invoke
+				invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
+			}
 			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,invoiceStatusList));
 			
 			EntityCondition	cond = EntityCondition.makeCondition(exprList, EntityOperator.AND);	
@@ -6031,7 +6053,6 @@ Debug.logInfo("result= " + result, module);
 				tempObInvoice.put("estimatedDeliveryDate", UtilDateTime.getDayStart(obInvoice.getTimestamp("invoiceDate")));
 				tempObInvoiceList.add(tempObInvoice);
 			}
-					
 			result.put("invoiceList", tempObInvoiceList);
 			result.put("invoiceIds", EntityUtil.getFieldListFromEntityList(pendingOBInvoiceList, "invoiceId", true));
 			return result;
@@ -6297,7 +6318,16 @@ Debug.logInfo("result= " + result, module);
 				Debug.logError(e, "Cannot parse date string: " + supplyDate, module);
 	            return ServiceUtil.returnError(e.toString());		   
 			}	
-			
+			boolean enableOBInvoiceTrack = Boolean.TRUE;//For OB invoices Consideration
+			try{
+				 GenericValue tenantConfigEnableOBTrack = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableOBInvoiceForDueAndPayment"), true);
+				 if (UtilValidate.isNotEmpty(tenantConfigEnableOBTrack) && (tenantConfigEnableOBTrack.getString("propertyValue")).equals("N")) {
+					 enableOBInvoiceTrack = Boolean.FALSE;
+				 	} 
+			}catch (GenericEntityException e) {
+					// TODO: handle exception
+					Debug.logError(e, module);
+			 }	
 			if(UtilValidate.isNotEmpty(instrumentDateStr)){
 				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
 		  		  try {
@@ -6404,9 +6434,12 @@ Debug.logInfo("result= " + result, module);
 	        	String partyIdFrom = (String)facility.getString("ownerPartyId");
 	        	
 	        	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
+	        	
 	        	// lets get the opening balance invoices if any
+	        	if(enableOBInvoiceTrack){
 	        	List<GenericValue> obInvoiceList = (List)getOpeningBalanceInvoices(dctx,UtilMisc.toMap("facilityId", facilityId)).get("invoiceList");
 	        	boothOrdersList.addAll(obInvoiceList);
+	        	}
 	        	List invoiceIds = FastList.newInstance();
 	        	if(UtilValidate.isNotEmpty(boothOrdersList)){
 	        		boothOrdersList = EntityUtil.orderBy(boothOrdersList, UtilMisc.toList("parentFacilityId","originFacilityId","-estimatedDeliveryDate"));
@@ -7983,7 +8016,8 @@ Debug.logInfo("result= " + result, module);
 							paymentDate = UtilDateTime.addDaysToTimestamp(startDate, k);
 						    Map boothsPaymentsDetail = FastMap.newInstance();
 						    boothsPaymentsDetail = getBoothPayments(delegator ,dispatcher ,userLogin , UtilDateTime.toDateString(paymentDate,"yyyy-MM-dd"),null ,facilityId ,null ,Boolean.TRUE);        
-							if (ServiceUtil.isError(boothsPaymentsDetail)) {
+							// public static Map getBoothPayments(Delegator delegator ,LocalDispatcher dispatcher ,GenericValue userLogin,String paymentDate,String invoiceStatusId ,String facilityId ,String paymentMethodTypeId ,boolean onlyCurrentDues){
+						    if (ServiceUtil.isError(boothsPaymentsDetail)) {
 								Debug.logError(boothsPaymentsDetail.toString(), module);    			
 						        return  ServiceUtil.returnError(null, null, null, boothsPaymentsDetail);
 						    }
@@ -7992,7 +8026,7 @@ Debug.logInfo("result= " + result, module);
 							Map	tempBoothPayment =(Map)boothPaymentsList.get(0);
 							outstandingAmount = (BigDecimal)tempBoothPayment.get("totalDue");
 							}
-					       Debug.log("=====outstandingAmount==="+outstandingAmount+"===BoothId=="+facilityId+"====PaymentDatetoBe=="+paymentDate);
+					       Debug.log("=====outstandingAmount==="+outstandingAmount+"===BoothId==:"+facilityId+"====PaymentDate==:"+paymentDate);
 				    	   if(outstandingAmount.compareTo(BigDecimal.ZERO)<=0){
 				    	   continue;
 				    	   }
@@ -8000,6 +8034,7 @@ Debug.logInfo("result= " + result, module);
 				    		paymentCtx.put("userLogin", userLogin);
 				    		paymentCtx.put("facilityId", facilityId);
 				    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(paymentDate, "yyyy-MM-dd HH:mm:ss"));
+				    		paymentCtx.put("instrumentDate", UtilDateTime.toDateString(paymentDate, "dd MMMMM, yyyy"));
 				    		paymentCtx.put("amount", outstandingAmount.toString());
 				    		paymentCtx.put("useFifo",true);
 				    		paymentCtx.put("isEnableAcctg", "N");
