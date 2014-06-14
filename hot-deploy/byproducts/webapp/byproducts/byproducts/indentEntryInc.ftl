@@ -101,8 +101,9 @@ function cleanUpGrid(value){
 	$('div#tempRouteDiv').css("display","none");
 	updateGrid1(emptyJson);
 	if(screenFlag != "DSCorrection"){
-		setupGrid2(emptyJson);
+		//setupGrid2(emptyJson);
 	}
+	checkPONumber(null, null);
 	
 }
 
@@ -172,6 +173,9 @@ function updateGrid(){
 								}
 							}
 						}
+						var isCreditInstitution = result["isCreditInstitution"];
+						var PONumber = result["PONumber"];
+						checkPONumber(isCreditInstitution, PONumber);
 						priceTags = result["productPrice"];
 						prodIndentQtyCat = result["prodIndentQtyCat"];
 						var boothName = result["boothName"];
@@ -204,7 +208,7 @@ function updateGrid(){
 					alert("record not found :: Error code:-  "+xhr.status);
 				}							
 			});
-	
+			
 	
 }
 //end of update grid
@@ -235,14 +239,25 @@ function updateGrid(){
 		routeLabelIdMap = ${StringUtil.wrapString(routeLabelIdJSON)!'{}'};
 		routeTags = ${StringUtil.wrapString(routeItemsJSON)!'[]'};
 	</#if>
-		
+	
 	function requiredFieldValidator(value) {
 		if (value == null || value == undefined || !value.length)
 			return {valid:false, msg:"This is a required field"};
 		else
 			return {valid:true, msg:null};
 	}
-
+	
+	function checkPONumber(isCreditInstitution, PONumber){
+		if(isCreditInstitution){
+			$("#PONumber").parent().parent().show();
+			$("#PONumber").val(PONumber);
+		}
+		if(isCreditInstitution == undefined || isCreditInstitution == null || !isCreditInstitution){
+			$("#PONumber").val('');
+			$("#PONumber").parent().parent().hide();
+		}
+				
+	}
 	
 	function productFormatter(row, cell, value, columnDef, dataContext) { 
 		if(productIdLabelMap[value] == null){

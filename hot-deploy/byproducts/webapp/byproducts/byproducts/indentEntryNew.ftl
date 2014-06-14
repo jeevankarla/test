@@ -167,6 +167,13 @@
 	          		 </tr>	
    	  			      
    	  			</#if>
+   	  				<tr><td><br/></td></tr> 
+   	  				<tr>
+          				<td>&nbsp;</td>
+	          			<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>PO Number:</div></td>
+	          			<td>&nbsp;</td>
+	          			<td><input type="text" name="PONumber" id="PONumber"></td>
+	          		 </tr>
 			       </table>
        		<div name ="displayMsg" id="changeIndentEntry_spinner2"/>   
 		</form>

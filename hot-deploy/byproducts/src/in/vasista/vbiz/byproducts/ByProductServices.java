@@ -231,8 +231,8 @@ public class ByProductServices {
 		 try{
 			 GenericValue tenantConfigEnableStopShip = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableStopShip"), true);
 			 if (UtilValidate.isNotEmpty(tenantConfigEnableStopShip) && (tenantConfigEnableStopShip.getString("propertyValue")).equals("N")) {
-				 enableStopShip = Boolean.FALSE;
-				}
+			     enableStopShip = Boolean.FALSE;
+			 }
 		 }catch (GenericEntityException e) {
 			// TODO: handle exception
 			 Debug.logError(e, module);             
@@ -298,7 +298,7 @@ public class ByProductServices {
             if(UtilValidate.isNotEmpty(tripId)){
             	conditionList.add(EntityCondition.makeCondition("tripNum", EntityOperator.EQUALS, tripId));
             }
-           	
+            conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, stopShipList));
             EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND); 
             List<String> orderBy = UtilMisc.toList("subscriptionId", "productSubscriptionTypeId","-productId"); 
         	subscriptionProductsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, null, orderBy, null, false);
@@ -484,7 +484,16 @@ public class ByProductServices {
        Timestamp startTimestamp = UtilDateTime.nowTimestamp();
        boolean beganTransaction = false;
        boolean generationFailed = false;
-    
+       Map PONumberMap = FastMap.newInstance();
+       try{
+    	   List<GenericValue> subscriptionAttr = delegator.findList("SubscriptionAttribute", EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "PO_NUMBER"), null, null, null, false);
+    	   for(GenericValue eachAttr : subscriptionAttr){
+    		   PONumberMap.put(eachAttr.getString("subscriptionId"), eachAttr.getString("attrValue"));
+    	   }
+       }catch (GenericEntityException e) {
+      		Debug.logError(e, "Error fetching PO Numbers", module);
+      		return ServiceUtil.returnError("Error fetching PO Numbers : " + e);         	
+       }
        for(int shipNo=0 ; shipNo <shipmentIds.size() ;  shipNo++){
     	   String shipmentId = (String)shipmentIds.get(shipNo);
     	   GenericValue shipment;
@@ -601,7 +610,8 @@ public class ByProductServices {
 
                		context.put("subscriptionProductsList", orderSubProdsList);
    					context.put("shipmentId" , shipmentId);
-   					context.put("excludeInvoiceForFacilityIds", excludeInvoiceForFacilityIds);	
+   					context.put("excludeInvoiceForFacilityIds", excludeInvoiceForFacilityIds);
+   					context.put("PONumberMap", PONumberMap);
    					result = createSalesOrderSubscriptionProductType(dctx, context);
    					if (ServiceUtil.isError(result)) {
                    		Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
@@ -630,6 +640,7 @@ public class ByProductServices {
    				context.put("subscriptionProductsList", orderSubProdsList);
    				context.put("shipmentId" , shipmentId);
    				context.put("excludeInvoiceForFacilityIds", excludeInvoiceForFacilityIds);
+   				context.put("PONumberMap", PONumberMap);
    				result = createSalesOrderSubscriptionProductType(dctx, context); 
    				if (ServiceUtil.isError(result)) {
    	    			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
@@ -816,6 +827,7 @@ public class ByProductServices {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map PONumberMap = (Map) context.get("PONumberMap");
         String currencyUomId = (String) context.get("defaultOrganizationPartyCurrencyUomId");
         if(UtilValidate.isEmpty(currencyUomId)){
         	currencyUomId ="INR";
@@ -837,11 +849,14 @@ public class ByProductServices {
             return resultMap;
         }   
         String productSubscriptionTypeId = subscriptionProductsList.get(0).getString("productSubscriptionTypeId");
-        
+        String subscriptionId = subscriptionProductsList.get(0).getString("subscriptionId");
         String partyId = subscriptionProductsList.get(0).getString("ownerPartyId");
         String facilityId = subscriptionProductsList.get(0).getString("facilityId");
-        
-       List conditionList = FastList.newInstance();
+        String PONumber = "";
+        if(UtilValidate.isNotEmpty(PONumberMap) && UtilValidate.isNotEmpty(PONumberMap.get(subscriptionId))){
+        	PONumber = (String)PONumberMap.get(subscriptionId);
+        }
+        List conditionList = FastList.newInstance();
         
          conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 		conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.LIKE, "PM_RC_%"));
@@ -877,6 +892,7 @@ public class ByProductServices {
         cart.setShipToCustomerPartyId(partyId);
         cart.setEndUserCustomerPartyId(partyId);
         cart.setFacilityId(facilityId);
+        cart.setExternalId(PONumber);
         cart.setEstimatedDeliveryDate(estimatedDeliveryDate);
         cart.setProductSubscriptionTypeId(productSubscriptionTypeId);
         cart.setShipmentId(shipmentId);
@@ -1087,6 +1103,7 @@ public class ByProductServices {
                			 
            	         }catch (GenericEntityException e) {
            				 Debug.logError(e, module);
+           				 
            			}
            	      if(context.get("enableAdvancePaymentApp") != null){
            	    	enableAdvancePaymentApp = (Boolean)context.get("enableAdvancePaymentApp");
@@ -2884,26 +2901,30 @@ public class ByProductServices {
         	paymentCtx.put("paymentDate", paymentDate);
         	paymentCtx.put("paymentRefNum", paymentRefNum);
         	paymentCtx.put("issuingAuthority", issuingAuthority);  
-            paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
-            paymentCtx.put("instrumentDate", instrumentDate);
-            paymentCtx.put("paymentPurposeType", paymentPurposeType);
-	  		if(amount.compareTo(BigDecimal.ZERO) > 0){
-     				Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
-     				if(ServiceUtil.isError(paymentResult)){
-     					Debug.logError("Problems in service createPaymentForBooth", module);
-     					return ServiceUtil.returnError("Problems in service createPaymentForBooth");
-     				}
-	  		}
+        	paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
+        	paymentCtx.put("instrumentDate", instrumentDate);
+        	paymentCtx.put("paymentPurposeType", paymentPurposeType);
+	  	if(amount.compareTo(BigDecimal.ZERO) > 0){
+	  	    Map paymentResult = dispatcher.runSync("createPaymentForBooth", paymentCtx);
+	  	    if(ServiceUtil.isError(paymentResult)){
+	  		Debug.logError("Problems in service createPaymentForBooth", module);
+	  		return ServiceUtil.returnError("Problems in service createPaymentForBooth");
+	  	    }
+	  	}
         }catch (Exception e) {
-			  Debug.logError(e, e.toString(), module);
-		      return ServiceUtil.returnError(e.toString());
-		} 
-  		result = ServiceUtil.returnSuccess("Payment successfully done.");
-  		result.put("paymentMethodTypeId",paymentMethodType);
-		result.put("subTabItem", subTabItem);
-		result.put("statusId", "NOT_PAID");
-		result.put("facilityId", routeId);
-		 result.put("hideSearch", "N");
+            Debug.logError(e, e.toString(), module);
+            return ServiceUtil.returnError(e.toString());
+	} 
+  	result = ServiceUtil.returnSuccess("Payment successfully done.");
+  	result.put("paymentMethodTypeId",paymentMethodType);
+	result.put("subTabItem", subTabItem);
+	if(paymentMethodType.equalsIgnoreCase("CHEQUE_PAYIN") && UtilValidate.isNotEmpty(subTabItem)){
+	    result.put("statusId", "NOT_PAID");
+	}else{
+	    result.put("statusId", "PAID");
+	}
+	result.put("facilityId", routeId);
+	result.put("hideSearch", "N");
         return result;
     }  
 	

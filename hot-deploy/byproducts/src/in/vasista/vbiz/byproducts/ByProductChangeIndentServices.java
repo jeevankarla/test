@@ -87,6 +87,7 @@ public class ByProductChangeIndentServices {
     	  if(UtilValidate.isNotEmpty(request.getParameter("shipmentTypeId"))){
     		  shipmentTypeId = (String) request.getParameter("shipmentTypeId");
     	  }
+    	  String PONumber = (String) request.getParameter("PONumber");
     	  String productId = null;
     	  String quantityStr = null;
     	  String sequenceNum = null;	  
@@ -104,7 +105,7 @@ public class ByProductChangeIndentServices {
     	  try {
               // make sure this is in a transaction
               boolean beganTransaction = TransactionUtil.begin();
-    	  if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
+    	      if (UtilValidate.isNotEmpty(effectiveDateStr)) { //2011-12-25 18:09:45
     		  SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
     		  try {
     			  effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr).getTime());
@@ -115,9 +116,9 @@ public class ByProductChangeIndentServices {
     			  Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
                  //effectiveDate = UtilDateTime.nowTimestamp();
     		  }
-    	  }
-    	  
-    	  List routeIdValidateList = FastList.newInstance();
+    	      }
+    	      
+    	      List routeIdValidateList = FastList.newInstance();
   	      if(UtilValidate.isNotEmpty(subscriptionTypeId)){
   	    	  try{
   	    		  Map resultCtx = dispatcher.runSync("getRoutesByAMPM", UtilMisc.toMap("supplyType", subscriptionTypeId, "userLogin", userLogin));
@@ -134,8 +135,8 @@ public class ByProductChangeIndentServices {
   	      }
   	      
     	  if (boothId == "") {
-    			request.setAttribute("_ERROR_MESSAGE_","Booth Id is empty");
-    			return "error";
+    		request.setAttribute("_ERROR_MESSAGE_","Booth Id is empty");
+    		return "error";
     	  }
         // Get the parameters as a MAP, remove the productId and quantity params.
     	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
@@ -187,7 +188,22 @@ public class ByProductChangeIndentServices {
     		  request.setAttribute("_ERROR_MESSAGE_", "Problem getting Booth subscription");
     		  return "error";	
     	  }
-    	
+    	  if(UtilValidate.isNotEmpty(PONumber) && UtilValidate.isNotEmpty(subscription) && productSubscriptionTypeId.equals("CREDIT")){
+    	      try{
+    	    	  List subAttrCondList = FastList.newInstance();
+    	    	  subAttrCondList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscription.getString("subscriptionId")));
+    	    	  subAttrCondList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "PO_NUMBER"));
+    	    	  GenericValue newEntity = delegator.makeValue("SubscriptionAttribute");
+    	    	  newEntity.set("subscriptionId", subscription.getString("subscriptionId"));
+    	    	  newEntity.set("attrName", "PO_NUMBER");
+    	    	  newEntity.set("attrValue", PONumber);
+    	    	  delegator.createOrStore(newEntity);
+    	      }catch (GenericEntityException e) {
+    	    	  Debug.logError(e, "Problem updating PO Number", module);
+    	    	  request.setAttribute("_ERROR_MESSAGE_", "Problem updating PO Number");
+    	    	  return "error";	
+    	      }
+	  }
     	  List<Map>productQtyList =FastList.newInstance();
     	  for (int i = 0; i < rowCount; i++) {
     		  Map<String  ,Object> productQtyMap = FastMap.newInstance();
@@ -237,9 +253,9 @@ public class ByProductChangeIndentServices {
     		  productQtyList.add(productQtyMap);
     		  if(genRouteIds.contains(sequenceNum)){
     			  String errMsg="Trucksheet already generated for the route :"+ sequenceNum;
-	    			Debug.logError(errMsg , module);
-	      			request.setAttribute("_ERROR_MESSAGE_",errMsg);
-	      			return "error";
+    			  Debug.logError(errMsg , module);
+	      		  request.setAttribute("_ERROR_MESSAGE_",errMsg);
+	      		  return "error";
 	    	  }     
     	  }//end row count for loop
     	  
