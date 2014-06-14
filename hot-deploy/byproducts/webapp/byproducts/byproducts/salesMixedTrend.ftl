@@ -89,7 +89,7 @@ $(document).ready(function(){
             "${ajaxUrl}",  
             { fromDate: $("#fromDate").val() ,thruDate: $("#thruDate").val() ,
               facilityId : $("input[name=facilityId]").val(), productId : $("input[name=productId]").val(),partyId : $("input[name=partyId]").val(),
-              productCategoryId : $("select[name=productCategoryId]").val(), subscriptionTypeId : $("select[name=subscriptionTypeId]").val()},  
+              productCategoryId : $("select[name=productCategoryId]").val(), subscriptionTypeId : $("select[name=subscriptionTypeId]").val(),categoryTypeEnum : $("select[name=categoryTypeEnum]").val()},  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -141,13 +141,21 @@ $(document).ready(function(){
 				<td width="20%"><input class='h2' type="text" id="thruDate" name="thruDate"/></td>
 				<td align="right" width="10%"><span class='h3'>Shift: </span></td>
 				<td align="left" width="10%">
-					<select name="subscriptionTypeId" class='h4'><option value='All'>ALL</option>
+					<select name="subscriptionTypeId" class='h3'><option value='All'>ALL</option>
   	    				<option value='AM'>AM</option>
   	    				<option value='PM'>PM</option>
   	    				<option value='ADHOC'>COUNTER SALE</option>
 					</select>
 				</td>
-				<td></td>
+				<td align="right" width="10%"><span class='h3'>Category: </span></td>
+				<td width="15%">
+					<select name="categoryTypeEnum" id="categoryTypeEnum" class='h3'>
+						<option value="All">All Types</option>
+		            	<#list categoryTypeList as categoryType>    
+		            	   	<option value='${categoryType.enumId}'>	${categoryType.description}</option>
+		                </#list>            
+					</select>
+			    </td>
 				<td><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>
 			</tr>
     	</table> 

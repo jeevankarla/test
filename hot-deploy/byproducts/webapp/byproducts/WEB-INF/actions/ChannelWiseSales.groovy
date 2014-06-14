@@ -159,6 +159,10 @@ if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, result.productIdsList));
 	context.productCategoryId = parameters.productCategoryId;
 }*/
+if(parameters.categoryTypeEnum != "All" && parameters.categoryTypeEnum){
+	conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, parameters.categoryTypeEnum));
+	returnCondition.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, parameters.categoryTypeEnum));
+}
 if(UtilValidate.isNotEmpty(parameters.productId)){
 	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parameters.productId));
 	returnCondition.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS , parameters.productId));
