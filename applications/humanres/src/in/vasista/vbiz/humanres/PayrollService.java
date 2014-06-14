@@ -1108,9 +1108,16 @@ public class PayrollService {
 	    							//  NOOFCALENDERDAYS      NOOFATTENDEDDAYS      LOSSOFPAYDAYS
 	    							//  NOOFATTENDEDHOLIDAYS  NOOFATTENDEDSS        NOOFATTENDEDWEEKLYOFF
 	    							//  NOOFLEAVEDAYS         NOOFCOMPOFFSAVAILED
+		    						boolean getAttendance = false;
 	    							Set supportedVaribules = UtilMisc.toSet("NOOFCALENDERDAYS","NOOFATTENDEDDAYS","LOSSOFPAYDAYS",
 	    									"NOOFATTENDEDHOLIDAYS" ,"NOOFATTENDEDSS" ,"NOOFATTENDEDWEEKLYOFF" ,"NOOFLEAVEDAYS","NOOFCOMPOFFSAVAILED");
-	    							if( supportedVaribules.containsAll(varibuleKeyList)){
+	    							for(int i= 0;i<varibuleKeyList.size();i++){
+	    								String varibuleKey = (String)varibuleKeyList.get(i);
+	    								if(supportedVaribules.contains(varibuleKey)){
+	    									getAttendance =true;
+	    								}
+	    							}
+	    							if(getAttendance){
 		    							Map attendanceMap = getEmployeePayrollAttedance(dctx ,context);
 		    							variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderDays"));
 		    							variables.put("NOOFATTENDEDDAYS", (Double)attendanceMap.get("noOfAttendedDays"));
