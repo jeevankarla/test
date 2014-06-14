@@ -1352,12 +1352,13 @@ public class ByProductNetworkServices {
 	        Boolean isEnableProductSubscription = Boolean.FALSE;
 	        String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
 	        String subscriptionTypeId = (String) context.get("subscriptionTypeId");
+	        boolean isCreditInstitution = Boolean.FALSE;
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        if(UtilValidate.isNotEmpty(context.get("isEnableProductSubscription"))){
 	           isEnableProductSubscription = (Boolean) context.get("isEnableProductSubscription");
 	        }
 	        Map result = ServiceUtil.returnSuccess(); 
-	        
+	        String PONumber = "";
 	        Timestamp supplyDate = null;
 	        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
 	        if(UtilValidate.isNotEmpty(supplyDateStr)){
@@ -1373,6 +1374,39 @@ public class ByProductNetworkServices {
 	  	  		supplyDate = UtilDateTime.nowTimestamp();
 	  	  	}
 	        
+	        GenericValue facility = null;
+			try {
+				facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
+				if (UtilValidate.isNotEmpty(facility) && (facility.get("categoryTypeEnum")).equals("CR_INST")) {
+					isCreditInstitution = Boolean.TRUE;
+				}
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "Error in fetching facility " + boothId, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+			if (isCreditInstitution) {
+				String subscriptionId = "";
+				List subCondList = FastList.newInstance();
+				subCondList.add(EntityCondition.makeCondition("subscriptionTypeId",	EntityOperator.EQUALS, subscriptionTypeId));
+				subCondList.add(EntityCondition.makeCondition("facilityId",	EntityOperator.EQUALS, boothId));
+				EntityCondition subCond = EntityCondition.makeCondition(subCondList, EntityOperator.AND);
+				try {
+					List<GenericValue> subscriptions = delegator.findList("Subscription", subCond,UtilMisc.toSet("subscriptionId"), null, null, false);
+					if (UtilValidate.isNotEmpty(subscriptions)) {
+						GenericValue subscription = EntityUtil.getFirst(subscriptions);
+						subscriptionId = subscription.getString("subscriptionId");
+					}
+					GenericValue subscriptionAttr = delegator.findOne("SubscriptionAttribute", UtilMisc.toMap("subscriptionId", subscriptionId, "attrName", "PO_NUMBER"), false);
+					
+					if (UtilValidate.isNotEmpty(subscriptionAttr)) {
+						PONumber = subscriptionAttr.getString("attrValue");
+					}
+				} catch (GenericEntityException e) {
+					Debug.logError(e, "Error in fetching PO Number" + boothId,module);
+					return ServiceUtil.returnError(e.toString());
+				}
+			}
+	        
 	        List changeIndentProductList = FastList.newInstance();
 	        
 	        try{
@@ -1384,7 +1418,7 @@ public class ByProductNetworkServices {
 		        	EntityFindOptions opts = new EntityFindOptions();
 		            opts.setMaxRows(1);
 		            opts.setFetchSize(1);
-		            GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
+		            facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", boothId), false);
 		            
     			    productSubscriptionTypeId = "CASH";
     				if(facility.getString("categoryTypeEnum").equals("SO_INST")){
@@ -1431,8 +1465,8 @@ public class ByProductNetworkServices {
 	        	Debug.logError(e, "Error in fetching indent for the date" + supplyDateStr, module);
 	        	return ServiceUtil.returnError(e.toString());
 	        }
-	        
-	        	
+	        result.put("isCreditInstitution", isCreditInstitution);
+			result.put("PONumber", PONumber);
 	        return result;
 	    }
 	 	
