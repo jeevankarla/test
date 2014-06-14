@@ -31,7 +31,8 @@ under the License.
      <fo:page-sequence master-reference="main"> 	 <#-- the footer -->
      		<fo:static-content flow-name="xsl-region-before">
      			<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
-     			<fo:block>${partyGroup.groupName?if_exists}</fo:block>
+     			<#assign postalAddress=delegator.findByAnd("PartyAndPostalAddress", {"partyId" : parameters.partyId})/>
+     			<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always">${partyGroup.groupName?if_exists}  ${postalAddress[0].address1?if_exists}</fo:block>
         	 	<fo:block text-align="left" white-space-collapse="false" font-weight="bold">&#160; SUMMARY OF EARNINGS AND DEDUCTIONS FOR THE MONTH OF :  ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
         		<fo:block white-space-collapse="false" keep-together="always">${uiLabelMap.CommonPage}No: <fo:page-number/>                 Date: ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy"))}</fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>	 	 	  

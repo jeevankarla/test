@@ -18,7 +18,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.ofbiz.base.util.UtilNumber;
-
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 context.timePeriodEnd= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -58,6 +57,7 @@ context.dedTypeIds=dedTypeIds;
 context.dedDescMap=dedDescMap;
 Map payRollMap=FastMap.newInstance();
 Map payRollSummaryMap=FastMap.newInstance();
+Map BankAdvicePayRollMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
 	periodBillingId = periodBillDetails.get("periodBillingId");
@@ -71,11 +71,15 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 		payRollHeaderList.each{ payRollHead->
 			payrollHeaderId=payRollHead.get("payrollHeaderId");
 			partyId=payRollHead.get("partyIdFrom");
+			partyDetails = delegator.findOne("PartyPersonAndEmployeeDetail", [partyId :partyId], false);
+			bankAdviceDetailsMap=[:];
 			payRollItemsMap=[:];
 			itemConList=[];
 			itemConList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS ,payrollHeaderId));
 			itemCond = EntityCondition.makeCondition(itemConList,EntityOperator.AND);
 			payRollHeaderItemsList = delegator.findList("PayrollHeaderItem", itemCond, null, null, null, false);
+			totEarnings=0;
+			totDeductions=0;
 			if(UtilValidate.isNotEmpty(payRollHeaderItemsList)){
 				tempAmount =0;
 				payRollHeaderItemsList.each{ payRollHeaderItem->
@@ -84,7 +88,12 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 					if(amount >0){
 						tempAmount +=amount;
 					}
-					
+					if(benefitTypeIds.contains(payrollHeaderItemTypeId)){
+						totEarnings=totEarnings+amount;
+					}
+					if(dedTypeIds.contains(payrollHeaderItemTypeId)){
+						totDeductions=totDeductions+amount;
+					}
 					if(UtilValidate.isEmpty(payRollItemsMap.get(payrollHeaderItemTypeId))){
 						payRollItemsMap[payrollHeaderItemTypeId]=amount;
 					}else{
@@ -103,9 +112,30 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 					payRollMap.put(payrollHeaderId,payRollItemsMap);
 				}
 			}
+			netAmount=totEarnings+totDeductions;
+			if(UtilValidate.isNotEmpty(partyDetails.get("employeeBankAccNo"))){
+				bankAdviceDetailsMap.put("acNo",partyDetails.get("employeeBankAccNo"));
+			}
+			if(UtilValidate.isNotEmpty(partyDetails.employeeId)){
+				bankAdviceDetailsMap.put("emplNo",partyDetails.get("employeeId"));
+			}else{
+				bankAdviceDetailsMap.put("emplNo",partyId);
+			}
+			if(UtilValidate.isNotEmpty(partyDetails.firstName)){
+				if(UtilValidate.isNotEmpty(partyDetails.lastName)){
+					bankAdviceDetailsMap["empName"]=partyDetails.firstName+" "+partyDetails.lastName;
+				}else{
+					bankAdviceDetailsMap["empName"]=partyDetails.firstName;
+				}
+			}
+			bankAdviceDetailsMap.put("netAmt",netAmount);
+			if(UtilValidate.isNotEmpty(bankAdviceDetailsMap) && (netAmount !=0)){
+				BankAdvicePayRollMap.put(partyId,bankAdviceDetailsMap);
+			}		
 		}
 	}
 	
 }
+context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);

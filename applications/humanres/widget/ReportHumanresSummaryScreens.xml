@@ -936,7 +936,9 @@
 			</entity-condition>
 			<set field="groupName" value="${nameList[0].groupName}"/>
 			<set field="partyId" value="${nameList[0].partyId}"/>
-			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" />
+			<!-- <script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" /> -->
+			<set field="parameters.partyId" from-field="parameters.partyId"/>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>      
 		</actions>
 		<widgets>
 			<section>                                                      
