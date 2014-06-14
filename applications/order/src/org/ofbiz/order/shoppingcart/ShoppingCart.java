@@ -4187,26 +4187,26 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         result.put("estimatedDeliveryDate", this.getEstimatedDeliveryDate());        
         result.put("internalCode", this.getInternalCode());
         result.put("salesChannelEnumId", this.getChannelType());
-//        result.put("orderItemGroups", this.makeOrderItemGroups());
+        result.put("orderItemGroups", this.makeOrderItemGroups());
         result.put("orderItems", this.makeOrderItems(explodeItems, Boolean.TRUE, dispatcher));
-//        result.put("workEfforts", this.makeWorkEfforts());
+        result.put("workEfforts", this.makeWorkEfforts());
         result.put("orderAdjustments", this.makeAllAdjustments());
-//        result.put("orderTerms", this.getOrderTerms());
-//        result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());
+        result.put("orderTerms", this.getOrderTerms());
+        result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());
         result.put("orderProductPromoUses", this.makeProductPromoUses());
         result.put("orderProductPromoCodes", this.getProductPromoCodesEntered());
 
-//        result.put("orderAttributes", this.makeAllOrderAttributes());
-//        result.put("orderItemAttributes", this.makeAllOrderItemAttributes());
-//        result.put("orderContactMechs", this.makeAllOrderContactMechs());
-//        result.put("orderItemContactMechs", this.makeAllOrderItemContactMechs());
-//        result.put("orderPaymentInfo", this.makeAllOrderPaymentInfos(dispatcher));
-//        result.put("orderItemShipGroupInfo", this.makeAllShipGroupInfos());
-//        result.put("orderItemSurveyResponses", this.makeAllOrderItemSurveyResponses());
-//        result.put("orderAdditionalPartyRoleMap", this.getAdditionalPartyRoleMap());
+        result.put("orderAttributes", this.makeAllOrderAttributes());
+        result.put("orderItemAttributes", this.makeAllOrderItemAttributes());
+        result.put("orderContactMechs", this.makeAllOrderContactMechs());
+        result.put("orderItemContactMechs", this.makeAllOrderItemContactMechs());
+        result.put("orderPaymentInfo", this.makeAllOrderPaymentInfos(dispatcher));
+        result.put("orderItemShipGroupInfo", this.makeAllShipGroupInfos());
+        result.put("orderItemSurveyResponses", this.makeAllOrderItemSurveyResponses());
+        result.put("orderAdditionalPartyRoleMap", this.getAdditionalPartyRoleMap());
         result.put("orderItemAssociations", this.makeAllOrderItemAssociations());
-//        result.put("orderInternalNotes", this.getInternalOrderNotes());
-//        result.put("orderNotes", this.getOrderNotes());
+        result.put("orderInternalNotes", this.getInternalOrderNotes());
+        result.put("orderNotes", this.getOrderNotes());
 
         result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
         result.put("currencyUom", this.getCurrency());
@@ -4222,7 +4222,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         result.put("purposeTypeId", this.getPurposeTypeId());
         result.put("terminalId", this.getTerminalId());
         result.put("workEffortId", this.getWorkEffortId());
-//        result.put("autoOrderShoppingListId", this.getAutoOrderShoppingListId());
+        result.put("autoOrderShoppingListId", this.getAutoOrderShoppingListId());
 
         result.put("billToCustomerPartyId", this.getBillToCustomerPartyId());
         result.put("billFromVendorPartyId", this.getBillFromVendorPartyId());
