@@ -123,7 +123,9 @@ under the License.
            			</fo:table>
            		</fo:block>
            		<#assign netAmt= totalEarnings+totalDeductions>
-           		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">NET SALARY  :   ${netAmt?if_exists?string("#0.00")}</fo:block>
+           		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">NET SALARY  :   <#if totalEarnings?has_content>
+                   					<#assign net = netAmt?if_exists />
+                   			<@ofbizCurrency amount=net /></#if></fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Director                                                                                   Manager/Deputy Manager Finanace</fo:block>
