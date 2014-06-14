@@ -50,7 +50,7 @@ under the License.
      <fo:page-sequence master-reference="main"> 	 <#-- the footer -->
         <fo:static-content flow-name="xsl-region-after">
              <fo:block font-size="8pt" text-align="center">             
-             	<#if footerImageUrl?has_content><fo:external-graphic src="<@ofbizContentUrl>${footerImageUrl}</@ofbizContentUrl>" overflow="hidden" height="20px" content-height="scale-to-fit"/></#if>             
+             	<#if footerImageUrl?has_content><fo:external-graphic src="<@ofbizContentUrl>${footerImageUrl?if_exists}</@ofbizContentUrl>" overflow="hidden" height="20px" content-height="scale-to-fit"/></#if>             
          	 </fo:block>  
          	 <fo:block font-size="8pt" text-align="center" space-before="10pt">
                 ${uiLabelMap.CommonPage} <fo:page-number-citation ref-id="theEnd"/> ${uiLabelMap.CommonOf} <fo:page-number-citation ref-id="theEnd"/>
@@ -101,7 +101,7 @@ under the License.
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee No.            : ${emplDetails.employeeId?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee No.            : <#if emplDetails.employeeId?has_content>${emplDetails.employeeId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 					<fo:table-cell>
@@ -185,8 +185,8 @@ under the License.
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                         		<fo:block text-align="center">${Static["org.ofbiz.base.util.UtilDateTime"].getIntervalInDays(timePeriodStart,timePeriodEnd)}</fo:block>
-                        		<fo:block text-align="center">${days}days</fo:block>
-                        		<fo:block text-align="center">${(Static["org.ofbiz.base.util.UtilDateTime"].getIntervalInDays(timePeriodStart,timePeriodEnd))-days}days</fo:block>
+                        		<fo:block text-align="center">${days?if_exists}days</fo:block>
+                        		<fo:block text-align="center">${(Static["org.ofbiz.base.util.UtilDateTime"].getIntervalInDays(timePeriodStart,timePeriodEnd))-(days)}days</fo:block>
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     			<fo:block>
@@ -306,7 +306,7 @@ under the License.
 	                      			<#assign totalDeductions=(totalDeductions+(payHeadItems.getValue()))>                  			
 	                    			<fo:block>${dedDescMap[payHeadItems.getKey()]?if_exists}</fo:block>                			
 	                    		</fo:table-cell>                    		
-	                    		<fo:table-cell border-style="solid" text-align="right"><fo:block>${payHeadItems.getValue()?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+	                    		<fo:table-cell border-style="solid" text-align="right"><fo:block>${((-1)*payHeadItems.getValue())?if_exists?string("##0.00")}</fo:block></fo:table-cell>
 	                    	</fo:table-row>
                          </#if>        	
                     	</#list>
@@ -329,7 +329,7 @@ under the License.
                    			<@ofbizCurrency amount=totalamount/></#if></fo:block>
                    		</fo:table-cell>
                    </fo:table-row>
-                   <#assign netAmt= total-totalamount>
+                   <#assign netAmt= total+totalamount>
                 	<fo:table-row>
                    		<fo:table-cell>                   			
                    			<fo:block font-weight="bold">Net Pay   :
