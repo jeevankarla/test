@@ -8034,6 +8034,7 @@ Debug.logInfo("result= " + result, module);
 				    		paymentCtx.put("userLogin", userLogin);
 				    		paymentCtx.put("facilityId", facilityId);
 				    		paymentCtx.put("supplyDate", UtilDateTime.toDateString(paymentDate, "yyyy-MM-dd HH:mm:ss"));
+				    		paymentCtx.put("paymentDate", paymentDate);
 				    		paymentCtx.put("instrumentDate", UtilDateTime.toDateString(paymentDate, "dd MMMMM, yyyy"));
 				    		paymentCtx.put("amount", outstandingAmount.toString());
 				    		paymentCtx.put("useFifo",true);
