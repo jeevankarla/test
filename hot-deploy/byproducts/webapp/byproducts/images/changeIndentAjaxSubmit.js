@@ -27,6 +27,7 @@ $(document).ready(function() {
 	  		
 	});
  setDateRange();
+ checkPONumber(null, null);
 	 	
 });
 
