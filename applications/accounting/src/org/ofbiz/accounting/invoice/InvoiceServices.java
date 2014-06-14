@@ -2727,6 +2727,7 @@ public class InvoiceServices {
         List<GenericValue> paymentAppl = null;
         try {
             paymentAppl = delegator.findByAnd("PaymentAndApplication", UtilMisc.toMap("invoiceId", invoiceId));
+            paymentAppl = EntityUtil.orderBy(paymentAppl, UtilMisc.toList("amountApplied"));
             // For each payment application, select only those that are RECEIVED or SENT based on whether the payment is a RECEIPT or DISBURSEMENT respectively
             for (Iterator<GenericValue> iter = paymentAppl.iterator(); iter.hasNext();) {
                 GenericValue payment = iter.next();
