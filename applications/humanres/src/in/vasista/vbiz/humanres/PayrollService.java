@@ -1290,6 +1290,18 @@ public class PayrollService {
 	            } else {
 	                compare = 1;
 	            }
+	        }else if ("PAYHD_BEDE_GROSS_SAL".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
+	            if (UtilValidate.isNotEmpty(payGradeId)) {
+	                compare = payGradeId.compareTo(payrollBenDedCond.getString("condValue"));
+	            } else {
+	                compare = 1;
+	            }
+	        }else if ("PAYHD_BEDE_LEAVEDAYS".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
+	            if (UtilValidate.isNotEmpty(payGradeId)) {
+	                compare = payGradeId.compareTo(payrollBenDedCond.getString("condValue"));
+	            } else {
+	                compare = 1;
+	            }
 	        }
 
 
