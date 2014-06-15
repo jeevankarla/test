@@ -228,7 +228,8 @@ conditionList=[];
 			return ServiceUtil.returnError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap));
 		}
 	}
-	
+	Debug.log("====vbizNotPmInvIdsList="+vbizNotPmInvIdsList+"=====AndSize=="+vbizNotPmInvIdsList.size());
+	Debug.log("=====AndSize=="+vbizNotPmInvIdsList.size());
 	//knockoff invoics
 	vbizNotPmInvIdsList.each{ invoiceId->
 	 invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", UtilMisc.toMap("invoiceId", invoiceId, "userLogin", userLogin));
@@ -267,8 +268,7 @@ conditionList=[];
 		 }
 	  }//forEach Close
 	}
-	Debug.log("====vbizNotPmInvIdsList="+vbizNotPmInvIdsList+"=====AndSize=="+vbizNotPmInvIdsList.size());
-	Debug.log("=====AndSize=="+vbizNotPmInvIdsList.size());
+	
 	//Reset PaymentDate
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN , dayEnd));
