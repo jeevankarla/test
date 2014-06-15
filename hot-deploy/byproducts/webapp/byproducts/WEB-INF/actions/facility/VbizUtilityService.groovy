@@ -65,7 +65,6 @@ conditionList=[];
 	Debug.log("=====BeforeeeeeeeafterInvoiceIdsList====dayEnd="+dayEnd);
 	isSubmitted =true;
 	if(UtilValidate.isNotEmpty(isSubmitted)){
-		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO , dayEnd));
 		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -131,7 +130,6 @@ conditionList=[];
 		if (ServiceUtil.isError(resultPayMap)) {
 			return ServiceUtil.returnError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap));
 		}
-		
 	}
 	//create Payment Context
 	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "SALES_PAYIN");
@@ -139,44 +137,130 @@ conditionList=[];
 	paymentCtx.put("organizationPartyId","Company");
 	
 	//knockoff invoics
-	beforeTempInvoiceIdsList.each{ invoiceId->
+	
 	//outstanding foe invoice
-		//create vbizpayin payment for outstaning amount
-		// create payment application for invoice and payment
+	//create vbizpayin payment for outstaning amount
+	// create payment application for invoice and payment
+	beforeTempInvoiceIdsList.each{ invoiceId->
+	
 	 invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", UtilMisc.toMap("invoiceId", invoiceId, "userLogin", userLogin));
 	if(UtilValidate.isNotEmpty(invoicePaymentInfoList.get("invoicePaymentInfoList"))){
 	 invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0);
-	 outStandingAmount=invoicePaymentInfo.outstandingAmount;
-	 
-	 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId" : invoiceId), false);
-	  
-	            paymentCtx.put("partyId",invoice.partyId);
-	            paymentCtx.put("facilityId", invoice.facilityId);
-	            paymentCtx.put("paymentPurposeType", "");
-	            paymentCtx.put("instrumentDate", invoice.dueDate);
-				paymentCtx.put("paymentDate", invoice.dueDate);
-	            paymentCtx.put("statusId", "PMNT_RECEIVED");
-	            paymentCtx.put("isEnableAcctg", "N");
-	            paymentCtx.put("amount", outStandingAmount);
-	            paymentCtx.put("userLogin", userLogin); 
-	            paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
-	    		try{
-	            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
-	            if (ServiceUtil.isError(paymentResult)) {
-	            	Debug.logError(paymentResult.toString(), module);
-	                return ServiceUtil.returnError(null, null, null, paymentResult);
-	            }
-	            paymentId = (String)paymentResult.get("paymentId");
-	            }catch (Exception e) {
-	            Debug.logError(e, e.toString(), module);
-	            return ServiceUtil.returnError(e.toString());
-		        }
+	 outStandingAmount=0;
+		 if(UtilValidate.isNotEmpty(invoicePaymentInfo)){
+		 outStandingAmount=invoicePaymentInfo.outstandingAmount;
+		 }
+		 if(outStandingAmount>0){
+		 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId" : invoiceId), false);
+		  
+		            paymentCtx.put("partyId",invoice.partyId);
+		            paymentCtx.put("facilityId", invoice.facilityId);
+		            paymentCtx.put("paymentPurposeType", "");
+		            paymentCtx.put("instrumentDate", invoice.dueDate);
+					paymentCtx.put("paymentDate", invoice.dueDate);
+					paymentCtx.put("effectiveDate", invoice.dueDate);
+		            paymentCtx.put("statusId", "PMNT_RECEIVED");
+		            paymentCtx.put("isEnableAcctg", "N");
+		            paymentCtx.put("amount", outStandingAmount);
+		            paymentCtx.put("userLogin", userLogin); 
+		            paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
+		    		try{
+		            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+		            if (ServiceUtil.isError(paymentResult)) {
+		            	Debug.logError(paymentResult.toString(), module);
+		                return ServiceUtil.returnError(null, null, null, paymentResult);
+		            }
+		            paymentId = (String)paymentResult.get("paymentId");
+		            }catch (Exception e) {
+		            Debug.logError(e, e.toString(), module);
+		            return ServiceUtil.returnError(e.toString());
+			        }
+		 }
 	 }
 		
 		
 	}
+	
+	Debug.log("=====beforeTempInvoiceIdsList===="+beforeTempInvoiceIdsList);
+	Debug.log("=====beforeTempInvoiceIdsList==Size=="+beforeTempInvoiceIdsList.size());
+	 
+	//to void PM invoices VBIZ payments and..settle
+	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
+	Debug.log("=====pmShipmentIds==Size=="+pmShipmentIds.size());
+	if(UtilValidate.isNotEmpty(pmShipmentIds)){
 	conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN , dayEnd));
+	conditionList.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_EQUAL , "INVOICE_CANCELLED"));
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , pmShipmentIds));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	pmTempInvoiceList = delegator.findList("OrderHeaderFacAndItemBillingInv",condition , null, ["invoiceId"], null, false);
+	pmTempInvoiceIdsList = EntityUtil.getFieldListFromEntityList(pmTempInvoiceList, "invoiceId", true);
+	
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS , "VBIZ_PAYIN"));
+	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN , pmTempInvoiceIdsList));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	vbizPMApplicationList = delegator.findList("PaymentAndApplication",condition , null, null, null, false);
+	vbizPmPayIdsList = EntityUtil.getFieldListFromEntityList(vbizPMApplicationList, "paymentId", true);
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.NOT_IN , vbizPmPayIdsList));
+	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_IN , pmTempInvoiceIdsList));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	vbizPMNotApplicationList = delegator.findList("PaymentApplication",condition , null, null, null, false);
+	vbizNotPmInvIdsList = EntityUtil.getFieldListFromEntityList(vbizPMNotApplicationList, "invoiceId", true);
+	
+	//Void this Payments List
+	Debug.log("==vbizPmPayIdsList=="+vbizPmPayIdsList+"and SIZE="+vbizPmPayIdsList.size());
+	vbizPmPayIdsList.each{paymentId->
+		Map resultPayMap = dispatcher.runSync("voidPayment", UtilMisc.toMap("paymentId", paymentId, "userLogin", userLogin));
+		if (ServiceUtil.isError(resultPayMap)) {
+			return ServiceUtil.returnError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap));
+		}
+	}
+	
+	//knockoff invoics
+	vbizNotPmInvIdsList.each{ invoiceId->
+	 invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", UtilMisc.toMap("invoiceId", invoiceId, "userLogin", userLogin));
+		if(UtilValidate.isNotEmpty(invoicePaymentInfoList.get("invoicePaymentInfoList"))){
+			 invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0);
+			 outStandingAmount=0;
+			 if(UtilValidate.isNotEmpty(invoicePaymentInfo)){
+			 outStandingAmount=invoicePaymentInfo.outstandingAmount;
+			 }
+			 if(outStandingAmount>0){
+			 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId" : invoiceId), false);
+			  
+						paymentCtx.put("partyId",invoice.partyId);
+						paymentCtx.put("facilityId", invoice.facilityId);
+						paymentCtx.put("paymentPurposeType", "");
+						paymentCtx.put("instrumentDate", invoice.dueDate);
+						paymentCtx.put("paymentDate", invoice.dueDate);
+						paymentCtx.put("effectiveDate", invoice.dueDate);
+						paymentCtx.put("statusId", "PMNT_RECEIVED");
+						paymentCtx.put("isEnableAcctg", "N");
+						paymentCtx.put("amount", outStandingAmount);
+						paymentCtx.put("userLogin", userLogin);
+						paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
+						try{
+						Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+						if (ServiceUtil.isError(paymentResult)) {
+							Debug.logError(paymentResult.toString(), module);
+							return ServiceUtil.returnError(null, null, null, paymentResult);
+						}
+						paymentId = (String)paymentResult.get("paymentId");
+						}catch (Exception e) {
+						Debug.logError(e, e.toString(), module);
+						return ServiceUtil.returnError(e.toString());
+						}
+			 }
+		 }
+	  }//forEach Close
+	}
+	Debug.log("====vbizNotPmInvIdsList="+vbizNotPmInvIdsList+"=====AndSize=="+vbizNotPmInvIdsList.size());
+	Debug.log("=====AndSize=="+vbizNotPmInvIdsList.size());
+	//Reset PaymentDate
+	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN , dayEnd));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID")));
 	conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS , "VBIZ_PAYIN"));
@@ -191,11 +275,8 @@ conditionList=[];
 		payment.set("instrumentDate",paymentDate);
 		payment.store();
 	}
-	Debug.log("=====beforeTempInvoiceIdsList===="+beforeTempInvoiceIdsList);
-	Debug.log("=====beforeTempInvoiceIdsList==Size=="+beforeTempInvoiceIdsList.size());
-	
 		Debug.logInfo("Service Runs Sucessfully!","");
-	    context.errorMessage = "Totally Invoies Size() '" + beforeTempInvoiceIdsList.size() + "' And Payments size="+voidedPayList.size() +" Find this Service!";
+	    context.errorMessage = "Totally Invoies Size() '" + beforeTempInvoiceIdsList.size() + "' And Payments size="+voidedPayList.size() +" Find this Service!"+"==PmAppliedInvLsit=Size="+vbizNotPmInvIdsList.size();
 		//context.sucess = "Service Runs Sucessfully !";
 		return;
 	
