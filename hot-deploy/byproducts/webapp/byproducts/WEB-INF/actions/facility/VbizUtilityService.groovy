@@ -214,7 +214,7 @@ conditionList=[];
 	vbizNotPmInvIdsList=[];
 	conditionList.clear();
 	if(UtilValidate.isNotEmpty(vbizPmPayIdsList) &&UtilValidate.isNotEmpty(pmTempInvoiceIdsList)){
-	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.NOT_IN , vbizPmPayIdsList));
+	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN , vbizPmPayIdsList));
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_IN , pmTempInvoiceIdsList));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	vbizPMNotApplicationList = delegator.findList("PaymentApplication",condition , null, null, null, false);
