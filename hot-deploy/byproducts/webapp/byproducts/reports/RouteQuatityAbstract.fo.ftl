@@ -158,7 +158,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if routeProdTotals.get(product)?has_content>
-													<#assign qty= routeProdTotals.get(product).get("packetQuantity")>
+													<#assign qty= routeProdTotals.get(product).get("total")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -179,7 +179,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if routeProdTotals.get(product)?has_content>
-													<#assign byProdQty= routeProdTotals.get(product).get("packetQuantity")>
+													<#assign byProdQty= routeProdTotals.get(product).get("total")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -289,7 +289,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if pmRouteProdTotals.get(product)?has_content>
-															<#assign qty= pmRouteProdTotals.get(product).get("packetQuantity")>
+															<#assign qty= pmRouteProdTotals.get(product).get("total")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -310,7 +310,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if pmRouteProdTotals.get(product)?has_content>
-													<#assign byProdQty= pmRouteProdTotals.get(product).get("packetQuantity")>
+													<#assign byProdQty= pmRouteProdTotals.get(product).get("total")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -423,7 +423,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if adhocBoothProdTotals.get(product)?has_content>
-															<#assign qty= adhocBoothProdTotals.get(product).get("packetQuantity")>
+															<#assign qty= adhocBoothProdTotals.get(product).get("total")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -444,7 +444,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if adhocBoothProdTotals.get(product)?has_content>
-													<#assign byProdQty= adhocBoothProdTotals.get(product).get("packetQuantity")>
+													<#assign byProdQty= adhocBoothProdTotals.get(product).get("total")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -553,7 +553,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if grandProdTotals.get(product)?has_content>
-															<#assign qty= grandProdTotals.get(product).get("packetQuantity")>
+															<#assign qty= grandProdTotals.get(product).get("total")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -574,7 +574,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if grandProdTotals.get(product)?has_content>
-															<#assign byProdQty= grandProdTotals.get(product).get("packetQuantity")>
+															<#assign byProdQty= grandProdTotals.get(product).get("total")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -741,7 +741,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if routeProdTotals.get(product)?has_content>
-													<#assign qty= routeProdTotals.get(product).get("packetQuantity")>
+													<#assign qty= routeProdTotals.get(product).get("total")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -762,7 +762,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if routeProdTotals.get(product)?has_content>
-													<#assign byProdQty= routeProdTotals.get(product).get("packetQuantity")>
+													<#assign byProdQty= routeProdTotals.get(product).get("total")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -853,7 +853,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if pmRouteProdTotals.get(product)?has_content>
-															<#assign qty= pmRouteProdTotals.get(product).get("packetQuantity")>
+															<#assign qty= pmRouteProdTotals.get(product).get("total")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -875,7 +875,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if pmRouteProdTotals.get(product)?has_content>
-													<#assign byProdQty= pmRouteProdTotals.get(product).get("packetQuantity")>
+													<#assign byProdQty= pmRouteProdTotals.get(product).get("total")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -975,7 +975,7 @@ under the License.
 																</#if>
 																<#assign qty=0>
 																<#if adhocBoothProdTotals.get(product)?has_content>
-																			<#assign qty= adhocBoothProdTotals.get(product).get("packetQuantity")>
+																			<#assign qty= adhocBoothProdTotals.get(product).get("total")>
 																</#if>
 																<#if qty !=0>
 																	<fo:table-cell>		
@@ -996,7 +996,7 @@ under the License.
 																</#if>
 																<#assign byProdQty=0>
 																<#if adhocBoothProdTotals.get(product)?has_content>
-																	<#assign byProdQty= adhocBoothProdTotals.get(product).get("packetQuantity")>
+																	<#assign byProdQty= adhocBoothProdTotals.get(product).get("total")>
 																</#if>
 																<#if byProdQty !=0>
 																	<fo:table-cell>		
@@ -1085,7 +1085,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if grandProdTotals.get(product)?has_content>
-															<#assign qty= grandProdTotals.get(product).get("packetQuantity")>
+															<#assign qty= grandProdTotals.get(product).get("total")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -1106,7 +1106,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if grandProdTotals.get(product)?has_content>
-															<#assign byProdQty= grandProdTotals.get(product).get("packetQuantity")>
+															<#assign byProdQty= grandProdTotals.get(product).get("total")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
