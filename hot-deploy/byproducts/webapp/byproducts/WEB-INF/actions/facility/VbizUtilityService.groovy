@@ -88,31 +88,38 @@ conditionList=[];
 	vbizPaymentsList = delegator.findList("Payment",condition , null, null, null, false);
 	vbizPaymentIdsList = EntityUtil.getFieldListFromEntityList(vbizPaymentsList, "paymentId", false);
 	//after application
+	afterApplPayIdsList=[];
+	if(UtilValidate.isNotEmpty(vbizPaymentsList)&&UtilValidate.isNotEmpty(vbizPaymentIdsList)){
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN , afterInvoiceIdsList));
 	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN , vbizPaymentIdsList));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	afterApplPayList = delegator.findList("PaymentApplication",condition , null, null, null, false);
 	afterApplPayIdsList = EntityUtil.getFieldListFromEntityList(afterApplPayList, "paymentId", true);
+	}
 	//before
 	//payments void list  afterApplPayIdsList
 	
 	//vbiz paymentsApplication After 30th 
+	vbizExtraInvoiceIdsList=[];
+	if(UtilValidate.isNotEmpty(afterApplPayIdsList)){
 	conditionList.clear();
 	//conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN , beforeInvoiceIdsList));
 	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN , afterApplPayIdsList));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	vbizExtraApplicationList = delegator.findList("PaymentApplication",condition , null, null, null, false);
 	vbizExtraInvoiceIdsList = EntityUtil.getFieldListFromEntityList(vbizExtraApplicationList, "invoiceId", true);
-	
-	
+	}
+	Debug.log("====vbizExtraInvoiceIdsList==Size="+vbizExtraInvoiceIdsList.size());
+	beforeTempInvoiceIdsList=[];
+	if(UtilValidate.isNotEmpty(vbizExtraInvoiceIdsList)){ 
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO , dayEnd));
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN , vbizExtraInvoiceIdsList));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	beforeTempInvoiceList = delegator.findList("Invoice",condition , null, ["invoiceDate"], null, false);
 	beforeTempInvoiceIdsList = EntityUtil.getFieldListFromEntityList(beforeTempInvoiceList, "invoiceId", false);
-	
+	}
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN , dayEnd));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID")));
@@ -121,6 +128,7 @@ conditionList=[];
 	afterPayList = delegator.findList("Payment",condition , null, ["paymentDate"], null, false);
 	afterPayIdsList = EntityUtil.getFieldListFromEntityList(afterPayList, "paymentId", false);
 	afterApplPayIdsList.addAll(afterPayIdsList);
+	Debug.log("====afterApplPayIdsList==Size="+afterApplPayIdsList.size());
 	Set voidedPayList=new HashSet(afterApplPayIdsList);
 	Debug.log("====VoidedPayments==Size="+voidedPayList.size());
 	//void payments
@@ -183,7 +191,7 @@ conditionList=[];
 	
 	Debug.log("=====beforeTempInvoiceIdsList===="+beforeTempInvoiceIdsList);
 	Debug.log("=====beforeTempInvoiceIdsList==Size=="+beforeTempInvoiceIdsList.size());
-	 
+	Debug.log("*********************=NewService********StartsHERE==========>");
 	//to void PM invoices VBIZ payments and..settle
 	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
 	Debug.log("=====pmShipmentIds==Size=="+pmShipmentIds.size());
@@ -203,13 +211,15 @@ conditionList=[];
 	vbizPMApplicationList = delegator.findList("PaymentAndApplication",condition , null, null, null, false);
 	vbizPmPayIdsList = EntityUtil.getFieldListFromEntityList(vbizPMApplicationList, "paymentId", true);
 	
+	vbizNotPmInvIdsList=[];
 	conditionList.clear();
+	if(UtilValidate.isNotEmpty(vbizPmPayIdsList) &&UtilValidate.isNotEmpty(pmTempInvoiceIdsList)){
 	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.NOT_IN , vbizPmPayIdsList));
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_IN , pmTempInvoiceIdsList));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	vbizPMNotApplicationList = delegator.findList("PaymentApplication",condition , null, null, null, false);
 	vbizNotPmInvIdsList = EntityUtil.getFieldListFromEntityList(vbizPMNotApplicationList, "invoiceId", true);
-	
+	}
 	//Void this Payments List
 	Debug.log("==vbizPmPayIdsList=="+vbizPmPayIdsList+"and SIZE="+vbizPmPayIdsList.size());
 	vbizPmPayIdsList.each{paymentId->
