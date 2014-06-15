@@ -65,7 +65,7 @@ conditionList=[];
 	Debug.log("=====BeforeeeeeeeafterInvoiceIdsList====dayEnd="+dayEnd+isSubmitted);
 	if(UtilValidate.isNotEmpty(isSubmitted)){
 		
-		/*conditionList.clear();
+		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO , dayEnd));
 		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		beforeInvoiceList = delegator.findList("Invoice",condition , null, ["dueDate"], null, false);
@@ -77,7 +77,7 @@ conditionList=[];
 			invoice.store();
 			Debug.log("=====invDate="+invDate+"====invoiceId=="+invoiceId);
 		}
-	Debug.log("=====beforeInvoiceIdsList="+beforeInvoiceIdsList);*/
+	Debug.log("=====beforeInvoiceIdsList="+beforeInvoiceIdsList);
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN , dayEnd));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -126,21 +126,21 @@ conditionList=[];
 	Set voidedPayList=new HashSet(afterApplPayIdsList);
 	Debug.log("====VoidedPayments==Size="+voidedPayList.size());
 	//void payments
-	/*voidedPayList.each{paymentId->
+	voidedPayList.each{paymentId->
 		Debug.log("==VoidPaymentId=="+paymentId);
 		Map resultPayMap = dispatcher.runSync("voidPayment", UtilMisc.toMap("paymentId", paymentId, "userLogin", userLogin));
 		if (ServiceUtil.isError(resultPayMap)) {
 			return ServiceUtil.returnError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap));
 		}
 		
-	}*/
+	}
 	//create Payment Context
 	Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "SALES_PAYIN");
 	paymentCtx.put("paymentMethodTypeId", "VBIZ_PAYIN");
 	paymentCtx.put("organizationPartyId","Company");
 	
 	//knockoff invoics
-/*	beforeTempInvoiceIdsList.each{ invoiceId->
+	beforeTempInvoiceIdsList.each{ invoiceId->
 	//outstanding foe invoice
 		//create vbizpayin payment for outstaning amount
 		// create payment application for invoice and payment
@@ -175,9 +175,9 @@ conditionList=[];
 	 }
 		
 		
-	}*/
-	Debug.log("=====vbizExtraPaymentIdsList===="+beforeTempInvoiceIdsList);
-	Debug.log("=====vbizExtraPaymentIdsList==Size=="+beforeTempInvoiceIdsList.size());
+	}
+	Debug.log("=====beforeTempInvoiceIdsList===="+beforeTempInvoiceIdsList);
+	Debug.log("=====beforeTempInvoiceIdsList==Size=="+beforeTempInvoiceIdsList.size());
 	
 		Debug.logInfo("Service Runs Sucessfully!","");
 	    context.errorMessage = "Totally Invoies Size() '" + beforeTempInvoiceIdsList.size() + "' And Payments size="+voidedPayList.size() +" Find this Service!";
@@ -186,21 +186,6 @@ conditionList=[];
 	
 	}
 	
-	/*
-	categoryIdsList = ByProductReportServices.getByProdReportCategories(delegator, UtilMisc.toMap("productCategoryTypeId", "ExDuty_REPORT_CAT")).get("reportProductCategories");
-	
-	for(int i = 0; i < categoryIdsList.size(); i++){
-		
-		String category = (String) categoryIdsList.get(i);
-		categoryProductsList = categoryProductsMap.get(category);
-		
-		dayWiseSalesMap = (ByProductNetworkServices.getDayWiseTotalSales(dctx, monthBegin, monthEnd, null, categoryProductsList)).get("dayWiseSale");
-		
-		dayWiseCategorySalesMap.put(category, dayWiseSalesMap);
-		
-	}
-	
-	context.dayWiseCategorySalesMap = dayWiseCategorySalesMap;*/
 	
 	
 	
