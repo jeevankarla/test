@@ -76,9 +76,7 @@ conditionList=[];
 			Timestamp invDate=invoice.dueDate;
 			invoice.set("invoiceDate",invDate);
 			invoice.store();
-			Debug.log("=====invDate="+invDate+"====invoiceId=="+invoiceId);
 		}
-	Debug.log("=====beforeInvoiceIdsList="+beforeInvoiceIdsList);
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN , dayEnd));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -176,6 +174,22 @@ conditionList=[];
 	 }
 		
 		
+	}
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN , dayEnd));
+	conditionList.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN , dayEnd));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID")));
+	conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS , "VBIZ_PAYIN"));
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	afterPayList = delegator.findList("Payment",condition , null, ["paymentDate"], null, false);
+	afterPayIdsList = EntityUtil.getFieldListFromEntityList(afterPayList, "paymentId", false);
+	Set resetDatePayIdsList=new HashSet(afterPayIdsList);//Date needs to be reset
+	resetDatePayIdsList.each{paymentId->
+		GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId" : paymentId), false);
+		Timestamp paymentDate=payment.paymentDate;
+		payment.set("effectiveDate",paymentDate);
+		payment.set("instrumentDate",paymentDate);
+		payment.store();
 	}
 	Debug.log("=====beforeTempInvoiceIdsList===="+beforeTempInvoiceIdsList);
 	Debug.log("=====beforeTempInvoiceIdsList==Size=="+beforeTempInvoiceIdsList.size());
