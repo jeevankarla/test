@@ -24,13 +24,6 @@
     -->
 
     <!-- Request Mappings -->
-    
-      <request-map uri="VbizUtilityService">
-          <security https="true" auth="true"/>
-        <response name="success" type="view" value="VbizUtilityService"/>
-        <response name="error" type="view" value="VbizUtilityService"/>
-    </request-map>
-    
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FacilityTreeNetworkNg"/></request-map>
 	<request-map uri="mainNg"><security https="true" auth="true"/><response name="success" type="view" value="FacilityTreeNetworkNg"/></request-map>
 	

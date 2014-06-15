@@ -103,13 +103,5 @@
         <field name="issuingAuthority" title="BankName"><display/></field>  
         <field name="amount" title="AMOUNT"><display/></field>        
      </form>
-      <form name="VbizUtilityService" type="single" target="VbizUtilityService"  paginate="false"
-    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-    	<field name="paymentttttttt" title="Run Your Utility Service Here"><display/></field> 
-    	<field name="isSubmitted" ><hidden value="Y"></hidden></field> 	
-    	
-          <field name="subAmount" title="Submit Service" widget-style="smallSubmit"><submit></submit></field>      
-     </form>
-     
-    
+   
 </forms>

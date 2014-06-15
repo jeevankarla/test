@@ -62,7 +62,8 @@ dayEnd = UtilDateTime.getDayEnd(effectiveDate)
 		 (select `INVOICE_ID` from `INVOICE` where `INVOICE_DATE`>'2014-04-30 23:59:59' ) AND `PAYMENT_ID` IN
 		  (select `PAYMENT_ID` from `PAYMENT` where  `PAYMENT_METHOD_TYPE_ID` ='VBIZ_PAYIN'))*/
 conditionList=[];
-	Debug.log("=====BeforeeeeeeeafterInvoiceIdsList====dayEnd="+dayEnd+isSubmitted);
+	Debug.log("=====BeforeeeeeeeafterInvoiceIdsList====dayEnd="+dayEnd);
+	isSubmitted =true;
 	if(UtilValidate.isNotEmpty(isSubmitted)){
 		
 		conditionList.clear();

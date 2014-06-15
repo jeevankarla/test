@@ -4,7 +4,9 @@
     <description>ByProducts Services</description>
     <vendor></vendor>
     <version>1.0</version>
-    
+   <service name="VbizUtilityService" engine="groovy" location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/VbizUtilityService.groovy" invoke="" transaction-timeout="70000">
+       
+    </service>
     <service name="getPartyDiscountAmount" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductServices" invoke="getPartyDiscountAmount">
         <description>Get Rate Amount</description>
