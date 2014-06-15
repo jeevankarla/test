@@ -24,6 +24,13 @@
     -->
 
     <!-- Request Mappings -->
+    
+      <request-map uri="VbizUtilityService">
+          <security https="true" auth="true"/>
+        <response name="success" type="view" value="VbizUtilityService"/>
+        <response name="error" type="view" value="VbizUtilityService"/>
+    </request-map>
+    
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="FacilityTreeNetworkNg"/></request-map>
 	<request-map uri="mainNg"><security https="true" auth="true"/><response name="success" type="view" value="FacilityTreeNetworkNg"/></request-map>
 	
@@ -1137,5 +1144,6 @@
  
  <view-map name="FindPaymentNonRoute" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentNonRoute"/>
  <view-map name="NewNonRouteReceipt" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#NewNonRouteReceipt"/>
+ <view-map name="VbizUtilityService" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#VbizUtilityService"  />
     
 </site-conf>
