@@ -704,7 +704,7 @@ public class PayrollService {
 				catch(GenericEntityException e) {
 					Debug.logError(e, errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage(), module);
 			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage());			
-				}			
+				}	
 				catch (GenericServiceException e) {
 					Debug.logError(e, errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage(), module);
 			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage());
@@ -736,7 +736,6 @@ public class PayrollService {
 					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
 			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage());
 			    }   		
-
 				// Create invoice items for deductions
 				try {
 					serviceResults = createPayrolDeductionItems(dctx, context);
@@ -1437,25 +1436,28 @@ public class PayrollService {
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	try {
 	    		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
-	    		availedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"Y"))).size();
-	    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
-	    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
-	    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
-	    			String availedCanteen = emplDailyAttendanceDetail.getString("availedCanteen");
-	    			if(UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
-	    				shiftDetailMap.put(shiftType,1);
-	    			}else{
-	    				shiftDetailMap.put(shiftType,(((Integer)(shiftDetailMap.get(shiftType))).intValue()+1));
-	    			}
-	    			// availedCanteen
-	    			if(UtilValidate.isNotEmpty(availedCanteen) && availedCanteen.equalsIgnoreCase("Y")){
-	    				if(UtilValidate.isEmpty(availedCanteenDetailMap.get(shiftType))){
-		    				availedCanteenDetailMap.put(shiftType,1);
+	    		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
+	    			availedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"Y"))).size();
+		    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
+		    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
+		    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
+		    			String availedCanteen = emplDailyAttendanceDetail.getString("availedCanteen");
+		    			if(UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
+		    				shiftDetailMap.put(shiftType,1);
 		    			}else{
-		    				availedCanteenDetailMap.put(shiftType,(((Integer)(shiftDetailMap.get(shiftType))).intValue()+1));
+		    				shiftDetailMap.put(shiftType,(((Integer)(shiftDetailMap.get(shiftType))).intValue()+1));
 		    			}
-	    			}
+		    			// availedCanteen
+		    			if(UtilValidate.isNotEmpty(availedCanteen) && availedCanteen.equalsIgnoreCase("Y")){
+		    				if(UtilValidate.isEmpty(availedCanteenDetailMap.get(shiftType))){
+			    				availedCanteenDetailMap.put(shiftType,1);
+			    			}else{
+			    				availedCanteenDetailMap.put(shiftType,(((Integer)(shiftDetailMap.get(shiftType))).intValue()+1));
+			    			}
+		    			}
+		    		}
 	    		}
+	    		
 	    			
 			GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId, "customTimePeriodId",timePeriodId), false);
 			result.put("lossOfPayDays", 0.0);
@@ -1594,7 +1596,7 @@ public class PayrollService {
 					}
 	        	}
 	        	if(payHeadTypeId.equals("PAYROL_BEN_CONVEY")){
-		        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd));
+		        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("employeeId",employeeId,"timePeriodStart",timePeriodStart,"timePeriodEnd" ,timePeriodEnd ,"userLogin",userLogin));
 		        	if(ServiceUtil.isError(empPositionDetails)){
 		            	Debug.logError(ServiceUtil.getErrorMessage(empPositionDetails), module);
 		                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(empPositionDetails));

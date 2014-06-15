@@ -64,7 +64,7 @@ if(partyId != null && UtilValidate.isNotEmpty(partyId)){
 	deductionAmount = null;
 	
 	if(UtilValidate.isNotEmpty(partyId)){
-		resultMap = PayrollService.preparePayrolItems(dctx, [partyId:partyId, timePeriodId:customTimePeriodId]);
+		resultMap = PayrollService.preparePayrolItems(dctx, [partyId:partyId, timePeriodId:customTimePeriodId, userLogin : userLogin]);
 		if(UtilValidate.isNotEmpty(resultMap)){
 			itemsList = resultMap.get("itemsList");
 			if(UtilValidate.isNotEmpty(itemsList)){
