@@ -1460,10 +1460,10 @@ public class PayrollService {
 	    		}
 	    		
 	    			
-			GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId, "customTimePeriodId",timePeriodId), false);
+			GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId, "customTimePeriodId",lastCloseAttedancePeriod.get("customTimePeriodId")), false);
 			result.put("lossOfPayDays", 0.0);
 			result.put("noOfAttendedDays",0.0);
-			result.put("noOfCalenderDays", 0.0);
+			result.put("noOfCalenderDays", UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd));
 			result.put("noOfAttendedHoliDays", 0.0);
 			result.put("noOfAttendedSsDays", 0.0);
 			result.put("noOfAttendedWeeklyOffDays", 0.0);
