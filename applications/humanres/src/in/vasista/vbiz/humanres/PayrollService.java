@@ -451,6 +451,7 @@ public class PayrollService {
 						payHeadCtx.put("timePeriodEnd", timePeriodEnd);
 						payHeadCtx.put("timePeriodId", timePeriodId);
 						payHeadCtx.put("employeeId", partyId);
+						Debug.log("benefitTypeId========="+benefitTypeId);
 						Map<String, Object> result = calculatePayHeadAmount(dctx,payHeadCtx);
 						Debug.log("result========="+result);
 						if(UtilValidate.isNotEmpty(result)){
