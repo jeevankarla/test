@@ -1541,7 +1541,12 @@ public class PayrollService {
 		       for(int i=0;i<itemsList.size();i++){
 		        	Map itemEntry =  (Map)itemsList.get(i);
 		        	Debug.log("itemEntry gross salary====="+itemEntry);
-		        	BigDecimal tempAmount = new BigDecimal((Double)itemEntry.get("amount"));
+		        	BigDecimal tempAmount = BigDecimal.ZERO;
+		        	if((itemEntry.get("amount")) instanceof BigDecimal){
+		        		tempAmount = (BigDecimal)itemEntry.get("amount");
+		        	}else{
+		        		tempAmount = new BigDecimal((Double)itemEntry.get("amount"));
+		        	}
 		        	amount = amount.add(tempAmount);
 		        	
 		        }
