@@ -1107,7 +1107,7 @@ public class PayrollService {
 		    						// this to support no.of days in the accounting formula
 	    							//  NOOFCALENDERDAYS      NOOFATTENDEDDAYS      LOSSOFPAYDAYS
 	    							//  NOOFATTENDEDHOLIDAYS  NOOFATTENDEDSS        NOOFATTENDEDWEEKLYOFF
-	    							//  NOOFLEAVEDAYS         NOOFCOMPOFFSAVAILED
+	    							//  NOOFLEAVEDAYS         NOOFCOMPOFFSAVAILED   GROSSSALARY
 		    						boolean getAttendance = false;
 	    							Set supportedVaribules = UtilMisc.toSet("NOOFCALENDERDAYS","NOOFATTENDEDDAYS","LOSSOFPAYDAYS",
 	    									"NOOFATTENDEDHOLIDAYS" ,"NOOFATTENDEDSS" ,"NOOFATTENDEDWEEKLYOFF" ,"NOOFLEAVEDAYS","NOOFCOMPOFFSAVAILED");
@@ -1231,6 +1231,8 @@ public class PayrollService {
 			String shiftTypeId = null;
 			String otherCond = null;
 			String payGradeId = null;
+			String grossSalary = null;
+			Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate);
 	        if(UtilValidate.isNotEmpty(condParms)){
 	        	 geoId = (String)condParms.get("geoId");
 				 emplPositionTypeId = (String)condParms.get("emplPositionTypeId");
@@ -1238,7 +1240,7 @@ public class PayrollService {
 				 shiftTypeId = (String)condParms.get("shiftTypeId");
 				 otherCond = (String)condParms.get("otherCond");
 	        }else{
-	        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, UtilMisc.toMap("userLogin",userLogin,"employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate));
+	        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, paramCtxMap);
 	        	if(ServiceUtil.isError(empPositionDetails)){
 	            	Debug.logError(ServiceUtil.getErrorMessage(empPositionDetails), module);
 	                return false;
@@ -1291,14 +1293,18 @@ public class PayrollService {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_GROSS_SAL".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
-	            if (UtilValidate.isNotEmpty(payGradeId)) {
-	                compare = payGradeId.compareTo(payrollBenDedCond.getString("condValue"));
+	        	Map grossSalaryMap  = getEmployeeGrossSalary(dctx ,paramCtxMap);
+	        	grossSalary = ((BigDecimal)grossSalaryMap.get("amount")).toString();
+	            if (UtilValidate.isNotEmpty(grossSalary)) {
+	                compare = grossSalary.compareTo(payrollBenDedCond.getString("condValue"));
 	            } else {
 	                compare = 1;
 	            }
 	        }else if ("PAYHD_BEDE_LEAVEDAYS".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
-	            if (UtilValidate.isNotEmpty(payGradeId)) {
-	                compare = payGradeId.compareTo(payrollBenDedCond.getString("condValue"));
+	        	Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,paramCtxMap);
+	        	String noOfLeaveDays = ((Double)employeePayrollAttedance.get("noOfLeaveDays")).toString();
+	            if (UtilValidate.isNotEmpty(noOfLeaveDays)) {
+	                compare = noOfLeaveDays.compareTo(payrollBenDedCond.getString("condValue"));
 	            } else {
 	                compare = 1;
 	            }
