@@ -1578,7 +1578,7 @@ public class PayrollService {
 	        	Map shiftDetailMap = (Map)employeePayrollAttedance.get("shiftDetailMap");
 	        	Map availedCanteenDetailMap = (Map)employeePayrollAttedance.get("availedCanteenDetailMap");
 	        	int availedVehicleDays = ((Integer)employeePayrollAttedance.get("availedVehicleDays")).intValue();
-	        	if(payHeadTypeId.equals("PAYROL_BEN_SHIFT")){
+	        	if(payHeadTypeId.equals("PAYROL_BEN_SHIFT") && UtilValidate.isNotEmpty(shiftDetailMap)){
 	        		Iterator tempIter = shiftDetailMap.entrySet().iterator();
 		        	String shiftTypeId = "";
 					while (tempIter.hasNext()) {
@@ -1616,7 +1616,7 @@ public class PayrollService {
 		        	}
 					
 	        	}
-	        	if(payHeadTypeId.equals("PAYROL_DD_SAL_CANT")){
+	        	if(payHeadTypeId.equals("PAYROL_DD_SAL_CANT")&& UtilValidate.isNotEmpty(availedCanteenDetailMap)){
 	        		Iterator tempIter = availedCanteenDetailMap.entrySet().iterator();
 		        	String shiftTypeId = "";
 					while (tempIter.hasNext()) {
