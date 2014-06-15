@@ -62,7 +62,7 @@ dayEnd = UtilDateTime.getDayEnd(effectiveDate)
 		 (select `INVOICE_ID` from `INVOICE` where `INVOICE_DATE`>'2014-04-30 23:59:59' ) AND `PAYMENT_ID` IN
 		  (select `PAYMENT_ID` from `PAYMENT` where  `PAYMENT_METHOD_TYPE_ID` ='VBIZ_PAYIN'))*/
 conditionList=[];
-	Debug.log("=====BeforeeeeeeeafterInvoiceIdsList====dayEnd="+dayEnd);
+	Debug.log("=====Before=ServiceRun====dayEnd="+dayEnd);
 	isSubmitted =true;
 	if(UtilValidate.isNotEmpty(isSubmitted)){
 		conditionList.clear();
@@ -278,6 +278,7 @@ conditionList=[];
 	afterPayList = delegator.findList("Payment",condition , null, ["paymentDate"], null, false);
 	afterPayIdsList = EntityUtil.getFieldListFromEntityList(afterPayList, "paymentId", false);
 	Set resetDatePayIdsList=new HashSet(afterPayIdsList);//Date needs to be reset
+	Debug.log("resetDatePayIdsList========Size="+resetDatePayIdsList.size());
 	resetDatePayIdsList.each{paymentId->
 		GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId" : paymentId), false);
 		Timestamp paymentDate=payment.paymentDate;
@@ -285,7 +286,7 @@ conditionList=[];
 		payment.set("instrumentDate",paymentDate);
 		payment.store();
 	}
-		Debug.logInfo("Service Runs Sucessfully!","");
+		Debug.log("Service Runs Sucessfully========!");
 	    context.errorMessage = "Totally Invoies Size() '" + beforeTempInvoiceIdsList.size() + "' And Payments size="+voidedPayList.size() +" Find this Service!"+"==PmAppliedInvLsit=Size="+vbizNotPmInvIdsList.size();
 		//context.sucess = "Service Runs Sucessfully !";
 		return;
