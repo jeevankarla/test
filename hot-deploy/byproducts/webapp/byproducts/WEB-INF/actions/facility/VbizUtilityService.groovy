@@ -42,7 +42,7 @@ import in.vasista.vbiz.byproducts.ByProductReportServices;
 	dctx = dispatcher.getDispatchContext();
 	context.put("dctx",dctx);
 	effectiveDate = UtilDateTime.nowTimestamp();
-	fromDateStr="2014-05-30"
+	fromDateStr="2014-04-30"
 	
 	
 	if (UtilValidate.isNotEmpty(fromDateStr)) {
