@@ -86,7 +86,7 @@ under the License.
 		   					 							<#assign totalDeductions=(totalDeductions+(summaryValues.getValue()))>  
 		       					 						<fo:table-row>
 		       					 							<fo:table-cell>
-		       					 								<fo:block keep-together="always">City Compensatory Allowance</fo:block>
+		       					 								<fo:block keep-together="always">${dedDescMap[summaryValues.getKey()]?if_exists}</fo:block>
 		       					 							</fo:table-cell>
 		       					 							<fo:table-cell>
 		       					 								<fo:block text-align="right">${((-1)*summaryValues.getValue())?if_exists?string("#0.00")}</fo:block>

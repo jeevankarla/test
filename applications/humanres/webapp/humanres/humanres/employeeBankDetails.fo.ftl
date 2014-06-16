@@ -75,7 +75,7 @@ under the License.
                         <fo:block text-align="left" keep-together="always">${bankAdvice.getValue().get("empName")?if_exists}</fo:block>
                    </fo:table-cell>
                     <fo:table-cell  border="solid">
-                        <fo:block text-align="right">${bankAdvice.getValue().get("acNo")?if_exists}</fo:block>
+                        <fo:block text-align="left">${bankAdvice.getValue().get("acNo")?if_exists}</fo:block>
                     </fo:table-cell>
                     <#assign totalNetAmt=totalNetAmt+bankAdvice.getValue().get("netAmt")>
                    <fo:table-cell  border="solid">
