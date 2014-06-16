@@ -27,7 +27,8 @@ import in.vasista.vbiz.byproducts.TransporterServices;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
-
+rounding = UtilNumber.getBigDecimalRoundingMode("order.rounding");
+context.rounding = rounding;
 
 dctx = dispatcher.getDispatchContext();
 periodBillingId = null;
@@ -61,7 +62,7 @@ context.facilityWorkOrdrNumMap = facilityWorkOrdrNumMap;//workOrder Numbers
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.EQUALS , monthBegin));
-//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01","S02","S03")));
+//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 EntityFindOptions findOptions = new EntityFindOptions();
 routesList = delegator.findList("FacilityAndCommission",condition,["facilityId"]as Set, UtilMisc.toList("parentFacilityId","facilityId"),findOptions,false);
@@ -93,7 +94,7 @@ routesList.each{ route ->
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 //conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.EQUALS , monthBegin));
-//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01","S02","S03")));
+//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, ["commissionDate"], null, false);
 
@@ -159,6 +160,7 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		routeValueMap["rtAmount"] = BigDecimal.ZERO;
 		if(UtilValidate.isNotEmpty(facilityCommission.totalAmount)){
 			routeValueMap["rtAmount"] = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+		
 			totalsMap["grTotRtAmount"] += ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		}
 		routeValueMap["pendingDue"] =BigDecimal.ZERO;
@@ -172,7 +174,9 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		}else{
 			routeSmsMap[facilityId] += ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		}
+		Debug.log("====totalsMap=="+totalsMap);
 	}
+	
 }
 masterList.add(transporterMargins);
 context.put("masterList", masterList);
@@ -190,6 +194,7 @@ if(UtilValidate.isNotEmpty(routeSmsMap)){
 		Map.Entry entry = mapIter.next();
 		 netAmount = BigDecimal.ZERO;
 		 totalFine = BigDecimal.ZERO;
+		 routeAmount = BigDecimal.ZERO;
 		 routeId = entry.getKey();
 		 routeAmount = entry.getValue();
 		 if(UtilValidate.isNotEmpty(facRecoveryMap.get(routeId))){
@@ -203,9 +208,9 @@ if(UtilValidate.isNotEmpty(routeSmsMap)){
 		 }
 		 if(netAmount!=0){
 			 tempMap = [:];
-			 tempMap["routeAmount"] = routeAmount;
-			 tempMap["totalFine"] = totalFine;
-			 tempMap["netAmount"] = netAmount;
+			 tempMap["routeAmount"] =new BigDecimal(routeAmount).setScale(2,BigDecimal.ROUND_HALF_UP) ;
+			 tempMap["totalFine"] =new BigDecimal(totalFine).setScale(2,BigDecimal.ROUND_HALF_UP) ; 
+			 tempMap["netAmount"] = new BigDecimal(netAmount).setScale(0,BigDecimal.ROUND_HALF_UP) ;
 			 tempTempMap = [:];
 			 tempTempMap.putAll(tempMap);
 			 finalMap.put(routeId,tempTempMap);
