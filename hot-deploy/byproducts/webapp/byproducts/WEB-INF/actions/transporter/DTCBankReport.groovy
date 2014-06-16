@@ -56,17 +56,16 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 Map partyFacilityMap=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",monthBegin)).get("partyAndFacilityList");
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
-conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.EQUALS , monthBegin));
+conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.GREATER_THAN_EQUAL_TO,monthBegin));
+conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.LESS_THAN_EQUAL_TO,monthEnd));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 EntityFindOptions findOptions = new EntityFindOptions();
 routesList = delegator.findList("FacilityAndCommission",condition,["facilityId"]as Set, UtilMisc.toList("parentFacilityId","facilityId"),findOptions,false);
 routeIdsList = EntityUtil.getFieldListFromEntityList(routesList, "facilityId", false);
-
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, ["commissionDate"], null, false);
-
 finAccountName = parameters.finAccountName;
 dtcBankMap = [:];
 if(UtilValidate.isNotEmpty(facilityCommissionList)){
