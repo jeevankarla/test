@@ -2198,7 +2198,7 @@ public class ByProductServices {
 		    }
 		    productPrices = EntityUtil.filterByDate(productPrices, priceDate);
 		    
-		    // fetch the mrp price
+		    // fetch the mrp basic price
 		    BigDecimal mrpBasicPrice = BigDecimal.ZERO;
 			List<GenericValue> mrpProdPrices = EntityUtil.filterByCondition(productPrices, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, "MRP_PRICE"));
 		    if (!UtilValidate.isEmpty(mrpProdPrices)) {
@@ -2260,7 +2260,7 @@ public class ByProductServices {
 			}
 			
 			totalTaxAmt = totalTaxAmt.add(amount);
-			mrpTotalTaxAmt.add(mrpAmount);
+			mrpTotalTaxAmt = mrpTotalTaxAmt.add(mrpAmount);
 			Map taxDetailMap = FastMap.newInstance();
 			
 			taxDetailMap.put("taxType", taxType);
