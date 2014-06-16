@@ -59,15 +59,17 @@ under the License.
        					 					<fo:table-body>
        					 						<#list summaryReportList as summaryValues>
 		   					 						<#if benefitTypeIds.contains(summaryValues.getKey())>
-		   					 							<#assign totalEarnings=(totalEarnings+(summaryValues.getValue()))>     
-		       					 						<fo:table-row>
-		       					 							<fo:table-cell>
-		       					 								<fo:block keep-together="always">${benefitDescMap[summaryValues.getKey()]?if_exists}</fo:block>
-		       					 							</fo:table-cell>
-		       					 							<fo:table-cell>
-		       					 								<fo:block text-align="right">${summaryValues.getValue()?if_exists?string("#0.00")}</fo:block>
-		       					 							</fo:table-cell>
-		       					 						</fo:table-row>
+		   					 							<#assign totalEarnings=(totalEarnings+(summaryValues.getValue()))>   
+		   					 							<#if summaryValues.getValue() !=0>  
+			       					 						<fo:table-row>
+			       					 							<fo:table-cell>
+			       					 								<fo:block keep-together="always">${benefitDescMap[summaryValues.getKey()]?if_exists}</fo:block>
+			       					 							</fo:table-cell>
+			       					 							<fo:table-cell>
+			       					 								<fo:block text-align="right">${summaryValues.getValue()?if_exists?string("#0.00")}</fo:block>
+			       					 							</fo:table-cell>
+			       					 						</fo:table-row>
+		       					 						</#if>
 		   					 						</#if>
        					 						</#list>
        					 					</fo:table-body>
@@ -84,14 +86,16 @@ under the License.
        					 						<#list summaryReportList as summaryValues>
 		   					 						<#if dedTypeIds.contains(summaryValues.getKey())>
 		   					 							<#assign totalDeductions=(totalDeductions+(summaryValues.getValue()))>  
-		       					 						<fo:table-row>
-		       					 							<fo:table-cell>
-		       					 								<fo:block keep-together="always">${dedDescMap[summaryValues.getKey()]?if_exists}</fo:block>
-		       					 							</fo:table-cell>
-		       					 							<fo:table-cell>
-		       					 								<fo:block text-align="right">${((-1)*summaryValues.getValue())?if_exists?string("#0.00")}</fo:block>
-		       					 							</fo:table-cell>
-		       					 						</fo:table-row>
+		   					 							<#if summaryValues.getValue() !=0>
+			       					 						<fo:table-row>
+			       					 							<fo:table-cell>
+			       					 								<fo:block keep-together="always">${dedDescMap[summaryValues.getKey()]?if_exists}</fo:block>
+			       					 							</fo:table-cell>
+			       					 							<fo:table-cell>
+			       					 								<fo:block text-align="right">${((-1)*summaryValues.getValue())?if_exists?string("#0.00")}</fo:block>
+			       					 							</fo:table-cell>
+			       					 						</fo:table-row>
+			       					 					</#if>	
 		   					 						</#if>
        					 						</#list>
        					 					</fo:table-body>
@@ -129,7 +133,7 @@ under the License.
                    			<@ofbizCurrency amount=net /></#if></fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
-         		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Director                                                                                   Manager/Deputy Manager Finanace</fo:block>
+         		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Director                                                                                   Manager/Deputy Manager Finance</fo:block>
           </fo:flow>          
         </fo:page-sequence> 
         <#else>    	
