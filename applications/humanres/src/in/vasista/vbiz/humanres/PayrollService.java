@@ -1080,7 +1080,6 @@ public class PayrollService {
 	                	StringBuilder priceInfoDescription = new StringBuilder();
 	                	Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
 	                    List<GenericValue> payHeadPriceActions = delegator.findByAndCache("PayHeadPriceAction", UtilMisc.toMap("payrollBenDedRuleId", payHeadPriceRuleId));
-	                    Debug.log("payHeadPriceActions ######################################"+payHeadPriceActions.size());
 	                    for (GenericValue payHeadPriceAction: payHeadPriceActions) {
 	                        // yeah, finally here, perform the action, ie, modify the amount
 	     	                    priceInfoDescription.append(condsDescription.toString());
@@ -1119,8 +1118,7 @@ public class PayrollService {
 	    							}
 	    							if(getAttendance){
 		    							Map attendanceMap = getEmployeePayrollAttedance(dctx ,context);
-		    							priceInfoDescription.append("[ Attendance Details : "+attendanceMap);
-		    							priceInfoDescription.append("  ]\n \n ");
+		    							
 		    							variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderDays"));
 		    							variables.put("NOOFATTENDEDDAYS", (Double)attendanceMap.get("noOfAttendedDays"));
 		    							variables.put("NOOFATTENDEDHOLIDAYS", (Double)attendanceMap.get("noOfAttendedHoliDays"));
@@ -1581,10 +1579,12 @@ public class PayrollService {
 	        List priceInfos =FastList.newInstance();
 	        try{
 	        	Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
-	        	
+	        	StringBuilder priceInfoDescription = new StringBuilder();
 	        	Map shiftDetailMap = (Map)employeePayrollAttedance.get("shiftDetailMap");
 	        	Map availedCanteenDetailMap = (Map)employeePayrollAttedance.get("availedCanteenDetailMap");
 	        	int availedVehicleDays = ((Integer)employeePayrollAttedance.get("availedVehicleDays")).intValue();
+	        	priceInfoDescription.append("\n \n[ Attendance Details ::"+employeePayrollAttedance);
+				priceInfoDescription.append("  ]\n \n ");
 	        	if(payHeadTypeId.equals("PAYROL_BEN_SHIFT") && UtilValidate.isNotEmpty(shiftDetailMap)){
 	        		Iterator tempIter = shiftDetailMap.entrySet().iterator();
 		        	String shiftTypeId = "";
@@ -1641,13 +1641,13 @@ public class PayrollService {
 						priceInfos.add(calcResults.get("priceInfos"));
 					}
 	        	}
-	        	
+	        	priceInfos.add(priceInfoDescription);
 	            } catch (Exception e) {
 	                Debug.logError(e, "Error getting rules from the database while calculating price", module);
 	                return ServiceUtil.returnError(e.toString());
 	            }
 	        //end of price rules
-	            
+	           
 	          result.put("amount", amount);
 	          result.put("priceInfos", priceInfos);
 	        // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
