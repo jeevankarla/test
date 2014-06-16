@@ -38,7 +38,8 @@ under the License.
 			<#assign facilityId= trnsptMarginValues.getKey()>
 			<#assign facility = delegator.findOne("Facility",{"facilityId" : facilityId}, false)>
 			<#assign trnsptMarginEntries = (trnsptMarginValues.getValue())>
-			
+			<#assign workOrderNo="">
+			<#assign workOrderNo=facilityWorkOrdrNumMap(facilityId)?if_exists>
 				<fo:page-sequence master-reference="main" >
 					<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
@@ -78,6 +79,8 @@ under the License.
 						<#assign panId = daywiseTrnsptEntry.getValue().get("panId")?if_exists>
 						<#assign closedDate = daywiseTrnsptEntry.getValue().get("closedDate")?if_exists>
 						<#assign facilityCode = daywiseTrnsptEntry.getValue().get("facilityCode")?if_exists>
+						
+						
 		                   <fo:table-row>
 			                   <fo:table-cell>
 			                         <fo:block  text-indent="15pt">CONTRACTOR NAME:${partyName}</fo:block>
@@ -92,7 +95,7 @@ under the License.
 			                         <fo:block  text-indent="15pt">TYPE: ${uomId?if_exists}</fo:block>
 			                         <fo:block  text-indent="15pt">RATE:${margin?if_exists} </fo:block>
 			                         <fo:block  text-indent="15pt">DISTANCE:${distance?if_exists}</fo:block>
-			                         <fo:block  text-indent="15pt">WORK ORDER NO: ${facilityCode?if_exists}</fo:block>
+			                         <fo:block  text-indent="15pt">WORK ORDER NO: ${workOrderNo?if_exists}</fo:block>
 			                         <fo:block  text-indent="15pt">VALID UP TO:${closedDate?if_exists} </fo:block>
 			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			                  </fo:table-cell>
