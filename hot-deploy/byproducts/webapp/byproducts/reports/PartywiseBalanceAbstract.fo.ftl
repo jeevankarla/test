@@ -21,8 +21,8 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
-                <fo:region-body margin-top="1.2in"/>
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
+                <fo:region-body margin-top="1.7in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -43,30 +43,30 @@ under the License.
        <#assign booth = eachPartyLedger.getKey()>        
 		        <fo:page-sequence master-reference="main" font-size="10pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-		        		<fo:block text-align="left" font-size="10pt" keep-together="always"  white-space-collapse="false">&#160;                                 ${uiLabelMap.KMFDairyHeader}</fo:block>
-                    	<fo:block text-align="left" font-size="9pt" keep-together="always"  white-space-collapse="false">&#160;                                            ${uiLabelMap.KMFDairySubHeader}</fo:block>
-                    	<fo:block text-align="left" font-size="9pt" keep-together="always"  white-space-collapse="false">&#160;                                        PARTY LEDGER ABSTRACT FOR: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
-              			<fo:block font-size="7pt" text-align="left">========================================================================================================================================================</fo:block>  
-            			<fo:block text-align="left" font-size="9pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">&#160; RETAILER CODE: ${eachPartyLedger.getKey()?if_exists}                                        PARTY NAME:  ${facilityDesc.get(eachPartyLedger.getKey())?if_exists}                  </fo:block>
-              			<fo:block font-size="7pt" text-align="left">--------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>  
-            			<fo:block text-align="left" font-size="9pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">&#160;DATE    OPENING      INV. NO     SALES     PROD-RET   RECEIPTS   TYPE/CQ-NO   RET-CQ-NO  RET-AMT    PENALTY   CLOSING</fo:block>
-		        		<fo:block font-size="7pt" text-align="left">--------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>  
+		        		<fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false">&#160;${uiLabelMap.KMFDairyHeader}</fo:block>
+                    	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;${uiLabelMap.KMFDairySubHeader}</fo:block>
+                    	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;PARTY LEDGER ABSTRACT FOR: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
+              			<fo:block font-size="12pt" text-align="left">======================================================================================================================================</fo:block>  
+            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160; RETAILER CODE: ${eachPartyLedger.getKey()?if_exists}                                        PARTY NAME:  ${facilityDesc.get(eachPartyLedger.getKey())?if_exists}                  </fo:block>
+              			<fo:block font-size="12pt" text-align="left">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>  
+            			<fo:block text-align="left" font-size="12pt" keep-together="always" font-family="Courier,monospace" white-space-collapse="false">&#160;DATE        OPENING        SALES        PROD-RET     RECEIPTS       TYPE/CQ-NO      RET-CQ-NO     RET-AMT      PENALTY      CLOSING</fo:block>
+		        		<fo:block font-size="12pt" text-align="left">--------------------------------------------------------------------------------------------------------------------------------------</fo:block>  
 		        	</fo:static-content>	        	
 		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
                  	<fo:table>
-                    <fo:table-column column-width="30pt"/> 
-                    <fo:table-column column-width="60pt"/>
-                    <fo:table-column column-width="70pt"/> 
-            		<fo:table-column column-width="65pt"/> 	
-            		<fo:table-column column-width="60pt"/>	
-            		<fo:table-column column-width="65pt"/>
-            		<fo:table-column column-width="55pt"/>
-            		<fo:table-column column-width="55pt"/>
-            		<fo:table-column column-width="55pt"/>
-            		<fo:table-column column-width="55pt"/>
-            		<fo:table-column column-width="55pt"/>	
-            		<fo:table-column column-width="80pt"/>
+                    <fo:table-column column-width="50pt"/> 
+                    <fo:table-column column-width="100pt"/>
+                    <#--<fo:table-column column-width="70pt"/> -->
+            		<fo:table-column column-width="100pt"/> 	
+            		<fo:table-column column-width="100pt"/>	
+            		<fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="100pt"/>	
+            		<fo:table-column column-width="150pt"/>
                     <fo:table-body>
                     <#assign ledgerDetails = eachPartyLedger.getValue()>
                     	<#list ledgerDetails as eachDateDetail>
@@ -98,16 +98,16 @@ under the License.
 	                    		<#assign displayFlag = "yes">
 	                    	</#if>
 		                    <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">${eachDateDetail.get("stDate")?if_exists}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDateDetail.get("stDate")?if_exists}</fo:block>  
 				            </fo:table-cell>
                         	<fo:table-cell>
-                            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"><#if displayFlag = "yes">${ob?if_exists?string("#0.00")}</#if></fo:block>  
+                            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"><#if displayFlag = "yes">${ob?if_exists?string("#0.00")}</#if></fo:block>  
                         	</fo:table-cell>
+                        	<#--<fo:table-cell>
+                            	<fo:block text-align="right" font-size="8pt"><#if eachDateDetail.get("invoiceId")?has_content></#if></fo:block>  
+                        	</fo:table-cell>-->
                         	<fo:table-cell>
-                            	<fo:block text-align="right" font-size="8pt"><#if eachDateDetail.get("invoiceId")?has_content>[${eachDateDetail.get("invoiceId")?if_exists}]</#if></fo:block>  
-                        	</fo:table-cell>
-                        	<fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"><#if saleAmt !=0>${saleAmt?if_exists?string("#0.00")}</#if></fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"><#if saleAmt !=0>${saleAmt?if_exists?string("#0.00")}</#if></fo:block>  
 		                    </fo:table-cell>
 				            
 				            <#-- <fo:table-cell>
@@ -118,72 +118,72 @@ under the License.
 				            	<#assign prodRetAmt = eachDateDetail.get("prodReturnAmt")>
 				            </#if>
 				            <fo:table-cell>
-				            	<fo:block text-align="right" font-size="8pt" white-space-collapse="true"><#if (prodRetAmt>0)>${prodRetAmt?if_exists}</#if></fo:block>  
+				            	<fo:block text-align="right" font-size="12pt" white-space-collapse="true"><#if (prodRetAmt>0)>${prodRetAmt?if_exists}</#if></fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false"><#if rcpt != 0 >${rcpt?if_exists?string("#0.00")}</#if></fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"><#if rcpt != 0 >${rcpt?if_exists?string("#0.00")}</#if></fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block text-align="right" font-size="8pt" white-space-collapse="true">${eachDateDetail.get("chequeNo")?if_exists}</fo:block>  
+				            	<fo:block text-align="right" font-size="12pt" white-space-collapse="true">${eachDateDetail.get("chequeNo")?if_exists}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block text-align="right" font-size="8pt" white-space-collapse="true">${eachDateDetail.get("chequeReturn")?if_exists}</fo:block>  
+				            	<fo:block text-align="right" font-size="12pt" white-space-collapse="true">${eachDateDetail.get("chequeReturn")?if_exists}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block text-align="right" font-size="8pt" white-space-collapse="true"><#if returnAmt != 0>${returnAmt?if_exists?string("#0.00")}</#if></fo:block>  
+				            	<fo:block text-align="right" font-size="12pt" white-space-collapse="true"><#if returnAmt != 0>${returnAmt?if_exists?string("#0.00")}</#if></fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block text-align="right" font-size="8pt" white-space-collapse="true"><#if penaltyAmt != 0>${penaltyAmt?if_exists?string("#0.00")}</#if></fo:block>  
+				            	<fo:block text-align="right" font-size="12pt" white-space-collapse="true"><#if penaltyAmt != 0>${penaltyAmt?if_exists?string("#0.00")}</#if></fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				               	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${closingBalance?if_exists?string("#0.00")}</fo:block>  
+				               	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${closingBalance?if_exists?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
                         </fo:table-row>
                         </#list>
                         <#assign grandTotalMap = boothSummary.get(booth)>
 						<fo:table-row>
 	                    	<fo:table-cell>
-		                		<fo:block font-size="7pt" text-align="left">========================================================================================================================================================</fo:block>     
+		                		<fo:block font-size="12pt" text-align="left">======================================================================================================================================</fo:block>     
 		                	</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
 		                    <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false">SUMMARY::</fo:block>  
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">SUMMARY::</fo:block>  
 				            </fo:table-cell>
                         	<fo:table-cell>
-                            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${grandTotalMap.get("periodOB")?if_exists?string("#0.00")}</fo:block>  
+                            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalMap.get("periodOB")?if_exists?string("#0.00")}</fo:block>  
                         	</fo:table-cell>
-                        	<fo:table-cell>
+                        	<#--<fo:table-cell>
 				            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>  
-				            </fo:table-cell>
+				            </fo:table-cell>-->
                         	<fo:table-cell>
-		                    	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${grandTotalMap.get("totalSale")?if_exists?string("#0.00")}</fo:block>  
+		                    	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalMap.get("totalSale")?if_exists?string("#0.00")}</fo:block>  
 		                    </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${grandTotalMap.get("totalProdReturn")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalMap.get("totalProdReturn")?if_exists?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${grandTotalMap.get("totalReceipt")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalMap.get("totalReceipt")?if_exists?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>  
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>  
+				            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${grandTotalMap.get("totalReturn")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalMap.get("totalReturn")?if_exists?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${grandTotalMap.get("totalPenalty")?if_exists?string("#0.00")}</fo:block>  
+				            	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalMap.get("totalPenalty")?if_exists?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 				            <fo:table-cell>
-				               	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${grandTotalMap.get("periodCB")?if_exists?string("#0.00")}</fo:block>  
+				               	<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">${grandTotalMap.get("periodCB")?if_exists?string("#0.00")}</fo:block>  
 				            </fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
 	                    	<fo:table-cell>
-		                		<fo:block font-size="7pt" text-align="left">========================================================================================================================================================</fo:block>     
+		                		<fo:block font-size="12pt" text-align="left">======================================================================================================================================</fo:block>     
 		                	</fo:table-cell>
 						</fo:table-row>
                     </fo:table-body>
