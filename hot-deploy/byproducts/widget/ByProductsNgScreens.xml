@@ -2096,7 +2096,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<#--<screen name="FindInstitutionPayment">
+	<!-- <screen name="FindInstitutionPayment">
 		<section>
 			<actions>
 				<set field="titleProperty" value="pageTitleFindPayments" />
@@ -2114,20 +2114,13 @@
     			<service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
                 </service>
-                <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
+                <set field="hasPaymentCancelPermission" value="true" type="Boolean"/>
     			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>		
     			<set field="targetValue" value="FindPaymentByMethod"/>										
     			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
     			<set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId" default-value="${paymentMethodTypeId}"/>
     			<set field="parameters.onlyCurrentDues" value="false"/>
-    			<!-- <entity-condition list="instPeriodTypeList" entity-name="PeriodType">
-					<condition-list combine="or">
-						<condition-expr field-name="periodTypeId" operator="equals" value="INST_DAILY_BILL"/>
-						<condition-expr field-name="periodTypeId" operator="equals" value="INST_WEEK_BILL"/>
-						<condition-expr field-name="periodTypeId" operator="equals" value="INST_FORTNIGHT_BILL"/>
-						<condition-expr field-name="periodTypeId" operator="equals" value="INST_MONTH_BILL"/>
-					</condition-list>    			
-    			</entity-condition> -->
+    			
     			<entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
     				<condition-list combine="or">
     					<condition-expr field-name="paymentMethodTypeId" operator="equals"  value="FT_PAYIN"/>
@@ -2168,7 +2161,6 @@
 									   <section>
 									        <widgets> 		
 										        <screenlet title="Credit Institution Payments">
-										        	<!-- <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific> -->
 										        	<include-form name="FindInstitutionPayment" location="component://byproducts/widget/ByProductsNgForms.xml" />
 										        </screenlet>
 									  	        <screenlet title="Institution Dues Details">				
@@ -2216,7 +2208,7 @@
 				</decorator-screen>
 			</widgets>
 		</section>
-	</screen>-->
+	</screen> -->
 	
 	<screen name="FindBoothPayments">
 		<section>
