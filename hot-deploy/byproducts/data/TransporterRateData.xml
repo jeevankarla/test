@@ -58,13 +58,22 @@
     <SecurityGroup description="All 'TRNS MRGN(DTC)' permissions like create,cancel " groupId="TRNSMRGNADMIN"/>    
     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="TRNSMRGN_ADMIN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_ADMIN"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODREPORTS_VIEW"/>
+      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCOUNTING_INVOICE_APPROVE"/>
+    <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCTG_PREF_VIEW"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCTG_ATX_CREATE"/>
+   
     <!-- TRNSMRGN View permissions -->
     <SecurityGroup description=" 'TRNS MRGN(DTC)' permissions with restriction on download of VendorMarginMainReport" groupId="TRNSMRGNVIEW"/>    
     <SecurityGroupPermission groupId="TRNSMRGNVIEW" permissionId="TRNSMRGN_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_VIEW"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODREPORTS_VIEW"/>
+
     
-    
-    
+       <FacilityTypeAttr facilityTypeId="ROUTE" attrName="WORK_ORDER_NO"></FacilityTypeAttr>
+     <FacilityAttribute facilityId="S01" attrName="WORK_ORDER_NO" attrValue="S01777566"></FacilityAttribute>
     
     
     <CustomTimePeriod customTimePeriodId="MAR-1-31" periodTypeId="MARGIN_MONTH" periodNum="3" periodName="March(1-31)" fromDate="2014-03-01" thruDate="2014-03-31" isClosed="N"  organizationPartyId="Company"/>

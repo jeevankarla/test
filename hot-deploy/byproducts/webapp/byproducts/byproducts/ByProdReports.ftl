@@ -322,26 +322,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
 			</form>
 		</tr>
-		<tr class="alternate-row">
-			<form id="CratesAndCansReport" name="CratesAndCansReport" method="post" action="<@ofbizUrl>CratesAndCansReport.pdf</@ofbizUrl>" target="_blank">	
-				<td width="30%">Crates And Cans Report</td>
-				<td width="15%">From<input  type="text" size="18pt" id="cacFromDateId" readonly  name="fromDate"/></td>
-	  			<td width="15%">To<input  type="text" size="18pt" id="cacThruDateId" readonly  name="thruDate"/></td>
-	  			<td width="15%"></td>
-      			<td width="15%"></td>
-				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
-			</form>
-		</tr>
-		<tr class="alternate-row">
-			<form id="CratesAndCansDayWiseReport" name="CratesAndCansDayWiseReport" method="post" action="<@ofbizUrl>CratesAndCansDayWiseReport.pdf</@ofbizUrl>" target="_blank">	
-				<td width="30%">Crates And Cans Detailed Report</td>
-				<td width="15%">From<input  type="text" size="18pt" id="cacdFromDateId" readonly  name="fromDate"/></td>
-	  			<td width="15%">To<input  type="text" size="18pt" id="cacdThruDateId" readonly  name="thruDate"/></td>
-	  			<td width="15%"></td>
-      			<td width="15%"></td>
-				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
-			</form>
-		</tr>
       	 <tr class="alternate-row">
         	<form id="DealerBankChallan" name="DealerBankChallan" method="post"  target="_blank" action="<@ofbizUrl>DealerBankChallan.txt</@ofbizUrl>">	
       			<td width="30%">Dealer BankChallan Report </td>
@@ -489,6 +469,28 @@ function makeDatePicker1(fromDateId ,thruDateId){
       		</form>	
         </tr>
      </#if>
+      <#if security.hasEntityPermission("TRNSMRGN", "_VIEW", session)>
+					 	<tr class="alternate-row">
+							<form id="CratesAndCansReport" name="CratesAndCansReport" method="post" action="<@ofbizUrl>CratesAndCansReport.pdf</@ofbizUrl>" target="_blank">	
+								<td width="30%">Crates And Cans Report</td>
+								<td width="15%">From<input  type="text" size="18pt" id="cacFromDateId" readonly  name="fromDate"/></td>
+					  			<td width="15%">To<input  type="text" size="18pt" id="cacThruDateId" readonly  name="thruDate"/></td>
+					  			<td width="15%"></td>
+				      			<td width="15%"></td>
+								<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
+							</form>
+						</tr>
+						<tr class="alternate-row">
+							<form id="CratesAndCansDayWiseReport" name="CratesAndCansDayWiseReport" method="post" action="<@ofbizUrl>CratesAndCansDayWiseReport.pdf</@ofbizUrl>" target="_blank">	
+								<td width="30%">Crates And Cans Detailed(DayWise) Report</td>
+								<td width="15%">From<input  type="text" size="18pt" id="cacdFromDateId" readonly  name="fromDate"/></td>
+					  			<td width="15%">To<input  type="text" size="18pt" id="cacdThruDateId" readonly  name="thruDate"/></td>
+					  			<td width="15%"></td>
+				      			<td width="15%"></td>
+								<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
+							</form>
+						</tr>
+		</#if>
       	 <#if security.hasEntityPermission("ACCOUNTING", "_CASHIER", session)>
         <tr class="alternate-row">
         	<form id="CashPaymentCheckList" name="CashierPaymentCheckList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentCheckList</@ofbizUrl>">	
@@ -571,7 +573,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 
 </#if>
 
-<#if screenFlag?exists && screenFlag.equals("MonthlyReports") && security.hasEntityPermission("BYPRODUCTS", "_MNTHREPOR", session)>
+<#if screenFlag?exists && screenFlag.equals("MonthlyReports")  && (security.hasEntityPermission("BYPRODUCTS", "_MNTHREPOR", session)|| security.hasEntityPermission("TRNSMRGN", "_VIEW", session))>
 <div class="full">
 
 <div class="screenlet">
@@ -609,6 +611,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
           					</td>       			
       					</form>
       				</tr> -->
+      				 <#if security.hasEntityPermission("BYPRODUCTS", "_MNTHREPOR", session)>
       				<tr class="alternate-row">
 			      	   <form id="paymentOBandCB" name="paymentOBandCB" method="post" action="<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Partywise Ledger Abstract</td>
@@ -676,80 +679,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
 						</form>
 					</tr>
-					 <tr class="alternate-row">
-						<form id="DTCCostReport" name="DTCCostReport" method="post" action="<@ofbizUrl>DTCCostReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">DTC Cost Report</td>
-							<td width="15%">Period
-	  							<select name="customTimePeriodId" class='h4'>
-	            					<#list timePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-	            					</#list>            
-								</select>
-	      					</td>
-	      					<td width="15%"></td>
-	      					<td width="15%"></td>
-	      					<td width="15%"></td>
-	      					<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('DTCCostReport', '<@ofbizUrl>DTCCostReport.pdf</@ofbizUrl>');" class="buttontext"/>
-							<input type="submit" value="CSV" onClick="javascript:appendParams('DTCCostReport', '<@ofbizUrl>DTCCostReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
-						</form>
-					</tr>
-					<tr class="alternate-row">
-						<form id="DTCBankReport" name="DTCBankReport" method="post" action="<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">DTC Bank Report<input  type="hidden"  value="DTCBankReport"   name="reportTypeFlag"/></td>
-							<td width="15%">Bank
-	  							<select name="finAccountName" class='h4'>
-	              	    				<option value='CORPORATION BANK YELAHANKA'>CORPORATION BANK YELAHANKA</option>
-	              	    				<option value='AXIS BANK, YNK BRANCH'>AXIS BANK, YNK BRANCH</option>
-								</select>
-	      					</td>
-							<td width="15%">Period
-	  							<select name="customTimePeriodId" class='h4'>
-	            					<#list timePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-	            					</#list>            
-								</select>
-	      					</td>
-	      					<td width="15%"></td>
-	      					<td width="10%"><td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
-						</form>
-					</tr>
-					<tr class="alternate-row">
-						<form id="DTCTransporterBankReport" name="DTCTransporterBankReport" method="post" action="<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">Transporter Bank Report<input  type="hidden"  value="DTCTransporterReport"   name="reportTypeFlag"/></td>
-							<td width="15%">Bank
-	  							<select name="finAccountName" class='h4'>
-	              	    				<option value='CORPORATION BANK YELAHANKA'>CORPORATION BANK YELAHANKA</option>
-	              	    				<option value='AXIS BANK, YNK BRANCH'>AXIS BANK, YNK BRANCH</option>
-								</select>
-	      					</td>
-							<td width="15%">Period
-	  							<select name="customTimePeriodId" class='h4'>
-	            					<#list timePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-	            					</#list>            
-								</select>
-	      					</td>
-	      					<td width="15%"></td>
-	      					<td width="10%"><td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
-						</form>
-					</tr>
-					<tr class="alternate-row">
-						<form id="DTCFinesAndPenaltiesReport" name="DTCFinesAndPenaltiesReport" method="post" action="<@ofbizUrl>DTCFinesAndPenaltiesReport.pdf</@ofbizUrl>" target="_blank">	
-							<td width="30%">DTC Fines And Penalties Report</td>
-							<td width="15%">Period
-	  							<select name="customTimePeriodId" class='h4'>
-	            					<#list timePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-	            					</#list>            
-								</select>
-	      					</td>
-	      					<td width="15%"></td>
-	      					<td width="15%"></td>
-	      					<td width="15%"></td>
-	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
-	      				</form>
-					</tr>
-					<tr class="alternate-row">
+						<tr class="alternate-row">
       					<form id="dueParticulars" name="dueParticulars" method="post" action="<@ofbizUrl>dueParticulars.txt</@ofbizUrl>" target="_blank">	
       						<td width="30%">Due Particulars<input  type="hidden"  value="DuesParticulers"   name="reportTypeFlag"/></td>
 							<td width="15%">From<input  type="text" size="18pt" id="DueFromDateId" readonly  name="fromDate"/></td>
@@ -778,6 +708,82 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       					</form>
       				</tr>
+					</#if>
+			<#if security.hasEntityPermission("TRNSMRGN", "_VIEW", session)>
+					 <tr class="alternate-row">
+						<form id="DTCCostReport" name="DTCCostReport" method="post" action="<@ofbizUrl>DTCCostReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">DTC Cost Report</td>
+							<td width="15%">Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list dtcTimePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>            
+								</select>
+	      					</td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('DTCCostReport', '<@ofbizUrl>DTCCostReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							<input type="submit" value="CSV" onClick="javascript:appendParams('DTCCostReport', '<@ofbizUrl>DTCCostReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="DTCBankReport" name="DTCBankReport" method="post" action="<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">DTC Bank Report<input  type="hidden"  value="DTCBankReport"   name="reportTypeFlag"/></td>
+							<td width="15%">Bank
+	  							<select name="finAccountName" class='h4'>
+	              	    				<option value='CORPORATION BANK YELAHANKA'>CORPORATION BANK YELAHANKA</option>
+	              	    				<option value='AXIS BANK, YNK BRANCH'>AXIS BANK, YNK BRANCH</option>
+								</select>
+	      					</td>
+							<td width="15%">Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list dtcTimePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>            
+								</select>
+	      					</td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="DTCTransporterBankReport" name="DTCTransporterBankReport" method="post" action="<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Transporter Bank Report<input  type="hidden"  value="DTCTransporterReport"   name="reportTypeFlag"/></td>
+							<td width="15%">Bank
+	  							<select name="finAccountName" class='h4'>
+	              	    				<option value='CORPORATION BANK YELAHANKA'>CORPORATION BANK YELAHANKA</option>
+	              	    				<option value='AXIS BANK, YNK BRANCH'>AXIS BANK, YNK BRANCH</option>
+								</select>
+	      					</td>
+							<td width="15%">Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list dtcTimePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>            
+								</select>
+	      					</td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="DTCFinesAndPenaltiesReport" name="DTCFinesAndPenaltiesReport" method="post" action="<@ofbizUrl>DTCFinesAndPenaltiesReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">DTC Fines And Penalties Report</td>
+							<td width="15%">Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list timePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>            
+								</select>
+	      					</td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
+	      				</form>
+					</tr>
+					</#if>
 			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	

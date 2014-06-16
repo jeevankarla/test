@@ -643,6 +643,7 @@
 				<or>
 					<if-has-permission permission="BYPRODUCTS"  action="_ADMIN"/>
 					<if-has-permission permission="BYPRODUCTS"  action="_MNTHREPOR"/>
+					<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
 				</or>
             </condition>
             <link target="MonthlyReports">

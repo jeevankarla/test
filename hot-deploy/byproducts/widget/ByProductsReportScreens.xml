@@ -14,6 +14,10 @@
                 	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
                 	<order-by field-name="-thruDate"/>
                 </entity-condition>
+                  <entity-condition list="dtcTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="DTC_FORTNIGHT_BILL"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
                 <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
                 	<condition-list combine="or">
                 		<condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/>
@@ -91,6 +95,11 @@
                 	<condition-expr field-name="periodTypeId" operator="equals" value="MARGIN_MONTH"/>
                 	<order-by field-name="-thruDate"/>
                 </entity-condition>
+                <entity-condition list="dtcTimePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="DTC_FORTNIGHT_BILL"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+                
                  <entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
                 	<condition-list combine="or">
                 		<!-- <condition-expr field-name="enumTypeId" operator="equals" value="BOOTH_CAT_TYPE"/> -->

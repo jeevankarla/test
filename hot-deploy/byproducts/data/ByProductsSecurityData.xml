@@ -276,5 +276,26 @@
 	 <SecurityPermission description="All 'VNDR MRGN' permissions with restriction on download of Margin/billing Reports." permissionId="VNDRMRGN_VIEW"/>
 	<SecurityGroup description="View Margin/billing Report permissions with restriction on download" groupId="VNDRMRGNVIEW"/>    
     <SecurityGroupPermission groupId="VNDRMRGNVIEW" permissionId="VNDRMRGN_VIEW"/>
+        <!-- TRNSMRGN Admin permissions -->
+    <SecurityGroup description="All 'TRNS MRGN(DTC)' permissions like create,cancel " groupId="TRNSMRGNADMIN"/>    
+    <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="TRNSMRGN_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_ADMIN"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODREPORTS_VIEW"/>
+      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCOUNTING_ARINVOICE_EDIT"/>
+      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCOUNTING_INVOICE_APPROVE"/>
+    <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCOUNTING_READ"/>
+    <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCTG_PREF_VIEW"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCTG_ATX_CREATE"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODUCTS_DAILREPOR"/>
+   
+    <!-- TRNSMRGN View permissions -->
+    <SecurityGroup description=" 'TRNS MRGN(DTC)' permissions with restriction on download of VendorMarginMainReport" groupId="TRNSMRGNVIEW"/>    
+    <SecurityGroupPermission groupId="TRNSMRGNVIEW" permissionId="TRNSMRGN_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_VIEW"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODREPORTS_VIEW"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODUCTS_DAILREPOR"/>
+
+   
+    
 	
 </entity-engine-xml>
