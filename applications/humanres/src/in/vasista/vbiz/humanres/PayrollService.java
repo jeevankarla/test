@@ -1456,7 +1456,7 @@ public class PayrollService {
 		    				if(UtilValidate.isEmpty(availedCanteenDetailMap.get(shiftType))){
 			    				availedCanteenDetailMap.put(shiftType,1);
 			    			}else{
-			    				availedCanteenDetailMap.put(shiftType,(((Integer)(shiftDetailMap.get(shiftType))).intValue()+1));
+			    				availedCanteenDetailMap.put(shiftType,(((Integer)(availedCanteenDetailMap.get(shiftType))).intValue()+1));
 			    			}
 		    			}
 		    		}
