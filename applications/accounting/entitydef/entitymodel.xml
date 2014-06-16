@@ -1385,6 +1385,26 @@
         	<index-field name="paidDate"/>
       </index>				
 	</entity>
+	<entity entity-name="BillOfSaleInvoiceSequence" package-name="org.ofbiz.accounting.invoice"
+		title="BillOfSale Sequence Entity">
+		<field name="finYearId" type="id-ne"></field>
+		<field name="billOfSaleTypeId" type="id"></field>
+		<field name="sequenceId" type="id-ne"></field>
+		<field name="invoiceId" type="id-ne"></field>
+		<prim-key field="finYearId" />
+		<prim-key field="billOfSaleTypeId" />
+		<prim-key field="sequenceId" />
+		<relation type="one" fk-name="BSSEQ_FY"
+			rel-entity-name="CustomTimePeriod">
+			<key-map field-name="finYearId"  rel-field-name="customTimePeriodId"/>
+		</relation>
+		<relation type="one" fk-name="BSSEQ_INV" rel-entity-name="Invoice">
+			<key-map field-name="invoiceId" />
+		</relation>
+		<relation type="one" fk-name="BSSEQ_BST" title="BillOfSaleType" rel-entity-name="Enumeration">
+            <key-map field-name="billOfSaleTypeId" rel-field-name="enumId"/>
+        </relation>
+	</entity>
 	<entity entity-name="InvoiceAttribute" package-name="org.ofbiz.accounting.invoice"
 		title="Invoice Attribute Entity">
 		<field name="invoiceId" type="id-ne"></field>

@@ -31,7 +31,13 @@ under the License.
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
     </service>
-
+    <service name="createBillOfSaleSeqForInvoice" engine="simple"
+        location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createBillOfSaleSeqForInvoice">
+        <description>Get the Next Sequence for the given billOfSaleType in BillOfSaleInvoiceSequence Entity</description>
+        <attribute name="billOfSaleTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <!-- Invoice services -->
     <service name="createInvoice" engine="simple" default-entity-name="Invoice"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
@@ -44,7 +50,8 @@ under the License.
         <attribute name="invoiceAttrName" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceAttrValue" type="String" mode="IN" optional="true"/>
         <attribute name="timePeriodId" type="String" mode="IN" optional="true"/>
-        <attribute name="isPartyGroupInvoice" type="String" mode="IN" optional="true"/>                 
+        <attribute name="isPartyGroupInvoice" type="String" mode="IN" optional="true"/>
+        <attribute name="billOfSaleTypeId" type="String" mode="OUT" optional="true"/>                 
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceTypeId" mode="IN" optional="false"/>

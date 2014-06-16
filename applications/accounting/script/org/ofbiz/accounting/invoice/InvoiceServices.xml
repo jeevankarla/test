@@ -117,13 +117,39 @@ under the License.
         <set field="invoiceId" value="${partyAcctgPreference.invoiceIdPrefix}${str:toString(invoiceIdTemp)}"/>
         <field-to-result field="invoiceId" result-name="invoiceId"/>
     </simple-method>
-
+    
+     <simple-method method-name="createBillOfSaleSeqForInvoice" short-description="Create a new Invoice">
+         <entity-one value-field="invoice" entity-name="Invoice"></entity-one>
+         <set field="isSalesInvoice" value="${groovy:org.ofbiz.accounting.util.UtilAccounting.isSalesInvoice(invoice)}" type="Boolean"/>
+         <if-compare operator="equals" value="true" field="isSalesInvoice">
+            <set field="organizationPartyId" from-field="invoice.partyIdFrom"/>
+            <else>
+                <set field="organizationPartyId" from-field="invoice.partyId"/>
+            </else>
+         </if-compare>
+         <!-- get current fiscal year -->
+          <set value="FISCAL_YEAR" field="onlyIncludePeriodTypeIdList[]"/>
+          <set from-field="invoice.invoiceDate" field="findCustomTimePeriodCallMap.findDate"/>
+          <set from-field="organizationPartyId" field="findCustomTimePeriodCallMap.organizationPartyId" default-value="Company"/>
+          <set from-field="onlyIncludePeriodTypeIdList" field="findCustomTimePeriodCallMap.onlyIncludePeriodTypeIdList"/>
+          <!-- should we excludeNoOrganizationPeriods? for now, YES, which means to find a CustomTimePeriod one must be setup at least for the top level Organization Party -->
+          <set value="Y" field="findCustomTimePeriodCallMap.excludeNoOrganizationPeriods"/>
+          <call-service service-name="findCustomTimePeriods" in-map-name="findCustomTimePeriodCallMap">
+              <result-to-field result-name="customTimePeriodList"/>
+          </call-service>
+          <first-from-list entry="customTimePeriod" list="customTimePeriodList"/>
+          <make-value value-field="newEntity" entity-name="BillOfSaleInvoiceSequence"/>
+          <set field="newEntity.finYearId" from-field="customTimePeriod.customTimePeriodId"/>
+          <set field="newEntity.invoiceId" from-field="invoice.invoiceId"/>
+          <set field="newEntity.billOfSaleTypeId" from-field="parameters.billOfSaleTypeId"/>
+          <make-next-seq-id seq-field-name="sequenceId" value-field="newEntity"/>
+          <create-value value-field="newEntity"/>
+     </simple-method>
 
     <simple-method method-name="createInvoice" short-description="Create a new Invoice">
         <now-timestamp field="nowTimestamp"/>
 
         <make-value value-field="newEntity" entity-name="Invoice"/>
-
         <!-- call getNextInvoiceId service with the parameters.partyIdFrom when invoice Id is not suplied
                             else use it from the input -->
         <if-empty field="parameters.invoiceId">
@@ -133,7 +159,7 @@ under the License.
             </call-service>
         </if-empty>
         <field-to-result field="parameters.invoiceId" result-name="invoiceId"/>
-
+        <field-to-result field="parameters.billOfSaleTypeId" result-name="billOfSaleTypeId"/>
         <!-- set the invoice date if not provided -->
         <if-empty field="parameters.invoiceDate">
             <set from-field="nowTimestamp" field="parameters.invoiceDate"/>

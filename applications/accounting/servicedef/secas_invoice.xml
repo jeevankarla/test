@@ -39,6 +39,10 @@ under the License.
         <set field-name="invoiceAttrValue" env-name="timePeriodId" />          
         <action service="createInvoiceAttribute" mode="sync"/>
     </eca>
+    <eca service="createInvoice" event="commit">
+        <condition field-name="billOfSaleTypeId" operator="is-not-empty"/>      
+        <action service="createBillOfSaleSeqForInvoice" mode="sync"/>
+    </eca>
     
     <!-- Remove InvoiceItemAssoc on cancel commission invoice -->
     <eca service="cancelInvoice" event="commit">
