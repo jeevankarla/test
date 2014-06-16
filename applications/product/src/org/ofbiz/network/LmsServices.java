@@ -667,7 +667,8 @@ public class LmsServices {
 		routeName = (String) context.get("facilityName");
 		String parentFacilityId = (String) context.get("parentFacilityId");
 		BigDecimal facilitySize = (BigDecimal) context.get("facilitySize");
-		
+		String shipmentTypeId = (String) context.get("description");
+		String subscriptionTypeId="";
 		String ownerPartyId = "COMPANY";
 		
 		GenericValue facility;
@@ -690,13 +691,24 @@ public class LmsServices {
 				Debug.logError("Incorrect Zone Id", module);
 				return ServiceUtil.returnError("Incorrect Zone Id");
 			}*/
+		    if(UtilValidate.isNotEmpty(shipmentTypeId)){
+	        	if(shipmentTypeId.equals("AM_SHIPMENT")){
+	        		shipmentTypeId = "AM";
+	        		subscriptionTypeId=shipmentTypeId+"_RT_GROUP";
+	        	}else{
+	        		shipmentTypeId = "PM";
+	        		subscriptionTypeId=shipmentTypeId+"_RT_GROUP";
+	        	}
+	        }
+		    
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
 			if(UtilValidate.isNotEmpty(facility)){
 				Debug.logError("Route Id Already Exists!", module);
 				return ServiceUtil.returnError("Route Id Already Exists!");
 			}
 		    String typeInput = "ROUTE";
-			Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", ownerPartyId, "openedDate", UtilDateTime.nowTimestamp(), "facilityId", facilityId, "facilityTypeId", typeInput, "parentFacilityId", parentFacilityId, "facilityName", routeName, "description", description, "facilitySize", facilitySize);   
+			Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", ownerPartyId, "openedDate", UtilDateTime.nowTimestamp(),
+					"facilityId", facilityId, "facilityTypeId", typeInput, "parentFacilityId", parentFacilityId, "facilityName", routeName, "description", description, "facilitySize", facilitySize);   
 			Map<String, Object> resultMap =  dispatcher.runSync("createFacility", input);
 			if (ServiceUtil.isError(resultMap)) {
 				Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -707,6 +719,23 @@ public class LmsServices {
 		    result = ServiceUtil.returnSuccess("Route "+resultFacilityId+" is successfully created");
 		    result.put("facilityId", resultFacilityId);
 			
+		    input = UtilMisc.toMap("userLogin", userLogin, "facilityGroupId", resultFacilityId, "facilityGroupTypeId", "RT_BOOTH_GROUP","primaryParentGroupId",subscriptionTypeId,"ownerFacilityId",resultFacilityId,
+		    		"facilityGroupName",resultFacilityId,"description",resultFacilityId);
+			resultMap = dispatcher.runSync("createFacilityGroup", input);
+			if (ServiceUtil.isError(resultMap)) {
+				Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+                return resultMap;
+            }
+			Map tempMap = FastMap.newInstance();
+        	tempMap.put("facilityId", facilityId);
+        	tempMap.put("facilityGroupId", subscriptionTypeId);
+        	tempMap.put("fromDate", UtilDateTime.nowTimestamp());
+        	tempMap.put("userLogin", userLogin);
+        	resultMap = dispatcher.runSync("addFacilityToGroup", tempMap);
+        	if(ServiceUtil.isError(resultMap)){
+        		Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+             return resultMap;
+        	}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError("Error while populating FacilityParty" + e);
@@ -1428,7 +1457,7 @@ public class LmsServices {
     		
     		for(GenericValue subProd : subscProduct){
     			Timestamp fromDate = subProd.getTimestamp("fromDate");
-    			if(fromDate.compareTo(UtilDateTime.getDayStart(closeDate))<=0){
+    			if(fromDate.before(UtilDateTime.getDayStart(closeDate))){
     				subProd.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(closeDate, -1)));
     				subProd.store();
     			}
