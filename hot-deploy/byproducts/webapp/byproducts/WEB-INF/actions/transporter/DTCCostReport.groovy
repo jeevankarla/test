@@ -38,8 +38,10 @@ monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 totalDays=UtilDateTime.getIntervalInDays(monthBegin,monthEnd);
 context.put("totalDays", totalDays+1);
 
+routeIdsList = [];
+routeWiseMap =[:];
 
-periodBillingId = null;
+/*periodBillingId = null;
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_LMS_TRSPT_MRGN"));
@@ -51,8 +53,6 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 		periodBillingId = periodBillingDetails.periodBillingId;
 	}
 }
-routeIdsList = [];
-routeWiseMap =[:];
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.GREATER_THAN_EQUAL_TO,monthBegin));
@@ -60,11 +60,12 @@ conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 EntityFindOptions findOptions = new EntityFindOptions();
 routesList = delegator.findList("FacilityAndCommission",condition,["facilityId"]as Set, UtilMisc.toList("parentFacilityId","facilityId"),findOptions,false);
-routeIdsList = EntityUtil.getFieldListFromEntityList(routesList, "facilityId", false);
+routeIdsList = EntityUtil.getFieldListFromEntityList(routesList, "facilityId", false);*/
+routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
 if(UtilValidate.isNotEmpty(routeIdsList)){
 	routeIdsList.each{ routeId ->
 	totalSaleQty=0;
-	conditionList.clear();
+	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
 	conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
 	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,monthBegin));
@@ -80,10 +81,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 			Iterator mapRouteIter = routeProdTotals.entrySet().iterator();
 			while (mapRouteIter.hasNext()) {
 				Map.Entry entry = mapRouteIter.next();
-				conditionList=[];
-				conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS,entry.getKey()));
-				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-				productCategoryList = delegator.findList("ProductCategoryAndMember",condition,null,null,null,false);
+				List<GenericValue> productCategoryList = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, entry.getKey()), null, null, null, false);
 				prodCategoryIds= EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
 				prodCategoryIds.each{ prodCategory->
 					if("LMS".equals(prodCategory)){
