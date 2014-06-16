@@ -1119,6 +1119,8 @@ public class PayrollService {
 	    							}
 	    							if(getAttendance){
 		    							Map attendanceMap = getEmployeePayrollAttedance(dctx ,context);
+		    							priceInfoDescription.append("[ Attendance Details : "+attendanceMap);
+		    							priceInfoDescription.append("  ]\n \n ");
 		    							variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderDays"));
 		    							variables.put("NOOFATTENDEDDAYS", (Double)attendanceMap.get("noOfAttendedDays"));
 		    							variables.put("NOOFATTENDEDHOLIDAYS", (Double)attendanceMap.get("noOfAttendedHoliDays"));
