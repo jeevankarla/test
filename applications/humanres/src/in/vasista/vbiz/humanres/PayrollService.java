@@ -1302,9 +1302,10 @@ public class PayrollService {
 	            }
 	        }else if ("PAYHD_BEDE_LEAVEDAYS".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	        	Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,paramCtxMap);
-	        	String noOfLeaveDays = ((Double)employeePayrollAttedance.get("noOfLeaveDays")).toString();
+	        	int noOfLeaveDays = (((Double)employeePayrollAttedance.get("noOfLeaveDays")).intValue());
+	        	int condValue = Integer.parseInt(payrollBenDedCond.getString("condValue"));
 	            if (UtilValidate.isNotEmpty(noOfLeaveDays)) {
-	                compare = noOfLeaveDays.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = noOfLeaveDays-condValue;
 	            } else {
 	                compare = 1;
 	            }
@@ -1536,11 +1537,9 @@ public class PayrollService {
 	           if(UtilValidate.isNotEmpty(result.get("itemsList"))){
 		    	   itemsList.addAll((List)result.get("itemsList"));
 		       }
-	           Debug.log("itemsList size gross salary====="+itemsList.size());
 	           
 		       for(int i=0;i<itemsList.size();i++){
 		        	Map itemEntry =  (Map)itemsList.get(i);
-		        	Debug.log("itemEntry gross salary====="+itemEntry);
 		        	BigDecimal tempAmount = BigDecimal.ZERO;
 		        	if((itemEntry.get("amount")) instanceof BigDecimal){
 		        		tempAmount = (BigDecimal)itemEntry.get("amount");
