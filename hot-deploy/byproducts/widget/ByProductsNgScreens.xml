@@ -1098,7 +1098,14 @@
             <actions>
                 <set field="titleProperty" value="Analytics"/>
                 <set field="tabButtonItem" value="analytics"/>
- 				<set field="tabButtonItem2" value="channelSalesChart" />                                           
+ 				<set field="tabButtonItem2" value="channelSalesChart" />
+ 				<entity-condition list="categoryTypeList" entity-name="Enumeration" use-cache="true">
+                	<condition-list combine="or">
+               		 	<condition-expr field-name="enumId" operator="equals" value="SHP_RTLR"/>
+               			<condition-expr field-name="enumId" operator="equals" value="CR_INST"/>   
+               			<condition-expr field-name="enumId" operator="equals" value="SCT_RTLR"/>  
+               		</condition-list>
+         		</entity-condition>		                                           
                 <set field="headerItem" value="charts"/>
 				<set field="ajaxUrl" value="ChannelWiseSalesChartInternal" type="String"/>
             </actions>            
@@ -1134,7 +1141,7 @@
             <actions>
                 <set field="titleProperty" value="Analytics"/>
                 <set field="tabButtonItem" value="analytics"/>  
- 				<set field="tabButtonItem2" value="salesRevenueTrend" />                                                                                    
+ 		<set field="tabButtonItem2" value="salesRevenueTrend" />                                                                                    
                 <set field="headerItem" value="charts"/>
                 <set field="dailySalesRevenueTrend" value="true"></set>
                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/ChannelWiseSales.groovy"/>                                                 
@@ -2057,11 +2064,11 @@
 												</and>
 											</condition>
 											<widgets>
-										        <screenlet title="Cash Payments">
-										        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
-										        	<include-form name="FindPaymentsByMethod" location="component://byproducts/widget/ByProductsNgForms.xml" />
-										        </screenlet>
-									  	        <screenlet title="Retailers Receipts :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
+													<screenlet>
+										        		<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific>
+										        		<include-form name="FindPaymentsByMethod" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        	</screenlet>
+									  	       		 <screenlet title="Retailers Receipts :${invoicesTotalAmount} (${groovy: boothPaymentsList.size()})">
 									  	       		<!--<link target="boothPayments.csv" text="Export As CSV" style="buttontext create">
 									  	        		<parameter param-name="paymentDate" from-field="parameters.paymentDate"/>
 														<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
@@ -2089,6 +2096,128 @@
 			</widgets>
 		</section>
 	</screen>
+	<#--<screen name="FindInstitutionPayment">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				<set field="tabButtonItem" value="CustomPayments" />
+				<set field="subTabButtonItem" value="institutionPayment"/>
+				<set field="paymentDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}" type="String"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;dd MMMMM, yyyy&quot;)}" type="String" /> 				
+				<entity-condition entity-name="FacilityParty" list="facilityParty" filter-by-date="true">
+	    			<condition-list>
+	    				<condition-expr field-name="partyId" value="${userLogin.partyId}"/>
+	    				<condition-expr field-name="roleTypeId" value="FACILITY_CASHIER"/>
+	    			</condition-list>
+    			</entity-condition>
+    			<service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+                <set field="hasPaymentCancelPermission" value="true" type="Boolean"/><!--from-field="permResult.hasPermission"	-->
+    			<set field="paymentLocationId" value="${facilityParty[0].facilityId}"/>		
+    			<set field="targetValue" value="FindPaymentByMethod"/>										
+    			<set field="layoutSettings.javaScripts[]" value="/byproducts//images/paymentMethodType.js" global="true"/>
+    			<set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId" default-value="${paymentMethodTypeId}"/>
+    			<set field="parameters.onlyCurrentDues" value="false"/>
+    			<!-- <entity-condition list="instPeriodTypeList" entity-name="PeriodType">
+					<condition-list combine="or">
+						<condition-expr field-name="periodTypeId" operator="equals" value="INST_DAILY_BILL"/>
+						<condition-expr field-name="periodTypeId" operator="equals" value="INST_WEEK_BILL"/>
+						<condition-expr field-name="periodTypeId" operator="equals" value="INST_FORTNIGHT_BILL"/>
+						<condition-expr field-name="periodTypeId" operator="equals" value="INST_MONTH_BILL"/>
+					</condition-list>    			
+    			</entity-condition> -->
+    			<entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
+    				<condition-list combine="or">
+    					<condition-expr field-name="paymentMethodTypeId" operator="equals"  value="FT_PAYIN"/>
+    					<condition-expr field-name="paymentMethodTypeId" operator="equals"  value="CHEQUE_PAYIN"/>
+    				</condition-list>
+    			</entity-condition>
+    			<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getInstitutionPayments.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu location="component://byproducts/widget/ByProductsMenus.xml" name="PaymentSubTabBar"/>
+						<section>
+							<condition>
+								<or>
+									<not><if-empty field="facilityParty"/></not>
+									<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+									<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
+									<if-has-permission permission="BYPRODUCTS" action="_CHALLAN"/>	
+								</or>		
+							</condition>
+							<widgets>
+								<section>
+									<condition>
+										<and>
+											<or>
+												<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+												<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
+												<if-has-permission permission="BYPRODUCTS" action="_CHALLAN"/>
+											</or>
+											<or>
+												<if-empty field="statusId"/>
+												<if-compare operator="equals" value="NOT_PAID" field="statusId"/>
+											</or>
+										</and>
+									</condition>
+									<widgets>
+									   <section>
+									        <widgets> 		
+										        <screenlet title="Credit Institution Payments">
+										        	<!-- <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/PaymentCheckList.ftl"/></html></platform-specific> -->
+										        	<include-form name="FindInstitutionPayment" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+									  	        <screenlet title="Institution Dues Details">				
+									  	        	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/DuesHistory.ftl"/></html></platform-specific>
+									  	        	<platform-specific><html>
+												  		<html-template location="component://byproducts/webapp/byproducts/byproducts/InstitutionDuePayment.ftl"/>
+												  		</html>
+												  	</platform-specific>	
+									  	        	<platform-specific>
+                                            			<html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchInstitutionDues.ftl"/></html>
+                                        			</platform-specific> 
+										        </screenlet>
+										     </widgets> 
+										 </section>
+									</widgets>
+									<fail-widgets>
+										<section>
+											<condition>
+												<and>
+													<or>
+														<if-has-permission permission="BYPRODUCTS" action="_CASH"/>
+														<if-has-permission permission="BYPRODUCTS" action="_CHEQUE"/>
+														<if-has-permission permission="BYPRODUCTS" action="_CHALLAN"/>
+													</or>
+													<if-compare operator="equals" value="PAID" field="statusId"/>
+												</and>
+											</condition>
+											<widgets>
+										        <screenlet title="Search Options">
+										        	<include-form name="FindInstitutionPayment" location="component://byproducts/widget/ByProductsNgForms.xml" />
+										        </screenlet>
+									  	        <screenlet title="Credit Institution Receipts">
+									  	        	
+									  	        	<platform-specific>
+	                                     					<html><html-template location="component://byproducts/webapp/byproducts/reports/printInstitutionPayments.ftl"/></html>
+	                                				</platform-specific>
+										        </screenlet>								    
+											</widgets>
+										</section>
+									</fail-widgets>
+								</section>			
+							</widgets>
+						</section>									
+					</decorator-section>	
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>-->
+	
 	<screen name="FindBoothPayments">
 		<section>
 			<actions>
@@ -2509,7 +2638,7 @@
             	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                     <decorator-section name="body">  
  							<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/facility/vehicleStatusFind.ftl"></html-template></html></platform-specific>
-						<screenlet title="VehicleStatus List">	
+						<screenlet title="VehicleStatus List">				
 						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/facility/vehicleBulkSubmitForm.ftl"></html-template></html></platform-specific>
 						<!-- 	<include-form name="submitBulkStatus" location="component://byproducts/widget/ByProductsNgForms.xml" />	 -->	
 						<include-form name="ListVehicleStatus" location="component://byproducts/widget/ByProductsNgForms.xml" />
