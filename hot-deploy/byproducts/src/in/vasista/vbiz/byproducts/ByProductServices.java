@@ -2199,12 +2199,12 @@ public class ByProductServices {
 		    productPrices = EntityUtil.filterByDate(productPrices, priceDate);
 		    
 		    // fetch the mrp price
-		    BigDecimal mrpPrice = BigDecimal.ZERO;
+		    BigDecimal mrpBasicPrice = BigDecimal.ZERO;
 			List<GenericValue> mrpProdPrices = EntityUtil.filterByCondition(productPrices, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, "MRP_PRICE"));
 		    if (!UtilValidate.isEmpty(mrpProdPrices)) {
 		    	GenericValue mrpProdPrice = EntityUtil.getFirst(mrpProdPrices);
-		    	if (mrpProdPrice != null) {
-		    		mrpPrice = mrpProdPrice.getBigDecimal("price");
+		    	if (mrpBasicPrice != null) {
+		    		mrpBasicPrice = mrpProdPrice.getBigDecimal("price");
 		    	}
 		    }
 		    
@@ -2234,20 +2234,24 @@ public class ByProductServices {
 		List taxDetailList = FastList.newInstance();
 		BigDecimal totalExciseDuty = BigDecimal.ZERO;
 		BigDecimal totalTaxAmt = BigDecimal.ZERO;
+		BigDecimal mrpTotalTaxAmt = BigDecimal.ZERO; // for mrp we just want the total tax amount
 		
 		for (GenericValue taxItem : taxList) {
 			
 			String taxType = (String) taxItem.get("orderAdjustmentTypeId");
 			BigDecimal amount = BigDecimal.ZERO;
+			BigDecimal mrpAmount = BigDecimal.ZERO;
+			
 			BigDecimal percentage = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty(taxItem.get("amount"))){
 				amount = (BigDecimal) taxItem.get("amount");
+				mrpAmount = amount;
 			}
 			if(UtilValidate.isNotEmpty(taxItem.get("sourcePercentage")) && amount.compareTo(BigDecimal.ZERO)== 0){
 				percentage = (BigDecimal) taxItem.get("sourcePercentage");
 				if(UtilValidate.isNotEmpty(percentage) && UtilValidate.isNotEmpty(basicPrice)){
 					amount = (basicPrice.multiply(percentage)).divide(new BigDecimal(100));
-					//amount = (basicPrice.multiply(percentage)).divide(new BigDecimal(100) , decimals,rounding);
+					mrpAmount = (mrpBasicPrice.multiply(percentage)).divide(new BigDecimal(100));
 				}
 			}
 			
@@ -2256,7 +2260,7 @@ public class ByProductServices {
 			}
 			
 			totalTaxAmt = totalTaxAmt.add(amount);
-			
+			mrpTotalTaxAmt.add(mrpAmount);
 			Map taxDetailMap = FastMap.newInstance();
 			
 			taxDetailMap.put("taxType", taxType);
@@ -2271,7 +2275,7 @@ public class ByProductServices {
 	    
 	    BigDecimal price = basicPrice.add(totalExciseDuty);
 	    BigDecimal totalPrice = basicPrice.add(totalTaxAmt);
-	    
+	    BigDecimal mrpPrice = mrpBasicPrice.add(mrpTotalTaxAmt);
 	    result.put("basicPrice", basicPrice);
 	    result.put("mrpPrice", mrpPrice);	    
 	    result.put("price", price);
