@@ -23,8 +23,8 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="15in" page-width="12in"
-            margin-top="0.4in" margin-bottom=".3in" margin-left=".1in" margin-right=".1in">
-        <fo:region-body margin-top="1.54in"/>
+            margin-top="0.3in" margin-bottom=".3in" margin-left=".1in" margin-right=".1in">
+        <fo:region-body margin-top="1.75in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -40,6 +40,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;STATEMENT SHOWING THE PAYMENT TOWARDS TRANSPORTATION CHARGES</fo:block>
               		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;TO BE CREDITED TO DTC CONTRACTORS AS PER DETAILS BELOW</fo:block>
+              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;${parameters.finAccountName?if_exists}</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
@@ -230,8 +231,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                </fo:block>
           		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold" font-size="14pt">&#160;DEDUCTION DETAILS</fo:block>
           		<fo:block>
-                 	<fo:table border-style="solid">
+                 	<fo:table>
                     <fo:table-column column-width="60pt"/>
+	            	<fo:table-column column-width="60pt"/>
 	            	<fo:table-column column-width="60pt"/>
 	            	<fo:table-column column-width="80pt"/>  
 	       	    	<fo:table-column column-width="100pt"/>
@@ -240,6 +242,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                     <fo:table-body>
                     	<fo:table-row >
                     		<fo:table-cell>
+                        		<fo:block></fo:block>  
+                   			</fo:table-cell>
+                   			<fo:table-cell>
                         		<fo:block></fo:block>  
                    			</fo:table-cell>
                    			<fo:table-cell>
@@ -262,8 +267,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
             </fo:table>
            </fo:block> 		
         	<fo:block>
-             	<fo:table border-style="solid">
+             	<fo:table>
                 <fo:table-column column-width="60pt"/>
+            	<fo:table-column column-width="60pt"/>
             	<fo:table-column column-width="60pt"/>
             	<fo:table-column column-width="80pt"/>  
        	    	<fo:table-column column-width="100pt"/>
@@ -273,6 +279,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                 <#assign grandTotalFine = 0>
                 <#assign routeDetails = finalMap.entrySet()>
                 	<#list routeDetails as eachRoute>
+                		<#assign routeId = eachRoute.getKey()?if_exists>
                 		<#assign totalFine = eachRoute.getValue().get("totalFine")?if_exists>
                 		<#assign facilityCode = eachRoute.getValue().get("facilityCode")?if_exists>
 							<fo:table-row>
@@ -282,23 +289,26 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 	                   			<fo:table-cell>
 	                        		<fo:block></fo:block>  
 	                   			</fo:table-cell>
+	                   			<fo:table-cell>
+	                        		<fo:block></fo:block>  
+	                   			</fo:table-cell>
 								<fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"> 
+	                            		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"> 
                                              ${routeId?if_exists}
                                       </fo:block>  
 	                       			</fo:table-cell>
 								<fo:table-cell border-style="solid">
-                            		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"> 
+                            		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"> 
                                          ${facilityCode?if_exists}
                                   </fo:block>  
                        			</fo:table-cell>
 								<fo:table-cell border-style="solid"> 
-                            		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false" keep-together="always"> 
+                            		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" keep-together="always"> 
                                         Fines And Penalties 
                                   </fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                                <fo:block text-align="right" font-weight="bold">
+                                <fo:block text-align="right" font-weight="bold" font-size="10pt">
                                        <#assign grandTotalFine = grandTotalFine+totalFine>
                                             <#if totalFine?has_content>${(totalFine)?string("##0.00")}<#else>0.00</#if>
                                 </fo:block>
@@ -312,6 +322,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                    			<fo:table-cell>
                         		<fo:block></fo:block>  
                    			</fo:table-cell>
+                   			<fo:table-cell>
+                        		<fo:block></fo:block>  
+                   			</fo:table-cell>
 							<fo:table-cell border-style="solid">
                         		<fo:block  text-align="left" keep-together="always" font-size="10pt" font-weight="bold" white-space-collapse="false">Grand Total 
                               </fo:block>  
@@ -320,11 +333,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                         		<fo:block></fo:block>  
                    			</fo:table-cell>
 							<fo:table-cell>
-                        		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"> 
+                        		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"> 
                               </fo:block>  
                    			</fo:table-cell>
                             <fo:table-cell border-style="solid">
-                                <fo:block text-align="right" font-weight="bold">
+                                <fo:block text-align="right" font-weight="bold" font-size="10pt">
                                         <#if grandTotalFine?has_content>${(grandTotalFine)?string("##0.00")}<#else>0.00</#if>
                                 </fo:block>
                              </fo:table-cell>

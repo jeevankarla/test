@@ -694,6 +694,46 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						</form>
 					</tr>
 					<tr class="alternate-row">
+						<form id="DTCBankReport" name="DTCBankReport" method="post" action="<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">DTC Bank Report<input  type="hidden"  value="DTCBankReport"   name="reportTypeFlag"/></td>
+							<td width="15%">Bank
+	  							<select name="finAccountName" class='h4'>
+	              	    				<option value='CORPORATION BANK YELAHANKA'>CORPORATION BANK YELAHANKA</option>
+	              	    				<option value='AXIS BANK, YNK BRANCH'>AXIS BANK, YNK BRANCH</option>
+								</select>
+	      					</td>
+							<td width="15%">Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list timePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>            
+								</select>
+	      					</td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+						</form>
+					</tr>
+					<tr class="alternate-row">
+						<form id="DTCTransporterBankReport" name="DTCTransporterBankReport" method="post" action="<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Transporter Bank Report<input  type="hidden"  value="DTCTransporterReport"   name="reportTypeFlag"/></td>
+							<td width="15%">Bank
+	  							<select name="finAccountName" class='h4'>
+	              	    				<option value='CORPORATION BANK YELAHANKA'>CORPORATION BANK YELAHANKA</option>
+	              	    				<option value='AXIS BANK, YNK BRANCH'>AXIS BANK, YNK BRANCH</option>
+								</select>
+	      					</td>
+							<td width="15%">Period
+	  							<select name="customTimePeriodId" class='h4'>
+	            					<#list timePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>            
+								</select>
+	      					</td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+						</form>
+					</tr>
+					<tr class="alternate-row">
 						<form id="DTCFinesAndPenaltiesReport" name="DTCFinesAndPenaltiesReport" method="post" action="<@ofbizUrl>DTCFinesAndPenaltiesReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">DTC Fines And Penalties Report</td>
 							<td width="15%">Period
