@@ -51,6 +51,13 @@ dctx = dispatcher.getDispatchContext();
 monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 Map partyFacilityMap=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",monthBegin)).get("partyAndFacilityList");
+facilityWorkOrdrNumMap = [:];
+facilityWorkOrderNoList = delegator.findList("FacilityAttribute", EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "WORK_ORDER_NO"), null, null, null, false);
+facilityWorkOrderNoList.each{eachWork ->
+	facilityWorkOrdrNumMap.put(eachWork.facilityId, eachWork.attrValue);
+}
+context.facilityWorkOrdrNumMap = facilityWorkOrdrNumMap;//workOrder Numbers
+
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.EQUALS , monthBegin));
