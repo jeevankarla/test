@@ -709,7 +709,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       					</form>
       				</tr>
 					</#if>
-			<#if security.hasEntityPermission("TRNSMRGN", "_VIEW", session)>
+					<#if security.hasEntityPermission("TRNSMRGN", "_VIEW", session)>
 					 <tr class="alternate-row">
 						<form id="DTCCostReport" name="DTCCostReport" method="post" action="<@ofbizUrl>DTCCostReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">DTC Cost Report</td>
@@ -731,9 +731,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="DTCBankReport" name="DTCBankReport" method="post" action="<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">DTC Bank Report<input  type="hidden"  value="DTCBankReport"   name="reportTypeFlag"/></td>
 							<td width="15%">Bank
-	  							<select name="finAccountName" class='h4'>
-	              	    				<option value='CORPORATION BANK YELAHANKA'>CORPORATION BANK YELAHANKA</option>
-	              	    				<option value='AXIS BANK, YNK BRANCH'>AXIS BANK, YNK BRANCH</option>
+	  							<select name="finAccountId" class='h4'>
+	              	    				<option value='FIN_ACCNT4'>CORPORATION BANK YELAHANKA</option>
+	              	    				<option value='FIN_ACCNT7'>AXIS BANK, YNK BRANCH</option>
 								</select>
 	      					</td>
 							<td width="15%">Period
@@ -751,9 +751,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<form id="DTCTransporterBankReport" name="DTCTransporterBankReport" method="post" action="<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Transporter Bank Report<input  type="hidden"  value="DTCTransporterReport"   name="reportTypeFlag"/></td>
 							<td width="15%">Bank
-	  							<select name="finAccountName" class='h4'>
-	              	    				<option value='CORPORATION BANK YELAHANKA'>CORPORATION BANK YELAHANKA</option>
-	              	    				<option value='AXIS BANK, YNK BRANCH'>AXIS BANK, YNK BRANCH</option>
+	  							<select name="finAccountId" class='h4'>
+	              	    				<option value='FIN_ACCNT4'>CORPORATION BANK YELAHANKA</option>
+	              	    				<option value='FIN_ACCNT7'>AXIS BANK, YNK BRANCH</option>
 								</select>
 	      					</td>
 							<td width="15%">Period

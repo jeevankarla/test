@@ -33,6 +33,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
  <#if finalMap?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
+					<#assign finAccount = delegator.findOne("FinAccount", {"finAccountId" : parameters.finAccountId}, true)?if_exists/>
 					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
 					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">    UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
 					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">&#160;      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
@@ -40,7 +41,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;STATEMENT SHOWING THE PAYMENT TOWARDS TRANSPORTATION CHARGES</fo:block>
               		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;TO BE CREDITED TO DTC CONTRACTORS AS PER DETAILS BELOW</fo:block>
-              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;${parameters.finAccountName?if_exists}</fo:block>
+              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;${finAccount.finAccountName?if_exists}</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
@@ -164,7 +165,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right">
 	                                    <#assign totalNetAmount = totalNetAmount+netAmount>
-	                                            <#if netAmount?has_content>${(netAmount)?string("##0.00")}<#else>0.00</#if>
+	                                            <#if netAmount?has_content>${(netAmount)?string("#0")}.00<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
@@ -212,7 +213,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                                 </fo:table-cell>
                                 <fo:table-cell border-style="solid">
                                     <fo:block text-align="right">
-                                            <#if totalNetAmount?has_content>${(totalNetAmount)?string("#0")}.00<#else>0.00</#if>
+                                            <#if totalNetAmount?has_content>${(totalNetAmount)?string("#0.00")}<#else>0.00</#if>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>

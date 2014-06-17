@@ -50,7 +50,7 @@
 	
 	import org.ofbiz.network.LmsServices;
 	import in.vasista.vbiz.byproducts.SalesHistoryServices;
-	import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
 
  	public class TransporterServices {
 		
@@ -1562,8 +1562,6 @@
 				return result;
 		}// end of service
 		    
-		    
-		    
 		    public static Map<String, Object>  sendTransporterMarginSMS(DispatchContext dctx, Map<String, Object> context)  {
 		        LocalDispatcher dispatcher = dctx.getDispatcher();	
 		        Delegator delegator = dctx.getDelegator();
@@ -1611,6 +1609,27 @@
 				} 
 		        return ServiceUtil.returnSuccess("Sms successfully sent!");		
 		 }
+		    public static Map<String, Object> getFacilityByFinAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
+		    	Delegator delegator = ctx.getDelegator();
+		    	String finAccountId = (String)context.get("finAccountId");
+		    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+		    	Map<String, Object> result = ServiceUtil.returnSuccess();
+		    	List partyList= FastList.newInstance();
+		    	try {
+		    		List conditionList= FastList.newInstance();
+		    		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+		    		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "DTC_BILL"));
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 
+		        	List<GenericValue> finAccountRoleList = delegator.findList("FinAccountRole", condition, null, null, null, false);
+		        	partyList = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", false);
+		    		
+		    	} catch (GenericEntityException e) {
+		            Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+		        }
+		        result.put("partyList", partyList);
+		        return result;
+		    }
 }
 
 

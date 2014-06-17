@@ -53,7 +53,6 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 		periodBillingId = periodBillingDetails.periodBillingId;
 	}
 }
-Map partyFacilityMap=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",monthBegin)).get("partyAndFacilityList");
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.GREATER_THAN_EQUAL_TO,monthBegin));
@@ -65,65 +64,71 @@ routeIdsList = EntityUtil.getFieldListFromEntityList(routesList, "facilityId", f
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-facilityCommissionList = delegator.findList("FacilityCommission",condition , null, ["commissionDate"], null, false);
-finAccountName = parameters.finAccountName;
+facilityCommissionList = delegator.findList("FacilityCommission",condition , null, null, null, false);
+
+finAccountId = parameters.finAccountId;
 dtcBankMap = [:];
+finAccountParties = [];
+finAccountParties = (TransporterServices.getFacilityByFinAccount(dctx,UtilMisc.toMap("finAccountId",finAccountId,"userLogin",userLogin))).get("partyList");
 if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	facilityCommissionList.each { facilityCommission ->
 		facilityId = facilityCommission.facilityId;
-		facilityRateResult=[:];
-		facCondList = [];
-		facCondList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , facilityId));
-		facCondList.add(EntityCondition.makeCondition("finAccountName", EntityOperator.EQUALS , finAccountName));
-		facCondition = EntityCondition.makeCondition(facCondList,EntityOperator.AND);
-		List<GenericValue> facilities = delegator.findList("FacilityPersonAndFinAccount", facCondition, null, null, null, false);
-		if(UtilValidate.isNotEmpty(facilities)){
-			facility = EntityUtil.getFirst(facilities);
-			Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
-			inputRateAmt.put("rateCurrencyUomId", "INR");
-			inputRateAmt.put("facilityId", facilityId);
-			inputRateAmt.put("fromDate",monthBegin );
-			inputRateAmt.put("rateTypeId", "TRANSPORTER_MRGN");
-			facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
-		
-			String partyName = "";
-			if(UtilValidate.isNotEmpty(facility.firstName)){
-			   partyName=facility.firstName;
-			}
-			if(UtilValidate.isNotEmpty(facility.lastName)){
-				partyName=facility.firstName+","+facility.lastName;
-			}
-			if(UtilValidate.isEmpty(dtcBankMap[facilityId])){
-				tempMap = [:];
-				tempMap["amount"] = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
-				if(UtilValidate.isNotEmpty(partyName)){
-					tempMap["facilityName"] = partyName;
+		partyId =  facilityCommission.partyId;
+		if(UtilValidate.isNotEmpty(partyId)){
+			if(finAccountParties.contains(partyId)){
+				List<GenericValue> personFinAccountDetails = delegator.findList("PersonAndFinAccount", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), null, null, null, false);
+				if(UtilValidate.isNotEmpty(personFinAccountDetails)){
+					personFinAccount = EntityUtil.getFirst(personFinAccountDetails);
+					String partyName = "";
+					if(UtilValidate.isNotEmpty(personFinAccount.firstName)){
+					   partyName=personFinAccount.firstName;
+					}
+					if(UtilValidate.isNotEmpty(personFinAccount.lastName)){
+						partyName=personFinAccount.firstName+","+personFinAccount.lastName;
+					}
+					facility = [:];
+					List<GenericValue> facilities = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId), null, null, null, false);
+					if(UtilValidate.isNotEmpty(facilities)){
+						facility = EntityUtil.getFirst(facilities);
+					}
+					partyIdentification = [:];
+					List<GenericValue> partyIdentificationDetails = delegator.findList("PartyIdentification", EntityCondition.makeCondition([partyId: partyId, partyIdentificationTypeId: "PAN_NUMBER"]), null, null, null, false);
+					if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
+						partyIdentification = EntityUtil.getFirst(partyIdentificationDetails);
+					}
+					if(UtilValidate.isEmpty(dtcBankMap[facilityId])){
+						tempMap = [:];
+						tempMap["amount"] = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+						if(UtilValidate.isNotEmpty(partyName)){
+							tempMap["facilityName"] = partyName;
+						}
+						if(UtilValidate.isNotEmpty(facility.facilityCode)){
+							tempMap["facilityCode"] = facility.facilityCode;
+						}
+						if(UtilValidate.isNotEmpty(partyIdentification.idValue)){
+							tempMap["facilityPan"] = partyIdentification.idValue;
+						}
+						if(UtilValidate.isNotEmpty(personFinAccount.finAccountCode) && "FNACT_ACTIVE".equals(personFinAccount.statusId)){
+							tempMap["facilityFinAccount"] = personFinAccount.finAccountCode;
+						}
+						dtcBankMap[facilityId] = tempMap;
+					}else{
+						Map tempMap = FastMap.newInstance();
+						tempMap.putAll(dtcBankMap.get(facilityId));
+						totAmount = 0 ;
+						totAmount = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+						if(UtilValidate.isNotEmpty(totAmount) && totAmount!=0){
+							tempMap["amount"] += totAmount;
+						}
+						dtcBankMap[facilityId] = tempMap;
+					}
 				}
-				if(UtilValidate.isNotEmpty(facility.facilityCode)){
-					tempMap["facilityCode"] = facility.facilityCode;
-				}
-				if(UtilValidate.isNotEmpty(facility.panId)){
-					tempMap["facilityPan"] = facility.panId;
-				}
-				if(UtilValidate.isNotEmpty(facility.finAccountCode) && "FNACT_ACTIVE".equals(facility.statusId)){
-					tempMap["facilityFinAccount"] = facility.finAccountCode;
-				}
-				dtcBankMap[facilityId] = tempMap;
-			}else{
-				Map tempMap = FastMap.newInstance();
-				tempMap.putAll(dtcBankMap.get(facilityId));
-				totAmount = 0 ;
-				totAmount = ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
-				if(UtilValidate.isNotEmpty(totAmount) && totAmount!=0){
-					tempMap["amount"] += totAmount;
-				}
-				dtcBankMap[facilityId] = tempMap;
 			}
 		}
 	}
 }
 facRecoveryMap=[:];
-facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"userLogin",userLogin));
+facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"thruDate",monthEnd,"userLogin",userLogin));
 facRecoveryMap=facilityRecoveryResult.get("facilityRecoveryInfoMap");
 partyRecoveryInfoMap=facilityRecoveryResult.get("partyRecoveryInfoMap");
 
