@@ -36,7 +36,7 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 	context.thruDateTime = thruDateTime;
 }
 
-
+isByParty = Boolean.TRUE;
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
 categoryTypeEnum=parameters.categoryTypeEnum;
@@ -100,7 +100,7 @@ if(UtilValidate.isNotEmpty(boothTotalsWithReturn)){
 	returnBoothTotals=boothTotalsWithReturn.get("boothTotals");
 	totalReturnAmnt=boothTotalsWithReturn.get("totalRevenue");
 }*/
-boothTotals = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd, "facilityList", boothsList, "userLogin", userLogin)).get("boothInvoiceTotalMap");
+boothTotals = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd, "facilityList", boothsList, "userLogin", userLogin, "isByParty", isByParty)).get("boothInvoiceTotalMap");
 inputMap = [];
 penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd,"facilityList", boothsList, "userLogin", userLogin));
 facilityPenaltyMap = penaltyResult.get("facilityPenalty");
@@ -112,7 +112,7 @@ facilityIdsList=[];
 	paidPaymentInput["thruDate"]=dayEnd;
 	paidPaymentInput["facilityIdsList"]=boothsList;
 	paidPaymentInput["isForCalOB"]="Y";
-	
+	paidPaymentInput["isByParty"] = isByParty;
 	boothPaidDetail=[:];
 	//Lets find each type of payment
 	boothCashPaymentsList=[];
@@ -138,7 +138,7 @@ facilityIdsList=[];
 	boothChallanPaymentsList = boothChallanPaidDetail["boothPaymentsList"];
 	boothChallanRouteIdsMap= boothChallanPaidDetail["boothRouteIdsMap"];
 	}
-
+	
 categoryTotalMap = [:];
 categorysList = [];
 categorysParloursList = [];
@@ -201,7 +201,7 @@ boothsList.each{  boothId->
 	BigDecimal openingBalance=BigDecimal.ZERO;
 	boothTotalsMap=[:];
 	if(reportTypeFlag=="DuesAbstractReport"){
-	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:boothId])).get("openingBalance");
+	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:boothId, isByParty:isByParty])).get("openingBalance");
 	boothTotalsMap.put("openingBalance", openingBalance);
 	netAmount=netAmount.add(openingBalance);
 	}
@@ -222,13 +222,13 @@ boothsList.each{  boothId->
 		tempCatList = categoryTotalMap.get(categoryType);
 		tempCatList.addAll(boothTotalsMap);
 		categoryTotalMap.putAt(categoryType, tempCatList);
-		}else{
-			tempList = [];
-			tempList.add(boothTotalsMap);
-			categoryTotalMap.putAt(categoryType, tempList);
-			categorysList.add(categoryType);
-		}
-   }	
+	}else{
+		tempList = [];
+		tempList.add(boothTotalsMap);
+		categoryTotalMap.putAt(categoryType, tempList);
+		categorysList.add(categoryType);
+	}
+}
 }
 
 categorysParloursList.add("PARLOUR");
