@@ -793,7 +793,7 @@ public class InvoiceServices {
         if (DECIMALS == -1 || ROUNDING == -1) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingAritmeticPropertiesNotConfigured",locale));
         }
-
+        String billOfSaleTypeId = (String) context.get("billOfSaleTypeId");
         String orderId = (String) context.get("orderId");
         List<GenericValue> billItems = UtilGenerics.checkList(context.get("billItems"));
         String invoiceId = (String) context.get("invoiceId");
@@ -883,6 +883,7 @@ public class InvoiceServices {
                 createInvoiceContext.put("description", orderHeader.getString("productSubscriptionTypeId"));
                 createInvoiceContext.put("invoiceDate", invoiceDate);
                 createInvoiceContext.put("dueDate", dueDate);
+                createInvoiceContext.put("billOfSaleTypeId", billOfSaleTypeId);
                 createInvoiceContext.put("isEnableAcctg", orderHeader.getString("isEnableAcctg"));
                 createInvoiceContext.put("invoiceTypeId", invoiceType);
                 // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)

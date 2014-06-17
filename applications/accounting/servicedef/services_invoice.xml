@@ -51,7 +51,7 @@ under the License.
         <attribute name="invoiceAttrValue" type="String" mode="IN" optional="true"/>
         <attribute name="timePeriodId" type="String" mode="IN" optional="true"/>
         <attribute name="isPartyGroupInvoice" type="String" mode="IN" optional="true"/>
-        <attribute name="billOfSaleTypeId" type="String" mode="OUT" optional="true"/>                 
+        <attribute name="billOfSaleTypeId" type="String" mode="INOUT" optional="true"/>                 
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceTypeId" mode="IN" optional="false"/>
@@ -251,6 +251,7 @@ under the License.
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="billItems" type="List" mode="IN" optional="false"/>
         <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="billOfSaleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
         <attribute name="invoiceTypeId" type="String" mode="OUT" optional="true"/>
     </service>
