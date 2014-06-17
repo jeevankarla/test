@@ -36,8 +36,6 @@ context.put("thruDateTime", thruDateTime);
 
 monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
-totalDays=UtilDateTime.getIntervalInDays(monthBegin,monthEnd);
-context.put("totalDays", totalDays+1);
 
 periodBillingId = null;
 conditionList=[];
@@ -165,6 +163,7 @@ contractorIdList.each { contractorId ->
 		}
 	
 	}
+	Debug.log("========routeWiseSaleMap=========="+routeWiseSaleMap);
 	tempContMap = [:];
 	tempContMap.putAll(routeWiseSaleMap);
 	contractorRoutesMap.put(contractorId, tempContMap);
