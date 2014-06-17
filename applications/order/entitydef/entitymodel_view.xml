@@ -2000,5 +2000,19 @@ under the License.
 	      <key-map field-name="shipmentId"/>      
 	    </view-link>
        
+	 </view-entity>
+	 <view-entity entity-name="InvoiceAndBillOfSaleInvoiceSequence"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Invoice And Bill of Sale Invoice Sequence">
+      <member-entity entity-alias="INV" entity-name="Invoice"/>
+      <member-entity entity-alias="BSI" entity-name="BillOfSaleInvoiceSequence"/>
+      <alias-all entity-alias="INV"/>
+      <alias entity-alias="BSI" name="finYearId"/>
+      <alias entity-alias="BSI" name="billOfSaleTypeId"/> 
+      <alias entity-alias="BSI" name="sequenceId"/>
+      <view-link entity-alias="INV" rel-entity-alias="BSI">
+        <key-map field-name="invoiceId"/>
+      </view-link>
 	 </view-entity>    
 </entitymodel>
