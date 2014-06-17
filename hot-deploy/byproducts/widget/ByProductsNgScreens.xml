@@ -2096,7 +2096,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<!-- <screen name="FindInstitutionPayment">
+	 <screen name="FindInstitutionPayment">
 		<section>
 			<actions>
 				<set field="titleProperty" value="pageTitleFindPayments" />
@@ -2208,7 +2208,7 @@
 				</decorator-screen>
 			</widgets>
 		</section>
-	</screen> -->
+	</screen> 
 	
 	<screen name="FindBoothPayments">
 		<section>
