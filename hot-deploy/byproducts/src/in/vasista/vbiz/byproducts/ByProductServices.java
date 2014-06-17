@@ -3833,7 +3833,8 @@ public class ByProductServices {
 		      Map<String, Object> result = ServiceUtil.returnSuccess();
 		      String customTimePeriodId = (String)context.get("customTimePeriodId");
 		      String periodTypeId = (String)context.get("periodTypeId");
-		      String facilityId = (String)context.get("facilityId");	      
+		      String facilityId = (String)context.get("facilityId");
+		      String billOfSaleTypeId = "RM_CRINST";
 		      List conditionList = FastList.newInstance();
 		      List<String> facilityIds = FastList.newInstance();
 		      try{
@@ -3960,6 +3961,7 @@ public class ByProductServices {
 			    		  Map createInvoiceCtx = FastMap.newInstance();
 				    	  createInvoiceCtx.put("userLogin", userLogin);
 				    	  createInvoiceCtx.put("orderIds", orderIds);
+				    	  createInvoiceCtx.put("billOfSaleTypeId", billOfSaleTypeId);
 				    	  createInvoiceCtx.put("invoiceDate", dayStartThruDate);
 				    	  Map resultCtx = dispatcher.runSync("createInvoiceForAllOrders", createInvoiceCtx);
 				    	  
@@ -4066,6 +4068,7 @@ public class ByProductServices {
 	        List<String> orderIds = (List)context.get("orderIds");
 	        Timestamp invoiceDate = (Timestamp)context.get("invoiceDate");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String billOfSaleTypeId = (String) context.get("billOfSaleTypeId");
 	        Locale locale = (Locale) context.get("locale");
 	        Map<String, Object> result = ServiceUtil.returnSuccess();
 	        try {
@@ -4087,6 +4090,9 @@ public class ByProductServices {
 	        	invoiceCtx.put("billItems", billItems);
 	        	if(UtilValidate.isNotEmpty(invoiceDate)){
 	        		invoiceCtx.put("eventDate", invoiceDate);
+	        	}
+	        	if(UtilValidate.isNotEmpty(billOfSaleTypeId)){
+	        		invoiceCtx.put("billOfSaleTypeId", billOfSaleTypeId);
 	        	}
 		        Map<String, Object> serviceResult = dispatcher.runSync("createInvoiceForOrder", invoiceCtx);
 	        	if(ServiceUtil.isError(serviceResult)){
