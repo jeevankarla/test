@@ -1405,7 +1405,8 @@ import java.text.SimpleDateFormat;
 		        }catch(GenericEntityException e){
 					Debug.logError("Error while creating Transporter Recovery"+e.getMessage(), module);
 				}
-		        result = ServiceUtil.returnSuccess("Transporter Recovery Created Sucessfully");	        
+		        result = ServiceUtil.returnSuccess("Transporter Recovery Created Sucessfully");
+		        result.put("createdDate",UtilDateTime.nowTimestamp());
 		        return result;
 		    }  
 		    
@@ -1593,11 +1594,11 @@ import java.text.SimpleDateFormat;
 		        	// Send SMS notification to list
 		        	String text = "DTC Bill generated for route " + facilityId+" ("+fromDate+"-"+thruDate+")."+ "  Gross Amount: Rs" +
 		        	routeAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
-					"; Fines: Rs" +
+					"; Deductions: Rs" +
 					totalFine.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) +
 					"; Net Amount: Rs" +  
 					netAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
-					".  Automated message from Milkosoft.";
+					".  Automated message from Mother Dairy.";
 					Debug.logInfo("Sms text: " + text, module);
 					Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
 						"text", text, "userLogin", userLogin);
@@ -1609,6 +1610,47 @@ import java.text.SimpleDateFormat;
 				} 
 		        return ServiceUtil.returnSuccess("Sms successfully sent!");		
 		 }
+		    
+		    public static Map<String, Object>  sendFacilityRecoverySms(DispatchContext dctx, Map<String, Object> context)  {
+		        LocalDispatcher dispatcher = dctx.getDispatcher();	
+		        Delegator delegator = dctx.getDelegator();
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        String facilityId = (String) context.get("facilityId");
+		        Timestamp createdDate = (Timestamp) context.get("createdDate");
+		        String fromDate = (UtilDateTime.toDateString(createdDate, "MMMM dd,yyyy")).toString();
+		        String recoveryTypeId = (String)context.get("recoveryTypeId");
+		        BigDecimal amount = (BigDecimal)context.get("amount");
+		        Map<String, Object> serviceResult;
+		        Map<String, Object> userServiceResult;
+		        String countryCode = "91";
+		        String contactNumberTo = null;
+		        String description = null;
+		        try {
+		        	GenericValue enumeration = delegator.findOne("Enumeration", UtilMisc.toMap("enumId", recoveryTypeId),false);
+		        	if (UtilValidate.isNotEmpty(enumeration)) {
+		        		description = enumeration.getString("description");
+		        	}
+		        }catch (GenericEntityException e) {
+	               Debug.logError(e, module);
+	               return ServiceUtil.returnError(e.getMessage());
+				}
+		        try {
+		        	// Send SMS notification to list
+		        	String text = " A penalty("+description+")" +" of " + " Rs."+amount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding"))
+		        	+" has been levied for route("+facilityId+")"+" on "+fromDate+"."+
+					" Automated message from Mother Dairy.";
+					Debug.logInfo("Sms text: " + text, module);
+					Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
+						"text", text, "userLogin", userLogin);
+					dispatcher.runAsync("sendSmsToContactListNoCommEvent", sendSmsContext);
+				}
+				catch (GenericServiceException e) {
+					Debug.logError(e, "Error calling sendSmsToContactListNoCommEvent service", module);
+					return ServiceUtil.returnError(e.getMessage());			
+				} 
+		        return ServiceUtil.returnSuccess("Sms successfully sent!");		
+		 }   
+		 
 		    public static Map<String, Object> getFacilityByFinAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
 		    	Delegator delegator = ctx.getDelegator();
 		    	String finAccountId = (String)context.get("finAccountId");

@@ -33,5 +33,12 @@ under the License.
     	<condition field-name="enablePaymentSms" operator="equals" type="Boolean" value="true"/>
         <condition field-name="paymentId" operator="is-not-empty"/>
         <action service="sendPaymentSms" mode="sync"/>
+    </eca>
+    <eca service="createTransporterRecovery" event="commit">
+        <condition field-name="facilityId" operator="is-not-empty"/>
+        <condition field-name="createdDate" operator="is-not-empty"/>
+        <condition field-name="recoveryTypeId" operator="is-not-empty"/>
+        <condition field-name="amount" operator="is-not-empty"/>
+        <action service="sendFacilityRecoverySms" mode="sync"/>
     </eca>  
 </service-eca>
