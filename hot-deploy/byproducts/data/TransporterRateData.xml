@@ -18,6 +18,7 @@
      <Uom abbreviation="km"   description="Kilometer"   uomId="LEN_km" uomTypeId="LENGTH_MEASURE"/> 
      
     <PeriodType description="DTC Fortnightly Bill" periodLength="2" periodTypeId="DTC_FORTNIGHT_BILL" uomId="TF_wk"/>
+      <CustomTimePeriod createdStamp="2014-06-13 18:33:27.0" createdTxStamp="2014-06-13 18:33:27.0" customTimePeriodId="10080" fromDate="2014-06-01" isClosed="N" lastUpdatedStamp="2014-06-13 18:33:27.0" lastUpdatedTxStamp="2014-06-13 18:33:27.0" organizationPartyId="Company" periodName="JAN1-15(2014)" periodTypeId="DTC_FORTNIGHT_BILL" thruDate="2014-06-15"/> 
      	
      <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Transporter Commsion"/>
      <EnumerationType description="Period Billing Type" enumTypeId="PBILLING_TYPE" hasTable="N" parentTypeId=""/>
@@ -64,21 +65,19 @@
     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCOUNTING_READ"/>
     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCTG_PREF_VIEW"/>
      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="ACCTG_ATX_CREATE"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODUCTS_DAILREPOR"/>
    
     <!-- TRNSMRGN View permissions -->
     <SecurityGroup description=" 'TRNS MRGN(DTC)' permissions with restriction on download of VendorMarginMainReport" groupId="TRNSMRGNVIEW"/>    
     <SecurityGroupPermission groupId="TRNSMRGNVIEW" permissionId="TRNSMRGN_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_VIEW"/>
      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODREPORTS_VIEW"/>
+     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODUCTS_DAILREPOR"/>
 
-    
+
+    <!-- sample  -->
        <FacilityTypeAttr facilityTypeId="ROUTE" attrName="WORK_ORDER_NO"></FacilityTypeAttr>
      <FacilityAttribute facilityId="S01" attrName="WORK_ORDER_NO" attrValue="S01777566"></FacilityAttribute>
     
-    
-    <CustomTimePeriod customTimePeriodId="MAR-1-31" periodTypeId="MARGIN_MONTH" periodNum="3" periodName="March(1-31)" fromDate="2014-03-01" thruDate="2014-03-31" isClosed="N"  organizationPartyId="Company"/>
-    <CustomTimePeriod customTimePeriodId="APR-1-31" periodTypeId="MARGIN_MONTH" periodNum="4" periodName="April(1-30)" fromDate="2014-04-01" thruDate="2014-04-30" isClosed="N"  organizationPartyId="Company"/>
-    <CustomTimePeriod customTimePeriodId="MAY-1-31" periodTypeId="MARGIN_MONTH" periodNum="5" periodName="May(1-31)" fromDate="2014-05-01" thruDate="2014-05-31" isClosed="N"  organizationPartyId="Company"/>
-    <CustomTimePeriod customTimePeriodId="JUNE-1-31" periodTypeId="MARGIN_MONTH" periodNum="6" periodName="June(1-30)" fromDate="2014-06-01" thruDate="2014-06-30" isClosed="N"  organizationPartyId="Company"/>
-    
+   
  
