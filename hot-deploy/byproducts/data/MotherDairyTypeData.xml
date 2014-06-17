@@ -26,5 +26,8 @@
 	<ContactList contactListId="SMS_ALLOWED_TST_LST" contactListName="Allowed test list" contactListTypeId="ANNOUNCEMENT" contactMechTypeId="TELECOM_NUMBER" ownerPartyId="10030" singleUse="N"/>
     <TenantConfiguration propertyName="mobileAMIndentEndTime" propertyValue="17:00" propertyTypeEnumId="LMS" description="Cut off time for accepting mobile AM indents"/>
     <TenantConfiguration propertyName="mobilePMIndentEndTime" propertyValue="09:30" propertyTypeEnumId="LMS" description="Cut off time for accepting mobile PM indents"/>
+    
+    <EnumerationType description="CUSTOM SEQUENCE NUMBER" enumTypeId="CUSTOM_SEQ_NUM"/> 
+    <Enumeration description="CREDIT INSTITUTION SEQUENCE" enumCode="CR INST SEQUENCE" enumId="RM_CRINST" enumTypeId="CUSTOM_SEQ_NUM"/> 
 
 </entity-engine-xml>
