@@ -3596,7 +3596,10 @@ public class ByProductNetworkServices {
 	        if(context.get("excludeAdhocPayments") != null){
 	        	excludeAdhocPayments = (Boolean)context.get("excludeAdhocPayments");
 	        }
-	        
+	        boolean isForCalOB = Boolean.FALSE;
+			if(UtilValidate.isNotEmpty(context.get("isForCalOB")) && ((String)context.get("isForCalOB")).equals("Y")){
+				isForCalOB = Boolean.TRUE;
+			}
 	        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
 	        List paymentIds = (List) context.get("paymentIds");
 	        boolean onlyCurrentDues= Boolean.FALSE;
@@ -3682,7 +3685,12 @@ public class ByProductNetworkServices {
 			}else{
 				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin), EntityOperator.AND, EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
 			}
-			exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+			if(isForCalOB){//for Party Ledger we have to consider Cheque Voided payments also
+				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_RECEIVED"),EntityOperator.OR, 
+				    	EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_VOID"),EntityOperator.AND, EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"))));
+			}else{
+				exprList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+			}
 			if (!UtilValidate.isEmpty(userLoginId)) {
 				exprList.add(EntityCondition.makeCondition("lastModifiedByUserLogin", EntityOperator.EQUALS, userLoginId));
 			}
@@ -6997,7 +7005,7 @@ Debug.logInfo("result= " + result, module);
 	    	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate)));
 	    	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "CREDITNOTE_PAYIN")));
 	    	 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_RECEIVED"),EntityOperator.OR, 
-	    			 	EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_VOID"), EntityOperator.AND, EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"))));
+	    	           EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_VOID"),EntityOperator.AND, EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"))));
 	    	 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	 try{
 	    		 payments = delegator.findList("Payment", condition, null, UtilMisc.toList("facilityId", "paymentDate"), null, false);
