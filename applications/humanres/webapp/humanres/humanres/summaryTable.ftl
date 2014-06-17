@@ -28,7 +28,7 @@ $(document).ready(function() {
 			{ "title": "Phone" }],
 		"iDisplayLength" : 25,
 		"fnRowCallback": function(nRow, aData, iDisplayIndex ) {
-		    $('td:eq(0)', nRow).html('<a href="viewprofile?partyId=' + aData[1] + '">' +
+		    $('td:eq(0)', nRow).html('<a href="EmployeeProfile?partyId=' + aData[1] + '">' +
                 aData[0] + '</a>');
             return nRow;
 			//$(nRow).click(function () {
