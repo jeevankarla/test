@@ -250,14 +250,15 @@ under the License.
                 ${(payment.paymentMethodTypeDesc)?if_exists}
               </td>
               <td><@ofbizCurrency amount=payment.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><input type="button" name="viewDues" id="pastDues" value="View Details" onclick="javascript:showRetailerDueHistory('${payment.facilityId}');"/></td>
+              <td><input type="button" name="viewDues" id="pastDues" value="View Details" onclick="javascript:showRetailerDueHistory('${payment.facilityId?if_exists}');"/></td>
               <#if parameters.paymentMethodTypeId == "CHALLAN_PAYIN">
               	<#assign selectVal = "">
-              	<#if partyFinAccMap?has_content && (partyFinAccMap.get(payment.facilityId)?exists)>
-              		<#assign selectVal = partyFinAccMap.get(payment.facilityId)>	
+              	<#if partyFinAccMap?has_content && (partyFinAccMap.get(facilityDetails.ownerPartyId)?exists)>
+              		<#assign selectVal = partyFinAccMap.get(facilityDetails.ownerPartyId)>	
               	</#if>
               	
           		<td><select name='finAccountId' id='finAccountId' class='h4'>
+          			<option value='select'>-- Select --</option>
 					<#if accountNameList?has_content><#list accountNameList as eachBank><option value='${eachBank.finAccountId?if_exists}' <#if selectVal?has_content && selectVal.finAccountCode == eachBank.finAccountCode>selected</#if>>${eachBank.finAccountName?if_exists}</option></#list></#if>            
 				</select></td>
           	  </#if>
@@ -265,7 +266,7 @@ under the License.
               		<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>
               		<td>${(payment.facilityId)?if_exists}<input type="checkbox" id="facilityId_${payment_index}" name="boothIds" value="${payment.facilityId}" onclick="javascript:recalcAmounts();"/></td>
               <#else>
-              		<td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.routeId}','${payment.facilityId}' ,'${payment.grandTotal}', '${parameters.paymentMethodTypeId}', '${facilityDetails.get("facilityName")}');" value="Make Payment"/></td>
+              		<td><input id="submitButton" type="button"  onclick="javascript:showPaymentEntry('${payment.routeId?if_exists}','${payment.facilityId}' ,'${payment.grandTotal}', '${parameters.paymentMethodTypeId}', '${facilityDetails.get("facilityName")}');" value="Make Payment"/></td>
               </#if>
 	          
             </tr>
