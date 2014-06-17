@@ -797,10 +797,31 @@
             </hyperlink>
         </field> 
     </form>
-    <form name="FindPaymentsByMethod" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="${targetValue}"
+    <form name="FindInstitutionPayment" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="FindInstitutionPayment"
     	default-table-style="basic-table hover-bar" separate-columns="true"> 
     	<field name="hideSearch"><hidden value="N"/></field>
     	<field name="onlyCurrentDues"><hidden value="false"/></field>
+        <field name="facilityId" title="Institution" action="javascript:this.value=this.value.toUpperCase();" event="onblur" required-field="true"><lookup target-form-name="LookupFacility"/></field>
+       <!--  <field name="periodTypeId" title="Period Type">
+        	<drop-down >
+        		<option key="AllTypes" description="All Types"/>
+        		<list-options key-name="periodType.periodTypeId" list-name="instPeriodTypeList" description="${periodType.description}" list-entry-name="periodType"/>
+        	</drop-down>
+        </field> -->
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
+            <drop-down allow-empty="false">
+            	<option key="NOT_PAID" description="Not Paid"/>
+            	<option key="PAID" description="Paid"/>                
+            </drop-down>
+        </field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    
+    
+    <form name="FindPaymentsByMethod" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="${targetValue}"
+    	default-table-style="basic-table hover-bar" separate-columns="true"> 
+    	<field name="hideSearch"><hidden value="N"/></field>
+    	<field name="onlyCurrentDues"><hidden value="true"/></field>
     	<field name="subTabItem"><hidden value="${parameters.subTabItem}"/></field>   	   	
     	<!--<field name="paymentDate" title="${uiLabelMap.SupplyDate}"><hidden value="${bsh:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd&quot;)}"/></field>
     	<field name="displayDate" title="${uiLabelMap.SupplyDate}" widget-style="h3"><display default-value="${defaultEffectiveDate}"/></field>       
