@@ -1491,28 +1491,6 @@ under the License.
 			<key-map rel-field-name ="invoiceItemTypeId" field-name="payrollHeaderItemTypeId"/>
 		</relation> -->
 	</entity>
-	<entity entity-name="PayHeadPriceAction"
-            package-name="org.ofbiz.humanres"
-            title="PayHead Price Action Entity">
-      <field name="payrollBenDedRuleId" type="id-ne"></field>
-      <field name="payHeadPriceActionSeqId" type="id-ne"></field>
-      <field name="payHeadPriceActionTypeId" type="id-ne"></field>
-      <field name="customPriceCalcService" type="id-vlong"></field>  
-      <field name="acctgFormulaId" type="id"></field>   
-      <field name="amount" type="fixed-point"></field>
-      <prim-key field="payrollBenDedRuleId"/>
-      <prim-key field="payHeadPriceActionSeqId"/>
-      <relation type="one" fk-name="PYH_PCACT_TYPE" rel-entity-name="PayHeadPriceActionType">
-        <key-map field-name="payHeadPriceActionTypeId"/>
-      </relation>
-      <relation type="one" fk-name="PYH_PCACT_RL" rel-entity-name="PayrollBenDedRule">
-        <key-map field-name="payrollBenDedRuleId"/>
-      </relation>
-      <relation type="one" fk-name="PAY_HED_FORMULA"
-          rel-entity-name="AcctgFormula">
-  		<key-map field-name="acctgFormulaId"/>
-	  </relation>
-    </entity>
     <entity entity-name="PayHeadPriceActionType"
             package-name="org.ofbiz.humanres"
             default-resource-name="ProductEntityLabels"
@@ -1520,6 +1498,17 @@ under the License.
       <field name="payHeadPriceActionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="payHeadPriceActionTypeId"/>
+    </entity>
+     <entity entity-name="PayrollBenDedRule"
+            package-name="org.ofbiz.humanres"
+            title="Benfit ,Deduction Amount Rule Entity">
+      <field name="payrollBenDedRuleId" type="id-ne"></field>
+      <field name="payHeadTypeId" type="id-ne"></field>
+      <field name="ruleName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="payrollBenDedRuleId"/>
     </entity>
     <entity entity-name="PayrollBenDedCond"
             package-name="org.ofbiz.humanres"
@@ -1541,15 +1530,125 @@ under the License.
         <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
-    <entity entity-name="PayrollBenDedRule"
+   <entity entity-name="PayHeadPriceAction"
             package-name="org.ofbiz.humanres"
-            title="Benfit ,Deduction Amount Rule Entity">
+            title="PayHead Price Action Entity">
       <field name="payrollBenDedRuleId" type="id-ne"></field>
-      <field name="payHeadTypeId" type="id-ne"></field>
-      <field name="ruleName" type="name"></field>
-      <field name="description" type="description"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
+      <field name="payHeadPriceActionSeqId" type="id-ne"></field>
+      <field name="payHeadPriceActionTypeId" type="id-ne"></field>
+      <field name="customPriceCalcService" type="id-vlong"></field>  
+      <field name="acctgFormulaId" type="id"></field>   
+      <field name="amount" type="fixed-point"></field>
       <prim-key field="payrollBenDedRuleId"/>
+      <prim-key field="payHeadPriceActionSeqId"/>
+      <relation type="one" fk-name="PYH_PCACT_TYPE" rel-entity-name="PayHeadPriceActionType">
+        <key-map field-name="payHeadPriceActionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PYH_PCACT_RL" rel-entity-name="PayrollBenDedRule">
+        <key-map field-name="payrollBenDedRuleId"/>
+      </relation>
+      <relation type="one" fk-name="PAY_HED_FORMULA"
+          rel-entity-name="AcctgFormula">
+  		<key-map field-name="acctgFormulaId"/>
+	  </relation>
+    </entity>
+    <!--Loan Management  -->
+     <entity entity-name="LoanType"
+            package-name="org.ofbiz.humanres"
+            title="LoanType Entity">
+      <field name="loanTypeId" type="id-ne"></field>
+      <field name="payHeadTypeId" type="id-ne"></field>
+      <field name="isActive" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <field name="maxAmount" type="currency-amount"></field>
+      <field name="maxAvails" type="numeric"></field>
+      <field name="numPrincipalInst" type="numeric"></field>
+      <field name="numInterestInst" type="numeric"></field>
+      <prim-key field="loanTypeId"/>
+    </entity>
+   <entity entity-name="Loan"
+            package-name="org.ofbiz.humanres"
+            title="Loan Entity">
+      <field name="loanId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+       <field name="loanTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="sanctionedAmount" type="currency-amount"></field>
+      <field name="principalAmount" type="currency-amount"></field>
+      <field name="interestAmount" type="currency-amount"></field>
+      <field name="numInterestInst" type="numeric"></field>
+      <field name="numPrincipalInst" type="numeric"></field>
+      <field name="disbDate" type="date-time"></field>
+      <field name="disbAmount" type="currency-amount"></field>
+      <field name="disbRefInvoiceId" type="id"></field>
+      <field name="setlDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+	  <field name="createdDate" type="date-time"></field>      
+      <field name="lastModifiedDate" type="date-time"></field>
+      <prim-key field="loanId"/>
+      <relation type="one" fk-name="LON_PA" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="LON_LTP" rel-entity-name="LoanType">
+        <key-map field-name="loanTypeId"/>
+      </relation>
+      <relation type="one" fk-name="LON_LTP" rel-entity-name="Invoice">
+        <key-map field-name="disbRefInvoiceId" rel-field-name="invoiceId"/>
+      </relation>
+      <relation type="one" fk-name="LON_CRU" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="LON_LMU" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity> 
+   
+   <entity entity-name="LoanStatus"
+            package-name="org.ofbiz.humanres"
+            title="Loan Recovery Entity">
+      <field name="loanId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="statusDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <field name="changedByUserLogin" type="id-vlong"></field>
+	  <field name="changedDate" type="date-time"></field>      
+      <prim-key field="loanId"/>
+      <prim-key field="statusId"/>
+      <relation type="one" fk-name="LOS_LO" rel-entity-name="Loan">
+        <key-map field-name="loanId"/>
+      </relation>
+      <relation type="one" fk-name="LOS_" rel-entity-name="Loan">
+        <key-map field-name="loanId"/>
+      </relation>
+      <relation type="one" fk-name="LOS_LO" rel-entity-name="UserLogin">
+        <key-map field-name="changedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+   </entity>
+   <entity entity-name="LoanRecovery"
+            package-name="org.ofbiz.humanres"
+            title="Loan Recovery Entity">
+      <field name="loanId" type="id-ne"></field>
+      <field name="sequenceNum" type="id-ne"></field>
+      <field name="recoveryDate" type="date-time"></field>
+      <field name="principalInstNum" type="numeric"></field>
+      <field name="principalAmount" type="currency-amount"></field>
+      <field name="interestAmount" type="currency-amount"></field>
+      <field name="interestInstNum" type="numeric"></field>
+      <field name="payrollHeaderId" type="id"></field>
+      <field name="payrollItemSeqId" type="id"></field>
+      <field name="paymentId" type="id"></field>
+      <prim-key field="loanId"/>
+      <prim-key field="sequenceNum"/>
+      <relation type="one" fk-name="LOR_LO" rel-entity-name="Loan">
+        <key-map field-name="loanId"/>
+      </relation>
+      <relation type="one" fk-name="LOR_PYT" rel-entity-name="Payment">
+        <key-map field-name="paymentId"/>
+      </relation>
+       <relation type="one" fk-name="LOR_PHI" rel-entity-name="PayrollHeaderItem">
+        <key-map field-name="payrollHeaderId" />
+        <key-map field-name="payrollItemSeqId"/>
+      </relation>
     </entity>
 </entitymodel>
