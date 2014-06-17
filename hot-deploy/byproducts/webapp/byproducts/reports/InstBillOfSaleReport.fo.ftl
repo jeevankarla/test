@@ -77,7 +77,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			                   <fo:table-cell>
 			                         <fo:block>&#160;</fo:block>
 			                         <fo:block text-align="right" keep-together="always" white-space-collapse="false">INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
-			                         <fo:block text-align="right" keep-together="always" white-space-collapse="false">INVOICE NO   :&#160;&#160;&#160;&#160;&#160;&#160;${invoiceList.getString("invoiceId")}</fo:block>
+			                         <fo:block text-align="right" keep-together="always" white-space-collapse="false">INVOICE NO   :&#160;&#160;&#160;&#160;&#160;&#160;${partyPONumMap.get(facilityId)?if_exists}</fo:block>
 			                     </fo:table-cell>
 		                     </fo:table-row>
 		                     <#if (reportTypeFlag=="enclosureOfTaxInvoice")><#-- extraspace if TAX report-->

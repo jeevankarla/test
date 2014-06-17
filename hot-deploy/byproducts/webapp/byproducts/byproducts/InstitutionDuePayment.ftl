@@ -3,7 +3,16 @@
 
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 
-
+<style type="text/css">
+.ui-tooltip1, .qtip{
+	position: absolute;
+	left: -10000em;
+	top: -10000em;
+ 
+	max-width: 550px; /* Change this? */
+	min-width: 450px; /* ...and this! */
+}
+</style>
 <script type="application/javascript">
 	/*
 	 * Common dialogue() function that creates our dialogue qTip.
@@ -51,6 +60,29 @@
 			}
 		});		
 	}
+ 	function paymentFieldsOnchange(){
+ 		var str=jQuery("#paymentMethodTypeId").val();
+		if(str == undefined){
+			return;
+		}
+		if(str.search(/(FT)+/g) >= 0){
+			htmlMsg = "";
+			htmlMsg += "<select name='issuingAuthority' id='issuingAuthority' class='h4'>"+
+						"<option value=''>-- Select -- </option>"+
+						"<#if fundTransferAccounts?has_content><#list fundTransferAccounts as eachFinAccount><option value='${eachFinAccount.finAccountName?if_exists}' >${eachFinAccount.finAccountName?if_exists}</option></#list></#if>"+            
+						"</select>";
+			jQuery("#bankSelect").html('');
+			jQuery("#bankSelect").html(htmlMsg);
+			$( this ).css(".ui-tooltip");
+		}
+		else{
+			jQuery("#bankSelect").html('');
+			htmlChqMsg = "";
+			htmlChqMsg += "<input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' value='${chequeBankName?if_exists}'/>";
+			jQuery("#bankSelect").html(htmlChqMsg);
+		}
+		$( this ).css();	
+	}
 	
 	function Alert(message, title)
 	{
@@ -94,6 +126,32 @@
 	var accountInfo;
 	//var boothId;
 	//var dueAmount;
+	function showPaymentEntryQTip(boothId, duesPay, boothName) {
+		var message = "";
+		booth = boothId;
+		dueAmount = duesPay;
+		facilityName = boothName;
+		message += "<html><head></head><body><form action='createInstitutionPayment' method='post' onsubmit='return disableGenerateButton();'><table width='100%' cellspacing=10 cellpadding=10 width=400>";
+			//message += "<br/><br/>";
+			message += "<tr class='h3'><td align='left' class='h3' width='40%'>Institution Code :</td><td align='left' width='60%'><input class='h4' type='label' id='facilityId' name='facilityId' value='${facilityId?if_exists}' readOnly/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='40%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentMethodTypeId' id='paymentMethodTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
+						"<#if paymentMethodList?has_content><#list paymentMethodList as eachMethodType><option value='${eachMethodType.paymentMethodTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
+						"</select></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='40%'>Issue Authority/ Bank :</td><td align='left' width='60%'><span id='bankSelect'><input class='h4' type='text' id='issuingAuthority' name='issuingAuthority' /></span></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='40%'>Payment Date:</td><td align='left' width='60%'><input class='h4' type='text' id='paymentDate' name='paymentDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='40%'>Payment Ref. No. :</td><td align='left' width='60%'><input class='h4' type='text' id='paymentRefNum' name='paymentRefNum' /></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='40%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/></td></tr>" +
+				 		"<tr class='h3'><td align='left' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='supplyDate' value='${paymentDate?if_exists}'/></td></tr>"+
+				 		"<tr class='h3'><td align='left' class='h3' width='40%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='useFifo' value='TRUE'/></td></tr>"+
+				 		"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+				 		
+                		
+					message +=	"</table></form></body></html>";
+		var title = "Dues Payment : "+facilityName +" [ "+booth+" ]";
+		Alert(message, title);
+		getFinaccountDetails(boothId);
+		
+	}	
 	
 	function showPaymentEntry(routeId, boothId ,amount, paymentMethodType, boothName) {
 		var message = "";
