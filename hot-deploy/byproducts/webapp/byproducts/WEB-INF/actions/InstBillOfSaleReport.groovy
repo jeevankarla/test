@@ -35,12 +35,14 @@
 	periodBillingIds=[];
 	
 	partyPONumMap = [:];
-	partyIdentification = delegator.findList("PartyIdentification", EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PO_NUMBER"), null, null, null, false);
+	/*partyIdentification = delegator.findList("PartyIdentification", EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PO_NUMBER"), null, null, null, false);
 	
 	partyIdentification.each{eachPO ->
 		partyPONumMap.put(eachPO.partyId, eachPO.idValue);
-	}
-	context.partyPONumMap = partyPONumMap;
+	}*/
+	creditInstFac = delegator.findList("Facility", EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS, "CR_INST"), UtilMisc.toSet("ownerPartyId"), null, null, false);
+	creditInstFacIds = EntityUtil.getFieldListFromEntityList(creditInstFac, "ownerPartyId", true);
+	
 	
     conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"COM_CANCELLED"));
@@ -61,13 +63,31 @@
 	billingPeriodDateStr += UtilDateTime.toDateString(thruDate, "dd-MMM-yyyy");
 	context.billingPeriodDate = billingPeriodDateStr;
 	
-//		Debug.log("########################################################## : "+facilityIds);
-		shipmentIds = [];
-		amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"AM");
-		shipmentIds.addAll(amShipmentIds);
-		pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"PM");
-		shipmentIds.addAll(pmShipmentIds);
+	shipmentIds = [];
+	amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"AM");
+	shipmentIds.addAll(amShipmentIds);
+	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"PM");
+	shipmentIds.addAll(pmShipmentIds);
 	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS , "CR_INST"));
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
+	conditionList.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_EQUAL , "INVOICE_CANCELLED"));
+	invCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	invoiceList = delegator.findList("OrderHeaderFacAndItemBillingInv", invCond, UtilMisc.toSet("invoiceId"), null, null, false);
+	invoiceIds = EntityUtil.getFieldListFromEntityList(invoiceList, "invoiceId", true);
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN , invoiceIds));
+	billCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	invoiceData = delegator.findList("InvoiceAndBillOfSaleInvoiceSequence", billCond, null, null, null, false);
+	invoiceData.each{eachItem ->
+		partyPONumMap.put(eachItem.facilityId, eachItem.sequenceId);
+	}
+	context.partyPONumMap = partyPONumMap;
+	Debug.log("partyPONumMap ###########################"+partyPONumMap);
+	
+		
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS , "RETURN_ACCEPTED"));
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));

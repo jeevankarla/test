@@ -22,6 +22,7 @@ hideSearch ="Y";
 paymentIds = FastList.newInstance();
 boothRouteIdsMap=[:];
 onlyCurrentDues = Boolean.TRUE;
+duesByParty = Boolean.TRUE;
 bankName = "";
 if(parameters.paymentDate){
 	paymentDate = parameters.paymentDate;
@@ -42,6 +43,7 @@ if(parameters.facilityId){
 }
 isRetailer = false;
 isRoute = false;
+GenericValue facility = null;
 if(facilityId){
 	facility = delegator.findOne("Facility",[facilityId : facilityId], false);
 	if (facility == null) {
@@ -51,13 +53,20 @@ if(facilityId){
 	}
 	if(facility.facilityTypeId == "BOOTH"){
 		isRetailer = true;
+		if(facility.categoryTypeEnum == "CR_INST"){
+			return;
+		}
 	}
 	if(facility.facilityTypeId == "ROUTE"){
 		isRoute = true;
+		duesByParty = Boolean.FALSE;
 	}
 	/*else{
 		context.facilityId = facilityId
 	}*/
+}
+else{
+	duesByParty = Boolean.FALSE;
 }
 if(parameters.paymentMethodTypeId){
 	paymentMethodTypeId = parameters.paymentMethodTypeId;
@@ -80,6 +89,7 @@ Map paymentTypeFacilityMap = (Map)resultCtx.get("paymentTypeFacilityMap");
 filterFacilityList = [];
 if(paymentMethodTypeId){
 	filterFacilityList =  paymentTypeFacilityMap.get(paymentMethodTypeId);
+	
 }
 if(parameters.hideSearch){
 	hideSearch = parameters.hideSearch;
@@ -121,14 +131,9 @@ accountNameList = [];
 //JSONObject partyFinAccMap = new JSONObject();
 partyFinAccMap = [:];	
 accountList.each{ eachAcc ->
-	//accCode = eachAcc.finAccountCode;
-	/*if(!checkList.contains(accCode)){
-		checkList.add(accCode);
-		accountNameList.add(eachAcc);
-	}*/
 	partyFinAccMap.put(eachAcc.ownerPartyId,eachAcc);
-	
 }
+//this is for drop down
 condList.clear();
 condList.add(EntityCondition.makeCondition("attrName" ,EntityOperator.EQUALS, "COLLECTION_ACCOUNT"));
 condList.add(EntityCondition.makeCondition("attrValue" ,EntityOperator.EQUALS, "Y"));
@@ -143,7 +148,7 @@ if(parameters.finAccountCode != "AllBanks"){
 	accountNameFacility = EntityUtil.filterByCondition(accountList, EntityCondition.makeCondition("finAccountCode", EntityOperator.EQUALS, parameters.finAccountCode));
 	accountNameOwnerIds = EntityUtil.getFieldListFromEntityList(accountNameFacility, "ownerPartyId", true);
 	facilityList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, accountNameOwnerIds), null, null, null, false);
-	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
+	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "ownerPartyId", true);
 }
 
 context.putAt("accountNameList", accountNameList);
@@ -153,20 +158,26 @@ if(parameters.paymentMethodTypeId == "CASH_PAYIN" || parameters.paymentMethodTyp
 }
 if(hideSearch == "N" || stopListing){
 	if (statusId == "PAID") {
-		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds]);
+		boothsPaymentsDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate:paymentDate , facilityId:facilityId , paymentMethodTypeId:paymentMethodTypeId , paymentIds : paymentIds, isByParty: duesByParty]);
 		boothTempPaymentsList = boothsPaymentsDetail["paymentsList"];
 		boothRouteIdsMap=boothsPaymentsDetail["boothRouteIdsMap"];
 	}
 	else {
-		boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);
+		if(!duesByParty){
+			boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues);
+		}else{
+			boothsPaymentsDetail = ByProductNetworkServices.getBoothPayments( delegator ,dispatcher, userLogin ,paymentDate , invoiceStatusId,facilityId ,paymentMethodTypeId , onlyCurrentDues, duesByParty, Boolean.TRUE);
+		}
 		boothTempPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	}
+	Debug.log("boothTempPaymentsList ####################"+boothTempPaymentsList);
 	finalFilterList = [];
 	filterFacilityList.each{ eachBankFacilityId ->
 		if(!accountNameFacilityIds || (accountNameFacilityIds &&  accountNameFacilityIds.contains(eachBankFacilityId))){
 			finalFilterList.add(eachBankFacilityId);
 		}
 	}
+	/*Debug.log("#######filterFacilityList################"+filterFacilityList);*/
 	boothPaymentsInnerList = [];
 	boothPaymentsList = [];
 	invoicesTotalAmount =0;
@@ -183,10 +194,14 @@ if(hideSearch == "N" || stopListing){
 				facilityId = boothPay.get("facilityId");
 				if(paymentMethodTypeId == "CHALLAN_PAYIN"){
 					if(finalFilterList && finalFilterList.contains(facilityId)){
-						exclList.add(facilityId);
-						boothPaymentsInnerList.add(boothPay);
-						invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
-						invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
+						if(duesByParty){
+							exclList.add(facilityId);
+							boothPaymentsInnerList.add(boothPay);
+							invoicesTotalAmount = invoicesTotalAmount+boothPay.get("grandTotal");
+							invoicesTotalDueAmount = invoicesTotalDueAmount+boothPay.get("totalDue");
+						}else{
+							boothPaymentsInnerList.add(boothPay);
+						}
 					}
 				}
 				else{
@@ -251,23 +266,34 @@ if(hideSearch == "N" || stopListing){
 			boothPaymentsList.addAll(axisPaymentsList);
 		}
 	}
-	if(isRetailer && statusId != "PAID"){
-		isRetailerExists = false;
+	if(isRetailer && statusId != "PAID" && (boothPaymentsList.size()==0)){
+		/*isRetailerExists = false;
 		boothPaymentsList.each{ eachItem ->
 			if(eachItem.facilityId == facilityId){
 				isRetailerExists = true;
 			}
-		}
-		if(!isRetailerExists){
+		}*/
+		//if(!isRetailerExists){
+			payMethDescription = "";
+			partyDefaults = EntityUtil.filterByCondition(partyProfileDefault, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, facility.ownerPartyId));
+			if(partyDefaults){
+				partyDefault = EntityUtil.getFirst(partyDefaults);
+				payType = partyDefault.get("defaultPayMeth");
+				payMethDescList = EntityUtil.filterByCondition(paymentMethodType, EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, payType));
+				if(payMethDescList){
+					payMethDesc = EntityUtil.getFirst(payMethDescList);
+					payMethDescription = payMethDesc.get("description");
+				}
+			}
 			tempMap = [:];
 			tempMap.facilityId = facilityId;
 			tempMap.routeId = "";
-			tempMap.paymentMethodTypeDesc = paymentMethodDesc;
+			tempMap.paymentMethodTypeDesc = payMethDescription;
 			tempMap.grandTotal = 0;
-			tempMap.totalDue = 0
+			tempMap.totalDue = 0;
 			tempMap.supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 			boothPaymentsList.add(tempMap);
-		}
+		//}
 		
 	}
 	context.boothPaymentsList = boothPaymentsList;	

@@ -24,7 +24,7 @@ if(parameters.boothId){
 
 JSONObject boothsDuesDaywiseJSON = new JSONObject();
 
-boothDuesDetail = ByProductNetworkServices.getDaywiseBoothDues(dctx, [userLogin: userLogin, facilityId:facilityId]);	
+boothDuesDetail = ByProductNetworkServices.getDaywiseBoothDues(dctx, [userLogin: userLogin, facilityId:facilityId, isByParty:Boolean.TRUE, enableCRInst:Boolean.FALSE]);	
 duesList = boothDuesDetail["boothDuesList"];
 JSONArray boothDuesList= new JSONArray();
 duesList.each { due ->

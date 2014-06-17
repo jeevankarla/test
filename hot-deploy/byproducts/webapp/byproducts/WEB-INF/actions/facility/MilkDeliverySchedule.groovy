@@ -145,7 +145,7 @@ for (int i=0; i < checkListItemList.size(); i++) {
 		Map<String, Object> boothPayments = ByProductNetworkServices.getBoothPayments(delegator, dctx.getDispatcher(), userLogin,
 			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.FALSE);
 		Map<String, Object> currentBoothPayments = ByProductNetworkServices.getBoothReceivablePayments(delegator, dctx.getDispatcher(), userLogin,
-			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.TRUE, Boolean.FALSE);
+			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
 		Map boothTotalDues = FastMap.newInstance();
 		boothTotalDues["totalDue"]=BigDecimal.ZERO;
 		boothTotalDues["grandTotal"]=BigDecimal.ZERO;
@@ -270,7 +270,7 @@ for (int i=0; i < checkListItemList.size(); i++) {
 		Map<String, Object> boothPayments = ByProductNetworkServices.getBoothPayments(delegator, dctx.getDispatcher(), userLogin,
 			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.FALSE);
 		Map<String, Object> currentBoothPayments = ByProductNetworkServices.getBoothReceivablePayments(delegator, dctx.getDispatcher(), userLogin,
-			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.TRUE, Boolean.FALSE);
+			UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"), null, checkListItemProd.originFacilityId ,null ,Boolean.TRUE, Boolean.FALSE, Boolean.FALSE);
 		Map boothTotalDues = FastMap.newInstance();
 		boothTotalDues["totalDue"]=BigDecimal.ZERO;
 		boothTotalDues["grandTotal"]=BigDecimal.ZERO;
