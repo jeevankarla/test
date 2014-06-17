@@ -625,7 +625,6 @@ under the License.
         <field name="noOfAttendedSsDays" type="fixed-point"/><!-- no.of attended second saturday -->
         <field name="noOfAttendedWeeklyOffDays" type="fixed-point"/>
         <field name="noOfCompoffAvailed" type="fixed-point"/>
-        
         <field name="lossOfPayDays" type="fixed-point"/>
         <prim-key field="partyId"/>
         <prim-key field="customTimePeriodId"/>
@@ -1631,6 +1630,7 @@ under the License.
             title="Loan Recovery Entity">
       <field name="loanId" type="id-ne"></field>
       <field name="sequenceNum" type="id-ne"></field>
+      <field name="customTimePeriodId" type="id"/>
       <field name="recoveryDate" type="date-time"></field>
       <field name="principalInstNum" type="numeric"></field>
       <field name="principalAmount" type="currency-amount"></field>
@@ -1641,6 +1641,9 @@ under the License.
       <field name="paymentId" type="id"></field>
       <prim-key field="loanId"/>
       <prim-key field="sequenceNum"/>
+      <relation type="one" fk-name="LOR_CUST_TP" rel-entity-name="CustomTimePeriod">
+            <key-map field-name="customTimePeriodId"/>
+      </relation>
       <relation type="one" fk-name="LOR_LO" rel-entity-name="Loan">
         <key-map field-name="loanId"/>
       </relation>
