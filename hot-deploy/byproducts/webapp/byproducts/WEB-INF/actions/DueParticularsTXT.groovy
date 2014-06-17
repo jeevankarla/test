@@ -83,7 +83,7 @@ context.thruDateTime = thruDateTime;
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_EQUAL , null));
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, "2093"));
-conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1103","S1169")));
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1174","S1169")));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
 boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
@@ -111,6 +111,7 @@ facilityIdsList=[];
 	paidPaymentInput["fromDate"]=dayBegin;
 	paidPaymentInput["thruDate"]=dayEnd;
 	paidPaymentInput["facilityIdsList"]=boothsList;
+	paidPaymentInput["isForCalOB"]="Y";
 	
 	boothPaidDetail=[:];
 	//Lets find each type of payment
