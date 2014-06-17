@@ -22,9 +22,9 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="15in" page-width="12in"
-            margin-top=".3in" margin-bottom=".3in" margin-left=".1in" margin-right=".1in">
-        <fo:region-body margin-top="1.8in"/>
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
+            margin-top=".3in" margin-bottom=".3in" margin-left=".2in" margin-right=".1in">
+        <fo:region-body margin-top="1.75in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -41,19 +41,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;STATEMENT SHOWING THE PAYMENT TOWARDS TRANSPORTATION CHARGES</fo:block>
               		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;TO BE CREDITED TO DTC CONTRACTORS AS PER DETAILS BELOW</fo:block>
-              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;${finAccount.finAccountName?if_exists}</fo:block>
+              		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;${finAccount.finAccountName?if_exists}          					&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Period:${fromDateStr}${thruDateStr}</fo:block>
               		<fo:block>
 	                 	<fo:table border-style="solid">
 	                    <fo:table-column column-width="30pt"/>
 	                    <fo:table-column column-width="40pt"/>
 	                    <fo:table-column column-width="55pt"/>  
-	               	    <fo:table-column column-width="130pt"/>
-	            		<fo:table-column column-width="110pt"/>
+	               	    <fo:table-column column-width="120pt"/>
+	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="110pt"/> 		
 	            		<fo:table-column column-width="90pt"/>
 	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="90pt"/>
-	            		<fo:table-column column-width="110pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
@@ -75,16 +74,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                             		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Account No.</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Sale Amount</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Gross Amount</fo:block>  
                        			</fo:table-cell>
                         		<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Total Dedn.</fo:block>   
+                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Total Dedn.</fo:block>   
                         		</fo:table-cell>
                         		<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Net Amount</fo:block>  
-                        		</fo:table-cell>
-                        		<fo:table-cell border-style="solid">
-                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Billing Period</fo:block>  
                         		</fo:table-cell>
                 			</fo:table-row>
                     </fo:table-body>
@@ -97,13 +93,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                     <fo:table-column column-width="30pt"/>
                     <fo:table-column column-width="40pt"/>
                     <fo:table-column column-width="55pt"/>  
-               	    <fo:table-column column-width="130pt"/>
-            		<fo:table-column column-width="110pt"/>
+               	    <fo:table-column column-width="120pt"/>
+            		<fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="110pt"/> 		
             		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="90pt"/>
-            		<fo:table-column column-width="110pt"/>
                     <fo:table-body>
                     <#assign totalSale = 0>
                     <#assign grandTotalFine = 0>
@@ -131,7 +126,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                                       </fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" font-weight="bold">
+                                    <fo:block text-align="left">
                                             ${facilityCode?if_exists}
                                     </fo:block>
 	                                </fo:table-cell>
@@ -166,11 +161,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 	                                    <fo:block text-align="right">
 	                                    <#assign totalNetAmount = totalNetAmount+netAmount>
 	                                            <#if netAmount?has_content>${(netAmount)?string("#0")}.00<#else>0.00</#if>
-	                                    </fo:block>
-	                                </fo:table-cell>
-	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="right" keep-together="always">
-	                                            ${fromDateStr}${thruDateStr}
 	                                    </fo:block>
 	                                </fo:table-cell>
                               </fo:table-row>
@@ -216,10 +206,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                                             <#if totalNetAmount?has_content>${(totalNetAmount)?string("##0.00")}<#else>0.00</#if>
                                     </fo:block>
                                 </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block text-align="right" keep-together="always">
-                                    </fo:block>
-                                </fo:table-cell>
                           </fo:table-row>
                           <fo:table-row>
                           		<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalNetAmount, "%indRupees-and-paise", locale).toUpperCase()>
@@ -227,6 +213,63 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 			                        	<fo:block keep-together="always" font-size="12pt" font-weight="bold">Amount Payable:(${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
 			                   </fo:table-cell>
 			               </fo:table-row>
+			               <fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">Prepared By</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre-Audit</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Manager(Finance)</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+		              <fo:table-row>
+							<fo:table-cell>
+			            		<fo:block  keep-together="always"></fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Director</fo:block>  
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			            		<fo:block  keep-together="always"></fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
                     </fo:table-body>
                 </fo:table>
                </fo:block> 		

@@ -109,6 +109,16 @@ under the License.
         <field name="payment" title="Cost Per Day"><display/></field>
         <field name="cost" title="Cost/Litre"><display/></field>
     </form>
+     <form name="DTCBankReportCSV" type="list" list-name="dtcBankReportCsvList" view-size="99999">
+        <field name="route" title="Route No"><display/></field>
+        <field name="facilityCode" title="Facility Code"><display/></field>
+        <field name="facilityName" title="Facility Name"><display/></field>
+        <field name="facilityPan" title="Pan Number"><display/></field>
+        <field name="facilityFinAccount" title="Account Number"><display/></field>
+        <field name="routeAmount" title="Gross Amount"><display/></field>
+        <field name="totalFine" title="Fine Amount"><display/></field>
+        <field name="netAmount" title="Net Amount"><display/></field>
+    </form>
     <form name="createNewFineorPenalty" type="single" target="createTransporterRecovery" header-row-style="header-row" 
 		default-table-style="basic-table" >
 		<field name="facilityId" title="Route"><lookup target-form-name="LookupFacility"/></field>

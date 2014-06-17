@@ -697,9 +697,6 @@
     <request-map uri="sendTransporterMarginSMS"><security https="true" auth="true"/>
         <response name="success" type="view" value="sendTransporterMarginSMS"/>
     </request-map>
-    <request-map uri="DTCBankReport.pdf"><security https="true" auth="true"/>
-        <response name="success" type="view" value="DTCBankReport"/>
-    </request-map>
     <request-map uri="FinesAndPenalties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinesAndPenalties"/>
@@ -946,6 +943,14 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DTCCostReportCSV"/>
     </request-map>
+    <request-map uri="DTCBankReport.pdf">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="DTCBankReport"/>
+    </request-map>
+    <request-map uri="DTCBankReport.csv">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="DTCBankReportCSV"/>
+    </request-map>
     <request-map uri="CategoryWiseSalesReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CategoryWiseSalesReport"/>
@@ -1138,6 +1143,7 @@
    <view-map name="DTCCostReport" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCCostReport" content-type="application/pdf"/>
    <view-map name="DTCCostReportCSV" type="screencsv" page="component://byproducts/widget/TransporterScreens.xml#DTCCostReportCSV" content-type="text/csv"/>
    <view-map name="DTCBankReport" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCBankReport" content-type="application/pdf"/>
+   <view-map name="DTCBankReportCSV" type="screencsv" page="component://byproducts/widget/TransporterScreens.xml#DTCBankReportCSV" content-type="text/csv"/>
    <view-map name="FinesAndPenalties" type="screen" page="component://byproducts/widget/TransporterScreens.xml#FinesAndPenalties"/>
    <view-map name="CreateNewFineorPenalty" type="screen" page="component://byproducts/widget/TransporterScreens.xml#CreateNewFineorPenalty"/>
    

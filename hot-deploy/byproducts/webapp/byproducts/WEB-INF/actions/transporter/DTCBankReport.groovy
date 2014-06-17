@@ -25,6 +25,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.network.LmsServices;
 import in.vasista.vbiz.byproducts.TransporterServices;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import org.ofbiz.party.party.PartyHelper;
 
 dctx = dispatcher.getDispatchContext();
 periodBillingId = null;
@@ -65,6 +66,7 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, null, null, false);
+facilityCommissionList = UtilMisc.sortMaps(facilityCommissionList, UtilMisc.toList("facilityId"));
 
 finAccountId = parameters.finAccountId;
 dtcBankMap = [:];
@@ -76,16 +78,11 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		partyId =  facilityCommission.partyId;
 		if(UtilValidate.isNotEmpty(partyId)){
 			if(finAccountParties.contains(partyId)){
-				List<GenericValue> personFinAccountDetails = delegator.findList("PersonAndFinAccount", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), null, null, null, false);
-				if(UtilValidate.isNotEmpty(personFinAccountDetails)){
-					personFinAccount = EntityUtil.getFirst(personFinAccountDetails);
+				List<GenericValue> finAccountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId), null, null, null, false);
+				if(UtilValidate.isNotEmpty(finAccountDetails)){
+					finAccount = EntityUtil.getFirst(finAccountDetails);
 					String partyName = "";
-					if(UtilValidate.isNotEmpty(personFinAccount.firstName)){
-					   partyName=personFinAccount.firstName;
-					}
-					if(UtilValidate.isNotEmpty(personFinAccount.lastName)){
-						partyName=personFinAccount.firstName+","+personFinAccount.lastName;
-					}
+					partyName = PartyHelper.getPartyName(delegator, partyId, true);
 					facility = [:];
 					List<GenericValue> facilities = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId), null, null, null, false);
 					if(UtilValidate.isNotEmpty(facilities)){
@@ -102,14 +99,14 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 						if(UtilValidate.isNotEmpty(partyName)){
 							tempMap["facilityName"] = partyName;
 						}
-						if(UtilValidate.isNotEmpty(facility.facilityCode)){
-							tempMap["facilityCode"] = facility.facilityCode;
+						if(UtilValidate.isNotEmpty(partyId)){
+							tempMap["facilityCode"] = partyId;
 						}
 						if(UtilValidate.isNotEmpty(partyIdentification.idValue)){
 							tempMap["facilityPan"] = partyIdentification.idValue;
 						}
-						if(UtilValidate.isNotEmpty(personFinAccount.finAccountCode) && "FNACT_ACTIVE".equals(personFinAccount.statusId)){
-							tempMap["facilityFinAccount"] = personFinAccount.finAccountCode;
+						if(UtilValidate.isNotEmpty(finAccount.finAccountCode) && "FNACT_ACTIVE".equals(finAccount.statusId)){
+							tempMap["facilityFinAccount"] = finAccount.finAccountCode;
 						}
 						dtcBankMap[facilityId] = tempMap;
 					}else{
@@ -184,3 +181,42 @@ if(UtilValidate.isNotEmpty(dtcBankMap)){
 	}
 }
 context.put("finalMap",finalMap);
+
+//for CSV
+dtcBankReportCsvList = [];
+if(UtilValidate.isNotEmpty(finalMap)){
+	finalMap.each { route->
+		dtcBankCsvMap = [:];
+		dtcBankCsvMap["route"] = route.getKey();
+		dtcBankCsvMap["facilityCode"] = route.getValue().get("facilityCode");
+		dtcBankCsvMap["facilityName"] = route.getValue().get("facilityName");
+		dtcBankCsvMap["facilityPan"] = route.getValue().get("facilityPan");
+		dtcBankCsvMap["facilityFinAccount"] = route.getValue().get("facilityFinAccount");
+		dtcBankCsvMap["routeAmount"] = ((routeAmount).setScale(2,BigDecimal.ROUND_HALF_UP));
+		dtcBankCsvMap["totalFine"] = ((totalFine).setScale(2,BigDecimal.ROUND_HALF_UP));
+		dtcBankCsvMap["netAmount"] = ((netAmount).setScale(2,BigDecimal.ROUND_HALF_UP));
+		tempMap = [:];
+		tempMap.putAll(dtcBankCsvMap);
+		dtcBankReportCsvList.add(tempMap);
+	}
+}
+context.put("dtcBankReportCsvList",dtcBankReportCsvList);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

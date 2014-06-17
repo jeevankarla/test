@@ -744,7 +744,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								</select>
 	      					</td>
 	      					<td width="15%"></td>
-	      					<td width="10%"><td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('DTCBankReport', '<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							<input type="submit" value="CSV" onClick="javascript:appendParams('DTCBankReport', '<@ofbizUrl>DTCBankReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 						</form>
 					</tr>
 					<tr class="alternate-row">
@@ -764,7 +766,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 								</select>
 	      					</td>
 	      					<td width="15%"></td>
-	      					<td width="10%"><td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+	      					<td width="15%"></td>
+	      					<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('DTCTransporterBankReport', '<@ofbizUrl>DTCBankReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							<input type="submit" value="CSV" onClick="javascript:appendParams('DTCTransporterBankReport', '<@ofbizUrl>DTCBankReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 						</form>
 					</tr>
 					<tr class="alternate-row">
