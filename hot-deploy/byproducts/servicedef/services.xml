@@ -50,6 +50,7 @@
             Create an invoice from order list
         </description>
         <attribute name="orderIds" type="List" mode="IN" optional="false"/>
+        <attribute name="billOfSaleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
     </service>
