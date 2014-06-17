@@ -39,6 +39,12 @@
         <response name="success" type="request" value="FindPaymentByMethod"/>
         <response name="error" type="request" value="FindPaymentByMethod"/>
     </request-map>
+    <request-map uri="cancelInstPayment">
+     	 <security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelRetailerPayment"/>
+        <response name="success" type="request" value="FindInstitutionPayment"/>
+        <response name="error" type="request" value="FindInstitutionPayment"/>
+    </request-map>
     
     <request-map uri="ViewFacilityGeoPoint">
         <security https="true" auth="true"/>
@@ -388,6 +394,10 @@
     <request-map uri="SalesReport.csv"><security https="true" auth="true"/>
         <response name="success" type="view" value="SalesReportCSV"/>
     </request-map>
+    <request-map uri="RMMaterialBalance.csv"><security https="true" auth="true"/>
+        <response name="success" type="view" value="RMMaterialBalanceCSV"/>
+    </request-map>
+    
     <request-map uri="bankRemittanceStatement.txt"><security https="true" auth="true"/>
         <response name="success" type="view" value="BankRemittanceStatementTXT"/>
     </request-map>
@@ -815,6 +825,13 @@
         	<redirect-parameter name="subTabItem"/>
     	</response>       	
     </request-map>
+    <request-map uri="createInstitutionPayment">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createChequePayment"/>   	
+    	<response name="success" type="view" value="FindInstitutionPayment"/>
+    	<response name="error" type="view" value="FindInstitutionPayment"/>       	
+    </request-map>
+    
     
     
     <request-map uri="FindFacility">
@@ -989,6 +1006,7 @@
 	<view-map name="EditByProductPrices" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#EditByProductPrices"/>
 	
 	<view-map name="SalesReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#SalesReportCSV" content-type="text/csv" encoding="none"/>
+	<view-map name="RMMaterialBalanceCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#RMMaterialBalanceCSV" content-type="text/csv" encoding="none"/>
 	
     <view-map name="returnHeader" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnHeader"/>
     <view-map name="ReturnItems" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnItems"/> 
