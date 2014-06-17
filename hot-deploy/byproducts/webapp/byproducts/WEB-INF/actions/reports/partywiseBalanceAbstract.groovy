@@ -131,7 +131,7 @@ if(boothIdsList){
 			stDate = UtilDateTime.toDateString(startingDate, "dd.MM.yyyy");
 			if(testFlag == 0){
 				testFlag = 1;
-				openingBalance =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayStart , facilityId:eachBooth, isByParty:Boolean.TRUE])).get("openingBalance");
+				openingBalance =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,isForCalOB:"Y",saleDate: dayStart , facilityId:eachBooth, isByParty:Boolean.TRUE])).get("openingBalance");
 				//openingBalance = (ByProductNetworkServices.getOpeningBalanceForByProductFacilities(dctx, [facilityId: eachBooth, userLogin: userLogin ,saleDate: dayStart])).get("openingBalance");
 			}else{
 				openingBalance = closingBalance;
