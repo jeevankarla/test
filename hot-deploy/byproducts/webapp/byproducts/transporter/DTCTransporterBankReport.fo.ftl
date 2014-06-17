@@ -212,7 +212,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                                 </fo:table-cell>
                                 <fo:table-cell border-style="solid">
                                     <fo:block text-align="right">
-                                            <#if totalNetAmount?has_content>${(totalNetAmount)?string("##0.00")}<#else>0.00</#if>
+                                            <#if totalNetAmount?has_content>${(totalNetAmount)?string("#0")}.00<#else>0.00</#if>
                                     </fo:block>
                                 </fo:table-cell>
                                 <fo:table-cell>
@@ -221,7 +221,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                                 </fo:table-cell>
                           </fo:table-row>
                           <fo:table-row>
-                          		<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalNetAmount, "%indRupees-and-paise", locale).toUpperCase()>
+                          		<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(totalNetAmount?string("#0"), "%indRupees-and-paise", locale).toUpperCase()>
 			                   <fo:table-cell>
 			                        	<fo:block keep-together="always" font-size="12pt" font-weight="bold">Amount Payable:(${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
 			                   </fo:table-cell>

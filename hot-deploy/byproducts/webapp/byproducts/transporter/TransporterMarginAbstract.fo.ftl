@@ -143,7 +143,7 @@ under the License.
                     												<fo:table-cell><fo:block text-align="right">${totalCrAndCan?string("#0.00")?if_exists}</fo:block></fo:table-cell>
                     												<fo:table-cell><fo:block text-align="right">${othersFine?string("#0.00")?if_exists}</fo:block></fo:table-cell>
                     												<#--><fo:table-cell><fo:block text-align="right">${grTotpendingDue.toEngineeringString()?if_exists}</fo:block></fo:table-cell>-->
-                    												<fo:table-cell><fo:block text-align="right">${netPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    												<fo:table-cell><fo:block text-align="right">${netPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     											</fo:table-row>
                     											<fo:table-row>
                     												<fo:table-cell><fo:block >------------------------------------------------------------------------------------</fo:block></fo:table-cell>
@@ -158,7 +158,7 @@ under the License.
                     							<fo:table-cell><fo:block text-align="right">${totGrTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     							<fo:table-cell><fo:block text-align="right">${totCRandCanAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     							<fo:table-cell><fo:block text-align="right">${totGrOthersAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right">${totGrTotNetPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right">${totGrTotNetPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     						</fo:table-row> 
                     						<fo:table-row>
                     							<fo:table-cell><fo:block >------------------------------------------------------------------------------------</fo:block></fo:table-cell>

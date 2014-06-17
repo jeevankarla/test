@@ -77,7 +77,7 @@ under the License.
                     								<fo:table-cell><fo:block>TOTAL</fo:block></fo:table-cell>
                     								<fo:table-cell><fo:block text-align="right">${daywiseTrnsptEntry.getValue().get("grTotQty").toEngineeringString()}</fo:block></fo:table-cell>
                     								<fo:table-cell></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="right">${grTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>                    								
+                    								<fo:table-cell><fo:block text-align="right">${grTotRtAmt?string("#0")?if_exists}.00</fo:block></fo:table-cell>                    								
                     							</fo:table-row>
                     							<fo:table-row>
                     								<fo:table-cell>
@@ -93,7 +93,7 @@ under the License.
                     								<fo:table-cell><fo:block text-align="center" keep-together="always">VEHICLE DUE:</fo:block></fo:table-cell>
                     								<fo:table-cell><fo:block text-align="left">${vehicleDue.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     								<fo:table-cell><fo:block text-align="left" keep-together="always">NET PAYABLE:</fo:block></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="left">${netPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block text-align="left">${netPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     							</fo:table-row>
                     							<fo:table-row>
                     								<fo:table-cell><fo:block >---------------------------------------------------------------------</fo:block></fo:table-cell>

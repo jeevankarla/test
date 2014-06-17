@@ -86,7 +86,7 @@ under the License.
 			                         <fo:block  text-indent="15pt">CONTRACTOR NAME:${partyName}</fo:block>
 			                          <fo:block  text-indent="15pt">CONTRACTOR CODE:${partyCode}</fo:block>
 			                         <fo:block  text-indent="15pt">PERIOD:&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd-MMM-yyyy")}&#160;&#160;TO&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime,"dd-MMM-yyyy")}</fo:block>
-			                         <fo:block  text-indent="15pt">DISTRIBUTION CHARGES GROSS(Rs): ${grTotRtAmt?string("#0")?if_exists}</fo:block>
+			                         <fo:block  text-indent="15pt">DISTRIBUTION CHARGES GROSS(Rs): ${grTotRtAmt?string("#0")?if_exists}.00</fo:block>
 			                         <fo:block  text-indent="15pt">ADDITIONAL PAYMENT:</fo:block>
 			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			                     </fo:table-cell>
@@ -145,7 +145,7 @@ under the License.
 			                   </#if>
 			                   <#assign netAmount=(grTotRtAmt-totalDeduction)>
 			                         <fo:block text-align="right" text-indent="15pt">TOTAL DEDUCTION:<#if facRecvoryMap?has_content>${facRecvoryMap.get("totalFine")?if_exists?string("#0.0")}</#if></fo:block>
-			                         <fo:block text-align="right"  text-indent="15pt">NET PAYABLE:${netAmount?string("#0")}</fo:block>
+			                         <fo:block text-align="right"  text-indent="15pt">NET PAYABLE:${netAmount?string("#0")}.00</fo:block>
 			                  </fo:table-cell>
 		                     </fo:table-row>
 		                     </fo:table-body>

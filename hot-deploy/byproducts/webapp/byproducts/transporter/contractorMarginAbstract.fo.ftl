@@ -186,7 +186,7 @@ under the License.
 												<fo:table-cell><fo:block text-align="right">${totPartyAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
 												<fo:table-cell><fo:block text-align="right">${totPartyCrAndCanAmt?string("#0.00")?if_exists}</fo:block></fo:table-cell>
 												<fo:table-cell><fo:block text-align="right">${totPartyOthersAmt?string("#0.00")?if_exists}</fo:block></fo:table-cell>
-												<fo:table-cell><fo:block text-align="right">${totPartyNetPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+												<fo:table-cell><fo:block text-align="right">${totPartyNetPayable?string("#0")?if_exists}</fo:block></fo:table-cell>
 											</fo:table-row>
 											<fo:table-row>
 												<fo:table-cell><fo:block >------------------------------------------------------------------------------------</fo:block></fo:table-cell>
@@ -198,7 +198,7 @@ under the License.
                     							<fo:table-cell><fo:block text-align="right">${totGrTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     							<fo:table-cell><fo:block text-align="right">${totCRandCanAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     							<fo:table-cell><fo:block text-align="right">${totGrOthersAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right">${totGrTotNetPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right">${totGrTotNetPayable?string("#0")?if_exists}</fo:block></fo:table-cell>
                     						</fo:table-row> 
                     						<fo:table-row>
                     							<fo:table-cell><fo:block >------------------------------------------------------------------------------------</fo:block></fo:table-cell>
