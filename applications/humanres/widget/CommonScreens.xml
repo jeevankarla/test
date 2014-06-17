@@ -53,9 +53,18 @@ under the License.
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
                         <section>
-                            <widgets>
+            	<actions>
+					<script  
+						location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeTable.groovy" />                
+            	</actions>                        
+                            <widgets><!--
                                 <container style="lefthalf">
                                     <include-screen name="OrgTree"/>
+                                </container>
+                                --><container >
+                                	<screenlet title="Company Employees">
+										<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/summaryTable.ftl"></html-template></html></platform-specific>                                	
+                                	</screenlet>
                                 </container>
                             </widgets>
                         </section>
