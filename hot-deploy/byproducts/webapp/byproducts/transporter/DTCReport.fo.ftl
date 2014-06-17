@@ -135,7 +135,7 @@ under the License.
                     	    </fo:table-row>
 		                      <fo:table-row>
 			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt">(As Per Enclosure)</fo:block>
+			                         <fo:block  text-indent="15pt">&#xA;</fo:block>
 			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			                  </fo:table-cell>
 			                   <fo:table-cell>
@@ -169,7 +169,7 @@ under the License.
 						 </fo:table-body>	
 						 </fo:table>
 			</fo:block> 
-			 <fo:block >-----------------------------------------------------------------------------------</fo:block>
+			 <fo:block >------------------------------------------------------------------------------------</fo:block>
 				<fo:block>
 				           <fo:table width="100%" table-layout="fixed" space-after="0.0in">
 					           <fo:table-column column-width="100pt"/>
@@ -203,6 +203,51 @@ under the License.
 		           <fo:table-column column-width="170pt"/>
 		           <fo:table-column column-width="120pt"/>
 		              <fo:table-body>
+		              <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+						<fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+						<fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+						<fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
+				        <fo:table-row>	
+				            	<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            	</fo:table-cell>
+				        </fo:table-row>
 			              <fo:table-row>
 							  <fo:table-cell>
 									<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">PREPARED BY </fo:block>
