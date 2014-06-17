@@ -617,6 +617,7 @@ under the License.
             title="Attendance Entry Entity">
         <field name="partyId" type="id-ne"/>
         <field name="customTimePeriodId" type="id-ne"/>
+        <field name="noOfPayableDays" type="fixed-point"/>
         <field name="noOfAttendedDays" type="fixed-point"/>
         <field name="noOfCalenderDays" type="fixed-point"/>
         <field name="noOfLeaveDays" type="fixed-point"/>
