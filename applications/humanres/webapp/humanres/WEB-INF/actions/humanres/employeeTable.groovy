@@ -30,10 +30,16 @@ def populateChildren(org, employeeList) {
 		employee = [:];
 		employee.put("department", org.groupName);
 		employeePosition = "";
-		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", [employeePartyId : employment.partyId]));
+		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : employment.partyId]));
 		emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
-		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
-			employeePosition = emplPositionAndFulfillment.getString("emplPositionTypeId");
+		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionId") != null){
+			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionId")], true);
+			if (emplPositionType != null) {
+				employeePosition = emplPositionType.getString("description");
+			}
+			else {
+				employeePosition = emplPositionAndFulfillment.getString("emplPositionId");
+			}
 		}
 		employee.put("position", employeePosition);
 		String lastName="";
