@@ -47,7 +47,7 @@ dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = fromDateTime;
 context.thruDate = thruDateTime;
 maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
-
+isByParty = Boolean.TRUE;
 if(maxIntervalDays > 32){
 	Debug.logError("You Cannot Choose More Than 31 Days.","");
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
@@ -55,6 +55,7 @@ if(maxIntervalDays > 32){
 }
 boothIdsList = [];
 resultMap = ByProductServices.getAllByproductBooths(delegator, fromDateTime);
+
 boothsList = resultMap.get("boothsList");
 
 facilityDesc = [:];
@@ -92,14 +93,20 @@ amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayB
 shipmentIds.addAll(amShipmentIds);
 pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
 shipmentIds.addAll(pmShipmentIds);
-boothWiseReturnTotal = ByProductNetworkServices.getPeriodReturnTotals(dctx, [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd, facilityIds:boothIdsList]).get("dayWiseBoothWiseTotals");
-
-daywiseReceipts = ByProductNetworkServices.getByProductPaymentDetails(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", boothIdsList)).get("paymentDetails");
-invoiceResult = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin)).get("dayWisePartyInvoiceDetail");
-penaltyResult = ByProductNetworkServices.getByProductDaywisePenaltyTotals(dctx, fromDateTime, dayEnd, boothIdsList, userLogin);
+//boothWiseReturnTotal = ByProductNetworkServices.getPeriodReturnTotals(dctx, [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd, facilityIds:boothIdsList, isByParty:isByParty]).get("dayWiseBoothWiseTotals");
+daywiseReceipts = ByProductNetworkServices.getByProductPaymentDetails(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", boothIdsList, "isByParty",isByParty)).get("paymentDetails");
+boothWiseReturnTotal = ByProductNetworkServices.getDaywiseProductReturnTotal(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", [], "isByParty",isByParty)).get("productReturnTotals");
+invoiceResult = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin, "isByParty",isByParty)).get("dayWisePartyInvoiceDetail");
+penaltyResult = ByProductNetworkServices.getByProductDaywisePenaltyTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin, "isByParty",isByParty));
 
 penalty = penaltyResult.get("facilityPenalty");
 returnPaymentReferences = penaltyResult.get("returnPaymentReferences");
+if(isByParty){
+	ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothIdsList), UtilMisc.toSet("ownerPartyId"), null, null, false);
+	boothIdsList.clear();
+	boothIdsList = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
+	
+}
 maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 if(boothIdsList){
 	boothIdsList.each{eachBooth ->
@@ -112,6 +119,8 @@ if(boothIdsList){
 		tempOB = 0;
 		startingDate = fromDateTime;
 		paymentDetailList = [];
+		boothProdReturns = boothWiseReturnTotal.get(eachBooth);
+		Debug.log("boothProdReturns ######################################"+boothProdReturns);
 		boothPenalty = penalty.get(eachBooth);
 		tempPaymentList = [];
 		for(k = 1;k<=maxIntervalDays+1;k++){
@@ -122,7 +131,7 @@ if(boothIdsList){
 			stDate = UtilDateTime.toDateString(startingDate, "dd.MM.yyyy");
 			if(testFlag == 0){
 				testFlag = 1;
-				openingBalance =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayStart , facilityId:eachBooth])).get("openingBalance");
+				openingBalance =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayStart , facilityId:eachBooth, isByParty:Boolean.TRUE])).get("openingBalance");
 				//openingBalance = (ByProductNetworkServices.getOpeningBalanceForByProductFacilities(dctx, [facilityId: eachBooth, userLogin: userLogin ,saleDate: dayStart])).get("openingBalance");
 			}else{
 				openingBalance = closingBalance;
@@ -131,12 +140,22 @@ if(boothIdsList){
 			tempOB = openingBalance;
 			returnProdCheckDate = UtilDateTime.toDateString(startingDate, "yyyy-MM-dd");
 			prodReturnAmt = 0;
-			if(boothWiseReturnTotal.get(returnProdCheckDate)){
+			
+			if(boothProdReturns){
+				dayDetails = boothProdReturns.get("daywiseReturnAmt");
+				if(dayDetails){
+					temp = dayDetails.get(returnProdCheckDate);
+					if(temp){
+						prodReturnAmt = dayDetails.get(returnProdCheckDate);
+					}
+				}
+			}
+			/*if(boothWiseReturnTotal.get(returnProdCheckDate)){
 				eachBoothReturnTotal = boothWiseReturnTotal.get(returnProdCheckDate);
 				if(eachBoothReturnTotal){
 					prodReturnAmt = eachBoothReturnTotal.get(eachBooth);
 				}
-			}
+			}*/
 			if(invoiceResult.get(dayStart)){
 				tempDaySale = invoiceResult.get(dayStart);
 				if(tempDaySale && tempDaySale.get(eachBooth)){

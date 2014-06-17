@@ -26,7 +26,6 @@ import in.vasista.vbiz.byproducts.ByProductReportServices;
 
 dctx=dispatcher.getDispatchContext();
 effectiveDateStr = parameters.effectiveDate;
-Debug.log("effectiveDateStr ######################################"+effectiveDateStr);
 effectiveDate = null;
 if (UtilValidate.isNotEmpty(effectiveDateStr)) {
 	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
@@ -43,6 +42,7 @@ dayBegin = UtilDateTime.getDayStart(effectiveDate);
 dayEnd = UtilDateTime.getDayEnd(effectiveDate);
 context.displayDate = UtilDateTime.toDateString(dayBegin, "dd MMMMM, yyyy");
 conditionList=[];
+isByParty = Boolean.TRUE;
 resultCtx = ByProductNetworkServices.getAllBooths(delegator,null);
 boothsList= resultCtx.get("boothsList");
 boothsDetailsList = resultCtx.get("boothsDetailsList");
@@ -54,13 +54,19 @@ FDRDetail = ByProductNetworkServices.getFacilityFixedDeposit( dctx , [userLogin:
 duesFDRList = [];
 //boothsList.clear();
 //boothsList.add("9598");
+if(isByParty){
+	ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList), UtilMisc.toSet("ownerPartyId"), null, null, false);
+	boothsList.clear();
+	boothsList = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
+}
+
 boothsList.each{ eachBoothId ->
 	//facility
 	facilityFDRMap = [:];
 	facilityFDRMap.putAt("facilityId", eachBoothId);
 	facilityDet = EntityUtil.filterByCondition(boothsDetailsList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachBoothId));
 	facilityFDRMap.putAt("facilityName", (EntityUtil.getFirst(facilityDet)).facilityName);
-	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:eachBoothId])).get("openingBalance");
+	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:eachBoothId, isByParty:isByParty])).get("openingBalance");
 	facilityFDRMap.putAt("openingBalance", openingBalance);
 	boothFDRDet = FDRDetail.get(eachBoothId);
 	fdrAmt = 0;
