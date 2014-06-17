@@ -193,7 +193,6 @@ under the License.
                     	<#assign chequeRetAmount = duedata.get("chequeRetnAmount")>
                     	<#assign totalPaid = duedata.get("totalPaid")>
 						<#assign netAmount = duedata.get("netAmount")>
-						<#if !(invoiceAmount == 0)>
 	                	<fo:table-row>
                     		<fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">${temp?if_exists}</fo:block>  
@@ -275,9 +274,8 @@ under the License.
 	                        </fo:table-cell>
 	                    </fo:table-row> 
 	                    <#assign temp = temp+1>
-	                    </#if>
 	                </#list>
-	                <#if invTot!= 0>
+	              
 	                <fo:table-row>
                	     	<fo:table-cell>
                             <fo:block >-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
@@ -348,7 +346,7 @@ under the License.
                            <fo:block >-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
-                	</#if>
+                	
 	                </#list>
 	                <fo:table-row>
                	     	<fo:table-cell>
@@ -521,7 +519,7 @@ under the License.
                     	<#assign chequeRetAmount = duedata.get("chequeRetnAmount")>
                     	<#assign totalPaid = duedata.get("totalPaid")>
 						<#assign netAmount = duedata.get("netAmount")>
-						<#if !(invoiceAmount == 0)>
+						
 	                	<fo:table-row>
                     		<fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="left"  white-space-collapse="false">${temp?if_exists}.</fo:block>  
@@ -592,9 +590,9 @@ under the License.
 	                        </fo:table-cell> -->
 	                    </fo:table-row> 
 	                    <#assign temp = temp+1>
-	                    </#if>
+	                   
 	                </#list>
-	                <#if invTot!= 0>
+	               
 	                <fo:table-row>
                	     	<fo:table-cell>
                             <fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
@@ -655,7 +653,7 @@ under the License.
                            <fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
-                	</#if>
+                	
 	                </#list>
 	                <fo:table-row>
                	     	<fo:table-cell>
