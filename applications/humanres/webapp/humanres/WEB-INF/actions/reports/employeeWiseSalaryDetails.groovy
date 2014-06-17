@@ -70,15 +70,6 @@ if(partyId != null && UtilValidate.isNotEmpty(partyId)){
 			if(UtilValidate.isNotEmpty(itemsList)){
 				itemsList.each{ item->
 					payrollItemTypeId = item.payrollItemTypeId;
-					if(payrollItemTypeId == "PAYROL_BEN_SALARY"){
-						payGrade=delegator.findOne("PayGrade",[payGradeId : "BASIC_PAY"],false);
-						payGradeDescription = payGrade.payGradeName;
-						basicAmount = item.amount;
-						partyBenefitList.add([ payGradeName : payGradeDescription,
-						amount : basicAmount]);
-						salaryDetailsListCsv.add([ payGradeName : payGradeDescription,
-						amount : basicAmount]);
-					}
 					if(benefitTypeIds.contains(payrollItemTypeId)){
 						benefitType = delegator.findOne("BenefitType", [benefitTypeId : payrollItemTypeId], false);
 						benefitTypeDescription = benefitType.description;
