@@ -118,7 +118,7 @@ if(hideSearch == "N"){
 	}
 	if(statusId != "PAID" && boothTempPaymentsList.size()== 0){
 		tempMap = [:];
-		tempMap.facilityId = eachRetailer;
+		tempMap.facilityId = facilityId;
 		tempMap.routeId = "";
 		tempMap.paymentMethodTypeDesc = "";
 		tempMap.grandTotal = 0;
@@ -126,7 +126,6 @@ if(hideSearch == "N"){
 		tempMap.supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		boothTempPaymentsList.add(tempMap);
 	}
-	Debug.log("boothTempPaymentsList AASSSDDD#####################################"+boothTempPaymentsList);
 	boothPaymentsInnerList = [];
 	boothPaymentsList = [];
 	invoicesTotalAmount =0;
