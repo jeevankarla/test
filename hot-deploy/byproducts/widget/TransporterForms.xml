@@ -56,12 +56,12 @@ under the License.
                   <parameter param-name="reportTypeFlag"  value="DTCReport"/>                                  
             </hyperlink>
         </field>
-        <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)" title="${uiLabelMap.CommonCancel}">
+        <field name="cancelTransporterMarginReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;TRNSCANCEL&quot;, &quot;_CANCELADMIN&quot;, session)))}" title="${uiLabelMap.CommonCancel}">
             <hyperlink target="cancelTransporterMarginReport" description="${uiLabelMap.CommonCancel}" target-window="_blank">
                 <parameter param-name="periodBillingId"  from-field="periodBillingId" />                                                               
             </hyperlink>
         </field>
-         <field name="transporterMarginSMS" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)" title="Send Sms">
+         <field name="transporterMarginSMS" widget-style="buttontext" use-when="(&quot;${statusId}&quot;==&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" title="Send Sms">
             <hyperlink target="sendTransporterMarginSMS" description="Send Sms" target-window="_blank">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
