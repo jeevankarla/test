@@ -1598,7 +1598,7 @@ import java.text.SimpleDateFormat;
 					totalFine.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) +
 					"; Net Amount: Rs" +  
 					netAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
-					".  Automated message from Mother Dairy.";
+		        	".Automated message from Mother Dairy.For any clarfication pls. contact GM(Tech):9591994382 / DM(Mktg):9591994374";
 					Debug.logInfo("Sms text: " + text, module);
 					Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
 						"text", text, "userLogin", userLogin);
