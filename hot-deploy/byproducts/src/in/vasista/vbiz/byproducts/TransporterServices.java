@@ -239,6 +239,7 @@ import java.text.SimpleDateFormat;
 							isUpCountry="N";
 						}
 						BigDecimal narmalMargin = BigDecimal.ZERO;
+						 BigDecimal totalPeriodComission = BigDecimal.ZERO;
 						 //to get normalMargin for each date
 						 Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
 							inputRateAmt.put("rateCurrencyUomId", context.get("currencyUomId"));
@@ -362,7 +363,7 @@ import java.text.SimpleDateFormat;
 							Timestamp lastDay = UtilDateTime.getDayEnd(supplyDate, timeZone, locale);
 							routeMarginMap.put("dueAmount", BigDecimal.ZERO);
 							routeMarginMap.put("commision",actualCommision);
-							
+							totalPeriodComission=totalPeriodComission.add(actualCommision);
 							int Days=UtilDateTime.getIntervalInDays(lastDay,monthEnd);
 							if(Days==0){						
 								Map transporterDuesMap = LmsServices.getTransporterDues(dctx, UtilMisc.toMap("userLogin", userLogin, "fromDate", supplyDate, "thruDate", supplyDate, "facilityId", route));
@@ -376,7 +377,10 @@ import java.text.SimpleDateFormat;
 							tempMap.putAll(routeMarginMap);
 							dayTotalsMap.put(supplyDate, tempMap);					
 						}
-						transporterMap.put(route, dayTotalsMap);
+				       
+						 if(totalPeriodComission.compareTo(BigDecimal.ZERO) !=0){//for whole period if commission is zero dont add
+								transporterMap.put(route, dayTotalsMap);
+						   }
 					}
 					masterList.add(transporterMap);
 					result =SalesHistoryServices.populateFacilityCommissiions(dctx, context, masterList,periodBillingId);	
