@@ -192,9 +192,9 @@ if(UtilValidate.isNotEmpty(finalMap)){
 		dtcBankCsvMap["facilityName"] = route.getValue().get("facilityName");
 		dtcBankCsvMap["facilityPan"] = route.getValue().get("facilityPan");
 		dtcBankCsvMap["facilityFinAccount"] = route.getValue().get("facilityFinAccount");
-		dtcBankCsvMap["routeAmount"] = ((routeAmount).setScale(2,BigDecimal.ROUND_HALF_UP));
-		dtcBankCsvMap["totalFine"] = ((totalFine).setScale(2,BigDecimal.ROUND_HALF_UP));
-		dtcBankCsvMap["netAmount"] = ((netAmount).setScale(2,BigDecimal.ROUND_HALF_UP));
+		dtcBankCsvMap["routeAmount"] = (route.getValue().get("routeAmount").setScale(2,BigDecimal.ROUND_HALF_UP));
+		dtcBankCsvMap["totalFine"] = (route.getValue().get("totalFine").setScale(2,BigDecimal.ROUND_HALF_UP));
+		dtcBankCsvMap["netAmount"] = (route.getValue().get("netAmount").setScale(2,BigDecimal.ROUND_HALF_UP));
 		tempMap = [:];
 		tempMap.putAll(dtcBankCsvMap);
 		dtcBankReportCsvList.add(tempMap);
