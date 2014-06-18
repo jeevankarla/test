@@ -48,8 +48,8 @@ def populateChildren(org, employeeList) {
 		}
 		employee.put("name", employment.firstName + " " + lastName);
 		employee.put("employeeId", employment.partyId);
-		fromDate = UtilDateTime.toDateString(employment.fromDate, "dd/MM/yy");
-		employee.put("joinDate", fromDate)
+		joinDate = UtilDateTime.toDateString(employment.appointmentDate, "dd/MM/yyyy");
+		employee.put("joinDate", joinDate)
 		
 		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: employment.partyId, userLogin: userLogin]);
 		phoneNumber = "";
