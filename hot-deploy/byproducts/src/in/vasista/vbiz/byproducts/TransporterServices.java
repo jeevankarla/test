@@ -1585,8 +1585,8 @@ import java.text.SimpleDateFormat;
 		        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
 		        		fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 		        		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-					    //fromDate = (UtilDateTime.toDateString(fromDateTime, "MMMdd")).toString();
-					   // thruDate = (UtilDateTime.toDateString(thruDateTime, "MMMdd yyyy")).toString();
+					    fromDate = (UtilDateTime.toDateString(fromDateTime, "MMMdd")).toString();
+					    thruDate = (UtilDateTime.toDateString(thruDateTime, "MMMdd yyyy")).toString();
 		        	}
 		        }catch (GenericEntityException e) {
 	               Debug.logError(e, module);
@@ -1620,10 +1620,13 @@ import java.text.SimpleDateFormat;
 					netAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
 		        	". Automated message from Mother Dairy.For any clarification pls. contact GM(Tech):9591994382 / DM(Mktg):9591994374";
 					Debug.logInfo("Sms text: " + text, module);
-					 Map<String, Object> sendSmsParams = FastMap.newInstance();      
-			            sendSmsParams.put("contactNumberTo", contactNumberTo);                     
-			            sendSmsParams.put("text",text);  
-			            dispatcher.runAsync("sendSms", sendSmsParams,false); 
+					 Map<String, Object> sendSmsParams = FastMap.newInstance();
+					 if(UtilValidate.isNotEmpty(contactNumberTo)){
+						 sendSmsParams.put("contactNumberTo", contactNumberTo);                     
+				         sendSmsParams.put("text",text);  
+				         dispatcher.runAsync("sendSms", sendSmsParams,false); 
+					 }
+			           
 				}
 				catch (Exception e) {
 					Debug.logError(e, "Error calling sendSmsToContactListNoCommEvent service", module);
@@ -1681,9 +1684,11 @@ import java.text.SimpleDateFormat;
 					" Automated message from Mother Dairy.";
 					Debug.logInfo("Sms text: " + text, module);
 					Map<String, Object> sendSmsParams = FastMap.newInstance();      
-		            sendSmsParams.put("contactNumberTo", contactNumberTo);                     
-		            sendSmsParams.put("text",text);  
-		            dispatcher.runAsync("sendSms", sendSmsParams,false); 
+				   if(UtilValidate.isNotEmpty(contactNumberTo)){
+						 sendSmsParams.put("contactNumberTo", contactNumberTo);                     
+				         sendSmsParams.put("text",text);  
+				         dispatcher.runAsync("sendSms", sendSmsParams,false); 
+					 }
 					
 				}catch (Exception e) {
 					Debug.logError(e, "Error calling sendSmsToContactListNoCommEvent service", module);
