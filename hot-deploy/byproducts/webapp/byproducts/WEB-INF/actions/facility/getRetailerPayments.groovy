@@ -147,7 +147,11 @@ accountNameFacilityIds = [];
 if(parameters.finAccountCode != "AllBanks"){
 	accountNameFacility = EntityUtil.filterByCondition(accountList, EntityCondition.makeCondition("finAccountCode", EntityOperator.EQUALS, parameters.finAccountCode));
 	accountNameOwnerIds = EntityUtil.getFieldListFromEntityList(accountNameFacility, "ownerPartyId", true);
-	facilityList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, accountNameOwnerIds), null, null, null, false);
+	custCond = [];
+	custCond.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, accountNameOwnerIds));
+	custCond.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
+	splCond = EntityCondition.makeCondition(custCond, EntityOperator.AND);
+	facilityList = delegator.findList("Facility", splCond, null, null, null, false);
 	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "ownerPartyId", true);
 }
 
