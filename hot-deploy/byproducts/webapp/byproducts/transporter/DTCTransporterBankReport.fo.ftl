@@ -299,9 +299,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
                       </#list>
                       <#if grandTotalFine?has_content && grandTotalFine!=0>
                       <fo:table-row>
-                      		<fo:table-cell>
-	                        		<fo:block></fo:block>  
-                   			</fo:table-cell>
                    			<fo:table-cell>
                         		<fo:block></fo:block>  
                    			</fo:table-cell>

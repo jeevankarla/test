@@ -66,7 +66,7 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, null, null, false);
-facilityCommissionList = UtilMisc.sortMaps(facilityCommissionList, UtilMisc.toList("facilityId"));
+facilityCommissionList = UtilMisc.sortMaps(facilityCommissionList, UtilMisc.toList("partyId"));
 
 finAccountId = parameters.finAccountId;
 dtcBankMap = [:];
