@@ -1579,13 +1579,14 @@ import java.text.SimpleDateFormat;
 		        Map<String, Object> userServiceResult;
 		        String countryCode = "91";
 		        String contactNumberTo = null;
+		        Timestamp fromDateTime  = null;
 		        try {
 			        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
 		        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
-		        		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+		        		fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 		        		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-					    fromDate = (UtilDateTime.toDateString(fromDateTime, "MMMdd")).toString();
-					    thruDate = (UtilDateTime.toDateString(thruDateTime, "MMMdd yyyy")).toString();
+					    //fromDate = (UtilDateTime.toDateString(fromDateTime, "MMMdd")).toString();
+					   // thruDate = (UtilDateTime.toDateString(thruDateTime, "MMMdd yyyy")).toString();
 		        	}
 		        }catch (GenericEntityException e) {
 	               Debug.logError(e, module);
@@ -1593,7 +1594,7 @@ import java.text.SimpleDateFormat;
 				}
 		        try {
 		        	// Send SMS notification to contractor
-		        	Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",thruDate ,"facilityId",facilityId)).get("facilityPartyMap");
+		        	Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",fromDateTime ,"facilityId",facilityId)).get("facilityPartyMap");
 		        	Map<String, Object> getTelParams = FastMap.newInstance();
 		        	getTelParams.put("partyId", facilityParty.get(facilityId));
 		        	if(UtilValidate.isNotEmpty(partyId)){
@@ -1657,7 +1658,6 @@ import java.text.SimpleDateFormat;
 				}
 		        try {
 		        	// Send SMS notification to contractor
-		        	//GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId),false);
 		        	Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",createdDate ,"facilityId",facilityId)).get("facilityPartyMap");
 		        	 Map<String, Object> getTelParams = FastMap.newInstance();
 		        	 getTelParams.put("partyId", facilityParty.get(facilityId));
