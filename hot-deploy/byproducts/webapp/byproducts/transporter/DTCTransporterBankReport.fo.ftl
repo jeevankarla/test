@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.3in" margin-bottom=".3in" margin-left=".2in" margin-right=".1in">
-        <fo:region-body margin-top="1.75in"/>
+        <fo:region-body margin-top="0.01in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -33,6 +33,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
  <#if finalMap?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
+			</fo:static-content>		
+            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
 					<#assign finAccount = delegator.findOne("FinAccount", {"finAccountId" : parameters.finAccountId}, true)?if_exists/>
 					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
 					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false">    UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
@@ -42,8 +44,6 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;STATEMENT SHOWING THE PAYMENT TOWARDS TRANSPORTATION CHARGES</fo:block>
               		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;TO BE CREDITED TO DTC CONTRACTORS AS PER DETAILS BELOW</fo:block>
               		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;${finAccount.finAccountName?if_exists}          					&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Period:${fromDateStr}${thruDateStr}</fo:block>
-            </fo:static-content>		
-            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
 	                 	<fo:table border-style="solid">
 	                    <fo:table-column column-width="30pt"/>
