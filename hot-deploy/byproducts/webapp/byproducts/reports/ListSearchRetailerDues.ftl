@@ -232,7 +232,11 @@ under the License.
       <tbody>
         <#assign alt_row = false>
         <#list boothPaymentsList as payment>
-        	<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : payment.facilityId}, false)>   
+        	<#assign facilityDetails= {}>
+        	<#if payment.facilityId?has_content>
+        		<#assign facilityDetails = delegator.findOne("Facility", {"facilityId" : payment.facilityId}, false)> 
+        	</#if>
+        	  
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
             	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${parameters.paymentMethodTypeId?if_exists}">
             	<input type="hidden" name="currDue" id="currDue" value="${payment.grandTotal?if_exists}">
