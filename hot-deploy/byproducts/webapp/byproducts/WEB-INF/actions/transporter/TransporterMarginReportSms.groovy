@@ -35,10 +35,13 @@ if(UtilValidate.isNotEmpty(finalMap)){
 	finalMap.each { route->
 		if(UtilValidate.isNotEmpty(route)){
 			routeId = route.getKey();
+			if(UtilValidate.isNotEmpty(routePartyMap)){
+			partyId=routePartyMap.get(routeId);
+			}
 			routeAmount  = (BigDecimal)route.getValue().get("routeAmount").setScale(0,BigDecimal.ROUND_HALF_UP);
 			totalFine  = (BigDecimal)route.getValue().get("totalFine").setScale(0,BigDecimal.ROUND_HALF_UP);
 			netAmount  = (BigDecimal)route.getValue().get("netAmount").setScale(0,BigDecimal.ROUND_HALF_UP);
-			smsService = dispatcher.runSync("sendTransporterMarginSMS", [facilityId: routeId,routeAmount: routeAmount,totalFine: totalFine, netAmount: netAmount, customTimePeriodId: customTimePeriodId, userLogin: userLogin]);
+			smsService = dispatcher.runSync("sendTransporterMarginSMS", [facilityId: routeId,partyId:partyId,routeAmount: routeAmount,totalFine: totalFine, netAmount: netAmount, customTimePeriodId: customTimePeriodId, userLogin: userLogin]);
 		}
 	}
 }
