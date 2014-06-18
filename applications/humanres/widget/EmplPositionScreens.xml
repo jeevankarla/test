@@ -24,7 +24,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmplPosition"/>
-                <set field="headerItem" value="EmplPosition"/>
+				<set field="tabButtonItem" value="FindEmplPositions" />                                
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYEEPOS_EDIT"/>
                 </service>
@@ -35,8 +35,9 @@
                 <set field="hasEmployeePosViewPermission" from-field="permResult.hasPermission"/>                                   
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmployeePosViewPermission" operator="equals" value="true" type="Boolean"/>

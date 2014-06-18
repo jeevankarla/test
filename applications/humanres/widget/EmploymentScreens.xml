@@ -24,7 +24,8 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResFindEmployment"/>
-                <set field="headerItem" value="Employment"/>
+                <set field="headerItem" value="FindEmployments"/>
+				<set field="tabButtonItem" value="FindEmployments" />                
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
@@ -37,7 +38,8 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                  
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<section>
                     	    <condition>

@@ -21,6 +21,33 @@
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 <!--*********************************************************************************************-->
+
+    <menu name="HumanresNGTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="HumanresProfile">      
+        <menu-item name="main" title="Lookup Employees">
+            <link target="main">
+            </link>
+        </menu-item>
+        <menu-item name="FindEmployments" title="Employments">     
+        	<link target="FindEmployments"/>
+        </menu-item>
+        <menu-item name="FindEmplPositions" title="Employee Positions">     
+        	<link target="FindEmplPositions"/>
+        </menu-item> 
+        <menu-item name="HRReports" title="${uiLabelMap.AccountingReports}">
+			<condition>
+            	<if-has-permission permission="HUMANRES"  action="_REPORTS_VIEW"/>
+            </condition>              
+        	<link target="HRReports"><parameter param-name="organizationPartyId"/>  </link>
+        </menu-item>        
+		<menu-item name="FindPayrollBilling" title="Payroll">
+			<link target="FindPayrollBilling"/>
+		</menu-item>      
+        <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
+            <link target="FindEmplLeaves"/>
+        </menu-item>	                    
+	</menu>        
+
 <menu name="Day"  extends="Calendar">
         <menu-item name="next" title="${uiLabelMap.WorkEffortNextDay}">
             <link target="${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${nextMillis}${urlParam}"/>
@@ -84,31 +111,8 @@
     </menu>
 <!--*********************************************************************************************-->
     <menu name="HumanResAppBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="Employees" title="${uiLabelMap.HumanResEmployees}">
-			<condition>
-            	<if-has-permission permission="HUMANRES"  action="_EMPLOYEE_VIEW"/>
-            </condition>        
-        	<link target="findEmployees"/>
-        </menu-item>
-        <menu-item name="Employment" title="${uiLabelMap.HumanResEmployment}">
-			<condition>
-            	<if-has-permission permission="HUMANRES"  action="_EMPLOYMENT_VIEW"/>
-            </condition>        
-        	<link target="FindEmployments"/>
-        </menu-item>
-        <menu-item name="EmplPosition" title="${uiLabelMap.HumanResEmployeePosition}">
-        	<condition>
-            	<if-has-permission permission="HUMANRES"  action="_EMPLOYEEPOS_VIEW"/>
-            </condition>
-        	<link target="FindEmplPositions"/>
-        </menu-item>
+       
         <menu-item name="calendar" title="${uiLabelMap.WorkEffortCalendar}"><link target="calendar"/></menu-item>
-        <menu-item name="HumanresReports" title="${uiLabelMap.AccountingReports}">
-			<condition>
-            	<if-has-permission permission="HUMANRES"  action="_REPORTS_VIEW"/>
-            </condition>              
-        	<link target="HRReports"><parameter param-name="organizationPartyId"/>  </link>
-        </menu-item>
         <!--<menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="FindPerfReviews"/></menu-item>-->
         <!--<menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><link target="FindPartySkills"/></menu-item>  -->
         <!--<menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>-->
@@ -141,7 +145,6 @@
             </condition>
             <link target="week"/>
 		</menu-item>    
-        <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
         <menu-item name="GlobalHRSettings" title="${uiLabelMap.HumanResGlobalHRSettings}" selected-style="selected">
 			<condition>
             	<if-has-permission permission="HUMANRES"  action="_GLOBALHR_VIEW"/>
@@ -150,7 +153,7 @@
         </menu-item>
     </menu>
     <menu name="HumanresReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-         selected-menuitem-context-field-name="tabButtonItem" >
+         selected-menuitem-context-field-name="tabButtonItem2" >
        <menu-item name="LeaveTypes" title="${uiLabelMap.LeaveTypes}">
            <link target="LeaveTypes">
                <parameter param-name="organizationPartyId"/>
@@ -210,9 +213,6 @@
 			<parameter param-name="partyId" />
 		</link>
 	</menu-item>-->
-	<menu-item name="FindPayrollBilling" title="${uiLabelMap.payrollGeneration}">
-		<link target="FindPayrollBilling"/>
-	</menu-item>
 	<menu-item name="BenefitDeductionCalculator" title="Benefit Deduction Calculator">
 		<link target="BenefitDeductionCalculator"/>
 	</menu-item>
@@ -510,7 +510,7 @@
     
     <menu name="EmplLeaveTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Employee Leave" type="simple" menu-container-style="button-bar tab-bar" 
-        default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
+        default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
             <link target="FindEmplLeaves"/>
         </menu-item>

@@ -47,32 +47,29 @@ under the License.
         </section>
     </screen>
 
-    <screen name="Main">
+     <screen name="HumanresCommonDecorator">
         <section>
+            <actions>
+            	<set field="parameters.mainDecoratorLocation" value="component://humanres/widget/CommonScreens.xml"/>
+            </actions>
             <widgets>
-                <decorator-screen name="main-decorator">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
-            	<actions>
-					<script  
-						location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeTable.groovy" />                
-            	</actions>                        
-                            <widgets><!--
-                                <container style="lefthalf">
-                                    <include-screen name="OrgTree"/>
-                                </container>
-                                --><container >
-                                	<screenlet title="Company Employees">
-										<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/summaryTable.ftl"></html-template></html></platform-specific>                                	
-                                	</screenlet>
-                                </container>
+                            <widgets>
+                            	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresNGTabBar"/>
+                                <decorator-section-include name="body"/>
                             </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ByProductsViewPermissionError}</label>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+
 
     <screen name="OrgTree">
         <section>

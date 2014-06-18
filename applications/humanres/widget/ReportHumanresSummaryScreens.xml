@@ -15,21 +15,23 @@
 	<screen name="LeaveTypes">
 		<section>
 			<actions>
-			<set field="tabButtonItem" value="LeaveTypes"/>
+			    <set field="tabButtonItem" value="HRReports"/>
+ 				<set field="tabButtonItem2" value="LeaveTypes" />   
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
                 <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>  
 			</actions>
 			<widgets>		
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					   <include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
                     	<section>
                     	    <condition>
                             	<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
                             </condition>
-                            <widgets>                         												
+                            <widgets>                        												
 								<screenlet title="${uiLabelMap.HumanResEmployeeLeaveTypes}">
 								  <link text="${uiLabelMap.LeaveTypeExportAsCsv}" style="button" target="LeaveTypeListCsv.csv"/>									
 								  <link text="${uiLabelMap.LeaveTypeExportAsPdf}" style="button" target="LeaveTypeListPdf.pdf"/>														
@@ -430,16 +432,18 @@
 	<screen name="Employees">
 		<section>
 			<actions>
-			<set field="tabButtonItem" value="Employees"/>
+			    <set field="tabButtonItem" value="HRReports"/>			
+			<set field="tabButtonItem2" value="Employees"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
                 <set field="hasReportsViewPermission" from-field="permResult.hasPermission"/>  
 			</actions>
 			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
             			<section>
                 			<condition>
                     			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -541,7 +545,8 @@
 	 <screen name="AttendanceReport">
         <section>
             <actions>
-            	<set field="tabButtonItem" value="AttendanceReport"/>
+            	<set field="tabButtonItem" value="HRReports"/>
+            	<set field="tabButtonItem2" value="AttendanceReport"/>
             	      <service service-name="humanResManagerPermission" result-map="permResult">
                            <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                       </service>
@@ -553,8 +558,11 @@
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
     		</actions>    		   			  
          		<widgets>
-         			<decorator-screen name="CommonHumanresReportsDecorator" location="${parameters.mainDecoratorLocation}">
-					 <decorator-section name="body">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
          			     <screenlet title="${uiLabelMap.AttendanceDailyReport}">
                  			<include-form name="AttendanceDailyReport" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
                  		 </screenlet>
@@ -570,7 +578,8 @@
 	<screen name="PayHeadTypes">
 		<section>
 			<actions>
-				<set field="tabButtonItem" value="PayHeadTypes"/>
+			    <set field="tabButtonItem" value="HRReports"/>			
+				<set field="tabButtonItem2" value="PayHeadTypes"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
@@ -579,9 +588,11 @@
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/getPayHeadTypes.groovy"/>		
 			</actions>
 			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
          				<section>
              				<condition>
                  				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -690,7 +701,8 @@
 	<screen name="EmployeeProfileReport">
 		<section>
 			<actions>
-			<set field="tabButtonItem" value="EmployeeProfileReport"/>
+			    <set field="tabButtonItem" value="HRReports"/>			
+			<set field="tabButtonItem2" value="EmployeeProfileReport"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
@@ -699,9 +711,11 @@
                 <set field="partyId" from-field="parameters.partyIdFrom"/>				
 			</actions>
 			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
         				<section>
             				<condition>
                 				<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -798,12 +812,15 @@
 	<screen name="PaySlipEmployeeWise">
 		<section>
 			<actions>
-				<set field="tabButtonItem" value="PaySlipEmployeeWise"/>				
+			    <set field="tabButtonItem" value="HRReports"/>			
+				<set field="tabButtonItem2" value="PaySlipEmployeeWise"/>				
             </actions>
 			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
 						<screenlet title="PaySlipEmployeeWise">									
 							<include-form name="paySlipEmployeeWise"
 								location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
@@ -909,12 +926,15 @@
 <screen name="EmployeeBankDetails">
 	<section>
 		<actions>
-			<set field="tabButtonItem" value="EmployeeBankDetails" />
+			    <set field="tabButtonItem" value="HRReports"/>		
+			<set field="tabButtonItem2" value="EmployeeBankDetails" />
 		</actions>
 		<widgets>
-			<decorator-screen name="CommonHumanresReportsDecorator"
-				location="${parameters.mainDecoratorLocation}">
-				<decorator-section name="body">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
 					<screenlet title="${uiLabelMap. HumanResEmployeeBankDetails}">
 						<include-form name="EmployeeBankDetails" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 					</screenlet>
@@ -957,7 +977,8 @@
 		<section>
 			<actions>
 				 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
-				<set field="tabButtonItem" value="EmployeeWiseSalaryDetails"/>
+			    <set field="tabButtonItem" value="HRReports"/>				 
+				<set field="tabButtonItem2" value="EmployeeWiseSalaryDetails"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
@@ -966,9 +987,11 @@
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeWiseSalaryDetails.groovy"/>		                
 			</actions>
 			<widgets>
-				<decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
 		      			<section>
 		          			<condition>
 		              			<if-compare field="hasReportsViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -1080,12 +1103,15 @@
             <actions>
                <set field="titleProperty" value="Employee's Punch Report"/>
                 <set field="headerItem" value="Attendance"/>
-                <set field="tabButtonItem" value="Employee's Punch Report"/>
+                <set field="tabButtonItem2" value="Employee's Punch Report"/>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePunchReport.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonHumanresReportsDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
                         <screenlet title="Employee's Punch Report">
                             <platform-specific>
                                 <html><html-template location="component://humanres/webapp/humanres/humanres/EmployeePunchReport.ftl"/></html>
@@ -1151,6 +1177,7 @@
             </widgets>
         </section>
     </screen>
+    <!-- TODO move this out of here -->
     <screen name="FindPayrollBilling">
         <section>
             <actions>
@@ -1158,8 +1185,8 @@
                 <set field="tabButtonItem" value="FindPayrollBilling"/>  
             </actions>            
             <widgets>
-                <decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
                     	<section>
                     	  <widgets>
@@ -1189,13 +1216,16 @@
     <screen name="BenefitDeductionCalculator">
         <section>
             <actions>
+			    <set field="tabButtonItem" value="HRReports"/>            
                 <set field="titleProperty" value="BenefitDeductionCalculator"/>
-                <set field="tabButtonItem" value="BenefitDeductionCalculator"/>  
+                <set field="tabButtonItem2" value="BenefitDeductionCalculator"/>  
             </actions>            
             <widgets>
-                <decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
                     	<section>
                     	  <widgets>
                     	      <!-- <container style="button-bar">
@@ -1218,13 +1248,16 @@
     <screen name="EmployeeDailyAttendance">
         <section>
             <actions>
-			   <set field="titleProperty" value="EmployeeDailyAttendance"/>
-               <set field="tabButtonItem" value="EmployeeDailyAttendance"/>
+			   <set field="titleProperty" value="EmployeeDailyAttendance"/>			    
+			   <set field="tabButtonItem" value="HRReports"/>
+               <set field="tabButtonItem2" value="EmployeeDailyAttendance"/>
             </actions>           
             	<widgets>
-                <decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
+
                     	<section>
 							<widgets>
 								<container style="button-bar">
