@@ -99,9 +99,15 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, ["commissionDate"], null, false);
 
 routeSmsMap=[:];
+routePartyMap=[:];
 if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	facilityCommissionList.each { facilityCommission ->
 		facilityId = facilityCommission.facilityId;
+		partyId = facilityCommission.partyId;
+		if(UtilValidate.isEmpty(routePartyMap.get(partyId))){
+			routePartyMap[facilityId]=partyId;
+		 }
+		
 		facilityRateResult=[:];
 		rateMap =[:];
 		rateList =[];
@@ -174,12 +180,12 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		}else{
 			routeSmsMap[facilityId] += ((new BigDecimal(facilityCommission.totalAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
 		}
-		Debug.log("====totalsMap=="+totalsMap);
 	}
-	
 }
 masterList.add(transporterMargins);
 context.put("masterList", masterList);
+context.put("routePartyMap",routePartyMap);
+Debug.log("===routePartyMap===="+routePartyMap);
 facRecoveryMap=[:];
 
 facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"userLogin",userLogin));

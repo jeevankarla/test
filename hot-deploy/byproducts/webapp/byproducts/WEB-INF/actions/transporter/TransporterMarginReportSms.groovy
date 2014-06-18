@@ -29,6 +29,8 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 dctx = dispatcher.getDispatchContext();
 customTimePeriodId = parameters.customTimePeriodId;
 finalMap = context.get("finalMap");
+routePartyMap = context.get("routePartyMap");
+
 if(UtilValidate.isNotEmpty(finalMap)){
 	finalMap.each { route->
 		if(UtilValidate.isNotEmpty(route)){
