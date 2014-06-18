@@ -1568,6 +1568,7 @@ import java.text.SimpleDateFormat;
 		        Delegator delegator = dctx.getDelegator();
 		        GenericValue userLogin = (GenericValue) context.get("userLogin");
 		        String facilityId = (String) context.get("facilityId");
+		        String partyId = (String) context.get("partyId");
 		        String customTimePeriodId = (String) context.get("customTimePeriodId");
 		        BigDecimal routeAmount = (BigDecimal)context.get("routeAmount");
 		        BigDecimal totalFine = (BigDecimal)context.get("totalFine");
@@ -1591,20 +1592,39 @@ import java.text.SimpleDateFormat;
 	               return ServiceUtil.returnError(e.getMessage());
 				}
 		        try {
-		        	// Send SMS notification to list
+		        	// Send SMS notification to contractor
+		        	Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",thruDate ,"facilityId",facilityId)).get("facilityPartyMap");
+		        	Map<String, Object> getTelParams = FastMap.newInstance();
+		        	getTelParams.put("partyId", facilityParty.get(facilityId));
+		        	if(UtilValidate.isNotEmpty(partyId)){
+		        		 getTelParams.put("partyId", partyId);
+		        	 }
+		             getTelParams.put("userLogin", userLogin);                    	
+		             serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+		             if (ServiceUtil.isError(serviceResult)) {
+		             	 Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+		                 return ServiceUtil.returnSuccess();
+		             } 
+		             if(UtilValidate.isNotEmpty(serviceResult.get("contactNumber"))){
+		             	contactNumberTo = (String) serviceResult.get("contactNumber");
+		             	if(!UtilValidate.isEmpty(serviceResult.get("countryCode"))){
+		             		contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");
+		             	}
+		             }	
 		        	String text = "DTC Bill generated for route " + facilityId+" ("+fromDate+"-"+thruDate+")."+ "  Gross Amount: Rs" +
 		        	routeAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
 					"; Deductions: Rs" +
 					totalFine.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) +
 					"; Net Amount: Rs" +  
 					netAmount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding")) + 
-		        	".Automated message from Mother Dairy.For any clarfication pls. contact GM(Tech):9591994382 / DM(Mktg):9591994374";
+		        	". Automated message from Mother Dairy.For any clarification pls. contact GM(Tech):9591994382 / DM(Mktg):9591994374";
 					Debug.logInfo("Sms text: " + text, module);
-					Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
-						"text", text, "userLogin", userLogin);
-					dispatcher.runAsync("sendSmsToContactListNoCommEvent", sendSmsContext);
+					 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+			            sendSmsParams.put("contactNumberTo", contactNumberTo);                     
+			            sendSmsParams.put("text",text);  
+			            dispatcher.runAsync("sendSms", sendSmsParams,false); 
 				}
-				catch (GenericServiceException e) {
+				catch (Exception e) {
 					Debug.logError(e, "Error calling sendSmsToContactListNoCommEvent service", module);
 					return ServiceUtil.returnError(e.getMessage());			
 				} 
@@ -1616,6 +1636,7 @@ import java.text.SimpleDateFormat;
 		        Delegator delegator = dctx.getDelegator();
 		        GenericValue userLogin = (GenericValue) context.get("userLogin");
 		        String facilityId = (String) context.get("facilityId");
+		        String partyId = (String) context.get("partyId");
 		        Timestamp createdDate = (Timestamp) context.get("createdDate");
 		        String fromDate = (UtilDateTime.toDateString(createdDate, "MMMM dd,yyyy")).toString();
 		        String recoveryTypeId = (String)context.get("recoveryTypeId");
@@ -1635,16 +1656,36 @@ import java.text.SimpleDateFormat;
 	               return ServiceUtil.returnError(e.getMessage());
 				}
 		        try {
-		        	// Send SMS notification to list
+		        	// Send SMS notification to contractor
+		        	//GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId),false);
+		        	Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",createdDate ,"facilityId",facilityId)).get("facilityPartyMap");
+		        	 Map<String, Object> getTelParams = FastMap.newInstance();
+		        	 getTelParams.put("partyId", facilityParty.get(facilityId));
+		        	 if(UtilValidate.isNotEmpty(partyId)){
+		        		 getTelParams.put("partyId", partyId);
+		        	 }
+		             getTelParams.put("userLogin", userLogin);                    	
+		             serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+		             if (ServiceUtil.isError(serviceResult)) {
+		             	 Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+		                 return ServiceUtil.returnSuccess();
+		             } 
+		             if(!UtilValidate.isEmpty(serviceResult.get("contactNumber"))){
+		             	contactNumberTo = (String) serviceResult.get("contactNumber");
+		             	if(!UtilValidate.isEmpty(serviceResult.get("countryCode"))){
+		             		contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");
+		             	}
+		             }	
 		        	String text = " A penalty("+description+")" +" of " + " Rs."+amount.setScale(1, UtilNumber.getBigDecimalRoundingMode("order.rounding"))
 		        	+" has been levied for route("+facilityId+")"+" on "+fromDate+"."+
 					" Automated message from Mother Dairy.";
 					Debug.logInfo("Sms text: " + text, module);
-					Map<String,  Object> sendSmsContext = UtilMisc.<String, Object>toMap("contactListId", "SALES_NOTIFY_LST", 
-						"text", text, "userLogin", userLogin);
-					dispatcher.runAsync("sendSmsToContactListNoCommEvent", sendSmsContext);
-				}
-				catch (GenericServiceException e) {
+					Map<String, Object> sendSmsParams = FastMap.newInstance();      
+		            sendSmsParams.put("contactNumberTo", contactNumberTo);                     
+		            sendSmsParams.put("text",text);  
+		            dispatcher.runAsync("sendSms", sendSmsParams,false); 
+					
+				}catch (Exception e) {
 					Debug.logError(e, "Error calling sendSmsToContactListNoCommEvent service", module);
 					return ServiceUtil.returnError(e.getMessage());			
 				} 

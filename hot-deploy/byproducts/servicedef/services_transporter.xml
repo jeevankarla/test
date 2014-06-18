@@ -48,7 +48,8 @@
     <service name="sendTransporterMarginSMS" engine="java" auth="true" 
         location="in.vasista.vbiz.byproducts.TransporterServices" invoke="sendTransporterMarginSMS">
         <description>Send Transporter Margin SMS</description>        
-       	<attribute name="facilityId" mode="IN" type="String" optional="false"/>   
+       	<attribute name="facilityId" mode="IN" type="String" optional="false"/>
+       	 <attribute name="partyId" mode="IN" type="String" optional="true"/>
         <attribute name="routeAmount" mode="IN" type="BigDecimal" optional="false"/>
         <attribute name="totalFine" mode="IN" type="BigDecimal" optional="false"/>
         <attribute name="netAmount" mode="IN" type="BigDecimal" optional="false"/>
@@ -58,6 +59,7 @@
         location="in.vasista.vbiz.byproducts.TransporterServices" invoke="sendFacilityRecoverySms">
         <description>Send Transporter Margin SMS</description>        
        	<attribute name="facilityId" mode="IN" type="String" optional="false"/>
+       	 <attribute name="partyId" mode="IN" type="String" optional="true"/>
        	<attribute name="createdDate" mode="IN" type="Timestamp" optional="false"/>   
         <attribute name="recoveryTypeId" mode="IN" type="String" optional="false"/>
         <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/>  
