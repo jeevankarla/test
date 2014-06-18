@@ -1091,6 +1091,7 @@ public class PayrollService {
 	    							//  NOOFCALENDERDAYS      NOOFATTENDEDDAYS      LOSSOFPAYDAYS
 	    							//  NOOFATTENDEDHOLIDAYS  NOOFATTENDEDSS        NOOFATTENDEDWEEKLYOFF
 	    							//  NOOFLEAVEDAYS         NOOFCOMPOFFSAVAILED   GROSSSALARY
+		    						// NOOFAVAILEDVEHICLEDAYS  
 		    						boolean getAttendance = false;
 	    							Set supportedVaribules = UtilMisc.toSet("NOOFCALENDERDAYS","NOOFATTENDEDDAYS","LOSSOFPAYDAYS",
 	    									"NOOFATTENDEDHOLIDAYS" ,"NOOFATTENDEDSS" ,"NOOFATTENDEDWEEKLYOFF" ,"NOOFLEAVEDAYS","NOOFCOMPOFFSAVAILED");
@@ -1111,6 +1112,7 @@ public class PayrollService {
 		    							variables.put("NOOFATTENDEDWEEKLYOFF", (Double)attendanceMap.get("noOfAttendedWeeklyOffDays"));
 		    							variables.put("NOOFLEAVEDAYS", (Double)attendanceMap.get("noOfLeaveDays"));
 		    							variables.put("NOOFCOMPOFFSAVAILED", (Double)attendanceMap.get("noOfCompoffAvailed"));
+		    							variables.put("NOOFAVAILEDVEHICLEDAYS", (Double)attendanceMap.get("availedVehicleDays"));
 		    							
 		    							double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
 		    							evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
@@ -1397,6 +1399,7 @@ public class PayrollService {
 	        Locale locale = (Locale) context.get("locale");
 	        Map shiftDetailMap = FastMap.newInstance();
 	        int availedVehicleDays =0;
+	        int disAvailedVehicleDays =0;
 	        Map availedCanteenDetailMap = FastMap.newInstance();
         	List conditionList = FastList.newInstance();
 	        List<GenericValue> emplDailyAttendanceDetailList = FastList.newInstance();
@@ -1428,6 +1431,7 @@ public class PayrollService {
 	    		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
 	    		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
 	    			availedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"Y"))).size();
+	    			disAvailedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"N"))).size();
 		    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
 		    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
 		    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
@@ -1469,6 +1473,7 @@ public class PayrollService {
 				}
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfCalenderDays"))){
 					result.put("noOfCalenderDays", (payrollAttendance.getBigDecimal("noOfCalenderDays")).doubleValue());
+					result.put("noOfPayableDays", (payrollAttendance.getBigDecimal("noOfCalenderDays")).doubleValue());
 				}
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfAttendedHoliDays"))){
 					result.put("noOfAttendedHoliDays", (payrollAttendance.getBigDecimal("noOfAttendedHoliDays")).doubleValue());
@@ -1499,6 +1504,7 @@ public class PayrollService {
             result.put("shiftDetailMap" ,shiftDetailMap);
             result.put("availedCanteenDetailMap" , availedCanteenDetailMap);
             result.put("availedVehicleDays" , availedVehicleDays);
+            result.put("disAvailedVehicleDays" , disAvailedVehicleDays);
             //Debug.log("getEmployeePayrollAttendance result:" + result);
 	    
 	        return result;
@@ -1575,6 +1581,9 @@ public class PayrollService {
 	        	Map shiftDetailMap = (Map)employeePayrollAttedance.get("shiftDetailMap");
 	        	Map availedCanteenDetailMap = (Map)employeePayrollAttedance.get("availedCanteenDetailMap");
 	        	int availedVehicleDays = ((Integer)employeePayrollAttedance.get("availedVehicleDays")).intValue();
+	        	int disAvailedVehicleDays = ((Integer)employeePayrollAttedance.get("disAvailedVehicleDays")).intValue();
+	        	Double noOfCalenderDays = (Double)employeePayrollAttedance.get("noOfCalenderDays");
+	        	
 	        	priceInfoDescription.append("\n \n[ Attendance Details ::"+employeePayrollAttedance);
 				priceInfoDescription.append("  ]\n \n ");
 	        	if(payHeadTypeId.equals("PAYROL_BEN_SHIFT") && UtilValidate.isNotEmpty(shiftDetailMap)){
@@ -1610,7 +1619,7 @@ public class PayrollService {
 	                    priceResultRuleCtx.putAll(context);
 	                    priceResultRuleCtx.put("condParms", condParms);
 	                    Map<String, Object> calcResults = calculatePayHeadAmount(dctx,priceResultRuleCtx);
-						amount = amount.add(((BigDecimal)calcResults.get("amount")).multiply(new BigDecimal(availedVehicleDays)));
+						amount = amount.add((BigDecimal)calcResults.get("amount"));
 						priceInfos.add(calcResults.get("priceInfos"));
 		        	}
 					
