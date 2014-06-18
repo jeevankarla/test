@@ -1,15 +1,26 @@
 
 	<link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/css/jquery.dataTables.css</@ofbizContentUrl>">
+	<link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/css/dataTables.tableTools.css</@ofbizContentUrl>">
+
 	<style type="text/css" class="init">
 
 	</style>
 <style type="text/css">
 .dataTables_filter input {
-  border-style: groove;
+  border-style: groove;    
+}
+.dataTables_filter {
+    /*
+    width: 50%;
+    float: right;
+    */
 }
 </style>	
 	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/jquery.js</@ofbizContentUrl>"></script>
 	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/jquery.dataTables.js</@ofbizContentUrl>"></script>
+	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/js/dataTables.tableTools.js</@ofbizContentUrl>"></script>
+
+
 	<script type="text/javascript" language="javascript" class="init">	
 
 var dataSet = ${StringUtil.wrapString(employeesJSON!'[]')};
@@ -26,8 +37,13 @@ $(document).ready(function() {
 			{ "title": "Position" },			
 			{ "title": "Join Date" },			
 			{ "title": "Phone" }],
-		"iDisplayLength" : 25,
-		"fnRowCallback": function(nRow, aData, iDisplayIndex ) {
+            "sDom": 'lfTrtip',
+            "tableTools": {
+                "sSwfPath": "<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf</@ofbizContentUrl>",
+                "aButtons": [ "copy", "csv", "pdf"  ]
+            },
+		"iDisplayLength" : 25,		
+     	"fnRowCallback": function(nRow, aData, iDisplayIndex ) {
 		    $('td:eq(0)', nRow).html('<a href="EmployeeProfile?partyId=' + aData[1] + '">' +
                 aData[0] + '</a>');
             return nRow;
