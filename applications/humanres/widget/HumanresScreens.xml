@@ -43,10 +43,11 @@
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
-					<decorator-section name="body">    
-                        	<platform-specific> 
-                            	<html><html-template location="component://humanres/webapp/humanres/humanres/employeesTenure.ftl"/></html>
-                        	</platform-specific>   
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnalyticsTabBar"/>                                                        					   
+                        <platform-specific> 
+                            <html><html-template location="component://humanres/webapp/humanres/humanres/employeesTenure.ftl"/></html>
+                        </platform-specific>   
                     </decorator-section>
                 </decorator-screen>
             </widgets>

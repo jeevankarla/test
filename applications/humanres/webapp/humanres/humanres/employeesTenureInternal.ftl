@@ -142,7 +142,7 @@ $(document).ready(function() {
 
 	</script>
 		
-		<div id="demo"></div>
+<div class="container"></div>
 <div class="lefthalf">
 <div class="screenlet">
 	<div class="screenlet-title-bar">
@@ -164,4 +164,5 @@ $(document).ready(function() {
     	<div id="upcomingRetireesTable"/>
     </div>
 </div>    
+</div>
 </div>
