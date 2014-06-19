@@ -34,6 +34,7 @@ def populateChildren(org, employeeList) {
 		}
 		employee.put("name", employment.firstName + " " + lastName);
 		employee.put("employeeId", employment.partyId);
+		employee.put("birthDate", employment.birthDate);
 		joinDate = UtilDateTime.toDateString(employment.appointmentDate, "dd/MM/yyyy");
 		employee.put("joinDate", joinDate)
 		
@@ -56,20 +57,59 @@ def populateChildren(org, employeeList) {
 employeeList = [];
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
-JSONArray employeesJSON = new JSONArray();
-employeeList.each {employee ->
-	JSONArray employeeJSON = new JSONArray();
-	employeeJSON.add(employee.name);
-	employeeJSON.add(employee.employeeId);
-	employeeJSON.add(employee.department);
-	employeeJSON.add(employee.position);
-	employeeJSON.add(employee.joinDate);
-	employeeJSON.add(employee.phoneNumber);
-	//employeeJSON.add(employee.address);
-	employeesJSON.add(employeeJSON);
-}
-context.employeesJSON = employeesJSON;
 //Debug.logError("employeeList="+employeeList,"");
-//Debug.logError("employeesJSON="+employeesJSON,"");
+departmentMap = [:];
+upcomingRetirements = [];
+thruDate=UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 365);
+
+JSONArray employeesJSON = new JSONArray();
+
+employeeList.each {employee ->
+	if (departmentMap.containsKey(employee.department)) {
+		departmentMap[employee.department] += 1;
+	}
+	else {
+		departmentMap[employee.department] = 1;
+	}
+	if (employee.birthDate) {
+		int month = (employee.birthDate).getMonth();
+		int day = (employee.birthDate).getDay();
+		int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale) + 60;	
+		retirementDate = UtilDateTime.toTimestamp(month, day, year, 0, 0, 0);
+		if (retirementDate < thruDate) {
+			JSONArray employeeJSON = new JSONArray();
+			employeeJSON.add(employee.name);
+			//employeeJSON.add(employee.employeeId);
+			employeeJSON.add(employee.department);
+			employeeJSON.add(employee.position);
+			employeeJSON.add(employee.joinDate);
+			employeeJSON.add(UtilDateTime.toDateString(retirementDate, "dd/MM/yyyy"));
+			employeesJSON.add(employeeJSON);
+		}
+	}
+}
+JSONArray deptLabelsJSON = new JSONArray();
+JSONArray deptPieDataJSON = new JSONArray();
+
+JSONArray deptEmployeesJSON = new JSONArray();
+departmentMap.each { dept ->
+	JSONArray deptJSON = new JSONArray();
+	deptJSON.add(dept.getKey());
+	deptJSON.add(dept.getValue());
+	deptEmployeesJSON.add(deptJSON);
+	
+	JSONObject deptPie = new JSONObject();
+	deptPie.put("label", dept.getKey());
+	deptPie.put("data", dept.getValue());
+	deptPieDataJSON.add(deptPie);
+}
+Debug.logError("departmentMap="+departmentMap,"");
+Debug.logError("deptEmployeesJSON="+deptEmployeesJSON,"");
+Debug.logError("deptPieDataJSON="+deptPieDataJSON,"");
+Debug.logError("employeesJSON="+employeesJSON,"");
+context.deptEmployeesJSON = deptEmployeesJSON;
+context.deptPieDataJSON = deptPieDataJSON;
+context.employeesJSON = employeesJSON;
+
 
 

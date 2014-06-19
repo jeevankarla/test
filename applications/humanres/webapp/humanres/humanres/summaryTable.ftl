@@ -9,12 +9,6 @@
 .dataTables_filter input {
   border-style: groove;    
 }
-.dataTables_filter {
-    /*
-    width: 50%;
-    float: right;
-    */
-}
 </style>	
 	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/jquery.js</@ofbizContentUrl>"></script>
 	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/jquery.dataTables.js</@ofbizContentUrl>"></script>

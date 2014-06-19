@@ -31,33 +31,38 @@
 		</section>
 	</screen>
  
-	<screen name="Employments">
-		<section>
-			<actions>
-				<set field="headerItem" value="main" />
-				<set field="tabButtonItem" value="main" />
-				<set field="titleProperty" value="Lookup Employees" />
-				<script
-					location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeTable.groovy" />
-			</actions>
-			<widgets>
+	 <screen name="EmployeesTenureChart">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>
+ 				<set field="tabButtonItem2" value="employeesTenureChart" />                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="employeesTenureChartInternal" type="String"/>
+            </actions>            
+            <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
 					location="component://humanres/widget/CommonScreens.xml">
-
-					<decorator-section name="body">
-						<container>
-							<screenlet title="Company Employees">
-								<platform-specific>
-									<html>
-										<html-template
-											location="component://humanres/webapp/humanres/humanres/summaryTable.ftl"></html-template>
-									</html>
-								</platform-specific>
-							</screenlet>
-						</container>
-					</decorator-section>
-				</decorator-screen>
-			</widgets>
-		</section>
-	</screen>        
+					<decorator-section name="body">    
+                        	<platform-specific> 
+                            	<html><html-template location="component://humanres/webapp/humanres/humanres/employeesTenure.ftl"/></html>
+                        	</platform-specific>   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+	 <screen name="EmployeesTenureChartInternal">
+        <section>
+            <actions>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeesTenure.groovy"/>  
+            </actions>            
+            <widgets>
+                        	<platform-specific> 
+                            	<html><html-template location="component://humanres/webapp/humanres/humanres/employeesTenureInternal.ftl"/></html>
+                        	</platform-specific>   
+            </widgets>
+        </section>
+    </screen>  
 </screens>

@@ -45,7 +45,10 @@
 		</menu-item>      
         <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
             <link target="FindEmplLeaves"/>
-        </menu-item>	                    
+        </menu-item>
+        <menu-item name="analytics" title="Analytics">
+            <link target="analytics"/>
+        </menu-item>        	                    
 	</menu>        
 
 <menu name="Day"  extends="Calendar">

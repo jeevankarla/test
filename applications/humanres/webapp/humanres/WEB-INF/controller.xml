@@ -977,6 +977,17 @@ under the License.
         <event type="service" invoke="deleteEmplPositionTypeRate"/>
         <response name="success" type="view" value="EditEmplPositionTypeRates"/>
     </request-map>
+    
+    
+    <request-map uri="analytics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeesTenureChart"/>
+    </request-map>
+    <request-map uri="employeesTenureChartInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeesTenureChartInternal"/>
+    </request-map>     
+    
    <!-- <request-map uri="EditAgreementEmploymentAppls">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditAgreementEmploymentAppls"/>
@@ -1644,4 +1655,9 @@ under the License.
     <view-map name="FindTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#FindTrainingApprovals"/>
     <view-map name="EditTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#EditTrainingApprovals"/>
     <view-map name="LookupTraining" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupTraining"/>
+
+	<!-- Analytics -->
+	<view-map name="EmployeesTenureChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChart"/>
+	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>
+	
 </site-conf>
