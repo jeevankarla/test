@@ -188,10 +188,10 @@ under the License.
                     		<#assign lossOfPay=0>
                     		<#assign netPaidDays=0>
                     		<#if emplLeavesDetails?has_content>
-                    			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")?if_exists>
-                    			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")?if_exists>
-                    			<#assign netPaidDays=(totalDays-lossOfPay)>
-                    		</#if>                    		
+                    			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")>
+                    			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")>
+                    		</#if>      
+                    		<#assign netPaidDays=(totalDays-lossOfPay)>              		
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                         		<fo:block text-align="center">${totalDays?if_exists}</fo:block>
@@ -313,8 +313,12 @@ under the License.
                          <#if dedTypeIds.contains(payHeadItems.getKey())>
 	                    	<fo:table-row>                      
 	                    		<fo:table-cell border-style="solid">                    		
-	                      			<#assign totalDeductions=(totalDeductions+(payHeadItems.getValue()))>                  			
-	                    			<fo:block>${dedDescMap[payHeadItems.getKey()]?if_exists}</fo:block>                			
+	                      			<#assign totalDeductions=(totalDeductions+(payHeadItems.getValue()))>  
+	                      			<#assign instmtNo=0>
+	                      			<#if InstallmentFinalMap[payRollHeader.getKey()].get(payHeadItems.getKey())?has_content>
+	                      				<#assign instmtNo=InstallmentFinalMap[payRollHeader.getKey()].get(payHeadItems.getKey())?if_exists>  
+	                      			</#if>	              			
+	                    			<fo:block>${dedDescMap[payHeadItems.getKey()]?if_exists}<#if instmtNo !=0>[${instmtNo?if_exists}]</#if></fo:block>                			
 	                    		</fo:table-cell>                    		
 	                    		<fo:table-cell border-style="solid" text-align="right"><fo:block>${((-1)*payHeadItems.getValue())?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 	                    	</fo:table-row>

@@ -58,6 +58,7 @@ context.dedDescMap=dedDescMap;
 Map payRollMap=FastMap.newInstance();
 Map payRollSummaryMap=FastMap.newInstance();
 Map BankAdvicePayRollMap=FastMap.newInstance();
+Map InstallmentFinalMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
 	periodBillingId = periodBillDetails.get("periodBillingId");
@@ -74,16 +75,40 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			partyDetails = delegator.findOne("PartyPersonAndEmployeeDetail", [partyId :partyId], false);
 			bankAdviceDetailsMap=[:];
 			payRollItemsMap=[:];
+			InstallmentNoMap=[:];
 			itemConList=[];
 			itemConList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS ,payrollHeaderId));
 			itemCond = EntityCondition.makeCondition(itemConList,EntityOperator.AND);
-			payRollHeaderItemsList = delegator.findList("PayrollHeaderItem", itemCond, null, null, null, false);
+			payRollHeaderItemsList = delegator.findList("PayrollHeaderItem", itemCond, null, ["payrollItemSeqId"], null, false);
 			totEarnings=0;
 			totDeductions=0;
 			if(UtilValidate.isNotEmpty(payRollHeaderItemsList)){
 				tempAmount =0;
 				payRollHeaderItemsList.each{ payRollHeaderItem->
+					payrollItemSeqId=payRollHeaderItem.get("payrollItemSeqId");
 					payrollHeaderItemTypeId=payRollHeaderItem.get("payrollHeaderItemTypeId");
+					//getting installment No
+					if(dedTypeIds.contains(payrollHeaderItemTypeId)){
+						loanRecList=[];
+						loanRecList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS ,payrollHeaderId));
+						loanRecList.add(EntityCondition.makeCondition("payrollItemSeqId", EntityOperator.EQUALS ,payrollItemSeqId));
+						loanCond = EntityCondition.makeCondition(loanRecList,EntityOperator.AND);
+						loanRecvryList = delegator.findList("LoanRecovery", loanCond, null, null, null, false);
+						if(UtilValidate.isNotEmpty(loanRecvryList)){							
+							loanRecvryDetails = EntityUtil.getFirst(loanRecvryList);
+							instNum=0;
+							if(UtilValidate.isNotEmpty(loanRecvryDetails.get("principalInstNum"))){
+								instNum = loanRecvryDetails.get("principalInstNum");
+							}
+							if(UtilValidate.isNotEmpty(loanRecvryDetails.get("principalInstNum"))){
+								instNum = loanRecvryDetails.get("interestInstNum");
+							}
+							if(instNum !=0){
+								InstallmentNoMap.put(payrollHeaderItemTypeId,instNum);
+							}
+						}
+					}				
+					
 					amount=payRollHeaderItem.get("amount");
 					if(amount >0){
 						tempAmount +=amount;
@@ -107,6 +132,9 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 						payRollSummaryMap[payrollHeaderItemTypeId]+=amount;
 					}
 					
+				}
+				if(UtilValidate.isNotEmpty(InstallmentNoMap)){
+					InstallmentFinalMap.put(payrollHeaderId,InstallmentNoMap)
 				}
 				if(UtilValidate.isNotEmpty(payRollItemsMap) || tempAmount !=0){
 					payRollMap.put(payrollHeaderId,payRollItemsMap);
@@ -136,6 +164,7 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	}
 	
 }
+context.put("InstallmentFinalMap",InstallmentFinalMap);
 context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
