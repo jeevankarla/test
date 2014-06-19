@@ -1379,6 +1379,7 @@ import java.text.SimpleDateFormat;
 		    	String facilityId = (String) context.get("facilityId");
 		    	String customTimePeriodId = (String) context.get("customTimePeriodId");
 		    	String recoveryTypeId = (String)context.get("recoveryTypeId");
+		    	Timestamp incidentDate = (Timestamp)context.get("incidentDate");
 		    	BigDecimal amount = (BigDecimal)context.get("amount");
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 		    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -1390,6 +1391,7 @@ import java.text.SimpleDateFormat;
 		    			facilityRecovery = delegator.makeValue("FacilityRecovery");
 		    			facilityRecovery.put("facilityId", facilityId );
 		    			facilityRecovery.put("customTimePeriodId", customTimePeriodId);
+		    			facilityRecovery.put("incidentDate", incidentDate);
 		    			facilityRecovery.put("recoveryTypeId", recoveryTypeId); 
 		    			facilityRecovery.put("amount", amount);
 		    			facilityRecovery.put("createdDate", UtilDateTime.nowTimestamp());
@@ -1398,10 +1400,12 @@ import java.text.SimpleDateFormat;
 		    			facilityRecovery.create();    
 		            }
 		    		else {  
-		    			
 		    			facilityRecovery.set("amount", amount);
 		    			//facilityRecovery.set("createdDate", UtilDateTime.nowTimestamp());
 		    			//facilityRecovery.set("createdByUserLogin", userLogin.get("userLoginId"));
+		    			if(UtilValidate.isNotEmpty(incidentDate)){
+			    			facilityRecovery.set("incidentDate", incidentDate);
+			    			}
 		    			facilityRecovery.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 		    			facilityRecovery.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	    			    facilityRecovery.store();
@@ -1411,6 +1415,7 @@ import java.text.SimpleDateFormat;
 				}
 		        result = ServiceUtil.returnSuccess("Transporter Recovery Created Sucessfully");
 		        result.put("createdDate",UtilDateTime.nowTimestamp());
+		        result.put("incidentDate",incidentDate);
 		        return result;
 		    }  
 		    
@@ -1645,7 +1650,7 @@ import java.text.SimpleDateFormat;
 		        GenericValue userLogin = (GenericValue) context.get("userLogin");
 		        String facilityId = (String) context.get("facilityId");
 		        String partyId = (String) context.get("partyId");
-		        Timestamp createdDate = (Timestamp) context.get("createdDate");
+		        Timestamp createdDate = (Timestamp) context.get("incidentDate");
 		        String fromDate = (UtilDateTime.toDateString(createdDate, "MMMM dd,yyyy")).toString();
 		        String recoveryTypeId = (String)context.get("recoveryTypeId");
 		        BigDecimal amount = (BigDecimal)context.get("amount");
@@ -1654,6 +1659,7 @@ import java.text.SimpleDateFormat;
 		        String countryCode = "91";
 		        String contactNumberTo = null;
 		        String description = null;
+		        Debug.log("===========incidentDate===inSms=="+createdDate);
 		        try {
 		        	GenericValue enumeration = delegator.findOne("Enumeration", UtilMisc.toMap("enumId", recoveryTypeId),false);
 		        	if (UtilValidate.isNotEmpty(enumeration)) {

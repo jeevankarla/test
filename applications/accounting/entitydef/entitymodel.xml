@@ -4950,6 +4950,7 @@
 		title="Facility Recovery">
 		<field name="facilityId" type="id-ne"></field>
 		<field name="customTimePeriodId" type="id"></field>
+		<field name="incidentDate" type="date-time"></field>
 		<field name="recoveryTypeId" type="id-ne"></field>
 		<field name="amount" type="currency-amount"></field>
 		<field name="periodBillingId" type="id"></field>
@@ -4957,7 +4958,6 @@
       	<field name="createdByUserLogin" type="id-vlong"></field>
       	<field name="lastModifiedDate" type="date-time"></field>
       	<field name="lastModifiedByUserLogin" type="id-vlong"></field>
-      	
 		<prim-key field="facilityId" />
 		<prim-key field="customTimePeriodId" />
 		<prim-key field="recoveryTypeId" />

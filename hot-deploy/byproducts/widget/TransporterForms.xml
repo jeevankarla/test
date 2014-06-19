@@ -132,6 +132,9 @@ under the License.
            	 	</entity-options>
 			</drop-down>
 		</field>
+		 <field name="incidentDate"  required-field="true" title="Date of Incident">
+          <date-time> </date-time>
+        </field> 
 		 <field name="recoveryTypeId" title="Recovery Type">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
@@ -204,6 +207,7 @@ under the License.
     	<field name="amount" title="Amount(Rs)"><display/></field>
     	<field name="createdByUserLogin" title="User Name"><display/></field>
     	<field name="createdDate" title="createdDate"><display/></field>
+    	<field name="incidentDate" title="Date Of Incident"><display/></field>
     	<field name="cancel" widget-style="buttontext cancel">
 		<hyperlink target="cancelTranporterRecovery" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
         	<parameter param-name="facilityId" from-field="facilityId"/>
