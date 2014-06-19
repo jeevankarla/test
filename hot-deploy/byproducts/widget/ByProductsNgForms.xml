@@ -604,7 +604,7 @@
           <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
         <field name="orderType"><hidden value="SALES_ORDER"/></field>
-        <field name="salesChannelEnumId"><hidden value="RM_DIRECT_CHANNEL"/></field>
+        <field name="salesChannelEnumId"><hidden value="${ChannalType}"  > </hidden></field>
         <field name="productSubscriptionTypeId" title="Supply Type">
         <drop-down><option key="CASH" description="CASH"/>
         <option key="SPECIAL_ORDER" description="SPL ORDER"/></drop-down>

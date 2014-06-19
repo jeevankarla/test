@@ -16,7 +16,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
-
+import in.vasista.vbiz.byproducts.icp.icpServices;
 
 if(parameters.boothId){
 	parameters.boothId = parameters.boothId.toUpperCase();
@@ -28,6 +28,16 @@ shipmentTypeId = parameters.shipmentTypeId;
 dctx = dispatcher.getDispatchContext();
 effectiveDate = parameters.effectiveDate;
 priceTypeId=parameters.priceTypeId;
+changeFlag=parameters.changeFlag;
+
+productCatageoryId=parameters.productCatageoryId;
+if(changeFlag=="IcpSales"){
+	productCatageoryId="ICE_CREAM_NANDINI";
+}
+if(changeFlag=="IcpSalesAmul"){
+	productCatageoryId="ICE_CREAM_AMUL";
+}
+Debug.log("========changeFlag=="+changeFlag);
 subscriptionProdList = [];
 displayGrid = true;
 effDateDayBegin="";
@@ -189,6 +199,7 @@ exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesD
 		 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
   EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+	Debug.log("=====discontinuationDateCondition===="+discontinuationDateCondition);
 }
 else{
 prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
@@ -208,7 +219,9 @@ prodList.each{eachItem ->
 productPrices = [];
 Map prodPriceMap =[:];
 if(boothId){
-	productStoreId = ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
+	//getIceCreamFactoryStore
+	//productStoreId = ByProductServices.getByprodFactoryStore(delegator).get("factoryStoreId");
+	productStoreId = icpServices.getIceCreamFactoryStore(delegator).get("factoryStoreId");
 	Map inputProductRate = FastMap.newInstance();
 	inputProductRate.put("productStoreId", productStoreId);
 	inputProductRate.put("fromDate",effDateDayBegin);
@@ -225,7 +238,8 @@ productCostJSON=prodPriceMap;
 
 JSONObject prodIndentQtyCat = new JSONObject();
 JSONObject qtyInPieces = new JSONObject();
-
+/*protStoreId = icpServices.getIceCreamFactoryStore(delegator).get("factoryStoreId");
+Debug.log("===protStoreId===When IAM entering NEW SCREEN"+protStoreId);*/
 //for now no Crates in in AdhocSale
 /*inputCtx = [:];
 inputCtx.put("userLogin", userLogin);

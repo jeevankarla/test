@@ -67,10 +67,18 @@ $(document).ready(function(){
      </div>
       
     <div class="screenlet-body">
-	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">     
+    <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
+     <form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesAmul</@ofbizUrl>" id="indententryinit">  
+    <#elseif changeFlag?exists && changeFlag=='IcpSales'>
+    <form method="post" name="indententryinit" action="<@ofbizUrl>IcpSales</@ofbizUrl>" id="indententryinit">  
+    <#else>
+    <form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
+    </#if>
+	
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">  
+       <#if  (changeFlag?exists && changeFlag!='IcpSales')>   
         <tr>
-          <td>&nbsp;</td>
+          <td>&nbsp;${changeFlag?if_exists}</td>
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Products Type:</div></td>
           <td>&nbsp;</td>
        <#if productCatageoryId?exists && booth?exists>
@@ -104,9 +112,21 @@ $(document).ready(function(){
           </td>
        </#if>  
        </tr>    
+       </#if>
         <tr>
           <td>&nbsp;<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
-           <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/> 
+          <input type="hidden" name="isFormSubmitted"  value="YES" />
+            <input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
+            <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
+              <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_DIRECT_SHIPMENT"/> 
+              <input type="hidden" name="salesChannel" id="salesChannel" value="ICP_AMUL_CHANNEL"/> 
+            <#elseif changeFlag?exists && changeFlag=='IcpSales'>
+             <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_DIRECT_SHIPMENT"/> 
+               <input type="hidden" name="salesChannel" id="salesChannel" value="ICP_NANDINI_CHANNEL"/> 
+             
+            <#else>
+              <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/> 
+            </#if>
            </td>
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.SupplyDate}:</div></td>
           <td>&nbsp;</td>
@@ -240,6 +260,7 @@ $(document).ready(function(){
 	<input type="hidden" name="destinationFacilityId" id="destinationFacilityId" value="${parameters.destinationFacilityId?if_exists}"/>
 	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="${parameters.shipmentTypeId?if_exists}"/>
 	<input type="hidden" name="vehicleId" id="vehicleId" value="${parameters.vehicleId?if_exists}"/>
+	<input type="hidden" name="salesChannel" id="salesChannel" value="${parameters.salesChannel?if_exists}"/>
 	<br>
 </form>
     </div>
@@ -312,10 +333,12 @@ $(document).ready(function(){
 			<#assign formAction =''>			
 		    <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 		 		<#assign formAction='processAdhocSale'>
-		 	<#elseif changeFlag?exists && changeFlag=='ByProdGatePass'>
-	             <#assign formAction='processByprodGatePass'>
+		 	<#elseif changeFlag?exists && changeFlag=='IcpSalesAmul'>
+	             <#assign formAction='processIcpAmulSale'>
+	        <#elseif changeFlag?exists && changeFlag=='IcpSales'>
+	         <#assign formAction='processIcpSale'>
 		 	<#else>
-		 			<#assign formAction='processIndentEntryNew'>		 	
+		 			<#assign formAction='processIcpSale'>		 	
 			</#if>				
 			
 	<#if booth?exists>

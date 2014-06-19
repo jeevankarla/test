@@ -292,15 +292,7 @@
        	    <link target="GatePassShipment">
             </link>
        </menu-item>
-      <menu-item name="AdhocSale" title="Adhoc Sale"> 
-        <condition>
-        	<and>
-        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-        	</and>        		
-        </condition>  
-      	 <link target="AdhocSale">    
-         </link>
-        </menu-item>
+     
        <menu-item name="DSCorrectionEntryInit" title="${uiLabelMap.TruckSheetCorrection}">
         	<condition>
         	   <or>
@@ -469,6 +461,38 @@
             </condition>       
         	<link target="ChannelWiseSalesChart"/>
         </menu-item>  
+         <menu-item name="AdhocSale" title="Adhoc Sale"> 
+        <condition>
+        	<and>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        	</and>        		
+        </condition>  
+      	 <link target="AdhocSale">    
+         </link>
+        </menu-item>
+        <menu-item name="IcpSales" title="Nandini Icp Sale"> 
+        <condition>
+        	<or>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+        	</or>        		
+        </condition>  
+      	 <link target="IcpSales">    
+         </link>
+        </menu-item>
+        
+       <!--  <menu-item name="IcpSalesAmul" title="Amul Icp Sales"> 
+        <condition>
+        	<or>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+        		
+        	</or>        		
+        </condition>  
+      	 <link target="IcpSalesAmul">    
+         </link>
+        </menu-item> -->
+        
     </menu>
     
     <menu name="ReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
@@ -713,9 +737,27 @@
         	<link target="AdhocSale"/>
         </menu-item>
         <menu-item name="FindAdhocSalesOrder" title="Find Adhoc Orders">
-        	<link target="FindAdhocSalesOrder"/>
+        	<link target="FindAdhocSalesOrder"><parameter param-name="ChannalType"  value="RM_DIRECT_CHANNEL" ></parameter></link>
         </menu-item>
       </menu>
+       <menu name="IcpSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="IcpSalesTab" title="Nandini Icp Sales">
+        	<link target="IcpSales"/>
+        </menu-item>
+         <menu-item name="FindIcpSalesOrder" title="Find Nandini Icp Orders">
+        	<link target="FindIcpSalesOrder"></link>
+        </menu-item>
+      </menu>
+      <menu name="IcpAmulSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="IcpSalesAmul" title="Amul Icp Sales">
+        	<link target="IcpSalesAmul"/>
+        </menu-item>
+         <menu-item name="FindIcpAmulOrder" title="Find Amul Icp Orders">
+        	<link target="FindIcpAmulOrder"></link>
+        </menu-item>
+      </menu>
+      
+      
       <menu name="TransporterMarginsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="TransporterMargins" title="TransporterBilling">
         	<link target="TransporterMargins"/>

@@ -602,6 +602,28 @@
         <response name="success" type="view" value="AdhocSale"/>   
        <response name="failed" type="view" value="AdhocSale"/>  
     </request-map> 
+      <request-map uri="IcpSales">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IcpSales"/>   
+       <response name="failed" type="view" value="IcpSales"/>  
+    </request-map>
+     <request-map uri="IcpSalesAmul">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IcpSalesAmul"/>   
+       <response name="failed" type="view" value="IcpSalesAmul"/>  
+    </request-map>
+      <request-map uri="FindIcpSalesOrder">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindIcpSalesOrder"/>   
+       <response name="failed" type="view" value="FindIcpSalesOrder"/>  
+    </request-map>
+      <request-map uri="FindIcpAmulOrder">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindIcpAmulOrder"/>   
+       <response name="failed" type="view" value="FindIcpAmulOrder"/>  
+    </request-map>
+    
+    
    <request-map uri="AdhocSaleNew">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AdhocSaleNew"/>
@@ -619,6 +641,30 @@
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="AdhocSale"/>
     </request-map>
+     <request-map uri="processIcpSale">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="IcpSales">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="orderFacility"/>
+     		<redirect-parameter name="orderRoute"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="IcpSales"/>
+    </request-map>
+    <request-map uri="processIcpAmulSale">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="IcpSalesAmul">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="orderFacility"/>
+     		<redirect-parameter name="orderRoute"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="IcpSalesAmul"/>
+    </request-map>
+    
+    
     <request-map uri="FindAdhocSalesOrder">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindAdhocSalesOrder"/>
@@ -822,6 +868,8 @@
         	<redirect-parameter name="subTabItem"/>
     	</response>       	
     </request-map>
+   
+    
     <request-map uri="createInstitutionPayment">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createChequePayment"/>   	
@@ -1134,7 +1182,7 @@
     <view-map name="AdhocTruckSheetReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#AdhocTruckSheetReportTXT"  content-type="text/plain" />
     <view-map name="IndentAdjustmentEntryInit" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IndentAdjustmentEntryInit"/>
 	<view-map name="IndentAdjustEntryNew" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IndentAdjustEntryNew"/>
-    
+  
  <!-- Transporter views -->
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
@@ -1161,6 +1209,11 @@
  
  <view-map name="FindPaymentNonRoute" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentNonRoute"/>
  <view-map name="NewNonRouteReceipt" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#NewNonRouteReceipt"/>
- <view-map name="VbizUtilityService" type="screen" page="component://byproducts/widget/ByProductsReportScreens.xml#VbizUtilityService"  />
+ 
+ <!-- IceCreamPlant -->  
+ <view-map name="IcpSales" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSales"/>
+ <view-map name="FindIcpSalesOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpSalesOrder"/>
+ <view-map name="IcpSalesAmul" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSalesAmul"/>
+ <view-map name="FindIcpAmulOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpAmulOrder"/>
     
 </site-conf>
