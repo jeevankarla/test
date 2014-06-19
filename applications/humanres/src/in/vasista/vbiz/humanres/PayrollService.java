@@ -1598,7 +1598,7 @@ public class PayrollService {
 	        	Map availedCanteenDetailMap = (Map)employeePayrollAttedance.get("availedCanteenDetailMap");
 	        	int availedVehicleDays = ((Integer)employeePayrollAttedance.get("availedVehicleDays")).intValue();
 	        	int disAvailedVehicleDays = ((Integer)employeePayrollAttedance.get("disAvailedVehicleDays")).intValue();
-	        	Double noOfCalenderDays = (Double)employeePayrollAttedance.get("noOfCalenderDays");
+	        	//int noOfCalenderDays = (Integer)employeePayrollAttedance.get("noOfCalenderDays").intValue();
 	        	
 	        	priceInfoDescription.append("\n \n[ Attendance Details ::"+employeePayrollAttedance);
 				priceInfoDescription.append("  ]\n \n ");
