@@ -44,11 +44,20 @@ function makeDatePicker(fromDateId ,thruDateId){
 			jQuery("#rateAmount").parent().parent().hide();
 		}
 	}
+	function hideorShowBankDtls(){
+	  var paymentMethodTypeId =$( "#paymentMethodTypeId option:selected" ).val();
+		if(paymentMethodTypeId == "CHALLAN_PAYIN"){
+		    jQuery("#finAccountId").parent().parent().show();
+		}else{
+			jQuery("#finAccountId").parent().parent().hide();
+		}
+	}
     $(document).ready(function(){
     
       	jQuery("#marginOnMilk").parent().parent().hide();
 		jQuery("#marginOnProduct").parent().parent().hide();
     	jQuery("#rateAmount").parent().parent().hide();	
+    	jQuery("#finAccountId").parent().parent().hide();
             $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -421,41 +430,22 @@ function makeDatePicker(fromDateId ,thruDateId){
 							         <tr>
 				          				 <td class="label"><b>Payment Method Type</b></td>
 									     <td>
-									      <select name="paymentMethodTypeId" id="paymentMethodTypeId">
+									      <select name="paymentMethodTypeId" id="paymentMethodTypeId" onchange="javascript:hideorShowBankDtls();">
 										      <option value='CASH_PAYIN'>CSH</option>
 										      <option value='CHALLAN_PAYIN'>CHLN</option>
 										      <option value='CHEQUE_PAYIN'>CHQ</option>
 					      		          </select>
 									    </td>
 							        </tr>
-							         <tr>
-				          				 <td class="label"><b>Bank AccNo</b></td>
-									     <td>
-									      	<input type="text" name="finAccountCode" id="finAccountCode" size="30" maxlength="60"  autocomplete="off"/>
-									    </td>
-							        </tr>
-							         <tr>
-				          				 <td class="label"><b>Bank Name</b></td>
-									     <td>
-									      	<input type="text" name="finAccountName" id="finAccountName" size="30" maxlength="60" autocomplete="off"/>
-									    </td>
-							        </tr>
+							        <#assign finAccountDetails	= delegator.findByAnd("FinAccount", {"finAccountTypeId" : "BANK_ACCOUNT","ownerPartyId":"Company","statusId":"FNACT_ACTIVE"})>
 							        <tr>
-				          				 <td class="label"><b>Branch Name</b></td>
+				          				 <td class="label"><b>Bank Names</b></td>
 									     <td>
-									      	<input type="text" name="finAccountBranch" id="finAccountBranch" size="30" maxlength="60"  autocomplete="off"/>
-									    </td>
-							        </tr>
-							        <tr>
-				          				 <td class="label"><b>IFSC Code</b></td>
-									     <td>
-									      	<input type="text" name="ifscCode" id="ifscCode" size="30" maxlength="60"  autocomplete="off"/>
-									    </td>
-							        </tr>
-							        <tr>
-				          				 <td class="label"><b>From Date</b></td>
-									     <td>
-									      	<input type="text" name="fDate" id="fDate" size="30" maxlength="60" autocomplete="off"/>
+										     <select name="finAccountId" id="finAccountId">
+									            <#list finAccountDetails as finAccount>
+								                 <option value='${finAccount.finAccountId?if_exists}' >${finAccount.finAccountName?if_exists}</option>
+								                </#list>
+								            </select>
 									    </td>
 							        </tr>
 						  </table>

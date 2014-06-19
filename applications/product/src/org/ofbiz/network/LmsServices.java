@@ -250,30 +250,11 @@ public class LmsServices {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		
 		String facilityId = (String) context.get("facilityId");
-		String finAccountBranch = (String) context.get("finAccountBranch");
-		String finAccountName = (String) context.get("finAccountName");
-		String finAccountCode = (String) context.get("finAccountCode");
+		String finAccountId = (String) context.get("finAccountId");
 		String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
-		String ifscCode = (String) context.get("ifscCode");
 		String productStoreId = (String)(getFactoryStore(delegator)).get("factoryStoreId");
-		String fDate = (String) context.get("fromDate");
-		Timestamp fromDate = null;
+		Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
-		if(UtilValidate.isNotEmpty(fDate)){
-			try {
-				fromDate = new java.sql.Timestamp(sdf.parse(fDate).getTime());
-				fromDate = UtilDateTime.getDayStart(fromDate);
-			} catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: "+ fDate, module);
-				return ServiceUtil.returnError("Cannot parse date string: "+ fDate);
-			} catch (NullPointerException e) {
-				Debug.logError(e, "Cannot parse date string: "+ fDate, module);
-				return ServiceUtil.returnError("Cannot parse empty date string ");
-			}
-		}
-		if(UtilValidate.isEmpty(fromDate)){
-			fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-		}
 		try{
 			GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
 			String partyId = (String) facility.get("ownerPartyId");
@@ -282,8 +263,22 @@ public class LmsServices {
 			EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<GenericValue> partyProfileDefault = delegator.findList("PartyProfileDefault", cond, null, null, null, false);
 			partyProfileDefault = EntityUtil.filterByDate(partyProfileDefault, fromDate);
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+			conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+			EntityCondition  finCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List<GenericValue>finAccountList = delegator.findList("FinAccount", finCond, null, null, null, false);
+			
 			boolean createEntry = true;
 			if(UtilValidate.isNotEmpty(partyProfileDefault)){
+				if(UtilValidate.isNotEmpty(finAccountList)){
+					GenericValue finAcccount = EntityUtil.getFirst(finAccountList);
+					finAcccount.set("statusId", "FNACT_CANCELLED");
+					finAcccount.set("thruDate", UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayEnd(fromDate), -1));
+					finAcccount.store();
+				}
 				GenericValue partyProfile = EntityUtil.getFirst(partyProfileDefault);
 				Timestamp startDate = partyProfile.getTimestamp("fromDate");
 				if(startDate.compareTo(fromDate) == 0){
@@ -305,8 +300,9 @@ public class LmsServices {
 		        newEntity.set("fromDate",fromDate);
 		        newEntity.create();
 			}
-			if (UtilValidate.isNotEmpty(finAccountName)){
-				 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "finAccountBranch", finAccountBranch, "finAccountName", finAccountName,"finAccountCode", finAccountCode,"ifscCode", ifscCode);
+			if (paymentMethodTypeId.equals("CHALLAN_PAYIN")){
+				 GenericValue finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+				 input = UtilMisc.toMap("userLogin", userLogin, "ownerPartyId", partyId, "finAccountTypeId", finAccount.get("finAccountTypeId"),"finAccountName", finAccount.get("finAccountName"),"finAccountCode",finAccount.get("finAccountCode"), "finAccountBranch", finAccount.get("finAccountBranch"),"ifscCode", finAccount.get("ifscCode"),"fromDate",fromDate);
 				 resultMap = dispatcher.runSync("createFinAccount", input);
 				 if (ServiceUtil.isError(resultMap)) {
 					 Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -610,9 +606,7 @@ public class LmsServices {
                  return resultMap;
              }
 			    input.clear();
-			    input = UtilMisc.toMap("userLogin", userLogin,"facilityId", facilityId,"finAccountBranch",(String)context.get("finAccountBranch"),
-			    		"finAccountName",(String)context.get("finAccountName"),"finAccountCode",(String)context.get("finAccountCode"),"paymentMethodTypeId",(String)context.get("paymentMethodTypeId"),
-			    		"ifscCode",(String)context.get("ifscCode"),"fromDate",(String)context.get("fDate"));
+			    input = UtilMisc.toMap("userLogin", userLogin,"facilityId", facilityId,"finAccountId",(String)context.get("finAccountId"),"paymentMethodTypeId",(String)context.get("paymentMethodTypeId"));
 				resultMap = dispatcher.runSync("createFacilityPaymentDefault", input);
 				if (ServiceUtil.isError(resultMap)) {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);

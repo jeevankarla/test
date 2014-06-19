@@ -2150,18 +2150,21 @@ under the License.
     <form name="FacilityPaymentDefault" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="createFacilityPaymentDefault"
     	default-table-style="basic-table hover-bar" separate-columns="true"> 
 		<field name="facilityId" title="Facility Id"><display/></field>
-		<field name="paymentMethodTypeId">
+		<field name="paymentMethodTypeId" id-name="paymentMethodTypeId" event="onchange" action="javascript:getBankNames();">
          	<drop-down allow-empty="false">
-         		<entity-options description="${description}" entity-name="PaymentMethodType">
-         		</entity-options>
+         	    <option key="CASH_PAYIN" description="CSH"/>
+         	    <option key="CHALLAN_PAYIN" description="CHLN"/>
+         	    <option key="CHEQUE_PAYIN" description="CHQ"/>
          	</drop-down>
          </field>
         <field name="actionFlag"><hidden value="update"/></field>
-        <field name="finAccountCode" title="Bank AccNo"><text/></field>
-        <field name="finAccountName" title="Bank Name"><text/></field>
+        <field name="finAccountId"  id-name="finAccountId" title="Bank Name">
+        	<drop-down allow-empty="false"></drop-down>
+     	</field>
+        <!--  <field name="finAccountName" title="Bank Name"><text/></field>
         <field name="finAccountBranch" title="Branch Name"><text/></field>
         <field name="ifscCode" title="IFSC CODE"><text/></field>
-        <field name="fromDate" title="From Date"><date-time type="timestamp"/></field>
+        <field name="fromDate" title="From Date"><date-time type="timestamp"/></field>-->
         <field name="submitButton" title="Update" separate-column="true">
             <submit button-type="button"/>
         </field>
