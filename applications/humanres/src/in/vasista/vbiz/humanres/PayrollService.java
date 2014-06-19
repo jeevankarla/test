@@ -1365,6 +1365,50 @@ public class PayrollService {
 	        return result;
 	    }
 	    
+	 public static Map<String, Object> getPayrollAttedancePeriod(DispatchContext dctx, Map<String, ? extends Object> context) {
+
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+			Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+			String timePeriodId = (String) context.get("timePeriodId");
+	        Locale locale = (Locale) context.get("locale");
+	        Map shiftDetailMap = FastMap.newInstance();
+	        int availedVehicleDays =0;
+	        int disAvailedVehicleDays =0;
+	        Map availedCanteenDetailMap = FastMap.newInstance();
+     	List conditionList = FastList.newInstance();
+	        List<GenericValue> emplDailyAttendanceDetailList = FastList.newInstance();
+	        GenericValue lastCloseAttedancePeriod= null;
+	        String attendancePeriodId = timePeriodId;
+	        try{
+	        	EntityFindOptions efo = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, 1, 1, true);
+	        	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "ATTENDANCE_MONTH"));
+	        	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(timePeriodEnd)));
+	        	EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        	List<GenericValue> attendancePeriodList = delegator.findList("CustomTimePeriod",cond, null, UtilMisc.toList("-thruDate"), efo, false);
+	        	 //result = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", "Company", "periodTypeId", "ATTENDANCE_MONTH","userLogin", userLogin));
+	  	    	if(ServiceUtil.isError(result)){
+	 	 	    	Debug.logError("Error in service findLastClosedDate ", module);    			
+	 	 		    return ServiceUtil.returnError("Error in service findLastClosedDate");
+	 	 	    }
+	  	    	//lastCloseAttedancePeriod = ((GenericValue)result.get("lastClosedTimePeriod"))
+	  	    	if(UtilValidate.isNotEmpty(attendancePeriodList)){
+	  	    		lastCloseAttedancePeriod = EntityUtil.getFirst(attendancePeriodList);
+	  	    	}else{
+	  	    		lastCloseAttedancePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",timePeriodEnd), true);
+	  	    	}
+	  	    	
+	        }catch (Exception e) {
+				// TODO: handle exception
+			}
+	      result.put("lastCloseAttedancePeriod", lastCloseAttedancePeriod);
+	      return result;  
+	 }
+	 
 	 public static Map<String, Object> getEmployeePayrollAttedance(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 	        Delegator delegator = dctx.getDelegator();
@@ -1386,26 +1430,21 @@ public class PayrollService {
 	        GenericValue lastCloseAttedancePeriod= null;
 	        String attendancePeriodId = timePeriodId;
 	        try{
-	        	EntityFindOptions efo = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, 1, 1, true);
-	        	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "ATTENDANCE_MONTH"));
-	        	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(timePeriodEnd)));
-	        	EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	        	List<GenericValue> attendancePeriodList = delegator.findList("CustomTimePeriod",cond, null, UtilMisc.toList("-thruDate"), efo, false);
-	        	 //result = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", "Company", "periodTypeId", "ATTENDANCE_MONTH","userLogin", userLogin));
+	        	 result = getPayrollAttedancePeriod(dctx,context);
 	  	    	if(ServiceUtil.isError(result)){
-	 	 	    	Debug.logError("Error in service findLastClosedDate ", module);    			
-	 	 		    return ServiceUtil.returnError("Error in service findLastClosedDate");
+	 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
+	 	 		    return ServiceUtil.returnError("Error in service findLast Closed Attedance Date");
 	 	 	    }
 	  	    	//lastCloseAttedancePeriod = ((GenericValue)result.get("lastClosedTimePeriod"))
-	  	    	if(UtilValidate.isNotEmpty(attendancePeriodList)){
-	  	    		lastCloseAttedancePeriod = EntityUtil.getFirst(attendancePeriodList);
+	  	    	if(UtilValidate.isNotEmpty(result.get("lastCloseAttedancePeriod"))){
+	  	    		lastCloseAttedancePeriod = (GenericValue)result.get("lastCloseAttedancePeriod");
 		  	    	attendancePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
 	  	    	}
 	  	    	
 	        }catch (Exception e) {
 				// TODO: handle exception
 			}
-	       Debug.log("lastCloseAttedancePeriod==========="+lastCloseAttedancePeriod);
+	       Debug.logInfo("lastCloseAttedancePeriod==========="+lastCloseAttedancePeriod,module);
 	        conditionList.clear();
 	        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
 	        if(UtilValidate.isNotEmpty(lastCloseAttedancePeriod)){
