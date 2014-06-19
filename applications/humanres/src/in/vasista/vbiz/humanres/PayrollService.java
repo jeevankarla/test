@@ -201,7 +201,7 @@ public class PayrollService {
 		       					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItem");
 		       					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
 		       					payHeaderItem.set("payrollHeaderItemTypeId",payHeaderItemValue.get("payrollItemTypeId"));
-		       					payHeaderItem.set("amount", payHeaderItemValue.get("amount"));
+		       					payHeaderItem.set("amount", ((BigDecimal)payHeaderItemValue.get("amount")).setScale(0, BigDecimal.ROUND_HALF_UP));
 		       				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
 					            delegator.create(payHeaderItem);
 					            //now populate item ref to loan recovery ,if the current head is loan deduction
