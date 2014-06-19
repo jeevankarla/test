@@ -2,5 +2,24 @@
 <ShipmentType description="Adhoc Shipment" hasTable="N" parentTypeId="" shipmentTypeId="DIRECT_SHIPMENT"/>
 <ShipmentType description="RM Adhoc Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="RM_DIRECT_SHIPMENT"/>
 <Enumeration enumId="RM_DIRECT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="RM_DIRECT_CHANNEL" description="Retail Marketing Direct Sales Channel" />
+  
+<ShipmentType description="ICE Cream Sale Adhoc Shipment" hasTable="N" parentTypeId="" shipmentTypeId="ICP_DIRECT_SHIPMENT"/>
+<Enumeration enumId="ICP_NANDINI_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="ICP_NANDINI_CHANNEL" description="Nandini Ice Cream Sales Channel" />
     
+<Enumeration enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL" enumCode="ICP_AMUL_CHANNEL" description="Amul Ice Cream  Sales Channel" />
 
+ <ProductCategoryType  description="Ice Cream"  productCategoryTypeId="ICE_CREAM"/> 
+ <ProductCategory  productCategoryId="ICE_CREAM_NANDINI" productCategoryTypeId="ICE_CREAM"/> 
+ <ProductCategory  productCategoryId="ICE_CREAM_AMUL" productCategoryTypeId="ICE_CREAM"/> 
+    <Product   primaryProductCategoryId="ICE_CREAM_NANDINI" productId="100" />
+    <Product  primaryProductCategoryId="ICE_CREAM_NANDINI" productId="101" />
+    <Product primaryProductCategoryId="ICE_CREAM_NANDINI" productId="102" />
+    
+     <Product   primaryProductCategoryId="ICE_CREAM_AMUL" productId="103" />
+    <Product  primaryProductCategoryId="ICE_CREAM_AMUL" productId="104" />
+    <Product primaryProductCategoryId="ICE_CREAM_AMUL" productId="105" />
+    
+     <SecurityGroup description="All 'ICP SALES' permissions like create,cancel " groupId="ICPSALE_VIEW"/>    
+    <SecurityGroupPermission groupId="ICPSALE_VIEW" permissionId="ICPSALE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ICPSALE_VIEW"/>
+   

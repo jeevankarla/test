@@ -71,10 +71,15 @@
     <SecurityGroup description=" 'TRNS MRGN(DTC)' permissions with restriction on download of VendorMarginMainReport" groupId="TRNSMRGNVIEW"/>    
     <SecurityGroupPermission groupId="TRNSMRGNVIEW" permissionId="TRNSMRGN_VIEW"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_VIEW"/>
-     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODREPORTS_VIEW"/>
-     <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODUCTS_DAILREPOR"/>
+     <SecurityGroupPermission groupId="TRNSMRGNVIEW" permissionId="BYPRODREPORTS_VIEW"/>
+     <SecurityGroupPermission groupId="TRNSMRGNVIEW" permissionId="BYPRODUCTS_DAILREPOR"/>
 
-
+ <!-- TRNSMRGN CANCEL  permissions -->
+    <SecurityGroup description="All 'TRNS MRGN(DTC)' permissions like create,cancel " groupId="TRNSMRGN_CANCELADMIN"/>    
+    <SecurityGroupPermission groupId="TRNSMRGN_CANCELADMIN" permissionId="TRNSMRGN_CANCELADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSCANCEL_ADMIN"/>
+   
+   
     <!-- sample  -->
        <FacilityTypeAttr facilityTypeId="ROUTE" attrName="WORK_ORDER_NO"></FacilityTypeAttr>
      <FacilityAttribute facilityId="S01" attrName="WORK_ORDER_NO" attrValue="S01777566"></FacilityAttribute>
