@@ -1536,6 +1536,8 @@ under the License.
       <field name="payrollBenDedRuleId" type="id-ne"></field>
       <field name="payHeadPriceActionSeqId" type="id-ne"></field>
       <field name="payHeadPriceActionTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <field name="customPriceCalcService" type="id-vlong"></field>  
       <field name="acctgFormulaId" type="id"></field>   
       <field name="amount" type="fixed-point"></field>
