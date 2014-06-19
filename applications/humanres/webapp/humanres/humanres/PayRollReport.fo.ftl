@@ -43,10 +43,12 @@ under the License.
       	 <#assign payHeader = delegator.findOne("PayrollHeader", {"payrollHeaderId" : payRollHeader.getKey()}, true)>
       	 <#assign partyId = payHeader.partyIdFrom>
       	 <#assign emplDetails = delegator.findOne("PartyPersonAndEmployeeDetail", {"partyId" : partyId}, true)/>
+      	 <#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": "ATTN_"+parameters.customTimePeriodId}, true)/>
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
+      	 <#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : partyId})/>
          <#assign location=delegator.findByAnd("EmployeeContactDetails", {"partyId" : partyId})/>
-         <#assign emplLeaves = delegator.findByAnd("EmplLeaveStatus", {"partyId" : partyId})/>       
+         <#assign emplLeaves = delegator.findByAnd("EmplLeaveBalanceStatus", {"partyId" : partyId, "customTimePeriodId": parameters.customTimePeriodId})/>       
      <fo:page-sequence master-reference="main"> 	 <#-- the footer -->
         <fo:static-content flow-name="xsl-region-after">
              <fo:block font-size="8pt" text-align="center">             
@@ -110,7 +112,7 @@ under the License.
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Department               : ${(emplPosition[0].emplPositionTypeId)?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Department               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 					<fo:table-cell>
@@ -119,7 +121,7 @@ under the License.
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Designation               : ${(emplPosition[0].emplPositionId)?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Designation               : ${(emplPositionAndFulfilment[0].emplPositionId)?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 					<fo:table-cell>
@@ -128,7 +130,7 @@ under the License.
                      		 				</fo:table-row>                     		 				
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Location                    : ${(location[0].city)?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Location                    : ${(doj[0].locationGeoId)?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 					<fo:table-cell>
@@ -182,11 +184,19 @@ under the License.
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">Loss of Pay              :</fo:block>
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">Net Paid Days          :</fo:block>
                     		</fo:table-cell>
+                    		<#assign totalDays=0>
+                    		<#assign lossOfPay=0>
+                    		<#assign netPaidDays=0>
+                    		<#if emplLeavesDetails?has_content>
+                    			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")?if_exists>
+                    			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")?if_exists>
+                    			<#assign netPaidDays=(totalDays-lossOfPay)>
+                    		</#if>                    		
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                        		<fo:block text-align="center">${Static["org.ofbiz.base.util.UtilDateTime"].getIntervalInDays(timePeriodStart,timePeriodEnd)}</fo:block>
-                        		<fo:block text-align="center">${days?if_exists}days</fo:block>
-                        		<fo:block text-align="center">${(Static["org.ofbiz.base.util.UtilDateTime"].getIntervalInDays(timePeriodStart,timePeriodEnd))-(days)}days</fo:block>
+                        		<fo:block text-align="center">${totalDays?if_exists}</fo:block>
+                        		<fo:block text-align="center">${lossOfPay?if_exists}days</fo:block>
+                        		<fo:block text-align="center">${(netPaidDays?if_exists)}days</fo:block>
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     			<fo:block>
@@ -213,30 +223,30 @@ under the License.
                     						<fo:table-row>
                     							<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false">Opening Leaves                  :</fo:block></fo:table-cell>
                     							<fo:table-cell/>
-                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="SICK_LEAVE">${empl.availableLeaves?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
-                    							<fo:table-cell/>
-                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CASUAL_LEAVE">${empl.availableLeaves?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="EL">${empl.openingBalance?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CH">${empl.openingBalance?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CL">${empl.openingBalance?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
                     						</fo:table-row>
                     						<fo:table-row>
                     							<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false">Additions During the Month :</fo:block></fo:table-cell>
                     							<fo:table-cell/>
-                    							<fo:table-cell><fo:block>1</fo:block></fo:table-cell>
-                    							<fo:table-cell/>
-                    							<fo:table-cell><fo:block>1</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="EL">${empl.adjustedDays?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CH">${empl.adjustedDays?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CL">${empl.adjustedDays?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
                     						</fo:table-row>
                     						<fo:table-row>
                     							<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false">Availed During the Month    :</fo:block></fo:table-cell>
                     							<fo:table-cell/>
-                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="SICK_LEAVE">${empl.availedLeaves?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
-                    							<fo:table-cell/>
-                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CASUAL_LEAVE">${empl.availedLeaves?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="EL">${empl.availedDays?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CH">${empl.availedDays?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CL">${empl.availedDays?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
                     						</fo:table-row>
                     						<fo:table-row>
                     							<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false">Closing Leaves                    :</fo:block></fo:table-cell>
                     							<fo:table-cell/>
-                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="SICK_LEAVE">${(empl.availableLeaves+1)-empl.availedLeaves}</#if></#list></#if></fo:block></fo:table-cell>
-                    							<fo:table-cell/>
-                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CASUAL_LEAVE">${(empl.availableLeaves+1)-empl.availedLeaves}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="EL">${((empl.openingBalance+empl.adjustedDays)-(empl.availedDays))?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CH">${((empl.openingBalance+empl.adjustedDays)-(empl.availedDays))?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block><#if emplLeaves?has_content><#list emplLeaves as empl><#if empl.leaveTypeId=="CL">${((empl.openingBalance+empl.adjustedDays)-(empl.availedDays))?if_exists}</#if></#list></#if></fo:block></fo:table-cell>
                     						</fo:table-row>                   						
                     					</fo:table-body>	
                     				</fo:table>	
@@ -274,8 +284,8 @@ under the License.
 	                    		<fo:table-cell border-style="solid">                    		
 	                      			<#assign totalEarnings=(totalEarnings+(payHeadItems.getValue()))>                  			
 	                    			<fo:block>${benefitDescMap[payHeadItems.getKey()]?if_exists}</fo:block>                			
-	                    		</fo:table-cell>                    		
-	                    		<fo:table-cell border-style="solid" text-align="right"><fo:block>${payHeadItems.getValue()?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+	                    		</fo:table-cell>                 	              		
+	                    		<fo:table-cell border-style="solid"><fo:block text-align="right">${payHeadItems.getValue()?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 	                    	</fo:table-row>
                          </#if>        	
                     	</#list>
@@ -306,7 +316,7 @@ under the License.
 	                      			<#assign totalDeductions=(totalDeductions+(payHeadItems.getValue()))>                  			
 	                    			<fo:block>${dedDescMap[payHeadItems.getKey()]?if_exists}</fo:block>                			
 	                    		</fo:table-cell>                    		
-	                    		<fo:table-cell border-style="solid" text-align="right"><fo:block>${((-1)*payHeadItems.getValue())?if_exists?string("##0.00")}</fo:block></fo:table-cell>
+	                    		<fo:table-cell border-style="solid" text-align="right"><fo:block>${((-1)*payHeadItems.getValue())?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 	                    	</fo:table-row>
                          </#if>        	
                     	</#list>
@@ -321,19 +331,19 @@ under the License.
                    			
                    			<fo:block font-weight="bold" white-space-collapse="false" keep-together="always">Total Earnings :                                         <#if totalEarnings?has_content>
                    			<#assign total = totalEarnings?if_exists />
-                   			<@ofbizCurrency amount=total /></#if></fo:block>
+                   			<@ofbizCurrency amount=total?string("#0") /></#if></fo:block>
                    		</fo:table-cell>
                    		<fo:table-cell>
                    			<fo:block font-weight="bold" white-space-collapse="false" keep-together="always">Total Deductions :                                       <#if totalDeductions?has_content>
-                   			<#assign totalamount = totalDeductions?if_exists />
-                   			<@ofbizCurrency amount=totalamount/></#if></fo:block>
+                   			<#assign totalamount = ((-1)*totalDeductions)?if_exists />
+                   			<@ofbizCurrency amount=totalamount?string("#0")/></#if></fo:block>
                    		</fo:table-cell>
                    </fo:table-row>
-                   <#assign netAmt= total+totalamount>
+                   <#assign netAmt= total-totalamount>
                 	<fo:table-row>
                    		<fo:table-cell>                   			
                    			<fo:block font-weight="bold">Net Pay   :
-                            	<@ofbizCurrency amount=netAmt/>
+                            	<@ofbizCurrency amount=netAmt?string("#0")/>
                           	</fo:block>                       
                    			<fo:block white-space-collapse="false" keep-together="always">(In Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmt?string("#0")), "%rupees-and-paise", locale).toUpperCase()} ONLY)</fo:block>
                    		</fo:table-cell>
@@ -341,6 +351,8 @@ under the License.
             		</fo:table-body>
             	</fo:table>            		          
             </fo:block>
+            <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+            <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
             <fo:block text-align="center" keep-together="always" font-size="8pt">This is a computer-generated salary slip. Does not require a Signature
             </fo:block>
           </fo:flow>          
