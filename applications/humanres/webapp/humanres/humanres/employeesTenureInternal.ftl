@@ -31,9 +31,10 @@
 	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/jquery.js</@ofbizContentUrl>"></script>
 	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/jquery.dataTables.js</@ofbizContentUrl>"></script>
 	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/js/dataTables.tableTools.js</@ofbizContentUrl>"></script>
+	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/dataTables.plugins.js</@ofbizContentUrl>"></script>
+	
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.js</@ofbizContentUrl>"></script>
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.axislabels.js"</@ofbizContentUrl>></script>
-
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.pie.js"</@ofbizContentUrl>></script>
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.tooltip.js"</@ofbizContentUrl>></script>
 
@@ -119,11 +120,14 @@ $(document).ready(function() {
 		"data": upcomingRetireesTable,
 		"columns": [
 			{ "title": "Employee" },
+			{ "title": "Employee Id" },			
 			{ "title": "Department" },
 			{ "title": "Position" },			
 			{ "title": "Join Date" },			
 			{ "title": "Retirement Date" }],
-		"iDisplayLength" : 25,		
+		"columnDefs": [{ type: 'date-eu', targets: [4,5] },
+					   { "visible": false, targets: 1 }],
+       	"iDisplayLength" : 25,		
      	"fnRowCallback": function(nRow, aData, iDisplayIndex ) {
 		    $('td:eq(0)', nRow).html('<a href="EmployeeProfile?partyId=' + aData[1] + '">' +
                 aData[0] + '</a>');
@@ -131,7 +135,7 @@ $(document).ready(function() {
 		}
 	} );	
 	
-	datatable2.fnSort( [ [4,'asc'] ] );	 
+	datatable2.fnSort( [ [5,'asc'] ] );	 
 	 
 	 	
 } );

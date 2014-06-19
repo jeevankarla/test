@@ -79,7 +79,7 @@ employeeList.each {employee ->
 		if (retirementDate < thruDate) {
 			JSONArray employeeJSON = new JSONArray();
 			employeeJSON.add(employee.name);
-			//employeeJSON.add(employee.employeeId);
+			employeeJSON.add(employee.employeeId);
 			employeeJSON.add(employee.department);
 			employeeJSON.add(employee.position);
 			employeeJSON.add(employee.joinDate);
