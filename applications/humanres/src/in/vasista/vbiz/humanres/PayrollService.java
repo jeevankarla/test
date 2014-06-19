@@ -43,6 +43,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityUtil;
 
 public class PayrollService {
@@ -1064,6 +1065,7 @@ public class PayrollService {
 	                	StringBuilder priceInfoDescription = new StringBuilder();
 	                	Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
 	                    List<GenericValue> payHeadPriceActions = delegator.findByAndCache("PayHeadPriceAction", UtilMisc.toMap("payrollBenDedRuleId", payHeadPriceRuleId));
+	                    payHeadPriceActions = EntityUtil.filterByDate(payHeadPriceActions,timePeriodStart);
 	                    for (GenericValue payHeadPriceAction: payHeadPriceActions) {
 	                        // yeah, finally here, perform the action, ie, modify the amount
 	     	                    priceInfoDescription.append(condsDescription.toString());
@@ -1406,17 +1408,29 @@ public class PayrollService {
         	List conditionList = FastList.newInstance();
 	        List<GenericValue> emplDailyAttendanceDetailList = FastList.newInstance();
 	        GenericValue lastCloseAttedancePeriod= null;
+	        String attendancePeriodId = timePeriodId;
 	        try{
-	        	 result = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", "Company", "periodTypeId", "ATTENDANCE_MONTH","userLogin", userLogin));
+	        	EntityFindOptions efo = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, 1, 1, true);
+	        	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "ATTENDANCE_MONTH"));
+	        	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(timePeriodEnd)));
+	        	EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	        	List<GenericValue> attendancePeriodList = delegator.findList("CustomTimePeriod",cond, null, UtilMisc.toList("-thruDate"), efo, false);
+	        	 //result = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", "Company", "periodTypeId", "ATTENDANCE_MONTH","userLogin", userLogin));
 	  	    	if(ServiceUtil.isError(result)){
 	 	 	    	Debug.logError("Error in service findLastClosedDate ", module);    			
 	 	 		    return ServiceUtil.returnError("Error in service findLastClosedDate");
 	 	 	    }
-	  	    	lastCloseAttedancePeriod = ((GenericValue)result.get("lastClosedTimePeriod"));
+	  	    	//lastCloseAttedancePeriod = ((GenericValue)result.get("lastClosedTimePeriod"))
+	  	    	if(UtilValidate.isNotEmpty(attendancePeriodList)){
+	  	    		lastCloseAttedancePeriod = EntityUtil.getFirst(attendancePeriodList);
+		  	    	attendancePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
+	  	    	}
+	  	    	
 	        }catch (Exception e) {
 				// TODO: handle exception
 			}
 	       //Debug.log("lastCloseAttedancePeriod==========="+lastCloseAttedancePeriod);
+	        conditionList.clear();
 	        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
 	        if(UtilValidate.isNotEmpty(lastCloseAttedancePeriod)){
 	        	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(lastCloseAttedancePeriod.getDate("fromDate"))));
@@ -1455,7 +1469,7 @@ public class PayrollService {
 	    		}
 	    		
 	    			
-			GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId, "customTimePeriodId",lastCloseAttedancePeriod.get("customTimePeriodId")), false);
+			GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId,"customTimePeriodId",attendancePeriodId), false);
 			result.put("lossOfPayDays", 0.0);
 			result.put("noOfAttendedDays",0.0);
 			result.put("noOfCalenderDays", UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd));
