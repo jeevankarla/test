@@ -84,24 +84,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                     <#list saleDetails as sale>
                     	<#assign cratesReceived=sale.getValue().get("cratesReceived")?if_exists>
                     	<#assign cansReceived=sale.getValue().get("cansReceived")?if_exists>
-	                    	<#if cratesReceived &gt;0>
-	                    	     <#assign cratesDiff =sale.getValue().get("cratesSent")-sale.getValue().get("cratesReceived")>
-	                    	</#if>
-	                    	<#if cansReceived &gt; 0>
-	                    	      <#assign cansDiff =sale.getValue().get("cansSent")-sale.getValue().get("cansReceived")>
-	                    	</#if>
-                    	
+	                    <#assign cratesDiff =sale.getValue().get("cratesReceived")-sale.getValue().get("cratesSent")>
+	                    <#assign cansDiff =sale.getValue().get("cansReceived")-sale.getValue().get("cansSent")>
                     	<#assign cratesSentTot=cratesSentTot+sale.getValue().get("cratesSent")>
                     	<#assign cratesReceivedTot=cratesReceivedTot+sale.getValue().get("cratesReceived")>
-			                   <#if cratesReceivedTot &gt;0>
-                    				<#assign cratesDiffTot=cratesDiffTot+cratesDiff>
-                    	      </#if>
+			            <#assign cratesDiffTot=cratesDiffTot+cratesDiff>
                     	<#assign cansSentTot=cansSentTot+sale.getValue().get("cansSent")>
                     	<#assign cansReceivedTot=cansReceivedTot+sale.getValue().get("cansReceived")>
-                    		 <#if cansReceivedTot &gt;0>
-                    				<#assign cansDiffTot=cansDiffTot+cansDiff>
-                    	      </#if>
-                    	
+                    	<#assign cansDiffTot=cansDiffTot+cansDiff>
                 			<fo:table-row>
                 				<fo:table-cell>
                     			<fo:block keep-together="always" text-align="left"    white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
@@ -184,7 +174,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 	                        </fo:table-row>
 	                       <fo:table-row>
                 				<fo:table-cell>
-                    			<fo:block keep-together="always" text-align="left"    font-weight="bold" white-space-collapse="false" linefeed-treatment="preserve">Grand Total :</fo:block> 
+                    			<fo:block keep-together="always" text-align="left"    font-weight="bold" font-size="10pt" white-space-collapse="false" linefeed-treatment="preserve">Grand Total :</fo:block> 
                     			</fo:table-cell>
                     			<fo:table-cell>
                         			<fo:block  keep-together="always" text-align="left" font-weight="bold" font-size="10pt" white-space-collapse="false">&#xA;</fo:block>  
