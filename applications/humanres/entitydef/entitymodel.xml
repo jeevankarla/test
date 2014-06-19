@@ -1486,10 +1486,6 @@ under the License.
 			rel-entity-name="PayrollHeader">
 			<key-map field-name="payrollHeaderId"/>
 		</relation>
-		<!-- <relation type="one" fk-name="PAYH_ITMITYP"
-			rel-entity-name="InvoiceItemType">
-			<key-map rel-field-name ="invoiceItemTypeId" field-name="payrollHeaderItemTypeId"/>
-		</relation> -->
 	</entity>
     <entity entity-name="PayHeadPriceActionType"
             package-name="org.ofbiz.humanres"
@@ -1573,7 +1569,8 @@ under the License.
             title="Loan Entity">
       <field name="loanId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-       <field name="loanTypeId" type="id-ne"></field>
+      <field name="loanTypeId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="sanctionedAmount" type="currency-amount"></field>
       <field name="principalAmount" type="currency-amount"></field>
@@ -1657,4 +1654,23 @@ under the License.
         <key-map field-name="payrollItemSeqId"/>
       </relation>
     </entity>
+    <view-entity entity-name="LoanAndRecoveryAndType"
+    package-name="org.ofbiz.humanres" title="Loan and Type and Recovery">
+      <member-entity entity-alias="LO" entity-name="Loan"/>
+      <member-entity entity-alias="LOT" entity-name="LoanType"/>
+      <member-entity entity-alias="LOR" entity-name="LoanRecovery"/>
+      <alias-all entity-alias="LOR"></alias-all>
+      <alias name="loanId" entity-alias="LO"/>
+      <alias name="partyId" entity-alias="LO"/>
+      <alias name="loanTypeId" entity-alias="LO"/>
+      <alias name="statusId" entity-alias="LO"/>
+      <alias name="payHeadTypeId" entity-alias="LOT"/>
+      <view-link entity-alias="LO" rel-entity-alias="LOT">
+        <key-map field-name="loanTypeId"/>
+      </view-link>
+      <view-link entity-alias="LO" rel-entity-alias="LOR">
+        <key-map field-name="loanId"/>
+      </view-link>
+    </view-entity>
+    
 </entitymodel>

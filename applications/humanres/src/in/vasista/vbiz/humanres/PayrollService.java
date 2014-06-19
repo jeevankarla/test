@@ -154,8 +154,6 @@ public class PayrollService {
 					
 					Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 					Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
-					
-					int totalDays=UtilDateTime.getIntervalInDays(monthBegin,monthEnd);	
 					try {
 						Map input = FastMap.newInstance();
 						//input.put(arg0, arg1);
@@ -206,6 +204,22 @@ public class PayrollService {
 		       					payHeaderItem.set("amount", payHeaderItemValue.get("amount"));
 		       				    delegator.setNextSubSeqId(payHeaderItem, "payrollItemSeqId", 5, 1);
 					            delegator.create(payHeaderItem);
+					            //now populate item ref to loan recovery ,if the current head is loan deduction
+					            List condList = FastList.newInstance();
+					            condList.add(EntityCondition.makeCondition("payHeadTypeId" ,EntityOperator.EQUALS ,payHeaderItemValue.get("payrollItemTypeId")));
+					            condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS ,"LOAN_DISBURSED"));
+					            condList.add(EntityCondition.makeCondition("customTimePeriodId" ,EntityOperator.EQUALS ,customTimePeriodId));
+					            condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS ,payHeader.get("partyIdFrom")));
+					            EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+					            List<GenericValue> revoveryList = delegator.findList("LoanAndRecoveryAndType", cond, null, null, null, false);
+					            if(UtilValidate.isNotEmpty(revoveryList)){
+					            	GenericValue recovery = EntityUtil.getFirst(revoveryList);
+					            	recovery.set("payrollHeaderId", payHeaderItem.getString("payrollHeaderId"));
+					            	recovery.set("payrollItemSeqId", payHeaderItem.getString("payrollItemSeqId"));
+					            	delegator.store(recovery);
+					            	
+					            }
+					            
 							}
 	       				}
 						
@@ -254,6 +268,7 @@ public class PayrollService {
 		    				List<GenericValue> payrollHeaderItemList = delegator.findList("PayrollHeaderItem", EntityCondition.makeCondition("payrollHeaderId", EntityOperator.IN, payrollHeaderIds), null, null, null, false);
 		    				if(UtilValidate.isNotEmpty(payrollHeaderItemList)){
 		    	    		    delegator.removeAll(payrollHeaderItemList);
+		    	    		    delegator.removeAll(payrollHeaderList);
 		    	    		}
 		    			}
 		    			periodBilling.set("statusId", "COM_CANCELLED");
@@ -262,6 +277,8 @@ public class PayrollService {
 						periodBilling.store();
 		    		}else{
 		    			periodBilling.set("statusId", "CANCEL_FAILED");
+		    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 		    			periodBilling.store();
 		    		}
 		    	}catch (GenericEntityException e) {
@@ -656,23 +673,8 @@ public class PayrollService {
 		        Debug.logInfo("==========>timePeriodEnd=" + timePeriodEnd.toString(), module);   
 		        context.put("timePeriodStart", timePeriodStart);
 		        context.put("timePeriodEnd", timePeriodEnd);        
-				// First check for any loss of pay days
-				/*try {
-					serviceResults = fetchLossOfPayDays(dctx, context);
-			        if (ServiceUtil.isError(serviceResults)) {
-			        	return ServiceUtil.returnError(errorMsg, null, null, serviceResults);
-			        }			
-				} 
-				catch(GenericEntityException e) {
-					Debug.logError(e, errorMsg + "Unable to fetch loss of pay days needed to generate payroll: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to fetch loss of pay days needed to generate payroll");			
-				}
-				catch (Exception e) {
-					Debug.logError(e, errorMsg + "Unable to fetch loss of pay days needed to generate payroll: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to fetch loss of pay days needed to generate payroll: " + e.getMessage());
-			    }   		
-		Debug.logInfo("==========>lossOfPayDays=" + context.get("lossOfPayDays"), module); */  		
-				// First, lets generate invoice item(s) for basic salary
+				
+				// First, lets generate pay Header item(s) for basic salary
 				try {
 					serviceResults = createPayrolBasicSalaryItems(dctx, context);
 			        if (ServiceUtil.isError(serviceResults)) {
@@ -681,20 +683,11 @@ public class PayrollService {
 			       if(UtilValidate.isNotEmpty(serviceResults.get("itemsList"))){
 			    	   itemsList.addAll((List)serviceResults.get("itemsList"));
 			       }
-				} 
-				catch(GenericEntityException e) {
-					Debug.logError(e, errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage());			
-				}	
-				catch (GenericServiceException e) {
-					Debug.logError(e, errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage());
-			    }
-				catch (Exception e) {
+				}catch (Exception e) {
 					Debug.logError(e, errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage(), module);
 			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll Item records for basic salary: " + e.getMessage());
 			    }        
-				// Create invoice items for benefits
+				// Create payhead items for benefits
 				try {
 					serviceResults = createPayrolBenefitItems(dctx, context);
 			        if (ServiceUtil.isError(serviceResults)) {
@@ -703,21 +696,12 @@ public class PayrollService {
 			        if(UtilValidate.isNotEmpty(serviceResults.get("itemsList"))){
 				    	   itemsList.addAll((List)serviceResults.get("itemsList"));
 				    	   
-				       }
-				}
-				catch(GenericEntityException e) {
-					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage());			
-				}	
-				catch (GenericServiceException e) {
-					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage());
-			    }	
-				catch (Exception e) {
+				     }
+				}catch (Exception e) {
 					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
 			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage());
 			    }   		
-				// Create invoice items for deductions
+				// Create payhead items for deductions
 				try {
 					serviceResults = createPayrolDeductionItems(dctx, context);
 			        if (ServiceUtil.isError(serviceResults)) {
@@ -727,19 +711,11 @@ public class PayrollService {
 				    	   itemsList.addAll((List)serviceResults.get("itemsList"));
 				    	   
 				     }
+ 				}catch (Exception e) {
+					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
+			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll payHeadItem records for deductions: " + e.getMessage());
 				}
-				catch(GenericEntityException e) {
-					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for deductions: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll InvoiceItem records for deductions: " + e.getMessage());			
-				}				
-				catch (GenericServiceException e) {
-					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll InvoiceItem records for deductions: " + e.getMessage());
-			    }
-				catch (Exception e) {
-					Debug.logError(e, errorMsg + "Unable to create payroll InvoiceItem records for benefits: " + e.getMessage(), module);
-			        return ServiceUtil.returnError(errorMsg + "Unable to create payroll InvoiceItem records for deductions: " + e.getMessage());
-				}   
+				
 			    Map result = ServiceUtil.returnSuccess();
 			    result.put("itemsList",itemsList);
 				return result;   	

@@ -147,6 +147,10 @@
    <Enumeration  description="First shift" enumId="SHIFT_01" enumTypeId="EMPL_REC_SHT"/>
    <Enumeration  description="Second shift" enumId="SHIFT_02" enumTypeId="EMPL_REC_SHT"/>
    <Enumeration  description="Night shift" enumId="SHIFT_NIGHT" enumTypeId="EMPL_REC_SHT"/>
+     <!-- Loan Status -->
+     <StatusType description="Employee Loan status" hasTable="N" parentTypeId="" statusTypeId="EMPL_LOAN_STATUS"/>
+     <StatusItem description="Approved" sequenceId="3" statusCode="APPROVED" statusId="LOAN_APPROVED" statusTypeId="EMPL_LOAN_STATUS"/>
+     <StatusItem description="Disbursed" sequenceId="4" statusCode="DISBURSED" statusId="LOAN_DISBURSED" statusTypeId="EMPL_LOAN_STATUS"/>
      
        
 </entity-engine-xml>
