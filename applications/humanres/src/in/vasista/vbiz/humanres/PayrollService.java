@@ -1180,7 +1180,7 @@ public class PayrollService {
                       
 	                    }
 	                    
-	                    calcResults.put("amount", modifyAmount);
+	                    calcResults.put("amount", modifyAmount.setScale(0, BigDecimal.ROUND_HALF_UP));
 	                    priceInfos.add(priceInfoDescription.toString());
 	                    calcResults.put("priceInfos", priceInfos);
 	                    return calcResults;
