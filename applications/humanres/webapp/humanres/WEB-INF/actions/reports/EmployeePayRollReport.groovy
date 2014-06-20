@@ -18,6 +18,11 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.ofbiz.base.util.UtilNumber;
+
+if (parameters.customTimePeriodId == null) {
+	return;	
+}
+
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 context.timePeriodEnd= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));

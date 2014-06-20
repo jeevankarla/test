@@ -60,10 +60,50 @@
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeesTenure.groovy"/>  
             </actions>            
             <widgets>
-                        	<platform-specific> 
-                            	<html><html-template location="component://humanres/webapp/humanres/humanres/employeesTenureInternal.ftl"/></html>
-                        	</platform-specific>   
+            	<platform-specific> 
+                	<html><html-template location="component://humanres/webapp/humanres/humanres/employeesTenureInternal.ftl"/></html>
+                </platform-specific>   
             </widgets>
         </section>
     </screen>  
+    
+	 <screen name="SalaryAnalysisChart">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Analytics"/>
+                <set field="tabButtonItem" value="analytics"/>
+ 				<set field="tabButtonItem2" value="salaryAnalysisChart" />                                           
+                <set field="headerItem" value="charts"/>
+				<set field="ajaxUrl" value="SalaryAnalysisChartInternal" type="String"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/salaryAnalysis.groovy"/>  				
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AnalyticsTabBar"/>                                                        					   
+                        <platform-specific> 
+                            <html><html-template location="component://humanres/webapp/humanres/humanres/salaryAnalysis.ftl"/></html>
+                        </platform-specific>   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+	 <screen name="SalaryAnalysisChartInternal">
+        <section>
+            <actions>
+<!--           		<set field="parameters.customTimePeriodId" value="APR_14" />-->
+            	<set field="parameters.partyId" value="Company" />            	
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>              
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/salaryAnalysisInternal.groovy"/>  
+            </actions>            
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://humanres/webapp/humanres/humanres/salaryAnalysisInternal.ftl"/></html>
+                </platform-specific>   
+            </widgets>
+        </section>
+    </screen>      
 </screens>

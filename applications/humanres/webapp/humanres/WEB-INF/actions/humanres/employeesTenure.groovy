@@ -88,7 +88,6 @@ employeeList.each {employee ->
 		}
 	}
 }
-JSONArray deptLabelsJSON = new JSONArray();
 JSONArray deptPieDataJSON = new JSONArray();
 
 JSONArray deptEmployeesJSON = new JSONArray();
@@ -103,9 +102,9 @@ departmentMap.each { dept ->
 	deptPie.put("data", dept.getValue());
 	deptPieDataJSON.add(deptPie);
 }
-Debug.logError("departmentMap="+departmentMap,"");
-Debug.logError("deptEmployeesJSON="+deptEmployeesJSON,"");
-Debug.logError("deptPieDataJSON="+deptPieDataJSON,"");
+//Debug.logError("departmentMap="+departmentMap,"");
+//Debug.logError("deptEmployeesJSON="+deptEmployeesJSON,"");
+//Debug.logError("deptPieDataJSON="+deptPieDataJSON,"");
 Debug.logError("employeesJSON="+employeesJSON,"");
 context.deptEmployeesJSON = deptEmployeesJSON;
 context.deptPieDataJSON = deptPieDataJSON;

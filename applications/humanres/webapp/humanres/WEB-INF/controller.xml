@@ -986,7 +986,15 @@ under the License.
     <request-map uri="employeesTenureChartInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeesTenureChartInternal"/>
-    </request-map>     
+    </request-map>
+    <request-map uri="salaryAnalysisChart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SalaryAnalysisChart"/>
+    </request-map>
+    <request-map uri="SalaryAnalysisChartInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SalaryAnalysisChartInternal"/>
+    </request-map>          
     
    <!-- <request-map uri="EditAgreementEmploymentAppls">
         <security https="true" auth="true"/>
@@ -1659,5 +1667,7 @@ under the License.
 	<!-- Analytics -->
 	<view-map name="EmployeesTenureChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChart"/>
 	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>
+	<view-map name="SalaryAnalysisChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#SalaryAnalysisChart"/>
+	<view-map name="SalaryAnalysisChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#SalaryAnalysisChartInternal"/>
 	
 </site-conf>

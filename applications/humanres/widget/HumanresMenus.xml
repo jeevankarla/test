@@ -55,7 +55,10 @@
 		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="employeesTenureChart" title="Employees Analytics"> 
         	<link target="analytics"/>
-        </menu-item>       
+        </menu-item> 
+        <menu-item name="salaryAnalysisChart" title="Salary Analysis"> 
+        	<link target="salaryAnalysisChart"/>
+        </menu-item>               
     </menu>	     
 
 	<menu name="Day"  extends="Calendar">
