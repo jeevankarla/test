@@ -468,7 +468,9 @@ public class PayrollService {
 					input.put("payrollItemTypeId", benefitTypeId);			  
 					Timestamp from = benefit.getTimestamp("fromDate");
 					Timestamp thru = benefit.getTimestamp("thruDate");
-					
+					GenericValue benefitTypeRow = delegator.findOne("BenefitType", UtilMisc.toMap(
+		        			"benefitTypeId", benefitTypeId), false);
+		        	context.put("proportionalFlag", benefitTypeRow.getString("proportionalFlag"));
 					//if empty cost then look in rule engine
 					if(UtilValidate.isEmpty(benefit.getBigDecimal("cost"))){
 						Map payHeadCtx = UtilMisc.toMap("userLogin", userLogin);				
@@ -477,6 +479,7 @@ public class PayrollService {
 						payHeadCtx.put("timePeriodEnd", timePeriodEnd);
 						payHeadCtx.put("timePeriodId", timePeriodId);
 						payHeadCtx.put("employeeId", partyId);
+						payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
 						Map<String, Object> result = calculatePayHeadAmount(dctx,payHeadCtx);
 						if(UtilValidate.isNotEmpty(result)){
 							benefit.set("cost" ,result.get("amount"));
@@ -537,6 +540,7 @@ public class PayrollService {
 						payHeadCtx.put("timePeriodEnd", timePeriodEnd);
 						payHeadCtx.put("timePeriodId", timePeriodId);
 						payHeadCtx.put("employeeId", partyId);
+						payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
 						Map<String, Object> result = calculatePayHeadAmount(dctx,payHeadCtx);
 						if(UtilValidate.isNotEmpty(result)){
 							deduction.set("cost" ,result.get("amount"));
@@ -891,6 +895,11 @@ public class PayrollService {
                     if(UtilValidate.isNotEmpty(deductionTypeRow)){
                     	 payheadAmtCtx.put("proportionalFlag", deductionTypeRow.getString("proportionalFlag"));
                     }
+                    GenericValue benifitTypeRow = delegator.findOne("BenefitType", UtilMisc.toMap(
+		        			"benefitTypeId", payHeadTypeId), false);
+                    if(UtilValidate.isNotEmpty(benifitTypeRow)){
+                    	 payheadAmtCtx.put("proportionalFlag", benifitTypeRow.getString("proportionalFlag"));
+                    }
                     if(UtilValidate.isNotEmpty(context.get("proportionalFlag"))){
                     	payheadAmtCtx.put("proportionalFlag", context.get("proportionalFlag"));
 		            }
@@ -1203,7 +1212,7 @@ public class PayrollService {
 			String shiftTypeId = null;
 			String otherCond = null;
 			String payGradeId = null;
-			String grossSalary = null;
+			//String grossSalary = null;
 			Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate);
 	        if(UtilValidate.isNotEmpty(condParms)){
 	        	 geoId = (String)condParms.get("geoId");
@@ -1266,9 +1275,10 @@ public class PayrollService {
 	            }
 	        }else if ("PAYHD_BEDE_GROSS_SAL".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	        	Map grossSalaryMap  = getEmployeeGrossSalary(dctx ,paramCtxMap);
-	        	grossSalary = ((BigDecimal)grossSalaryMap.get("amount")).toString();
+	        	BigDecimal grossSalary = ((BigDecimal)grossSalaryMap.get("amount"));
+	        	BigDecimal condValue = new BigDecimal(payrollBenDedCond.getString("condValue"));
 	            if (UtilValidate.isNotEmpty(grossSalary)) {
-	                compare = grossSalary.compareTo(payrollBenDedCond.getString("condValue"));
+	                compare = grossSalary.compareTo(condValue);
 	            } else {
 	                compare = 1;
 	            }
