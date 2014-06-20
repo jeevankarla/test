@@ -1017,6 +1017,10 @@ public class PayrollService {
 	                boolean allTrue = true;
 	                StringBuilder condsDescription = new StringBuilder();
 	                List<GenericValue> payrollBenDedCondList = delegator.findList("PayrollBenDedCond", EntityCondition.makeCondition("payrollBenDedRuleId",EntityOperator.EQUALS ,payHeadPriceRuleId ), null,UtilMisc.toList("payrollBenDedCondSeqId") , null, false);	
+	                //no condition then look in action
+	                if(UtilValidate.isEmpty(payrollBenDedCondList)){
+	                	allTrue = true;
+	                }
 	                for (GenericValue payrollBenDedCond : payrollBenDedCondList) {
 	                	
                          if(UtilValidate.isNotEmpty(condParms)){
