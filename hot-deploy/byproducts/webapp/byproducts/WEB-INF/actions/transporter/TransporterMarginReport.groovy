@@ -104,7 +104,7 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 	facilityCommissionList.each { facilityCommission ->
 		facilityId = facilityCommission.facilityId;
 		partyId = facilityCommission.partyId;
-		if(UtilValidate.isEmpty(routePartyMap.get(partyId))){
+		if(UtilValidate.isEmpty(routePartyMap.get(facilityId))){
 			routePartyMap[facilityId]=partyId;
 		 }
 		
