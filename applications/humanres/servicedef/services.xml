@@ -1209,10 +1209,16 @@ under the License.emplpunch
        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
        <attribute name="punchList" mode="IN" type="java.util.List"/>
   </service>
-  <service name="fetchLastPunch" engine="java" invoke="fetchLastPunch" location="in.vasista.vbiz.humanres.PunchService" auth="true" export="true">
+ <service name="fetchLastPunch" engine="java" invoke="fetchLastPunch" location="in.vasista.vbiz.humanres.PunchService" auth="true" export="true">
         <description>fetch punch</description>
        <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
       <attribute name="deviceId" mode="IN" optional="true" type="String"/>
       <attribute name="punchEntry" mode="OUT" type="Map" optional="true"></attribute>
-  </service>
+  </service>  
+  <service name="sendPayrollSms" engine="groovy"  location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy" auth="true">
+      <description>send paroll sms</description>
+      <attribute name="periodBillingId" mode="IN" optional="false" type="String"/>
+      <attribute name="customTimePeriodId" mode="IN" optional="false" type="String"/>
+      <attribute name="sendSms" mode="IN" optional="true" type="String" default-value="Y"/>
+  </service>  
 </services>
