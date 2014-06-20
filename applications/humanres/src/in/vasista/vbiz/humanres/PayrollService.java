@@ -1015,11 +1015,12 @@ public class PayrollService {
 
 	                // check all conditions
 	                boolean allTrue = true;
+	                
 	                StringBuilder condsDescription = new StringBuilder();
 	                List<GenericValue> payrollBenDedCondList = delegator.findList("PayrollBenDedCond", EntityCondition.makeCondition("payrollBenDedRuleId",EntityOperator.EQUALS ,payHeadPriceRuleId ), null,UtilMisc.toList("payrollBenDedCondSeqId") , null, false);	
-	                //no condition then look in action
-	                if(UtilValidate.isEmpty(payrollBenDedCondList)){
-	                	allTrue = true;
+	              //this is to support rule with no condition 
+	                if(UtilValidate.isNotEmpty(condParms) && UtilValidate.isEmpty(payrollBenDedCondList)){
+	                	allTrue = false; 
 	                }
 	                for (GenericValue payrollBenDedCond : payrollBenDedCondList) {
 	                	
