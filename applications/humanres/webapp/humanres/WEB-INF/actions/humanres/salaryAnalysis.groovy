@@ -16,6 +16,6 @@ periodIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "customTime
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.IN, periodIds));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-customTimePeriods = delegator.findList("CustomTimePeriod", condition, null, null, null, true);
+customTimePeriods = delegator.findList("CustomTimePeriod", condition, null, ["-thruDate"], null, true);
 context.customTimePeriods = customTimePeriods;
 Debug.logError("customTimePeriods="+customTimePeriods,"");
