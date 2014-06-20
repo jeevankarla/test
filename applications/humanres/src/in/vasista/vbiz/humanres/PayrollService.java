@@ -1074,6 +1074,7 @@ public class PayrollService {
 	    							Set supportedVaribules = UtilMisc.toSet("NOOFCALENDERDAYS","NOOFATTENDEDDAYS","LOSSOFPAYDAYS",
 	    									"NOOFATTENDEDHOLIDAYS" ,"NOOFATTENDEDSS" ,"NOOFATTENDEDWEEKLYOFF" ,"NOOFLEAVEDAYS","NOOFCOMPOFFSAVAILED");
 	    							supportedVaribules.add("NOOFAVAILEDVEHICLEDAYS");
+	    							supportedVaribules.add("NOOFPAYABLEDAYS");
 	    							
 	    							for(int i= 0;i<varibuleKeyList.size();i++){
 	    								String varibuleKey = (String)varibuleKeyList.get(i);
@@ -1093,6 +1094,7 @@ public class PayrollService {
 		    							variables.put("NOOFLEAVEDAYS", (Double)attendanceMap.get("noOfLeaveDays"));
 		    							variables.put("NOOFCOMPOFFSAVAILED", (Double)attendanceMap.get("noOfCompoffAvailed"));
 		    							variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
+		    							variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
 		    							
 		    							double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
 		    							evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
