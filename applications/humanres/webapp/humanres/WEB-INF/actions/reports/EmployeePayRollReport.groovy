@@ -74,6 +74,7 @@ context.dedTypeIds=dedTypeIds;
 context.dedDescMap=dedDescMap;
 Map payRollMap=FastMap.newInstance();
 Map payRollSummaryMap=FastMap.newInstance();
+Map payRollEmployeeMap=FastMap.newInstance();
 Map BankAdvicePayRollMap=FastMap.newInstance();
 Map InstallmentFinalMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(periodBillingList)){
@@ -120,9 +121,9 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 							if(UtilValidate.isNotEmpty(loanRecvryDetails.get("principalInstNum"))){
 								instNum = loanRecvryDetails.get("interestInstNum");
 							}
-							InstallmentNoMap.put(payrollHeaderItemTypeId,instNum);							
+								InstallmentNoMap.put(payrollHeaderItemTypeId,instNum);
+							}
 						}
-					}				
 					
 					amount=payRollHeaderItem.get("amount");
 					if(amount >0){
@@ -153,6 +154,7 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 				}
 				if(UtilValidate.isNotEmpty(payRollItemsMap) || tempAmount !=0){
 					payRollMap.put(payrollHeaderId,payRollItemsMap);
+					payRollEmployeeMap.put(partyId,payRollItemsMap);
 				}
 			}
 			netAmount=totEarnings+totDeductions;
@@ -216,3 +218,4 @@ context.put("InstallmentFinalMap",InstallmentFinalMap);
 context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
+context.put("payRollEmployeeMap",payRollEmployeeMap);
