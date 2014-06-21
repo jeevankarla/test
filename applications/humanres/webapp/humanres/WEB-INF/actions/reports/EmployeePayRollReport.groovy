@@ -19,14 +19,25 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilNumber;
+import in.vasista.vbiz.humanres.PayrollService;
 
 if (parameters.customTimePeriodId == null) {
 	return;	
 }
+dctx = dispatcher.getDispatchContext();
 
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 context.timePeriodEnd= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+
+resultMap = PayrollService.getPayrollAttedancePeriod(dctx, [timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, timePeriodId: parameters.customTimePeriodId, userLogin : userLogin]);
+if(UtilValidate.isNotEmpty(resultMap)){
+	lastCloseAttedancePeriod=resultMap.get("lastCloseAttedancePeriod");
+	timePeriod=lastCloseAttedancePeriod.get("periodName");
+	context.timePeriod=timePeriod;
+}
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
@@ -109,9 +120,7 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 							if(UtilValidate.isNotEmpty(loanRecvryDetails.get("principalInstNum"))){
 								instNum = loanRecvryDetails.get("interestInstNum");
 							}
-							if(instNum !=0){
-								InstallmentNoMap.put(payrollHeaderItemTypeId,instNum);
-							}
+							InstallmentNoMap.put(payrollHeaderItemTypeId,instNum);							
 						}
 					}				
 					
