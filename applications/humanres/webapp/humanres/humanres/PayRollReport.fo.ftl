@@ -43,6 +43,7 @@ under the License.
       	 <#assign payHeader = delegator.findOne("PayrollHeader", {"payrollHeaderId" : payRollHeader.getKey()}, true)>
       	 <#assign partyId = payHeader.partyIdFrom>
       	 <#assign emplDetails = delegator.findOne("PartyPersonAndEmployeeDetail", {"partyId" : partyId}, true)/>      	 
+      	 <#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod}, true)/>
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
       	 <#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : partyId})/>
