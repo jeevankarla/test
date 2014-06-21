@@ -46,7 +46,7 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
 
 //getting benefits
-benefitTypeList = delegator.findList("BenefitType", null, null, null, null, false);
+benefitTypeList = delegator.findList("BenefitType", null, null, ["sequenceNum"], null, false);
 benefitDescMap=[:];
 if(UtilValidate.isNotEmpty(benefitTypeList)){
 	benefitTypeList.each{ benefit->
@@ -60,7 +60,7 @@ context.benefitTypeIds=benefitTypeIds;
 context.benefitDescMap=benefitDescMap;
 //getting deductions
 
-deductionTypeList = delegator.findList("DeductionType", null, null, null, null, false);
+deductionTypeList = delegator.findList("DeductionType", null, null, ["sequenceNum"], null, false);
 dedDescMap=[:];
 if(UtilValidate.isNotEmpty(deductionTypeList)){
 	deductionTypeList.each{ deduction->

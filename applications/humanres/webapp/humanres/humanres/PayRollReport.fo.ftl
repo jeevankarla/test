@@ -278,19 +278,21 @@ under the License.
                     		</fo:table-cell>                    		
                     	</fo:table-row>
                    <#assign payRollHeaderItemList =payRollHeader.getValue().entrySet()> 	
-                   <#if payRollHeaderItemList?has_content>
-                      <#list payRollHeaderItemList as payHeadItems>
-                         <#if benefitTypeIds.contains(payHeadItems.getKey())>
-	                    	<fo:table-row>                      
-	                    		<fo:table-cell border-style="solid">                    		
-	                      			<#assign totalEarnings=(totalEarnings+(payHeadItems.getValue()))>                  			
-	                    			<fo:block>${benefitDescMap[payHeadItems.getKey()]?if_exists}</fo:block>                			
-	                    		</fo:table-cell>                 	              		
-	                    		<fo:table-cell border-style="solid"><fo:block text-align="right">${payHeadItems.getValue()?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
-	                    	</fo:table-row>
-                         </#if>        	
+                   	<#list benefitTypeIds as benefitType>
+                    		<#assign value=0>
+                    		<#if (payRollHeader.getValue()).get(benefitType)?has_content>
+                    			<#assign value=(payRollHeader.getValue()).get(benefitType)>	
+                    		</#if>
+                    		<#if value !=0>
+	                    		<fo:table-row>                      
+		                    		<fo:table-cell border-style="solid">                    		
+		                      			<#assign totalEarnings=(totalEarnings+(value))>                  			
+		                    			<fo:block>${benefitDescMap[benefitType]?if_exists}</fo:block>                			
+		                    		</fo:table-cell>                 	              		
+		                    		<fo:table-cell border-style="solid"><fo:block text-align="right">${value?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
+		                    	</fo:table-row>
+	                    	</#if>
                     	</#list>
-                    	</#if>
             		</fo:table-body>
             	</fo:table>
             	</fo:block>
@@ -309,23 +311,25 @@ under the License.
                     			<fo:block keep-together="always" text-align="center" font-weight="bold">${uiLabelMap.CommonAmount}</fo:block>
                     		</fo:table-cell>                    		
                     	</fo:table-row>
-                    	<#if payRollHeaderItemList?has_content>
-                      <#list payRollHeaderItemList as payHeadItems>
-                         <#if dedTypeIds.contains(payHeadItems.getKey())>
-	                    	<fo:table-row>                      
-	                    		<fo:table-cell border-style="solid">                    		
-	                      			<#assign totalDeductions=(totalDeductions+(payHeadItems.getValue()))>  
-	                      			<#assign instmtNo=0>
-	                      			<#if InstallmentFinalMap[payRollHeader.getKey()].get(payHeadItems.getKey())?has_content>
-	                      				<#assign instmtNo=InstallmentFinalMap[payRollHeader.getKey()].get(payHeadItems.getKey())?if_exists>  
-	                      			</#if>	              			
-	                    			<fo:block>${dedDescMap[payHeadItems.getKey()]?if_exists}<#if instmtNo !=0>[${instmtNo?if_exists}]</#if></fo:block>                			
-	                    		</fo:table-cell>                    		
-	                    		<fo:table-cell border-style="solid" text-align="right"><fo:block>${((-1)*payHeadItems.getValue())?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
-	                    	</fo:table-row>
-                         </#if>        	
+                    	<#list dedTypeIds as deductionType>
+                    		<#assign dedValue=0>
+                    		<#if (payRollHeader.getValue()).get(deductionType)?has_content>
+                    			<#assign dedValue=(payRollHeader.getValue()).get(deductionType)>	
+                    		</#if>
+                    		<#if dedValue !=0>
+	                    		<fo:table-row>                      
+		                    		<fo:table-cell border-style="solid">                    		
+		                      			<#assign totalDeductions=(totalDeductions+(dedValue))> 
+		                      			<#assign instmtNo=0>
+		                      			<#if InstallmentFinalMap[payRollHeader.getKey()].get(deductionType)?has_content>
+		                      				<#assign instmtNo=InstallmentFinalMap[payRollHeader.getKey()].get(deductionType)?if_exists>  
+		                      			</#if>                 			
+		                    			<fo:block>${dedDescMap[deductionType]?if_exists}<#if instmtNo !=0>[${instmtNo?if_exists}]</#if></fo:block>                			
+		                    		</fo:table-cell>                 	              		
+		                    		<fo:table-cell border-style="solid"><fo:block text-align="right">${((-1)*(dedValue))?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
+		                    	</fo:table-row>
+	                    	</#if>
                     	</#list>
-                    	</#if>
             		</fo:table-body>
             	</fo:table>
             	</fo:block>         
