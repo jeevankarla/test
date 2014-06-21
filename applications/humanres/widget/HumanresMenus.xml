@@ -232,6 +232,9 @@
 	<menu-item name="EmployeeDailyAttendance" title="Employee Daily Attendance">
 		<link target="EmployeeDailyAttendance"/>
 	</menu-item>
+	<menu-item name="PartyBenefitOrDeduction" title="Employee Benefit/Deduction">
+		<link target="PartyBenefitOrDeduction"/>
+	</menu-item>
    </menu>
     <menu name="EmploymentBar" default-menu-item-name="EditPartyBenefit" default-selected-style="selected"
         type="simple" menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem">

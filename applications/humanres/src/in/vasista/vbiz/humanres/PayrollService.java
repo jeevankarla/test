@@ -514,7 +514,7 @@ public class PayrollService {
 		        List itemsList = FastList.newInstance();
 
 				List conditionList = UtilMisc.toList(
-		                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+						EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 		        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 		        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 		        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
@@ -1782,4 +1782,125 @@ public class PayrollService {
 	        result = ServiceUtil.returnSuccess("Successfully Updated!!");
 	        return result;
 	    }//end of service
+	 
+	 public static Map<String, Object> getPartyIdFromEmployment(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Delegator delegator = ctx.getDelegator();
+	    	String partyIdTo = (String)context.get("partyIdTo");
+	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    	String customTimePeriodId = (String)context.get("customTimePeriodId");
+	    	Map<String, Object> result = ServiceUtil.returnSuccess();
+	    	String partyIdFrom = null;
+	    	Timestamp fromDateStart  = null;
+	    	try {
+		        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+	        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+	        		Timestamp fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	        		Timestamp thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	        		fromDateStart = UtilDateTime.getDayStart(fromDateTime);
+	        	}
+	        }catch (GenericEntityException e) {
+	        	Debug.logError(e, module);
+	        	return ServiceUtil.returnError(e.getMessage());
+			}
+	    	try {
+	    		List conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
+				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 	
+				List<GenericValue> employmentList = delegator.findList("Employment", condition, null, null, null, false);
+				if(UtilValidate.isNotEmpty(employmentList)){
+					List activeEmploymentList = EntityUtil.filterByDate(employmentList, fromDateStart);
+					GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
+					partyIdFrom = activeEmployment.getString("partyIdFrom");
+				}
+	    	} catch (GenericEntityException e) {
+	            Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        }
+	        result.put("partyIdFrom", partyIdFrom);
+	        return result;
+	    }
+	 public static Map<String, Object> createOrUpdatePartyBenefitOrDeduction(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String partyId = (String) context.get("partyId");
+	        String customTimePeriodId = (String)context.get("customTimePeriodId");
+	        String payHeadTypeId = (String)context.get("payHeadTypeId");
+	        BigDecimal amount = (BigDecimal)context.get("amount");
+	        Locale locale = (Locale) context.get("locale");
+	        Map result = ServiceUtil.returnSuccess();
+	        Timestamp fromDateStart  = null;
+	        Timestamp thruDateEnd  = null;
+	        
+			String benefitTypeId = null;
+			String deductionTypeId = null;
+			
+			String partyIdFrom = null;
+			
+			Map employmentDetails = getPartyIdFromEmployment(dctx,UtilMisc.toMap("userLogin",userLogin,"customTimePeriodId",customTimePeriodId,"partyIdTo",partyId));
+			if(UtilValidate.isNotEmpty(employmentDetails)){
+				partyIdFrom =(String)employmentDetails.get("partyIdFrom");
+			}
+	        try {
+		        GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId", customTimePeriodId),false);
+	        	if (UtilValidate.isNotEmpty(customTimePeriod)) {
+	        		Timestamp fromDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	        		Timestamp thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	        		fromDateStart = UtilDateTime.getDayStart(fromDateTime);
+	        		thruDateEnd = UtilDateTime.getDayEnd(thruDateTime);
+	        		previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
+	        	}
+	        }catch (GenericEntityException e) {
+	        	Debug.logError(e, module);
+	        	return ServiceUtil.returnError(e.getMessage());
+			}
+			try {
+				if(UtilValidate.isNotEmpty(payHeadTypeId)){
+					try {
+						GenericValue benefitType = delegator.findOne("BenefitType", UtilMisc.toMap("benefitTypeId", payHeadTypeId), false);
+						if(UtilValidate.isNotEmpty(benefitType)){
+							benefitTypeId = benefitType.getString("benefitTypeId");
+						}
+						GenericValue deductionType = delegator.findOne("DeductionType", UtilMisc.toMap("deductionTypeId", payHeadTypeId), false);
+						if(UtilValidate.isNotEmpty(deductionType)){
+							deductionTypeId = deductionType.getString("deductionTypeId");
+						}
+					}catch (GenericEntityException e) {
+			        	Debug.logError(e, module);
+			        	return ServiceUtil.returnError(e.getMessage());
+					}
+				}
+				if(UtilValidate.isNotEmpty(benefitTypeId)){
+					GenericValue partyBenefit = delegator.makeValue("PartyBenefit");
+					partyBenefit.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+					partyBenefit.set("roleTypeIdTo", "EMPLOYEE");
+					partyBenefit.set("partyIdFrom", partyIdFrom);
+					partyBenefit.set("partyIdTo", partyId);
+					partyBenefit.set("benefitTypeId", benefitTypeId);
+					partyBenefit.set("periodTypeId", "RATE_MONTH");
+					partyBenefit.set("fromDate", fromDateStart);
+					partyBenefit.set("thruDate", thruDateEnd);
+					partyBenefit.set("cost", amount);
+					delegator.createOrStore(partyBenefit);
+				}else{
+					GenericValue partyDeduction = delegator.makeValue("PartyDeduction");
+					partyDeduction.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
+					partyDeduction.set("roleTypeIdTo", "EMPLOYEE");
+					partyDeduction.set("partyIdFrom", partyIdFrom);
+					partyDeduction.set("partyIdTo", partyId);
+					partyDeduction.set("deductionTypeId", deductionTypeId);
+					partyDeduction.set("periodTypeId", "RATE_MONTH");
+					partyDeduction.set("fromDate", fromDateStart);
+					partyDeduction.set("thruDate", thruDateEnd);
+					partyDeduction.set("cost", amount);
+					delegator.createOrStore(partyDeduction);
+				}
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+	        result = ServiceUtil.returnSuccess("Successfully Created!!");
+	        return result;
+	 }//end of service
 }

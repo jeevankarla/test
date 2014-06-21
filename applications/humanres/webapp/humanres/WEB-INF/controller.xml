@@ -630,6 +630,20 @@ under the License.
         <response name="success" type="view" value="EmployeeDailyAttendance"/>
         <response name="error" type="view" value="EmployeeDailyAttendance"/>
     </request-map>
+    <request-map uri="PartyBenefitOrDeduction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PartyBenefitOrDeduction"/>
+    </request-map>
+    <request-map uri="createPartyBenefitOrDeduction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createPartyBenefitOrDeduction"/>
+    </request-map>
+    <request-map uri="createOrUpdatePartyBenefitOrDeduction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createOrUpdatePartyBenefitOrDeduction"/>
+        <response name="success" type="view" value="PartyBenefitOrDeduction"/>
+        <response name="error" type="view" value="PartyBenefitOrDeduction"/>
+    </request-map>
    <!-- ================Employee Position Group==================================== -->
     <request-map uri="FindEmplPositions">
         <security https="true" auth="true"/>
@@ -1456,30 +1470,30 @@ under the License.
     <request-map uri="LookupAgreement"><security auth="true" https="true"/><response name="success" type="view" value="LookupAgreement"/></request-map>
     <request-map uri="LookupJobRequisition"><security auth="true" https="true"/><response name="success" type="view" value="LookupJobRequisition"/></request-map>
  
-<request-map uri="FindBenefits"><security auth="true" https="true"/><response name="success" type="view" value="FindBenefits"/></request-map>
+	<request-map uri="FindBenefits"><security auth="true" https="true"/><response name="success" type="view" value="FindBenefits"/></request-map>
 	<request-map uri="FindDeductionTypes"><security auth="true" https="true"/><response name="success" type="view" value="FindDeductionTypes"/></request-map>
-	 <request-map uri="EditBenefit"><security auth="true" https="true"/><response name="success" type="view" value="EditBenefit"/></request-map>
-	 <request-map uri="LookupBenefits"><security auth="true" https="true"/><response name="success" type="view" value="LookupBenefits"/></request-map>
+	<request-map uri="EditBenefit"><security auth="true" https="true"/><response name="success" type="view" value="EditBenefit"/></request-map>
+	<request-map uri="LookupBenefits"><security auth="true" https="true"/><response name="success" type="view" value="LookupBenefits"/></request-map>
 	<request-map uri="updateBenefit"><security https="true" auth="true"/><event type="service" invoke="updateBenefit"/><response name="success" type="view" value="EditBenefit"/><response name="error" type="view" value="EditBenefit"/></request-map>
-   <request-map uri="createBenefit"><security https="true" auth="true"/><event type="service" invoke="createBenefit"/><response name="success" type="view" value="EditBenefit"/><response name="error" type="view" value="EditBenefit"/></request-map>
+    <request-map uri="createBenefit"><security https="true" auth="true"/><event type="service" invoke="createBenefit"/><response name="success" type="view" value="EditBenefit"/><response name="error" type="view" value="EditBenefit"/></request-map>
     <request-map uri="deleteBenefit"><security https="true" auth="true"/><event type="service" invoke="deleteBenefit"/><response name="success" type="view" value="FindBenefits"/><response name="error" type="view" value="FindBenefits"/></request-map>
     <request-map uri="EditDeductionType"><security auth="true" https="true"/><response name="success" type="view" value="EditDeductionType"/></request-map>
 	<request-map uri="createDeductionType"><security https="true" auth="true"/><event type="service" invoke="createDeductionType"/><response name="success" type="view" value="EditDeductionType"/></request-map>
-   <request-map uri="updateDeductionType"><security https="true" auth="true"/><event type="service" invoke="updateDeductionType"/><response name="success" type="view" value="EditDeductionType"/><response name="error" type="view" value="EditDeductionType"/></request-map>
+    <request-map uri="updateDeductionType"><security https="true" auth="true"/><event type="service" invoke="updateDeductionType"/><response name="success" type="view" value="EditDeductionType"/><response name="error" type="view" value="EditDeductionType"/></request-map>
     <request-map uri="deleteDeductionType"><security https="true" auth="true"/><event type="service" invoke="deleteDeductionType"/><response name="success" type="view" value="FindDeductionTypes"/><response name="error" type="view" value="FindDeductionTypes"/></request-map>
     <request-map uri="LookupDeductionTypes"><security auth="true" https="true"/><response name="success" type="view" value="LookupDeductionTypes"/></request-map>
-<request-map uri="LookupEmployeeName"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployeeName"/></request-map>
+	<request-map uri="LookupEmployeeName"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployeeName"/></request-map>
     <request-map uri="LookupTerminationReason"><security auth="true" https="true"/><response name="success" type="view" value="LookupTerminationReason"/></request-map>
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <view-map name="LookupTerminationReason"  type="screen" page="component://humanres/widget/LookupScreens.xml#LookupTerminationReason"/>
    
-<view-map name="EditDeductionType" type="screen" page="component://humanres/widget/DeductionTypeScreens.xml#EditDeductionType"/>	
-<view-map name="FindBenefits" type="screen" page="component://humanres/widget/BenefitTypeScreens.xml#FindBenefits"/>	
-<view-map name="LookupDeductionTypes" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupDeductionTypes"/>	
-<view-map name="LookupBenefits" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupBenefits"/>	
-<view-map name="EditBenefit" type="screen" page="component://humanres/widget/BenefitTypeScreens.xml#EditBenefit"/>	
-<view-map name="FindDeductionTypes" type="screen" page="component://humanres/widget/DeductionTypeScreens.xml#FindDeductionTypes"/>	
-<view-map name="calendar" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarWithDecorator"/>
+	<view-map name="EditDeductionType" type="screen" page="component://humanres/widget/DeductionTypeScreens.xml#EditDeductionType"/>	
+	<view-map name="FindBenefits" type="screen" page="component://humanres/widget/BenefitTypeScreens.xml#FindBenefits"/>	
+	<view-map name="LookupDeductionTypes" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupDeductionTypes"/>	
+	<view-map name="LookupBenefits" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupBenefits"/>	
+	<view-map name="EditBenefit" type="screen" page="component://humanres/widget/BenefitTypeScreens.xml#EditBenefit"/>	
+	<view-map name="FindDeductionTypes" type="screen" page="component://humanres/widget/DeductionTypeScreens.xml#FindDeductionTypes"/>	
+	<view-map name="calendar" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarWithDecorator"/>
 
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
     <view-map name="LookupPayment"  type="screen" page="component://accounting/widget/LookupScreens.xml#LookupPayment"/>
@@ -1575,60 +1589,62 @@ under the License.
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
  <!--====================Reports View===================================-->
     <view-map name="HRReports" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>
- <view-map name="LeaveTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>
- <view-map name="LeaveTypeListCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypeListCsv" content-type="text/csv" encoding="none"/>
+ 	<view-map name="LeaveTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>
+ 	<view-map name="LeaveTypeListCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypeListCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="LeaveTypeListPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypeListPdf" content-type="application/pdf" encoding="none"/>
- <view-map name="EmployeeGroups" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeGroups"/>
- <view-map name="Employees" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#Employees"/>
- <view-map name="EmployeesListCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesListCsv" content-type="text/csv" encoding="none"/>
-<view-map name="EmployeesListPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesListPdf" content-type="application/pdf" encoding="none"/>
- <view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
- <view-map name="PayHeadTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypes"/>
-<view-map name="PayHeadTypesCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesCsv" content-type="text/csv" encoding="none"/>
+ 	<view-map name="EmployeeGroups" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeGroups"/>
+ 	<view-map name="Employees" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#Employees"/>
+ 	<view-map name="EmployeesListCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesListCsv" content-type="text/csv" encoding="none"/>
+	<view-map name="EmployeesListPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesListPdf" content-type="application/pdf" encoding="none"/>
+ 	<view-map name="viewprofile" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewprofile"/>
+ 	<view-map name="PayHeadTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypes"/>
+	<view-map name="PayHeadTypesCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="PayHeadTypesPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesPdf" content-type="application/pdf" encoding="none"/>
  
- <view-map name="EmployeeProfileReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileReport"/>
- <view-map name="EmployeeProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileCsv" content-type="text/csv" encoding="none"/>
+ 	<view-map name="EmployeeProfileReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileReport"/>
+ 	<view-map name="EmployeeProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="EmployeeProfilePdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfilePdf" content-type="application/pdf" encoding="none"/>
  
  
- <view-map name="PartyProfile" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfile"/>
- <view-map name="PartyProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfileCsv" content-type="application/pdf" encoding="none"/>
+ 	<view-map name="PartyProfile" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfile"/>
+ 	<view-map name="PartyProfileCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfileCsv" content-type="application/pdf" encoding="none"/>
 	<view-map name="PartyProfilePdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyProfilePdf" content-type="text/pdf" encoding="none"/>
  
- <view-map name="PaySheet" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySheet"/>
- <view-map name="EmployeeContactDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetails"/>
- <view-map name="EmployeeContactDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetailsCsv" content-type="text/csv" encoding="none"/>
- <view-map name="EmployeeContactDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetailsPdf" content-type="application/pdf" encoding="none"/>
- 
- <view-map name="PaySlipEmployeeWise" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySlipEmployeeWise"/>
- <view-map name="PrintPaySlipsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPaySlipsPdf" content-type="application/pdf" encoding="none"></view-map>
- <view-map name="PrintPayrollSummary" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPayrollSummary" content-type="application/pdf" encoding="none"></view-map>
- <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>
- <view-map name="EmployeeWiseSalaryDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsCsv" content-type="text/csv" encoding="none"/>
- <view-map name="EmployeeWiseSalaryDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsPdf" content-type="application/pdf" encoding="none"/>
-
- <view-map name="EmployeeBankDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetails"/> 
- <view-map name="EmployeeBankDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetailsPdf" content-type="application/pdf" encoding="none"/>
- <view-map name="PFtransfer" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFtransfer" content-type="application/pdf" encoding="none"/>
- <view-map name="PFclaiming" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFclaiming" content-type="application/pdf" encoding="none"/>
- <view-map name="PFnomination" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFnomination" content-type="application/pdf" encoding="none"/>
- <view-map name="PFqualified" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFqualified" content-type="application/pdf" encoding="none"/>
- <view-map name="PFleaving" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFleaving" content-type="application/pdf" encoding="none"/>
- <view-map name="ESIdeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIdeclaration" content-type="application/pdf" encoding="none"/>
- <view-map name="ESIchangefamilydeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIchangefamilydeclaration" content-type="application/pdf" encoding="none"/>
- <view-map name="ESIfamilydeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIfamilydeclaration" content-type="application/pdf" encoding="none"/>
- <view-map name="ESIannualinformation" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIannualinformation" content-type="application/pdf" encoding="none"/>
- <view-map name="TDSemployee" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSemployee" content-type="application/pdf" encoding="none"/>
- <view-map name="TDSform16a" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSform16a" content-type="application/pdf" encoding="none"/>
- <view-map name="TDSchallan" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSchallan" content-type="application/pdf" encoding="none"/>
- <view-map name="FindPayrollBilling" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#FindPayrollBilling"/>
- <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
- <view-map name="EmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeDailyAttendance"/>
- <view-map name="createEmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#createEmployeeDailyAttendance"/>
- <view-map name="PFReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFReport"/>
- <view-map name="ESIReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIReport"/>
- <view-map name="TDSReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSReport"/>
+	 <view-map name="PaySheet" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySheet"/>
+	 <view-map name="EmployeeContactDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetails"/>
+	 <view-map name="EmployeeContactDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetailsCsv" content-type="text/csv" encoding="none"/>
+	 <view-map name="EmployeeContactDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeContactDetailsPdf" content-type="application/pdf" encoding="none"/>
+	 
+	 <view-map name="PaySlipEmployeeWise" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PaySlipEmployeeWise"/>
+	 <view-map name="PrintPaySlipsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPaySlipsPdf" content-type="application/pdf" encoding="none"></view-map>
+	 <view-map name="PrintPayrollSummary" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PrintPayrollSummary" content-type="application/pdf" encoding="none"></view-map>
+	 <view-map name="EmployeeWiseSalaryDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetails"/>
+	 <view-map name="EmployeeWiseSalaryDetailsCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsCsv" content-type="text/csv" encoding="none"/>
+	 <view-map name="EmployeeWiseSalaryDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeWiseSalaryDetailsPdf" content-type="application/pdf" encoding="none"/>
+	
+	 <view-map name="EmployeeBankDetails" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetails"/> 
+	 <view-map name="EmployeeBankDetailsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeBankDetailsPdf" content-type="application/pdf" encoding="none"/>
+	 <view-map name="PFtransfer" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFtransfer" content-type="application/pdf" encoding="none"/>
+	 <view-map name="PFclaiming" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFclaiming" content-type="application/pdf" encoding="none"/>
+	 <view-map name="PFnomination" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFnomination" content-type="application/pdf" encoding="none"/>
+	 <view-map name="PFqualified" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFqualified" content-type="application/pdf" encoding="none"/>
+	 <view-map name="PFleaving" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFleaving" content-type="application/pdf" encoding="none"/>
+	 <view-map name="ESIdeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIdeclaration" content-type="application/pdf" encoding="none"/>
+	 <view-map name="ESIchangefamilydeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIchangefamilydeclaration" content-type="application/pdf" encoding="none"/>
+	 <view-map name="ESIfamilydeclaration" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIfamilydeclaration" content-type="application/pdf" encoding="none"/>
+	 <view-map name="ESIannualinformation" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIannualinformation" content-type="application/pdf" encoding="none"/>
+	 <view-map name="TDSemployee" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSemployee" content-type="application/pdf" encoding="none"/>
+	 <view-map name="TDSform16a" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSform16a" content-type="application/pdf" encoding="none"/>
+	 <view-map name="TDSchallan" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSchallan" content-type="application/pdf" encoding="none"/>
+	 <view-map name="FindPayrollBilling" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#FindPayrollBilling"/>
+	 <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
+	 <view-map name="EmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeDailyAttendance"/>
+	 <view-map name="createEmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#createEmployeeDailyAttendance"/>
+	 <view-map name="PartyBenefitOrDeduction" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyBenefitOrDeduction"/>
+	 <view-map name="createPartyBenefitOrDeduction" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#createPartyBenefitOrDeduction"/>
+	 <view-map name="PFReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFReport"/>
+	 <view-map name="ESIReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#ESIReport"/>
+	 <view-map name="TDSReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSReport"/>
  
   
    <!--====================Reports View===================================-->

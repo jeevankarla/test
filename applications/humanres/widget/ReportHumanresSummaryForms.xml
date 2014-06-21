@@ -463,7 +463,6 @@
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-            
         </field>
        <field name="submit" title="calculate"><submit/></field>
     </form>
@@ -485,7 +484,6 @@
 		<field name="priceInfos" title="Price Calc Info">
 			<display></display>
 		</field>
-		
 		<field name="amount">
 			<display/>
 		</field>
@@ -544,6 +542,69 @@
         <field name="availedVehicleAllowance" title="Vehicle Allowance"><display/></field>
     	<field name="availedCanteen" title="Canteen Allowance"><display/></field>
     	<field name="shiftType" title="Shift Type"><display/></field>
-    </form>  
+    </form>
+    <form name="createPartyBenefitOrDeduction" type="single" target="createOrUpdatePartyBenefitOrDeduction" header-row-style="header-row" 
+		default-table-style="basic-table" >
+		<field name="partyId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+		<field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="payHeadTypeId" title="Benefit/Deduction Type" >
+         	<drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="benefitTypeId" entity-name="BenefitType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+                 <entity-options description="${description}" key-field-name="deductionTypeId" entity-name="DeductionType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="amount" title="Amount"><text size="25"></text></field>
+		<field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit">
+            <submit/>
+        </field>
+    </form>
+    <form name="FindPartyBenefitOrDeduction" type="single" paginate-target="createPartyBenefitOrDeduction" header-row-style="header-row" default-table-style="basic-table" >
+    	<field name="hideSearch"><hidden value="Y" /></field>
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+       	<field name="partyId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+       	<field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="ListPartyBenefitOrDeduction" type="list"
+		list-name="employDetailsList" odd-row-style="alternate-row"
+		default-table-style="basic-table hover-bar">
+		<actions>
+		    <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeBenefitDeduction.groovy"/>
+		</actions>
+		<field name="partyId" title="Employee"><display/></field> 
+		 <field name="customTimePeriodId" title = "Custom Time Period">
+          <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${fromDate} - ${thruDate}"/>
+        </field>
+		<field name="description" title="Benefit/Deduction Type">
+			<display/>
+		</field>
+		<field name="amount">
+			<display/>
+		</field>
+	</form>
 </forms>
         

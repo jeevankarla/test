@@ -80,8 +80,8 @@
         <section>
             <actions>
                 <set field="titleProperty" value="HumanResEditEmployment"/>
-                <set field="headerItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditEmployment"/>
+                <set field="headerItem" value="FindEmployments"/>
+                <set field="tabButtonItem" value="FindEmployments"/>
                 <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <entity-one entity-name="Employment" value-field="employment"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
@@ -94,7 +94,8 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                                                
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<section>
                     	    <condition>
@@ -126,7 +127,8 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                 
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<section>
                     	    <condition>

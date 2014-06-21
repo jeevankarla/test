@@ -1248,8 +1248,8 @@
     <screen name="EmployeeDailyAttendance">
         <section>
             <actions>
-			   <set field="titleProperty" value="EmployeeDailyAttendance"/>			    
-			   <set field="tabButtonItem" value="HRReports"/>
+			   <set field="tabButtonItem" value="HRReports"/>            
+               <set field="titleProperty" value="EmployeeDailyAttendance"/>
                <set field="tabButtonItem2" value="EmployeeDailyAttendance"/>
             </actions>           
             	<widgets>
@@ -1257,7 +1257,6 @@
 					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>                                                        
-
                     	<section>
 							<widgets>
 								<container style="button-bar">
@@ -1280,17 +1279,74 @@
     <screen name="createEmployeeDailyAttendance">
         <section>
             <actions>
-			   <set field="titleProperty" value="EmployeeDailyAttendance"/>
-               <set field="tabButtonItem" value="EmployeeDailyAttendance"/>
+			   <set field="tabButtonItem" value="HRReports"/>            
+               <set field="titleProperty" value="EmployeeDailyAttendance"/>
+               <set field="tabButtonItem2" value="EmployeeDailyAttendance"/>
             </actions>           
             <widgets>
-                <decorator-screen name="CommonHumanresReportsDecorator"
-					location="${parameters.mainDecoratorLocation}">
+               <decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
 					<decorator-section name="body">
+					<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>       
                     	<section>
 							<widgets>
 								<screenlet title="Create Employee Allowance">				
 									<include-form name="createEmployeeDailyAttendance" location="component://humanres/widget/ReportHumanresSummaryForms.xml"></include-form>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PartyBenefitOrDeduction">
+        <section>
+            <actions>
+			  <set field="tabButtonItem" value="HRReports"/>            
+              <set field="titleProperty" value="PartyBenefitOrDeduction"/>
+              <set field="tabButtonItem2" value="PartyBenefitOrDeduction"/>
+            </actions>           
+            	<widgets>
+                <decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="createPartyBenefitOrDeduction" text="Create New" style="buttontext create">				
+									</link>
+								</container>
+								<screenlet title="Find Employee Benefit/Deduction">				
+									<include-form name="FindPartyBenefitOrDeduction" location="component://humanres/widget/ReportHumanresSummaryForms.xml"></include-form>
+								</screenlet>
+								<screenlet title="List Employee Benefit/Deduction">				
+									<include-form name="ListPartyBenefitOrDeduction" location="component://humanres/widget/ReportHumanresSummaryForms.xml"></include-form>
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="createPartyBenefitOrDeduction">
+        <section>
+            <actions>
+			   <set field="tabButtonItem" value="HRReports"/>            
+               <set field="titleProperty" value="PartyBenefitOrDeduction"/>
+               <set field="tabButtonItem2" value="PartyBenefitOrDeduction"/>
+            </actions>           
+            <widgets>
+                <decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					<include-menu location="component://humanres/widget/HumanresMenus.xml" name="HumanresReportsTabBar"/>
+                    	<section>
+							<widgets>
+								<screenlet title="Create Employee Benefit/Deduction">				
+									<include-form name="createPartyBenefitOrDeduction" location="component://humanres/widget/ReportHumanresSummaryForms.xml"></include-form>
 								</screenlet>
 							</widgets>      
                     	</section>
