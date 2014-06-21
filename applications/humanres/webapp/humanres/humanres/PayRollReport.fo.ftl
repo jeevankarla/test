@@ -42,8 +42,7 @@ under the License.
         <#assign totalDeductions =0 />
       	 <#assign payHeader = delegator.findOne("PayrollHeader", {"payrollHeaderId" : payRollHeader.getKey()}, true)>
       	 <#assign partyId = payHeader.partyIdFrom>
-      	 <#assign emplDetails = delegator.findOne("PartyPersonAndEmployeeDetail", {"partyId" : partyId}, true)/>
-      	 <#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod}, true)/>
+      	 <#assign emplDetails = delegator.findOne("PartyPersonAndEmployeeDetail", {"partyId" : partyId}, true)/>      	 
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
       	 <#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : partyId})/>
@@ -119,9 +118,10 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee.PAN          : ${emplDetails.panId?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 				</fo:table-row>
+                     		 				<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPositionAndFulfilment[0].emplPositionTypeId}, true)>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Designation               : ${(emplPositionAndFulfilment[0].emplPositionId)?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Designation               : ${designation.description?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 					<fo:table-cell>
