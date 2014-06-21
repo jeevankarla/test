@@ -1147,7 +1147,7 @@ public class PayrollService {
 		    						}
 		    						double basicSalary = ((Double)fetchBasicSalaryAndGradeMap.get("amount")).doubleValue();
 		    						variables.put("BASIC", basicSalary);
-		    						evltr.addVariableValues(variables);        		
+		    						evltr.addVariableValues(variables);   
 		    						modifyAmount = new BigDecimal( evltr.evaluate());
 		    						//amount info 
 		    						priceInfoDescription.append("[");
@@ -1510,8 +1510,7 @@ public class PayrollService {
 			result.put("noOfAttendedWeeklyOffDays", 0.0);
 			result.put("noOfCompoffAvailed", 0.0);
 			result.put("noOfLeaveDays", 0.0);
-			
-			
+			result.put("noOfPayableDays",result.get("noOfCalenderDays"));
 			if(UtilValidate.isNotEmpty(payrollAttendance)){
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays"))){
 					result.put("lossOfPayDays", (payrollAttendance.getBigDecimal("lossOfPayDays")).doubleValue());
