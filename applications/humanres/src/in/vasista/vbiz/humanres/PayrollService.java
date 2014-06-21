@@ -1849,7 +1849,7 @@ public class PayrollService {
 	        		Timestamp thruDateTime = UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 	        		fromDateStart = UtilDateTime.getDayStart(fromDateTime);
 	        		thruDateEnd = UtilDateTime.getDayEnd(thruDateTime);
-	        		previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
+	        		//previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDateTime, -1));
 	        	}
 	        }catch (GenericEntityException e) {
 	        	Debug.logError(e, module);
