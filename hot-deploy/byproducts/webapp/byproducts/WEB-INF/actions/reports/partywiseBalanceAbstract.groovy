@@ -137,7 +137,9 @@ if(boothIdsList){
 				openingBalance = closingBalance;
 			}
 			invoiceId = "";
-			tempOB = openingBalance;
+			if(openingBalance){
+				tempOB = openingBalance;
+			}
 			returnProdCheckDate = UtilDateTime.toDateString(startingDate, "yyyy-MM-dd");
 			prodReturnAmt = 0;
 			
@@ -334,7 +336,7 @@ if(boothIdsList){
 				prodReturnAmt = 0;
 			}
 			total_ProdReturn = total_ProdReturn+prodReturnAmt;
-			total_Receipt = total_Receipt+payment
+			total_Receipt = total_Receipt+payment;
 			cheqDate = eachItem.get("chequeDate");
 			cheqNo = eachItem.get("chequeNo");
 			cheqRet = eachItem.get("chequeReturn");
