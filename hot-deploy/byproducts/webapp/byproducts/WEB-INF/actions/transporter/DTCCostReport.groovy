@@ -75,18 +75,17 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 	shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
 	if(UtilValidate.isNotEmpty(shipmentIds)){
 		routeTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:monthBegin, thruDate:monthEnd,includeReturnOrders:true]);
+		// Populating sales for Milk and Curd products
 		if(UtilValidate.isNotEmpty(routeTotals)){
 			routeProdTotals = routeTotals.get("productTotals");
-			//populating route wise  lms product totals
-			Iterator mapRouteIter = routeProdTotals.entrySet().iterator();
-			while (mapRouteIter.hasNext()) {
-				Map.Entry entry = mapRouteIter.next();
-				List<GenericValue> productCategoryList = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition("productId", EntityOperator.EQUALS, entry.getKey()), null, null, null, false);
-				prodCategoryIds= EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
-				prodCategoryIds.each{ prodCategory->
-					if("LMS".equals(prodCategory)){
-						rtQty =entry.getValue().get("total");
-						totalSaleQty=totalSaleQty+rtQty;
+			if(UtilValidate.isNotEmpty(routeProdTotals)){
+				routeProdTotals.each{ productValue ->
+					if(UtilValidate.isNotEmpty(productValue)){
+						productId = productValue.getKey();
+						product = delegator.findOne("Product", [productId : productId], false);
+						if("Milk".equals(product.primaryProductCategoryId) || "Curd".equals(product.primaryProductCategoryId)){
+							totalSaleQty = totalSaleQty+productValue.getValue().get("total");
+						}
 					}
 				}
 			}
@@ -103,7 +102,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
 		if(UtilValidate.isEmpty(routeWiseMap[routeId])){
 			tempMap = [:];
-			tempMap["saleQty"] = ((new BigDecimal(totalSaleQty)).setScale(2,BigDecimal.ROUND_HALF_UP));
+			tempMap["saleQty"] = new BigDecimal(totalSaleQty).setScale(2,BigDecimal.ROUND_HALF_UP);
 			tempMap["facilityRate"] = (BigDecimal) facilityRateResult.get("rateAmount");
 			tempMap["facilitySize"] = facility.facilitySize;
 			if(totalSaleQty != 0){
@@ -113,7 +112,7 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 			Map tempMap = FastMap.newInstance();
 			tempMap.putAll(routeWiseMap.get(routeId));
 			totalQty = 0;
-			totalQty = ((new BigDecimal(totalSaleQty)).setScale(2,BigDecimal.ROUND_HALF_UP));
+			totalQty = new BigDecimal(totalSaleQty).setScale(2,BigDecimal.ROUND_HALF_UP);
 			if(UtilValidate.isNotEmpty(totalQty) && totalQty!=0){
 				tempMap["saleQty"] += totalQty;
 			}
