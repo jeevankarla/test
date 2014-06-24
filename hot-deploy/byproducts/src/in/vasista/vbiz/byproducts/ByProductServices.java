@@ -837,9 +837,11 @@ public class ByProductServices {
         List excludeInvoiceForFacilityIds = (List) context.get("excludeInvoiceForFacilityIds");
         List<GenericValue> subscriptionProductsList = UtilGenerics.checkList(context.get("subscriptionProductsList"));
         Map<String, Object> resultMap = FastMap.newInstance();
-		//BigDecimal quantity = BigDecimal.ZERO;        
-        String productStoreId = (String) (getByprodFactoryStore(delegator)).get("factoryStoreId");
-        
+		//BigDecimal quantity = BigDecimal.ZERO;  
+        String productStoreId=(String) context.get("productStoreId");
+        if (UtilValidate.isEmpty(productStoreId)) {
+        	productStoreId = (String) (getByprodFactoryStore(delegator)).get("factoryStoreId");
+        }
         String salesChannel = (String) context.get("salesChannel");       
         if (UtilValidate.isEmpty(salesChannel)) {
         	salesChannel = "BYPROD_SALES_CHANNEL";
