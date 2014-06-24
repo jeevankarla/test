@@ -287,7 +287,7 @@ under the License.
 	                    		<fo:table-row>                      
 		                    		<fo:table-cell border-style="solid">                    		
 		                      			<#assign totalEarnings=(totalEarnings+(value))>                  			
-		                    			<fo:block>${benefitDescMap[benefitType]?if_exists}</fo:block>                			
+		                    			<fo:block keep-together="always">${benefitDescMap[benefitType]?if_exists}</fo:block>                			
 		                    		</fo:table-cell>                 	              		
 		                    		<fo:table-cell border-style="solid"><fo:block text-align="right">${value?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 		                    	</fo:table-row>
@@ -324,7 +324,7 @@ under the License.
 		                      			<#if InstallmentFinalMap[payRollHeader.getKey()].get(deductionType)?has_content>
 		                      				<#assign instmtNo=InstallmentFinalMap[payRollHeader.getKey()].get(deductionType)?if_exists>  
 		                      			</#if>                 			
-		                    			<fo:block>${dedDescMap[deductionType]?if_exists}<#if instmtNo !=0>[${instmtNo?if_exists}]</#if></fo:block>                			
+		                    			<fo:block keep-together="always">${dedDescMap[deductionType]?if_exists}<#if instmtNo !=0>[${instmtNo?if_exists}]</#if></fo:block>                			
 		                    		</fo:table-cell>                 	              		
 		                    		<fo:table-cell border-style="solid"><fo:block text-align="right">${((-1)*(dedValue))?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
 		                    	</fo:table-row>

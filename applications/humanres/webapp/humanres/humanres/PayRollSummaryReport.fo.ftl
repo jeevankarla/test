@@ -56,22 +56,22 @@ under the License.
        					 				<fo:table>
        					 					<fo:table-column column-width="30pt"/>
        					 					<fo:table-column column-width="270pt"/>
-       					 					<fo:table-body>
-       					 						<#list summaryReportList as summaryValues>
-		   					 						<#if benefitTypeIds.contains(summaryValues.getKey())>
-		   					 							<#assign totalEarnings=(totalEarnings+(summaryValues.getValue()))>   
-		   					 							<#if summaryValues.getValue() !=0>  
-			       					 						<fo:table-row>
-			       					 							<fo:table-cell>
-			       					 								<fo:block keep-together="always">${benefitDescMap[summaryValues.getKey()]?if_exists}</fo:block>
-			       					 							</fo:table-cell>
-			       					 							<fo:table-cell>
-			       					 								<fo:block text-align="right">${summaryValues.getValue()?if_exists?string("#0.00")}</fo:block>
-			       					 							</fo:table-cell>
-			       					 						</fo:table-row>
-		       					 						</#if>
-		   					 						</#if>
-       					 						</#list>
+       					 					<fo:table-body>       					 						
+       					 						<#list benefitTypeIds as benefitType>
+						                    		<#assign value=0>
+						                    		<#if payRollSummaryMap.get(benefitType)?has_content>
+						                    			<#assign value=payRollSummaryMap.get(benefitType)>	
+						                    		</#if>
+						                    		<#if value !=0>
+							                    		<fo:table-row>                      
+								                    		<fo:table-cell >                    		
+								                      			<#assign totalEarnings=(totalEarnings+(value))>                 			
+								                    			<fo:block keep-together="always">${benefitDescMap[benefitType]?if_exists}</fo:block>                			
+								                    		</fo:table-cell>                 	              		
+								                    		<fo:table-cell><fo:block text-align="right">${value?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
+								                    	</fo:table-row>
+							                    	</#if>
+						                    	</#list>
        					 					</fo:table-body>
        					 				</fo:table>
        					 			</fo:block>
@@ -82,22 +82,22 @@ under the License.
        					 				<fo:table>
        					 					<fo:table-column column-width="30pt"/>
        					 					<fo:table-column column-width="280pt"/>
-       					 					<fo:table-body>
-       					 						<#list summaryReportList as summaryValues>
-		   					 						<#if dedTypeIds.contains(summaryValues.getKey())>
-		   					 							<#assign totalDeductions=(totalDeductions+(summaryValues.getValue()))>  
-		   					 							<#if summaryValues.getValue() !=0>
-			       					 						<fo:table-row>
-			       					 							<fo:table-cell>
-			       					 								<fo:block keep-together="always">${dedDescMap[summaryValues.getKey()]?if_exists}</fo:block>
-			       					 							</fo:table-cell>
-			       					 							<fo:table-cell>
-			       					 								<fo:block text-align="right">${((-1)*summaryValues.getValue())?if_exists?string("#0.00")}</fo:block>
-			       					 							</fo:table-cell>
-			       					 						</fo:table-row>
-			       					 					</#if>	
-		   					 						</#if>
-       					 						</#list>
+       					 					<fo:table-body>       					 						
+       					 						<#list dedTypeIds as deductionType>
+						                    		<#assign dedValue=0>
+						                    		<#if payRollSummaryMap.get(deductionType)?has_content>
+						                    			<#assign dedValue=payRollSummaryMap.get(deductionType)>	
+						                    		</#if>
+						                    		<#if dedValue !=0>
+							                    		<fo:table-row>                      
+								                    		<fo:table-cell>                    		
+								                      			<#assign totalDeductions=(totalDeductions+(dedValue))>								                      			               			
+								                    			<fo:block keep-together="always">${dedDescMap[deductionType]?if_exists}</fo:block>                			
+								                    		</fo:table-cell>                 	              		
+								                    		<fo:table-cell><fo:block text-align="right">${((-1)*(dedValue))?if_exists?string("#0")}&#160;&#160;</fo:block></fo:table-cell>
+								                    	</fo:table-row>
+							                    	</#if>
+						                    	</#list>
        					 					</fo:table-body>
        					 				</fo:table>
        					 			</fo:block>
@@ -112,12 +112,12 @@ under the License.
        					 		<fo:table-cell><fo:block>Total</fo:block></fo:table-cell>       					 		
        					 		<fo:table-cell><fo:block text-align="right"><#if totalEarnings?has_content>
                    					<#assign total = totalEarnings?if_exists />
-                   			<@ofbizCurrency amount=total /></#if></fo:block></fo:table-cell>  
+                   			<@ofbizCurrency amount=total?string("#0") /></#if></fo:block></fo:table-cell>  
        					 		<fo:table-cell><fo:block></fo:block></fo:table-cell>
        					 		<fo:table-cell><fo:block text-align="right"> <#if totalDeductions?has_content>
                    					<#assign totalAmt = totalDeductions?if_exists />
                    					<#assign totalAmt=(totalAmt*-1)>
-                   			<@ofbizCurrency amount=totalAmt /></#if></fo:block></fo:table-cell>       					 		
+                   			<@ofbizCurrency amount=totalAmt?string("#0") /></#if></fo:block></fo:table-cell>       					 		
        					 	</fo:table-row>
        					 	<fo:table-row>
        					 		<fo:table-cell>
@@ -130,7 +130,7 @@ under the License.
            		<#assign netAmt= totalEarnings+totalDeductions>
            		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">NET SALARY  :   <#if totalEarnings?has_content>
                    					<#assign net = netAmt?if_exists />
-                   			<@ofbizCurrency amount=net /></#if></fo:block>
+                   			<@ofbizCurrency amount=net?string("#0") /></#if></fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Director                                                                                   Manager/Deputy Manager Finance</fo:block>
