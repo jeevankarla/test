@@ -110,9 +110,9 @@ public static String processIcpSale(HttpServletRequest request, HttpServletRespo
 	  if(shipmentTypeId.equals("ICP_DIRECT_SHIPMENT")){
 			 salesChannel = "ICP_NANDINI_CHANNEL";      	
 	     }
-	 /* if(UtilValidate.isNotEmpty(request.getAttribute("salesChannel"))){
-		  salesChannel=(String)request.getAttribute("salesChannel");
-	  }*/
+	  if(UtilValidate.isNotEmpty(request.getParameter("salesChannel"))){
+		  salesChannel=(String)request.getParameter("salesChannel");
+	  }
 	  //String shipmentTypeId = "BYPRODUCTS_SUPPL"; 
 	  // String salesChannel = "BYPROD_SALES_CHANNEL";
    List<String> leakProductList =UtilMisc.toList("1");//for BMP 200 ml leaks to be added

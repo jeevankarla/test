@@ -76,9 +76,9 @@ $(document).ready(function(){
     </#if>
 	
       <table width="100%" border="0" cellspacing="0" cellpadding="0">  
-       <#if  (changeFlag?exists && changeFlag!='IcpSales')>   
+       <#if  (changeFlag?exists && changeFlag =='AdhocSaleNew')>   
         <tr>
-          <td>&nbsp;${changeFlag?if_exists}</td>
+          <td>&nbsp;</td>
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Products Type:</div></td>
           <td>&nbsp;</td>
        <#if productCatageoryId?exists && booth?exists>

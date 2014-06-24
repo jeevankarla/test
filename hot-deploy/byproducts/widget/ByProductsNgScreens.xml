@@ -3137,7 +3137,7 @@
 			   <set field="tabButtonItem2" value="FindIcpAmulOrder"/>       
                <set field="headerItem" value="byProductsOrderEntry"/>
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
-               <set field="targetRequest" value="FindIcpSalesOrder"/>
+               <set field="targetRequest" value="FindIcpAmulOrder"/>
                <set field="ChannalType" value="ICP_AMUL_CHANNEL"/>
             </actions>
             <widgets>

@@ -481,7 +481,7 @@
          </link>
         </menu-item>
         
-       <!--  <menu-item name="IcpSalesAmul" title="Amul Icp Sales"> 
+        <menu-item name="IcpSalesAmul" title="Amul Icp Sales"> 
         <condition>
         	<or>
         		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -491,7 +491,7 @@
         </condition>  
       	 <link target="IcpSalesAmul">    
          </link>
-        </menu-item> -->
+        </menu-item> 
         
     </menu>
     
