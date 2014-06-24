@@ -1327,6 +1327,8 @@ public class ByProductServices {
      		}
         	try{
 	        	shipment.set("statusId", "CANCEL_INPROCESS");
+	        	shipment.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	        	shipment.put("lastModifiedDate", UtilDateTime.nowTimestamp());
 	        	shipment.store();
         	}catch(GenericEntityException e){
         		Debug.logError("Error while updating Shipment Status", module);
@@ -1455,6 +1457,8 @@ public class ByProductServices {
     		} 
         	
         	shipment.set("statusId", "SHIPMENT_CANCELLED");
+        	shipment.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+        	shipment.put("lastModifiedDate", UtilDateTime.nowTimestamp());
         	try{
         		shipment.store();    		
         	}catch (Exception e) {
