@@ -187,6 +187,7 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 		partyId = entry.getKey();
 		amountMap = entry.getValue();
 		Map<String, Object> getTelParams = FastMap.newInstance();
+		contactNumberTo = null;
 		getTelParams.put("partyId", partyId);
 		if(UtilValidate.isNotEmpty(partyId)){
 			getTelParams.put("partyId", partyId);
