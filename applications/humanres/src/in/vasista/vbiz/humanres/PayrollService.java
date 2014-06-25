@@ -1361,8 +1361,10 @@ public class PayrollService {
 	        	}
 	            
 	            GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
+	            if(UtilValidate.isNotEmpty(employeeDetail)){
+	            	result.put("vehicleType", employeeDetail.getString("vehicleType"));
+	            }
 	            
-	            result.put("vehicleType", employeeDetail.getString("vehicleType"));
 	            // get pay grade here
 	            Map fetchBasicSalaryAndGradeMap = fetchBasicSalaryAndGrade(dctx, context);
 	            if(ServiceUtil.isError(fetchBasicSalaryAndGradeMap)){
