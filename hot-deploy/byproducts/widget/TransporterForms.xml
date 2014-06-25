@@ -121,7 +121,7 @@ under the License.
     </form>
     <form name="createNewFineorPenalty" type="single" target="createTransporterRecovery" header-row-style="header-row" 
 		default-table-style="basic-table" >
-		<field name="facilityId" title="Route"><lookup target-form-name="LookupFacility"/></field>
+		<field name="facilityId" title="Route" action="javascript:this.value=this.value.toUpperCase();" event="onblur" ><lookup target-form-name="LookupFacility"/></field>
 		<field name="customTimePeriodId" title="${uiLabelMap.TimePeriod}" >
         	<drop-down>																						
             	<entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId"  filter-by-date="false" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMM,yyyy&quot;);}-${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMM,yyyy&quot;);}">
