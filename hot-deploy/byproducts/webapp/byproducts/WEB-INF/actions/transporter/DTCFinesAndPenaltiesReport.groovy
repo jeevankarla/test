@@ -106,7 +106,7 @@ contractorIdList.each { contractorId ->
 						EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 						try{
 							List<GenericValue> facilityRecoveryList = FastList.newInstance();
-							facilityRecoveryList = delegator.findList("FacilityRecovery", condition, null,null, null, false);
+							facilityRecoveryList = delegator.findList("FineRecovery", condition, null,null, null, false);
 							facilityIdsList = EntityUtil.getFieldListFromEntityList(facilityRecoveryList, "facilityId", false);
 							List<GenericValue>	allFaclityCrateFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CRATES"));
 							List<GenericValue>	allFaclityCanFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CANS"));

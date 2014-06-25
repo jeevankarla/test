@@ -143,14 +143,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> 
-		<!-- <field name="recoveryTypeId" title="Recovery Type" >
-        	<drop-down>
-        		<option key="CRATES" description="Crates"/>
-        		<option key="CANS" description="Cans"/>
-        		<option key="FINES_PENALTIES" description="Fines/Penalties"/>
-        	</drop-down>
-		</field> -->
 		<field name="amount" title="Amount(Rs)"><text/></field>
+		 <field name="description" title="Description" ><textarea/></field> 
 		<field name="submitButton" title="${uiLabelMap.Create}" widget-style="smallSubmit">
             <submit/>
         </field>
@@ -188,11 +182,11 @@ under the License.
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
     <form name="ListFinesAndPenalties" type="list" list-name="listIt" odd-row-style="alternate-row" 
-      default-entity-name="FacilityRecovery" default-table-style="basic-table hover-bar" >
+      default-entity-name="FineRecovery" default-table-style="basic-table hover-bar" >
     	<actions>    	
     	   <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="FacilityRecovery"/>
+                <field-map field-name="entityName" value="FineRecovery"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service> 
@@ -205,14 +199,16 @@ under the License.
           <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
         </field>
     	<field name="amount" title="Amount(Rs)"><display/></field>
+    	<field name="description" title="Description"><display/></field>
+    	<field name="incidentDate" title="Date Of Incident"><display/></field>
     	<field name="createdByUserLogin" title="User Name"><display/></field>
     	<field name="createdDate" title="createdDate"><display/></field>
-    	<field name="incidentDate" title="Date Of Incident"><display/></field>
     	<field name="cancel" widget-style="buttontext cancel">
 		<hyperlink target="cancelTranporterRecovery" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
         	<parameter param-name="facilityId" from-field="facilityId"/>
         	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
         	<parameter param-name="recoveryTypeId" from-field="recoveryTypeId"/>
+        	<parameter param-name="recoveryId" from-field="recoveryId"/>
         </hyperlink>
         </field>
     </form>

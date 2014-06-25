@@ -200,7 +200,7 @@ import java.text.SimpleDateFormat;
 				if(customTimePeriod == null){
 					generationFailed = true;
 				}
-				Map<String, Object> updateRecvoryRes=updateFacilityRecvory(dctx , UtilMisc.toMap("customTimePeriodId", customTimePeriodId,"periodBillingId",periodBillingId,"userLogin",userLogin));
+				Map<String, Object> updateRecvoryRes=updateFineRecvoryWithBilling(dctx , UtilMisc.toMap("customTimePeriodId", customTimePeriodId,"periodBillingId",periodBillingId,"userLogin",userLogin));
 				if (ServiceUtil.isError(updateRecvoryRes)) {
 		    		generationFailed = true;
 	                Debug.logWarning("There was an error while populating updateRecvory: " + ServiceUtil.getErrorMessage(updateRecvoryRes), module);
@@ -1382,11 +1382,25 @@ import java.text.SimpleDateFormat;
 		    	Timestamp incidentDate = (Timestamp)context.get("incidentDate");
 		    	BigDecimal amount = (BigDecimal)context.get("amount");
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				String description=(String)context.get("description");
 		    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
 				
 				try {
-		    		GenericValue facilityRecovery = delegator.findOne("FacilityRecovery", UtilMisc.toMap("facilityId", facilityId, "customTimePeriodId", customTimePeriodId, "recoveryTypeId",recoveryTypeId), false);
+					GenericValue facilityRecovery = delegator.makeValue("FineRecovery");
+	    			facilityRecovery.put("facilityId", facilityId );
+	    			facilityRecovery.put("customTimePeriodId", customTimePeriodId);
+	    			facilityRecovery.put("incidentDate", incidentDate);
+	    			facilityRecovery.put("recoveryTypeId", recoveryTypeId); 
+	    			facilityRecovery.put("amount", amount);
+	    			facilityRecovery.put("description", description);
+	    			facilityRecovery.put("createdDate", UtilDateTime.nowTimestamp());
+	    			facilityRecovery.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    			facilityRecovery.put("createdByUserLogin", userLogin.get("userLoginId"));
+	    			delegator.createSetNextSeqId(facilityRecovery);            
+	    			String recoveryId = (String) facilityRecovery.get("recoveryId");
+					
+		    		/*GenericValue facilityRecovery = delegator.findOne("FacilityRecovery", UtilMisc.toMap("facilityId", facilityId, "customTimePeriodId", customTimePeriodId, "recoveryTypeId",recoveryTypeId), false);
 		    		if (facilityRecovery == null) {
 		    			facilityRecovery = delegator.makeValue("FacilityRecovery");
 		    			facilityRecovery.put("facilityId", facilityId );
@@ -1409,7 +1423,7 @@ import java.text.SimpleDateFormat;
 		    			facilityRecovery.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 		    			facilityRecovery.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 	    			    facilityRecovery.store();
-		            }
+		            }*/
 		        }catch(GenericEntityException e){
 					Debug.logError("Error while creating Transporter Recovery"+e.getMessage(), module);
 				}
@@ -1440,7 +1454,7 @@ import java.text.SimpleDateFormat;
 		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		        	try{
 		        		List<GenericValue> facilityRecoveryList = FastList.newInstance();
-		        		facilityRecoveryList = delegator.findList("FacilityRecovery", condition, null,null, null, false);	 
+		        		facilityRecoveryList = delegator.findList("FineRecovery", condition, null,null, null, false);	 
 			        	facilityIdsList = EntityUtil.getFieldListFromEntityList(facilityRecoveryList, "facilityId", false);
 			        		
 			        	List<GenericValue>	allFaclityCrateFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CRATES"));
@@ -1513,7 +1527,7 @@ import java.text.SimpleDateFormat;
 				  result.put("partyRecoveryInfoMap",partyRecoveryInfoMap);
 	        	return result;
 			}
-		    public static Map<String, Object> updateFacilityRecvory(DispatchContext dctx, Map<String, Object> context) {
+		    public static Map<String, Object> updateFineRecvoryWithBilling(DispatchContext dctx, Map<String, Object> context) {
 				List conditionList= FastList.newInstance(); 
 				LocalDispatcher dispatcher = dctx.getDispatcher();
 		        Delegator delegator = dctx.getDelegator();
@@ -1528,7 +1542,7 @@ import java.text.SimpleDateFormat;
 		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		        	try{
 		        		List<GenericValue> facilityRecoveryList = FastList.newInstance();
-		        		facilityRecoveryList = delegator.findList("FacilityRecovery", condition, null,null, null, false);	 
+		        		facilityRecoveryList = delegator.findList("FineRecovery", condition, null,null, null, false);	 
 
 	                	if(!UtilValidate.isEmpty(facilityRecoveryList)){
 	                		for(GenericValue facilityRecovery : facilityRecoveryList){
@@ -1552,6 +1566,7 @@ import java.text.SimpleDateFormat;
 				String facilityId = (String) context.get("facilityId");
 		    	String customTimePeriodId = (String) context.get("customTimePeriodId");
 		    	String recoveryTypeId = (String)context.get("recoveryTypeId");
+		    	String recoveryId = (String)context.get("recoveryId");
 		    	GenericValue customTimePeriod = null;
 		    	try {
 		    		try {
@@ -1560,15 +1575,15 @@ import java.text.SimpleDateFormat;
 						Debug.logError(e1,"Error While Finding CustomTimePeriod");
 						return ServiceUtil.returnError("Error While Finding CustomTimePeriod" + e1);
 					}
-					GenericValue facilityRecovery = delegator.findOne("FacilityRecovery", UtilMisc.toMap("facilityId", facilityId, "customTimePeriodId", customTimePeriodId, "recoveryTypeId",recoveryTypeId), false);
+					GenericValue facilityRecovery = delegator.findOne("FineRecovery", UtilMisc.toMap("recoveryId",recoveryId), false);
 					if(UtilValidate.isNotEmpty(facilityRecovery)){
 						delegator.removeValue(facilityRecovery);    
 		            }
 		    	}catch (GenericEntityException e) {
 		    		 Debug.logError(e, module);
-		             return ServiceUtil.returnError("Failed to find facilityRecovery " + e);
+		             return ServiceUtil.returnError("Failed to find FineRecovery " + e);
 				} 
-				result = ServiceUtil.returnSuccess("FacilityRecovery Successfully Cancelled..");
+				result = ServiceUtil.returnSuccess("Recovery Successfully Cancelled..");
 				return result;
 		}// end of service
 		    
@@ -1659,7 +1674,6 @@ import java.text.SimpleDateFormat;
 		        String countryCode = "91";
 		        String contactNumberTo = null;
 		        String description = null;
-		        Debug.log("===========incidentDate===inSms=="+createdDate);
 		        try {
 		        	GenericValue enumeration = delegator.findOne("Enumeration", UtilMisc.toMap("enumId", recoveryTypeId),false);
 		        	if (UtilValidate.isNotEmpty(enumeration)) {
