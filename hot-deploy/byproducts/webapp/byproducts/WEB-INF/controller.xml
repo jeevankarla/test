@@ -737,8 +737,8 @@
         <response name="failed" type="view" value="TransporterMargins"/>
         <response name="error" type="view" value="TransporterMargins"/>
     </request-map>
-     <request-map uri="GenerateTrnsptMarginReport.txt"><security https="true" auth="true"/>
-        <response name="success" type="view" value="GenerateTrnsptMarginReportTXT"/>
+     <request-map uri="GenerateTrnsptMarginReport.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="GenerateTrnsptMarginReportPDF"/>
     </request-map>
     <request-map uri="sendTransporterMarginSMS"><security https="true" auth="true"/>
         <response name="success" type="view" value="sendTransporterMarginSMS"/>
@@ -1186,7 +1186,7 @@
  <!-- Transporter views -->
    <view-map name="TransporterMargins" type="screen" page="component://byproducts/widget/TransporterScreens.xml#TransporterMargins"/>
    <view-map name="GenerateTransporterMarginReport" type="screen" page="component://byproducts/widget/TransporterScreens.xml#GenerateTransporterMarginReport"/>
-   <view-map name="GenerateTrnsptMarginReportTXT" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#GenerateTrnsptMarginReportTXT" content-type="text/plain"/>
+   <view-map name="GenerateTrnsptMarginReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#GenerateTrnsptMarginReportPDF" content-type="application/pdf"/>
    <view-map name="sendTransporterMarginSMS" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#SendTransporterMarginSMS" content-type="application/pdf"/>
    <view-map name="DTCCostReport" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCCostReport" content-type="application/pdf"/>
    <view-map name="DTCCostReportCSV" type="screencsv" page="component://byproducts/widget/TransporterScreens.xml#DTCCostReportCSV" content-type="text/csv"/>

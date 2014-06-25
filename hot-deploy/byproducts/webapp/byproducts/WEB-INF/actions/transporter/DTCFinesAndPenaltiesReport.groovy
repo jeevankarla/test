@@ -107,66 +107,69 @@ contractorIdList.each { contractorId ->
 						try{
 							List<GenericValue> facilityRecoveryList = FastList.newInstance();
 							facilityRecoveryList = delegator.findList("FineRecovery", condition, null,null, null, false);
-							facilityIdsList = EntityUtil.getFieldListFromEntityList(facilityRecoveryList, "facilityId", false);
-							List<GenericValue>	allFaclityCrateFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CRATES"));
-							List<GenericValue>	allFaclityCanFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CANS"));
-							List<GenericValue>	allFaclityFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "FINES_PENALTIES"));
-							List<GenericValue>	allFaclityTransportFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "FINES_TRNS_COST"));
-							List<GenericValue>	allFaclitySecurityFineList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "FINES_SECURITY"));
-							List<GenericValue>	allFaclityRemitFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "FINES_CSH_SHORT"));
-							
-									for(GenericValue facilityRecCrate : allFaclityCrateFinesList){
-										crateFineAmount=crateFineAmount.add(facilityRecCrate.getBigDecimal("amount"));
-									}
-									for(GenericValue facilityRecCan : allFaclityCanFinesList){
-										canFineAmount=canFineAmount.add(facilityRecCan.getBigDecimal("amount"));
-									}
-									for(GenericValue facilityRecTrans : allFaclityFinesList){
-										finesAmount=finesAmount.add(facilityRecTrans.getBigDecimal("amount"));
-									}
-									for(GenericValue facilityRecTrans : allFaclityTransportFinesList){
-										transportAmount=transportAmount.add(facilityRecTrans.getBigDecimal("amount"));
-									}
-									for(GenericValue facilityRecSecurity : allFaclitySecurityFineList){
-										securityFineAmount=securityFineAmount.add(facilityRecSecurity.getBigDecimal("amount"));
-									}
-									for(GenericValue facilityRecRemit : allFaclityRemitFinesList){
-										remitFinesAmount=remitFinesAmount.add(facilityRecRemit.getBigDecimal("amount"));
-									}
-									
+							if(UtilValidate.isNotEmpty(facilityRecoveryList)){
+								facilityIdsList = EntityUtil.getFieldListFromEntityList(facilityRecoveryList, "facilityId", false);
+								List<GenericValue>	allFaclityCrateFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CRATES"));
+								List<GenericValue>	allFaclityCanFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "CANS"));
+								List<GenericValue>	allFaclityFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "FINES_PENALTIES"));
+								List<GenericValue>	allFaclityTransportFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "FINES_TRNS_COST"));
+								List<GenericValue>	allFaclitySecurityFineList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "FINES_SECURITY"));
+								List<GenericValue>	allFaclityRemitFinesList = EntityUtil.filterByCondition(facilityRecoveryList, EntityCondition.makeCondition("recoveryTypeId", EntityOperator.EQUALS, "FINES_CSH_SHORT"));
+								
+										for(GenericValue facilityRecCrate : allFaclityCrateFinesList){
+											crateFineAmount=crateFineAmount.add(facilityRecCrate.getBigDecimal("amount"));
+										}
+										for(GenericValue facilityRecCan : allFaclityCanFinesList){
+											canFineAmount=canFineAmount.add(facilityRecCan.getBigDecimal("amount"));
+										}
+										for(GenericValue facilityRecTrans : allFaclityFinesList){
+											finesAmount=finesAmount.add(facilityRecTrans.getBigDecimal("amount"));
+										}
+										for(GenericValue facilityRecTrans : allFaclityTransportFinesList){
+											transportAmount=transportAmount.add(facilityRecTrans.getBigDecimal("amount"));
+										}
+										for(GenericValue facilityRecSecurity : allFaclitySecurityFineList){
+											securityFineAmount=securityFineAmount.add(facilityRecSecurity.getBigDecimal("amount"));
+										}
+										for(GenericValue facilityRecRemit : allFaclityRemitFinesList){
+											remitFinesAmount=remitFinesAmount.add(facilityRecRemit.getBigDecimal("amount"));
+										}
+										if(UtilValidate.isEmpty(routeWiseSaleMap[routeId])){
+											tempMap = [:];
+											tempMap["cratesFine"]=crateFineAmount;
+											tempMap["cansFine"]=canFineAmount;
+											tempMap["finesAmount"]=finesAmount;
+											tempMap["transportAmount"]=transportAmount;
+											tempMap["securityFineAmount"]=securityFineAmount;
+											tempMap["remitFinesAmount"]=remitFinesAmount;
+											tempMap["subTotal"]=crateFineAmount+canFineAmount+finesAmount+transportAmount+transportAmount+remitFinesAmount;
+											routeWiseSaleMap[routeId]=tempMap;
+											
+										 }else{
+											 tempMap = [:];
+											 tempMap.putAll(routeWiseSaleMap.get(routeId));
+											 tempMap["cratesFine"]=crateFineAmount;
+											 tempMap["cansFine"]=canFineAmount;
+											 tempMap["finesAmount"]=finesAmount;
+											 tempMap["transportAmount"]=transportAmount;
+											 tempMap["securityFineAmount"]=transportAmount;
+											 tempMap["remitFinesAmount"]=remitFinesAmount;
+											 tempMap["subTotal"]=crateFineAmount+canFineAmount+finesAmount+transportAmount+transportAmount+remitFinesAmount;
+										 }
+							}
 						}catch(GenericEntityException e){
 							Debug.logError(e, module);
 						}
-					if(UtilValidate.isEmpty(routeWiseSaleMap[routeId])){
-						tempMap = [:];
-						tempMap["cratesFine"]=crateFineAmount;
-						tempMap["cansFine"]=canFineAmount;
-						tempMap["finesAmount"]=finesAmount;
-						tempMap["transportAmount"]=transportAmount;
-						tempMap["securityFineAmount"]=securityFineAmount;
-						tempMap["remitFinesAmount"]=remitFinesAmount;
-						routeWiseSaleMap[routeId]=tempMap;
-					 }else{
-						 tempMap = [:];
-						 tempMap.putAll(routeWiseSaleMap.get(routeId));
-						 tempMap["cratesFine"]=crateFineAmount;
-						 tempMap["cansFine"]=canFineAmount;
-						 tempMap["finesAmount"]=finesAmount;
-						 tempMap["transportAmount"]=transportAmount;
-						 tempMap["securityFineAmount"]=transportAmount;
-						 tempMap["remitFinesAmount"]=remitFinesAmount;
-						 tempMap["subTotal"]=crateFineAmount+canFineAmount+finesAmount+transportAmount+transportAmount+remitFinesAmount;
-						 routeWiseSaleMap[routeId] = tempMap;
-					 }
 				 }
 			}
 		}
 	
 	}
-	Debug.log("========routeWiseSaleMap=========="+routeWiseSaleMap);
-	tempContMap = [:];
-	tempContMap.putAll(routeWiseSaleMap);
-	contractorRoutesMap.put(contractorId, tempContMap);
+	if(UtilValidate.isNotEmpty(routeWiseSaleMap)){
+		tempContMap = [:];
+		tempContMap.putAll(routeWiseSaleMap);
+	    contractorRoutesMap.put(contractorId, tempContMap);
+	}
 }
 context.contractorNamesMap = contractorNamesMap;
 context.contractorRoutesMap = contractorRoutesMap;

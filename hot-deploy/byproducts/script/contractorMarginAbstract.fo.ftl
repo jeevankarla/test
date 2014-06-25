@@ -37,8 +37,8 @@ under the License.
 					<fo:static-content flow-name="xsl-region-before"  font-weight="7pt" font-family="Courier,monospace">
 						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> MOTHER DAIRY, KMF UNIT	</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" white-space-collapse="false" keep-together="always">BANGALORE - 560065.</fo:block>
-						<fo:block text-align="center" keep-together="always"> ROUTE WISE DISTRIBUTION TRANSPORT COST ABSTRACT REPORT</fo:block>
-						<fo:block text-align="center" keep-together="always" white-space-collapse="false">FROMDATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO  DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
+						<fo:block text-align="center" font-size="10pt" keep-together="always"> ROUTE WISE DISTRIBUTION TRANSPORT COST ABSTRACT REPORT</fo:block>
+						<fo:block text-align="center" font-size="10pt" keep-together="always" white-space-collapse="false">FROMDATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO  DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
 		            <fo:block >------------------------------------------------------------------------------------</fo:block>
 		            <fo:block>
 		            <fo:table >
@@ -53,27 +53,27 @@ under the License.
                     			<fo:table-body>
                     			<fo:table-row>
                     		       <fo:table-cell>
-                    		       <fo:block text-align="left" >ROUTE</fo:block>
+                    		       <fo:block keep-together="always" text-align="left" font-size="10pt">ROUTE</fo:block>
                     		       </fo:table-cell>
                     		       
                     		        <fo:table-cell>
-                    		        <fo:block text-align="right" > Distribution</fo:block>
-                    		        <fo:block text-align="right" >Cost(Gross)</fo:block>
+                    		        <fo:block keep-together="always" text-align="right" font-size="10pt"> Distribution</fo:block>
+                    		        <fo:block keep-together="always" text-align="right" font-size="10pt">Cost(Gross)</fo:block>
                     		        </fo:table-cell>
                     		        
                     		        <fo:table-cell>
-                    		        <fo:block text-align="right" > Crates&amp;Cans</fo:block>
-                    		         <fo:block text-align="right" >Recovery</fo:block>
+                    		        <fo:block keep-together="always" text-align="right" font-size="10pt"> Crates&amp;Cans</fo:block>
+                    		         <fo:block keep-together="always" text-align="right" font-size="10pt">Recovery</fo:block>
                     		        </fo:table-cell>
                     		        
                     		        <fo:table-cell>
-                    		          <fo:block text-align="right" > Penalties</fo:block>
-                    		         <fo:block text-align="right" ></fo:block>
+                    		          <fo:block keep-together="always" text-align="right" font-size="10pt"> Penalties</fo:block>
+                    		         <fo:block keep-together="always" text-align="right" font-size="10pt"></fo:block>
                     		        </fo:table-cell>
                     		        
                     		         <fo:table-cell>
-                    		         <fo:block text-align="right" > NET-Amount</fo:block>
-                    		         <fo:block text-align="right" ></fo:block>
+                    		         <fo:block keep-together="always" text-align="right" font-size="10pt"> NET-Amount</fo:block>
+                    		         <fo:block keep-together="always" text-align="right" font-size="10pt"></fo:block>
                     		        </fo:table-cell>
                     		     </fo:table-row>
                     		     </fo:table-body>
@@ -147,11 +147,11 @@ under the License.
                     												 
                     											<fo:table-row>
                     												<fo:table-cell><fo:block>${trnsptMarginValues.getKey()?if_exists}</fo:block></fo:table-cell>
-                    												<fo:table-cell><fo:block text-align="right">${grTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    												<fo:table-cell><fo:block text-align="right">${totalCrAndCan?string("#0.00")?if_exists}</fo:block></fo:table-cell>
-                    												<fo:table-cell><fo:block text-align="right">${othersFine?string("#0.00")?if_exists}</fo:block></fo:table-cell>
+                    												<fo:table-cell><fo:block keep-together="always" text-align="right" font-size="10pt">${grTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    												<fo:table-cell><fo:block keep-together="always" text-align="right" font-size="10pt">${totalCrAndCan?string("#0.00")?if_exists}</fo:block></fo:table-cell>
+                    												<fo:table-cell><fo:block keep-together="always" text-align="right" font-size="10pt">${othersFine?string("#0.00")?if_exists}</fo:block></fo:table-cell>
                     												<#--><fo:table-cell><fo:block text-align="right">${grTotpendingDue.toEngineeringString()?if_exists}</fo:block></fo:table-cell>-->
-                    												<fo:table-cell><fo:block text-align="right">${netPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    												<fo:table-cell><fo:block keep-together="always" text-align="right" font-size="10pt">${netPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     											</fo:table-row>
                     											<fo:table-row>
                     												<fo:table-cell><fo:block >------------------------------------------------------------------------------------</fo:block></fo:table-cell>
@@ -164,11 +164,11 @@ under the License.
 		 	    							</#list>
 		 	    							</#list>
                     						<fo:table-row>
-                    							<fo:table-cell><fo:block>TOTAL</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right">${totGrTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right">${totCRandCanAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right">${totGrOthersAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right">${totGrTotNetPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block keep-together="always" font-size="10pt">TOTAL</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block keep-together="always" text-align="right" font-size="10pt">${totGrTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block keep-together="always" text-align="right" font-size="10pt">${totCRandCanAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block keep-together="always" text-align="right" font-size="10pt">${totGrOthersAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block keep-together="always" text-align="right" font-size="10pt">${totGrTotNetPayable.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     						</fo:table-row> 
                     						<fo:table-row>
                     							<fo:table-cell><fo:block >------------------------------------------------------------------------------------</fo:block></fo:table-cell>

@@ -29,28 +29,28 @@ under the License.
         </field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="RouteWiseDTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="RouteWise DTC Abstract" target-window="_blank">
+            <hyperlink target="GenerateTrnsptMarginReport.pdf" description="RouteWise DTC Abstract" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="transporterMarginAbstract"/>                                  
             </hyperlink>
         </field> 
        	<field name="RouteWiseDTCDayWise" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Route Wise DTC DayWise" target-window="_blank">
+            <hyperlink target="GenerateTrnsptMarginReport.pdf" description="Route Wise DTC DayWise" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="trnsptMarginReport"/>                                  
             </hyperlink>
         </field>  
          <field name="ContractorWiseDTCAbstract" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="Contractor Wise DTC Abstract" target-window="_blank">
+            <hyperlink target="GenerateTrnsptMarginReport.pdf" description="Contractor Wise DTC Abstract" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="ContractorWiseDTCAbstract"/>                                  
             </hyperlink>
         </field>   
         <field name="DTCReport" widget-style="buttontext" use-when="(&quot;${statusId}&quot;!=&quot;COM_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;IN_PROCESS&quot;)">
-            <hyperlink target="GenerateTrnsptMarginReport.txt" description="DTC Report" target-window="_blank">
+            <hyperlink target="GenerateTrnsptMarginReport.pdf" description="DTC Report" target-window="_blank">
               	  <parameter param-name="periodBillingId" from-field="periodBillingId"/>
               	  <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/> 
                   <parameter param-name="reportTypeFlag"  value="DTCReport"/>                                  

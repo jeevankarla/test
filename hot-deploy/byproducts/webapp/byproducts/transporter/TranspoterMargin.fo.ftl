@@ -39,10 +39,10 @@ under the License.
 					<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> MOTHER DAIRY, KMF UNIT	</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" white-space-collapse="false" keep-together="always">BANGALORE - 560065.</fo:block>
-						<fo:block text-align="center" keep-together="always"> ROUTE DESPATCHES &amp; PAYMENT PARTICULARS</fo:block>
-						<fo:block text-align="left" keep-together="always" white-space-collapse="false">ROUTE: ${trnsptMarginValues.getKey()}          FROMDATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO  DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
+						<fo:block text-align="center" font-size="10pt" keep-together="always"> ROUTE DESPATCHES &amp; PAYMENT PARTICULARS</fo:block>
+						<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false">ROUTE: ${trnsptMarginValues.getKey()}          FROMDATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO  DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
 		            <fo:block >---------------------------------------------------------------------</fo:block>
-		            <fo:block text-align="left" keep-together="always"  white-space-collapse="false"> DATE         QUANTITY                  MARGIN AMOUNT</fo:block>
+		            <fo:block text-align="left" font-size="10pt" keep-together="always"  white-space-collapse="false"> DATE            QUANTITY                  MARGIN AMOUNT</fo:block>
 		            <fo:block >---------------------------------------------------------------------</fo:block>
 		            </fo:static-content>
 					<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
@@ -64,9 +64,9 @@ under the License.
                     							<#assign routeAmount = daywiseTrnsptEntry.getValue().get("rtAmount")>
                     							<fo:table-row>
                     								<fo:table-cell><fo:block>${daywiseTrnsptEntry.getKey()}</fo:block></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="right">${daywiseTrnsptEntry.getValue().get("totalQuantity").toEngineeringString()}</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block keep-together="always" font-size="10pt" text-align="right">${daywiseTrnsptEntry.getValue().get("totalQuantity").toEngineeringString()}</fo:block></fo:table-cell>
                     								<fo:table-cell></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="right">${routeAmount.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block keep-together="always" font-size="10pt" text-align="right">${routeAmount.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     							</fo:table-row>
                     						<#else>
                     							<fo:table-row>
@@ -75,9 +75,9 @@ under the License.
                     							<fo:table-row>
                     								<#assign grTotRtAmt = daywiseTrnsptEntry.getValue().get("grTotRtAmount")>
                     								<fo:table-cell><fo:block>TOTAL</fo:block></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="right">${daywiseTrnsptEntry.getValue().get("grTotQty").toEngineeringString()}</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block keep-together="always" font-size="10pt" text-align="right">${daywiseTrnsptEntry.getValue().get("grTotQty").toEngineeringString()}</fo:block></fo:table-cell>
                     								<fo:table-cell></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="right">${grTotRtAmt?string("#0")?if_exists}.00</fo:block></fo:table-cell>                    								
+                    								<fo:table-cell><fo:block keep-together="always" font-size="10pt" text-align="right">${grTotRtAmt?string("#0")?if_exists}.00</fo:block></fo:table-cell>                    								
                     							</fo:table-row>
                     							<fo:table-row>
                     								<fo:table-cell>
@@ -88,12 +88,12 @@ under the License.
                     								
                     								<#assign vehicleDue = daywiseTrnsptEntry.getValue().get("grTotpendingDue")>
                     								<#assign netPayable = grTotRtAmt.subtract(vehicleDue)>
-                    								<fo:table-cell><fo:block text-align="left" keep-together="always">MONTH BILL:</fo:block></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="right">${grTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="center" keep-together="always">VEHICLE DUE:</fo:block></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="left">${vehicleDue.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="left" keep-together="always">NET PAYABLE:</fo:block></fo:table-cell>
-                    								<fo:table-cell><fo:block text-align="left">${netPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block font-size="10pt" text-align="left" keep-together="always">MONTH BILL:</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block font-size="10pt" text-align="right">${grTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block font-size="10pt" text-align="center" keep-together="always">VEHICLE DUE:</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block font-size="10pt" text-align="left">${vehicleDue.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block font-size="10pt" text-align="left" keep-together="always">NET PAYABLE:</fo:block></fo:table-cell>
+                    								<fo:table-cell><fo:block font-size="10pt" text-align="left">${netPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     							</fo:table-row>
                     							<fo:table-row>
                     								<fo:table-cell><fo:block >---------------------------------------------------------------------</fo:block></fo:table-cell>

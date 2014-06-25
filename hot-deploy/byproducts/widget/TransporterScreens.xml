@@ -87,7 +87,7 @@
             </widgets>
         </section>
     </screen>
-    <screen name="GenerateTrnsptMarginReportTXT">
+    <screen name="GenerateTrnsptMarginReportPDF">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>

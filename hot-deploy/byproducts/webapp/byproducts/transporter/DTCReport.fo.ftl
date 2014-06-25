@@ -45,8 +45,8 @@ under the License.
 						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD.</fo:block>
 						<fo:block text-align="center" font-weight="bold" font-size="10pt" white-space-collapse="false" keep-together="always">UNIT : MOTHER DAIRY : G.K.V.K POST : YELAHANKA : BANGALORE - 560065</fo:block>
 						 <fo:block >-----------------------------------------------------------------------------------</fo:block>
-						<fo:block text-align="center" keep-together="always">DISTRIBUTION TRANSPORTATION COST</fo:block>
-						<fo:block text-align="center" keep-together="always">PAYMENT SHEET</fo:block>
+						<fo:block text-align="center" font-size="10pt" keep-together="always">DISTRIBUTION TRANSPORTATION COST</fo:block>
+						<fo:block text-align="center" font-size="10pt" keep-together="always">PAYMENT SHEET</fo:block>
 				    </fo:static-content>
 				<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 				<fo:block>
@@ -83,21 +83,19 @@ under the License.
 						
 		                   <fo:table-row>
 			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt">CONTRACTOR NAME:${partyName}</fo:block>
-			                          <fo:block  text-indent="15pt">CONTRACTOR CODE:${partyCode}</fo:block>
-			                         <fo:block  text-indent="15pt">PERIOD:&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd-MMM-yyyy")}&#160;&#160;TO&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime,"dd-MMM-yyyy")}</fo:block>
-			                         <fo:block  text-indent="15pt">DISTRIBUTION CHARGES GROSS(Rs): ${grTotRtAmt?string("#0")?if_exists}.00</fo:block>
-			                         <fo:block  text-indent="15pt">ADDITIONAL PAYMENT:</fo:block>
-			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">CONTRACTOR NAME:${partyName}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">CONTRACTOR CODE:${partyCode}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">PERIOD:&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd-MMM-yyyy")}&#160;&#160;TO&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime,"dd-MMM-yyyy")}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">DISTRIBUTION CHARGES GROSS(Rs): ${grTotRtAmt?string("#0")?if_exists}.00</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">ADDITIONAL PAYMENT:</fo:block>
 			                     </fo:table-cell>
 			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt">ROUTE: ${trnsptMarginValues.getKey()}</fo:block>
-			                         <fo:block  text-indent="15pt">TYPE: ${uomId?if_exists}</fo:block>
-			                         <fo:block  text-indent="15pt">RATE:${margin?if_exists} </fo:block>
-			                         <fo:block  text-indent="15pt">DISTANCE:${distance?if_exists}</fo:block>
-			                         <fo:block  text-indent="15pt">WORK ORDER NO: ${workOrderNo?if_exists}</fo:block>
-			                         <fo:block  text-indent="15pt">VALID UP TO:${closedDate?if_exists} </fo:block>
-			                         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ROUTE: ${trnsptMarginValues.getKey()}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TYPE: ${uomId?if_exists}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RATE:${margin?if_exists} </fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DISTANCE:${distance?if_exists}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;WORK ORDER NO: ${workOrderNo?if_exists}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;VALID UP TO:${closedDate?if_exists} </fo:block>
 			                  </fo:table-cell>
 		                     </fo:table-row>
 		                     </#if>	
@@ -108,10 +106,10 @@ under the License.
                     	    </fo:table-row>
 							<fo:table-row>
 			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt">DEDUCTIONS</fo:block>
+			                         <fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DEDUCTIONS</fo:block>
 			                  </fo:table-cell>
 			                   <fo:table-cell>
-			                         <fo:block  text-align="right" text-indent="15pt">&#160;&#160;&#160;&#160;&#160;AMOUNT(Rs)</fo:block>
+			                         <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">AMOUNT(Rs)</fo:block>
 			                  </fo:table-cell>
 		                     </fo:table-row>
 		                     <fo:table-row>
@@ -119,15 +117,15 @@ under the License.
                     	    </fo:table-row>
 					        <fo:table-row>
 			                   <fo:table-cell>
-			                         <fo:block  text-indent="15pt">CRATES Recovery</fo:block>
-			                          <fo:block  text-indent="15pt">CANS Recovery</fo:block>
-			                          <fo:block  text-indent="15pt">FINE &amp; OTHERS</fo:block>
+			                         <fo:block   keep-together="always" text-align="left" font-size="10pt">CRATES Recovery</fo:block>
+			                          <fo:block  keep-together="always" text-align="left" font-size="10pt">CANS Recovery</fo:block>
+			                          <fo:block  keep-together="always" text-align="left" font-size="10pt">FINE &amp; OTHERS</fo:block>
 			                  </fo:table-cell>
 			                  	<#assign facRecvoryMap=facilityRecoveryInfoMap.get(trnsptMarginValues.getKey())?if_exists>
 			                   <fo:table-cell>
-			                         <fo:block text-align="right"  text-indent="15pt"><#if facRecvoryMap?has_content>${facRecvoryMap.get("cratesFine")?if_exists?string("#0.0")}</#if></fo:block>
-			                          <fo:block text-align="right" text-indent="15pt"><#if facRecvoryMap?has_content>${facRecvoryMap.get("cansFine")?if_exists?string("#0.0")}</#if></fo:block>
-			                         <fo:block  text-align="right" text-indent="15pt"><#if facRecvoryMap?has_content>${facRecvoryMap.get("othersFine")?if_exists?string("#0.0")}</#if></fo:block>
+			                         <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false"><#if facRecvoryMap?has_content>${facRecvoryMap.get("cratesFine")?if_exists?string("#0.0")}</#if></fo:block>
+			                          <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false"><#if facRecvoryMap?has_content>${facRecvoryMap.get("cansFine")?if_exists?string("#0.0")}</#if></fo:block>
+			                         <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false"><#if facRecvoryMap?has_content>${facRecvoryMap.get("othersFine")?if_exists?string("#0.0")}</#if></fo:block>
 			                  </fo:table-cell>
 		                     </fo:table-row>
 		                     <fo:table-row>
@@ -144,8 +142,8 @@ under the License.
 			                   <#assign totalDeduction=facRecvoryMap.get("totalFine")?if_exists>
 			                   </#if>
 			                   <#assign netAmount=(grTotRtAmt-totalDeduction)>
-			                         <fo:block text-align="right" text-indent="15pt">TOTAL DEDUCTION:<#if facRecvoryMap?has_content>${facRecvoryMap.get("totalFine")?if_exists?string("#0.0")}</#if></fo:block>
-			                         <fo:block text-align="right"  text-indent="15pt">NET PAYABLE:${netAmount?string("#0")}.00</fo:block>
+			                         <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">TOTAL DEDUCTION:<#if facRecvoryMap?has_content>${facRecvoryMap.get("totalFine")?if_exists?string("#0.0")}</#if></fo:block>
+			                         <fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">NET PAYABLE:${netAmount?string("#0")}.00</fo:block>
 			                  </fo:table-cell>
 		                     </fo:table-row>
 		                     </fo:table-body>
@@ -158,7 +156,7 @@ under the License.
 			              <fo:table-row>
 						  <fo:table-cell>
 						   <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmount?string("#0")), "%rupees-and-paise", locale).toUpperCase()>
-                   					<fo:block white-space-collapse="false" keep-together="always">(In Words: ${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
+                   					<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">(In Words: ${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
 							</fo:table-cell>
 							</fo:table-row>		
 				          <fo:table-row>
@@ -176,7 +174,7 @@ under the License.
 					              <fo:table-body>
 						              <fo:table-row>
 										  <fo:table-cell>
-												<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">PAYMENT ARRANGED THROUGH BANK: </fo:block>
+												<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">PAYMENT ARRANGED THROUGH BANK: </fo:block>
 											</fo:table-cell>
 										</fo:table-row>		
 							          <fo:table-row>
@@ -186,12 +184,12 @@ under the License.
 									</fo:table-row>	
 									<fo:table-row>
 										  <fo:table-cell>
-												<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">ACCOUNT NO:${accNo} </fo:block>
+												<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">ACCOUNT NO:${accNo} </fo:block>
 											</fo:table-cell>
 									</fo:table-row>		
 									<fo:table-row>
 									  <fo:table-cell>
-											<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">PAN NO:${panId} </fo:block>
+											<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">PAN NO:${panId} </fo:block>
 										</fo:table-cell>
 										</fo:table-row>		
 								 </fo:table-body>	
@@ -203,21 +201,6 @@ under the License.
 		           <fo:table-column column-width="170pt"/>
 		           <fo:table-column column-width="120pt"/>
 		              <fo:table-body>
-		              <fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
-						<fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
-				        <fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
 				        <fo:table-row>	
 				            	<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
@@ -233,30 +216,20 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				            	</fo:table-cell>
 				        </fo:table-row>
-				        <fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
-						<fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
-				        <fo:table-row>	
+				         <fo:table-row>	
 				            	<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				            	</fo:table-cell>
 				        </fo:table-row>
 			              <fo:table-row>
 							  <fo:table-cell>
-									<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">PREPARED BY </fo:block>
+									<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">PREPARED BY </fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
-									<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">PRE AUDIT</fo:block>
+									<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">PRE AUDIT</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
-									<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">MANAGER(MKTG) </fo:block>
+									<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">MANAGER(MKTG) </fo:block>
 								</fo:table-cell>
 							</fo:table-row>		
 					 </fo:table-body>	
