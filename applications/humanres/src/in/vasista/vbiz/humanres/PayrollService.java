@@ -1129,7 +1129,7 @@ public class PayrollService {
 		    			                    	payheadAmtCtx.put("proportionalFlag", context.get("proportionalFlag"));
 		    					            }
 		    			                   // Debug.log("in dependent flag"+payheadAmtCtx);
-		    				                Map<String, Object> innerCalcResults = calculatePayHeadAmount(dctx,payheadAmtCtx);
+		    				                Map<String, Object> innerCalcResults = getPayHeadAmount(dctx,payheadAmtCtx);
 		    								variables.put(varibuleKey, ((BigDecimal)innerCalcResults.get("amount")).doubleValue());
 			    						}
 		    							// this to support GROSSSALARY 
