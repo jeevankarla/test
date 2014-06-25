@@ -1124,6 +1124,7 @@ public class PayrollService {
 		    			                    payheadAmtCtx.put("timePeriodStart", timePeriodStart);
 		    			                    payheadAmtCtx.put("timePeriodEnd", timePeriodEnd);
 		    			                    payheadAmtCtx.put("timePeriodId", timePeriodId);
+		    			                    payheadAmtCtx.put("customTimePeriodId", timePeriodId);
 		    			                    payheadAmtCtx.put("payHeadTypeId", varibuleKey);
 		    			                    if(UtilValidate.isNotEmpty(context.get("proportionalFlag"))){
 		    			                    	payheadAmtCtx.put("proportionalFlag", context.get("proportionalFlag"));
