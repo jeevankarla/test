@@ -1409,7 +1409,7 @@ public class PayrollService {
 	        	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "ATTENDANCE_MONTH"));
 	        	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(timePeriodEnd)));
 	        	EntityCondition cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	        	List<GenericValue> attendancePeriodList = delegator.findList("CustomTimePeriod",cond, null, UtilMisc.toList("-thruDate"), efo, false);
+	        	List<GenericValue> attendancePeriodList = delegator.findList("CustomTimePeriod",cond, null, UtilMisc.toList("-thruDate"), null, false);
 	        	 //result = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", "Company", "periodTypeId", "ATTENDANCE_MONTH","userLogin", userLogin));
 	  	    	if(ServiceUtil.isError(result)){
 	 	 	    	Debug.logError("Error in service findLastClosedDate ", module);    			
