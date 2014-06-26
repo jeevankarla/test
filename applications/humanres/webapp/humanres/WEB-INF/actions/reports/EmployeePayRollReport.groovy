@@ -33,7 +33,7 @@ timePeriodStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 
 resultMap = PayrollService.getPayrollAttedancePeriod(dctx, [timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, timePeriodId: parameters.customTimePeriodId, userLogin : userLogin]);
-if(UtilValidate.isNotEmpty(resultMap)){
+if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){	
 	lastCloseAttedancePeriod=resultMap.get("lastCloseAttedancePeriod");
 	timePeriod=lastCloseAttedancePeriod.get("periodName");
 	context.timePeriod=timePeriod;
@@ -44,7 +44,6 @@ conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUAL
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
-
 //getting benefits
 benefitTypeList = delegator.findList("BenefitType", null, null, ["sequenceNum"], null, false);
 benefitDescMap=[:];

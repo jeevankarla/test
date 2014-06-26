@@ -34,7 +34,7 @@ under the License.
     <#assign emplPosition=0 />
     <#assign location=0 />
     <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
-    <#assign postalAddress=delegator.findByAnd("PartyAndPostalAddress", {"partyId" : parameters.partyId})/>
+     <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", parameters.partyId, "userLogin", userLogin))/>
     <#if payRollMap?has_content>
     	<#assign payRollHeaderList = payRollMap.entrySet()>
       <#list payRollHeaderList as payRollHeader>
@@ -42,8 +42,8 @@ under the License.
         <#assign totalDeductions =0 />
       	 <#assign payHeader = delegator.findOne("PayrollHeader", {"payrollHeaderId" : payRollHeader.getKey()}, true)>
       	 <#assign partyId = payHeader.partyIdFrom>
-      	 <#assign emplDetails = delegator.findOne("PartyPersonAndEmployeeDetail", {"partyId" : partyId}, true)/>      	 
-      	 <#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod}, true)/>
+      	 <#assign emplDetails = delegator.findOne("PartyPersonAndEmployeeDetail", {"partyId" : partyId}, true)/>
+      	 <#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod?if_exists}, true)/>
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
       	 <#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : partyId})/>
@@ -71,7 +71,7 @@ under the License.
             				<fo:table-cell><fo:block keep-together="always">${partyGroup.groupName?if_exists}</fo:block></fo:table-cell>
             			</fo:table-row>
             			<fo:table-row>
-            				<fo:table-cell><fo:block keep-together="always">${postalAddress[0].address1?if_exists}</fo:block></fo:table-cell>
+            				<fo:table-cell><fo:block keep-together="always"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block></fo:table-cell>
             			</fo:table-row>
             		</fo:table-body>
             	</fo:table>
@@ -119,10 +119,10 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee.PAN          : ${emplDetails.panId?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 				</fo:table-row>
-                     		 				<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPositionAndFulfilment[0].emplPositionTypeId}, true)>
+                     		 				<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPositionAndFulfilment[0].emplPositionTypeId?if_exists}, true)>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Designation               : ${designation.description?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Designation               : <#if designation?has_content>${designation.description?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 					<fo:table-cell>
@@ -189,10 +189,10 @@ under the License.
                     		<#assign lossOfPay=0>
                     		<#assign netPaidDays=0>
                     		<#if emplLeavesDetails?has_content>
-                    			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")>
-                    			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")>
-                    		</#if>      
-                    		<#assign netPaidDays=(totalDays-lossOfPay)>              		
+                    			<#assign totalDays=emplLeavesDetails.get("noOfCalenderDays")?if_exists>
+                    			<#assign lossOfPay=emplLeavesDetails.get("lossOfPayDays")?if_exists>
+                    			<#assign netPaidDays=(totalDays-lossOfPay)>
+                    		</#if>                    		
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                         		<fo:block text-align="center">${totalDays?if_exists}</fo:block>
@@ -278,7 +278,7 @@ under the License.
                     		</fo:table-cell>                    		
                     	</fo:table-row>
                    <#assign payRollHeaderItemList =payRollHeader.getValue().entrySet()> 	
-                   	<#list benefitTypeIds as benefitType>
+                    <#list benefitTypeIds as benefitType>
                     		<#assign value=0>
                     		<#if (payRollHeader.getValue()).get(benefitType)?has_content>
                     			<#assign value=(payRollHeader.getValue()).get(benefitType)>	
