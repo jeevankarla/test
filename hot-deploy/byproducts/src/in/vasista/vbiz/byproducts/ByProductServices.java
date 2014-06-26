@@ -5215,6 +5215,7 @@ public class ByProductServices {
           	String paymentId = (String)context.get("paymentId");
           	String chequeReturns = (String)context.get("chequeBounce");
           	String comments = (String)context.get("bounceReason");
+          	String returnDateStr = (String)context.get("returnDate");
           	Map<String, Object> result =  FastMap.newInstance();
           	Map<String, Object> inMap = FastMap.newInstance();
           	Map<String, Object> createInvoiceResult = FastMap.newInstance();
@@ -5222,11 +5223,26 @@ public class ByProductServices {
     		inMap.put("paymentId", paymentId);
     		inMap.put("userLogin", userLogin);
     		GenericValue payment = null;
+    		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+  	  	  	Timestamp cancelDate = null;
+    		if(UtilValidate.isNotEmpty(returnDateStr)){
+  	  	  		try {
+  	  	  		cancelDate = new java.sql.Timestamp(sdf.parse(returnDateStr).getTime());
+  	  	  		} catch (ParseException e) {
+  	  	  			Debug.logError(e, "Cannot parse date string: " + returnDateStr, module);
+  	  	  		} catch (NullPointerException e) {
+  	  	  			Debug.logError(e, "Cannot parse date string: " + returnDateStr, module);
+  	  	  		}
+  	  	  	}
+  	  	  	else{
+  	  	  		cancelDate = UtilDateTime.nowTimestamp();
+  	  	  	}
+    		
     		try{
     			payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
     			payment.put("chequeReturns", chequeReturns);
     			payment.put("comments", comments);
-    			payment.put("cancelDate", UtilDateTime.nowTimestamp());
+    			payment.put("cancelDate", cancelDate);
     			payment.store();
     			
     			Map<String, Object> cancelResults = dispatcher.runSync("voidPayment",inMap);
@@ -5244,7 +5260,7 @@ public class ByProductServices {
     				createInvoice.put("invoiceItemTypeId","INCO_FINEPENALTY_CHQ");
     				createInvoice.put("invoiceTypeId", "MIS_INCOME_IN");
     				createInvoice.put("description", "Cheque Bounce");
-    				createInvoice.put("invoiceDate",UtilDateTime.nowTimestamp());
+    				createInvoice.put("invoiceDate", cancelDate);
     				createInvoiceResult = ByProductNetworkServices.createFacilityInvoice(ctx, createInvoice);
     				if (ServiceUtil.isError(createInvoiceResult)) {
 	                	Debug.logError("Error creating invoice for the retailer"+payment.get("facilityId"), module);	

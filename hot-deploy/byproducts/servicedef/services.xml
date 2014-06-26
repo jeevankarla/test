@@ -558,6 +558,7 @@
         <attribute name="chequeBounce" type="String" mode="IN" optional="false"/>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
         <attribute name="bounceReason" type="String" mode="IN" optional="true"/>
+        <attribute name="returnDate" type="String" mode="IN" optional="true"/>
     </service>
     
      <service name="createPaymentForBooth" engine="java"

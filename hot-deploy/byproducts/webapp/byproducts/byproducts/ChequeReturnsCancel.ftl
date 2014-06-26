@@ -56,6 +56,17 @@
 		
 	}
 	
+	function datepick()
+	{		
+		$( "#returnDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			maxDate:0,
+			numberOfMonths: 1});		
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+	}
+	
 	//disable the generate button once the form submited
 	function disableGenerateButton(){			
 		   $("input[type=submit]").attr("disabled", "disabled");
@@ -68,12 +79,15 @@
 	
 	function chequeBounceFieldsOnchange(){
 		jQuery("input[name='bounceReason']").parent().parent().hide();
+		jQuery("input[name='returnDate']").parent().parent().hide();
 		var str=jQuery("select[name='chequeBounce']").val();	
 		if(str == "Y"){	
 			jQuery("input[name='bounceReason']").parent().parent().show();
+			jQuery("input[name='returnDate']").parent().parent().show();
 		}else{
 			$('#bounceReason').attr('value','');
 			jQuery("input[name='bounceReason']").parent().parent().hide();
+			jQuery("input[name='returnDate']").parent().parent().hide();
 			
 		}
 	}
@@ -85,6 +99,7 @@
 						"<option value='N' >No</option>"+  
 						"<option value='Y' >Yes</option>"+          
 						"</select></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Return Date :</td><td align='left' width='70%'><input class='h4' type='text' id='returnDate' name='returnDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Reason For Bounce/Return :</td><td align='left' width='70%'><input class='h4' type='text' id='bounceReason' name='bounceReason' /></td></tr>" +
 						"<tr class='h3'><td></td><td><input type='hidden' name='paymentId' id='paymentId' value='"+paymentId+"'></td></tr>"+
 					"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
