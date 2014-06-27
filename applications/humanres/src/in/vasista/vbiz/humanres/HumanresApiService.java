@@ -119,7 +119,7 @@ public class HumanresApiService {
   		}
     	Map result = FastMap.newInstance();  
     	Map employeeMap = FastMap.newInstance();  
-    	employeeMap.put("employeeList", employeeList)
+    	employeeMap.put("employeeList", employeeList);
 		result.put("employeesResult", employeeMap);
 Debug.logInfo("result:" + result, module);		 
     	return result;
