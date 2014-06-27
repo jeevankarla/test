@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Humanres API services</description>
+    <vendor>Vasista</vendor>
+
+   <service name="recordPunch" engine="java" invoke="recordPunch" location="in.vasista.vbiz.humanres.PunchService" auth="true" export="true">
+        <description>record punch</description>
+       <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+       <attribute name="punchList" mode="IN" type="java.util.List"/>
+  </service>
+ <service name="fetchLastPunch" engine="java" invoke="fetchLastPunch" location="in.vasista.vbiz.humanres.PunchService" auth="true" export="true">
+        <description>fetch punch</description>
+       <permission-service service-name="humanResManagerPermission" main-action="CREATE"/>
+      <attribute name="deviceId" mode="IN" optional="true" type="String"/>
+      <attribute name="punchEntry" mode="OUT" type="Map" optional="true"></attribute>
+  </service>      
+    
+    <service name="getActiveEmployees" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.humanres.HumanresApiService" invoke="getActiveEmployees">
+        <description>Service to get all active employees</description>
+        <attribute type="Map" mode="OUT" name="employeesResult" optional="true"/>
+    </service>     
+    
+
+</services>   
