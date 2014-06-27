@@ -117,8 +117,10 @@ public class HumanresApiService {
 		}catch(GenericEntityException e){
   			Debug.logError("Error fetching employees " + e.getMessage(), module);
   		}
-    	Map result = FastMap.newInstance();  		
-		result.put("employeesResult", employeeList);
+    	Map result = FastMap.newInstance();  
+    	Map employeeMap = FastMap.newInstance();  
+    	employeeMap.put("employeeList", employeeList)
+		result.put("employeesResult", employeeMap);
 Debug.logInfo("result:" + result, module);		 
     	return result;
     }      
