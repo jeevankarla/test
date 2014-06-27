@@ -49,6 +49,7 @@ public class HumanresApiService {
 				"partyRelationshipTypeId", "GROUP_ROLLUP"),UtilMisc.toList("groupName")));
   			for(GenericValue internalOrg : internalOrgs){
   				Map<String, Object> inputParamMap = FastMap.newInstance();
+  				inputParamMap.put("userLogin", userLogin);			  				
   				inputParamMap.put("org", internalOrg);
   				populateOrgEmployees(dctx, inputParamMap, employeeList);
   			}
@@ -112,6 +113,7 @@ public class HumanresApiService {
 		try {
 			GenericValue company = delegator.findByPrimaryKey("PartyAndGroup", UtilMisc.toMap("partyId", "Company"));
 			Map<String, Object> inputParamMap = FastMap.newInstance();
+			inputParamMap.put("userLogin", userLogin);			
 			inputParamMap.put("org", company);
 			populateOrgEmployees(dctx, inputParamMap, employeeList);	
 		}catch(GenericEntityException e){
