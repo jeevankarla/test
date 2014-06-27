@@ -64,9 +64,16 @@ boothsList.each{ eachBoothId ->
 	//facility
 	facilityFDRMap = [:];
 	facilityFDRMap.putAt("facilityId", eachBoothId);
-	facilityDet = EntityUtil.filterByCondition(boothsDetailsList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachBoothId));
+	facilityDet = [];
+	if(isByParty){
+		facilityDet = EntityUtil.filterByCondition(boothsDetailsList, EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachBoothId));
+	}
+	else{
+		facilityDet = EntityUtil.filterByCondition(boothsDetailsList, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachBoothId));
+	}
+	facId = (EntityUtil.getFirst(facilityDet)).facilityId;
 	facilityFDRMap.putAt("facilityName", (EntityUtil.getFirst(facilityDet)).facilityName);
-	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:eachBoothId, isByParty:isByParty])).get("openingBalance");
+	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:facId, isByParty:isByParty])).get("openingBalance");
 	facilityFDRMap.putAt("openingBalance", openingBalance);
 	boothFDRDet = FDRDetail.get(eachBoothId);
 	fdrAmt = 0;
