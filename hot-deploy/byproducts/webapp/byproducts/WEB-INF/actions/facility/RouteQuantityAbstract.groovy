@@ -202,7 +202,7 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 					currentProduct = productValue.getKey();
 					product = delegator.findOne("Product", [productId : currentProduct], false);
 					tempVariantMap =[:];
-					productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct]), null, null, null, false));
+					productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
 					virtualProductId =currentProduct;
 					if(UtilValidate.isNotEmpty(productAssoc)){
 						virtualProductId = productAssoc.productId;
