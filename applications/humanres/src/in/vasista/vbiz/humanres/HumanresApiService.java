@@ -108,7 +108,7 @@ public class HumanresApiService {
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch employees!", module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");
         }    	
-		List<GenericValue> employeeList = FastList.newInstance();        
+		List employeeList = FastList.newInstance();        
 		try {
 			GenericValue company = delegator.findByPrimaryKey("PartyAndGroup", UtilMisc.toMap("partyId", "Company"));
 			Map<String, Object> inputParamMap = FastMap.newInstance();
