@@ -77,6 +77,21 @@
         <field name="unitPrice" title="Unit Price"><display/></field> 
         <field name="subAmount" title="Sub Amount"><display/></field> 
     </form>
+    <form name="ListRetailerDetailCSV" type="list" list-name="boothsDetail" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<field name="facilityId" title="Retailer Code"><display/></field> 
+    	<field name="facilityName" title="Retailer Name"><display/></field> 
+    	<field name="category" title="Retailer Category"><display/></field> 
+    	<field name="securityDeposit" title="Security Deposit"><display/></field> 
+    	<field name="fixedDeposit" title="Fixed Deposit"><display/></field> 
+    	<field name="ownerPhone" title="Phone Number"><display/></field> 
+    	<field name="salesRep" title="Sales Rep."><display/></field> 
+        <field name="amRouteId" title="AM Route"><display/></field> 
+        <field name="pmRouteId" title="PM Route"><display/></field> 
+        <field name="latitude" title="Latitude"><display/></field>
+        <field name="longitude" title="Longitude"><display/></field> 
+    </form>
+    
     <form name="ListBoothPaymentsCSV" type="list" list-name="boothPaymentsCsvList" paginate="false"
     		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
     	<!-- RECTDATE	TRSPTRID	ZONE	ROUTE	BOOTH	BNAME	ALLOTEE	CASHVALU -->   	
@@ -102,6 +117,16 @@
         <field name="paymentMethodTypeId" title="PaymentMethodType"><display/></field>  
         <field name="issuingAuthority" title="BankName"><display/></field>  
         <field name="amount" title="AMOUNT"><display/></field>        
+     </form>
+      <form name="RMMaterialBalanceCSV" type="list" list-name="materialBalanceList" paginate="false"
+    		odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    	<field name="serialNo" title="SL.No"><display/></field> 	
+    	<field name="prodDescription" title="Description"><display/></field> 
+    	<field name="quantity" title="Quantity (Kgs.)"><display /></field>
+    	<field name="fatPercent" title="FAT %"><display/></field>   	
+    	<field name="snfPercent" title="SNF %"><display/></field>
+    	<field name="fatKgs" title="FAT (Kgs.)"><display/></field>
+        <field name="snfKgs" title="SNF (Kgs.)"><display/></field>  
      </form>
    
 </forms>

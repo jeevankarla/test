@@ -2762,6 +2762,7 @@ public class ByProductNetworkServices {
 			facilityFieldStaffMap = (Map<String, String>) facilityFieldStaffResult.get("facilityFieldStaffMap");
 		}
 		try {
+			Map FDRDetails = (Map)getFacilityFixedDeposit( dctx , UtilMisc.toMap("userLogin", userLogin, "effectiveDate", UtilDateTime.nowTimestamp())).get("FacilityFDRDetail");
 			conditionList.add(EntityCondition.makeCondition("facilityTypeId",EntityOperator.EQUALS, "BOOTH"));
 			if (UtilValidate.isNotEmpty(categoryTypeEnum)) {
 				conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS,categoryTypeEnum));
@@ -2770,8 +2771,14 @@ public class ByProductNetworkServices {
 			List<GenericValue> booths = delegator.findList("Facility", condition, null,UtilMisc.toList("facilityId"), null, false);
 			Iterator<GenericValue> boothIter = booths.iterator();
 			while (boothIter.hasNext()) {
+				BigDecimal fixedDeposit = BigDecimal.ZERO;
+				BigDecimal securityDeposit = BigDecimal.ZERO;
 				GenericValue booth = boothIter.next();
 				String boothId = booth.getString("facilityId");
+				if(UtilValidate.isNotEmpty(FDRDetails) && UtilValidate.isNotEmpty(FDRDetails.get(boothId))){
+					Map facilityFDRDetail = (Map)FDRDetails.get(boothId);
+					fixedDeposit = (BigDecimal)facilityFDRDetail.get("totalAmount");
+				}
 				String vendorPhone = "";
 				String latitude = "";
 				String longitude = "";
@@ -2802,12 +2809,16 @@ public class ByProductNetworkServices {
 					latitude = pt.getString("latitude");
 					longitude = pt.getString("longitude");
 				}
-
+				if(UtilValidate.isNotEmpty(booth.get("securityDeposit"))){
+					securityDeposit = booth.getBigDecimal("securityDeposit");
+				}
 				Map<String, Object> boothDetails = FastMap.newInstance();
 				boothDetails.put("facilityId", boothId);
 				boothDetails.put("facilityName",booth.getString("facilityName"));
 				boothDetails.put("category",booth.getString("categoryTypeEnum"));
 				boothDetails.put("ownerName", vendorName);
+				boothDetails.put("securityDeposit", securityDeposit);
+				boothDetails.put("fixedDeposit", fixedDeposit);
 				boothDetails.put("ownerPhone", vendorPhone);
 				boothDetails.put("salesRep", salesRep);
 				boothDetails.put("amRouteId", amRouteId);

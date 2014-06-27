@@ -345,6 +345,26 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="RMMaterialBalanceCSV">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/reports/RMMaterialBalance.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="RMMaterialBalanceCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
 	<screen name="IndentVsDispatchMonthlyCSV">
 		<section>
 			<actions>
@@ -1355,6 +1375,19 @@
 			<widgets>	
 	        	<container>	
 			       <include-form name="ListTrucksheetDetailCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+		    	</container>
+		    </widgets>								
+		</section>
+	</screen>
+	<screen name="RetailerDetailReportCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="pageTitleFindPayments" />
+				 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/RetailerDetailReport.groovy" />
+			</actions>
+			<widgets>	
+	        	<container>	
+			       <include-form name="ListRetailerDetailCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
 		    	</container>
 		    </widgets>								
 		</section>

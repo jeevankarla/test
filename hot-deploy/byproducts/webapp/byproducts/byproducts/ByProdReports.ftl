@@ -92,10 +92,12 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("ProductIndentAbstDate","");
 		makeDatePicker("RouteTrCorrDate","");
 		makeDatePicker("RouteTrDetDate","");
+		makeDatePicker("retailerDetailDate","");
 		makeDatePicker("bsFromDateId","bsThruDateId");
 		makeDatePicker("prodReturnDateId","thuDateId");
 		makeDatePicker("saleFromDateId","saleThruDateId");
 		makeDatePicker("chequeFromDateId","chequeThruDateId");
+		//makeDatePicker("materialFromDateId","materialThruDateId");
 		makeDatePicker("FDRDateId","");
 		makeDatePicker("vatFromDateId","vatThruDateId");
 		makeDatePicker("effFromDate","effThruDate");
@@ -274,6 +276,16 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<option value='PM'>PM</option>
 					</select>
 				</td>
+				<td width="15%"></td>
+				<td width="15%"></td>	
+				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+      		</form>	
+        </tr>
+        <tr class="alternate-row">
+        	<form id="FacilityDetailReport" name="FacilityDetailReport" method="post"  target="_blank" action="<@ofbizUrl>RetailerDetailReport.csv</@ofbizUrl>">	
+      			<td width="30%">Retailer Detail Report </td>
+      			<td width="15%">Date<input  type="text" size="18pt" id="retailerDetailDate" readonly  name="supplyDate"/></td>			
+      			<td width="15%"></td>
 				<td width="15%"></td>
 				<td width="15%"></td>	
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
@@ -669,6 +681,16 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>       			
       					</form>
       				</tr>
+      				<#--<tr class="alternate-row">
+      					<form id="DuesFDRReport" name="RTMaterialBalance" method="post" action="<@ofbizUrl>RMMaterialBalance.csv</@ofbizUrl>" target="_blank">	
+      						<td width="30%">Route Marketing Material Balance Report</td>
+      						<td width="15%">From<input  type="text" size="18pt" id="materialFromDateId" readonly  name="fromDate"/></td>
+      						<td width="15%">Thru<input  type="text" size="18pt" id="materialThruDateId" readonly  name="thruDate"/></td>
+	      					<td width="15%"></td>
+	      					<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>       			
+      					</form>
+      				</tr>-->
 			        <tr class="alternate-row">
 						<form id="MonthlyVatReport" name="MonthlyVatReport" method="post" action="<@ofbizUrl>MonthlyVatReport.txt</@ofbizUrl>" target="_blank">	
 							<td width="30%">Vat Returns Report</td>
