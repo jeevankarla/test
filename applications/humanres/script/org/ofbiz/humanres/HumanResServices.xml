@@ -182,6 +182,24 @@
 		<call-service service-name="updatePerson" in-map-name="parameters">
 			<default-message resource="PartyUiLabels" property="PartyPersonSuccessfullyUpdated" />
 		</call-service>			
+        <entity-and entity-name="PartyClassification" list="partyClassificationList" filter-by-date="true">
+           <field-map field-name="partyId" from-field="parameters.partyId"/>
+        </entity-and>
+       <first-from-list entry="partyClassification" list="partyClassificationList"/>
+        <if-not-empty field="partyClassification.partyClassificationGroupId" >        	 
+	       	<set field="classification.partyId" from-field="parameters.partyId"/>
+	       	<set field="classification.partyClassificationGroupId" value="${partyClassification.partyClassificationGroupId}" />
+	       	<set field="classification.fromDate" value="${partyClassification.fromDate}" />
+	       	<call-service service-name="deletePartyClassification" in-map-name="classification"></call-service> 
+       	</if-not-empty>
+        <if-not-empty field="parameters.caste">
+        	<set field="partyClassificationCtx.partyId" from-field="parameters.partyId" />
+			<set field="partyClassificationCtx.partyClassificationGroupId" from-field="parameters.caste" />
+			 <now-date-to-env field="nowDate"/>
+			<set field="partyClassificationCtx.fromDate" value="${nowDate}" type="Date"/>
+			<call-service service-name="createPartyClassification"
+				in-map-name="partyClassificationCtx" />
+        </if-not-empty>	
 		<call-service service-name="updatePreviousEmployment" in-map-name="parameters">		
 		</call-service>
 	</simple-method>

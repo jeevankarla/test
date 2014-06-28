@@ -624,6 +624,7 @@ under the License.emplpunch
 			<exclude field-name="partyId" />
 		</auto-attributes>
 		<attribute name="partyId" mode="IN" type="String"></attribute>
+		<attribute name="caste" mode="IN" type="String" optional="true"></attribute>
     </service>
 
 	<service name="updatePreviousEmployment" engine="simple"
