@@ -26,18 +26,18 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
+
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import net.sf.json.JSONArray;
+import java.math.RoundingMode;
 import java.util.SortedMap;
 import org.ofbiz.party.party.PartyHelper;
 fromDate = parameters.fromDate;
 thruDate = parameters.thruDate;
-totalQuantity = 0;
-totalRevenue = 0;
 dctx = dispatcher.getDispatchContext();
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+rounding = RoundingMode.HALF_UP;
 try {
 	if (parameters.fromDate) {
 		context.froDate = parameters.fromDate;
@@ -69,18 +69,23 @@ allProductsList.each{ eachProd ->
 context.productNames = productNames;
 dctx = dispatcher.getDispatchContext();
 conditionList = [];
-conditionList.clear();
-shipmentIds = ByProductNetworkServices.getShipmentIds(delegator, fromDate, thruDate);
-JSONArray fieldStaffDataListJSON = new JSONArray();
-JSONArray labelsJSON = new JSONArray();
+shipmentIds = [];
+
+amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"AM");
+shipmentIds.addAll(amShipmentIds);
+pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,"PM");
+shipmentIds.addAll(pmShipmentIds);
+
 if(UtilValidate.isNotEmpty(shipmentIds)){
 facilityFieldStaff = (ByProductNetworkServices.getFacilityFieldStaff(dctx, context));
 facilityFieldStaffMap = facilityFieldStaff.getAt("facilityFieldStaffMap");
 fieldStaffAndFacility = facilityFieldStaff.getAt("fieldStaffAndFacility");
+
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
-conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED")));
+conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-orderItemList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
+orderItemList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", condition, null, null, null, false);
+
 SortedMap fieldStaffMap = new TreeMap();
 SortedMap facilityMap = new TreeMap();
 fieldStaffNamesMap =[:];
@@ -92,18 +97,39 @@ Iterator mapIter = fieldStaffAndFacility.entrySet().iterator();
 while (mapIter.hasNext()) {
 	Map.Entry entry = mapIter.next();
 	fieldStaffId =entry.getKey();
-	JSONArray labelsList= new JSONArray();
 	fieldStaffIdList.add(fieldStaffId);
 	label = PartyHelper.getPartyName(delegator, fieldStaffId, false);
 	fieldStaffNamesMap.put(fieldStaffId, label)
-	labelsList.add(label);
-	labelsJSON.add(labelsList);
 }
 fieldStaffIdList.each { fieldStaffId ->
-	retailsList = fieldStaffAndFacility.get(fieldStaffId.trim().toUpperCase());
+	retailsList = fieldStaffAndFacility.get(fieldStaffId.trim());
 	quantityMap=[:];
 	retailsList.each{eachFacilityId->
+		returnMilkSaleTotal = 0;
+		returnCurdSaleTotal = 0;
+		returnOtherSaleTotal = 0;
+		returnItemsList = EntityUtil.filterByAnd(orderItemList,UtilMisc.toMap("originFacilityId", eachFacilityId ));
 		dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [facilityIds:UtilMisc.toList(eachFacilityId),shipmentIds:shipmentIds, fromDate:fromDate, thruDate:thruDate]);
+		if(UtilValidate.isNotEmpty(returnItemsList)){
+			returnItemsList.each{ returnItem->
+				    returnQtyIncluded =0;
+				    returnQuantity=0;
+					retunProduct=0;
+					returnQuantity = returnItem.returnQuantity;
+					retunProduct = delegator.findOne("Product", ["productId" : returnItem.productId], true);
+					returnQtyIncluded = retunProduct.quantityIncluded;
+					if("Milk".equals(retunProduct.primaryProductCategoryId)){
+						returnMilkSaleTotal=returnMilkSaleTotal+(returnQuantity*returnQtyIncluded);
+					}
+					if("Curd".equals(retunProduct.primaryProductCategoryId)){
+						returnCurdSaleTotal=returnCurdSaleTotal+(returnQuantity*returnQtyIncluded);
+				    }
+					if(!("Milk".equals(retunProduct.primaryProductCategoryId))&&!("Curd".equals(retunProduct.primaryProductCategoryId))){
+						returnOtherSaleTotal=returnCurdSaleTotal+(returnQuantity*returnQtyIncluded);
+					}
+			}
+			
+		}
 		if(UtilValidate.isNotEmpty(dayTotals)){
 			prodTotals = dayTotals.get("productTotals");
 			milkSalesMap = [:];
@@ -118,9 +144,10 @@ fieldStaffIdList.each { fieldStaffId ->
 						productValueMap.put(product.productId,prodMap);
 					}
 				}
-				milkSaleTotal = 0;
-				curdSaleTotal = 0;
-				Total=0; 
+				BigDecimal milkSaleTotal = 0;
+				BigDecimal curdSaleTotal = 0;
+				BigDecimal otherSaleTotal = 0;
+				total=0; 
 				productCategoryMap = [:];
 				finalSalesList=[];
 				productValueMap.each{ productValue ->
@@ -135,33 +162,42 @@ fieldStaffIdList.each { fieldStaffId ->
 						if("Curd".equals(product.primaryProductCategoryId)){
 							curdSaleTotal=curdSaleTotal+productValue.getValue().get("total");
 						}
+						if(!("Milk".equals(product.primaryProductCategoryId))&&!("Curd".equals(product.primaryProductCategoryId))){
+							otherSaleTotal=otherSaleTotal+productValue.getValue().get("total");
+						}
 				  }
 			   }
+				milkSaleTotal=(milkSaleTotal-returnMilkSaleTotal).setScale(0, rounding);
+			    curdSaleTotal=(curdSaleTotal-returnCurdSaleTotal).setScale(0, rounding)
+				otherSaleTotal=(otherSaleTotal-returnOtherSaleTotal).setScale(0, rounding)
+				
 				if(milkSaleTotal!=0){
-				   milkSalesMap.putAt("Milk", milkSaleTotal);
-			   }
+				   milkSalesMap.putAt("Milk",milkSaleTotal );
+			    }
 				if(curdSaleTotal!=0){
 				   milkSalesMap.putAt("Curd", curdSaleTotal);
 				}
-				if(curdSaleTotal!=0 || milkSaleTotal!=0 ){
-					Total=milkSaleTotal+curdSaleTotal;
-					milkSalesMap.putAt("Total", Total);
+				if(otherSaleTotal!=0){
+					milkSalesMap.putAt("OtherProducts", otherSaleTotal);
 				 }
-				
+				if(curdSaleTotal!=0 || milkSaleTotal!=0 || otherSaleTotal!=0){
+					total=milkSaleTotal+curdSaleTotal+otherSaleTotal;
+					milkSalesMap.putAt("Total", total);
+				 }
 			}
 			if(UtilValidate.isNotEmpty(milkSalesMap)){
 			   quantityMap.put(eachFacilityId, milkSalesMap);
 			}
-			facilityDetails = delegator.findOne("Facility", [facilityId : eachFacilityId], false);
-			if(UtilValidate.isNotEmpty(facilityDetails)){
-				facilityName = facilityDetails.facilityName;
-				facilityNamesMap.put(eachFacilityId, facilityName)
-				context.facilityNamesMap = facilityNamesMap;
-			}
 		}
-	if(UtilValidate.isNotEmpty(quantityMap)){
-		fieldStaffMap.put(fieldStaffId,quantityMap);
-	 }
+		 facilityDetails = delegator.findOne("Facility", [facilityId : eachFacilityId], false);
+		 if(UtilValidate.isNotEmpty(facilityDetails)){
+			facilityName = facilityDetails.facilityName;
+			facilityNamesMap.put(eachFacilityId, facilityName)
+			context.facilityNamesMap = facilityNamesMap;
+		 }
+		 if(UtilValidate.isNotEmpty(quantityMap)){
+			fieldStaffMap.put(fieldStaffId,quantityMap);
+		 }
 	}
 }
 facilityList = [];
