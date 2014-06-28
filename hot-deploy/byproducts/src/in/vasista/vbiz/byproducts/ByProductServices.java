@@ -3879,7 +3879,12 @@ public class ByProductServices {
 		    	  else{
 		    		  facilityIds.add(facilityId);
 		    	  }
-		    	  for(String facId : facilityIds){
+		    	  List<String> ownerPartyIds = FastList.newInstance();
+		    	  if(UtilValidate.isNotEmpty(facilityIds)){
+		    		  List<GenericValue> ownerParties = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds), UtilMisc.toSet("ownerPartyId"), null, null,false);
+		    		  ownerPartyIds = EntityUtil.getFieldListFromEntityList(ownerParties, "ownerPartyId", true);
+		    	  }
+		    	  for(String facId : ownerPartyIds){
 		    		  
 		    		  conditionList.clear();
 		    		  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facId));
@@ -3909,7 +3914,7 @@ public class ByProductServices {
 			    	  List shipmentIds = ByProductNetworkServices.getByProdShipmentIds(delegator, fromDate, endThruDate);
 			    	  conditionList.clear();
 			    	  conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
-			    	  conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facId));
+			    	  conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, facId));
 			    	  conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED", "ORDER_REJECTED")));
 			    	  EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			    	  List<GenericValue> orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null, UtilMisc.toList("-estimatedDeliveryDate"), null, false);
@@ -3989,6 +3994,7 @@ public class ByProductServices {
 				    	  String refNum = "CR_PB_"+periodBillingId;
 				    	  GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
 				    	  invoice.set("referenceNumber",refNum);
+				    	  invoice.set("facilityId",facId);
 				    	  invoice.set("dueDate",dayStartThruDate);//reset Billing EndDate as invoiceDue date
 				    	  invoice.set("periodBillingId",periodBillingId);
 				    	  invoice.store();

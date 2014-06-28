@@ -76,7 +76,6 @@
 	invCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	invoiceList = delegator.findList("OrderHeaderFacAndItemBillingInv", invCond, UtilMisc.toSet("invoiceId"), null, null, false);
 	invoiceIds = EntityUtil.getFieldListFromEntityList(invoiceList, "invoiceId", true);
-	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN , invoiceIds));
 	billCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -85,9 +84,7 @@
 		partyPONumMap.put(eachItem.facilityId, eachItem.sequenceId);
 	}
 	context.partyPONumMap = partyPONumMap;
-	Debug.log("partyPONumMap ###########################"+partyPONumMap);
 	
-		
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS , "RETURN_ACCEPTED"));
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
@@ -98,12 +95,11 @@
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
 	conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
-	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, facilityIds));
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
 	condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	fieldsToSelect = ["originFacilityId","estimatedShipDate","orderId","externalId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId", "vatPercent"] as Set;
+	fieldsToSelect = ["ownerPartyId","estimatedShipDate","orderId","externalId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId", "vatPercent"] as Set;
 	orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
-	
 	
 	if(UtilValidate.isNotEmpty(reportTypeFlag)){
 		if(reportTypeFlag=="instBillOfSale"){
@@ -118,11 +114,6 @@
 		
 	}
 	
-//	Debug.log("------------------orderItemsList--------------------- : "+orderItemsList);
-	
-	
-	
-	
 	List conditionList= FastList.newInstance();
 	conditionList.add(EntityCondition.makeCondition("taxPercentage", EntityOperator.NOT_EQUAL, null));
 	conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, "VAT_SALE"));
@@ -134,8 +125,6 @@
 	List vatList = EntityUtil.getFieldListFromEntityList(productPrice, "taxPercentage", true);
 	context.vatList = vatList;
 
-
-	
 	returnItemMap = FastMap.newInstance();
 	saleTotal=0;
 	returnTotal=0;
@@ -143,7 +132,7 @@
 	
 	facilityIds.each{eachFacilityId->
 		
-		itemsList = EntityUtil.filterByCondition(orderItemsList, EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS , eachFacilityId));
+		itemsList = EntityUtil.filterByCondition(orderItemsList, EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , eachFacilityId));
 		
 		if (UtilValidate.isNotEmpty(itemsList)) {
 			itemsListMap.put(eachFacilityId, itemsList);
@@ -170,7 +159,7 @@
 			//if(productVatAmount==0 || productVatAmount==0.00){
 				
 				tempMap.estimatedShipDate = eachEntry.estimatedShipDate;
-				tempMap.originFacilityId = eachEntry.originFacilityId;
+				tempMap.originFacilityId = eachEntry.ownerPartyId;
 				tempMap.shipmentTypeId = eachEntry.shipmentTypeId;
 				tempMap.productId = eachEntry.productId;
 				tempMap.orderId=eachEntry.orderId;
@@ -181,7 +170,7 @@
 				tempMap.itemDescription = eachEntry.itemDescription;
 				tempMap.amount = (eachEntry.quantity*eachEntry.unitPrice);
 				condList = [];
-				condList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, eachFacilityId));
+				condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachFacilityId));
 				condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, eachEntry.shipmentId));
 				condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachEntry.productId));
 				cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -244,12 +233,7 @@
 	context.itemsReturnListMap=returnItemMap;	
 	context.itemsListMap=itemsListMap;
 
-	
-	
-	
-	
-	
-	periodBillingIds.each{eachperiodBillingId->
+		periodBillingIds.each{eachperiodBillingId->
 		conditionList.clear();
 //		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "INVOICE_APPROVED"));
 //		conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
