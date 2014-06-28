@@ -18,8 +18,8 @@ def populateChildren(org, employeeList) {
 		employeePosition = "";
 		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : employment.partyId]));
 		emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
-		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionId") != null){
-			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionId")], true);
+		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
+			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
 			if (emplPositionType != null) {
 				employeePosition = emplPositionType.getString("description");
 			}
