@@ -754,12 +754,31 @@ public class ByProductChangeIndentServices {
 	  	  		  if(UtilValidate.isNotEmpty(subsidyList)){
 	  	  			  actualSubsidyQty = ((GenericValue)EntityUtil.getFirst(subsidyList)).getBigDecimal("quantity");
 	  	  		  }
+	  	  		  	  	  		  
+	  	  		  GenericValue subscription = delegator.findOne("Subscription", UtilMisc.toMap("subscriptionId", subscriptionId), false);
+	  	  		  String facilityId = "";
+	  	  		  if(UtilValidate.isNotEmpty(subscription)){
+	  	  			  facilityId = subscription.getString("facilityId");
+	  	  		  }
+	  	  		  condList.clear();
+	  	  		  condList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
+	  	  		  condList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+	  	  		  condList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
+	  	  		  condList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate)));
+	  	  		  EntityCondition shipCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	  	  		  Debug.log("shipCond ######################################"+shipCond);
+	  	  		  List<GenericValue> OrderList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", shipCond, null, null, null, false);
+	  	  		  List generatedRoutes = EntityUtil.getFieldListFromEntityList(OrderList, "routeId", true);
+
 	  	  		  condList.clear();
 	  	  		  condList.add(EntityCondition.makeCondition("subscriptionId", EntityOperator.EQUALS, subscriptionId));
 	  	  		  condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("productId", EntityOperator.IN, altShiftProduct), EntityOperator.OR, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, subsidyProduct)));
 	  	  		  condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, "AM"));
 	  	  		  condList.add(EntityCondition.makeCondition("productSubscriptionTypeId", EntityOperator.NOT_EQUAL, "EMP_SUBSIDY"));
 	  	  		  condList.add(EntityCondition.makeCondition("quantity", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
+	  	  		  if(UtilValidate.isNotEmpty(generatedRoutes)){
+	  	  			condList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.NOT_IN, generatedRoutes));
+	  	  		  }
 	  	  		  condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayStart(effectiveDate)));
 	  	  		  condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 	  	  				  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayEnd(effectiveDate))));
