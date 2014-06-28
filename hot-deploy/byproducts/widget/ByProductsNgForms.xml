@@ -1065,7 +1065,7 @@
     	<field name="facilityId" title="Institution"><lookup target-form-name="LookupFacility"></lookup></field>    	
        <field name="periodTypeId" title="Period Type" >
         	<drop-down>
-        	    <option key="" description="-- Select --"/>
+        	    <option key="" description="- Select -"/>
         		<list-options key-name="periodTypeId" list-name="periodTypes" description="${description}"/>
         	</drop-down>
         </field>
