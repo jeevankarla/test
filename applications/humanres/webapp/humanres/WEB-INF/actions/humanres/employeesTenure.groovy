@@ -18,8 +18,8 @@ def populateChildren(org, employeeList) {
 		employeePosition = "";
 		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : employment.partyId]));
 		emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
-		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionId") != null){
-			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionId")], true);
+		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
+			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
 			if (emplPositionType != null) {
 				employeePosition = emplPositionType.getString("description");
 			}
@@ -77,6 +77,8 @@ employeeList.each {employee ->
 		int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale) + 60;	
 		retirementDate = UtilDateTime.toTimestamp(month, day, year, 0, 0, 0);
 		if (retirementDate < thruDate) {
+//Debug.logError("deptPieDataJSON="+deptPieDataJSON,"");
+			
 			JSONArray employeeJSON = new JSONArray();
 			employeeJSON.add(employee.name);
 			employeeJSON.add(employee.employeeId);
