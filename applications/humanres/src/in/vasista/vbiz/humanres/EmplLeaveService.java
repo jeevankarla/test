@@ -47,7 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
 public class EmplLeaveService {
     public static final String module = EmplLeaveService.class.getName();
 	
-	public static Map<String, Object> getEmployeeLeaveBalnce(DispatchContext dctx, Map<String, ? extends Object> context) {
+	public static Map<String, Object> getEmployeeLeaveBalance(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
 
         Map<String, Object> result = FastMap.newInstance();

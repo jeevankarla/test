@@ -157,7 +157,7 @@ Debug.logInfo("result:" + result, module);
         
     	Map result = FastMap.newInstance();  
     	Map employeeDetailsMap = FastMap.newInstance();  
-    	Map leaveBalances = EmplLeaveService.getEmployeeLeaveBalnce(dctx, UtilMisc.toMap("employeeId", employeeId));
+    	Map leaveBalances = EmplLeaveService.getEmployeeLeaveBalance(dctx, UtilMisc.toMap("employeeId", employeeId));
     	employeeDetailsMap.put("leaveBalances", leaveBalances);
     	
     	result.put("employeeDetailsResult", employeeDetailsMap);

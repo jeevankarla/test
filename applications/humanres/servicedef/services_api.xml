@@ -23,5 +23,9 @@
         <attribute type="Map" mode="OUT" name="employeesResult" optional="true"/>
     </service>     
     
-
+    <service name="fetchEmployeeDetails" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.humanres.HumanresApiService" invoke="fetchEmployeeDetails">
+        <description>Service to get all active employees</description>
+        <attribute type="Map" mode="OUT" name="employeeDetailsResult" optional="true"/>
+    </service>  
 </services>   
