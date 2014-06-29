@@ -127,4 +127,42 @@ Debug.logInfo("result:" + result, module);
     	return result;
     }      
     
+    public static Map<String, Object> fetchEmployeeDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_MYEMPLOYEE", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch employees!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }    	
+        
+    	if (userLogin == null || userLogin.get("partyId") == null) {
+            Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " not mapped to a party!", module);
+            return ServiceUtil.returnError("Valid employee code not found.");    		
+    	}
+    	
+    	String employeeId = (String)userLogin.get("partyId");
+		try {    	
+			List<GenericValue> employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", UtilMisc.toMap("partyIdTo", employeeId, 
+				"roleTypeIdTo", "EMPLOYEE"), null));    	
+			if (employments.size() == 0) {
+				Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + employeeId + " does not have an active employment!", module);
+				return ServiceUtil.returnError("Active employment not found.");  
+			}
+		} catch(GenericEntityException e){
+			Debug.logError("Error fetching employee details " + e.getMessage(), module);
+		}      
+        
+    	Map result = FastMap.newInstance();  
+    	Map employeeDetailsMap = FastMap.newInstance();  
+    	Map leaveBalances = EmplLeaveService.getEmployeeLeaveBalnce(dctx, UtilMisc.toMap("employeeId", employeeId));
+    	employeeDetailsMap.put("leaveBalances", leaveBalances);
+    	
+    	result.put("employeeDetailsResult", employeeDetailsMap);
+Debug.logInfo("result:" + result, module);		 
+    	return result;
+    }          
+    
 }
