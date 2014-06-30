@@ -587,6 +587,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPayrollBilling"/>
     </request-map>
+   <request-map uri="setPeriodBillingStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="SetPeriodBillingStatus"/>
+        <response name="success" type="view" value="FindPayrollBilling"/>
+    </request-map>
      <request-map uri="sendPayrollSms">
         <security https="true" auth="true"/>
         <event type="service" invoke="sendPayrollSms"></event>

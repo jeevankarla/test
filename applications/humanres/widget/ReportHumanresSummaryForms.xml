@@ -405,6 +405,7 @@
 		    </entity-and>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>
 			<set field="partyId" value="${partyId}"/>
+			<set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 		</actions>
 		<field name="periodBillingId">
 			<display description="${periodBillingId}" />
@@ -415,26 +416,43 @@
 		<field name="statusId" title = "Status">
           <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
-		<field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
+			<hyperlink target="setPeriodBillingStatus" description="approve">
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        	<parameter param-name="statusId" value="APPROVED"/>
+	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
+	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+	        </hyperlink>
+        </field>
+		
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
 			<hyperlink target="cancelPayrollBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        </hyperlink>
         </field>
-         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="PaySlip Report" widget-style="buttontext" >
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)|| statusId.equals(&quot;APPROVED&quot;)" name="PaySlip Report" widget-style="buttontext" >
             <hyperlink target="PrintPaySlipsPdf.pdf" description="PaySlip Report"  target-window="_BLANK">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
         		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
         		<parameter param-name="partyId" value="${partyId}"/>
             </hyperlink>
         </field> 
-         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="PaySlip Summary" widget-style="buttontext" >
+         <field use-when="statusId.equals(&quot;GENERATED&quot;) || statusId.equals(&quot;APPROVED&quot;)" name="PaySlip Summary" widget-style="buttontext" >
             <hyperlink target="PrintPayrollSummary.pdf" description="Payroll Summary"  target-window="_BLANK">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
         		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
         		<parameter param-name="partyId" value="${partyId}"/>
             </hyperlink>
         </field>
-        <field use-when="statusId.equals(&quot;GENERATED&quot;)&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" name="Sendsms" widget-style="buttontext">
+        <field use-when="statusId.equals(&quot;APPROVED&quot;)" name="reject" widget-style="buttontext cancel">
+			<hyperlink target="setPeriodBillingStatus" description="Reject" >
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        	<parameter param-name="statusId" value="GENERATED"/>
+	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
+	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+	        </hyperlink>
+        </field>
+        <field use-when="(statusId.equals(&quot;APPROVED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;SENDLVDSMS&quot;, &quot;_VIEW&quot;, session)))}" name="Sendsms" widget-style="buttontext">
             <hyperlink target="sendPayrollSms" description="Send sms"  target-window="_BLANK" confirmation-message="Are You Sure You Want To send Sms">
              	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
              	<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>

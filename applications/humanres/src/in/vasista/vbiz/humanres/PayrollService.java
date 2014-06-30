@@ -65,7 +65,7 @@ public class PayrollService {
 		        if(UtilValidate.isEmpty(partyId)){
 					partyId = "Company";
 				}
-		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS")));
+		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
 		        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
 		    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
 		    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -266,9 +266,9 @@ public class PayrollService {
 		    			List payrollHeaderIds = EntityUtil.getFieldListFromEntityList(payrollHeaderList, "payrollHeaderId", false);
 		    			if(UtilValidate.isNotEmpty(payrollHeaderIds)){
 		    				List<GenericValue> payrollHeaderItemList = delegator.findList("PayrollHeaderItem", EntityCondition.makeCondition("payrollHeaderId", EntityOperator.IN, payrollHeaderIds), null, null, null, false);
-		    				if(UtilValidate.isNotEmpty(payrollHeaderItemList)){
-		    	    		    delegator.removeAll(payrollHeaderItemList);
-		    	    		    delegator.removeAll(payrollHeaderList);
+		    				if(UtilValidate.isNotEmpty(payrollHeaderItemList) && !(periodBilling.getString("statusId").equals("APPROVED"))){
+		    	    		    //delegator.removeAll(payrollHeaderItemList);
+		    	    		    //delegator.removeAll(payrollHeaderList);
 		    	    		}
 		    			}
 		    			periodBilling.set("statusId", "COM_CANCELLED");

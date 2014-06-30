@@ -790,7 +790,11 @@ under the License.
     	<attribute name="fileName" mode="IN" type="String" optional="true"></attribute>
     	<attribute name="fileLocation" mode="IN" type="String" optional="true"></attribute>
     	<attribute name="outputFile" mode="OUT" type="String" optional="true"></attribute>
-    	
+    </service>
+    <service name="SetPeriodBillingStatus" default-entity-name="PeriodBilling" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a PeriodBilling</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     
 </services>
