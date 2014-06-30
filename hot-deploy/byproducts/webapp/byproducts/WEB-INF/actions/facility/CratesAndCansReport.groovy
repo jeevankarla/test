@@ -29,12 +29,8 @@
 	import java.util.*;
 	import java.text.ParseException;
 	import java.text.SimpleDateFormat;
-	import net.sf.json.JSONArray;
-	import java.util.SortedMap;
 	import javolution.util.FastList;
 	import org.ofbiz.service.ServiceUtil;
-	import in.vasista.vbiz.byproducts.ByProductServices;
-	import in.vasista.vbiz.byproducts.ByProductReportServices;
 	import javolution.util.FastMap;
 	
 	dctx = dispatcher.getDispatchContext();
@@ -72,78 +68,87 @@
 	context.put("dayEnd",thruEffectiveDateStr);
 	
 routeWiseCratesMap = [:];
-routeMap=[:];
+shipmentWiseCratesMap = [:];
 conditionList=[];
 shipmentIds=[];
 routeIdsList=[];
 routeWiseSaleMap =[:];
-estimatedShipDateList=[];
-List<GenericValue> vehicleTripStatusList=FastList.newInstance();
-List routeVehicleCratesList=FastList.newInstance();
-DayWiseSaleMap = [:];
 		
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
 		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO ,startDate));
 		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,endDate));
-	
 		EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		List<GenericValue> shipmentList = delegator.findList("Shipment", cond, null,UtilMisc.toList("routeId"), null, false);
 		shipmentIds.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
-		routeIdsList.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "routeId", false));
-		estimatedShipDateList.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "estimatedShipDate", false));
-		if(UtilValidate.isNotEmpty(shipmentList)){
-			for(i=0;i<shipmentIds.size();i++){
+		List<GenericValue> crateCanAcct = delegator.findList("CrateCanAccount", EntityCondition.makeCondition("shipmentId", EntityOperator.IN ,shipmentIds), null, null, null, false);
+		if(UtilValidate.isNotEmpty(crateCanAcct)){
+			for(i=0;i<crateCanAcct.size();i++){
 				Map cratesMap = FastMap.newInstance();
-				shipmentId=shipmentIds.get(i);
-				routeId=routeIdsList.get(i);
-				estimatedShipDate=(Timestamp)estimatedShipDateList.get(i);
+				shipmentId=crateCanAcct.get(i).get("shipmentId");
 				if(UtilValidate.isNotEmpty(shipmentId)){
 					cratesSent=0;cratesReceived=0;cansSent=0;cansReceived=0;
-					GenericValue crateCanAcct = delegator.findOne("CrateCanAccount", UtilMisc.toMap("shipmentId", shipmentId), false);
-					if(UtilValidate.isNotEmpty(crateCanAcct)){
-						cratesSent=crateCanAcct.cratesSent;
-						cratesReceived=crateCanAcct.cratesReceived;
-						cansSent=crateCanAcct.cansSent;
-						cansReceived=crateCanAcct.cansReceived;
-					}
+					cratesSent=crateCanAcct.get(i).get("cratesSent");
+					cratesReceived=crateCanAcct.get(i).get("cratesReceived");
+					cansSent=crateCanAcct.get(i).get("cansSent");
+					cansReceived=crateCanAcct.get(i).get("cansReceived");
+					
 					cratesMap.put("cratesSent",cratesSent);
 					cratesMap.put("cratesReceived",cratesReceived);
 					cratesMap.put("cansSent",cansSent);
 					cratesMap.put("cansReceived",cansReceived);
 					
-					routeId = routeId;
-					shipDate = estimatedShipDate;
-					if(UtilValidate.isEmpty(routeWiseCratesMap[routeId])){
-						dayWiseMap = [:];
-						dayWiseMap[shipDate] = cratesMap;
-						tempRouteCrateMap = [:];
-						tempRouteCrateMap.putAll(dayWiseMap);
-						routeWiseCratesMap[routeId] = tempRouteCrateMap;
-					}
-					else{
-						dayWiseMap = routeWiseCratesMap[routeId];
-						dayWiseMap[shipDate] = cratesMap;
-						tempRouteCrateMap = [:];
-						tempRouteCrateMap.putAll(dayWiseMap);
-						routeWiseCratesMap[routeId] = tempRouteCrateMap;
-					}
-					if(UtilValidate.isEmpty(routeWiseSaleMap[routeId])){
+					if(UtilValidate.isEmpty(shipmentWiseCratesMap[shipmentId])){
 						tempMap = [:];
 						tempMap["cratesSent"]=cratesMap.get("cratesSent");
 						tempMap["cratesReceived"]=cratesMap.get("cratesReceived");
 						tempMap["cansSent"]=cratesMap.get("cansSent");
 						tempMap["cansReceived"]=cratesMap.get("cansReceived");
-						routeWiseSaleMap[routeId]=tempMap;
+						shipmentWiseCratesMap[shipmentId]=tempMap;
 					 }else{
 						 tempMap = [:];
-						 tempMap.putAll(routeWiseSaleMap.get(routeId));
+						 tempMap.putAll(shipmentWiseCratesMap.get(shipmentId));
 						 tempMap["cratesSent"] += cratesMap.get("cratesSent");
 						 tempMap["cratesReceived"] += cratesMap.get("cratesReceived");
 						 tempMap["cansSent"]=cratesMap.get("cansSent");
 						 tempMap["cansReceived"]=cratesMap.get("cansReceived");
-						 routeWiseSaleMap[routeId] = tempMap;
+						 shipmentWiseCratesMap[shipmentId] = tempMap;
 					 }
 				   }
+			}
+		}
+		for(i=0;i<shipmentList.size();i++){
+			shipmentId=shipmentList.get(i).get("shipmentId");
+			routeId=shipmentList.get(i).get("routeId");
+			shipDate=(Timestamp)shipmentList.get(i).get("estimatedShipDate");
+			if(UtilValidate.isEmpty(routeWiseCratesMap[routeId])){
+				dayWiseMap = [:];
+				dayWiseMap[shipDate] = shipmentWiseCratesMap.get(shipmentId);
+				tempRouteCrateMap = [:];
+				tempRouteCrateMap.putAll(dayWiseMap);
+				routeWiseCratesMap[routeId] = tempRouteCrateMap;
+		    }
+		   else{
+				dayWiseMap = routeWiseCratesMap[routeId];
+				dayWiseMap[shipDate] = shipmentWiseCratesMap.get(shipmentId);
+				tempRouteCrateMap = [:];
+				tempRouteCrateMap.putAll(dayWiseMap);
+				routeWiseCratesMap[routeId] = tempRouteCrateMap;
+		   }
+		   if(UtilValidate.isEmpty(routeWiseSaleMap[routeId])){
+			   tempMap = [:];
+			   tempMap["cratesSent"]=shipmentWiseCratesMap.get(shipmentId).get("cratesSent");
+			   tempMap["cratesReceived"]=shipmentWiseCratesMap.get(shipmentId).get("cratesReceived");
+			   tempMap["cansSent"]=shipmentWiseCratesMap.get(shipmentId).get("cansSent");
+			   tempMap["cansReceived"]=shipmentWiseCratesMap.get(shipmentId).get("cansReceived");
+			   routeWiseSaleMap[routeId]=tempMap;
+			}else{
+				tempMap = [:];
+				tempMap.putAll(routeWiseSaleMap.get(routeId));
+				tempMap["cratesSent"] += shipmentWiseCratesMap.get(shipmentId).get("cratesSent");
+				tempMap["cratesReceived"] += shipmentWiseCratesMap.get(shipmentId).get("cratesReceived");
+				tempMap["cansSent"]=shipmentWiseCratesMap.get(shipmentId).get("cansSent");
+				tempMap["cansReceived"]=shipmentWiseCratesMap.get(shipmentId).get("cansReceived");
+				routeWiseSaleMap[routeId] = tempMap;
 			}
 		}
 context.routeWiseSaleMap = routeWiseSaleMap;
