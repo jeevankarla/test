@@ -4687,6 +4687,7 @@ public class ByProductNetworkServices {
 		boothOrdersList.addAll(obInvoiceList);
 		boothOrdersList = EntityUtil.orderBy(boothOrdersList,UtilMisc.toList("originFacilityId", "-estimatedDeliveryDate"));
 		Map<String, Object> totalAmount = FastMap.newInstance();
+		List splInvoiceTypes = UtilMisc.toList(obInvoiceType, "SHOPEE_RENT", "MIS_INCOME_IN");
 		if (!UtilValidate.isEmpty(boothOrdersList)) {
 			List invoiceIds = EntityUtil.getFieldListFromEntityList(boothOrdersList, "invoiceId", false);
 			String tempFacilityId = "";
@@ -4762,7 +4763,7 @@ public class ByProductNetworkServices {
 						}
 						tempPayment.put("grandTotal", BigDecimal.ZERO);
 						tempPayment.put("totalDue", BigDecimal.ZERO);
-						if (currentDayShipments.contains(boothPayment.getString("shipmentId")) || ((thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && invoiceTypeId.equals(obInvoiceType))) {
+						if (currentDayShipments.contains(boothPayment.getString("shipmentId")) || ((thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && splInvoiceTypes.contains(invoiceTypeId))) {
 							tempPayment.put("grandTotal", outstandingAmount);
 							tempPayment.put("totalDue", outstandingAmount);
 						} else {
@@ -4772,7 +4773,7 @@ public class ByProductNetworkServices {
 						tempPayment.put("supplyDate", boothPayment.getTimestamp("estimatedDeliveryDate"));
 
 					} else {
-						if (currentDayShipments.contains(boothPayment.getString("shipmentId"))	|| ((thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && invoiceTypeId.equals(obInvoiceType))) {
+						if (currentDayShipments.contains(boothPayment.getString("shipmentId"))	|| ((thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && splInvoiceTypes.contains(invoiceTypeId))) {
 							tempPayment.put("grandTotal", outstandingAmount.add((BigDecimal) tempPayment.get("grandTotal")));
 							tempPayment.put("totalDue", outstandingAmount.add((BigDecimal) tempPayment.get("totalDue")));
 						} else {
@@ -4818,7 +4819,7 @@ public class ByProductNetworkServices {
 						}
 						tempPayment.put("grandTotal", BigDecimal.ZERO);
 						tempPayment.put("totalDue", BigDecimal.ZERO);
-						if (currentDayShipments.contains(boothPayment.getString("shipmentId"))|| ((thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && invoiceTypeId.equals(obInvoiceType))) {
+						if (currentDayShipments.contains(boothPayment.getString("shipmentId"))|| ((thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && splInvoiceTypes.contains(invoiceTypeId))) {
 							tempPayment.put("grandTotal", outstandingAmount);
 							tempPayment.put("totalDue", outstandingAmount);
 						} else {
@@ -4828,7 +4829,7 @@ public class ByProductNetworkServices {
 						tempPayment.put("supplyDate", boothPayment.getTimestamp("estimatedDeliveryDate"));
 
 					} else {
-						if (currentDayShipments.contains(boothPayment.getString("shipmentId"))|| ((thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && invoiceTypeId.equals(obInvoiceType))) {
+						if (currentDayShipments.contains(boothPayment.getString("shipmentId"))|| ((thruDate.compareTo(UtilDateTime.getDayEnd(boothPayment.getTimestamp("estimatedDeliveryDate"))) == 0) && splInvoiceTypes.contains(invoiceTypeId))) {
 							tempPayment.put("grandTotal", outstandingAmount.add((BigDecimal) tempPayment.get("grandTotal")));
 							tempPayment.put("totalDue", outstandingAmount.add((BigDecimal) tempPayment.get("totalDue")));
 						} else {
@@ -4998,7 +4999,7 @@ public class ByProductNetworkServices {
 			exprListForParameters.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
 		}
 
-		exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_PAID", "INVOICE_CANCELLED","INVOICE_WRITEOFF")));
+		exprListForParameters.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_PAID","INVOICE_CANCELLED","INVOICE_WRITEOFF")));
 
 		// filter out booths owned by the APDDCF
 		exprListForParameters.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL, "Company"));
@@ -7408,10 +7409,11 @@ public class ByProductNetworkServices {
 			}
 		}
 
-		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, "Company")));
-		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
-		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate)));
-		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_EQUAL,"CREDITNOTE_PAYIN")));
+		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, "Company"));
+		conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.NOT_EQUAL, "SECURITYDEPSIT_PAYIN"));
+		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		conditionList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_EQUAL,"CREDITNOTE_PAYIN"));
 		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"PMNT_RECEIVED"), EntityOperator.OR, EntityCondition.makeCondition(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_VOID"),EntityOperator.AND, EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"))));
 		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		try {
