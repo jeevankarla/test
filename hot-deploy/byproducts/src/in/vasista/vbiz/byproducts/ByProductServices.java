@@ -5295,6 +5295,9 @@ public class ByProductServices {
 	        Timestamp thruDate = (Timestamp) context.get("thruDate");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        List<GenericValue> FacilityCustBillingList = null;
+	        Timestamp tempfromDate=null;
+	        String tempPeriodTypeId="";
+	        boolean isNewCustBilling = true;
 	        if(fromDate==null){
 	        	fromDate= UtilDateTime.nowTimestamp();
 	        }
@@ -5307,44 +5310,55 @@ public class ByProductServices {
 	        	Debug.logError("From date  shoud be greater than current date : "+fromDate+ "\t",module);
 				return ServiceUtil.returnError("From date  shoud be greater than current date  : "+fromDate);
 	        }
-	        List conditionList = UtilMisc.toList(
-	                EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-	                conditionList.add( EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
-	                EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  
-	                
 				try {
-					FacilityCustBillingList = delegator.findList("FacilityCustomBilling", condition, null, null, null, false);
+					FacilityCustBillingList = delegator.findList("FacilityCustomBilling",  EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
 				}catch (GenericEntityException e) {
 					Debug.logError(e, module);
 		            return ServiceUtil.returnError(e.getMessage());
 				} 
-                List<GenericValue> facilityCustBill= EntityUtil.filterByDate(FacilityCustBillingList,fromDate);
- 	            if(UtilValidate.isNotEmpty(facilityCustBill)){
- 			       try {
- 			    	    conditionList.clear();
- 	 			       	GenericValue facilityList = facilityCustBill.get(0);
- 	 			        facilityList.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
-						facilityList.store();
-					}catch (GenericEntityException e) {
-						Debug.logError("Error in Facility Custom Billing : "+facilityId+ "\t"+e.toString(),module);
-						return ServiceUtil.returnError(e.getMessage());
-					}
- 	            }
-     		   	GenericValue newEntity = delegator.makeValue("FacilityCustomBilling");
-     	        newEntity.set("facilityId", facilityId);
-     	        newEntity.set("periodTypeId", periodTypeId);
-     	        newEntity.set("fromDate", fromDate);
-     	        newEntity.set("thruDate", thruDate);
-     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
-   	            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
-   	            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-   	            newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
- 		        try {
- 					delegator.create(newEntity);
- 				}catch (GenericEntityException e) {
- 					Debug.logError("Error in creating Facility Custom Billing: "+facilityId+ "\t"+e.toString(),module);
- 					return ServiceUtil.returnError(e.getMessage());
- 				}
+				if(UtilValidate.isNotEmpty(FacilityCustBillingList)){
+	                 List<GenericValue> facilityCustBill= EntityUtil.filterByDate(FacilityCustBillingList,fromDate);
+	 	            if(UtilValidate.isNotEmpty(facilityCustBill)){
+	 			       try {
+	 	 			       	GenericValue facilityList = facilityCustBill.get(0);
+	 	 			  	    tempfromDate = facilityList.getTimestamp("fromDate");
+	 	 			  	    tempPeriodTypeId = facilityList.getString("periodTypeId");
+		 	 			  	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))>0){
+		 	 			  	   facilityList.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+		 	 			       facilityList.store();
+						    }
+					       	if(fromDate.compareTo(UtilDateTime.getDayStart(tempfromDate))==0){
+					       		facilityList.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+					       		facilityList.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+					       		 if(UtilValidate.isNotEmpty(thruDate)){
+					       		   facilityList.set("thruDate",thruDate);
+					       		 }
+					       		facilityList.store();
+					       		isNewCustBilling=false;
+					       	}
+						}catch (GenericEntityException e) {
+							Debug.logError("Error in Facility Custom Billing : "+facilityId+ "\t"+e.toString(),module);
+							return ServiceUtil.returnError(e.getMessage());
+						}
+	 	            }
+				}
+				if(isNewCustBilling){
+	     		   	GenericValue newEntity = delegator.makeValue("FacilityCustomBilling");
+	     	        newEntity.set("facilityId", facilityId);
+	     	        newEntity.set("periodTypeId", periodTypeId);
+	     	        newEntity.set("fromDate", fromDate);
+	     	        newEntity.set("thruDate", thruDate);
+	     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+	   	            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+	   	            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	   	            newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	 		        try {
+	 					delegator.create(newEntity);
+	 				}catch (GenericEntityException e) {
+	 					Debug.logError("Error in creating Facility Custom Billing: "+facilityId+ "\t"+e.toString(),module);
+	 					return ServiceUtil.returnError(e.getMessage());
+	 				}
+				}
 			return result;
 	    }
 	    public static Map<String, Object> createOrUpdateFacilityRate(DispatchContext ctx,Map<String, Object> context) {
