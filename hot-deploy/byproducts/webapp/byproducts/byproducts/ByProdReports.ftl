@@ -624,7 +624,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       					</form>
       				</tr> -->
       				 <#if security.hasEntityPermission("BYPRODUCTS", "_MNTHREPOR", session)>
-      				<tr class="alternate-row">
+      				<#--<tr class="alternate-row">
 			      	   <form id="paymentOBandCB" name="paymentOBandCB" method="post" action="<@ofbizUrl>PartywiseBalanceAbstract.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Partywise Ledger Abstract</td>
 			             <td width="15%">From<input  type="text" size="10pt" id="effFromDate" readonly  name="fromDate"/></td>
@@ -633,7 +633,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			             <td width="15%"></td>
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
-			        </tr>
+			        </tr>-->
 			        
 			        <tr class="alternate-row">
 			      	   <form id="RetailerLedgerAbstract" name="RetailerLedgerAbstract" method="post" action="<@ofbizUrl>RetailerLedgerAbstract.pdf</@ofbizUrl>" target="_blank">        
