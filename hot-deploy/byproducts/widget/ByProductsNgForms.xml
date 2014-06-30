@@ -1095,6 +1095,7 @@
         <field name="rateTypeId" title="Rate type Id" >
          <drop-down>
                 <entity-options description="${description}" key-field-name="rateTypeId" entity-name="RateType">
+                 	<entity-constraint name="rateTypeId" operator="like" value="%_RENT%"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -1113,9 +1114,8 @@
         </actions>
     	<field name="facilityId" title="Retailer Id"><display/></field>    	
         <field name="rateTypeId" title="Rate type" ><display description="${rateTypeId}"></display><!-- <display-entity entity-name="RateType" key-field-name="ratetypeId" description="${description} "/> --></field>
-        <field name="productId" title="product"><display/></field>
-        <field name="supplyTypeEnumId" title="supplyType"><display/></field>
-        <field name="rateAmount" title="Rate Amount"><display/></field>
+        <field name="supplyTypeEnumId" title="SupplyType"><display/></field>
+        <field name="rateAmount" title="Amount"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
     	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
     </form>
@@ -1126,6 +1126,7 @@
         <field name="rateTypeId" title="Rate type Id">
          <drop-down>
                 <entity-options description="${description}" key-field-name="rateTypeId" entity-name="RateType">
+               	    <entity-constraint name="rateTypeId" operator="like" value="%_RENT%"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -1134,11 +1135,9 @@
         <field name="supplyTypeEnumId" title="supplyTypeEnumId">
 			<drop-down allow-empty="false" no-current-selected-key="N">
 				<option key="AM"></option>
-				<option key="PM" />
-				<option key="_NA_" />
 			</drop-down>
         </field>
-        <field name="rateAmount" title="Rate Amount"><text/></field>
+        <field name="rateAmount" title="Amount"><text/></field>
         <field name="productId" title="Product"><hidden value="_NA_"></hidden></field>
         <field name="rateCurrencyUomId" ><hidden value="INR"></hidden></field>
         <field name="fromDate"><date-time/></field>
