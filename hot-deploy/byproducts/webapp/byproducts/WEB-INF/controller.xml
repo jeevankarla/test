@@ -871,20 +871,19 @@
         	<redirect-parameter name="subTabItem"/>
     	</response>       	
     </request-map>
-   
-    
     <request-map uri="createInstitutionPayment">
     	<security https="true" auth="true"/>
     	<event type="service" invoke="createChequePayment"/>   	
     	<response name="success" type="view" value="FindInstitutionPayment"/>
     	<response name="error" type="view" value="FindInstitutionPayment"/>       	
     </request-map>
-    
-    
-    
     <request-map uri="FindFacility">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacility"/>
+    </request-map>
+     <request-map uri="FacilitySearchResults">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FacilitySearchResults"/>
     </request-map>
     <request-map uri="FacilityProfile">
         <security https="true" auth="true"/>
