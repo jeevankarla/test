@@ -1399,6 +1399,8 @@ public class ByProductNetworkServices {
 			}
 
 		}
+		result.put("isCreditInstitution", isCreditInstitution);
+		result.put("PONumber", PONumber);
 		List changeIndentProductList = FastList.newInstance();
 
 		try {
@@ -1429,6 +1431,7 @@ public class ByProductNetworkServices {
 				GenericValue prevSubscriptionProduct = (GenericValue) EntityUtil.getFirst(previousSubscriptionProductList);
 				String prevDate = "";
 				if (UtilValidate.isNotEmpty(prevSubscriptionProduct)) {
+					List changedIndentProducts = FastList.newInstance();
 					Timestamp previousDate = prevSubscriptionProduct.getTimestamp("thruDate");
 					prevDate = UtilDateTime.toDateString(previousDate,"dd MMMMM, yyyy");
 					Map newContext = FastMap.newInstance();
@@ -1442,9 +1445,15 @@ public class ByProductNetworkServices {
 					newContext.put("isEnableProductSubscription",(Boolean) context.get("isEnableProductSubscription"));
 					newContext.put("supplyDate", prevDate);
 					newContext.put("priceCalcFalg", Boolean.FALSE);
+					result.put("changeIndentProductList", changedIndentProducts);
+					result.put("isCreditInstitution", isCreditInstitution);
+					result.put("PONumber", PONumber);
 					Map resultCtx = getBoothChandentIndent(dctx, newContext);
+					if(ServiceUtil.isError(resultCtx)){
+						Debug.logError(ServiceUtil.getErrorMessage(resultCtx), module);
+						return result;
+					}
 					List tempProdQtyList = (List) resultCtx.get("changeIndentProductList");
-					List changedIndentProducts = FastList.newInstance();
 					for (int i = 0; i < tempProdQtyList.size(); i++) {
 						Map tempMap = (Map) tempProdQtyList.get(i);
 						tempMap.put("cQuantity", BigDecimal.ZERO);
@@ -1728,6 +1737,7 @@ public class ByProductNetworkServices {
 				try {
 					pendingInvoiceList = delegator.findList("InvoiceAndApplAndPayment", cond, null, null, null,	false);
 					// no payment applications then add invoice total amount to OB or unapplied amount.
+					
 					Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", UtilMisc.toMap("userLogin", userLogin, "invoiceId",invoiceId));
 					if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
 						Debug.logError(getInvoicePaymentInfoListResult.toString(),module);
@@ -1772,15 +1782,7 @@ public class ByProductNetworkServices {
 		}
 		Set paymentSet = new HashSet(EntityUtil.getFieldListFromEntityList(pendingPaymentsList, "paymentId", false));
 		for (GenericValue pendingPayments : pendingPaymentsList) {
-			/*count=count+1;
-			Debug.log("i======"+count);
-			Debug.log("pendingPayments======"+pendingPayments);
-			Debug.log("======***********============");
-			Debug.log("dueDate======"+pendingPayments.getTimestamp("dueDate"));
-			Debug.log("pmPaymentDate======"+pendingPayments.getTimestamp("pmPaymentDate"));
-			Debug.log("paidDate======"+pendingPayments.getTimestamp("paidDate"));
-			Debug.log("paymentapplicationId======"+pendingPayments.getString("paymentApplicationId"));*/
-			if (UtilValidate.isEmpty(pendingPayments.getTimestamp("paidDate")) || (UtilDateTime.getDayStart(pendingPayments	.getTimestamp("paidDate"))).equals(UtilDateTime.getDayStart(pendingPayments.getTimestamp("invoiceDate")))
+			if (UtilValidate.isEmpty(pendingPayments.getTimestamp("paidDate")) || (UtilDateTime.getDayStart(pendingPayments.getTimestamp("paidDate"))).equals(UtilDateTime.getDayStart(pendingPayments.getTimestamp("invoiceDate")))
 					|| (pendingPayments.getTimestamp("paidDate")).compareTo(dayBegin) >= 0) {
 				advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amountApplied"));
 			}
