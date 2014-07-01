@@ -5125,7 +5125,7 @@ public class ByProductNetworkServices {
 		BigDecimal roundedtotalDueAmount = ZERO;
 		Map<String, Object> boothPayments = FastMap.newInstance();
 		boothPayments = getBoothPayments(delegator, ctx.getDispatcher(),
-				userLogin, UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"),null, boothId, null, Boolean.FALSE);
+				userLogin, UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "yyyy-MM-dd HH:mm:ss"),null, boothId, null, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE);
 		List boothPaymentsList = (List) boothPayments.get("boothPaymentsList");
 		List boothPaymentsUnRoundedList = (List) boothPayments.get("boothPaymentsUnRoundedList");
 		if (boothPaymentsList.size() != 0) {
