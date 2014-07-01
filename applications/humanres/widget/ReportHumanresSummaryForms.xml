@@ -411,24 +411,10 @@
 			<display description="${periodBillingId}" />
 		</field>
 		<field name="customTimePeriodId">
-			<display/>
+			<display-entity entity-name="CustomTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}"></display-entity>
 		</field>
 		<field name="statusId" title = "Status">
           <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
-        </field>
-        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
-			<hyperlink target="setPeriodBillingStatus" description="approve">
-	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
-	        	<parameter param-name="statusId" value="APPROVED"/>
-	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
-	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
-	        </hyperlink>
-        </field>
-		
-        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
-			<hyperlink target="cancelPayrollBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
-	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
-	        </hyperlink>
         </field>
         <field use-when="statusId.equals(&quot;GENERATED&quot;)|| statusId.equals(&quot;APPROVED&quot;)" name="PaySlip Report" widget-style="buttontext" >
             <hyperlink target="PrintPaySlipsPdf.pdf" description="PaySlip Report"  target-window="_BLANK">
@@ -443,6 +429,20 @@
         		<parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
         		<parameter param-name="partyId" value="${partyId}"/>
             </hyperlink>
+        </field>
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
+			<hyperlink target="setPeriodBillingStatus" description="approve">
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        	<parameter param-name="statusId" value="APPROVED"/>
+	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
+	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+	        </hyperlink>
+        </field>
+		
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
+			<hyperlink target="cancelPayrollBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        </hyperlink>
         </field>
         <field use-when="statusId.equals(&quot;APPROVED&quot;)" name="reject" widget-style="buttontext cancel">
 			<hyperlink target="setPeriodBillingStatus" description="Reject" >

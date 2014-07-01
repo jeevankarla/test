@@ -38,9 +38,10 @@ if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 	timePeriod=lastCloseAttedancePeriod.get("periodName");
 	context.timePeriod=timePeriod;
 }
+List stautsList = UtilMisc.toList("GENERATED","APPROVED");
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN  ,stautsList));
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
