@@ -179,7 +179,7 @@ Debug.logInfo("result:" + result, module);
             Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " not mapped to a party!", module);
             return ServiceUtil.returnError("Valid employee code not found.");    		
     	}
-    	
+		Map<String, Object> employeeProfile = FastMap.newInstance();    	
     	String employeeId = (String)userLogin.get("partyId");
 		try {    	
 			List<GenericValue> employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", UtilMisc.toMap("partyIdTo", employeeId, 
@@ -188,16 +188,17 @@ Debug.logInfo("result:" + result, module);
 				Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + employeeId + " does not have an active employment!", module);
 				return ServiceUtil.returnError("Active employment not found.");  
 			}
-		} catch(GenericEntityException e){
+         
+			Map<String, Object> inputParamMap = FastMap.newInstance();
+			inputParamMap.put("userLogin", userLogin);			
+			inputParamMap.put("employment", EntityUtil.getFirst(employments));
+			employeeProfile = getEmployeeProfile(dctx, inputParamMap);
+		} catch(Exception e){
 			Debug.logError("Error fetching employee details " + e.getMessage(), module);
-		}      
-        
-    	Map result = FastMap.newInstance();  
-    	Map employeeDetailsMap = FastMap.newInstance();  
-    	Map leaveBalances = EmplLeaveService.getEmployeeLeaveBalance(dctx, UtilMisc.toMap("employeeId", employeeId));
-    	employeeDetailsMap.put("employeeId", employeeId);    	
-    	employeeDetailsMap.put("leaveDetails", leaveBalances);
-    	
+		}     
+    	Map result = FastMap.newInstance(); 	
+		Map<String, Object> employeeDetailsMap = FastMap.newInstance();    	    	
+    	employeeDetailsMap.put("employeeProfile", employeeProfile);    	
     	result.put("employeeDetailsResult", employeeDetailsMap);
 Debug.logInfo("result:" + result, module);		 
     	return result;
