@@ -34,6 +34,61 @@ public class HumanresApiService {
 
     public static final String module = HumanresApiService.class.getName();
 	
+    /*
+     * Helper that returns full employee profile.  This method expects the employee's EmploymentAndPerson
+     * record as an input.
+     */
+    static Map<String, Object> getEmployeeProfile(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    
+    	Map<String, Object> employee = FastMap.newInstance();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue employment = (GenericValue) context.get("employment");
+        if (UtilValidate.isEmpty(employment)) {
+        	return employee;
+        }
+		GenericValue dept;
+		try {
+			dept = delegator.findByPrimaryKey("PartyAndGroup", UtilMisc.toMap("partyId", "Company"));
+	
+			if (UtilValidate.isNotEmpty(dept)) {
+				employee.put("department", dept.getString("groupName"));
+			}
+			String employeePosition = "";
+			List<GenericValue> emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", UtilMisc.toMap("employeePartyId", employment.getString("partyId"))));
+			GenericValue emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
+			if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
+				GenericValue emplPositionType = delegator.findOne("EmplPositionType",UtilMisc.toMap("emplPositionTypeId", emplPositionAndFulfillment.getString("emplPositionTypeId")), true);
+				if (emplPositionType != null) {
+					employeePosition = emplPositionType.getString("description");
+				}
+				else {
+					employeePosition = emplPositionAndFulfillment.getString("emplPositionId");
+				}
+			}
+			employee.put("position", employeePosition);
+			String lastName="";
+			if(employment.getString("lastName") !=null){
+				lastName = employment.getString("lastName");
+			}
+			employee.put("name", employment.getString("firstName") + " " + lastName);
+			employee.put("employeeId", employment.getString("partyId"));
+			String joinDate = UtilDateTime.toDateString(employment.getTimestamp("appointmentDate"), "yyyy-MM-dd");
+			employee.put("joinDate", joinDate);
+		
+			Map <String, Object>partyTelephone= dispatcher.runSync("getPartyTelephone", UtilMisc.toMap("partyId", employment.getString("partyId"), 
+					"userLogin", userLogin));
+			String phoneNumber = "";
+			if (partyTelephone != null && partyTelephone.get("contactNumber") != null) {
+				phoneNumber = (String)partyTelephone.get("contactNumber");
+			}
+			employee.put("phoneNumber", phoneNumber);  
+		} catch(Exception e){
+			Debug.logError("Error fetching employee profile " + e.getMessage(), module);
+		}
+		return employee;
+    }
+    
 	static void populateOrgEmployees(DispatchContext dctx, Map<String, ? extends Object> context, List employeeList) {
     	Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();    	    	
@@ -42,7 +97,6 @@ public class HumanresApiService {
         if (org == null) {
         	return;
         }
-
 		List<GenericValue> internalOrgs = FastList.newInstance();
   		try{
   			internalOrgs = EntityUtil.filterByDate(delegator.findByAnd("PartyRelationshipAndDetail", UtilMisc.toMap("partyIdFrom", org.getString("partyId"),
@@ -56,38 +110,15 @@ public class HumanresApiService {
 			List<GenericValue> employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", UtilMisc.toMap("partyIdFrom", org.getString("partyId"), 
 					"roleTypeIdTo", "EMPLOYEE"), UtilMisc.toList("firstName")));
 			for(GenericValue employment : employments){
-				Map<String, String> employee = FastMap.newInstance();			
-				employee.put("department", org.getString("groupName"));
-				String employeePosition = "";
-				List<GenericValue> emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", UtilMisc.toMap("employeePartyId", employment.getString("partyId"))));
-				GenericValue emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
-				if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
-					GenericValue emplPositionType = delegator.findOne("EmplPositionType",UtilMisc.toMap("emplPositionTypeId", emplPositionAndFulfillment.getString("emplPositionTypeId")), true);
-					if (emplPositionType != null) {
-						employeePosition = emplPositionType.getString("description");
-					}
-					else {
-						employeePosition = emplPositionAndFulfillment.getString("emplPositionId");
-					}
-				}
-				employee.put("position", employeePosition);
-				String lastName="";
-				if(employment.getString("lastName") !=null){
-					lastName = employment.getString("lastName");
-				}
-				employee.put("name", employment.getString("firstName") + " " + lastName);
-				employee.put("employeeId", employment.getString("partyId"));
-				String joinDate = UtilDateTime.toDateString(employment.getTimestamp("appointmentDate"), "yyyy-MM-dd");
-				employee.put("joinDate", joinDate);
+				Map<String, Object> employee = FastMap.newInstance();	
 				
-				Map <String, Object>partyTelephone= dispatcher.runSync("getPartyTelephone", UtilMisc.toMap("partyId", employment.getString("partyId"), 
-						"userLogin", userLogin));
-				String phoneNumber = "";
-				if (partyTelephone != null && partyTelephone.get("contactNumber") != null) {
-					phoneNumber = (String)partyTelephone.get("contactNumber");
+				Map<String, Object> inputParamMap = FastMap.newInstance();
+				inputParamMap.put("userLogin", userLogin);			
+				inputParamMap.put("employment", employment);
+				employee = getEmployeeProfile(dctx, inputParamMap);
+				if (UtilValidate.isNotEmpty(employee)) {
+					employeeList.add(employee);					
 				}
-				employee.put("phoneNumber", phoneNumber);
-				employeeList.add(employee);
 			}
   		}catch(GenericEntityException e){
   			Debug.logError("Error fetching employees " + e.getMessage(), module);
