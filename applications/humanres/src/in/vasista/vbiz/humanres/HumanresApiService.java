@@ -49,8 +49,7 @@ public class HumanresApiService {
         }
 		GenericValue dept;
 		try {
-			dept = delegator.findByPrimaryKey("PartyAndGroup", UtilMisc.toMap("partyId", "Company"));
-	
+			dept = delegator.findByPrimaryKey("PartyAndGroup", UtilMisc.toMap("partyId", employment.getString("partyIdFrom")));	
 			if (UtilValidate.isNotEmpty(dept)) {
 				employee.put("department", dept.getString("groupName"));
 			}
