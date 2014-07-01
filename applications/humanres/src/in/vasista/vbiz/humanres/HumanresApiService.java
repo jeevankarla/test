@@ -83,6 +83,13 @@ public class HumanresApiService {
 				phoneNumber = (String)partyTelephone.get("contactNumber");
 			}
 			employee.put("phoneNumber", phoneNumber);  
+	    	Map leaveBalances = EmplLeaveService.getEmployeeLeaveBalance(dctx, UtilMisc.toMap("employeeId", employment.getString("partyId")));
+	    	if (UtilValidate.isNotEmpty(leaveBalances)) {
+	    		employee.put("leaveBalanceDate", leaveBalances.get("leaveBalanceDate"));
+	    		employee.put("earnedLeaveBalance", leaveBalances.get("EL"));
+	    		employee.put("casualLeaveBalance", leaveBalances.get("CL"));
+	    		employee.put("halfPayLeaveBalance", leaveBalances.get("HPL"));
+	    	}			
 		} catch(Exception e){
 			Debug.logError("Error fetching employee profile " + e.getMessage(), module);
 		}
