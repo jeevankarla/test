@@ -33,7 +33,72 @@ import org.ofbiz.security.Security;
 public class HumanresApiService {
 
     public static final String module = HumanresApiService.class.getName();
-	
+
+    
+    static List getEmployeePayslips(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();   
+        List result = FastList.newInstance();
+        String employeeId = (String) context.get("employeeId");
+        try{		
+        	List conditionList = UtilMisc.toList(
+				EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));		
+        	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
+        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+        	List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
+
+        	List periodIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "customTimePeriodId", true);
+
+        	conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.IN, periodIds));
+        	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        	List customTimePeriods = delegator.findList("CustomTimePeriod", condition, null, UtilMisc.toList("-thruDate"), null, true);
+        	for (int i = 0; i < customTimePeriods.size(); ++i) {
+        		GenericValue period = (GenericValue)customTimePeriods.get(i);
+        		String periodId = period.getString("customTimePeriodId");
+            	conditionList.clear();
+            	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, periodId));
+            	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	List periodBillings = delegator.findList("PeriodBilling", condition, null, null, null, false);
+        		GenericValue periodBilling = EntityUtil.getFirst(periodBillings);
+        		String periodBillingId = periodBilling.getString("periodBillingId");
+            	conditionList.clear();
+            	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
+            	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
+            	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	List payrollHeaders = delegator.findList("PayrollHeader", condition, null, null, null, false);
+        		GenericValue payrollHeader = EntityUtil.getFirst(payrollHeaders);      
+            	Map<String, Object> payroll = FastMap.newInstance();
+            	String payrollHeaderId = payrollHeader.getString("payrollHeaderId");
+            	payroll.put("payrollHeaderId", payrollHeaderId);
+    			Date thruDate = period.getDate("thruDate");
+    			String payrollPeriod = UtilDateTime.toDateString(thruDate ,"MMM yyyy");            	
+            	payroll.put("payrollPeriod", payrollPeriod);
+            	BigDecimal netAmount = BigDecimal.ZERO;
+                List payrollItems = FastList.newInstance();
+            	conditionList.clear();
+            	conditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, payrollHeaderId));
+            	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            	List payrollHeaderItems = delegator.findList("PayrollHeaderItem", condition, null, null, null, false);
+            	for (int j = 0; j < payrollHeaderItems.size(); ++j) {
+            		Map<String, Object> payrollItem = FastMap.newInstance();
+            		GenericValue payrollHeaderItem = (GenericValue)payrollHeaderItems.get(j);
+            		BigDecimal amount = payrollHeaderItem.getBigDecimal("amount");
+            		netAmount = netAmount.add(amount);
+            		payrollItem.put(payrollHeaderItem.getString("payrollHeaderItemTypeId"), amount);
+            		payrollItems.add(payrollItem);
+            	}
+            	payroll.put("netAmount", netAmount);            	
+            	payroll.put("payrollItems", payrollItems);
+            	result.add(payroll);
+        	}
+        } catch (Exception e) {
+        	Debug.logError(e, "Error fetching employee payslips", module);
+        }
+        
+    	return result;
+    }
+    
     /*
      * Helper that returns full employee profile.  This method expects the employee's EmploymentAndPerson
      * record as an input.
@@ -184,7 +249,8 @@ Debug.logInfo("result:" + result, module);
             Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " not mapped to a party!", module);
             return ServiceUtil.returnError("Valid employee code not found.");    		
     	}
-		Map<String, Object> employeeProfile = FastMap.newInstance();    	
+		Map<String, Object> employeeProfile = FastMap.newInstance();   
+		List payslips = FastList.newInstance();
     	String employeeId = (String)userLogin.get("partyId");
 		try {    	
 			List<GenericValue> employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", UtilMisc.toMap("partyIdTo", employeeId, 
@@ -198,12 +264,20 @@ Debug.logInfo("result:" + result, module);
 			inputParamMap.put("userLogin", userLogin);			
 			inputParamMap.put("employment", EntityUtil.getFirst(employments));
 			employeeProfile = getEmployeeProfile(dctx, inputParamMap);
+
+			inputParamMap.clear();
+			inputParamMap.put("userLogin", userLogin);			
+			inputParamMap.put("employeeId", employeeId);		
+			payslips = getEmployeePayslips(dctx, inputParamMap);			
 		} catch(Exception e){
 			Debug.logError("Error fetching employee details " + e.getMessage(), module);
 		}     
+		
     	Map result = FastMap.newInstance(); 	
 		Map<String, Object> employeeDetailsMap = FastMap.newInstance();    	    	
-    	employeeDetailsMap.put("employeeProfile", employeeProfile);    	
+    	employeeDetailsMap.put("employeeProfile", employeeProfile);    
+    	employeeDetailsMap.put("payslips", payslips);    	
+    	
     	result.put("employeeDetailsResult", employeeDetailsMap);
 Debug.logInfo("result:" + result, module);		 
     	return result;
