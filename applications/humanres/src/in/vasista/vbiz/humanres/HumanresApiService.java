@@ -78,6 +78,7 @@ Debug.logInfo("getEmployeePayslips: condition->" + condition, module);
             		Date thruDate = period.getDate("thruDate");
             		String payrollPeriod = UtilDateTime.toDateString(thruDate ,"MMM yyyy");            	
             		payroll.put("payrollPeriod", payrollPeriod);
+            		payroll.put("payrollDate", thruDate);            		
             		BigDecimal netAmount = BigDecimal.ZERO;
             		List payrollItems = FastList.newInstance();
             		conditionList.clear();
