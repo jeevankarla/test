@@ -208,6 +208,9 @@
 				</entity-options>
 			</drop-down>
 		</field>
+		<field name="employeeId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
         <field name="customTimePeriodId" required-field="true">
             <drop-down>
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
