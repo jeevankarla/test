@@ -160,7 +160,7 @@ if(UtilValidate.isNotEmpty(dtcBankMap)){
 				  tempMap["totalFine"] = totalFine;
 			 }
 			 if(UtilValidate.isNotEmpty(netAmount)){
-				  tempMap["netAmount"] = netAmount;
+				  tempMap["netAmount"] = netAmount.setScale(0,BigDecimal.ROUND_HALF_UP);
 			 }
 			 if(UtilValidate.isNotEmpty(facilityName)){
 				 tempMap["facilityName"] = facilityName;
@@ -194,7 +194,7 @@ if(UtilValidate.isNotEmpty(finalMap)){
 		dtcBankCsvMap["facilityFinAccount"] = route.getValue().get("facilityFinAccount");
 		dtcBankCsvMap["routeAmount"] = (route.getValue().get("routeAmount").setScale(2,BigDecimal.ROUND_HALF_UP));
 		dtcBankCsvMap["totalFine"] = (route.getValue().get("totalFine").setScale(2,BigDecimal.ROUND_HALF_UP));
-		dtcBankCsvMap["netAmount"] = (route.getValue().get("netAmount").setScale(2,BigDecimal.ROUND_HALF_UP));
+		dtcBankCsvMap["netAmount"] = (route.getValue().get("netAmount").setScale(0,BigDecimal.ROUND_HALF_UP));
 		tempMap = [:];
 		tempMap.putAll(dtcBankCsvMap);
 		dtcBankReportCsvList.add(tempMap);

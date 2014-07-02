@@ -160,7 +160,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DTCBankReport.pdf")}
 	                                <fo:table-cell border-style="solid">
 	                                    <fo:block text-align="right">
 	                                    <#assign totalNetAmount = totalNetAmount+netAmount>
-	                                            <#if netAmount?has_content>${(netAmount)?string("#0")}.00<#else>0.00</#if>
+	                                            <#if netAmount?has_content>${(netAmount)?string("#0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
                               </fo:table-row>
