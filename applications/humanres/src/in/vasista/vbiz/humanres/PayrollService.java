@@ -266,9 +266,9 @@ public class PayrollService {
 		    			List payrollHeaderIds = EntityUtil.getFieldListFromEntityList(payrollHeaderList, "payrollHeaderId", false);
 		    			if(UtilValidate.isNotEmpty(payrollHeaderIds)){
 		    				List<GenericValue> payrollHeaderItemList = delegator.findList("PayrollHeaderItem", EntityCondition.makeCondition("payrollHeaderId", EntityOperator.IN, payrollHeaderIds), null, null, null, false);
-		    				if(UtilValidate.isNotEmpty(payrollHeaderItemList) && !(periodBilling.getString("statusId").equals("APPROVED"))){
-		    	    		    //delegator.removeAll(payrollHeaderItemList);
-		    	    		    //delegator.removeAll(payrollHeaderList);
+		    				if(UtilValidate.isNotEmpty(payrollHeaderItemList) && (periodBilling.getString("statusId").equals("GENERATED"))){
+		    	    		    delegator.removeAll(payrollHeaderItemList);
+		    	    		    delegator.removeAll(payrollHeaderList);
 		    	    		}
 		    			}
 		    			periodBilling.set("statusId", "COM_CANCELLED");
@@ -303,11 +303,12 @@ public class PayrollService {
 			        try {
 			            List conditionList = UtilMisc.toList(
 			                    EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
-			            conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart));
+			            //conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart));
 			            conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, timePeriodEnd)));
 			            EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);        	
 			            // sort by -fromDate to get the newest (largest) first, just in case there is more than one, should not happen but...
 			            List<GenericValue> payHistory = delegator.findList("PayHistory", condition, null, UtilMisc.toList("-fromDate"), null, false);
+			            payHistory = EntityUtil.filterByDate(payHistory, UtilDateTime.getDayStart(timePeriodEnd));
 			            if(UtilValidate.isEmpty(payHistory)){
 			            	result.put("amount", amount);
 			            	result.put("payGradeId", "-1");
@@ -456,11 +457,12 @@ public class PayrollService {
 				
 				List conditionList = UtilMisc.toList(
 		                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
-		        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+		       // conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 		        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 		        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 		        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
 				List<GenericValue> partyBenefits = delegator.findList("PartyBenefit", condition, null, null, null, false);
+				partyBenefits = EntityUtil.filterByDate(partyBenefits, UtilDateTime.getDayStart(timePeriodEnd));
 				for (int i = 0; i < partyBenefits.size(); ++i) {		
 					GenericValue benefit = partyBenefits.get(i);
 					String benefitTypeId = benefit.getString("benefitTypeId");				
@@ -515,12 +517,12 @@ public class PayrollService {
 
 				List conditionList = UtilMisc.toList(
 						EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
-		        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+		        //conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 		        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 		        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 		        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
 				List<GenericValue> partyDeductions = delegator.findList("PartyDeduction", condition, null, null, null, false);
-				
+				partyDeductions = EntityUtil.filterByDate(partyDeductions, UtilDateTime.getDayStart(timePeriodEnd));
 				for (int i = 0; i < partyDeductions.size(); ++i) {		
 					GenericValue deduction = partyDeductions.get(i);
 					Map input = UtilMisc.toMap("userLogin", userLogin);	
@@ -781,11 +783,12 @@ public class PayrollService {
 					if (!isGroup) {
 						List conditionList = UtilMisc.toList(
 								EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdFrom));
-						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+						//conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 						conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 					    EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 						EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
-						List<GenericValue> employments = delegator.findList("Employment", condition, null, null, null, false);	
+						List<GenericValue> employments = delegator.findList("Employment", condition, null, null, null, false);
+						employments = EntityUtil.filterByDate(employments, UtilDateTime.getDayStart(timePeriodEnd));
 						if (employments.size() == 0){
 							return ServiceUtil.returnError("No employment record found for party " + partyIdFrom, 
 									null, null, serviceResults);					
@@ -857,7 +860,7 @@ public class PayrollService {
 					List conditionList = UtilMisc.toList(
 			                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
 					conditionList.add(EntityCondition.makeCondition("benefitTypeId", EntityOperator.EQUALS, payHeadTypeId));
-			        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+			        //conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 			        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 			        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
@@ -866,11 +869,12 @@ public class PayrollService {
 					conditionList.clear();
 					conditionList.add( EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
 					conditionList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.EQUALS, payHeadTypeId));
-			        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+			        //conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 			        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 			        condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  
 			        payHeadTypesList.addAll(delegator.findList("PartyDeduction", condition, null, null, null, false));
+			        payHeadTypesList = EntityUtil.filterByDate(payHeadTypesList, UtilDateTime.getDayStart(timePeriodEnd));
 			        if(UtilValidate.isEmpty(payHeadTypesList)){
 			        	 Debug.logWarning("Payhead not applicable", module);
 			        	 result.put("amount", BigDecimal.ZERO);
