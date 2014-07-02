@@ -27,6 +27,7 @@ if (parameters.customTimePeriodId == null) {
 dctx = dispatcher.getDispatchContext();
 
 
+orgPartyId = null;
 
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
@@ -82,6 +83,7 @@ Map InstallmentFinalMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
 	periodBillingId = periodBillDetails.get("periodBillingId");
+	payRollHeaderList=[];
 	payConList=[];
 	payConList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,periodBillingId));
 	if(UtilValidate.isNotEmpty(parameters.employeeId))
@@ -89,6 +91,11 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
+		payrollHeader = payRollHeaderList[0];
+		if(UtilValidate.isNotEmpty(payrollHeader)){
+			orgPartyId = payrollHeader.partyId;
+			
+		}
 		payRollHeaderList.each{ payRollHead->
 			payrollHeaderId=payRollHead.get("payrollHeaderId");
 			partyId=payRollHead.get("partyIdFrom");
@@ -181,8 +188,8 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			}		
 		}
 	}
-	
 }
+
 
 if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(parameters.sendSms) && (parameters.sendSms).equals("Y")){
 	for(Map.Entry entry : BankAdvicePayRollMap.entrySet()){
@@ -218,20 +225,7 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 	
 }
 
-
-parameters.periodBillingId=periodBillingId;
-orgPartyId = null;
-payrollHeaderList = delegator.findList("PayrollHeader",EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, parameters.periodBillingId) , null, null, null, false);
-if(UtilValidate.isNotEmpty(payrollHeaderList)){
-	payrollHeader = payrollHeaderList[0];
-	if(UtilValidate.isNotEmpty(payrollHeader)){
-		orgPartyId = payrollHeader.partyId;
-		
-	}
-}
 parameters.partyId=orgPartyId;
-
-
 context.put("InstallmentFinalMap",InstallmentFinalMap);
 context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
