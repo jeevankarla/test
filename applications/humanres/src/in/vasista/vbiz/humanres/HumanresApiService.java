@@ -41,6 +41,17 @@ public class HumanresApiService {
         List result = FastList.newInstance();
         String employeeId = (String) context.get("employeeId");
         try{		
+        	Map <String, String> payheadsMap = FastMap.newInstance();
+        	List<GenericValue> benefitTypes = delegator.findList("BenefitType",null, null,null, null, true);
+        	for (int i = 0; i < benefitTypes.size(); ++i) {
+        		GenericValue benefitType = benefitTypes.get(i);
+        		payheadsMap.put(benefitType.getString("benefitTypeId"), benefitType.getString("benefitName"));
+        	}
+        	List<GenericValue> deductionTypes = delegator.findList("DeductionType",null, null,null, null, true);
+        	for (int i = 0; i < deductionTypes.size(); ++i) {
+        		GenericValue deductionType = deductionTypes.get(i);
+        		payheadsMap.put(deductionType.getString("deductionTypeId"), deductionType.getString("deductionName"));
+        	}       	
         	List conditionList = UtilMisc.toList(
 				EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));		
         	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
@@ -90,7 +101,11 @@ Debug.logInfo("getEmployeePayslips: condition->" + condition, module);
             			GenericValue payrollHeaderItem = (GenericValue)payrollHeaderItems.get(j);
             			BigDecimal amount = payrollHeaderItem.getBigDecimal("amount");
             			netAmount = netAmount.add(amount);
-            			payrollItem.put(payrollHeaderItem.getString("payrollHeaderItemTypeId"), amount);
+            			String payrollHeaderItemType = (payrollHeaderItem.getString("payrollHeaderItemTypeId"));
+            			if (payheadsMap.get(payrollHeaderItem.getString("payrollHeaderItemTypeId")) != null) {
+            				payrollHeaderItemType = payheadsMap.get(payrollHeaderItem.getString("payrollHeaderItemTypeId"));
+            			}
+            			payrollItem.put(payrollHeaderItemType, amount);
             			payrollItems.add(payrollItem);
             		}
             		payroll.put("netAmount", netAmount);            	
