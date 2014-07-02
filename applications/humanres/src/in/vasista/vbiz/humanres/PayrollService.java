@@ -198,6 +198,9 @@ public class PayrollService {
 							List payHeaderItemList = (List)payHeadItemResult.get("itemsList");
 							for(int j=0;j< payHeaderItemList.size();j++){
 								Map payHeaderItemValue = (Map)payHeaderItemList.get(j);
+								if(UtilValidate.isEmpty(payHeaderItemValue.get("amount")) || (((BigDecimal)payHeaderItemValue.get("amount")).compareTo(BigDecimal.ZERO) ==0) ){
+									continue;
+								}
 		       					GenericValue payHeaderItem = delegator.makeValue("PayrollHeaderItem");
 		       					payHeaderItem.set("payrollHeaderId", payHeader.get("payrollHeaderId"));
 		       					payHeaderItem.set("payrollHeaderItemTypeId",payHeaderItemValue.get("payrollItemTypeId"));
