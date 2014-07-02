@@ -17,7 +17,7 @@
      <Uom abbreviation="Trip per Amount"   description="Trip Amount"  uomId="OTH_TRIP" uomTypeId="OTHER_MEASURE"/>   
      <Uom abbreviation="km"   description="Kilometer"   uomId="LEN_km" uomTypeId="LENGTH_MEASURE"/> 
      
-    <PeriodType description="DTC Fortnightly Bill" periodLength="2" periodTypeId="DTC_FORTNIGHT_BILL" uomId="TF_wk"/>
+      <PeriodType description="DTC Fortnightly Bill" periodLength="2" periodTypeId="DTC_FORTNIGHT_BILL" uomId="TF_wk"/>
       <CustomTimePeriod createdStamp="2014-06-13 18:33:27.0" createdTxStamp="2014-06-13 18:33:27.0" customTimePeriodId="10080" fromDate="2014-06-01" isClosed="N" lastUpdatedStamp="2014-06-13 18:33:27.0" lastUpdatedTxStamp="2014-06-13 18:33:27.0" organizationPartyId="Company" periodName="JAN1-15(2014)" periodTypeId="DTC_FORTNIGHT_BILL" thruDate="2014-06-15"/> 
      	
      <TenantConfiguration propertyName="enableTranporterDuePayment" propertyValue="Y" propertyTypeEnumId="LMS" description="Enable Transporter Commsion"/>
@@ -84,5 +84,10 @@
        <FacilityTypeAttr facilityTypeId="ROUTE" attrName="WORK_ORDER_NO"></FacilityTypeAttr>
      <FacilityAttribute facilityId="S01" attrName="WORK_ORDER_NO" attrValue="S01777566"></FacilityAttribute>
     
-   
+       <RateType rateTypeId="FACILITY_SIZE"  description="Transportation Distance "/> 
+       <FacilityRate  facilityId="S02" fromDate="2014-03-01 00:00:00.0"  productId="_NA_" rateAmount="58.560000" rateCurrencyUomId="LEN_km" rateTypeId="FACILITY_SIZE" supplyTypeEnumId="_NA_"/>
+      <FacilityRate  facilityId="S03" fromDate="2014-03-01 00:00:00.0" thruDate="2014-05-10 23:59:59.0"  productId="_NA_" rateAmount="20" rateCurrencyUomId="LEN_km" rateTypeId="FACILITY_SIZE" supplyTypeEnumId="_NA_" />
+       <FacilityRate  facilityId="S03" fromDate="2014-05-11 00:00:00.0"   productId="_NA_" rateAmount="30" rateCurrencyUomId="LEN_km" rateTypeId="FACILITY_SIZE" supplyTypeEnumId="_NA_" />
+      <FacilityRate  facilityId="S06" fromDate="2014-03-01 00:00:00.0" thruDate="2014-05-10 23:59:59.0"  productId="_NA_" rateAmount="40" rateCurrencyUomId="LEN_km" rateTypeId="FACILITY_SIZE" supplyTypeEnumId="_NA_" />
+       <FacilityRate  facilityId="S06" fromDate="2014-05-11 00:00:00.0"  productId="_NA_" rateAmount="20" rateCurrencyUomId="LEN_km" rateTypeId="FACILITY_SIZE" supplyTypeEnumId="_NA_" /> 
  

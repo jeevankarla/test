@@ -281,6 +281,12 @@ import java.text.SimpleDateFormat;
 						//getting
 					/*	Map dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), UtilMisc.toMap("facilityIds",boothsList,"fromDate",monthBegin, "thruDate",monthEnd));
 						dayWiseTotalsMap=(Map)dayTotals.get("dayWiseTotals");*/
+						//input map for FacilitySize
+						 Map inputDistMap = UtilMisc.toMap("userLogin", userLogin);
+						 inputDistMap.put("rateCurrencyUomId", "LEN_km");
+						 inputDistMap.put("facilityId", facilityDetail.get("facilityId"));
+						 inputDistMap.put("rateTypeId", "FACILITY_SIZE");
+							
 						Timestamp supplyDate = monthBegin;
 				        for (int k = 0; k <= (totalDays); k++) {
 							Map routeMarginMap = FastMap.newInstance();
@@ -302,32 +308,6 @@ import java.text.SimpleDateFormat;
 							 GenericValue vehicleTrip=EntityUtil.getFirst(vehicleTrpList);
 							//List shipmentIds =ByProductNetworkServices.getShipmentIds(delegator,supplyDate,supplyDate);
 							 String curntDay=UtilDateTime.toDateString(supplyDate ,"yyyy-MM-dd");
-							 Map curntDaySalesMap=(Map)dayWiseTotalsMap.get(curntDay);
-							 
-							 if(UtilValidate.isNotEmpty(curntDaySalesMap)){/*
-							BigDecimal saleAmount = (BigDecimal)curntDaySalesMap.get("totalRevenue");
-							BigDecimal totalQty=(BigDecimal)curntDaySalesMap.get("total");
-							
-							Map supplyTypeTotalsMap=(Map)curntDaySalesMap.get("supplyTypeTotals");
-			                //cash
-							Map supplyTypeCashMap=(Map)supplyTypeTotalsMap.get("CASH");
-							BigDecimal cashQty=(BigDecimal)supplyTypeCashMap.get("total");
-							BigDecimal cashAmount= (BigDecimal)supplyTypeCashMap.get("totalRevenue");
-							//leak
-							Map supplyTypeLeakMap=(Map)supplyTypeTotalsMap.get("LEAK");
-							
-							BigDecimal leakQty=(BigDecimal)supplyTypeLeakMap.get("total");
-							BigDecimal leakAmount= (BigDecimal)supplyTypeLeakMap.get("totalRevenue");
-							
-							totalQty=totalQty.subtract(leakQty);
-							saleAmount=saleAmount.subtract(leakAmount);
-							
-							routeMarginMap.put("cashQty",cashQty );
-							routeMarginMap.put("cashAmount", cashAmount);
-							
-							routeMarginMap.put("quantity",totalQty );
-							routeMarginMap.put("saleAmount", saleAmount);					
-							*/}	
 							  narmalMargin = monthBeginMargin;
 				    			//normal Margin for Each Day if monthStart and MonthEnd is Different
 				    			if(monthBeginMargin.compareTo(monthEndMargin) != 0){
@@ -355,6 +335,16 @@ import java.text.SimpleDateFormat;
 								}
 							 BigDecimal actualCommision = tripSize.multiply(narmalMargin);
 	                         if(uomId.equals("LEN_km")){
+	                        	 inputDistMap.put("fromDate",supplyDate );
+	                        	 Map<String, Object> facilitySizeResult = dispatcher.runSync("getRouteDistance", inputDistMap);
+						    	    if (ServiceUtil.isError(facilitySizeResult)) {
+						    			generationFailed = true;
+						    			Debug.logWarning("There was an error while getting FacilitySize !: " + ServiceUtil.getErrorMessage(facilitySizeResult), module);
+						        		return ServiceUtil.returnError("There was an error while getting FacilitySize !: " + ServiceUtil.getErrorMessage(facilitySizeResult));          	            
+						            }
+						    	    if(UtilValidate.isNotEmpty(facilitySizeResult)){
+						    	    	facilitySize = (BigDecimal) facilitySizeResult.get("facilitySize");
+						    		}	
 	                      	   actualCommision = actualCommision.multiply(facilitySize);
 				    		}
 	                         /*if(uomId.equals("PER_LTR")){
@@ -393,113 +383,6 @@ import java.text.SimpleDateFormat;
 						periodBilling.set("statusId", "GENERATION_FAIL");
 					} 
 					periodBilling.store();	
-					
-					Map facilityRecoveryResultMap =(Map) getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"userLogin",userLogin));
-					Map partyWiseRecvoryMap=(Map)facilityRecoveryResultMap.get("partyRecoveryInfoMap");
-					Map transporterTradeResultMap=getTransporterTotalsForPeriodBilling(dctx, UtilMisc.toMap("periodBillingId",(Object)periodBillingId));
-					//Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("routeTradingMap");
-					Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
-					
-					if(UtilValidate.isNotEmpty(totalPartyTradingTotalMap)){
-					Iterator partyMarginsIter = totalPartyTradingTotalMap.entrySet().iterator();
-					
-					while (partyMarginsIter.hasNext()) {
-						Map.Entry partyEntry = (Entry) partyMarginsIter.next();	
-						String invoiceId="";
-						//String facilityId = (String) routeEntry.getKey();	
-						
-						String partyIdTo = (String) partyEntry.getKey();	
-						Map partyWiseValues = (Map) partyEntry.getValue();
-						BigDecimal totalMargin = (BigDecimal) partyWiseValues.get("totalMargin");
-						BigDecimal quantity = BigDecimal.ONE;
-						BigDecimal totalFine = BigDecimal.ZERO;
-						if(UtilValidate.isNotEmpty(partyWiseRecvoryMap) && UtilValidate.isNotEmpty(partyWiseRecvoryMap.get(partyIdTo))){
-							Map partyFinesMap=(Map)partyWiseRecvoryMap.get(partyIdTo);
-							totalFine=(BigDecimal)partyFinesMap.get("totalFine");
-						}
-						Debug.log("===partyIdTo==="+partyIdTo+"=====Fine="+totalFine+"===Commission="+totalMargin);
-						/*GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId) ,false);
-						String partyIdTo = facilityDetail.getString("ownerPartyId");*/
-						// heree Invoice Raised by Transporter
-						 if (UtilValidate.isEmpty(invoiceId)&& UtilValidate.isNotEmpty(partyIdTo)) {
-				                Map<String, Object> createInvoiceContext = FastMap.newInstance();
-				                createInvoiceContext.put("partyId", "Company");
-				                createInvoiceContext.put("partyIdFrom", partyIdTo);
-				                //createInvoiceContext.put("billingAccountId", billingAccountId);
-				                createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
-				                createInvoiceContext.put("dueDate", monthEnd);
-				                //createInvoiceContext.put("invoiceTypeId", "TRANSPORTER_OUT");
-				                createInvoiceContext.put("invoiceTypeId", "SALES_DIS_OUT");
-				                createInvoiceContext.put("referenceNumber", "TRSPT_MRGN_"+periodBillingId);
-				                // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
-				                createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
-				                createInvoiceContext.put("currencyUomId", "INR");
-				                createInvoiceContext.put("userLogin", userLogin);
-	
-				                // store the invoice first
-				                Map<String, Object> createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
-				                	if (ServiceUtil.isError(result)) {
-				    		    		generationFailed = true;
-				    	                Debug.logWarning("There was an error while creating  Invoice For TransporterCommission: " + ServiceUtil.getErrorMessage(result), module);
-				    	        		return ServiceUtil.returnError("There was an error while creating Invoice for  TransporterCommission: " + ServiceUtil.getErrorMessage(result));          	            
-				    	            } 
-				    				if (generationFailed) {
-				    					periodBilling.set("statusId", "GENERATION_FAIL");
-				    					periodBilling.store();	
-				    				} 
-				                // call service for creation invoice);
-				                invoiceId = (String) createInvoiceResult.get("invoiceId");
-				                Map<String, Object> resMap = null;
-				                Map<String, Object> invoiceItemAssocResultMap = null;
-				                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_ROUTE","quantity",quantity,"amount", totalMargin,"userLogin", userLogin));
-				                    if (ServiceUtil.isError(result)) {
-				                    	generationFailed = true;
-				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
-				                    }
-				                    //Fines Item
-				                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_RECOVERY_ITEM","quantity",quantity,"amount", totalFine.negate(),"userLogin", userLogin));
-				                    if (ServiceUtil.isError(result)) {
-				                    	generationFailed = true;
-				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
-				                    }
-				                    //for TDS Commission.
-				                   /* BigDecimal tdsMargin= totalMargin.divide(new BigDecimal(10));//for tax
-				                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "TDS_194H","quantity",quantity,"amount", tdsMargin,"userLogin", userLogin));
-				                    if (ServiceUtil.isError(result)) {
-				                    	generationFailed = true;
-				    	                Debug.logWarning("There was an error while creating  the TDS InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
-				                    }*/
-				                    Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
-				    	             invoiceCtx.put("userLogin", userLogin);
-				    	             invoiceCtx.put("statusId","INVOICE_APPROVED");
-				    	             try{
-				    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
-				    	             	if (ServiceUtil.isError(invoiceResult)) {
-				    	             		Debug.logError(invoiceResult.toString(), module);
-				    	                     return ServiceUtil.returnError(null, null, null, invoiceResult);
-				    	                 }	             	
-				    	             }catch(GenericServiceException e){
-				    	             	 Debug.logError(e, e.toString(), module);
-				    	                 return ServiceUtil.returnError(e.toString());
-				    	             }  
-				    	             //set to Ready for Posting
-				    	             invoiceCtx.put("userLogin", userLogin);
-				    	             invoiceCtx.put("statusId","INVOICE_READY");
-				    	             try{
-				    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
-				    	             	if (ServiceUtil.isError(invoiceResult)) {
-				    	             		Debug.logError(invoiceResult.toString(), module);
-				    	                     return ServiceUtil.returnError(null, null, null, invoiceResult);
-				    	                 }	             	
-				    	             }catch(GenericServiceException e){
-				    	             	 Debug.logError(e, e.toString(), module);
-				    	                 return ServiceUtil.returnError(e.toString());
-				    	             }  
-				            }
-						
-					}//end of while
-				}
-					
 				}catch (GenericEntityException e) {
 					Debug.logError(e, module);
 					
@@ -517,7 +400,156 @@ import java.text.SimpleDateFormat;
 		}
 	return resultValue;		
 	}
-		
+			
+			public static Map<String, Object> createDTCInvoice (DispatchContext dctx, Map<String, ? extends Object> context) {
+		    	Delegator delegator = dctx.getDelegator();
+		    	TimeZone timeZone = TimeZone.getDefault();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();       
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		    	Locale locale = (Locale) context.get("locale");
+		        Map<String, Object> result = new HashMap<String, Object>();
+		        String periodBillingId = (String) context.get("periodBillingId");
+		        GenericValue periodBilling = null;
+		        String customTimePeriodId="";
+		        try{
+		        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+		        	 customTimePeriodId =  periodBilling.getString("customTimePeriodId");
+		        }catch (GenericEntityException e) {
+		    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+		    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+				}   
+		        GenericValue customTimePeriod;
+				try {
+					customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+				} catch (GenericEntityException e1) {
+					Debug.logError(e1,"Error While Finding Customtime Period");
+			    /*	periodBilling.set("statusId", "GENERATION_FAIL");
+					periodBilling.store();*/
+					return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+				}
+				
+				Map<String, Object> updateRecvoryRes=updateFineRecvoryWithBilling(dctx , UtilMisc.toMap("customTimePeriodId", customTimePeriodId,"periodBillingId",periodBillingId,"userLogin",userLogin));
+				if (ServiceUtil.isError(updateRecvoryRes)) {
+		    		//generationFailed = true;
+	                Debug.logWarning("There was an error while populating updateRecvory: " + ServiceUtil.getErrorMessage(updateRecvoryRes), module);
+	        		return ServiceUtil.returnError("There was an error while populating updateRecvory: " + ServiceUtil.getErrorMessage(updateRecvoryRes));          	            
+	            } 
+				Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+				Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+				
+				Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
+				Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
+			Map facilityRecoveryResultMap =(Map) getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"userLogin",userLogin));
+			Map partyWiseRecvoryMap=(Map)facilityRecoveryResultMap.get("partyRecoveryInfoMap");
+			Map transporterTradeResultMap=getTransporterTotalsForPeriodBilling(dctx, UtilMisc.toMap("periodBillingId",(Object)periodBillingId));
+			//Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("routeTradingMap");
+			Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
+			
+			if(UtilValidate.isNotEmpty(totalPartyTradingTotalMap)){
+			Iterator partyMarginsIter = totalPartyTradingTotalMap.entrySet().iterator();
+			try{
+			while (partyMarginsIter.hasNext()) {
+				Map.Entry partyEntry = (Entry) partyMarginsIter.next();	
+				String invoiceId="";
+				//String facilityId = (String) routeEntry.getKey();	
+				
+				String partyIdTo = (String) partyEntry.getKey();	
+				Map partyWiseValues = (Map) partyEntry.getValue();
+				BigDecimal totalMargin = (BigDecimal) partyWiseValues.get("totalMargin");
+				BigDecimal quantity = BigDecimal.ONE;
+				BigDecimal totalFine = BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(partyWiseRecvoryMap) && UtilValidate.isNotEmpty(partyWiseRecvoryMap.get(partyIdTo))){
+					Map partyFinesMap=(Map)partyWiseRecvoryMap.get(partyIdTo);
+					totalFine=(BigDecimal)partyFinesMap.get("totalFine");
+				}
+				Debug.log("===partyIdTo==="+partyIdTo+"=====Fine="+totalFine+"===Commission="+totalMargin);
+				/*GenericValue facilityDetail = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId) ,false);
+				String partyIdTo = facilityDetail.getString("ownerPartyId");*/
+				// heree Invoice Raised by Transporter
+				 if (UtilValidate.isEmpty(invoiceId)&& UtilValidate.isNotEmpty(partyIdTo)) {
+		                Map<String, Object> createInvoiceContext = FastMap.newInstance();
+		                createInvoiceContext.put("partyId", "Company");
+		                createInvoiceContext.put("partyIdFrom", partyIdTo);
+		                //createInvoiceContext.put("billingAccountId", billingAccountId);
+		                createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
+		                createInvoiceContext.put("dueDate", monthEnd);
+		                //createInvoiceContext.put("invoiceTypeId", "TRANSPORTER_OUT");
+		                createInvoiceContext.put("invoiceTypeId", "SALES_DIS_OUT");
+		                createInvoiceContext.put("referenceNumber", "TRSPT_MRGN_"+periodBillingId);
+		                // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
+		                createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
+		                createInvoiceContext.put("currencyUomId", "INR");
+		                createInvoiceContext.put("userLogin", userLogin);
+
+		                // store the invoice first
+		                Map<String, Object> createInvoiceResult = dispatcher.runSync("createInvoice", createInvoiceContext);
+		                	if (ServiceUtil.isError(result)) {
+		    		    		//generationFailed = true;
+		    	                Debug.logWarning("There was an error while creating  Invoice For TransporterCommission: " + ServiceUtil.getErrorMessage(result), module);
+		    	        		return ServiceUtil.returnError("There was an error while creating Invoice for  TransporterCommission: " + ServiceUtil.getErrorMessage(result));          	            
+		    	            } 
+		    				/*if (generationFailed) {
+		    					periodBilling.set("statusId", "GENERATION_FAIL");
+		    					periodBilling.store();	
+		    				} */
+		                // call service for creation invoice);
+		                invoiceId = (String) createInvoiceResult.get("invoiceId");
+		                Map<String, Object> resMap = null;
+		                Map<String, Object> invoiceItemAssocResultMap = null;
+		                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_ROUTE","quantity",quantity,"amount", totalMargin,"userLogin", userLogin));
+		                    if (ServiceUtil.isError(result)) {
+		                    	//generationFailed = true;
+		    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
+		                    }
+		                    //Fines Item
+		                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_RECOVERY_ITEM","quantity",quantity,"amount", totalFine.negate(),"userLogin", userLogin));
+		                    if (ServiceUtil.isError(result)) {
+		                    	//generationFailed = true;
+		    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
+		                    }
+		                    //for TDS Commission.
+		                   /* BigDecimal tdsMargin= totalMargin.divide(new BigDecimal(10));//for tax
+		                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "TDS_194H","quantity",quantity,"amount", tdsMargin,"userLogin", userLogin));
+		                    if (ServiceUtil.isError(result)) {
+		                    	generationFailed = true;
+		    	                Debug.logWarning("There was an error while creating  the TDS InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
+		                    }*/
+		                    Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+		    	             invoiceCtx.put("userLogin", userLogin);
+		    	             invoiceCtx.put("statusId","INVOICE_APPROVED");
+		    	             try{
+		    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+		    	             	if (ServiceUtil.isError(invoiceResult)) {
+		    	             		Debug.logError(invoiceResult.toString(), module);
+		    	                     return ServiceUtil.returnError(null, null, null, invoiceResult);
+		    	                 }	             	
+		    	             }catch(GenericServiceException e){
+		    	             	 Debug.logError(e, e.toString(), module);
+		    	                 return ServiceUtil.returnError(e.toString());
+		    	             }  
+		    	             //set to Ready for Posting
+		    	             invoiceCtx.put("userLogin", userLogin);
+		    	             invoiceCtx.put("statusId","INVOICE_READY");
+		    	             try{
+		    	             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+		    	             	if (ServiceUtil.isError(invoiceResult)) {
+		    	             		Debug.logError(invoiceResult.toString(), module);
+		    	                     return ServiceUtil.returnError(null, null, null, invoiceResult);
+		    	                 }	             	
+		    	             }catch(GenericServiceException e){
+		    	             	 Debug.logError(e, e.toString(), module);
+		    	                 return ServiceUtil.returnError(e.toString());
+		    	             }  
+		            }
+				
+			}//end of while
+			}catch(GenericServiceException e){
+            	 Debug.logError(e, e.toString(), module);
+                return ServiceUtil.returnError(e.toString());
+			}
+		}//end of if
+			return result;
+		}
 		
 		public static Map<String, Object> cancelTransporterMarginReport(DispatchContext dctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = dctx.getDelegator();
@@ -555,8 +587,6 @@ import java.text.SimpleDateFormat;
 	        return result;
 	    }
 		   
-		
-		
 		 public static Map<String, Object> cancelTransporterMarginInvoice(DispatchContext dctx, Map<String, ? extends Object> context) {
 		    	Delegator delegator = dctx.getDelegator();
 		        LocalDispatcher dispatcher = dctx.getDispatcher();       
@@ -1385,8 +1415,18 @@ import java.text.SimpleDateFormat;
 				String description=(String)context.get("description");
 		    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
-				
+				List conditionList=FastList.newInstance();
 				try {
+	                conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_LMS_TRSPT_MRGN"));
+	                conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+	                conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		        		List<GenericValue> periodBillingList = FastList.newInstance();
+		        		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);	 
+		        		if(UtilValidate.isNotEmpty(periodBillingList)){
+		        			 Debug.logError("Billing Is Already Generated For This Period", module);
+		        			 return ServiceUtil.returnError("Billing Is Already Generated For This Period  and You Can Not Crete Recovery!");   
+		        		}
 					GenericValue facilityRecovery = delegator.makeValue("FineRecovery");
 	    			facilityRecovery.put("facilityId", facilityId );
 	    			facilityRecovery.put("customTimePeriodId", customTimePeriodId);
@@ -1742,6 +1782,7 @@ import java.text.SimpleDateFormat;
 		        result.put("partyList", partyList);
 		        return result;
 		    }
+		    
 }
 
 

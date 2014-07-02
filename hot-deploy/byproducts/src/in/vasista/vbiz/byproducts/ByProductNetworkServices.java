@@ -6699,7 +6699,33 @@ public class ByProductNetworkServices {
 
 		return result;
 	}
-
+	
+	
+	public static Map<String, Object> getRouteDistance(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map result = ServiceUtil.returnSuccess();
+		  Map<String , Object> inputRateAmt = FastMap.newInstance();
+		  inputRateAmt.putAll(context);
+			BigDecimal facilitySize = BigDecimal.ONE;
+		  try{
+			   Map<String, Object> facilitySizeResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+			   if(UtilValidate.isNotEmpty(facilitySizeResult)){
+				   BigDecimal tempFacilitySize=(BigDecimal) facilitySizeResult.get("rateAmount");
+				   if (tempFacilitySize.compareTo(BigDecimal.ZERO) > 0)
+		   			facilitySize = (BigDecimal) facilitySizeResult.get("rateAmount");
+		   		}	
+				if (ServiceUtil.isError(facilitySizeResult)) {
+	   			Debug.logWarning("There was an error while getting Facility Size: " + ServiceUtil.getErrorMessage(result), module);
+	       		return ServiceUtil.returnError("There was an error while getting Facility Size: " + ServiceUtil.getErrorMessage(result));          	            
+	           }
+			} catch (Exception e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+		   result.put("facilitySize", facilitySize);
+		return result;
+	}
 	// Payment services
 	public static Map<String, Object> createPaymentForBooth(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
