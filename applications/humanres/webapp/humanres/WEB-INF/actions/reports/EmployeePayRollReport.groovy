@@ -26,6 +26,8 @@ if (parameters.customTimePeriodId == null) {
 }
 dctx = dispatcher.getDispatchContext();
 
+
+
 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
 context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 context.timePeriodEnd= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
@@ -82,10 +84,10 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillingId = periodBillDetails.get("periodBillingId");
 	payConList=[];
 	payConList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS ,periodBillingId));
-	//payConList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,parameters.partyId));
+	if(UtilValidate.isNotEmpty(parameters.employeeId))
+		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,parameters.employeeId));
 	payCond = EntityCondition.makeCondition(payConList,EntityOperator.AND);
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
-	
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
 		payRollHeaderList.each{ payRollHead->
 			payrollHeaderId=payRollHead.get("payrollHeaderId");
@@ -215,6 +217,21 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 	}
 	
 }
+
+
+parameters.periodBillingId=periodBillingId;
+orgPartyId = null;
+payrollHeaderList = delegator.findList("PayrollHeader",EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, parameters.periodBillingId) , null, null, null, false);
+if(UtilValidate.isNotEmpty(payrollHeaderList)){
+	payrollHeader = payrollHeaderList[0];
+	if(UtilValidate.isNotEmpty(payrollHeader)){
+		orgPartyId = payrollHeader.partyId;
+		
+	}
+}
+parameters.partyId=orgPartyId;
+
+
 context.put("InstallmentFinalMap",InstallmentFinalMap);
 context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
