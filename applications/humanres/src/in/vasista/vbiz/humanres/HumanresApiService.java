@@ -66,31 +66,34 @@ public class HumanresApiService {
             	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, periodBillingId));
             	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, employeeId));
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+Debug.logInfo("getEmployeePayslips: condition->" + condition, module);		             	
             	List payrollHeaders = delegator.findList("PayrollHeader", condition, null, null, null, false);
-        		GenericValue payrollHeader = EntityUtil.getFirst(payrollHeaders);      
-            	Map<String, Object> payroll = FastMap.newInstance();
-            	String payrollHeaderId = payrollHeader.getString("payrollHeaderId");
-            	payroll.put("payrollHeaderId", payrollHeaderId);
-    			Date thruDate = period.getDate("thruDate");
-    			String payrollPeriod = UtilDateTime.toDateString(thruDate ,"MMM yyyy");            	
-            	payroll.put("payrollPeriod", payrollPeriod);
-            	BigDecimal netAmount = BigDecimal.ZERO;
-                List payrollItems = FastList.newInstance();
-            	conditionList.clear();
-            	conditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, payrollHeaderId));
-            	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-            	List payrollHeaderItems = delegator.findList("PayrollHeaderItem", condition, null, null, null, false);
-            	for (int j = 0; j < payrollHeaderItems.size(); ++j) {
-            		Map<String, Object> payrollItem = FastMap.newInstance();
-            		GenericValue payrollHeaderItem = (GenericValue)payrollHeaderItems.get(j);
-            		BigDecimal amount = payrollHeaderItem.getBigDecimal("amount");
-            		netAmount = netAmount.add(amount);
-            		payrollItem.put(payrollHeaderItem.getString("payrollHeaderItemTypeId"), amount);
-            		payrollItems.add(payrollItem);
+            	if (payrollHeaders.size() > 0)  {
+            		GenericValue payrollHeader = EntityUtil.getFirst(payrollHeaders);      
+            		Map<String, Object> payroll = FastMap.newInstance();
+            		String payrollHeaderId = payrollHeader.getString("payrollHeaderId");
+            		payroll.put("payrollHeaderId", payrollHeaderId);
+            		Date thruDate = period.getDate("thruDate");
+            		String payrollPeriod = UtilDateTime.toDateString(thruDate ,"MMM yyyy");            	
+            		payroll.put("payrollPeriod", payrollPeriod);
+            		BigDecimal netAmount = BigDecimal.ZERO;
+            		List payrollItems = FastList.newInstance();
+            		conditionList.clear();
+            		conditionList.add(EntityCondition.makeCondition("payrollHeaderId", EntityOperator.EQUALS, payrollHeaderId));
+            		condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+            		List payrollHeaderItems = delegator.findList("PayrollHeaderItem", condition, null, null, null, false);
+            		for (int j = 0; j < payrollHeaderItems.size(); ++j) {
+            			Map<String, Object> payrollItem = FastMap.newInstance();
+            			GenericValue payrollHeaderItem = (GenericValue)payrollHeaderItems.get(j);
+            			BigDecimal amount = payrollHeaderItem.getBigDecimal("amount");
+            			netAmount = netAmount.add(amount);
+            			payrollItem.put(payrollHeaderItem.getString("payrollHeaderItemTypeId"), amount);
+            			payrollItems.add(payrollItem);
+            		}
+            		payroll.put("netAmount", netAmount);            	
+            		payroll.put("payrollItems", payrollItems);
+            		result.add(payroll);
             	}
-            	payroll.put("netAmount", netAmount);            	
-            	payroll.put("payrollItems", payrollItems);
-            	result.add(payroll);
         	}
         } catch (Exception e) {
         	Debug.logError(e, "Error fetching employee payslips", module);
