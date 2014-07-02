@@ -57,6 +57,8 @@ public class HumanresApiService {
         		GenericValue period = (GenericValue)customTimePeriods.get(i);
         		String periodId = period.getString("customTimePeriodId");
             	conditionList.clear();
+            	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));            	
+            	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
             	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, periodId));
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
             	List periodBillings = delegator.findList("PeriodBilling", condition, null, null, null, false);
