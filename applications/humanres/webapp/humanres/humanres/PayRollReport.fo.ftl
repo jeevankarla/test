@@ -33,9 +33,9 @@ under the License.
     <#assign doj=0 />
     <#assign emplPosition=0 />
     <#assign location=0 />
+    <#if payRollMap?has_content>
     <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
      <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", parameters.partyId, "userLogin", userLogin))/>
-    <#if payRollMap?has_content>
     	<#assign payRollHeaderList = payRollMap.entrySet()>
       <#list payRollHeaderList as payRollHeader>
       	<#assign totalEarnings =0 />
