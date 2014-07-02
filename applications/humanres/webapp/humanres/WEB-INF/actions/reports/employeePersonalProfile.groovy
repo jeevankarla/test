@@ -20,6 +20,9 @@
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.condition.EntityConditionBuilder;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.EntityUtil;
+
 
 partyId=parameters.employeeId;
 orgId=parameters.partyIdFrom;
@@ -80,20 +83,7 @@ if(orgId != null && (partyId == null || UtilValidate.isEmpty(partyId))){
 employeeProfileList = UtilMisc.sortMaps(employeeProfileList, UtilMisc.toList("partyIdTo"));
 context.employeeProfileList=employeeProfileList;
 context.employeeId = partyId;
-
 context.partyIdFrom = orgId;
 context.orgParties=employeeProfileList.partyIdTo;
-
-orgPartyId = null;
-payrollHeaderList = delegator.findList("PayrollHeader",EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, parameters.periodBillingId) , null, null, null, false);
-if(UtilValidate.isNotEmpty(payrollHeaderList)){
-	payrollHeader = payrollHeaderList[0];
-	if(UtilValidate.isNotEmpty(payrollHeader)){
-		orgPartyId = payrollHeader.partyId;
-	}
-}
-parameters.partyId=orgPartyId;
-
-
 
 
