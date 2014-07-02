@@ -62,7 +62,7 @@ context.facilityWorkOrdrNumMap = facilityWorkOrdrNumMap;//workOrder Numbers
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.EQUALS , monthBegin));
-//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01")));
+//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01","S02","S03")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 EntityFindOptions findOptions = new EntityFindOptions();
 routesList = delegator.findList("FacilityAndCommission",condition,["facilityId"]as Set, UtilMisc.toList("parentFacilityId","facilityId"),findOptions,false);
@@ -80,10 +80,13 @@ routesList.each{ route ->
 	grTotalMap["grTotRtAmount"]=BigDecimal.ZERO;
 	grTotalMap["grTotpendingDue"]=BigDecimal.ZERO;
 	grTotalMap["monthBill"]=BigDecimal.ZERO;
-	for(int i=1 ; i <= (UtilDateTime.getIntervalInDays(monthBegin,monthEnd)+1); i++){
-		dayOfMonth = i;
-		dayTotalsMap[(String)i] = [:];
-		dayTotalsMap[(String)i].putAll(routeMarginMap);
+	
+	for(int i=0 ; i <= (UtilDateTime.getIntervalInDays(monthBegin,monthEnd)); i++){
+		currentDate=UtilDateTime.addDaysToTimestamp(monthBegin,i);
+		dayOfMonth=UtilDateTime.getDayOfMonth(currentDate ,timeZone, locale);
+		dayTotalsMap[(String)dayOfMonth] = [:];
+		dayTotalsMap[(String)dayOfMonth].putAll(routeMarginMap);
+	
 	}
 	routesRateAmount =[:];
 	dayTotalsMap["Tot"] =[:];
@@ -94,7 +97,7 @@ routesList.each{ route ->
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS , periodBillingId));
 //conditionList.add(EntityCondition.makeCondition("commissionDate", EntityOperator.EQUALS , monthBegin));
-//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01")));
+//conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN ,UtilMisc.toList("S01","S02","S03")));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityCommissionList = delegator.findList("FacilityCommission",condition , null, ["commissionDate"], null, false);
 
@@ -126,6 +129,8 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		routeValueMap =[:];
 		totalsMap =[:];
 		totalsMap = dayValuesMap["Tot"];
+		
+		
 		totalsMap.put("partyCode", facility.ownerPartyId);
 		totalsMap.put("distance", facility.facilitySize);
 		String partyName = "";
