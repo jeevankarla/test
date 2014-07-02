@@ -26,7 +26,8 @@ import in.vasista.vbiz.byproducts.TransporterServices;
 
 
 dctx = dispatcher.getDispatchContext();
-customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
+
+/*customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
 fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 
@@ -35,6 +36,31 @@ context.put("thruDateTime", thruDateTime);
 
 monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
+totalDays=UtilDateTime.getIntervalInDays(monthBegin,monthEnd);
+context.put("totalDays", totalDays+1);
+*/
+
+month = parameters.month;
+if(UtilValidate.isEmpty(month)){
+	Debug.logError("Month Cannot Be Empty","");
+	context.errorMessage = "Month Cannot Be Empty";
+	return;
+}
+
+def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+try {
+	monthTime = new java.sql.Timestamp(sdf.parse(month+"-01 00:00:00").getTime());
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: ", "");
+}
+
+locale = Locale.getDefault();
+timeZone = TimeZone.getDefault();
+
+Timestamp monthBegin = UtilDateTime.getMonthStart(monthTime);
+Timestamp monthEnd = UtilDateTime.getMonthEnd(monthTime, timeZone, locale);
+context.put("monthBegin", monthBegin);
+context.put("monthEnd", monthEnd);
 totalDays=UtilDateTime.getIntervalInDays(monthBegin,monthEnd);
 context.put("totalDays", totalDays+1);
 

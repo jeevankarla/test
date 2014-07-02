@@ -116,7 +116,29 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
-
+//for Month Picker
+	$(document).ready(function(){
+    	$(".monthPicker").datepicker( {
+	        changeMonth: true,
+	        changeYear: true,
+	        showButtonPanel: true,
+	        dateFormat: 'yy-mm',
+	        onClose: function(dateText, inst) { 
+	            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+	            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+	            $(this).datepicker('setDate', new Date(year, month, 1));
+	        }
+		});
+		$(".monthPicker").focus(function () {
+	        $(".ui-datepicker-calendar").hide();
+	        $("#ui-datepicker-div").position({
+	            my: "center top",
+	            at: "center bottom",
+	            of: $(this)
+	        });    
+	     });
+	});
+	
 </script>
 	<div >
 <#if screenFlag?exists && screenFlag.equals("MiscReports") && security.hasEntityPermission("BYPRODUCTS", "_MISCREPOR", session)>
@@ -735,13 +757,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					 <tr class="alternate-row">
 						<form id="DTCCostReport" name="DTCCostReport" method="post" action="<@ofbizUrl>DTCCostReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">DTC Cost Report</td>
-							<td width="15%">Period
-	  							<select name="customTimePeriodId" class='h4'>
-	            					<#list dtcTimePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-	            					</#list>            
-								</select>
-	      					</td>
+							<td width="15%">Month: <input type='text' id='month' name='month' onmouseover='monthPicker()' class="monthPicker"/></td>
 	      					<td width="15%"></td>
 	      					<td width="15%"></td>
 	      					<td width="15%"></td>
