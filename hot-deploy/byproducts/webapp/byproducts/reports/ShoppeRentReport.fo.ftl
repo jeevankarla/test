@@ -26,13 +26,14 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        
+      <#if finalList?has_content> 	    
         ${setRequestAttribute("OUTPUT_FILENAME", "channelWiseDespatch.txt")}
         <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
         <fo:static-content flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-            </fo:static-content>		    	
+            </fo:static-content>	
+              	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">	
 		        	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;     KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;    UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
@@ -42,8 +43,6 @@ under the License.
 		        		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">SL   BVB	   BVB 										       RENT	       TAX  		   TOTAL 				REMARKS</fo:block> 
 		        		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">NO   CODE   NAME 									       AMOUNT 	    AMOUNT 		&#160; 				&#160;</fo:block> 
 		        		<fo:block text-align="left"  keep-together="always"   white-space-collapse="false">========================================================================</fo:block> 
-		           	
-		        	 <#if finalList?has_content> 	
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="35pt"/>

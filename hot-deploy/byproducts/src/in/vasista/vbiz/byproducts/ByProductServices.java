@@ -436,12 +436,12 @@ public class ByProductServices {
 	            Debug.logError(e, "Error calling runSubscriptionAutoCreateOrders service", module);
 	            return ServiceUtil.returnError(e.getMessage());
 	        }  
+	      	Timestamp pMonthEnd=UtilDateTime.getMonthEnd(estimatedDeliveryDate,TimeZone.getDefault(),Locale.getDefault());
+  			int endDay=UtilDateTime.getDayOfMonth(pMonthEnd,TimeZone.getDefault(),Locale.getDefault());
 	      	int day=UtilDateTime.getDayOfMonth(estimatedDeliveryDate,TimeZone.getDefault(),Locale.getDefault());
-	        if(day==05){
+	        if(day==endDay){
 	        try{
-	        	Timestamp newDate=UtilDateTime.getMonthStart(estimatedDeliveryDate);
-	  			Timestamp pMonthStart=UtilDateTime.getMonthStart(UtilDateTime.addDaysToTimestamp(newDate, -1));
-	  			Timestamp pMonthEnd=UtilDateTime.getMonthEnd(UtilDateTime.addDaysToTimestamp(newDate, -1),TimeZone.getDefault(),Locale.getDefault());
+	        	Timestamp pMonthStart=UtilDateTime.getMonthStart(estimatedDeliveryDate);
 	        	Map createInvoiceForShopeeRentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
 	        	createInvoiceForShopeeRentHelperCtx.put("dueDate", estimatedDeliveryDate);
 	        	createInvoiceForShopeeRentHelperCtx.put("fromDate", pMonthStart);
@@ -450,7 +450,7 @@ public class ByProductServices {
 	     		  if (ServiceUtil.isError(result)) {
 	     			  String errMsg =  ServiceUtil.getErrorMessage(result);
 	     			  Debug.logError(errMsg , module);
-	     			  return ServiceUtil.returnError("error in shopee rent Generation ");
+	     			  return ServiceUtil.returnError("error in shoppee rent Generation ");
 	     		  }
 	     		  
 	     	  }catch (Exception e) {
@@ -1470,8 +1470,10 @@ public class ByProductServices {
     		}
         }
         Timestamp estimatedShipDate=shipment.getTimestamp("estimatedShipDate");
+        Timestamp pMonthEnd=UtilDateTime.getMonthEnd(estimatedShipDate,TimeZone.getDefault(),Locale.getDefault());
+		int endDay=UtilDateTime.getDayOfMonth(pMonthEnd,TimeZone.getDefault(),Locale.getDefault());
         int day=UtilDateTime.getDayOfMonth(estimatedShipDate,TimeZone.getDefault(),Locale.getDefault());
- 		if(day==5){
+ 		if(day==endDay){
  			String shipmentTypeId=shipment.getString("shipmentTypeId");
 	        try {
 		        List shipmentIdList = ByProductNetworkServices.getShipmentIds(delegator,UtilDateTime.toDateString(estimatedShipDate, "yyyy-MM-dd HH:mm:ss"), shipmentTypeId);
@@ -5576,9 +5578,8 @@ public class ByProductServices {
 	 		String customTimePeriodId = "";
 	 		List<String> periodBillingIds =FastList.newInstance();
 			try{
-		          Timestamp newDate=UtilDateTime.getMonthStart(estimatedShipDate);
-		    	  pMonthStart=UtilDateTime.getMonthStart(UtilDateTime.addDaysToTimestamp(newDate, -1));
-		    	  pMonthEnd=UtilDateTime.getMonthEnd(UtilDateTime.addDaysToTimestamp(newDate, -1),TimeZone.getDefault(),Locale.getDefault());
+		    	  pMonthStart=UtilDateTime.getMonthStart(estimatedShipDate);
+		    	  pMonthEnd=UtilDateTime.getMonthEnd(estimatedShipDate,TimeZone.getDefault(),Locale.getDefault());
 		    	  Map<String, Object> resultMap=dispatcher.runSync("getCustomTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",pMonthStart,"thruDate",pMonthEnd,"userLogin", userLogin));   
 		    	  if (ServiceUtil.isError(resultMap)) {
 	                	Debug.logError("Error getting Custom Time Period", module);	

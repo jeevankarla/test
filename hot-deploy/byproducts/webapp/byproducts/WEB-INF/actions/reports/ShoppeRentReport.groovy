@@ -1,6 +1,7 @@
 import org.ofbiz.base.util.*;
 import java.math.RoundingMode;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,34 +29,43 @@ context.put("dayStartThruDate", dayStartThruDate);
 
 printDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "dd/MM/yyyy");
 context.printDate = printDate;
-//decimals = UtilNumber.getBigDecimalScale("ledger.decimals");
-//rounding = UtilNumber.getBigDecimalRoundingMode("ledger.rounding");
 
 finalList =[];
 facilityIdsList =[];
-facilityList= (ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, "SHP_RTLR" ,dayBegin)).get("boothActiveList");
-facilityIdsList = EntityUtil.getFieldListFromEntityList(facilityList, "facilityId", true);
-//facilityIdsList=ByProductNetworkServices.getAllBooths(delegator,null).get("boothsList");
-facilityIdsList. each {facilityId ->
-	facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
-	boothFacilityId = facilityDetails.get("facilityId");
-	facilityName = facilityDetails.get("description");
-	Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
-	inputRateAmt.put("rateCurrencyUomId", "INR");
-	inputRateAmt.put("facilityId", boothFacilityId);
-	inputRateAmt.put("fromDate",dayBegin);
-	inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
+conditionList =[];
+Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",parameters.customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));
+List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+
+if (UtilValidate.isNotEmpty(periodBillingList)) {
+	periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
+
+	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillingIds));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL  ,"INVOICE_CANCELLED"));
 	
-	facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
-	BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
-	BigDecimal basicRateAmount = (rateAmount.divide(new BigDecimal(1.1236) , 0, rounding));
-	
-	tempMap =[:];
-	tempMap.put("boothId", boothFacilityId);
-	tempMap.put("facilityName", facilityName);
-	tempMap.put("rateAmount", rateAmount);
-	tempMap.put("basicRateAmount", basicRateAmount);
-	finalList.addAll(tempMap);
+	cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	invoiceList = delegator.findList("Invoice", cond, ["facilityId"] as Set , null, null, false);
+	facilityIdsList = EntityUtil.getFieldListFromEntityList(invoiceList, "facilityId", true);
+	facilityIdsList. each {facilityId ->
+		facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
+		boothFacilityId = facilityDetails.get("facilityId");
+		facilityName = facilityDetails.get("description");
+		Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
+		inputRateAmt.put("rateCurrencyUomId", "INR");
+		inputRateAmt.put("facilityId", boothFacilityId);
+		inputRateAmt.put("fromDate",dayBegin);
+		inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
+		
+		facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+		BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
+		BigDecimal basicRateAmount = (rateAmount.divide(new BigDecimal(1.1236) , 0, rounding));
+		
+		tempMap =[:];
+		tempMap.put("boothId", boothFacilityId);
+		tempMap.put("facilityName", facilityName);
+		tempMap.put("rateAmount", rateAmount);
+		tempMap.put("basicRateAmount", basicRateAmount);
+		finalList.addAll(tempMap);
+	}
 }
 context.putAt("finalList", finalList);
 
