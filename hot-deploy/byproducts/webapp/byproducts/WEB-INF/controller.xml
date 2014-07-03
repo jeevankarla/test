@@ -977,6 +977,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DTCFinesAndPenaltiesReportPDF"/>
     </request-map>
+    <request-map uri="DTCBillingReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="DTCBillingReportPDF"/>
+    </request-map>
     <request-map uri="chequeReturnReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="chequeReturnReportPDF"/>
@@ -1158,7 +1162,8 @@
 	<view-map name="BoothPaymentsCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothPaymentsCSV"  content-type="text/csv"/>
 	<view-map name="EmployeeReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#EmployeeReportCSV"  content-type="text/csv"/>
 	<view-map name="DTCFinesAndPenaltiesReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCFinesAndPenaltiesReportPDF" content-type="application/pdf"/>
-	
+	<view-map name="DTCBillingReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCBillingReportPDF" content-type="application/pdf"/>
+		
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>
 	<view-map name="RouteComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#RouteComparison"/>
