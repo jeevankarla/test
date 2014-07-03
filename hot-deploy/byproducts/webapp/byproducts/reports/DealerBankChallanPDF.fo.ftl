@@ -47,7 +47,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
         	         	<#assign accNumber = finDetail.get('accountCode')?if_exists>
         	         	<#assign bankName = finDetail.get('bankName')?if_exists>
         	           </#if>
-        	          <#assign facility = delegator.findOne("Facility", {"facilityId" :facilityId}, true)>
+        	           <#assign facility = {}>
+        	           <#if isByParty>
+        	           		<#assign facility = delegator.findOne("PartyAndPerson", {"partyId" :facilityId}, true)>
+        	           <#else>
+        	           		<#assign facility = delegator.findOne("Facility", {"facilityId" :facilityId}, true)>
+        	           </#if>
+        	          
         	           <#assign boothSaleDetails = boothSaleMap.getValue()>
         	                    
         	           <#assign amSaleDetails =boothSaleDetails.get("AM")>
@@ -105,7 +111,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  RETAILER NAME:&#160;${facility.facilityName}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="8pt" keep-together="always">  RETAILER NAME:&#160;<#if facility?exists && isByParty>${facility.firstName?if_exists} ${facility.lastName?if_exists}<#else>${facility.facilityName?if_exists}</#if></fo:block>
 																		</fo:table-cell>
 																	</fo:table-row>
 																	<fo:table-row>
@@ -316,7 +322,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "bankChallan.txt")}
 																	</fo:table-row>
 																	<fo:table-row>
 																		<fo:table-cell>
-																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">RETAILER NAME: &#160;${facility.facilityName}</fo:block>
+																			<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">RETAILER NAME: &#160;<#if facility?exists && isByParty>${facility.firstName?if_exists} ${facility.lastName?if_exists}<#else>${facility.facilityName?if_exists}</#if></fo:block>
 																		</fo:table-cell>
 																		<fo:table-cell>
 																				<fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace" font-size="10pt" keep-together="always">&#160;</fo:block>

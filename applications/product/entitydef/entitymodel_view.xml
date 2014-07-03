@@ -242,7 +242,8 @@ under the License.
 	    <alias entity-alias="FA" name="parentFacilityId"/>
 	    <alias entity-alias="FA" name="facilityTypeId"/>
 	    <alias entity-alias="FA" name="categoryTypeEnum"/> -->
-	    <alias entity-alias="FG" name="ownerFacilityId"/> 
+	    <alias entity-alias="FG" name="ownerFacilityId"/>
+	    <alias entity-alias="FG" name="primaryParentGroupId"/> 
 	    <alias entity-alias="FG" name="facilityGroupTypeId"/> 
 	     <view-link entity-alias="FGM" rel-entity-alias="FG">
             <key-map field-name="facilityGroupId"/>

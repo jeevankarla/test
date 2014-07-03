@@ -89,6 +89,7 @@
          <field name="bankChallan" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name="bankChallan">
             <hyperlink target="DealerBankChallan.txt" description="BankChallan" target-window="_blank" >
                	  <parameter param-name="supplyDate"  value="${groovy: return org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate,&quot;MMMM dd, yyyy&quot;)}"/>
+               	  <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/>
             </hyperlink>
         </field>
         <field name="InvoiceSlips" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;GENERATED&quot;" event="onclick" action="javascript:appendRoute(this);" id-name = "invoiceSlips">

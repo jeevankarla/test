@@ -23,6 +23,7 @@ import org.ofbiz.accounting.invoice.*;
 dctx = dispatcher.getDispatchContext();
 routeIdsList =[];
 shipmentIds = [];
+isByParty = Boolean.TRUE;
 Timestamp estimatedDeliveryDateTime = null;
 if(parameters.supplyDate){
 	
@@ -41,7 +42,7 @@ if(parameters.supplyDate){
 	Debug.logError("==unparsable Date=="+parameters.supplyDate,e.toString())
 	}*/
 }else{
-estimatedDeliveryDateTime=UtilDateTime.nowTimestamp();
+	estimatedDeliveryDateTime=UtilDateTime.nowTimestamp();
 }
 context.put("estimatedDeliveryDate", estimatedDeliveryDateTime);
 
@@ -59,7 +60,14 @@ if(day==5){
 	invoices = delegator.findList("Invoice", cond, null, null, null, false);
 	
 	invoices.each{ eachInvoice ->
-		facilityId = eachInvoice.facilityId
+		facilityId = "";
+		if(isByParty){
+			facilityId = eachInvoice.partyId;
+		}
+		else{
+			facilityId = eachInvoice.facilityId;
+		}
+		
 		invoiceAmount = InvoiceWorker.getInvoiceTotal(eachInvoice);
 		if(invoiceAmount>0){
 			rentInvoicesMap.put(facilityId, invoiceAmount);
@@ -68,7 +76,6 @@ if(day==5){
 	context.rentInvoiceAmt =  rentInvoicesMap;
 	
 }
-
 productNames = [:];
 
 shipments = [];
@@ -84,17 +91,32 @@ if(parameters.shipmentId){
 	    parameters.routeId = "All-Routes";
 	}
 }
+
+/*shipmentType = "";
+if(parameters.shipmentTypeId == "PM_SHIPMENT"){
+	shipmentType = "onlyPMShip";
+	result = ByProductNetworkServices.getBoothsByAMPM(delegator, [effectiveDate: estimatedDeliveryDateTime]);
+	amPartyBooths = result.get("amPartyBooths");
+	pmPartyBooths = result.get("pmPartyBooths");
+	pmPartyBooths.removeAll(amPartyBooths);
+	Debug.log("#########result########"+pmPartyBooths);
+		
+	
+}*/
+
+routeIdsList = [];
 if(parameters.routeId !="All-Routes"){
-	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , parameters.routeId));
+	routeIdsList.add(parameters.routeId);
 }
-conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS ,"ROUTE"));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-routeIdsList = (ByProductNetworkServices.getRoutesByAMPM(dctx ,UtilMisc.toMap("supplyType" ,"AM"))).get("routeIdsList");
-routeList = delegator.findList("Facility",EntityCondition.makeCondition("facilityId", EntityOperator.IN ,routeIdsList),null,null,null,false);
+else{
+	routeIdsList = (ByProductNetworkServices.getRoutesByAMPM(dctx ,UtilMisc.toMap("supplyType" ,"AM"))).get("routeIdsList");
+}
+//routeList = delegator.findList("Facility",EntityCondition.makeCondition("facilityId", EntityOperator.IN ,routeIdsList),null,null,null,false);
 
 dayBegin = UtilDateTime.getDayStart(estimatedDeliveryDateTime);
-context.putAt("dayBegin", dayBegin);
 dayEnd = UtilDateTime.getDayEnd(estimatedDeliveryDateTime);
+context.putAt("dayBegin", dayBegin);
+
 
 Map boothWiseSaleMap= FastMap.newInstance();
 
@@ -106,19 +128,32 @@ totalShipmentIds = [];
 totalShipmentIds.addAll(amShipmentIds);
 totalShipmentIds.addAll(pmShipmentIds);
 
-orderHeader = delegator.findList("OrderHeader", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, totalShipmentIds), ["originFacilityId", "shipmentId"] as Set, null, null, false);
+orderHeader = delegator.findList("OrderHeaderItemProductShipmentAndFacility", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, totalShipmentIds), ["originFacilityId", "shipmentId", "ownerPartyId"] as Set, null, null, false);
 
 orderHeaderAM = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("shipmentId", EntityOperator.IN, amShipmentIds));
 orderHeaderPM = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("shipmentId", EntityOperator.IN, pmShipmentIds));
 challanSerialNumMap = [:];
 
 orderHeaderAM.each{eachItem ->
-	challanSerialNumMap.put(eachItem.originFacilityId, eachItem.originFacilityId+"-"+eachItem.shipmentId);
+	if(isByParty){
+		challanSerialNumMap.put(eachItem.ownerPartyId, eachItem.ownerPartyId+"-"+eachItem.shipmentId);
+	}else{
+		challanSerialNumMap.put(eachItem.originFacilityId, eachItem.originFacilityId+"-"+eachItem.shipmentId);
+	}
+	
 }
 orderHeaderPM.each{eachEntry ->
-	if(!challanSerialNumMap.get(eachEntry.originFacilityId)){
-		challanSerialNumMap.put(eachEntry.originFacilityId, eachEntry.originFacilityId+"-"+eachEntry.shipmentId);
+	if(isByParty){
+		if(!challanSerialNumMap.get(eachEntry.ownerPartyId)){
+			challanSerialNumMap.put(eachEntry.ownerPartyId, eachEntry.ownerPartyId+"-"+eachEntry.shipmentId);
+		}
+	}else{
+		if(!challanSerialNumMap.get(eachEntry.originFacilityId)){
+			challanSerialNumMap.put(eachEntry.originFacilityId, eachEntry.originFacilityId+"-"+eachEntry.shipmentId);
+		}
 	}
+	
+	
 }
 context.challanSerialNumMap = challanSerialNumMap;
 
@@ -126,37 +161,74 @@ context.challanSerialNumMap = challanSerialNumMap;
 amBoothTotals=[:];
 pmBoothTotals=[:];
 if(UtilValidate.isNotEmpty(amShipmentIds)){
-	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds,fromDate:dayBegin, thruDate:dayEnd]);
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:amShipmentIds, fromDate:dayBegin, thruDate:dayEnd, includeReturnOrders:true, isByParty: isByParty]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		amBoothTotals = dayTotals.get("boothTotals");
 	}
 }
+//Debug.log("= =================== amBoothTotals #@@@@###########"+amBoothTotals.get("S103"));
+
 toDayAmStr=UtilDateTime.toDateString(estimatedDeliveryDateTime, "dd-MMM-yyyy");
 prevDayPmStr=UtilDateTime.toDateString(UtilDateTime.addDaysToTimestamp(estimatedDeliveryDateTime, -1), "dd-MMM-yyyy");
 //pmShipments
 if(UtilValidate.isNotEmpty(pmShipmentIds)){
-	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds,fromDate: UtilDateTime.addDaysToTimestamp(dayBegin, -1), thruDate: UtilDateTime.addDaysToTimestamp(dayEnd, -1)]);
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:pmShipmentIds,fromDate: UtilDateTime.addDaysToTimestamp(dayBegin, -1), thruDate: UtilDateTime.addDaysToTimestamp(dayEnd, -1), includeReturnOrders:true, isByParty: isByParty]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		pmBoothTotals = dayTotals.get("boothTotals");
 	}
 }
-						
 routeWiseMap =[:];
 facilityBankMap =[:];
-for(int i=0; i< routeList.size();i++){
-	route = routeList.get(i);
-	routeId=route.facilityId;
+for(int i=0; i< routeIdsList.size();i++){
+	routeId=routeIdsList.get(i);
 	boothIdsList=[];
 	getBoothRes=ByProductNetworkServices.getRouteBooths(delegator , UtilMisc.toMap("routeId",routeId));
 	boothsList =getBoothRes.get("boothsList");
-	boothIdsList = getBoothRes.get("boothIdsList");
+	//boothIdsList = getBoothRes.get("boothIdsList");
 	boothsList = EntityUtil.filterByDate(boothsList, estimatedDeliveryDateTime, "openedDate", "closedDate", true);
+	profilePartyIds= [];
+	ownerFacilityMap = [:];
 	
-	 partyProfileFacilityMap=ByProductNetworkServices.getPartyProfileDafult(dispatcher.getDispatchContext(),[boothIds:boothIdsList]).get("partyProfileFacilityMap");
+	if(isByParty){
+		boothIdsList = EntityUtil.getFieldListFromEntityList(boothsList, "ownerPartyId", true);
+		profilePartyIds = EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", true);
+		boothsList.each{eachItem ->
+			if(ownerFacilityMap.get(eachItem.ownerPartyId)){
+				tempFacList = ownerFacilityMap.get(eachItem.ownerPartyId);
+				tempFacList.add(eachItem.facilityId);
+				ownerFacilityMap.put(eachItem.ownerPartyId, tempFacList);
+			}
+			else{
+				tempList = [];
+				tempList.add(eachItem.facilityId);
+				ownerFacilityMap.put(eachItem.ownerPartyId, tempList);
+			}
+		}
+	}
+	else{
+		boothIdsList = EntityUtil.getFieldListFromEntityList(boothsList, "facilityId", true);
+		profilePartyIds.addAll(boothIdsList)
+	}
+	
+	partyProfileFacilityMap=ByProductNetworkServices.getPartyProfileDafult(dispatcher.getDispatchContext(),[boothIds:profilePartyIds]).get("partyProfileFacilityMap");
 	boothSaleMap=[:];
-	boothsList.each{ boothObj ->
-		boothId=boothObj.facilityId;
-		paymentMethodId=partyProfileFacilityMap.get(boothId);
+	boothIdsList.each{ boothId ->
+		
+		paymentMethodId = "";
+		profileBoothId = "";
+		if(isByParty){
+			facList = ownerFacilityMap.get(boothId);
+			if(facList){
+				profileBoothId = facList.get(0);
+				paymentMethodId=partyProfileFacilityMap.get(profileBoothId);
+			}
+		}
+		else{
+			paymentMethodId=partyProfileFacilityMap.get(boothId);
+			profileBoothId = boothId;
+		}
+		
+		
 		rentAmt = 0;
 		if(rentInvoicesMap && rentInvoicesMap.get(boothId)){
 			rentAmt = rentInvoicesMap.get(boothId);
@@ -167,8 +239,10 @@ for(int i=0; i< routeList.size();i++){
 		if(UtilValidate.isNotEmpty(paymentMethodId) && (paymentMethodId=="CHALLAN_PAYIN")){
 			//get Am Details
 			amBoothTotalMap=amBoothTotals.get(boothId);
+			
 			//get Pm details
 			pmBoothTotalMap=pmBoothTotals.get(boothId);
+			
 		}
 		
 		if(UtilValidate.isNotEmpty(amBoothTotalMap) || UtilValidate.isNotEmpty(pmBoothTotalMap)){//only add when amount is zero
@@ -176,9 +250,9 @@ for(int i=0; i< routeList.size();i++){
 			amDetailsMap["date"]=toDayAmStr;
 			amDetailsMap["shift"]="M";
 			if(UtilValidate.isNotEmpty(amBoothTotalMap)){
-			amDetailsMap["saleVal"]=amBoothTotalMap.get("totalRevenue");
+				amDetailsMap["saleVal"]=amBoothTotalMap.get("totalRevenue");
 			}else{
-			amDetailsMap["saleVal"]=0;
+				amDetailsMap["saleVal"]=0;
 			}
 			
 			boothAmPmMap["AM"]=amDetailsMap;
@@ -187,15 +261,17 @@ for(int i=0; i< routeList.size();i++){
 			pmDetailsMap["date"]=prevDayPmStr;
 			pmDetailsMap["shift"]="E";
 			if(UtilValidate.isNotEmpty(pmBoothTotalMap)){
-			pmDetailsMap["saleVal"]=pmBoothTotalMap.get("totalRevenue");
+				pmDetailsMap["saleVal"]=pmBoothTotalMap.get("totalRevenue");
 			}else{
-			pmDetailsMap["saleVal"]=0;
+				pmDetailsMap["saleVal"]=0;
 			}
 			boothAmPmMap["PM"]=pmDetailsMap;
 		}
 		if(UtilValidate.isNotEmpty(boothAmPmMap)){//if Am and Pm not empty then
+			boothAmPmMap["rentVal"] = rentAmt;
 			boothSaleMap[boothId]=boothAmPmMap;
-			finAcccountRes=ByProductNetworkServices.getFacilityFinAccountInfo(dctx,[facilityId:boothId]);
+			
+			finAcccountRes=ByProductNetworkServices.getFacilityFinAccountInfo(dctx,[facilityId: profileBoothId]);
 			if(UtilValidate.isNotEmpty(finAcccountRes.get("accountInfo"))){
 				accountInfo=finAcccountRes.get("accountInfo");
 				if(UtilValidate.isNotEmpty(accountInfo.finAccountCode)){
@@ -204,11 +280,8 @@ for(int i=0; i< routeList.size();i++){
 					tempMap.put("bankName", accountInfo.finAccountName);
 					facilityBankMap[boothId]=tempMap;
 				}
-				
 			}
-			
 		}
-		boothAmPmMap["rentVal"] = rentAmt;
 	}
 	if(UtilValidate.isNotEmpty(boothSaleMap)){
 		routeWiseMap[routeId]=boothSaleMap;
@@ -229,6 +302,6 @@ while (routeMapIter.hasNext()) {
 		filteredRouteWiseMap.put(entry.getKey(), entry.getValue());
 	}
 }
-
+context.put("isByParty", isByParty);
 context.put("routeWiseMap",filteredRouteWiseMap);
 context.put("facilityBankMap",facilityBankMap);

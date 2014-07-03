@@ -1832,6 +1832,31 @@ public class ByProductNetworkServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
 		}
+		
+		// here get the cheque bounce amount till cancel of payments
+		exprList.clear();
+		if (isByParty) {
+			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, ownerPartyIds));
+		} else {
+			exprList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN, facilityIds));
+		}
+		exprList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, "CHEQUE_PAYIN"));
+		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_VOID"));
+		exprList.add(EntityCondition.makeCondition("chequeReturns",EntityOperator.EQUALS, "Y"));
+		exprList.add(EntityCondition.makeCondition("cancelDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+		exprList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, dayBegin));
+
+		EntityCondition payReturnCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		try {
+			pendingPaymentsList = delegator.findList("Payment", paymentCond,UtilMisc.toSet("amount"), null, null, false);
+			for (GenericValue pendingPayments : pendingPaymentsList) {
+				advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amount"));
+			}
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
 		openingBalance = invoicePendingAmount.subtract(advancePaymentAmount);
 		openingBalanceMap.put("openingBalance", openingBalance);
 		return openingBalanceMap;
@@ -3066,7 +3091,44 @@ public class ByProductNetworkServices {
 		result.put("boothRouteIdsMap", boothRouteIdsMap);
 		return result;
 	}
+	
+	public static Map getBoothsByAMPM(Delegator delegator,Map<String, ? extends Object> context) {
+		List<String> boothIds = FastList.newInstance();
+		List<GenericValue> booths = FastList.newInstance();
+		List<GenericValue> facilityGroups = FastList.newInstance();
+		Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		if (UtilValidate.isEmpty(effectiveDate)) {
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
 
+		try {
+			facilityGroups = delegator.findList("FacilityGroupAndMemberAndFacility", EntityCondition.makeCondition("facilityGroupTypeId",EntityOperator.EQUALS, "RT_BOOTH_GROUP"), null, null, null, true);
+			facilityGroups = EntityUtil.filterByDate(facilityGroups, effectiveDate);
+			
+			List<GenericValue> amFacilityGroups  = EntityUtil.filterByCondition(facilityGroups, EntityCondition.makeCondition("primaryParentGroupId",EntityOperator.EQUALS, "AM_RT_GROUP"));
+			List<GenericValue> pmFacilityGroups  = EntityUtil.filterByCondition(facilityGroups, EntityCondition.makeCondition("primaryParentGroupId",EntityOperator.EQUALS, "PM_RT_GROUP"));
+			
+			List amRoutes = EntityUtil.getFieldListFromEntityList(amFacilityGroups, "facilityGroupId", true);
+			List pmRoutes = EntityUtil.getFieldListFromEntityList(pmFacilityGroups, "facilityGroupId", true);
+			List amBooths = EntityUtil.getFieldListFromEntityList(amFacilityGroups, "facilityId", true);
+			List pmBooths = EntityUtil.getFieldListFromEntityList(pmFacilityGroups, "facilityId", true);
+			List amPartyBooths = EntityUtil.getFieldListFromEntityList(amFacilityGroups, "ownerPartyId", true);
+			List pmPartyBooths = EntityUtil.getFieldListFromEntityList(pmFacilityGroups, "ownerPartyId", true);
+
+			result.put("amRoutes", amRoutes);
+			result.put("pmRoutes", pmRoutes);
+			result.put("amBooths", amBooths);
+			result.put("pmBooths", pmBooths);
+			result.put("amPartyBooths", amPartyBooths);
+			result.put("pmPartyBooths", pmPartyBooths);
+
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+		return result;
+	}
+	
 	public static Map getBoothsRouteMap(Delegator delegator,Map<String, ? extends Object> context) {
 		List<String> boothIds = FastList.newInstance();
 		List<GenericValue> booths = FastList.newInstance();
@@ -5239,6 +5301,10 @@ public class ByProductNetworkServices {
 		Delegator delegator = ctx.getDelegator();
 		List<String> facilityIds = (List<String>) context.get("facilityIds");
 		List<String> shipmentIds = (List<String>) context.get("shipmentIds");
+		boolean isByParty = Boolean.FALSE;
+		if(UtilValidate.isNotEmpty(context.get("isByParty"))){
+			isByParty = (Boolean)context.get("isByParty");
+		}
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		if (UtilValidate.isEmpty(fromDate)) {
 			Debug.logError("fromDate cannot be empty", module);
@@ -5251,7 +5317,17 @@ public class ByProductNetworkServices {
 		}
 		String subscriptionType = (String) context.get("subscriptionType");
 		Boolean onlyVendorAndPTCBooths = (Boolean) context.get("onlyVendorAndPTCBooths");
-
+		List ownerPartyIds = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(facilityIds) && isByParty){
+			try{
+				List<GenericValue> ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds), UtilMisc.toSet("ownerPartyId"), null, null ,false);
+				ownerPartyIds = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
+			}catch(GenericEntityException e){
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
+			}
+		}
+		
 		boolean includeReturnOrders = Boolean.FALSE;// always excluding if externally not set
 		if (context.get("includeReturnOrders") != null) {
 			includeReturnOrders = (Boolean) context.get("includeReturnOrders");
@@ -5304,9 +5380,16 @@ public class ByProductNetworkServices {
 					conditionList.add(EntityCondition.makeCondition(EntityOperator.OR, EntityCondition.makeCondition("categoryTypeEnum", "VENDOR"),EntityCondition.makeCondition("categoryTypeEnum","PTC")));
 				}
 			}
-			if (!UtilValidate.isEmpty(facilityIds)) {
-				conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));
+			if(isByParty){
+				if (UtilValidate.isNotEmpty(ownerPartyIds)) {
+					conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, ownerPartyIds));
+				}
+			}else{
+				if (UtilValidate.isNotEmpty(facilityIds)) {
+					conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, facilityIds));
+				}
 			}
+			
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			// Debug.logInfo("condition=" + condition, module);
 			if (!UtilValidate.isEmpty(shipmentIds)) {
@@ -5316,19 +5399,40 @@ public class ByProductNetworkServices {
 			if (includeReturnOrders) {
 				List returnConditionList = FastList.newInstance();
 				returnConditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
-				if (!UtilValidate.isEmpty(facilityIds)) {
-					returnConditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN,facilityIds));
+				if(UtilValidate.isNotEmpty(ownerPartyIds)){
+					returnConditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,ownerPartyIds));
 				}
+				else{
+					if (UtilValidate.isNotEmpty(facilityIds)) {
+						returnConditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN,facilityIds));
+					}
+				}
+				
 				returnConditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS,"RETURN_ACCEPTED"));
 				EntityCondition returnCondition = EntityCondition.makeCondition(returnConditionList, EntityOperator.AND);
 				List<GenericValue> returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility",returnCondition, null, null, null, false);
 				List<GenericValue> newReturnItemList = FastList.newInstance();
 				for (GenericValue returnItem : returnItemsList) {
-					String boothId = returnItem.getString("originFacilityId");
+					String boothId = "";
+					if(isByParty){
+						boothId = returnItem.getString("ownerPartyId");
+					}else{
+						boothId = returnItem.getString("originFacilityId");
+					}
+					
 					String productSubscriptionTypeId = "CASH";
 					String shipId = returnItem.getString("shipmentId");
 					String productId = returnItem.getString("productId");
-					GenericValue facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId", boothId), false);
+					GenericValue facility = null;
+					if(isByParty){
+						List<GenericValue> facilityList = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, boothId), null, null, null, false);
+						if(UtilValidate.isNotEmpty(facilityList)){
+							facility = EntityUtil.getFirst(facilityList);
+						}
+					}else{
+						facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId", boothId), false);
+					}
+					
 					if (UtilValidate.isNotEmpty(facility)) {
 						// lets override productSubscriptionTypeId based on facility category
 						if (facility.getString("categoryTypeEnum").equals("SO_INST")) {
@@ -5420,11 +5524,18 @@ public class ByProductNetworkServices {
 			}
 			totalFat = totalFat.add(fat);
 			totalSnf = totalSnf.add(snf);
-
+			
 			Map zone = (Map) boothZoneMap.get(orderItem.getString("originFacilityId"));
 			// Handle booth totals
-			String boothId = orderItem.getString("originFacilityId");
-
+			
+			String boothId = "";
+			if(isByParty){
+				boothId = orderItem.getString("ownerPartyId");
+			}
+			else{
+				boothId = orderItem.getString("originFacilityId");
+			}
+			
 			if (boothTotals.get(boothId) == null) {
 				Map<String, Object> newMap = FastMap.newInstance();
 
@@ -6699,7 +6810,7 @@ public class ByProductNetworkServices {
 
 		return result;
 	}
-	
+
 	
 	public static Map<String, Object> getRouteDistance(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
