@@ -1848,7 +1848,7 @@ public class ByProductNetworkServices {
 
 		EntityCondition payReturnCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 		try {
-			pendingPaymentsList = delegator.findList("Payment", paymentCond,UtilMisc.toSet("amount"), null, null, false);
+			pendingPaymentsList = delegator.findList("Payment", payReturnCond,UtilMisc.toSet("amount"), null, null, false);
 			for (GenericValue pendingPayments : pendingPaymentsList) {
 				advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amount"));
 			}
