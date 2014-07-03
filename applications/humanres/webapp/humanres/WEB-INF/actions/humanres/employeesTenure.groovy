@@ -72,10 +72,17 @@ employeeList.each {employee ->
 		departmentMap[employee.department] = 1;
 	}
 	if (employee.birthDate) {
-		int month = (employee.birthDate).getMonth();
-		int day = (employee.birthDate).getDay();
+		int day =  UtilDateTime.getDayOfMonth(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale);
+		int month = UtilDateTime.getMonth(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale) + 1;
+		if (day == 1) { // need to take the prev month last date
+			month--;
+		}
 		int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employee.birthDate), timeZone, locale) + 60;	
 		retirementDate = UtilDateTime.toTimestamp(month, day, year, 0, 0, 0);
+		retirementDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retirementDate), timeZone, locale);
+//Debug.logError("employee.birthDate="+employee.birthDate,"");
+//Debug.logError("retirementDate= "+retirementDate,"");
+
 		if (retirementDate < thruDate) {
 //Debug.logError("deptPieDataJSON="+deptPieDataJSON,"");
 			
