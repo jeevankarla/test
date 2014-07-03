@@ -307,7 +307,7 @@ public class PayrollService {
 			            List conditionList = UtilMisc.toList(
 			                    EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
 			            //conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart));
-			            conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, timePeriodEnd)));
+			            conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodEnd)));
 			            EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);        	
 			            // sort by -fromDate to get the newest (largest) first, just in case there is more than one, should not happen but...
 			            List<GenericValue> payHistory = delegator.findList("PayHistory", condition, null, UtilMisc.toList("-fromDate"), null, false);
@@ -1913,4 +1913,5 @@ public class PayrollService {
 	        result = ServiceUtil.returnSuccess("Successfully Created!!");
 	        return result;
 	 }//end of service
+	 	 
 }
