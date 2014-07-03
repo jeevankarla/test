@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.ofbiz.base.util.UtilNumber;
-
+import org.ofbiz.party.party.PartyHelper;
 import java.math.RoundingMode;
 import java.util.Map;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -114,7 +114,29 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		facilityRateResult=[:];
 		rateMap =[:];
 		rateList =[];
-		List<GenericValue> facilities = delegator.findList("FacilityPersonAndFinAccount", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
+		partyIdentification=[];
+		facilityParty=[];
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+		fincondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		List<GenericValue> facilities = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
+		
+		List<GenericValue> finAccountDetails = delegator.findList("FinAccount", fincondition, null, null, null, false);
+		if(UtilValidate.isNotEmpty(finAccountDetails)){
+			finAccount = EntityUtil.getFirst(finAccountDetails);
+		}
+		List<GenericValue> partyIdentificationDetails = delegator.findList("PartyIdentification", EntityCondition.makeCondition([partyId: partyId, partyIdentificationTypeId: "PAN_NUMBER"]), null, null, null, false);
+		if(UtilValidate.isNotEmpty(partyIdentificationDetails)){
+			partyIdentification = EntityUtil.getFirst(partyIdentificationDetails);
+		}
+		List<GenericValue> facilityPartyDtls = delegator.findList("FacilityParty", EntityCondition.makeCondition([partyId: partyId]), null, null, null, false);
+		if(UtilValidate.isNotEmpty(facilityPartyDtls)){
+			facilityParty = EntityUtil.getFirst(facilityPartyDtls);
+		}
+		
+		String partyName = PartyHelper.getPartyName(delegator, partyId, true);
+		
 		facility = EntityUtil.getFirst(facilities);
 
 		Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
@@ -130,30 +152,29 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		totalsMap =[:];
 		totalsMap = dayValuesMap["Tot"];
 		
+			if(UtilValidate.isNotEmpty(partyId)){
+				totalsMap.put("partyCode",partyId);
+			}
+			if(UtilValidate.isNotEmpty(facility)){
+				totalsMap.put("distance", facility.facilitySize);
+			}
 		
-		totalsMap.put("partyCode", facility.ownerPartyId);
-		totalsMap.put("distance", facility.facilitySize);
-		String partyName = "";
-			if(UtilValidate.isNotEmpty(facility.firstName)){
-		       partyName=facility.firstName;
+			if(UtilValidate.isNotEmpty(partyName)){
+				totalsMap.put("partyName",partyName);
 			}
-			if(UtilValidate.isNotEmpty(facility.lastName)){
-				partyName=facility.firstName+","+facility.lastName;
+			if(UtilValidate.isNotEmpty(partyIdentification)){
+			    totalsMap.put("panId",partyIdentification.idValue);
 			}
-			if(UtilValidate.isNotEmpty(facility.panId)){
-			    totalsMap.put("panId",facility.panId);
-			}
-			if(UtilValidate.isNotEmpty(facility.closedDate)){
-				closedDate=UtilDateTime.toDateString(facility.closedDate, "dd-MMM-yyyy");
+			if(UtilValidate.isNotEmpty(facilityParty)){
+				closedDate=facilityParty.thruDate;
+				if(UtilValidate.isNotEmpty(closedDate)){
+				  closedDate=UtilDateTime.toDateString(closedDate, "dd-MMM-yyyy");
+				}
 				totalsMap.put("closedDate", closedDate);
 			}
-			if(UtilValidate.isNotEmpty(facility.finAccountCode) && "FNACT_ACTIVE".equals(facility.statusId)){
-				totalsMap.put("accNo", facility.finAccountCode);
+			if(UtilValidate.isNotEmpty(finAccountDetails)){
+				totalsMap.put("accNo", finAccount.finAccountCode);
 			}
-			if(UtilValidate.isNotEmpty(facility.facilityCode)){
-				totalsMap.put("facilityCode", facility.facilityCode);
-			}
-		   totalsMap.put("partyName",partyName);
 		
 		if(UtilValidate.isNotEmpty(facilityRateResult)){
 			monthBeginMargin = (BigDecimal) facilityRateResult.get("rateAmount");
@@ -187,7 +208,9 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		}
 	}
 }
-masterList.add(transporterMargins);
+if(UtilValidate.isNotEmpty(transporterMargins)){
+	masterList.add(transporterMargins);
+}
 context.put("masterList", masterList);
 context.put("routePartyMap",routePartyMap);
 Debug.log("===routePartyMap===="+routePartyMap);

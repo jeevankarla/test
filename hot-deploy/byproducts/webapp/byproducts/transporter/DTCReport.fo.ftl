@@ -90,12 +90,12 @@ under the License.
 			                         <fo:block keep-together="always" text-align="left" font-size="10pt">ADDITIONAL PAYMENT:</fo:block>
 			                     </fo:table-cell>
 			                   <fo:table-cell>
-			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ROUTE: ${trnsptMarginValues.getKey()}</fo:block>
-			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;TYPE: ${uomId?if_exists}</fo:block>
-			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RATE:${margin?if_exists} </fo:block>
-			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DISTANCE:${distance?if_exists}</fo:block>
-			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;WORK ORDER NO: ${workOrderNo?if_exists}</fo:block>
-			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;VALID UP TO:${closedDate?if_exists} </fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;ROUTE: ${trnsptMarginValues.getKey()}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;TYPE: ${uomId?if_exists}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;RATE:${margin?if_exists} </fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;DISTANCE:${distance?if_exists}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;WORK ORDER NO: ${workOrderNo?if_exists}</fo:block>
+			                         <fo:block keep-together="always" text-align="left" font-size="10pt">&#160;&#160;&#160;&#160;VALID UP TO:${closedDate?if_exists} </fo:block>
 			                  </fo:table-cell>
 		                     </fo:table-row>
 		                     </#if>	
@@ -197,9 +197,9 @@ under the License.
 			        </fo:block> 
 			  <fo:block>
 		           <fo:table width="100%" table-layout="fixed" space-after="0.0in">
-		           <fo:table-column column-width="180pt"/>
-		           <fo:table-column column-width="170pt"/>
-		           <fo:table-column column-width="120pt"/>
+		           <fo:table-column column-width="270pt"/>
+		           <fo:table-column column-width="240pt"/>
+		           <fo:table-column column-width="160pt"/>
 		              <fo:table-body>
 				        <fo:table-row>	
 				            	<fo:table-cell>
@@ -229,7 +229,7 @@ under the License.
 									<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">PRE AUDIT</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
-									<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">MANAGER(MKTG) </fo:block>
+									<fo:block text-align="left" font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">Gen.Mgr(MKtg) </fo:block>
 								</fo:table-cell>
 							</fo:table-row>		
 					 </fo:table-body>	

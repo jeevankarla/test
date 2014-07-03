@@ -83,7 +83,7 @@ contractorIdList.each { contractorId ->
 	
 	shipmentIds = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false);
 	routeIdsList = EntityUtil.getFieldListFromEntityList(shipmentList, "routeId", false);
-	
+	Debug.log("shipmentIds==="+shipmentIds);
 		if(UtilValidate.isNotEmpty(shipmentIds)){
 			for(i=0;i<shipmentIds.size();i++){
 				Map cratesMap = FastMap.newInstance();
