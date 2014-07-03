@@ -428,12 +428,6 @@ import java.text.SimpleDateFormat;
 					return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
 				}
 				
-				Map<String, Object> updateRecvoryRes=updateFineRecvoryWithBilling(dctx , UtilMisc.toMap("customTimePeriodId", customTimePeriodId,"periodBillingId",periodBillingId,"userLogin",userLogin));
-				if (ServiceUtil.isError(updateRecvoryRes)) {
-		    		//generationFailed = true;
-	                Debug.logWarning("There was an error while populating updateRecvory: " + ServiceUtil.getErrorMessage(updateRecvoryRes), module);
-	        		return ServiceUtil.returnError("There was an error while populating updateRecvory: " + ServiceUtil.getErrorMessage(updateRecvoryRes));          	            
-	            } 
 				Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 				Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 				
@@ -443,7 +437,9 @@ import java.text.SimpleDateFormat;
 			Map partyWiseRecvoryMap=(Map)facilityRecoveryResultMap.get("partyRecoveryInfoMap");
 			Map transporterTradeResultMap=getTransporterTotalsForPeriodBilling(dctx, UtilMisc.toMap("periodBillingId",(Object)periodBillingId));
 			//Map totalRouteTradingTotalMap=(Map)transporterTradeResultMap.get("routeTradingMap");
-			Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
+			//Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("partyTradingMap");
+			Map totalPartyTradingTotalMap=(Map)transporterTradeResultMap.get("roundedPartyTradingMap");
+			
 			
 			if(UtilValidate.isNotEmpty(totalPartyTradingTotalMap)){
 			Iterator partyMarginsIter = totalPartyTradingTotalMap.entrySet().iterator();
@@ -1185,6 +1181,7 @@ import java.text.SimpleDateFormat;
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				Map<String, Object> routeTradingMap = new HashMap<String, Object>();
 				Map<String, Object> partyTradingMap = new HashMap<String, Object>();
+				Map<String, List> partyAndFacilityList = FastMap.newInstance();
 	        	String routeId = null;
 	        	String partyId = "";
 				if(!UtilValidate.isEmpty(periodBillingId)){
@@ -1205,6 +1202,17 @@ import java.text.SimpleDateFormat;
 	                			BigDecimal partyDueAmount = BigDecimal.ZERO;
 	                			routeId = (String)eachRoute.get("facilityId");
 	                			partyId = (String)eachRoute.get("partyId");
+	                			if (!UtilValidate.isEmpty(partyId)) {//preparing facilityList for party
+		                			if (UtilValidate.isNotEmpty(partyAndFacilityList.get(partyId))) {
+		            					List facilityList =FastList.newInstance();
+		            					Set tempFacilityList=new HashSet(partyAndFacilityList.get(partyId));
+		            					tempFacilityList.add(routeId);
+		            					facilityList.addAll(tempFacilityList);
+		            					partyAndFacilityList.put(partyId, facilityList);
+		            				} else {
+		            					partyAndFacilityList.put(partyId,UtilMisc.toList(routeId));
+		            				}
+	                			}
 	                			if(!UtilValidate.isEmpty(eachRoute.get("totalAmount"))){
 	                				totalMargin = (BigDecimal)eachRoute.get("totalAmount");
 	                				partyCommAmount=totalMargin;
@@ -1254,8 +1262,39 @@ import java.text.SimpleDateFormat;
 		        		Debug.logError(e, module);
 		        	}
 				}			
+				Map<String, Object> roundedPartyTradingMap = new HashMap<String, Object>();
+				for (Map.Entry<String, Object> entry : routeTradingMap.entrySet()) {//rounding by Routewise
+					Map<String, Object> routeValue = (Map<String, Object>) entry.getValue();
+					BigDecimal tempVal = (BigDecimal) routeValue.get("totalMargin");
+					tempVal = tempVal.setScale(0,BigDecimal.ROUND_HALF_UP);
+					tempVal = tempVal.setScale(2,BigDecimal.ROUND_HALF_UP);//making decimals
+					routeValue.put("totalMargin", tempVal);
+
+					tempVal = (BigDecimal) routeValue.get("totalDue");
+					tempVal = tempVal.setScale(0,BigDecimal.ROUND_HALF_UP);
+					tempVal = tempVal.setScale(2,BigDecimal.ROUND_HALF_UP);//making decimals
+					routeValue.put("totalDue", tempVal);
+				}
+				for (Map.Entry<String, List> entry : partyAndFacilityList.entrySet()) {
+						List<String> routesList = (List)entry.getValue();
+						Map tempTradeMap=FastMap.newInstance();
+						String tempPartyId= entry.getKey();
+						BigDecimal partyMargin = BigDecimal.ZERO; 
+        				BigDecimal partyDue = BigDecimal.ZERO;
+						for (String partyRouteId :routesList) {
+							Map routeValueMap=(Map)routeTradingMap.get(partyRouteId);
+							if(!UtilValidate.isEmpty(routeValueMap)){
+								partyMargin=partyMargin.add((BigDecimal)routeValueMap.get("totalMargin"));
+								partyDue=partyDue.add((BigDecimal)routeValueMap.get("totalDue"));
+							}
+						}
+						tempTradeMap.put("totalMargin", partyMargin);
+						tempTradeMap.put("totalDue", partyDue);
+						roundedPartyTradingMap.put(tempPartyId, tempTradeMap);
+				}
 				result.put("routeTradingMap",routeTradingMap);
 				result.put("partyTradingMap",partyTradingMap);
+				result.put("roundedPartyTradingMap",roundedPartyTradingMap);
 	        	return result;
 			}
 		    
