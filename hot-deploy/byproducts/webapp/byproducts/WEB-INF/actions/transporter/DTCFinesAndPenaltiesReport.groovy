@@ -79,7 +79,6 @@ contractorIdList.each { contractorId ->
 	
 	shipmentIds = EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false);
 	routeIdsList = EntityUtil.getFieldListFromEntityList(shipmentList, "routeId", false);
-	Debug.log("shipmentIds==="+shipmentIds);
 		if(UtilValidate.isNotEmpty(shipmentIds)){
 			for(i=0;i<shipmentIds.size();i++){
 				Map cratesMap = FastMap.newInstance();
@@ -100,7 +99,6 @@ contractorIdList.each { contractorId ->
 						conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, routeId));
 						conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 						EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-						Debug.log("===condition==="+condition)
 						try{
 							List<GenericValue> facilityRecoveryList = FastList.newInstance();
 							facilityRecoveryList = delegator.findList("FineRecovery", condition, null,null, null, false);
