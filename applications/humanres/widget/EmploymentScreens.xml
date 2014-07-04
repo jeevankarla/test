@@ -101,10 +101,14 @@
                     	    <condition>
                             	<if-compare field="hasEmploymentViewPermission" operator="equals" value="true" type="Boolean"/>
                             </condition>
-		                    <widgets>                        
+		                    <widgets>   
+		                    	<screenlet title="ListEmployment">
+		                    	<include-form name="ListEmployment" location="component://humanres/widget/forms/EmploymentForms.xml"/>
+		                        </screenlet>                     
 		                        <screenlet title="${uiLabelMap.HumanResEditEmployment}">
 		                            <include-form name="EditEmployment" location="component://humanres/widget/forms/EmploymentForms.xml"/>
 		                        </screenlet>
+		                        
 		                    </widgets>		
 		                    <fail-widgets>
                                 <label style="h3">${uiLabelMap.HumanResViewPermissionError}</label>                        			                    

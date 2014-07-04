@@ -365,7 +365,7 @@ under the License.
     <request-map uri="deleteEmployment">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteEmployment"/>
-        <response name="success" type="view" value="FindEmployments"/>
+        <response name="success" type="view" value="EditEmployment"/>
     </request-map>
     <!--<request-map uri="FindEmploymentApps">
         <security https="true" auth="true"/>

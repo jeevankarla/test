@@ -112,46 +112,94 @@
             </hyperlink>
         </field>
     </form>
-    <form name="EditEmployment" type="single" target="updateEmployment" default-map-name="employment"
+    <form name="ListEmployment" odd-row-style="alternate-row" header-row-style="header-row" type="list" target="updateEmployment"
+    	default-table-style="basic-table hover-bar" separate-columns="true" list-name="employmentList">
+    	<actions>
+			<entity-condition entity-name="Employment" list="employmentList">
+			   <condition-list combine="and">
+			       <condition-expr field-name="partyIdTo" from-field="parameters.partyIdTo"/>
+			   </condition-list>
+    		</entity-condition>
+		</actions>
+		<field name="actionFlag"><hidden value="update"/></field>
+		<field name="roleTypeIdFrom" title="RoleTypeIdFrom"><hidden/></field>
+		<field name="roleTypeIdTo" title="RoleTypeIdTo"><hidden/></field>
+		<field name="partyIdFrom" title="PartyIdFrom">
+		<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdFrom}]" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="partyIdFrom"/>
+                </sub-hyperlink>
+            </display-entity>
+		</field>
+		<field name="partyIdTo" title="PartyIdTo">
+		<display-entity key-field-name="partyId" entity-name="Person" description="${firstName} ${lastName}">
+		<sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdTo}]" target-type="inter-app">
+                    <parameter param-name="partyId" from-field="partyIdTo"/>
+                </sub-hyperlink>
+		</display-entity>
+		</field>
+		<field name="fromDate" title="FromDate"><display/></field>
+		<field name="thruDate" title="ThruDate"><date-time type="timestamp"/></field>
+		<field name="terminationReasionId" title="TerminationReasionId"><display/></field>
+		<field name="terminationTypeId" title="TerminationTypeId"><display/></field>
+		<field name="appointmentDate" title="AppointmentDate"><display/></field>
+		<field name="resignationDate" title="ResignationDate"><display/></field>
+		<field name="locationGeoId" title="LocationGeoId"><display/></field>
+		<field name="lastUpdateStamp" title="LastUpdatedStamp"><hidden/></field>
+		<field name="lastUpdatedTxStamp" title="LastUpdatedTxStamp"><hidden/></field>
+		<field name="createdStamp" title="CreatedStamp"><hidden/></field>
+		<field name="createdTxStamp" title="CreatedTxStamp"><hidden/></field>
+		<field name="submitButton" title="Update" separate-column="true">
+            <submit button-type="button"/>
+         </field>   
+       <field name="deleteLink" title="Delete" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEmployment">
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+           </hyperlink>
+        </field>
+    	</form>
+    <form name="EditEmployment" type="single" target="createEmployment" default-map-name="employment"
         header-row-style="header-row" default-table-style="basic-table">
-        <actions><set field="fromDate" type="Timestamp"></set></actions>
-        <alt-target use-when="employment==null" target="createEmployment"/>
         <auto-fields-service service-name="createEmployment" default-field-type="hidden"/>
+        <auto-fields-service service-name="deleteEmployment" default-field-type="hidden"/>
         <field name="roleTypeIdFrom"><hidden value="INTERNAL_ORGANIZATIO"/></field>
         <field name="roleTypeIdTo"><hidden value="EMPLOYEE"/></field>
-        <field name="partyIdFrom" use-when="employment==null" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}">
+         <field name="roleTypeIdFrom"  title="${uiLabelMap.HumanResEmploymentroleTypeIdFrom}" tooltip="${uiLabelMap.CommonRequired}"><hidden/></field>
+         <field name="roleTypeIdTo"  title="${uiLabelMap.HumanResEmploymentroleTypeIdTo}" tooltip="${uiLabelMap.CommonRequired}"><hidden/></field>
+        <field name="partyIdFrom"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
+        <field name="partyIdTo"  title="${uiLabelMap.HumanResEmployeePartyIdTo}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
+        <field name="fromDate"  title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time/></field>
+        <field name="thruDate"   title="${uiLabelMap.CommonThruDate}"><date-time/></field>
+        <field name="partyIdFrom"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="false">
-                <entity-options entity-name="PartyRole" description="${partyId}" key-field-name="partyId">
-                    <entity-constraint name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
-                </entity-options>
-            </drop-down>
+				<entity-options entity-name="PartyRoleAndPartyDetail" key-field-name="partyId" description="${groupName}[${partyId}]">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
         </field>
-        <field name="partyIdFrom" use-when="employment!=null" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
-        <field name="partyIdTo" use-when="employment==null" title="${uiLabelMap.HumanResEmployeePartyIdTo}" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" use-when="employment!=null" title="${uiLabelMap.HumanResEmployeePartyIdTo}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
-        <field name="fromDate" use-when="employment==null" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time/></field>
-        <field name="fromDate" use-when="employment!=null" title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field name="thruDate" use-when="employment!=null &amp;&amp; hasEmplEditPermission" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
-        <field name="thruDate" use-when="employment!=null &amp;&amp; !hasEmplEditPermission" title="${uiLabelMap.CommonThruDate}"><display/></field>
-        <field name="terminationReasonId" use-when="employment!=null &amp;&amp; hasEmplEditPermission" title="${uiLabelMap.HumanResTerminationReasonId}">
+        <field name="terminationReasonId"  title="${uiLabelMap.HumanResTerminationReasonId}">
             <drop-down allow-empty="true" no-current-selected-key="------">
                 <entity-options description="${description}" key-field-name="terminationReasonId" entity-name="TerminationReason">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="terminationReasonId" use-when="employment!=null &amp;&amp; !hasEmplEditPermission" title="${uiLabelMap.HumanResTerminationReasonId}"><display/></field>        
-        <field name="terminationTypeId" use-when="employment!=null &amp;&amp; hasEmplEditPermission">
+        <field name="terminationTypeId" >
             <drop-down allow-empty="true" no-current-selected-key="------">
                 <entity-options description="${description}" key-field-name="terminationTypeId" entity-name="TerminationType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="terminationTypeId" use-when="employment!=null &amp;&amp; !hasEmplEditPermission"><display/></field>        
-        <field name="submitButton" use-when="employment==null &amp;&amp; hasEmplEditPermission" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitButton" use-when="employment!=null &amp;&amp; hasEmplEditPermission" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton"  title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="AddPayHistory" type="single" target="createPayHistory"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
