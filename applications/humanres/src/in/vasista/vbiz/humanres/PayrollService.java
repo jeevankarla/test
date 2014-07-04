@@ -13,10 +13,13 @@ import java.util.TimeZone;
 import java.util.TreeSet;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map.Entry;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -27,6 +30,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.TimeDuration;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -1913,5 +1917,60 @@ public class PayrollService {
 	        result = ServiceUtil.returnSuccess("Successfully Created!!");
 	        return result;
 	 }//end of service
+	 public static String updateBenefitsOrDeductions(HttpServletRequest request, HttpServletResponse response) {
+	    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+	        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	        Locale locale = UtilHttp.getLocale(request);
+	        Map<String, Object> result = ServiceUtil.returnSuccess();
+	        HttpSession session = request.getSession();
+	        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");		
+	        String partyId = (String) request.getParameter("partyId");	
+	        String periodId = (String) request.getParameter("periodId");
+	        Map paramMap = UtilHttp.getParameterMap(request);
+	        FastList payheadTypeIdsList = FastList.newInstance();
+	        try{
+	        	List<GenericValue> benefitTypes = delegator.findList("BenefitType",null, null,null, null, true);
+	        	List<GenericValue> deductionTypes = delegator.findList("DeductionType",null, null,null, null, true);
+	        	payheadTypeIdsList.addAll(EntityUtil.getFieldListFromEntityList(benefitTypes, "benefitTypeId", true));
+	        	payheadTypeIdsList.addAll(EntityUtil.getFieldListFromEntityList(deductionTypes, "deductionTypeId", true));
+         } catch (GenericEntityException e) {
+             Debug.logError(e, "Error getting payhead types", module);
+         }
+	        if(UtilValidate.isNotEmpty(payheadTypeIdsList)){
+	        	for(int i=0;i<payheadTypeIdsList.size();i++){
+	        		String payheadTypeId= (String)payheadTypeIdsList.get(i);
+	        		
+	        		if(UtilValidate.isNotEmpty(paramMap.get(payheadTypeId))){
+	        			Map<String, Object> payItemMap=FastMap.newInstance();
+	        			String amountStr=(String)paramMap.get(payheadTypeId);
+	        			BigDecimal amount= BigDecimal.ZERO;
+	    				if (UtilValidate.isNotEmpty(amountStr)) {	
+	    					amount = new BigDecimal(amountStr);
+	    				}
+	    				payItemMap.put("userLogin",userLogin);
+	    				payItemMap.put("customTimePeriodId",periodId);
+	    				payItemMap.put("amount",amount);
+	    				payItemMap.put("partyId",partyId);
+	    				payItemMap.put("payHeadTypeId",payheadTypeId);	
+	    				try {
+	    					if(amount.compareTo(BigDecimal.ZERO) !=0){
+	    						Map resultValue = dispatcher.runSync("createOrUpdatePartyBenefitOrDeduction", payItemMap);
+	    						if( ServiceUtil.isError(resultValue)) {
+	    							String errMsg =  ServiceUtil.getErrorMessage(resultValue);
+	    							Debug.logWarning(errMsg , module);
+	    							request.setAttribute("_ERROR_MESSAGE_",errMsg);
+	    							
+	    							return "error";
+	    						}
+	    					}
+	    					
+	    				} catch (GenericServiceException s) {
+	    					s.printStackTrace();
+	    				} 
+	        		}
+	        	}
+	        }
+	      	 return "success";
+	    }
 	 	 
 }

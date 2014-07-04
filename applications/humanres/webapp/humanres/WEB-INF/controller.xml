@@ -649,6 +649,16 @@ under the License.
         <response name="success" type="view" value="PartyBenefitOrDeduction"/>
         <response name="error" type="view" value="PartyBenefitOrDeduction"/>
     </request-map>
+    <request-map uri="benefitOrDeduction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindBenefitsOrDeductions"/>
+    </request-map>
+    <request-map uri="updateEmployeeBenefitsOrDeductions">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateBenefitsOrDeductions"/>
+       <response name="success" type="request" value="json"/>
+       <response name="error" type="request" value="json"/>
+   </request-map>
    <!-- ================Employee Position Group==================================== -->
     <request-map uri="FindEmplPositions">
         <security https="true" auth="true"/>
@@ -1523,12 +1533,13 @@ under the License.
     <view-map name="EditEmployment" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditEmployment"/>
     <view-map name="ListEmployments" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListEmployments"/>
     <view-map name="EditPartyBenefits" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyBenefits"/>
+    <view-map name="FindBenefitsOrDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindBenefitsOrDeductions"/>
     <view-map name="EditPayrollPreferences" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPayrollPreferences"/>
     <view-map name="ListPayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListPayHistories"/>
     <view-map name="EditSalarySteps" type="screen" page="component://humanres/widget/PayGradeScreens.xml#EditSalarySteps"/>
     <view-map name="EditUnemploymentClaims" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditUnemploymentClaims"/>
     <view-map name="EditAgreementEmploymentAppls" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditAgreementEmploymentAppls"/>
-
+	
     <view-map name="FindEmployee" type="screen" page="component://humanres/widget/EmployeeScreens.xml#FindEmployee"/>
     <view-map name="NewEmployee" type="screen" page="component://humanres/widget/EmployeeScreens.xml#NewEmployee"/>
     <view-map name="EmployeeProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EmployeeProfile"/>

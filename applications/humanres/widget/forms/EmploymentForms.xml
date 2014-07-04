@@ -560,4 +560,24 @@
         <field name="thruDate"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
+    <form name="FindBenefitsOrDeductions" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+    	default-table-style="basic-table hover-bar" separate-columns="true">  
+        <field name="employeeId" title="Employee Id"><text size="13"/></field>
+        <field name="type" title="Type">
+        	<drop-down allow-empty="false">
+        		<option key="benefits"/>
+        		<option key="deductions"/>
+        	</drop-down>
+        </field>
+       <field name="customTimePeriodId" title="Period Id">
+             <drop-down allow-empty="true">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>        
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>
