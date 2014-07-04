@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ProductStore addToCartRemoveIncompat="Y"
+<!-- <ProductStore addToCartRemoveIncompat="Y"
 	addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y"
 	autoApproveOrder="Y" autoApproveReviews="N" autoInvoiceDigitalItems="Y"
 	autoOrderCcTryExp="Y" autoOrderCcTryLaterNsf="Y"
@@ -31,7 +31,7 @@
 	  <ProductStoreGroup  description="MOTHER DAIRY"  productStoreGroupId="ICECREAM_PRODUCTS" productStoreGroupName="MOTHER_DAIRY"/> 
 	   <ProductStoreGroupMember  fromDate="2014-01-31 00:00:00.0"  productStoreGroupId="ICECREAM_PRODUCTS" productStoreId="1005"/> 
 	   
-	   <!-- Nandi Store-->
+	   Nandi Store
 	   <ProductStore addToCartRemoveIncompat="Y"
 	addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y"
 	autoApproveOrder="Y" autoApproveReviews="N" autoInvoiceDigitalItems="Y"
@@ -63,4 +63,91 @@
 	 <ProductCategoryType  description="Ice Cream"  productCategoryTypeId="ICE_CREAM"/> 
 	  <ProductCategory  productCategoryId="ICE_CREAM_NANDINI" productCategoryTypeId="ICE_CREAM"/> 
 	 <ProdCatalogCategory  fromDate="2014-01-20 00:00:00.0"  prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT" prodCatalogId="ICE_CREAM_NANDINI" productCategoryId="ICE_CREAM_NANDINI"/>
-	 <ProductStoreGroupMember  fromDate="2014-01-31 00:00:00.0"  productStoreGroupId="ICECREAM_PRODUCTS" productStoreId="1005"/>  
+	 <ProductStoreGroupMember  fromDate="2014-01-31 00:00:00.0"  productStoreGroupId="ICECREAM_PRODUCTS" productStoreId="1005"/>   -->
+	 
+	 
+	 
+	 
+	 <!-- new Sample Data -->
+ 
+
+ <ProductStore addToCartRemoveIncompat="Y"
+ 	addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y"
+ 	autoApproveOrder="Y" autoApproveReviews="N" autoInvoiceDigitalItems="Y"
+ 	autoOrderCcTryExp="Y" autoOrderCcTryLaterNsf="Y"
+ 	autoOrderCcTryOtherCards="Y" autoSaveCart="N"
+ 	balanceResOnOrderCreation="N" checkGcBalance="N" checkInventory="N"
+ 	companyName="MOTHER DAIRY" createdStamp="2014-03-11 15:48:01.0"
+ 	createdTxStamp="2014-03-11 15:48:01.0" defaultCurrencyUomId="INR"
+ 	defaultLocaleString="en_US" digitalItemApprovedStatus="ITEM_APPROVED"
+ 	enableAutoSuggestionList="N" enableDigProdUpload="N" explodeOrderItems="N"
+ 	headerApprovedStatus="ORDER_APPROVED" headerCancelStatus="ORDER_SENT"
+ 	headerDeclinedStatus="ORDER_REJECTED" inventoryFacilityId="MARKETING STORE"
+ 	isDemoStore="Y" isFactoryStore="N" isImmediatelyFulfilled="N"
+ 	itemApprovedStatus="ITEM_APPROVED" itemCancelStatus="ITEM_CANCELLED"
+ 	itemDeclinedStatus="ITEM_REJECTED" lastUpdatedStamp="2014-03-11 15:48:01.0"
+ 	lastUpdatedTxStamp="2014-03-11 15:48:01.0" manualAuthIsCapture="N"
+ 	oneInventoryFacility="Y" payToPartyId="Company"
+ 	prodSearchExcludeVariants="Y" productStoreId="1005" prorateShipping="Y"
+ 	prorateTaxes="Y" reqReturnInventoryReceive="N" reqShipAddrForDigItems="Y"
+ 	requireCustomerRole="N" requireInventory="N" reserveInventory="N"
+ 	reserveOrderEnumId="INVRO_FIFO_REC" retryFailedAuths="Y"
+ 	selectPaymentTypePerItem="N" shipIfCaptureFails="Y"
+ 	showCheckoutGiftOptions="Y" showOutOfStockProducts="Y"
+ 	showPricesWithVatTax="N" showTaxIsExempt="Y" splitPayPrefPerShpGrp="Y"
+ 	storeName="ICE CREAM STORE" subtitle="ICE CREAM AMUL STORE" title="ICE CREAM AMUL STORE"
+	usePrimaryEmailUsername="N" viewCartOnAdd="N" /> 
+	
+	
+	 <ProdCatalog catalogName="Nandini Store Catalog"  prodCatalogId="ICE_CREAM_AMUL" useQuickAdd="N"/> 
+	<ProductStoreCatalog  fromDate="2014-01-20 00:00:00.0" prodCatalogId="ICE_CREAM_AMUL" productStoreId="1005"/>
+	
+      <ProductStore addToCartRemoveIncompat="Y"
+		addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y"
+		autoApproveOrder="Y" autoApproveReviews="N" autoInvoiceDigitalItems="Y"
+		autoOrderCcTryExp="Y" autoOrderCcTryLaterNsf="Y"
+		autoOrderCcTryOtherCards="Y" autoSaveCart="N"
+		balanceResOnOrderCreation="N" checkGcBalance="N" checkInventory="N"
+		companyName="MOTHER DAIRY" createdStamp="2014-03-11 15:48:01.0"
+		createdTxStamp="2014-03-11 15:48:01.0" defaultCurrencyUomId="INR"
+		defaultLocaleString="en_US" digitalItemApprovedStatus="ITEM_APPROVED"
+		enableAutoSuggestionList="N" enableDigProdUpload="N" explodeOrderItems="N"
+		headerApprovedStatus="ORDER_APPROVED" headerCancelStatus="ORDER_SENT"
+		headerDeclinedStatus="ORDER_REJECTED" inventoryFacilityId="MARKETING STORE"
+		isDemoStore="Y" isFactoryStore="N" isImmediatelyFulfilled="N"
+		itemApprovedStatus="ITEM_APPROVED" itemCancelStatus="ITEM_CANCELLED"
+		itemDeclinedStatus="ITEM_REJECTED" lastUpdatedStamp="2014-03-11 15:48:01.0"
+		lastUpdatedTxStamp="2014-03-11 15:48:01.0" manualAuthIsCapture="N"
+		oneInventoryFacility="Y" payToPartyId="Company"
+		prodSearchExcludeVariants="Y" productStoreId="1006" prorateShipping="Y"
+		prorateTaxes="Y" reqReturnInventoryReceive="N" reqShipAddrForDigItems="Y"
+		requireCustomerRole="N" requireInventory="N" reserveInventory="N"
+		reserveOrderEnumId="INVRO_FIFO_REC" retryFailedAuths="Y"
+		selectPaymentTypePerItem="N" shipIfCaptureFails="Y"
+		showCheckoutGiftOptions="Y" showOutOfStockProducts="Y"
+		showPricesWithVatTax="N" showTaxIsExempt="Y" splitPayPrefPerShpGrp="Y"
+		storeName="ICE CREAM NANDINI STORE" subtitle="ICE CREAM NANDINI STORE" title="ICE CREAM NANDINI  STORE"
+		usePrimaryEmailUsername="N" viewCartOnAdd="N" /> 
+       <ProdCatalog catalogName="Nandini Store Catalog"  prodCatalogId="ICE_CREAM_NANDINI" useQuickAdd="N"/> 
+       <ProductStoreCatalog  fromDate="2014-01-20 00:00:00.0" prodCatalogId="ICE_CREAM_NANDINI" productStoreId="1006"/>
+	
+	<ProductStoreGroup  description="MOTHER DAIRY"  productStoreGroupId="ICECREAM_PRODUCTS" productStoreGroupName="MOTHER_DAIRY"/> 
+	<ProductStoreGroupMember  fromDate="2014-01-31 00:00:00.0"  productStoreGroupId="ICECREAM_PRODUCTS" productStoreId="1005"/> 
+	   
+	 <ProductCategoryType  description="Ice Cream"  productCategoryTypeId="ICE_CREAM"/> 
+	 <ProductCategory  productCategoryId="ICE_CREAM_NANDINI" productCategoryTypeId="ICE_CREAM"/> 
+	 <ProductCategory  productCategoryId="ICE_CREAM_AMUL" productCategoryTypeId="ICE_CREAM"/> 
+	 
+	    <Product   primaryProductCategoryId="ICE_CREAM_NANDINI" productId="100" />
+	    <Product  primaryProductCategoryId="ICE_CREAM_NANDINI" productId="101" />
+	    <Product primaryProductCategoryId="ICE_CREAM_NANDINI" productId="102" />
+
+	     <Product   primaryProductCategoryId="ICE_CREAM_AMUL" productId="103" />
+	    <Product  primaryProductCategoryId="ICE_CREAM_AMUL" productId="104" />
+	    <Product primaryProductCategoryId="ICE_CREAM_AMUL" productId="105" />
+    
+    
+    
+     <Enumeration  description="WholeSale Reatailer" enumCode="WHS_RTLR" enumId="WHS_RTLR" enumTypeId="BOOTH_CAT_TYPE"  sequenceId="9"/> 
+	 
+	 

@@ -41,8 +41,29 @@ categoryTypeEnum = null;
 if(parameters.categoryTypeEnum){
 	categoryTypeEnum = parameters.categoryTypeEnum;
 }
+
 boothsList = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum);
-if(tempRoute){
+if(!UtilValidate.isEmpty(parameters.categoryTypeEnumIceCream)){//to handle IceCream Booths
+	categoryTypeEnum =parameters.categoryTypeEnumIceCream;
+	boothsList = ByProductNetworkServices.getAllBooths(delegator, categoryTypeEnum).get("boothsDetailsList");
+	JSONArray boothsJSON = new JSONArray();
+	routesList.each{route ->
+		JSONObject newRouteObj = new JSONObject();
+		newRouteObj.put("value",route.facilityId);
+		newRouteObj.put("label",route.facilityName);
+		routesJSON.add(newRouteObj);
+	}
+	JSONArray boothItemsJSON = new JSONArray();
+	boothsList.each{booth ->
+		JSONObject newBoothObj = new JSONObject();
+		newBoothObj.put("value",booth.facilityId);
+		newBoothObj.put("label",booth.facilityName);
+		boothsJSON.add(newBoothObj);
+	}
+	context.boothsJSON = boothsJSON;
+	Debug.log("boothsJSON==="+boothsJSON);
+}
+else if(tempRoute){
 	JSONArray boothsJSON = new JSONArray();
 	routesList.each{route ->
 		JSONObject newRouteObj = new JSONObject();
@@ -133,4 +154,5 @@ if(tempRoute){
 	context.boothsJSON = boothsJSON;
 	context.routeCollectionMap = routeCollectionMap;
 }
+
 context.routesJSON = routesJSON;

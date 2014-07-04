@@ -1668,6 +1668,8 @@
                		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
                		<select-field field-name="propertyValue"/>
                </entity-one>
+              
+            
                <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
                <set field="supplyDate" from-field="parameters.supplyDate"/>
                <set field="effectiveDate" value="${parameters.effectiveDate}"/>
@@ -2973,7 +2975,8 @@
                 <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />					  					  
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+				 <set field="parameters.categoryTypeEnumIceCream" value="WHS_RTLR"/>				  					  
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3016,6 +3019,7 @@
                <set field="orderRoute" from-field="parameters.orderRoute"/> 
                <set field="supplyDate" from-field="parameters.supplyDate"/>
                 <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+                  <set field="parameters.categoryTypeEnumIceCream" value="WHS_RTLR"/>	
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />					  					  
