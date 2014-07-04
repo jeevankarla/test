@@ -30,4 +30,14 @@ under the License.
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="HUMANRES_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="HUMANRES_ADMIN"/>
+    
+    <SecurityPermission description="Mobile employees view Permission." permissionId="MOB_EMPLOYEES_VIEW"/>
+    <SecurityPermission description="Mobile myemployee view Permission." permissionId="MOB_MYEMPLOYEE_VIEW"/>
+    <SecurityPermission description="Mobile retailer dashboard permission." permissionId="MOB_HR_DB_VIEW"/>
+    
+    <SecurityGroup description="Mobile employee" groupId="MOB_EMPLOYEE"/>
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_EMPLOYEES_VIEW"/>  
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_MYEMPLOYEE_VIEW"/>    
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_HR_DB_VIEW"/>    
+      
 </entity-engine-xml>

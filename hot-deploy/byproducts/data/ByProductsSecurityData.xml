@@ -71,9 +71,7 @@
     <SecurityGroupPermission groupId="MOB_SALESREP" permissionId="MOB_ORDER_VIEW"/>
     <SecurityGroupPermission groupId="MOB_SALESREP" permissionId="MOB_PAYMENT_VIEW"/>
     <SecurityGroupPermission groupId="MOB_SALESREP" permissionId="MOB_CATALOG_VIEW"/>    
-    <SecurityGroupPermission groupId="MOB_SALESREP" permissionId="MOB_FACILITY_VIEW"/> 
-    <SecurityGroupPermission groupId="MOB_SALESREP" permissionId="MOB_EMPLOYEES_VIEW"/>     
-    <SecurityGroupPermission groupId="MOB_SALESREP" permissionId="MOB_MYEMPLOYEE_VIEW"/>                     
+    <SecurityGroupPermission groupId="MOB_SALESREP" permissionId="MOB_FACILITY_VIEW"/>                     
     <SecurityGroupPermission groupId="MOB_SALESREP" permissionId="MOB_SREP_DB_VIEW"/>    
     
     <SecurityGroup description="Mobile sales without edit privileges" groupId="MOB_SALES_NOEDIT"/>
@@ -81,9 +79,7 @@
     <SecurityGroupPermission groupId="MOB_SALES_NOEDIT" permissionId="MOB_ORDER_VIEW"/>
     <SecurityGroupPermission groupId="MOB_SALES_NOEDIT" permissionId="MOB_PAYMENT_VIEW"/>
     <SecurityGroupPermission groupId="MOB_SALES_NOEDIT" permissionId="MOB_CATALOG_VIEW"/>    
-    <SecurityGroupPermission groupId="MOB_SALES_NOEDIT" permissionId="MOB_FACILITY_VIEW"/>  
-    <SecurityGroupPermission groupId="MOB_SALES_NOEDIT" permissionId="MOB_EMPLOYEES_VIEW"/>
-    <SecurityGroupPermission groupId="MOB_SALES_NOEDIT" permissionId="MOB_MYEMPLOYEE_VIEW"/>                                      
+    <SecurityGroupPermission groupId="MOB_SALES_NOEDIT" permissionId="MOB_FACILITY_VIEW"/>                                     
     <SecurityGroupPermission groupId="MOB_SALES_NOEDIT" permissionId="MOB_SREP_DB_VIEW"/>       
     
 
