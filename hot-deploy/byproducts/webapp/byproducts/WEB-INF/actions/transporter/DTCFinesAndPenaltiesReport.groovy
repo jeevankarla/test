@@ -28,7 +28,10 @@ import in.vasista.vbiz.byproducts.TransporterServices;
 import net.sf.json.JSONArray;
 import org.ofbiz.party.party.PartyHelper;
 dctx = dispatcher.getDispatchContext();
+
+if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
+}
 fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
 thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 context.put("fromDateTime", fromDateTime);
@@ -42,13 +45,6 @@ conditionList=[];
 conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_LMS_TRSPT_MRGN"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
-if(UtilValidate.isNotEmpty(periodBillingList)){
-	for (int i = 0; i < periodBillingList.size(); ++i) {
-		periodBillingDetails = periodBillingList.get(i);
-		periodBillingId = periodBillingDetails.periodBillingId;
-	}
-}
 contractorIdList=[];
 contractorNamesMap =[:];
 Map partyFacilityMap=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",monthBegin)).get("partyAndFacilityList");
@@ -99,11 +95,12 @@ contractorIdList.each { contractorId ->
 				BigDecimal subTotal=BigDecimal.ZERO;
 				
 				if(UtilValidate.isNotEmpty(shipmentId)){
-					routeId = routeId;
 					Map<String, Object> facilityFineTempMap = FastMap.newInstance();
 					    conditionList.clear();
 						conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, routeId));
+						conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
 						EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+						Debug.log("===condition==="+condition)
 						try{
 							List<GenericValue> facilityRecoveryList = FastList.newInstance();
 							facilityRecoveryList = delegator.findList("FineRecovery", condition, null,null, null, false);
@@ -122,11 +119,11 @@ contractorIdList.each { contractorId ->
 										for(GenericValue facilityRecCan : allFaclityCanFinesList){
 											canFineAmount=canFineAmount.add(facilityRecCan.getBigDecimal("amount"));
 										}
-										for(GenericValue facilityRecTrans : allFaclityFinesList){
-											finesAmount=finesAmount.add(facilityRecTrans.getBigDecimal("amount"));
+										for(GenericValue facilityRecFine : allFaclityFinesList){
+											finesAmount=finesAmount.add(facilityRecFine.getBigDecimal("amount"));
 										}
-										for(GenericValue facilityRecTrans : allFaclityTransportFinesList){
-											transportAmount=transportAmount.add(facilityRecTrans.getBigDecimal("amount"));
+										for(GenericValue facilityRecTransFine : allFaclityTransportFinesList){
+											transportAmount=transportAmount.add(facilityRecTransFine.getBigDecimal("amount"));
 										}
 										for(GenericValue facilityRecSecurity : allFaclitySecurityFineList){
 											securityFineAmount=securityFineAmount.add(facilityRecSecurity.getBigDecimal("amount"));
@@ -145,16 +142,6 @@ contractorIdList.each { contractorId ->
 											tempMap["subTotal"]=crateFineAmount+canFineAmount+finesAmount+transportAmount+transportAmount+remitFinesAmount;
 											routeWiseSaleMap[routeId]=tempMap;
 											
-										 }else{
-											 tempMap = [:];
-											 tempMap.putAll(routeWiseSaleMap.get(routeId));
-											 tempMap["cratesFine"]=crateFineAmount;
-											 tempMap["cansFine"]=canFineAmount;
-											 tempMap["finesAmount"]=finesAmount;
-											 tempMap["transportAmount"]=transportAmount;
-											 tempMap["securityFineAmount"]=transportAmount;
-											 tempMap["remitFinesAmount"]=remitFinesAmount;
-											 tempMap["subTotal"]=crateFineAmount+canFineAmount+finesAmount+transportAmount+transportAmount+remitFinesAmount;
 										 }
 							}
 						}catch(GenericEntityException e){
