@@ -1856,7 +1856,6 @@ public class ByProductNetworkServices {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
 		}
-		
 		openingBalance = invoicePendingAmount.subtract(advancePaymentAmount);
 		openingBalanceMap.put("openingBalance", openingBalance);
 		return openingBalanceMap;
@@ -4579,7 +4578,7 @@ public class ByProductNetworkServices {
 					if (dayWiseMap.containsKey(payDate)) {
 						BigDecimal extAmt = (BigDecimal) dayWiseMap.get(payDate);
 						BigDecimal tempTotalAmt = extAmt.add(amount);
-						dayWiseMap.put(payDate, amount);
+						dayWiseMap.put(payDate, tempTotalAmt);
 					} else {
 						dayWiseMap.put(payDate, amount);
 					}
