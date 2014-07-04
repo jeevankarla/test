@@ -876,5 +876,24 @@
         <field name="finAccountBranch" title="Account Branch" ><display default-value="${AccountDetails[0].finAccountBranch}"></display></field> 
 		<field name="ifscCode" title="Ifsc Code"><display default-value="${AccountDetails[0].ifscCode}"></display></field>
 	</form>
+	
+	<form name="EmployeeProfilePicture" target="createEmployeeContent" type="upload" 
+  		header-row-style="header-row">
+
+		<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" width="300"/></field>
+        <field name="partyId" map-name="parameters"><hidden/></field>  
+        <field name="partyContentTypeId"><hidden value="INTERNAL"/></field>
+        <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>
+        
+        <field name="contentTypeId"><hidden value="IMAGE_FRAME"/></field>
+        <field name="statusId"><hidden value="CTNT_AVAILABLE"/></field>
+        
+        <field name="uploadedFile" title="${uiLabelMap.CommonUpload}"><file/></field>
+        <field name="dataCategoryId"><hidden value="BUSINESS"/></field>
+        <field name="isPublic"><hidden value="Y"/></field>
+             
+        <field name="createButton" title="Upload Pic"><submit button-type="button"/></field>
+    </form> 
+    
 </forms>
 

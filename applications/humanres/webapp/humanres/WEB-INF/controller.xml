@@ -1120,7 +1120,14 @@ under the License.
         <response name="success" type="view" value="EditEmplLeave"/>
         <response name="error" type="view" value="EditEmplLeave"/>
     </request-map>
-
+	
+	<!--====================Employee Content Requests===================================-->
+	<request-map uri="createEmployeeContent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadPartyContentFile"/>
+        <response name="success" type="view" value="EmployeeProfile"/>
+    </request-map>
+	
     <!--====================Recruitment Requests===================================-->
     <request-map uri="FindJobRequisitions">
         <security https="true" auth="true"/>

@@ -177,6 +177,7 @@ under the License.
 		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                        </container>
 		                                        <container style="profile-right">
+		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="AccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
 <!--		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
@@ -570,4 +571,20 @@ under the License.
 			</widgets>
 		</section>
 	</screen>
+	<screen name="EmployeeProfilePicture">
+        <section>
+            <actions>
+                <service service-name="getCurrentPartyEmploymentData" auto-field-map="true" result-map="employmentData"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ServeProfilePic.groovy"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="contentId" from-field="parameters.contentId"/>
+                <entity-one entity-name="Content" value-field="content"/>
+            </actions>
+            <widgets>
+                <screenlet title="Profile Picture">
+                    <include-form name="EmployeeProfilePicture" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
 </screens>
