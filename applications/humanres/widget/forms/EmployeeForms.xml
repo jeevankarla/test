@@ -880,7 +880,7 @@
 	<form name="EmployeeProfilePicture" target="createEmployeeContent" type="upload" 
   		header-row-style="header-row">
 
-		<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" width="300"/></field>
+		<field name="imageWatermark" use-when="imageUrl != null" title="${uiLabelMap.CommonImage}" widget-area-style="img-src-de" ><image value="${imageUrl}" width="150"/></field>
         <field name="partyId" map-name="parameters"><hidden/></field>  
         <field name="partyContentTypeId"><hidden value="INTERNAL"/></field>
         <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field>
