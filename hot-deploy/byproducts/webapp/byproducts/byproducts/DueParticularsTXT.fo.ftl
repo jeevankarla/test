@@ -519,9 +519,6 @@ under the License.
                     	<#assign boothDetails = delegator.findOne("Facility", {"facilityId" : duedata.get("facilityId")?if_exists}, true)>
                     	<#assign invoiceAmount = duedata.get("invoiceAmount")>
                     	<#assign returnAmount = duedata.get("returnAmount")>
-                    	<#assign cashAmount = duedata.get("cashAmount")>
-                    	<#assign chequeAmount = duedata.get("chequeAmount")>
-                    	<#assign challanAmount = duedata.get("challanAmount")>
                     	<#assign chequeRetAmount = duedata.get("chequeRetnAmount")>
                     	<#assign chequePPaidAmount = duedata.get("chequePenalityPaidAmount")>
                     	 

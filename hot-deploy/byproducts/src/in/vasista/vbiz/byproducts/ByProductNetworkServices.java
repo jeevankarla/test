@@ -7568,11 +7568,13 @@ public class ByProductNetworkServices {
 		}
 
 		Map paymentDetailsMap = FastMap.newInstance();
+		Map facilityPaidMap = FastMap.newInstance();
 
 		if (UtilValidate.isNotEmpty(paymentParties)) {
 			for (int i = 0; i < paymentParties.size(); i++) {
 				Map dayPaymentDetail = FastMap.newInstance();
 				String facilityId = ((String) paymentParties.get(i)).toUpperCase();
+				BigDecimal totalPaidAmnt=BigDecimal.ZERO;
 				List<GenericValue> facilityPayments = FastList.newInstance();
 				if (isByParty) {
 					facilityPayments = EntityUtil.filterByCondition(payments,EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("partyIdFrom"),EntityOperator.EQUALS, EntityFunction.UPPER(((String) facilityId).toUpperCase())));
@@ -7591,6 +7593,7 @@ public class ByProductNetworkServices {
 						String issuingAuthorityBranch = facilityPayment.getString("issuingAuthorityBranch");
 						String statusId = facilityPayment.getString("statusId");
 						BigDecimal amount = (BigDecimal) facilityPayment.get("amount");
+						totalPaidAmnt=totalPaidAmnt.add(amount);
 						String paymentMethodTypeId = facilityPayment.getString("paymentMethodTypeId");
 						dataMap.put("paymentRefNum", paymentRefNum);
 						dataMap.put("issuingAuthority", issuingAuthority);
@@ -7644,9 +7647,12 @@ public class ByProductNetworkServices {
 					}
 				}
 				paymentDetailsMap.put(facilityId, dayPaymentDetail);
+				facilityPaidMap.put(facilityId,totalPaidAmnt);
+				
 			}
 		}
 		result.put("paymentDetails", paymentDetailsMap);
+		result.put("facilityPaidMap", facilityPaidMap);
 		return result;
 	}
 

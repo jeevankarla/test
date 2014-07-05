@@ -740,6 +740,14 @@
         <response name="failed" type="view" value="TransporterMargins"/>
         <response name="error" type="view" value="TransporterMargins"/>
     </request-map>
+    <request-map uri="ApproveDTCBilling">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="DTCStatusUpdate"/>
+       <response name="success" type="request" value="TransporterMargins"/>
+        <response name="failed" type="view" value="TransporterMargins"/>
+        <response name="error" type="view" value="TransporterMargins"/>
+    </request-map>
+    
      <request-map uri="GenerateTrnsptMarginReport.pdf"><security https="true" auth="true"/>
         <response name="success" type="view" value="GenerateTrnsptMarginReportPDF"/>
     </request-map>
@@ -1078,7 +1086,7 @@
     <view-map name="LookupProductByCategory" type="screen" page="component://byproducts/widget/ByProductsLookupScreens.xml#LookupProductByCategory"/>
     <view-map name="SubscriptionIndent" type="screen" page="component://byproducts/widget/ByProductsScreens.xml#SubscriptionIndent"/>
     <view-map name="DueParticularsTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="text/plain"/>
-    <view-map name="dueParticularsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsTXT" content-type="application/pdf"/><!-- withOB -->
+    <view-map name="dueParticularsPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DueParticularsPDF" content-type="application/pdf"/><!-- withOB -->
     <view-map name="PrintPaymentRecieptPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PrintPaymentRecieptPDF" content-type="application/pdf"/>
     <view-map name="chequeReturnReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#chequeReturnReportPDF" content-type="application/pdf"/>
     <view-map name="duesFDRReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#duesFDRReportPDF" content-type="application/pdf"/>
