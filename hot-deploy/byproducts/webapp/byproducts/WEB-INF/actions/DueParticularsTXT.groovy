@@ -79,16 +79,16 @@ context.thruDateTime = thruDateTime;
 	context.supplyDate = dayBegin;
 }*/
 
-/*conditionList=[];
+conditionList=[];
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_EQUAL , null));
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, "2093"));
-conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1174","S1169")));
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1174","S1169","B30101","B30202")));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
-boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
+boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);
 
-boothsList=ByProductNetworkServices.getAllBooths(delegator,categoryTypeEnum).get("boothsList");
+//boothsList=ByProductNetworkServices.getAllBooths(delegator,categoryTypeEnum).get("boothsList");
 boothTotals=[:];
 returnBoothTotals=[:];
 boothTotalsWithReturn=[:];
@@ -104,6 +104,9 @@ boothTotals = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, Ut
 inputMap = [];
 penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, UtilMisc.toMap("fromDate", dayBegin, "thruDate", dayEnd,"facilityList", boothsList, "userLogin", userLogin));
 facilityPenaltyMap = penaltyResult.get("facilityPenalty");
+returnPaymentReferences = penaltyResult.get("returnPaymentReferences");
+facilityPenaltyPaymentIdsMap= penaltyResult.get("facilityPenaltyPaymentIdsMap");
+Debug.log("=======facilityPenaltyPaymentIdsMap===="+facilityPenaltyPaymentIdsMap);
 List<GenericValue> paymentsList = FastList.newInstance();
 conditionList=[];
 facilityIdsList=[];
@@ -182,9 +185,21 @@ boothsList.each{  boothId->
 	}
 	BigDecimal invoiceAmount = totalRevenue;
 	BigDecimal chequePenality=BigDecimal.ZERO;
+	BigDecimal chequePenalityPaidAmount=BigDecimal.ZERO;
 	if(UtilValidate.isNotEmpty(facilityPenaltyMap.get(boothId))){
 		chequePenality=facilityPenaltyMap.get(boothId);
 	}
+	if(UtilValidate.isNotEmpty(facilityPenaltyPaymentIdsMap.get(boothId))){
+		penaltyPaymentIdsList=facilityPenaltyPaymentIdsMap.get(boothId);
+		penaltyPaymentIdsList.each{paymentId->
+			returnDetail = returnPaymentReferences.get(paymentId);
+			if(returnDetail){
+				chequePenalityPaidAmount=chequePenalityPaidAmount.add(returnDetail.get("amount"));
+			}
+		}
+		Debug.log("=chequePenalityPaidAmount==####"+chequePenalityPaidAmount+"===BoothId="+boothId);
+	}
+	
 	BigDecimal returnAmount=BigDecimal.ZERO;
 	/*if(UtilValidate.isNotEmpty(returnBoothTotals.get(boothId))){
 		returnAmount=(returnBoothTotals.get(boothId)).get("totalRevenue");
@@ -196,7 +211,7 @@ boothsList.each{  boothId->
 	
 	invoiceAmount=invoiceAmount.add(chequePenality);
 	BigDecimal totalPaidAmnt=(paymentAmount+cashAmount+chequeAmount+challanAmount+returnAmount);
-	//Debug.log("=returnAann==####"+returnAmount+"=paymentAmount="+paymentAmount+"=totalPaidAmnt="+totalPaidAmnt+"===BoothId="+boothId);
+	
 	BigDecimal netAmount =(BigDecimal) invoiceAmount.subtract(totalPaidAmnt);
 	BigDecimal openingBalance=BigDecimal.ZERO;
 	boothTotalsMap=[:];
@@ -205,6 +220,7 @@ boothsList.each{  boothId->
 	boothTotalsMap.put("openingBalance", openingBalance);
 	netAmount=netAmount.add(openingBalance);
 	}
+	netAmount=netAmount.add(chequePenalityPaidAmount);//to match with closing Balance
 	
    boothTotalsMap.put("facilityId", boothId);
    boothTotalsMap.put("invoiceAmount", totalRevenue+chequePenality);
@@ -213,6 +229,7 @@ boothsList.each{  boothId->
    boothTotalsMap.put("chequeAmount", chequeAmount);
    boothTotalsMap.put("challanAmount", challanAmount);
    boothTotalsMap.put("chequeRetnAmount", chequePenality);
+   boothTotalsMap.put("chequePenalityPaidAmount", chequePenalityPaidAmount);
    boothTotalsMap.put("totalPaid", totalPaidAmnt);
    boothTotalsMap.put("netAmount", netAmount);
    if(openingBalance!=0|| totalPaidAmnt!=0 || totalRevenue!=0 ){

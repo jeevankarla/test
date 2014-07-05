@@ -35,6 +35,8 @@ under the License.
 <#assign eaGtot = 0>
 <#assign saGtot = 0>
 <#assign netBalGrandTot = 0>   
+<#assign chequePenalityPaidAmountGr = 0>   
+
  
 <#if (reportTypeFlag=="DuesParticulers")>            	
 <fo:layout-master-set>
@@ -47,7 +49,7 @@ under the License.
   </#if>
   <#if (reportTypeFlag=="DuesAbstractReport")>            	
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="10in" page-width="13in"  margin-bottom="1in" margin-left=".1in" >
+	<fo:simple-page-master master-name="main" page-height="10in" page-width="14in"  margin-bottom="1in" margin-left=".1in" >
          <fo:region-body margin-top="1.2in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -403,7 +405,7 @@ under the License.
 					<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160;   ${uiLabelMap.KMFDairyHeader}</fo:block>
 					<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160;   ${uiLabelMap.KMFDairySubHeader}</fo:block>				
               		<fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160; <#if categoryTypeEnum?exists && categoryTypeEnum?has_content>  	<#assign enumeration = delegator.findOne("Enumeration", {"enumId" : categoryTypeEnum}, true)>${enumeration.description?if_exists}<#else>ALL </#if> DUES ABSTRACT FOR DATE/MONTH :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd,MMM yy")} - ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd,MMM yy")}           ${uiLabelMap.CommonPage}:<fo:page-number/></fo:block>
-            		<fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block >--------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
               		<fo:block>
                  	<fo:table border-width="1pt" >
                  	<fo:table-column column-width="40pt"/>
@@ -453,8 +455,10 @@ under the License.
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">TOT-PAID</fo:block> 
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">AMOUNT</fo:block>   
 	                        </fo:table-cell>
-	                      
-	                      
+	                        <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">CHQ-RTN</fo:block> 
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">PAYMENT</fo:block>   
+	                        </fo:table-cell>
 	                         <fo:table-cell>
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">CLOSING</fo:block> 
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">Dr&#160;&#160;</fo:block>   
@@ -472,7 +476,7 @@ under the License.
 	                </fo:table-body>
 	               </fo:table>       
 	               </fo:block>
-              		<fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              		<fo:block >--------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body" font-size="10pt"  font-family="Courier,monospace">		
             	<fo:block>
@@ -505,6 +509,8 @@ under the License.
 	                	<#assign challanTot = 0>
 	                	<#assign totalCatPaidAmnt = 0>
 	                	<#assign netBalTot = 0>
+	                	<#assign chequePPaidAmountCat = 0>
+	                	
 	                	<#assign eatot = 0>
 	                	<#assign satot = 0>
 	                	<#assign batot = 0>
@@ -517,6 +523,8 @@ under the License.
                     	<#assign chequeAmount = duedata.get("chequeAmount")>
                     	<#assign challanAmount = duedata.get("challanAmount")>
                     	<#assign chequeRetAmount = duedata.get("chequeRetnAmount")>
+                    	<#assign chequePPaidAmount = duedata.get("chequePenalityPaidAmount")>
+                    	 
                     	<#assign totalPaid = duedata.get("totalPaid")>
 						<#assign netAmount = duedata.get("netAmount")>
 						
@@ -561,6 +569,11 @@ under the License.
 	                        	<#assign totalCatPaidAmnt = totalCatPaidAmnt+totalPaidAmnt>
 	                        	<#assign totalPaidAmnt = 0>
 	                        </fo:table-cell>
+	                         <fo:table-cell>
+	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${chequePPaidAmount?if_exists?string("##0.00")}</fo:block>  
+	                        	<#assign chequePPaidAmountCat = chequePPaidAmountCat+chequePPaidAmount>
+	                        </fo:table-cell>
+	                        
                            <fo:table-cell>
 	                        <#if netAmount &gt; 0 >
 	                            <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${netAmount?if_exists?string("##0.00")}</fo:block>  
@@ -595,7 +608,7 @@ under the License.
 	               
 	                <fo:table-row>
                	     	<fo:table-cell>
-                            <fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
+                           <fo:block >--------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                 	
@@ -631,6 +644,11 @@ under the License.
 	                    		<#assign totalCatPaidGAmnt = totalCatPaidGAmnt+totalCatPaidAmnt>
 	                   			<#assign totalCatPaidAmnt = 0>
 	                    </fo:table-cell>
+	                     <fo:table-cell>
+	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${chequePPaidAmountCat?if_exists?string("##0.00")}</fo:block>  
+	                    		<#assign chequePenalityPaidAmountGr = chequePenalityPaidAmountGr+chequePPaidAmountCat>
+	                    </fo:table-cell>
+	                    
 	                    <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${satot?if_exists?string("##0.00")}</fo:block>  
 	                    		<#assign saGtot = saGtot+satot>
@@ -650,7 +668,7 @@ under the License.
                 	</fo:table-row>
                 	<fo:table-row>
                	     	<fo:table-cell>
-                           <fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
+                           <fo:block >--------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                 	
@@ -677,6 +695,9 @@ under the License.
 	                     <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${totalCatPaidGAmnt?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell>
+	                     <fo:table-cell>
+	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${chequePenalityPaidAmountGr?if_exists?string("##0.00")}</fo:block>  
+	                    </fo:table-cell>
 	                      <fo:table-cell>
 	                           <fo:block  keep-together="always" text-align="right"  white-space-collapse="false">${saGtot?if_exists?string("##0.00")}</fo:block>  
 	                    </fo:table-cell> 
@@ -689,7 +710,7 @@ under the License.
                 	</fo:table-row>
                 	<fo:table-row>
                	     	<fo:table-cell>
-                           <fo:block >-----------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
+                          <fo:block >--------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>        
                         </fo:table-cell>
                 	</fo:table-row>
                     </fo:table-body>

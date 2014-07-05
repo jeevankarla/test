@@ -7902,6 +7902,7 @@ public class ByProductNetworkServices {
 		Map facilityPenalty = FastMap.newInstance();
 		Map facilityPenaltyDayWise = FastMap.newInstance();
 		List chequeReturnDetails = FastList.newInstance();
+		Map facilityPenaltyPaymentIdsMap = FastMap.newInstance();
 		try {
 			List returnChequeExpr = FastList.newInstance();
 			returnChequeExpr.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_VOID"));
@@ -7965,6 +7966,7 @@ public class ByProductNetworkServices {
 					for (int i = 0; i < facilities.size(); i++) {
 						String facilityId = (String) facilities.get(i);
 						BigDecimal totalAmount = BigDecimal.ZERO;
+						List facilityPenaltyPaymentIds = FastList.newInstance();
 						Map dayWisePenalty = FastMap.newInstance();
 						List<GenericValue> facilityInvoices = EntityUtil.filterByCondition(invoices, EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS,facilityId));
 						Map dayPenalty = FastMap.newInstance();
@@ -7978,6 +7980,7 @@ public class ByProductNetworkServices {
 								dayCond.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
 								List<GenericValue> dayPartyPenalty = (List) EntityUtil.filterByCondition(facilityInvoices,EntityCondition.makeCondition(dayCond));
 								List invoiceDetail = FastList.newInstance();
+								
 								if (UtilValidate.isNotEmpty(dayPartyPenalty)) {
 									for (int j = 0; j < dayPartyPenalty.size(); j++) {
 										Map invoiceMap = FastMap.newInstance();
@@ -7989,6 +7992,7 @@ public class ByProductNetworkServices {
 										invoiceMap.put("amount", amount);
 										invoiceMap.put("paymentId",	paymentRefNum);
 										invoiceDetail.add(invoiceMap);
+										facilityPenaltyPaymentIds.add(paymentRefNum);
 									}
 									dayPenalty.put(dayStart, invoiceDetail);
 								}
@@ -7996,6 +8000,7 @@ public class ByProductNetworkServices {
 						}
 						facilityPenaltyDayWise.put(facilityId, dayPenalty);
 						facilityPenalty.put(facilityId, totalAmount);
+						facilityPenaltyPaymentIdsMap.put(facilityId,facilityPenaltyPaymentIds);
 					}
 				}
 			}
@@ -8007,6 +8012,7 @@ public class ByProductNetworkServices {
 		result.put("returnPaymentReferences", penaltyPaymentReferences);
 		result.put("facilityPenaltyDayWise", facilityPenaltyDayWise);
 		result.put("facilityPenalty", facilityPenalty);
+		result.put("facilityPenaltyPaymentIdsMap", facilityPenaltyPaymentIdsMap);
 		return result;
 	}
 
