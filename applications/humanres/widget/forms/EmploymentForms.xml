@@ -139,7 +139,7 @@
 		</display-entity>
 		</field>
 		<field name="fromDate" title="FromDate"><display/></field>
-		<field name="thruDate" title="ThruDate"><date-time type="timestamp"/></field>
+		<field name="thruDate" title="ThruDate"><date-time type="timestamp" /></field>
 		<field name="terminationReasionId" title="TerminationReasionId"><display/></field>
 		<field name="terminationTypeId" title="TerminationTypeId"><display/></field>
 		<field name="appointmentDate" title="AppointmentDate"><display/></field>
@@ -162,10 +162,8 @@
            </hyperlink>
         </field>
     	</form>
-    <form name="EditEmployment" type="single" target="createEmployment" default-map-name="employment"
+    <form name="EditEmployment" type="single" target="createEmployment" 
         header-row-style="header-row" default-table-style="basic-table">
-        <auto-fields-service service-name="createEmployment" default-field-type="hidden"/>
-        <auto-fields-service service-name="deleteEmployment" default-field-type="hidden"/>
         <field name="roleTypeIdFrom"><hidden value="INTERNAL_ORGANIZATIO"/></field>
         <field name="roleTypeIdTo"><hidden value="EMPLOYEE"/></field>
          <field name="roleTypeIdFrom"  title="${uiLabelMap.HumanResEmploymentroleTypeIdFrom}" tooltip="${uiLabelMap.CommonRequired}"><hidden/></field>
@@ -173,7 +171,6 @@
         <field name="partyIdFrom"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
         <field name="partyIdTo"  title="${uiLabelMap.HumanResEmployeePartyIdTo}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><hidden/></field>
         <field name="fromDate"  title="${uiLabelMap.CommonFromDate}" tooltip="${uiLabelMap.CommonRequired}"><date-time/></field>
-        <field name="thruDate"   title="${uiLabelMap.CommonThruDate}"><date-time/></field>
         <field name="partyIdFrom"  title="${uiLabelMap.HumanResEmploymentPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="false">
 				<entity-options entity-name="PartyRoleAndPartyDetail" key-field-name="partyId" description="${groupName}[${partyId}]">
