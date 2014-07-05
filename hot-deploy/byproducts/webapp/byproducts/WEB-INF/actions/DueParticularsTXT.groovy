@@ -79,16 +79,16 @@ context.thruDateTime = thruDateTime;
 	context.supplyDate = dayBegin;
 }*/
 
-conditionList=[];
+/*conditionList=[];
 conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS , "BOOTH"));
 conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.NOT_EQUAL , null));
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.NOT_EQUAL, "2093"));
 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN , UtilMisc.toList("S1174","S1169","B30101","B30202")));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 booths = delegator.findList("Facility", condition, null, UtilMisc.toList("facilityId"), null, false);
-boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);
+boothsList = EntityUtil.getFieldListFromEntityList(booths, "facilityId", false);*/
 
-//boothsList=ByProductNetworkServices.getAllBooths(delegator,categoryTypeEnum).get("boothsList");
+boothsList=ByProductNetworkServices.getAllBooths(delegator,categoryTypeEnum).get("boothsList");
 boothTotals=[:];
 returnBoothTotals=[:];
 boothTotalsWithReturn=[:];
