@@ -14,6 +14,9 @@ import org.ofbiz.base.util.UtilMisc;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 import java.text.SimpleDateFormat;
 import javax.swing.text.html.parser.Entity;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
@@ -49,13 +52,23 @@ context.put("estimatedDeliveryDate", estimatedDeliveryDateTime);
 rentInvoicesMap = [:];
 int day=UtilDateTime.getDayOfMonth(estimatedDeliveryDateTime,TimeZone.getDefault(),Locale.getDefault());
 if(day==5){
-	dayStart = UtilDateTime.getDayStart(estimatedDeliveryDateTime);
-	dayEnd = UtilDateTime.getDayEnd(estimatedDeliveryDateTime);
+	Timestamp newDate=UtilDateTime.getMonthStart(estimatedDeliveryDateTime);
+	Timestamp pMonthStart=UtilDateTime.getMonthStart(UtilDateTime.addDaysToTimestamp(newDate, -1));
+	Timestamp pMonthEnd=UtilDateTime.getMonthEnd(UtilDateTime.addDaysToTimestamp(newDate, -1),TimeZone.getDefault(),Locale.getDefault());
+	
+	resultMap=dispatcher.runSync("getCustomTimePeriodId", UtilMisc.toMap("periodTypeId","SALES_MONTH","fromDate",pMonthStart,"thruDate",pMonthEnd,"userLogin", userLogin));
+	if(UtilValidate.isNotEmpty(resultMap)){
+		customTimePeriodId=(String)resultMap.get("customTimePeriodId");
+		Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));
+		if (UtilValidate.isNotEmpty(resultMaplst)) {
+			periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+			periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
+		}
+	}
 	condList = [];
 	condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SHOPEE_RENT"));
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-	condList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
-	condList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	condList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN, periodBillingIds));
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	invoices = delegator.findList("Invoice", cond, null, null, null, false);
 	
