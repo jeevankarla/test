@@ -88,7 +88,6 @@ penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, UtilMisc.t
 facilityPenaltyMap = penaltyResult.get("facilityPenalty");
 returnPaymentReferences = penaltyResult.get("returnPaymentReferences");
 facilityPenaltyPaymentIdsMap= penaltyResult.get("facilityPenaltyPaymentIdsMap");
-Debug.log("=======facilityPenaltyPaymentIdsMapIN NEWWW===="+facilityPenaltyPaymentIdsMap+"====reportTypeFlag="+reportTypeFlag);
 List<GenericValue> paymentsList = FastList.newInstance();
 conditionList=[];
 facilityIdsList=[];
@@ -126,7 +125,6 @@ boothsList.each{  boothId->
 				chequePenalityPaidAmount=chequePenalityPaidAmount.add(returnDetail.get("amount"));
 			}
 		}
-		Debug.log("=chequePenalityPaidAmount==####"+chequePenalityPaidAmount+"===BoothId="+boothId);
 	}
 	
 	BigDecimal returnAmount=BigDecimal.ZERO;
