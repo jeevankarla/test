@@ -98,7 +98,6 @@ daywiseReceipts = ByProductNetworkServices.getByProductPaymentDetails(dctx, Util
 boothWiseReturnTotal = ByProductNetworkServices.getDaywiseProductReturnTotal(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", [], "isByParty",isByParty)).get("productReturnTotals");
 invoiceResult = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin, "isByParty",isByParty)).get("dayWisePartyInvoiceDetail");
 penaltyResult = ByProductNetworkServices.getByProductDaywisePenaltyTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin, "isByParty",isByParty));
-
 penalty = penaltyResult.get("facilityPenalty");
 returnPaymentReferences = penaltyResult.get("returnPaymentReferences");
 if(isByParty){
@@ -120,7 +119,6 @@ if(boothIdsList){
 		startingDate = fromDateTime;
 		paymentDetailList = [];
 		boothProdReturns = boothWiseReturnTotal.get(eachBooth);
-		Debug.log("boothProdReturns ######################################"+boothProdReturns);
 		boothPenalty = penalty.get(eachBooth);
 		tempPaymentList = [];
 		for(k = 1;k<=maxIntervalDays+1;k++){
@@ -184,7 +182,6 @@ if(boothIdsList){
 			tempDayBalanceMap.put("invoiceId", invoiceId);
 			tempDayBalanceMap.put("saleAmount", saleAmt);
 			tempDayBalanceMap.put("prodReturnAmt", prodReturnAmt);
-			
 			if(receiptAmt){
 				if(receiptAmt.get("payment")){
 					payments = receiptAmt.get("payment");
@@ -383,6 +380,7 @@ if(boothIdsList){
 				tempPenaltyList = boothPenalty.get(currDay);
 			}
 			if(tempPenaltyList && multiEntries){
+				tempCloseBal = 0;
 				tempPenaltyList.each{ eachPenalty ->
 					penaltyAmount = eachPenalty.get("amount");
 					total_Penalty = total_Penalty+penaltyAmount;
@@ -394,17 +392,19 @@ if(boothIdsList){
 						returnAmt = returnDetail.get("amount");
 						referenceNum = returnDetail.get("referenceNum");
 					}
-					
-					if(tempPaymentList){
+					total_returnAmt = total_returnAmt+returnAmt;
+					/*if(tempPaymentList){
 						tempPaymentList.each{eachPay ->
 							if(referenceNum == eachPay.get("paymentRefNum")){
 								returnAmt = eachPay.get("amount");
 								total_returnAmt = total_returnAmt+returnAmt;
 							}
 						}
-					}
+					}*/
+					
 					if(counterFlag == 0){
 						closeBal = tempOpenBal+salAmt-payment+returnAmt+penaltyAmount-prodReturnAmt;
+						tempCloseBal = closeBal;
 						tempMap.put("chequeReturn", referenceNum);
 						tempMap.put("penaltyAmt", penaltyAmount);
 						tempMap.put("returnAmt", returnAmt);
@@ -412,7 +412,8 @@ if(boothIdsList){
 						tempPaymentDetailList.addAll(tempMap);
 					}
 					else {
-						closeBal = tempOpenBal+returnAmt+penaltyAmount;
+						closeBal = tempCloseBal+returnAmt+penaltyAmount;
+						tempCloseBal = closeBal;
 						newTempMap = [:];
 						newTempMap.put("stDate", "");
 						newTempMap.put("openingBalance", "");
@@ -430,6 +431,7 @@ if(boothIdsList){
 					}
 					counterFlag++;
 				}
+				closeBal = tempCloseBal;
 			}
 			else{
 				if(counterFlag == 0){
