@@ -887,6 +887,7 @@
         
         <field name="contentTypeId"><hidden value="IMAGE_FRAME"/></field>
         <field name="statusId"><hidden value="CTNT_AVAILABLE"/></field>
+        <field name="mimeTypeId"><hidden value="image/jpeg"/></field>
         
         <field name="uploadedFile" title="${uiLabelMap.CommonUpload}"><file/></field>
         <field name="dataCategoryId"><hidden value="BUSINESS"/></field>
