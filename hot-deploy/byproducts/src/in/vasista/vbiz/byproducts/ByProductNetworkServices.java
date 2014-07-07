@@ -4792,7 +4792,7 @@ public class ByProductNetworkServices {
 					if (tempPartyId == "") {
 						tempPartyId = boothPayment.getString("partyId");
 						tempPayment = FastMap.newInstance();
-						tempPayment.put("facilityId", tempPartyId);
+						tempPayment.put("facilityId", boothPayment.getString("originFacilityId"));
 						tempPayment.put("partyId", tempPartyId);
 						tempPayment.put("routeId",boothPayment.getString("parentFacilityId"));
 						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempPartyId))) {
@@ -4813,7 +4813,7 @@ public class ByProductNetworkServices {
 						boothPaymentsList.add(tempPayment);
 						tempPartyId = boothPayment.getString("partyId");
 						tempPayment = FastMap.newInstance();
-						tempPayment.put("facilityId",boothPayment.getString("partyId"));
+						tempPayment.put("facilityId", boothPayment.getString("originFacilityId"));
 						tempPayment.put("partyId",boothPayment.getString("partyId"));
 						tempPayment.put("routeId",boothPayment.getString("parentFacilityId"));
 						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempFacilityId))) {
@@ -8366,7 +8366,8 @@ public class ByProductNetworkServices {
 		result.put("totalPaidAmount", totalPaidAmount);
 		return result;
 	}
-
+	
+	
 	public static Map<String, Object> updateReturnsForPeriod(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
