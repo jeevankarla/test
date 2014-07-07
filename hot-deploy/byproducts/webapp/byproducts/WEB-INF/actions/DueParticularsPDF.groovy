@@ -88,6 +88,8 @@ penaltyResult = ByProductNetworkServices.getChequePenaltyTotals(dctx, UtilMisc.t
 facilityPenaltyMap = penaltyResult.get("facilityPenalty");
 returnPaymentReferences = penaltyResult.get("returnPaymentReferences");
 facilityPenaltyPaymentIdsMap= penaltyResult.get("facilityPenaltyPaymentIdsMap");
+
+returnBoothTotals = ByProductNetworkServices.getDaywiseProductReturnTotal(dctx, UtilMisc.toMap("fromDate",dayBegin,"thruDate" ,dayEnd,"facilityList", [], "isByParty",isByParty)).get("productReturnTotals");
 List<GenericValue> paymentsList = FastList.newInstance();
 conditionList=[];
 facilityIdsList=[];
@@ -128,12 +130,11 @@ boothsList.each{  boothId->
 	}
 	
 	BigDecimal returnAmount=BigDecimal.ZERO;
-	/*if(UtilValidate.isNotEmpty(returnBoothTotals.get(boothId))){
-		returnAmount=(returnBoothTotals.get(boothId)).get("totalRevenue");
+	if(UtilValidate.isNotEmpty(returnBoothTotals.get(boothId))){
+		returnAmount=(returnBoothTotals.get(boothId)).get("totalAmount");
 		totaRETNAmount=totaRETNAmount.add(returnAmount);
 		//invoiceAmount=invoiceAmount.add(returnAmount);
-		
-	}*/
+	}
 	
 	invoiceAmount=invoiceAmount.add(chequePenality);
 	BigDecimal totalPaidAmnt=(paymentAmount+returnAmount);
