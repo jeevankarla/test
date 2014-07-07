@@ -75,13 +75,11 @@ if(partyCode){
 	partyCode = partyCode.toUpperCase();
 	boothIdsList.add(partyCode);
 }
-
 paymentMethodDescriptionMap = [:];
 paymentTypeList = delegator.findList("PaymentMethodType", null,null,null,null,true);
 paymentTypeList.each{eachMethod ->
 	paymentMethodDescriptionMap.put(eachMethod.paymentMethodTypeId, eachMethod.description);
 }
-
 
 context.facilityDesc = facilityDesc;
 boothSummary = [:];
@@ -100,16 +98,23 @@ invoiceResult = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, 
 penaltyResult = ByProductNetworkServices.getByProductDaywisePenaltyTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin, "isByParty",isByParty));
 penalty = penaltyResult.get("facilityPenalty");
 returnPaymentReferences = penaltyResult.get("returnPaymentReferences");
+partyFacilityMap = [:];
 if(isByParty){
 	ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothIdsList), UtilMisc.toSet("ownerPartyId"), null, null, false);
 	boothIdsList.clear();
 	boothIdsList = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
-	
+	partyFacilityMap = ByProductNetworkServices.getFacilityOwnerMap(dctx, [ownerPartyIds : boothIdsList]).get("partyFacilityMap");
 }
 maxIntervalDays=UtilDateTime.getIntervalInDays(fromDateTime,thruDateTime);
 if(boothIdsList){
 	boothIdsList.each{eachBooth ->
 		paymentDetailList = [];
+		boothFacility = eachBooth;
+		partyFacilities = partyFacilityMap.get(eachBooth);
+		if(partyFacilities){
+			boothFacility = partyFacilities.get(0);
+		}
+		
 		grandTotalMap = [:];
 		skipCounter = 0;
 		testFlag = 0;
@@ -129,7 +134,7 @@ if(boothIdsList){
 			stDate = UtilDateTime.toDateString(startingDate, "dd.MM.yyyy");
 			if(testFlag == 0){
 				testFlag = 1;
-				openingBalance =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,isForCalOB:"Y",saleDate: dayStart , facilityId:eachBooth, isByParty:Boolean.TRUE])).get("openingBalance");
+				openingBalance =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,isForCalOB:"Y",saleDate: dayStart , facilityId:boothFacility, isByParty:Boolean.TRUE])).get("openingBalance");
 				//openingBalance = (ByProductNetworkServices.getOpeningBalanceForByProductFacilities(dctx, [facilityId: eachBooth, userLogin: userLogin ,saleDate: dayStart])).get("openingBalance");
 			}else{
 				openingBalance = closingBalance;
@@ -477,5 +482,4 @@ if(boothIdsList){
 }
 context.put("partyWiseLedger", boothOBMap);
 context.put("boothSummary", boothSummary);
-
 
