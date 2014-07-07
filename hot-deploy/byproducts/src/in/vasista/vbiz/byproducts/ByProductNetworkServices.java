@@ -4592,7 +4592,8 @@ public class ByProductNetworkServices {
 		result.put("productReturnTotals", boothReturnDetail);
 		return result;
 	}
-
+	
+	
 	public static Map getBoothReceivablePaymentsForPeriod(DispatchContext dctx,Map<String, ? extends Object> context) {
 		// Delegator delegator ,LocalDispatcher dispatcher ,GenericValue
 		// userLogin,String paymentDate,String invoiceStatusId ,String
@@ -7151,6 +7152,47 @@ public class ByProductNetworkServices {
 			}
 		}
 		return ServiceUtil.returnSuccess();
+	}
+	
+	public static Map<String, Object> getFacilityOwnerMap(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		List ownerPartyIds = (List) context.get("ownerPartyIds");
+		List facilityIds = (List) context.get("facilityIds");
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		List conditionList = FastList.newInstance();
+		Map<String, Object> result = FastMap.newInstance();
+		if (UtilValidate.isNotEmpty(ownerPartyIds)) {
+			conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, ownerPartyIds));
+		}
+		if (UtilValidate.isNotEmpty(facilityIds)) {
+			conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, facilityIds));
+		}
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		List facilities = FastList.newInstance();
+		try{
+			facilities = delegator.findList("Facility", condition, UtilMisc.toSet("facilityId", "ownerPartyId"), null, null, false);
+		}catch(GenericEntityException e){
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		List<String> existFacilityIds = EntityUtil.getFieldListFromEntityList(facilities, "facilityId", true);
+		List<String> existOwnerPartyIds = EntityUtil.getFieldListFromEntityList(facilities, "ownerPartyId", true);
+		Map partyFacilityMap = FastMap.newInstance();
+		Map facilityPartyMap = FastMap.newInstance();
+		for(String facId : existFacilityIds){
+			List<GenericValue> ownerPartyList = EntityUtil.filterByCondition(facilities, EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facId));
+			List facOwnerPartyIds = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
+			facilityPartyMap.put(facId, facOwnerPartyIds);
+		}
+		for(String partyId : existOwnerPartyIds){
+			List<GenericValue> facilityPartyList = EntityUtil.filterByCondition(facilities, EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+			List partyFacilityIds = EntityUtil.getFieldListFromEntityList(facilityPartyList, "facilityId", true);
+			partyFacilityMap.put(partyId, partyFacilityIds);
+		}
+		result.put("facilityPartyMap", facilityPartyMap);
+		result.put("partyFacilityMap", partyFacilityMap);
+		return result;
 	}
 
 	/**

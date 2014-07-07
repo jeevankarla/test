@@ -154,6 +154,7 @@ if(parameters.finAccountCode != "AllBanks"){
 	facilityList = delegator.findList("Facility", splCond, null, null, null, false);
 	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "ownerPartyId", true);
 }
+partyFacilityMap = ByProductNetworkServices.getFacilityOwnerMap(dctx, [ownerPartyId : accountNameFacilityIds]).get("partyFacilityMap");
 
 context.putAt("accountNameList", accountNameList);
 stopListing = true;
@@ -235,6 +236,10 @@ if(hideSearch == "N" || stopListing){
 					if(!exclList.contains(eachRetailer)){
 						tempMap = [:];
 						tempMap.facilityId = eachRetailer;
+						facList = partyFacilityMap.get(eachRetailer);
+						if(facList){
+							tempMap.facilityId = facList.get(0);
+						}
 						tempMap.routeId = "";
 						tempMap.paymentMethodTypeDesc = paymentMethodDesc;
 						tempMap.grandTotal = 0;
@@ -290,7 +295,11 @@ if(hideSearch == "N" || stopListing){
 				}
 			}
 			tempMap = [:];
+			facList = partyFacilityMap.get(facilityId);
 			tempMap.facilityId = facilityId;
+			if(facList){
+				tempMap.facilityId = facList.get(0);
+			}
 			tempMap.routeId = "";
 			tempMap.paymentMethodTypeDesc = payMethDescription;
 			tempMap.grandTotal = 0;
