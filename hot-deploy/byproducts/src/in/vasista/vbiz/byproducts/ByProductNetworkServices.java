@@ -3864,7 +3864,7 @@ public class ByProductNetworkServices {
 					if (tempPartyId == "") {
 						tempPartyId = boothPayment.getString("partyIdFrom");
 						tempPayment = FastMap.newInstance();
-						tempPayment.put("facilityId", tempPartyId);
+						tempPayment.put("facilityId", boothPayment.getString("facilityId"));
 						tempPayment.put("partyIdFrom", tempPartyId);
 						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempPartyId))) {
 							tempPayment.put("routeId",boothRouteIdsMap.get(tempPartyId));
@@ -3881,7 +3881,7 @@ public class ByProductNetworkServices {
 						boothPaymentsList.add(tempPayment);
 						tempPartyId = boothPayment.getString("partyIdFrom");
 						tempPayment = FastMap.newInstance();
-						tempPayment.put("facilityId",boothPayment.getString("partyIdFrom"));
+						tempPayment.put("facilityId",boothPayment.getString("facilityId"));
 						tempPayment.put("partyIdFrom",boothPayment.getString("partyIdFrom"));
 						tempPayment.put("routeId",boothPayment.getString("parentFacilityId"));
 						if (UtilValidate.isNotEmpty(boothRouteIdsMap.get(tempPartyId))) {
