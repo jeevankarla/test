@@ -714,13 +714,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
       					</form>
       				</tr>-->
 			        <tr class="alternate-row">
-						<form id="MonthlyVatReport" name="MonthlyVatReport" method="post" action="<@ofbizUrl>MonthlyVatReport.txt</@ofbizUrl>" target="_blank">	
-							<td width="30%">Vat Returns Report</td>
+						<form id="MonthlyVatReport" name="MonthlyVatReport" method="post" action="<@ofbizUrl>MonthlyVatReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">Monthly Vat Report</td>
 							<td width="15%">From<input  type="text" size="18pt" id="vatFromDateId" readonly  name="fromDate"/></td>
 			      			<td width="15%">Thru<input  type="text" size="18pt" id="vatThruDateId" readonly  name="thruDate"/></td>
 							<td width="15%"></td>
 	      					<td width="15%"></td>
-							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>        			
+							<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('MonthlyVatReport', '<@ofbizUrl>MonthlyVatReport.pdf</@ofbizUrl>');" class="buttontext"/>
+							<input type="submit" value="CSV" onClick="javascript:appendParams('MonthlyVatReport', '<@ofbizUrl>MonthlyVatReport.csv</@ofbizUrl>');" class="buttontext"/></td>        			
 						</form>
 					</tr>
 					<#--<tr class="alternate-row">

@@ -128,5 +128,12 @@
     	<field name="fatKgs" title="FAT (Kgs.)"><display/></field>
         <field name="snfKgs" title="SNF (Kgs.)"><display/></field>  
      </form>
-   
+    <form name="MonthlyVatReportCSV" type="list" list-name="vatReportCsvList" view-size="99999">
+        <field name="product" title="Product Name"><display/></field>
+        <field name="vat" title="Vat Per"><display/></field>
+        <field name="saleRevenue" title="Sale Value"><display/></field>
+        <field name="vatRevenue" title="Vat Collected"><display/></field>
+        <field name="revenue" title="Net Sale"><display/></field>
+        <field name="quantity" title="Quantity(Kgs/Ltrs)"><display/></field>
+    </form>
 </forms>

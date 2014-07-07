@@ -1234,7 +1234,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="MonthlyVatReportTXT">
+	<screen name="MonthlyVatReportPDF">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
@@ -1257,6 +1257,20 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="MonthlyVatReportCSV">
+        <section>
+            <actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/monthlyVATReturn.groovy" />	
+			</actions>
+           <widgets>
+				<include-form name="MonthlyVatReportCSV" location="component://byproducts/widget/ByProductsReportForms.xml" />
+            </widgets>          
+        </section>
+    </screen>
 	<screen name="EnclosureOfTaxInvoiceReportTXT">
 		<section>
 			<actions>
