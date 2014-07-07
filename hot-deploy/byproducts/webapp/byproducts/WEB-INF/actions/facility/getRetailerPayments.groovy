@@ -154,7 +154,7 @@ if(parameters.finAccountCode != "AllBanks"){
 	facilityList = delegator.findList("Facility", splCond, null, null, null, false);
 	accountNameFacilityIds = EntityUtil.getFieldListFromEntityList(facilityList, "ownerPartyId", true);
 }
-partyFacilityMap = ByProductNetworkServices.getFacilityOwnerMap(dctx, [ownerPartyId : accountNameFacilityIds]).get("partyFacilityMap");
+partyFacilityMap = ByProductNetworkServices.getFacilityOwnerMap(dctx, [ownerPartyIds : accountNameFacilityIds]).get("partyFacilityMap");
 
 context.putAt("accountNameList", accountNameList);
 stopListing = true;
@@ -175,7 +175,6 @@ if(hideSearch == "N" || stopListing){
 		}
 		boothTempPaymentsList = boothsPaymentsDetail["boothPaymentsList"];
 	}
-	Debug.log("boothTempPaymentsList ####################"+boothTempPaymentsList);
 	finalFilterList = [];
 	filterFacilityList.each{ eachBankFacilityId ->
 		if(!accountNameFacilityIds || (accountNameFacilityIds &&  accountNameFacilityIds.contains(eachBankFacilityId))){
