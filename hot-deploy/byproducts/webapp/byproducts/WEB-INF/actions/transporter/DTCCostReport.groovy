@@ -90,47 +90,55 @@ routeIdsList = EntityUtil.getFieldListFromEntityList(routesList, "facilityId", f
 routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
 if(UtilValidate.isNotEmpty(routeIdsList)){
 	routeIdsList.each{ routeId ->
-	totalSaleQty=0;
-	conditionList=[];
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
-	conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
-	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,monthBegin));
-	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,monthEnd));
-	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	shipments = delegator.findList("Shipment", condition, null, ["routeId"], null, false);
-	shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
-	if(UtilValidate.isNotEmpty(shipmentIds)){
-		routeTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:monthBegin, thruDate:monthEnd,includeReturnOrders:true]);
-		// Populating sales for Milk and Curd products
-		if(UtilValidate.isNotEmpty(routeTotals)){
-			routeProdTotals = routeTotals.get("productTotals");
-			if(UtilValidate.isNotEmpty(routeProdTotals)){
-				routeProdTotals.each{ productValue ->
-					if(UtilValidate.isNotEmpty(productValue)){
-						productId = productValue.getKey();
-						product = delegator.findOne("Product", [productId : productId], false);
-						if("Milk".equals(product.primaryProductCategoryId) || "Curd".equals(product.primaryProductCategoryId)){
-							totalSaleQty = totalSaleQty+productValue.getValue().get("total");
+		totalSaleQty=0;
+		conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+		conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
+		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,monthBegin));
+		conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,monthEnd));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		shipments = delegator.findList("Shipment", condition, null, ["routeId"], null, false);
+		shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
+		if(UtilValidate.isNotEmpty(shipmentIds)){
+			routeTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:monthBegin, thruDate:monthEnd,includeReturnOrders:true]);
+			// Populating sales for Milk and Curd products
+			if(UtilValidate.isNotEmpty(routeTotals)){
+				routeProdTotals = routeTotals.get("productTotals");
+				if(UtilValidate.isNotEmpty(routeProdTotals)){
+					routeProdTotals.each{ productValue ->
+						if(UtilValidate.isNotEmpty(productValue)){
+							productId = productValue.getKey();
+							product = delegator.findOne("Product", [productId : productId], false);
+							if("Milk".equals(product.primaryProductCategoryId) || "Curd".equals(product.primaryProductCategoryId)){
+								totalSaleQty = totalSaleQty+productValue.getValue().get("total");
+							}
 						}
 					}
 				}
 			}
 		}
-	}
-	//populating Facility Rate and Facility Size
-	List<GenericValue> facilities = delegator.findList("FacilityPersonAndFinAccount", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, routeId), null, null, null, false);
-	facility = EntityUtil.getFirst(facilities);
-	Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
+		//populating Facility Rate and Facility Size
+		/*List<GenericValue> facilities = delegator.findList("FacilityPersonAndFinAccount", EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, routeId), null, null, null, false);
+		facility = EntityUtil.getFirst(facilities);*/
+		Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
 		inputRateAmt.put("rateCurrencyUomId", "INR");
 		inputRateAmt.put("facilityId", routeId);
 		inputRateAmt.put("fromDate",monthBegin );
 		inputRateAmt.put("rateTypeId", "TRANSPORTER_MRGN");
 		facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+		
+		Map inputFacilitySize =  UtilMisc.toMap("userLogin", userLogin);
+		inputFacilitySize.put("rateCurrencyUomId", "LEN_km");
+		inputFacilitySize.put("facilityId", routeId);
+		inputFacilitySize.put("fromDate",monthBegin );
+		inputFacilitySize.put("rateTypeId", "FACILITY_SIZE");
+		facilitySizeResult = dispatcher.runSync("getRouteDistance", inputFacilitySize);
+		
 		if(UtilValidate.isEmpty(routeWiseMap[routeId])){
 			tempMap = [:];
 			tempMap["saleQty"] = new BigDecimal(totalSaleQty).setScale(2,BigDecimal.ROUND_HALF_UP);
 			tempMap["facilityRate"] = (BigDecimal) facilityRateResult.get("rateAmount");
-			tempMap["facilitySize"] = facility.facilitySize;
+			tempMap["facilitySize"] = (BigDecimal) facilitySizeResult.get("facilitySize");
 			if(totalSaleQty != 0){
 				routeWiseMap[routeId] = tempMap;
 			}
@@ -145,7 +153,6 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 			if(totalQty != 0){
 				routeWiseMap[routeId] = tempMap;
 			}
-			
 		}
 	}
 }

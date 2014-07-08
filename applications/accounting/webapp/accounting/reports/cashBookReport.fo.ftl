@@ -22,8 +22,8 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-            margin-top="0.2in" margin-bottom=".3in" margin-left=".1in" margin-right=".1in">
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"
+            margin-top="0.2in" margin-bottom=".3in" margin-left=".2in" margin-right=".2in">
         <fo:region-body margin-top="1.34in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -51,6 +51,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	            		<fo:table-column column-width="90pt"/>
 	            		<fo:table-column column-width="80pt"/>
 	            		<fo:table-column column-width="90pt"/>
+	            		<fo:table-column column-width="120pt"/>
 	                    <fo:table-body>
 	                    <fo:table-row >
 	                    		<fo:table-cell border-style="solid">
@@ -77,6 +78,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
                         		<fo:table-cell border-style="solid">
                             		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Closing Balance</fo:block>  
                         		</fo:table-cell>
+                        		<fo:table-cell border-style="solid">
+                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Description</fo:block>  
+                        		</fo:table-cell>
                 			</fo:table-row>
                     </fo:table-body>
                 </fo:table>
@@ -93,6 +97,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
             		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="80pt"/>
             		<fo:table-column column-width="90pt"/>
+            		<fo:table-column column-width="120pt"/>
                     <fo:table-body>
                     	<#assign lineNo = 0>
                     	<#list dayFinAccountTransList as finAcctngDetails>
@@ -105,6 +110,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign closingBalance = (finAcctngDetails.get("closingBalance")?if_exists)/>
 	                		<#assign partyName = (finAcctngDetails.get("partyName")?if_exists)/>
 	                		<#assign description = (finAcctngDetails.get("description")?if_exists)/>
+	                		<#assign comments = (finAcctngDetails.get("comments")?if_exists)/>
 								<fo:table-row border-style="solid">
 									<fo:table-cell border-style="solid">
 	                            		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"> 
@@ -187,6 +193,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                </#if>
+	                                <#if ((comments)?has_content)>
+                                	<fo:table-cell border-style="solid" >
+	                                    <fo:block text-align="right">${(comments)}</fo:block>
+	                                </fo:table-cell>
+                                 	<#else>
+                                 	<fo:table-cell border-style="solid">
+	                                    <fo:block text-align="center"></fo:block>
+	                                </fo:table-cell>
+                                	</#if>
                               </fo:table-row>
                           </#list>
                           <fo:table-row>
@@ -208,7 +223,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
-						<fo:table-row>
+						<fo:table-row font-weight = "bold">
 							<fo:table-cell>
 			            		<fo:block  keep-together="always">Cashier/Accounts Asst</fo:block>  
 			       			</fo:table-cell>
@@ -216,10 +231,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Asst/Dpty Manager(Finance)</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre.Audit</fo:block>  
+			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre.Audit</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;MF/GMF</fo:block>  
+			            		<fo:block  keep-together="always">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;MF/GMF</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
                     </fo:table-body>

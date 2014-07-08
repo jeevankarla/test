@@ -616,6 +616,7 @@ under the License.
                 <option description="${uiLabelMap.CommonAll}" key="ALL"/>
             </drop-down>
         </field>
+        <field name="comments" title="Description"><text></text></field>
         <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
 	<form name="FinancialAccountTransCSV" type="list" list-name="financialAcctgTransList" view-size="99999">
@@ -635,6 +636,7 @@ under the License.
         <field name="debitAmount"><display/></field>
          <field name="creditAmount"><display/></field>
           <field name="closingBalance"><display/></field>
+          <field name="comments" title="Description"><display/></field>
     </form>
     <form name="InventoryValuation" type="single" target="InventoryValuation" header-row-style="header-row" default-table-style="basic-table">
         <field name="facilityId" position="1">

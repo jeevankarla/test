@@ -205,11 +205,14 @@ if (organizationPartyId) {
 		partyName = "";
 		paymentTypeDescription = "";
 		finAccountDescription = "";
+		paymentComments = "";
+		comments = parameters.comments;
 		glAcctgTrialBalanceList = UtilMisc.sortMaps(glAcctgTrialBalanceList, UtilMisc.toList("paymentId"));
 		if(UtilValidate.isNotEmpty(glAcctgTrialBalanceList)){
 			for(i=0; i<glAcctgTrialBalanceList.size(); i++){
 				acctgTransIt = glAcctgTrialBalanceList[i];
 				acctgTransAndEntries = glAcctgTrialBalanceList[i].acctgTransAndEntries;
+				List removedCommentsList = new ArrayList();
 				for(j=0; j<acctgTransAndEntries.size(); j++){
 					acctgTransEntry = acctgTransAndEntries[j];
 					openingBalance = closingBalance;
@@ -255,9 +258,19 @@ if (organizationPartyId) {
 						paymentType = delegator.findOne("PaymentAndType", [paymentId : paymentId], false);
 						if(UtilValidate.isNotEmpty(paymentType)){
 							paymentTypeDescription = paymentType.description;
+							if(UtilValidate.isNotEmpty(paymentType.comments)){
+								paymentComments = paymentType.comments;
+							}
 						}
 					}
-					
+					if(UtilValidate.isNotEmpty(comments)){
+						if((comments == paymentComments)){
+						}
+						else{
+							removedCommentsList.add(acctgTransEntry);
+							continue;
+						}
+					}
 					// Prepare List for CSV
 					debitAmount = BigDecimal.ZERO;
 					creditAmount = BigDecimal.ZERO;
@@ -312,6 +325,7 @@ if (organizationPartyId) {
 						acctgTransEntryMap["partyId"] = partyId;
 						acctgTransEntryMap["partyName"] = partyName;
 						acctgTransEntryMap["description"] = paymentTypeDescription;
+						acctgTransEntryMap["comments"] = paymentComments;
 					}else{
 						acctgTransEntryMap["paymentId"] = acctgTransId;
 						acctgTransEntryMap["partyId"] = accTransPartyId;
@@ -343,7 +357,7 @@ if (organizationPartyId) {
 					}
 					isMonthEnd = "N";
 				}
-			
+				acctgTransAndEntries.removeAll(removedCommentsList);
 				totClosingBalance = (totOpeningBalance+(acctgTransIt.debitTotal)-(acctgTransIt.creditTotal));
 				
 				
@@ -394,6 +408,7 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["partyId"] = dayFinAccount.partyId;
 			dayFinAccountMap["partyName"] = dayFinAccount.partyName;
 			dayFinAccountMap["description"] = dayFinAccount.description;
+			dayFinAccountMap["comments"] = dayFinAccount.comments;
 			dayFinAccountMap["openingBalance"] = dayFinAccount.openingBalance;
 			dayFinAccountMap["debitAmount"] = dayFinAccount.debitAmount;
 			dayFinAccountMap["creditAmount"] = dayFinAccount.creditAmount;
