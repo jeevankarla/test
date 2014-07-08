@@ -1809,6 +1809,7 @@ public class ByProductNetworkServices {
 		} else {
 			exprList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN, facilityIds));
 		}
+		exprList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.NOT_EQUAL, "SECURITYDEPSIT_PAYIN"));
 		exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentApplicationId", EntityOperator.EQUALS,null), EntityOperator.OR, EntityCondition.makeCondition(EntityCondition.makeCondition("isFullyApplied",EntityOperator.EQUALS, null), EntityOperator.OR,EntityCondition.makeCondition("isFullyApplied",EntityOperator.EQUALS, "N"))));
 		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("PMNT_VOID", "PMNT_CANCELLED", "PMNT_NOT_PAID")));
 		exprList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, dayBegin));
@@ -1827,6 +1828,7 @@ public class ByProductNetworkServices {
 				Map result = dispatcher.runSync("getPaymentNotApplied",UtilMisc.toMap("userLogin", userLogin, "paymentId",pendingPayments.getString("paymentId")));
 				advancePaymentAmount = advancePaymentAmount.add((BigDecimal) result.get("unAppliedAmountTotal"));
 				// advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amount"));
+				Debug.log("pendingPayments application  ##########################################"+pendingPayments.getString("paymentId"));
 			}
 		} catch (Exception e) {
 			Debug.logError(e, module);
@@ -7153,6 +7155,86 @@ public class ByProductNetworkServices {
 		}
 		return ServiceUtil.returnSuccess();
 	}
+	/*public static Map<String, Object> createSequenceForVATInvoice(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		String facilityId = (String) context.get("facilityId");
+		List facilityIds = (List) context.get("facilityIds");
+		Boolean isByParty = Boolean.FALSE;
+		if (UtilValidate.isNotEmpty(context.get("isByParty"))) {
+			isByParty = (Boolean) context.get("isByParty");
+		}
+		List ownerPartyIds = FastList.newInstance();
+		if (UtilValidate.isEmpty(facilityId)) {
+			facilityIds = (List) getAllBooths(delegator, null).get("boothsList");
+		} 
+		
+		if (UtilValidate.isEmpty(fromDate)) {
+			fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+		if (UtilValidate.isEmpty(thruDate)) {
+			thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+		}
+		int intervalDays = (UtilDateTime.getIntervalInDays(fromDate, thruDate)) + 1;
+		if (isByParty) {
+			try {
+				List facilities = delegator.findList("Facility",EntityCondition.makeCondition("facilityId",	EntityOperator.IN, facilityIds), UtilMisc.toSet("ownerPartyId"), null, null, false);
+				ownerPartyIds = EntityUtil.getFieldListFromEntityList(facilities, "ownerPartyId", true);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
+		}
+		List<GenericValue> payments = FastList.newInstance();
+		List conditionList = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(facilityIds)){
+			conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN, "PMNT_RECEIVED"));
+		}
+		if(UtilValidate.isNotEmpty(facilityId)){
+			conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS, facilityId));
+		}
+		if(UtilValidate.isNotEmpty(ownerPartyId)){
+			conditionList.add(EntityCondition.makeCondition("partyUd",EntityOperator.IN, ownerPartyId));
+		}
+		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN, "INVOICE_CANCELLED"));
+		conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		List extInvoiceIds = FastList.newInstance();
+		try {
+			List<String> extInvoices = delegator.findList("Invoice", condition, UtilMisc.toSet("invoiceId"), UtilMisc.toList("dueDate", "facilityId"), null, false);
+			extInvoiceIds = EntityUtil.getFieldListFromEntityList(extInvoices, "invoiceId", true); 
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+		List vatInvoiceIds = FastList.newInstance();
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN, extInvoiceIds));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "VAT_SALE"));
+		EntityCondition itemCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		try {
+			List<String> extInvoices = delegator.findList("InvoiceItem", condition, UtilMisc.toSet("invoiceId"), UtilMisc.toList("dueDate", "facilityId"), null, false);
+			extInvoiceIds = EntityUtil.getFieldListFromEntityList(extInvoices, "invoiceId", true); 
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
+		
+		Map boothReturnDetail = FastMap.newInstance();
+		for (String boothId : boothIds) {
+			List<GenericValue> boothCreditNoteDetails = FastList.newInstance();
+			if (isByParty) {
+				boothCreditNoteDetails = EntityUtil.filterByCondition(payments,EntityCondition.makeCondition("partyIdFrom",	EntityOperator.EQUALS, boothId));
+			} else {
+				boothCreditNoteDetails = EntityUtil.filterByCondition(payments,EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS, boothId));
+			}
+			
+
+		}
+		result.put("productReturnTotals", boothReturnDetail);
+		return result;
+	}*/
 	
 	public static Map<String, Object> getFacilityOwnerMap(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
