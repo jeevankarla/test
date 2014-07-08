@@ -102,8 +102,22 @@ categorysList = [];
 categorysParloursList = [];
 BigDecimal totaRETNAmount=BigDecimal.ZERO;
 Iterator boothTotIter = boothTotals.entrySet().iterator();
+partyFacilityMap = [:];
+if(isByParty){
+	ownerPartyList = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothsList), UtilMisc.toSet("ownerPartyId"), null, null, false);
+	boothsList.clear();
+	boothsList = EntityUtil.getFieldListFromEntityList(ownerPartyList, "ownerPartyId", true);
+	partyFacilityMap = ByProductNetworkServices.getFacilityOwnerMap(dctx, [ownerPartyIds : boothsList]).get("partyFacilityMap");
+	
+}
 
 boothsList.each{  boothId->
+	
+	boothFacility = boothId;
+	facList = partyFacilityMap.get(boothId);
+	if(facList){
+		boothFacility = facList.get(0);
+	}
 	BigDecimal totalRevenue=BigDecimal.ZERO;
 	if(UtilValidate.isNotEmpty(boothTotals.get(boothId))){
 		totalRevenue=boothTotals.get(boothId);
@@ -143,7 +157,7 @@ boothsList.each{  boothId->
 	BigDecimal openingBalance=BigDecimal.ZERO;
 	boothTotalsMap=[:];
 	if(reportTypeFlag=="DuesAbstractReport"){
-	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:boothId, isByParty:isByParty])).get("openingBalance");
+	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:boothFacility, isByParty:isByParty])).get("openingBalance");
 	boothTotalsMap.put("openingBalance", openingBalance);
 	netAmount=netAmount.add(openingBalance);
 	}

@@ -1828,7 +1828,6 @@ public class ByProductNetworkServices {
 				Map result = dispatcher.runSync("getPaymentNotApplied",UtilMisc.toMap("userLogin", userLogin, "paymentId",pendingPayments.getString("paymentId")));
 				advancePaymentAmount = advancePaymentAmount.add((BigDecimal) result.get("unAppliedAmountTotal"));
 				// advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amount"));
-				Debug.log("pendingPayments application  ##########################################"+pendingPayments.getString("paymentId"));
 			}
 		} catch (Exception e) {
 			Debug.logError(e, module);
@@ -6552,7 +6551,7 @@ public class ByProductNetworkServices {
 			// exprListForParameters.add(EntityCondition.makeCondition("productSubscriptionTypeId",
 			// EntityOperator.IN,
 			// UtilMisc.toList("CASH","SPECIAL_ORDER","CREDIT")));
-			exprList.add(EntityCondition.makeCondition("categoryTypeEnum",EntityOperator.NOT_IN, categoryTypeEnumList));
+			//exprList.add(EntityCondition.makeCondition("categoryTypeEnum",EntityOperator.NOT_IN, categoryTypeEnumList));
 		}
 		if (UtilValidate.isNotEmpty(ownerPartyIds)) {
 			exprList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN, ownerPartyIds));
@@ -6575,6 +6574,7 @@ public class ByProductNetworkServices {
 		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN, invoiceStatusList));
 
 		EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		Debug.log("cond ###########################################"+cond);
 		try {
 			pendingOBInvoiceList = delegator.findList("InvoiceAndFacility",	cond, null, null, null, false);
 		} catch (Exception e) {
@@ -6594,7 +6594,6 @@ public class ByProductNetworkServices {
 			tempObInvoice.put("estimatedDeliveryDate", UtilDateTime.getDayStart(obInvoice.getTimestamp("invoiceDate")));
 			tempObInvoiceList.add(tempObInvoice);
 		}
-
 		result.put("invoiceList", tempObInvoiceList);
 		result.put("invoiceIds", EntityUtil.getFieldListFromEntityList(pendingOBInvoiceList, "invoiceId", true));
 		return result;
