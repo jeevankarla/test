@@ -1219,4 +1219,14 @@ under the License.emplpunch
       <attribute name="customTimePeriodId" mode="IN" optional="false" type="String"/>
       <attribute name="sendSms" mode="IN" optional="true" type="String" default-value="Y"/>
   </service>  
+  
+  <service name="populatePayrollAttedance" engine="java" auth="true" invoke="populatePayrollAttedance" 
+        location="in.vasista.vbiz.humanres.PayrollService">
+        <description>Calculate amunt for the given payhead type</description>
+        <attribute name="fromDate" mode="IN" type="Timestamp"/> 
+        <attribute name="thruDate" mode="IN" type="Timestamp"/> 
+        <attribute name="orgPartyId" mode="IN" type="String"/> 
+        <attribute name="payrollPeriodId" mode="IN" type="String"/>
+   </service> 
+    
 </services>
