@@ -628,6 +628,7 @@ under the License.
         <field name="noOfAttendedWeeklyOffDays" type="fixed-point"/>
         <field name="noOfCompoffAvailed" type="fixed-point"/>
         <field name="lossOfPayDays" type="fixed-point"/>
+        <field name="noOfArrearDays" type="fixed-point"/>
         <prim-key field="partyId"/>
         <prim-key field="customTimePeriodId"/>
         <relation type="one" fk-name="PAYROLL_PERIOD_CUST_TP" rel-entity-name="CustomTimePeriod">
