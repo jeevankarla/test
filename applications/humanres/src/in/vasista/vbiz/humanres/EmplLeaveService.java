@@ -109,4 +109,53 @@ public class EmplLeaveService {
 
         return result;        
 	}
+	
+	public static Map<String, Object> fetchLeaveDaysForPeriod(DispatchContext dctx, Map<String, Object> context) {
+				Delegator delegator = dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				String errorMsg = "fetchLeaveDaysForPeriod failed";
+				String partyId = (String) context.get("partyId");	
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");        
+				Map<String, Object> serviceResults = ServiceUtil.returnSuccess();
+				BigDecimal noOfLeaveDays = BigDecimal.ZERO;
+				Map leaveDetailmap = FastMap.newInstance();
+				try{
+					
+					List conditionList = UtilMisc.toList(
+			            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+			    	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+					EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+					List<GenericValue> leaves = delegator.findList("EmplLeave", condition, null, null, null, false);
+					serviceResults.put("leaves", leaves);
+					for (int i = 0; i < leaves.size(); ++i) {		
+						GenericValue leave = leaves.get(i);
+						String leaveTypeId =leave.getString("leaveTypeId");
+			            Timestamp from = leave.getTimestamp("fromDate");
+			            Timestamp thru = leave.getTimestamp("thruDate");			
+						if (from.compareTo(timePeriodStart) < 0 || thru.compareTo(timePeriodEnd) > 0) {
+			            	return ServiceUtil.returnError(errorMsg + ": leave cannot span multiple payroll periods", 
+			            			null, null, null);				
+					 	}
+						int intv = (UtilDateTime.getIntervalInDays(from, thru)+1);
+						BigDecimal temp = new BigDecimal(intv);	
+						
+						if(UtilValidate.isEmpty(leaveDetailmap.get(leaveTypeId))){
+							leaveDetailmap.put(leaveTypeId,BigDecimal.ZERO);
+						}
+						leaveDetailmap.put(leaveTypeId, ((BigDecimal)leaveDetailmap.get(leaveTypeId)).add(temp));
+						noOfLeaveDays = noOfLeaveDays.add(temp);
+					} 
+				}catch(Exception e){
+					Debug.logError(e, "Error fetching leave days", module);
+		        	return ServiceUtil.returnError(e.toString());
+				}
+				
+				serviceResults.put("leaveDetailmap", leaveDetailmap);
+				serviceResults.put("noOfLeaveDays", noOfLeaveDays);
+		        return serviceResults; 
+			}	
 }
