@@ -82,9 +82,9 @@ if (UtilValidate.isNotEmpty(customTimePeriodId)) {
 	if (UtilValidate.isNotEmpty(partyId)) {
 		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
 	}
-	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDateStart));
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-			EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd)));
+			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, thruDateEnd)));
 	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	List<GenericValue> partyBenefitList = delegator.findList("PartyBenefit", condition, null, null, null, false);
 	if(UtilValidate.isNotEmpty(partyBenefitList)){
