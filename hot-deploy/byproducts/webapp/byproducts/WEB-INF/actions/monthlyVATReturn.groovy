@@ -82,9 +82,6 @@ findOptions.setDistinct(true);
 productPrice = delegator.findList("ProductPrice", condition1,  fieldsToSelect, ["taxPercentage"], findOptions, false);
 List vatList = EntityUtil.getFieldListFromEntityList(productPrice, "taxPercentage", true);
 context.vatList = vatList;
-finalVatList = [];
-
-productReturnMap = [:];
 
 resultMap = [:];
 shipmentIds = [];
@@ -98,15 +95,6 @@ if(UtilValidate.isNotEmpty(adhocShipments)){
 }
 if(UtilValidate.isNotEmpty(shipmentIds)){
 	resultMap = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]).get("productTotals");
-}
-
-prodCatMap = [:];
-productCategoryList = delegator.findList("ProductCategory",null,null,null,null,false);
-prodCategoryIds= EntityUtil.getFieldListFromEntityList(productCategoryList, "productCategoryId", true);
-prodCategoryIds.each{ prodCat->
-	prodList = delegator.findList("Product", EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, prodCat), ["productId"] as Set, null, null, false);
-	prodIdsList = EntityUtil.getFieldListFromEntityList(prodList, "productId", true);
-	prodCatMap.put(prodCat,prodIdsList);
 }
 
 vatMap = [:];
@@ -124,38 +112,71 @@ vatList.each { vat->
 			}
 		}
 		productCategoryMap = [:];
-		Iterator mapIter = prodCatMap.entrySet().iterator();
-		while (mapIter.hasNext()) {
-			productMap = [:];
-			Map.Entry entry = mapIter.next();
-			 productCategoryId = entry.getKey();
-			 productIdsList = entry.getValue();
-			 productIdsList.each{ product ->
-				prodValMap=[:];
-				revenue=0;
-				quantity=0;
-				vatRevenue = 0;
-				if(UtilValidate.isNotEmpty(productValueMap.get(product))){
-					revenue = productValueMap.get(product).get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
-					vatRevenue = productValueMap.get(product).get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
-					quantity = productValueMap.get(product).get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+		productValueMap.each{ productValue ->
+			if(UtilValidate.isNotEmpty(productValue)){
+				currentProduct = productValue.getKey();
+				product = delegator.findOne("Product", [productId : currentProduct], false);
+				tempVariantMap =[:];
+				productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
+				virtualProductId = currentProduct;
+				if(UtilValidate.isNotEmpty(productAssoc)){
+					virtualProductId = productAssoc.productId;
 				}
-				if(quantity!=0){
-					prodValMap["quantity"]=quantity.setScale(2,BigDecimal.ROUND_HALF_UP);
-					prodValMap["revenue"]=revenue.setScale(2,BigDecimal.ROUND_HALF_UP);
-					prodValMap["vatRevenue"]=vatRevenue.setScale(2,BigDecimal.ROUND_HALF_UP);
-					if(UtilValidate.isNotEmpty(prodValMap)){
+				if(UtilValidate.isEmpty(tempVariantMap[virtualProductId])){
+					tempMap = [:];
+					tempProdMap = [:];
+					tempProdMap["quantity"] = productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+					tempProdMap["revenue"] = productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+					tempProdMap["vatRevenue"] = productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+					tempMap[currentProduct] = tempProdMap;
+					tempVariantMap[virtualProductId] = tempMap;
+				}else{
+					tempMap = [:];
+					productQtyMap = [:];
+					tempMap.putAll(tempVariantMap.get(virtualProductId));
+					productQtyMap.putAll(tempMap);
+					productQtyMap["quantity"] += productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+					productQtyMap["revenue"] += productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+					productQtyMap["vatRevenue"] += productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+					tempMap[currentProduct] = productQtyMap;
+					tempVariantMap[virtualProductId] = tempMap;
+				}
+				if(UtilValidate.isEmpty(productCategoryMap[product.primaryProductCategoryId])){
+					productCategoryMap.put(product.primaryProductCategoryId,tempVariantMap);
+				}else{
+					tempCatMap = [:];
+					tempCatMap.putAll(productCategoryMap[product.primaryProductCategoryId]);
+					if(UtilValidate.isEmpty(tempCatMap[virtualProductId])){
+						tempMap = [:];
 						tempProdMap = [:];
-						tempProdMap.put(product,prodValMap);
-						productMap.putAll(tempProdMap);
+						tempProdMap["quantity"] = productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+						tempProdMap["revenue"] = productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+						tempProdMap["vatRevenue"] = productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+						tempMap[currentProduct] = tempProdMap;
+						tempCatMap[virtualProductId] = tempMap;
+					}else{
+						tempMap = [:];
+						tempMap.putAll(tempCatMap.get(virtualProductId));
+							if(UtilValidate.isEmpty(tempMap.get(currentProduct))){
+								currentTempMap = [:];
+								currentTempMap["quantity"] = productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+								currentTempMap["revenue"] = productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+								currentTempMap["vatRevenue"] = productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+								tempMap[currentProduct] = currentTempMap;
+							}else{
+								currentTempMap = [:];
+								currentTempMap["quantity"] += productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+								currentTempMap["revenue"] += productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+								currentTempMap["vatRevenue"] += productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+								tempMap[currentProduct] = currentTempMap;
+							}
+						tempCatMap[virtualProductId] = tempMap;
+					}
+					if(UtilValidate.isNotEmpty(tempCatMap)){
+						productCategoryMap.put(product.primaryProductCategoryId,tempCatMap);
 					}
 				}
-			 }
-			 if(UtilValidate.isNotEmpty(productMap)){
-				 tempMap = [:];
-				 tempMap.put(productCategoryId,productMap);
-				 productCategoryMap.putAll(tempMap);
-			 }
+			}
 		}
 	}
 	if(UtilValidate.isNotEmpty(productCategoryMap)){
@@ -178,26 +199,32 @@ if(UtilValidate.isNotEmpty(vatMap)){
 			while (prodMapIter.hasNext()) {
 				Map.Entry prodEntry = prodMapIter.next();
 				prodKey = prodEntry.getKey();
-				productDetails = delegator.findOne("Product", ["productId" : prodKey], true);
-				prodValue = prodEntry.getValue();
-				quantity = 0;
-				revenue = 0;
-				vatRevenue = 0;
-				quantity = prodValue.get("quantity");
-				revenue = prodValue.get("revenue");
-				vatRevenue = prodValue.get("vatRevenue");
-				csvVatMap = [:];
-				if(UtilValidate.isNotEmpty(productDetails)){
-					csvVatMap["product"] = productDetails.brandName;
+				prodValues = prodEntry.getValue();
+				Iterator productMapIter = prodValues.entrySet().iterator();
+				while (productMapIter.hasNext()) {
+					Map.Entry productEntry = productMapIter.next();
+					productKey = productEntry.getKey();
+					productDetails = delegator.findOne("Product", ["productId" : productKey], true);
+					prodValue = productEntry.getValue();
+					quantity = 0;
+					revenue = 0;
+					vatRevenue = 0;
+					quantity = prodValue.get("quantity");
+					revenue = prodValue.get("revenue");
+					vatRevenue = prodValue.get("vatRevenue");
+					csvVatMap = [:];
+					if(UtilValidate.isNotEmpty(productDetails)){
+						csvVatMap["product"] = productDetails.brandName;
+					}
+					csvVatMap["vat"] = vatKey;
+					csvVatMap["saleRevenue"] = (revenue - vatRevenue);
+					csvVatMap["vatRevenue"] = vatRevenue;
+					csvVatMap["revenue"] = revenue;
+					csvVatMap["quantity"] = quantity;
+					tempMap = [:];
+					tempMap.putAll(csvVatMap);
+					vatReportCsvList.add(tempMap);
 				}
-				csvVatMap["vat"] = vatKey;
-				csvVatMap["saleRevenue"] = (revenue - vatRevenue);
-				csvVatMap["vatRevenue"] = vatRevenue;
-				csvVatMap["revenue"] = revenue;
-				csvVatMap["quantity"] = quantity;
-				tempMap = [:];
-				tempMap.putAll(csvVatMap);
-				vatReportCsvList.add(tempMap);
 			}
 		}
 	}

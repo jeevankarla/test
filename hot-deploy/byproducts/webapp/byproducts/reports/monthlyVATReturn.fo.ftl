@@ -59,6 +59,7 @@ under the License.
 	                    	<#assign serialNo = 1>
 		                    	<#assign vatDetails = vatMap.entrySet()>
 		                    	<#list vatDetails as vat>
+		                    		<#assign prodCatDetails = vat.getValue().entrySet()>
 		                    		<fo:table-row>
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">----------------------------------------------------------------------------------------------------------------</fo:block>  
@@ -74,14 +75,12 @@ under the License.
 		                            			<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">----------------------------------------------------------------------------------------------------------------</fo:block>  
 		                        			</fo:table-cell>
 		                        	</fo:table-row>
-		                        	
 		                        	<#assign vatTotalNetVatExcValue = 0>
 		                        	<#assign vatTotalVatValue = 0>
 		                        	<#assign vatTotalNetRevenue = 0>
 		                        	<#assign vatTotalNetQuantity = 0>
-		                        	
-		                    		<#assign prodDetails = vat.getValue().entrySet()>
-			                    	<#list prodDetails as prodCategory>
+			                    	<#list prodCatDetails as prodCategory>
+			                    		<#assign productDetails = prodCategory.getValue().entrySet()>
 			                    		<#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : prodCategory.getKey()}, true)?if_exists/>
 		                    		<fo:table-row>
 	                        			<fo:table-cell>
@@ -93,23 +92,38 @@ under the License.
 	                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
 	                        			</fo:table-cell>
 		                        	</fo:table-row>
-		                        	<#assign totalNetVatExcValue = 0>
-		                        	<#assign totalVatValue = 0>
-		                        	<#assign totalNetRevenue = 0>
-		                        	<#assign totalNetQuantity = 0>
-		                        	<#assign serialNo = 1>
-		                    		<#assign productDetails = prodCategory.getValue().entrySet()>
-		                    			<#list productDetails as prod>
-		                    				 <#assign product = delegator.findOne("Product", {"productId" : prod.getKey()}, true)?if_exists/>
-		                    				 <#assign netRevenue = (prod.getValue().get("revenue"))?if_exists>
-		                    				 <#assign netQuantity = (prod.getValue().get("quantity"))?if_exists>
-		                    				 <#assign vatValue = (prod.getValue().get("vatRevenue"))?if_exists>
-		                    				 <#if vatValue?has_content>
-		                    				 	 <#assign netExcVatValue = (netRevenue - vatValue)>
-		                    				 <#else>
-		                    				 	<#assign netExcVatValue = (netRevenue?if_exists)>
-		                    				 </#if>
-		                    				 
+		                        			<#assign totalNetVatExcValue = 0>
+				                        	<#assign totalVatValue = 0>
+				                        	<#assign totalNetRevenue = 0>
+				                        	<#assign totalNetQuantity = 0>
+				                        	<#assign serialNo = 1>
+		                    			<#list productDetails as prodCat>
+		                    			<#if prodCategory.getKey()=="Other Products">
+		                    				<#if prodCat.getKey()=="LASSI" || prodCat.getKey()=="GOODLIFE">
+		                    					<#assign prodSubCat = delegator.findOne("Product", {"productId" : prodCat.getKey()}, true)?if_exists/>
+				                    			<fo:table-row>
+				                        			<fo:table-cell>
+				                            			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${prodSubCat.get("description")?if_exists}</fo:block>  
+				                        			</fo:table-cell>
+					                        	</fo:table-row>
+					                        	<fo:table-row>
+				                        			<fo:table-cell>
+				                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
+				                        			</fo:table-cell>
+					                        	</fo:table-row>
+					                        </#if>
+					                     </#if>
+					                        	<#assign catProdDetails = prodCat.getValue().entrySet()>
+		                        				<#list catProdDetails as prod>
+			                    				 <#assign product = delegator.findOne("Product", {"productId" : prod.getKey()}, true)?if_exists/>
+			                    				 <#assign netRevenue = (prod.getValue().get("revenue"))?if_exists>
+			                    				 <#assign netQuantity = (prod.getValue().get("quantity"))?if_exists>
+			                    				 <#assign vatValue = (prod.getValue().get("vatRevenue"))?if_exists>
+			                    				 <#if vatValue?has_content>
+			                    				 	 <#assign netExcVatValue = (netRevenue - vatValue)>
+			                    				 <#else>
+			                    				 	<#assign netExcVatValue = (netRevenue?if_exists)>
+			                    				 </#if>
 											<fo:table-row>
 												<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${serialNo?if_exists}</fo:block>  
@@ -136,7 +150,8 @@ under the License.
 			                        		</fo:table-row>
 			                        		<#assign serialNo = serialNo+1>
 			                        	</#list>
-			                        		<fo:table-row>
+			                        	</#list>
+		                        			<fo:table-row>
 			                        			<fo:table-cell>
 			                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
 			                        			</fo:table-cell>
@@ -165,8 +180,8 @@ under the License.
 			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${totalNetQuantity?if_exists?string("#0.00")}</fo:block>  
 			                        		</fo:table-cell>
 		                        		</fo:table-row>
-			                     	 </#list>
-			                     	 	<fo:table-row>
+		                        	</#list>
+		                        		<fo:table-row>
 			                        			<fo:table-cell>
 			                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
 			                        			</fo:table-cell>
@@ -195,8 +210,8 @@ under the License.
 			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${vatTotalNetQuantity?if_exists?string("#0.00")}</fo:block>  
 			                        		</fo:table-cell>
 		                        		</fo:table-row>
-			                      </#list>
-			                      		<fo:table-row >
+		                        	</#list>
+		                        	<fo:table-row >
 			                        			<fo:table-cell>
 			                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
 			                        			</fo:table-cell>

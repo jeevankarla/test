@@ -55,11 +55,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
 			        <fo:table-column column-width="14%"/>
 			        <fo:table-column column-width="18%"/>
                     <fo:table-body>
-                    <#assign serialNo = 1>
+                    	<#assign serialNo = 1>
 		                    	<#assign prodCategoryDetails = productCategoryMap.entrySet()>
 		                    	<#list prodCategoryDetails as prodCategory>
-		                    	<#if prodCategory.getKey()=="Milk">
-		                    	<#assign productCategory = delegator.findOne("Product", {"productId" : prodCategory.getKey()}, true)?if_exists/>
+		                    	<#if prodCategory.getKey()=="Milk" || prodCategory.getKey()=="Other Products">
+		                    	<#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : prodCategory.getKey()}, true)?if_exists/>
 		                    		<fo:table-row>
 	                        			<fo:table-cell>
 	                            			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false">${productCategory.description?if_exists}</fo:block>  
