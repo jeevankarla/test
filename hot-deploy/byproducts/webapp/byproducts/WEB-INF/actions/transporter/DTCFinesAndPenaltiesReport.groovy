@@ -42,9 +42,9 @@ monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 
 periodBillingId = null;
 conditionList=[];
-conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, parameters.customTimePeriodId));
-conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "PB_LMS_TRSPT_MRGN"));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+/*recoveryTypeList = delegator.findList("Enumeration", EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS , "FAC_RECVRY"), ["enumId"] as Set, UtilMisc.toList("sequenceId"), null, false);
+recoveryTypeList = EntityUtil.getFieldListFromEntityList(recoveryTypeList, "enumId", false);
+Debug.log("===recoveryTypeList==="+recoveryTypeList);*/
 contractorIdList=[];
 contractorNamesMap =[:];
 Map partyFacilityMap=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",monthBegin)).get("partyAndFacilityList");
@@ -137,7 +137,7 @@ contractorIdList.each { contractorId ->
 											tempMap["transportAmount"]=transportAmount;
 											tempMap["securityFineAmount"]=securityFineAmount;
 											tempMap["remitFinesAmount"]=remitFinesAmount;
-											tempMap["subTotal"]=crateFineAmount+canFineAmount+finesAmount+transportAmount+transportAmount+remitFinesAmount;
+											tempMap["subTotal"]=crateFineAmount+canFineAmount+finesAmount+transportAmount+securityFineAmount+remitFinesAmount;
 											routeWiseSaleMap[routeId]=tempMap;
 											
 										 }
