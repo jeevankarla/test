@@ -1936,6 +1936,9 @@
 			<exclude field="invoiceId" />
 		</alias-all>
 		<alias name="invoiceId" entity-alias="INV" />
+		<alias name="dueDate" entity-alias="INV" />
+		<alias name="paidDate" entity-alias="INV" />
+		<alias name="partyId" entity-alias="INV" />
 		<alias name="glAccountId" entity-alias="INVITMTYP" field="defaultGlAccountId"/>
 		<alias name="invoiceTypeId" entity-alias="INV" />
 		<alias name="facilityId" entity-alias="INV" />
