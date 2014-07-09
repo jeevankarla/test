@@ -1953,6 +1953,33 @@
 		</view-link>
 	</view-entity>	
 	
+	<view-entity entity-name="InvoiceAndItemType"
+		package-name="org.ofbiz.accounting.invoice"
+		title="Invoice, InvoiceItem and InvoiceType view entity">
+		<member-entity entity-alias="INVITM" entity-name="InvoiceItem" />
+		<member-entity entity-alias="INVTYP" entity-name="InvoiceType" />
+		<member-entity entity-alias="INV" entity-name="Invoice" />
+		<alias-all entity-alias="INVITM">
+			<exclude field="invoiceId" />
+		</alias-all>
+		<alias name="invoiceId" entity-alias="INV" />
+		<alias name="invoiceTypeId" entity-alias="INV" />
+		<alias name="statusId" entity-alias="INV" />
+		<alias name="facilityId" entity-alias="INV" />
+		<alias name="paidDate" entity-alias="INV" />
+		<alias name="dueDate" entity-alias="INV" />
+		<alias name="partyId" entity-alias="INV" />
+		<alias name="shipmentId" entity-alias="INV" />
+		<alias name="parentInvoiceTypeId" entity-alias="INVTYP" field="parentTypeId"/>
+		<view-link entity-alias="INV" rel-entity-alias="INVTYP">
+			<key-map field-name="invoiceTypeId" />
+		</view-link>
+		<view-link entity-alias="INV" rel-entity-alias="INVITM">
+			<key-map field-name="invoiceId" />
+		</view-link>
+	</view-entity>
+	
+	
 	<!-- ========================================================= -->
 	<!-- org.ofbiz.accounting.ledger -->
 	<!-- ========================================================= -->
