@@ -35,6 +35,11 @@ if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
 	context.fromDateTime = fromDateTime;
 	context.thruDateTime = thruDateTime;
 }
+enableOBbyParty = Boolean.FALSE;
+tenantConfigEnableOBbyParty = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId", "LMS", "propertyName","enableOBbyParty"), false);
+if (tenantConfigEnableOBbyParty && (tenantConfigEnableOBbyParty.getString("propertyValue")).equals("Y")) {
+	enableOBbyParty = Boolean.TRUE;
+}
 
 isByParty = Boolean.TRUE;
 fromDateStr = parameters.fromDate;
@@ -157,9 +162,14 @@ boothsList.each{  boothId->
 	BigDecimal openingBalance=BigDecimal.ZERO;
 	boothTotalsMap=[:];
 	if(reportTypeFlag=="DuesAbstractReport"){
-	openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:boothFacility, isByParty:isByParty])).get("openingBalance");
-	boothTotalsMap.put("openingBalance", openingBalance);
-	netAmount=netAmount.add(openingBalance);
+		if(enableOBbyParty){
+			openingBalance = (ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: dayBegin, partyId:boothId])).get("openingBalance");
+		}
+		else{
+			openingBalance =(ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: dayBegin , facilityId:boothFacility, isByParty:isByParty])).get("openingBalance");
+		}
+		boothTotalsMap.put("openingBalance", openingBalance);
+		netAmount=netAmount.add(openingBalance);
 	}
 	netAmount=netAmount.add(chequePenalityPaidAmount);//to match with closing Balance
 	

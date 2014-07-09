@@ -53,9 +53,14 @@ if(maxIntervalDays > 32){
 	context.errorMessage = "You Cannot Choose More Than 31 Days";
 	return;
 }
+enableOBbyParty = Boolean.FALSE;
+tenantConfigEnableOBbyParty = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId", "LMS", "propertyName","enableOBbyParty"), false);
+if (tenantConfigEnableOBbyParty && (tenantConfigEnableOBbyParty.getString("propertyValue")).equals("Y")) {
+	enableOBbyParty = Boolean.TRUE;
+}
+
 boothIdsList = [];
 resultMap = ByProductServices.getAllByproductBooths(delegator, fromDateTime);
-
 boothsList = resultMap.get("boothsList");
 
 facilityDesc = [:];
@@ -93,7 +98,7 @@ pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayB
 shipmentIds.addAll(pmShipmentIds);
 //boothWiseReturnTotal = ByProductNetworkServices.getPeriodReturnTotals(dctx, [shipmentIds:shipmentIds, fromDate:dayBegin, thruDate:dayEnd, facilityIds:boothIdsList, isByParty:isByParty]).get("dayWiseBoothWiseTotals");
 daywiseReceipts = ByProductNetworkServices.getByProductPaymentDetails(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", boothIdsList, "isByParty",isByParty)).get("paymentDetails");
-boothWiseReturnTotal = ByProductNetworkServices.getDaywiseProductReturnTotal(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", [], "isByParty",isByParty)).get("productReturnTotals");
+boothWiseReturnTotal = ByProductNetworkServices.getDaywiseProductReturnTotal(dctx, UtilMisc.toMap("fromDate",fromDateTime,"thruDate" ,dayEnd,"facilityList", [], "isByParty",isByParty )).get("productReturnTotals");
 invoiceResult = ByProductNetworkServices.getByProductDayWiseInvoiceTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin, "isByParty",isByParty)).get("dayWisePartyInvoiceDetail");
 penaltyResult = ByProductNetworkServices.getByProductDaywisePenaltyTotals(dctx, UtilMisc.toMap("fromDate", fromDateTime, "thruDate", dayEnd, "facilityList", boothIdsList, "userLogin", userLogin, "isByParty",isByParty));
 penalty = penaltyResult.get("facilityPenalty");
@@ -114,7 +119,6 @@ if(boothIdsList){
 		if(partyFacilities){
 			boothFacility = partyFacilities.get(0);
 		}
-		
 		grandTotalMap = [:];
 		skipCounter = 0;
 		testFlag = 0;
@@ -134,7 +138,12 @@ if(boothIdsList){
 			stDate = UtilDateTime.toDateString(startingDate, "dd.MM.yyyy");
 			if(testFlag == 0){
 				testFlag = 1;
-				openingBalance =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,isForCalOB:"Y",saleDate: dayStart , facilityId:boothFacility, isByParty:Boolean.TRUE])).get("openingBalance");
+				if(enableOBbyParty){
+					openingBalance = (ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: dayStart, partyId:eachBooth])).get("openingBalance");
+				}
+				else{
+					openingBalance = (ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,isForCalOB:"Y",saleDate: dayStart , facilityId:boothFacility, isByParty:Boolean.TRUE])).get("openingBalance");
+				}
 				//openingBalance = (ByProductNetworkServices.getOpeningBalanceForByProductFacilities(dctx, [facilityId: eachBooth, userLogin: userLogin ,saleDate: dayStart])).get("openingBalance");
 			}else{
 				openingBalance = closingBalance;

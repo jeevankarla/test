@@ -1970,7 +1970,168 @@ public class ByProductNetworkServices {
 		result = ServiceUtil.returnSuccess("Successfully populated parties accouting history for the period");
 		return result;
 	}
+	public static Map getOpeningBalanceForParty(DispatchContext dctx,Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String partyId = (String) context.get("partyId");
+		Timestamp saleDate = (Timestamp) context.get("saleDate");
+		List exprListForParameters = FastList.newInstance();
+		List boothPaymentsList = FastList.newInstance();
+		List partyInvoicesList = FastList.newInstance();
+		Map openingBalanceMap = FastMap.newInstance();
+		BigDecimal invoicesTotalAmount = BigDecimal.ZERO;
+		BigDecimal invoicesTotalDueAmount = BigDecimal.ZERO;
+		Timestamp dayBegin = UtilDateTime.getDayStart(saleDate);
+		try {
+			GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", partyId), false);
+			if (UtilValidate.isEmpty(partyDetail)) {
+				Debug.logInfo(partyId+ "'is not a valid party", "");
+				return ServiceUtil.returnError(partyId+ "'is not a valid party");
+			}
+		} catch (GenericEntityException e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		List invoiceStatusList = UtilMisc.toList("INVOICE_CANCELLED","INVOICE_WRITEOFF");
+		exprListForParameters.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, partyId));
+		exprListForParameters.add(EntityCondition.makeCondition("parentInvoiceTypeId",EntityOperator.EQUALS, "SALES_INVOICE"));
+		exprListForParameters.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN, dayBegin));
+		exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, invoiceStatusList));
+		exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR, EntityCondition.makeCondition("paidDate",	EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
+		EntityCondition paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
+		EntityFindOptions findOptions = new EntityFindOptions();
+		findOptions.setDistinct(true);
+		try {
+			partyInvoicesList = delegator.findList("InvoiceAndItemType", paramCond,UtilMisc.toSet("invoiceId"), null, findOptions, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		BigDecimal openingBalance = BigDecimal.ZERO;
+		BigDecimal invoicePendingAmount = BigDecimal.ZERO;
+		BigDecimal advancePaymentAmount = BigDecimal.ZERO;
+		if (!UtilValidate.isEmpty(partyInvoicesList)) {
+			Set invoiceIdSet = new HashSet(EntityUtil.getFieldListFromEntityList(partyInvoicesList,"invoiceId", false));
+			List invoiceIds = new ArrayList(invoiceIdSet);
+			// First compute the total invoice outstanding amount as of opening balance date.
+			for (int i = 0; i < invoiceIds.size(); i++) {
+				String invoiceId = (String) invoiceIds.get(i);
+				List<GenericValue> pendingInvoiceList = FastList.newInstance();
+				List exprList = FastList.newInstance();
+				exprList.add(EntityCondition.makeCondition("invoiceId",	EntityOperator.EQUALS, invoiceId));
+				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate",EntityOperator.EQUALS, null),EntityOperator.OR, EntityCondition.makeCondition("paidDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
+				exprList.add(EntityCondition.makeCondition("pmPaymentDate",	EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+				EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+				try {
+					pendingInvoiceList = delegator.findList("InvoiceAndApplAndPayment", cond, null, null, null,	false);
+					// no payment applications then add invoice total amount to OB or unapplied amount.
+					
+					Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", UtilMisc.toMap("userLogin", userLogin, "invoiceId",invoiceId));
+					if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
+						Debug.logError(getInvoicePaymentInfoListResult.toString(),module);
+						return ServiceUtil.returnError(null, null, null,getInvoicePaymentInfoListResult);
+					}
+					Map invoicePaymentInfo = (Map) ((List) getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+					BigDecimal outstandingAmount = (BigDecimal) invoicePaymentInfo.get("outstandingAmount");
+					invoicePendingAmount = invoicePendingAmount.add(outstandingAmount);
+					for (GenericValue pendingInvoice : pendingInvoiceList) {
+						invoicePendingAmount = invoicePendingAmount.add(pendingInvoice.getBigDecimal("amountApplied"));
+					}
+				} catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.toString());
+				}
+			}
+		}
+		//Now handle any unapplied payments as of opening balance date
+		// Here first get the payments that were made before opening balance date and have been partially applied.  
+		// Compute the amount that has been applied after opening balance date plus any unapplied amount
+		List exprList = FastList.newInstance();
+		List<GenericValue> pendingPaymentsList = FastList.newInstance();
+		exprList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, partyId));
+		exprList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+		exprList.add(EntityCondition.makeCondition("pmPaymentDate",EntityOperator.LESS_THAN, dayBegin));
+		EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		try {
+			pendingPaymentsList = delegator.findList("InvoiceAndApplAndPayment", cond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		Set paymentSet = new HashSet(EntityUtil.getFieldListFromEntityList(pendingPaymentsList, "paymentId", false));
+		for (GenericValue pendingPayments : pendingPaymentsList) {
+			if (UtilValidate.isEmpty(pendingPayments.getTimestamp("paidDate")) || (UtilDateTime.getDayStart(pendingPayments.getTimestamp("paidDate"))).equals(UtilDateTime.getDayStart(pendingPayments.getTimestamp("invoiceDate")))
+					|| (pendingPayments.getTimestamp("paidDate")).compareTo(dayBegin) >= 0) {
+				advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amountApplied"));
+			}
 
+		}
+
+		List paymentList = new ArrayList(paymentSet);
+		for (int i = 0; i < paymentList.size(); i++) {
+			try {
+				Map result = dispatcher.runSync("getPaymentNotApplied",UtilMisc.toMap("userLogin", userLogin, "paymentId",(String) paymentList.get(i)));
+				advancePaymentAmount = advancePaymentAmount.add((BigDecimal) result.get("unAppliedAmountTotal"));
+			} catch (GenericServiceException e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.toString());
+			}
+
+		}
+		// here get the all the zero application paymentId's
+		List<String> zeroAppPaymentIds = EntityUtil.getFieldListFromEntityList(pendingPaymentsList, "paymentId", true);
+		// Next get payments that were made before opening balance date and have zero applications
+		exprList.clear();
+		exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
+		exprList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.NOT_EQUAL, "SECURITYDEPSIT_PAYIN"));
+		exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paymentApplicationId", EntityOperator.EQUALS,null), EntityOperator.OR, EntityCondition.makeCondition(EntityCondition.makeCondition("isFullyApplied",EntityOperator.EQUALS, null), EntityOperator.OR,EntityCondition.makeCondition("isFullyApplied",EntityOperator.EQUALS, "N"))));
+		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("PMNT_VOID", "PMNT_CANCELLED", "PMNT_NOT_PAID")));
+		exprList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, dayBegin));
+		// exculde all the zero payment application payments
+		if (UtilValidate.isNotEmpty(zeroAppPaymentIds)) {
+			exprList.add(EntityCondition.makeCondition("paymentId",EntityOperator.NOT_IN, zeroAppPaymentIds));
+		}
+		EntityCondition paymentCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		try {
+			EntityFindOptions findOption = new EntityFindOptions();
+			findOption.setDistinct(true);
+			pendingPaymentsList = delegator.findList("PaymentAndApplicationLftJoin", paymentCond,UtilMisc.toSet("paymentId"), null, findOption, false);
+			for (GenericValue pendingPayments : pendingPaymentsList) {
+				Map result = dispatcher.runSync("getPaymentNotApplied",UtilMisc.toMap("userLogin", userLogin, "paymentId",pendingPayments.getString("paymentId")));
+				advancePaymentAmount = advancePaymentAmount.add((BigDecimal) result.get("unAppliedAmountTotal"));
+				// advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amount"));
+			}
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		
+		// here get the cheque bounce amount till cancel of payments
+		exprList.clear();
+		exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
+		exprList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, "CHEQUE_PAYIN"));
+		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_VOID"));
+		exprList.add(EntityCondition.makeCondition("chequeReturns",EntityOperator.EQUALS, "Y"));
+		exprList.add(EntityCondition.makeCondition("cancelDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+		exprList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, dayBegin));
+
+		EntityCondition payReturnCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		try {
+			pendingPaymentsList = delegator.findList("Payment", payReturnCond,UtilMisc.toSet("amount"), null, null, false);
+			for (GenericValue pendingPayments : pendingPaymentsList) {
+				advancePaymentAmount = advancePaymentAmount.add(pendingPayments.getBigDecimal("amount"));
+			}
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+		openingBalance = invoicePendingAmount.subtract(advancePaymentAmount);
+		openingBalanceMap.put("openingBalance", openingBalance);
+		return openingBalanceMap;
+	}
+	
 	public static Map<String, Object> getBoothOrderDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -7864,7 +8025,8 @@ public class ByProductNetworkServices {
 		Map boothInvTotalMap = FastMap.newInstance();
 		try {
 			List conditionList = FastList.newInstance();
-			conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.NOT_IN,UtilMisc.toList("MIS_INCOME_IN", "STATUTORY_OUT")));
+			conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.NOT_IN,UtilMisc.toList("STATUTORY_OUT")));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.NOT_IN,UtilMisc.toList("INCO_FINEPENALTY_CHQ")));
 			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 			if (isByParty) {
@@ -7875,7 +8037,7 @@ public class ByProductNetworkServices {
 
 			conditionList.add(EntityCondition.makeCondition("statusId",	EntityOperator.NOT_IN,UtilMisc.toList("INVOICE_CANCELLED", "INVOICE_WRITEOFF")));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			List<GenericValue> invoices = delegator.findList("Invoice", condition, UtilMisc.toSet("invoiceId", "dueDate","facilityId", "partyId"), null, null, false);
+			List<GenericValue> invoices = delegator.findList("InvoiceAndItemType", condition, UtilMisc.toSet("invoiceId", "dueDate","facilityId", "partyId"), null, null, false);
 			int intervalDays = (UtilDateTime.getIntervalInDays(fromDate,thruDate) + 1);
 			for (int k = 0; k < intervalDays; k++) {
 
