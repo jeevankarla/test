@@ -113,16 +113,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                         			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("cansFine")?if_exists}</fo:block>  
                     			</fo:table-cell>
                     			<fo:table-cell>
-                        			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("finesAmount")?if_exists}</fo:block>  
+                        			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("securityFineAmount")?if_exists}</fo:block>  
+                    			</fo:table-cell>
+                    			<fo:table-cell>
+                        			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("remitFinesAmount")?if_exists}</fo:block>  
                     			</fo:table-cell>
                     			<fo:table-cell>
                         			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("transportAmount")?if_exists}</fo:block>  
                     			</fo:table-cell>
                     			<fo:table-cell>
-                        			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("securityFineAmount")?if_exists}</fo:block>  
-                    			</fo:table-cell>
-                    			<fo:table-cell>
-                        			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("remitFinesAmount")?if_exists}</fo:block>  
+                        			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("finesAmount")?if_exists}</fo:block>  
                     			</fo:table-cell>
                     			<fo:table-cell>
                         			<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">${prod.getValue().get("subTotal")?if_exists}</fo:block>  
@@ -163,16 +163,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                     			      <fo:block text-align="right" font-size="9pt"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${cansFineTot}</fo:block> 
                     			</fo:table-cell>
                     			 <fo:table-cell>
-                    			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${finesTot}</fo:block> 
+                    			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${securityFineTot}</fo:block> 
+                    			</fo:table-cell>
+                    			 <fo:table-cell>
+                    			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${remitFineTot}</fo:block> 
                     			</fo:table-cell>
                     			 <fo:table-cell>
                     			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${transportFineTot}</fo:block> 
                     			</fo:table-cell>
                     			 <fo:table-cell>
-                    			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${securityFineTot}</fo:block> 
-                    			</fo:table-cell>
-                    			 <fo:table-cell>
-                    			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${remitFineTot}</fo:block> 
+                    			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${finesTot}</fo:block> 
                     			</fo:table-cell>
                     			 <fo:table-cell>
                     			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
@@ -224,16 +224,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "prdctRetrnReport.txt")}
                     			      <fo:block text-align="right"  font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${cansGTot}</fo:block> 
                     			</fo:table-cell>
                     			 <fo:table-cell>
-                    			      <fo:block text-align="right" font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${finesGTot}</fo:block> 
+                    			      <fo:block text-align="right" font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${securityGTot}</fo:block> 
+                    			</fo:table-cell>
+                    			 <fo:table-cell>
+                    			      <fo:block text-align="right" font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${remitGTot}</fo:block> 
                     			</fo:table-cell>
                     			 <fo:table-cell>
                     			      <fo:block text-align="right" font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${transportGTot}</fo:block> 
                     			</fo:table-cell>
                     			 <fo:table-cell>
-                    			      <fo:block text-align="right" font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${securityGTot}</fo:block> 
-                    			</fo:table-cell>
-                    			 <fo:table-cell>
-                    			      <fo:block text-align="right" font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${remitGTot}</fo:block> 
+                    			      <fo:block text-align="right" font-size="9pt" keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">${finesGTot}</fo:block> 
                     			</fo:table-cell>
                     			 <fo:table-cell>
                     			      <fo:block text-align="right"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
