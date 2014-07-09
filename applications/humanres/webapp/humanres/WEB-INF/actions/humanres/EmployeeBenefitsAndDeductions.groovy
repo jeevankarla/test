@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilNumber;
 import in.vasista.vbiz.humanres.PayrollService;
-
+import org.ofbiz.party.party.PartyHelper;
 if (parameters.customTimePeriodId == null) {
 	return;
 }
@@ -32,19 +32,14 @@ GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTim
 if (UtilValidate.isEmpty(customTimePeriod)) {
 	return;
 }
-context.timePeriodStart= UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-context.timePeriodEnd= UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 timePeriodStart=UtilDateTime.getDayStart(UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate")));
 timePeriodEnd=UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate")));
-conditionList=[];
-conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
-conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,parameters.customTimePeriodId));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
+context.timePeriodStart= timePeriodStart;
+
+context.timePeriodEnd= timePeriodEnd;
 
 //getting benefits
-benefitTypeList = delegator.findList("BenefitType", null, null, ["sequenceNum"], null, false);
+benefitTypeList = delegator.findList("BenefitType", EntityCondition.makeCondition("benefitTypeId", EntityOperator.NOT_EQUAL ,"PAYROL_BEN_SALARY"), null, ["sequenceNum"], null, false);
 benefitDescMap=[:];
 if(UtilValidate.isNotEmpty(benefitTypeList)){
 	benefitTypeList.each{ benefit->
@@ -54,7 +49,12 @@ if(UtilValidate.isNotEmpty(benefitTypeList)){
 	}
 }
 benefitTypeIds = EntityUtil.getFieldListFromEntityList(benefitTypeList, "benefitTypeId", true);
-context.benefitTypeIds=benefitTypeIds;
+
+if(benefitTypeIds.contains(parameters.benefitTypeId)){
+	context.benefitTypeIds=UtilMisc.toList(parameters.benefitTypeId);
+}else{
+	context.benefitTypeIds=benefitTypeIds;
+}
 context.benefitDescMap=benefitDescMap;
 //getting deductions
 
@@ -68,7 +68,11 @@ if(UtilValidate.isNotEmpty(deductionTypeList)){
 	}
 }
 dedTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypeList, "deductionTypeId", true);
-context.dedTypeIds=dedTypeIds;
+if(dedTypeIds.contains(parameters.dedTypeId)){
+	context.dedTypeIds=UtilMisc.toList(parameters.dedTypeId);
+}else{
+	context.dedTypeIds=dedTypeIds;
+}
 context.dedDescMap=dedDescMap;
 
 conditionList = [];
@@ -79,9 +83,9 @@ conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodEnd)));
 EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-List<GenericValue> partyBenefitList = delegator.findList("PartyBenefit", condition, null, null, null, false);
+List<GenericValue> partyBenefitList = delegator.findList("PartyBenefit", condition, null, ["partyIdTo"], null, false);
 
-List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, null, null, false);
+List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, ["partyIdTo"], null, false);
 
 Map benefitTypeFinalMap=FastMap.newInstance();
 
@@ -107,26 +111,42 @@ if(UtilValidate.isNotEmpty(partyBenefitList)){
 }
 
 JSONArray headBenefitItemsJSON = new JSONArray();
+Map totalBenefitsMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(benefitTypeFinalMap)){
 	Iterator BenfIter = benefitTypeFinalMap.entrySet().iterator();
 	while(BenfIter.hasNext()){
 		Map.Entry entry = BenfIter.next();
 		emplyId= entry.getKey();
 		JSONObject newObj = new JSONObject();
-		newObj.put("id",emplyId);
+		partyName=PartyHelper.getPartyName(delegator, emplyId, false);
+		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplyId]);
+		deptName="";
+		if(departmentDetails){
+			deptPartyId=departmentDetails[0].partyIdFrom;
+			deptName=PartyHelper.getPartyName(delegator, deptPartyId, false);
+		}
+		newObj.put("id",emplyId+"["+partyName+"]");		
 		newObj.put("partyId",emplyId);
 		newObj.put("periodId",parameters.customTimePeriodId);
+		if(UtilValidate.isNotEmpty(deptName)){
+			newObj.put("deptName",deptName);
+		}
 		if(UtilValidate.isNotEmpty(entry.getValue())){
 			Iterator headerItemIter = (entry.getValue()).entrySet().iterator();
 			while(headerItemIter.hasNext()){
 				Map.Entry itemEntry = headerItemIter.next();
+				benefitAmt=((itemEntry.getValue())).setScale(0,BigDecimal.ROUND_HALF_UP);
+				if(UtilValidate.isEmpty(totalBenefitsMap[itemEntry.getKey()])){
+					totalBenefitsMap[itemEntry.getKey()]=benefitAmt;
+				}else{
+					totalBenefitsMap[itemEntry.getKey()]+=benefitAmt;
+				}
 				newObj.put(itemEntry.getKey(),((itemEntry.getValue())).setScale(0,BigDecimal.ROUND_HALF_UP));
 			}
 		}
 		headBenefitItemsJSON.add(newObj);
 	}
 }
-
 Map deductionTypeValueMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(partyDeductionList)){
 	partyDeductionList.each{ partyDed->
@@ -156,7 +176,18 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 		Map.Entry entry = dedIter.next();
 		emplyId= entry.getKey();
 		JSONObject newObj = new JSONObject();
-		newObj.put("id",emplyId);
+		partyName=PartyHelper.getPartyName(delegator, emplyId, false);
+		newObj.put("id",emplyId+"["+partyName+"]");	
+		partyName=PartyHelper.getPartyName(delegator, emplyId, false);
+		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplyId]);
+		deptName="";
+		if(departmentDetails){
+			deptPartyId=departmentDetails[0].partyIdFrom;
+			deptName=PartyHelper.getPartyName(delegator, deptPartyId, false);
+		}
+		if(UtilValidate.isNotEmpty(deptName)){
+			newObj.put("deptName",deptName);
+		}
 		newObj.put("periodId",parameters.customTimePeriodId);
 		newObj.put("partyId",emplyId);
 		if(UtilValidate.isNotEmpty(entry.getValue())){

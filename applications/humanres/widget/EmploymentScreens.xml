@@ -405,6 +405,13 @@
                 <set field="titleProperty" value="HumanResFindEmployment"/>
                 <set field="headerItem" value="benefitOrDeduction"/>
 				<set field="tabButtonItem" value="benefitOrDeduction" />      
+				<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
+					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
+					<order-by field-name="sequenceNum"/>
+				</entity-condition>
+				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<order-by field-name="sequenceNum"/>					
+				</entity-condition>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeBenefitsAndDeductions.groovy" />  
             </actions>
             <widgets>

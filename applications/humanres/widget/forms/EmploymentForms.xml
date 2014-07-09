@@ -607,13 +607,34 @@
     </form>
     <form name="FindBenefitsOrDeductions" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true">  
+    	<!-- <field name="partyId" title="Department">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
+					<entity-constraint name="roleTypeId" operator="equals"
+						value="INTERNAL_ORGANIZATIO" />
+					<entity-order-by field-name="partyId" />
+				</entity-options>
+			</drop-down>
+		</field> -->
         <field name="employeeId" title="Employee Id"><text size="13"/></field>
-        <field name="type" title="Type">
-        	<drop-down allow-empty="false">
+        <field name="type" title="Type" event="onchange" action="javascript:headerTypeHandler();">
+        	<drop-down allow-empty="true">
         		<option key="benefits"/>
         		<option key="deductions"/>
         	</drop-down>
         </field>
+        <field name="benefitTypeId" title="Benefit Name">
+        	<drop-down allow-empty="true">
+        		<!-- <option key="All"/> -->
+        		<list-options key-name="benefitTypeId" list-name="allBenefitsTypeList" description="${benefitName}"/>
+        	</drop-down>
+        </field>
+       <field name="dedTypeId" title="Deduction Name">
+        	<drop-down allow-empty="true">
+        		<!-- <option key="All"/> -->
+        		<list-options key-name="deductionTypeId" list-name="allDeductionTypeList" description="${deductionName}"/>
+        	</drop-down>
+        </field> 
        <field name="customTimePeriodId" title="Period Id">
              <drop-down allow-empty="true">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">

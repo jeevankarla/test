@@ -70,7 +70,9 @@
 <script type="application/javascript">
 	var recentChnage;
 	var type;
-	type="${parameters.type?if_exists}";	
+	type="${parameters.type?if_exists}";
+	var benefitTypeId;
+	benefitTypeId="${parameters.benefitTypeId?if_exists}";	
 	function setUpItemList() {
 			//recentChnage = recentChnage;
 			
@@ -80,15 +82,17 @@
 			 	data = ${StringUtil.wrapString(headItemsJson)!'[]'};
 			</#if>
 			var columns = [		
-					{id:"id", name:"Empl No", field:"id", width:100, minWidth:100, cssClass:"cell-title", sortable:false},		
+					{id:"id", name:"Employee Id", field:"id", width:150, minWidth:100, cssClass:"cell-title", sortable:false},
+					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:false},		
 					<#if type?exists>
 						<#if type=="benefits">						
 							<#if benefitTypeIds?has_content> 
-						        <#list benefitTypeIds as benefitType>			        				
-									{id:"${benefitType}", name:"${benefitDescMap[benefitType]}", field:"${benefitType}", width:100, minWidth:80, editor:FloatCellEditor}<#if benefitType_has_next>,</#if>
+						        <#list benefitTypeIds as benefitType>	
+										{id:"${benefitType}", name:"${benefitDescMap[benefitType]}", field:"${benefitType}", width:100, minWidth:80, editor:FloatCellEditor}<#if benefitType_has_next>,</#if>
 								</#list>
 							</#if>
-						<#else>	
+						</#if>	
+						<#if type=="deductions">	
 							<#if dedTypeIds?has_content> 
 						        <#list dedTypeIds as dedType>				        	       				
 									{id:"${dedType}", name:"${dedDescMap[dedType]?if_exists}", field:"${dedType}", width:75, minWidth:80, editor:FloatCellEditor}<#if dedType_has_next>,</#if>
@@ -116,8 +120,8 @@
 				forceFitColumns: false,
 				enableCellNavigation: true,
 				autoEdit: true,
-				asyncEditorLoading: false,			
-	            secondaryHeaderRowHeight: 25
+				asyncEditorLoading: false   
+	            
 			};
 			
 	        var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
@@ -167,8 +171,9 @@
 		
 	
 	}
-	$(document).ready(function() {
+	$(document).ready(function() {			
 		  	setUpItemList();
+		  	
 	});
 	
 function editClickHandler(row) {
@@ -222,7 +227,22 @@ function updateEmployeeBenefitsOrDedEntryInternal(formName, action, row) {
                });
 		
 	}//end of updateEmployeeBenefitsOrDedEntryInternal
-
+function headerTypeHandler(){
+	var typeValue=jQuery('[name=type]').val();	
+	if(typeValue== ''){
+	 jQuery('[name=benefitTypeId]').parent().parent().parent().hide();
+	 jQuery('[name= dedTypeId]').parent().parent().parent().hide();
+	}
+	if(typeValue == 'benefits' ){
+		jQuery('[name=benefitTypeId]').parent().parent().parent().show();
+		
+		jQuery('[name= dedTypeId]').parent().parent().parent().hide();
+		
+	}if(typeValue == 'deductions' ){
+		jQuery('[name=benefitTypeId]').parent().parent().parent().hide();		
+		jQuery('[name= dedTypeId]').parent().parent().parent().show();
+	}
+}
 </script>
 	
 <div id="wrapper" style="width: 95%; height:100%">
@@ -235,7 +255,7 @@ function updateEmployeeBenefitsOrDedEntryInternal(formName, action, row) {
   
     <div>    	
  		<div class="grid-header" style="width:100%">
-			<label>Employee Benefits/Deductions</label>
+			<label>Employee Benefits/Deductions: <#if timePeriodStart?has_content>[${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodStart?if_exists, "MMMMM-yyyy"))}]</#if></label>
 		</div>    
 		<div id="itemGrid2" style="width:100%;height:350px;">
 			
