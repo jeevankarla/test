@@ -6574,7 +6574,6 @@ public class ByProductNetworkServices {
 		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN, invoiceStatusList));
 
 		EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
-		Debug.log("cond ###########################################"+cond);
 		try {
 			pendingOBInvoiceList = delegator.findList("InvoiceAndFacility",	cond, null, null, null, false);
 		} catch (Exception e) {
@@ -7154,22 +7153,20 @@ public class ByProductNetworkServices {
 		}
 		return ServiceUtil.returnSuccess();
 	}
-	/*public static Map<String, Object> createSequenceForVATInvoice(DispatchContext dctx, Map context) {
+	
+	public static Map<String, Object> createSequenceForVATInvoice(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		Timestamp fromDate = (Timestamp) context.get("fromDate");
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
-		String facilityId = (String) context.get("facilityId");
 		List facilityIds = (List) context.get("facilityIds");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Boolean isByParty = Boolean.FALSE;
 		if (UtilValidate.isNotEmpty(context.get("isByParty"))) {
 			isByParty = (Boolean) context.get("isByParty");
 		}
 		List ownerPartyIds = FastList.newInstance();
-		if (UtilValidate.isEmpty(facilityId)) {
-			facilityIds = (List) getAllBooths(delegator, null).get("boothsList");
-		} 
 		
 		if (UtilValidate.isEmpty(fromDate)) {
 			fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
@@ -7177,63 +7174,118 @@ public class ByProductNetworkServices {
 		if (UtilValidate.isEmpty(thruDate)) {
 			thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 		}
-		int intervalDays = (UtilDateTime.getIntervalInDays(fromDate, thruDate)) + 1;
-		if (isByParty) {
+		if (isByParty && UtilValidate.isNotEmpty(facilityIds)) {
 			try {
 				List facilities = delegator.findList("Facility",EntityCondition.makeCondition("facilityId",	EntityOperator.IN, facilityIds), UtilMisc.toSet("ownerPartyId"), null, null, false);
 				ownerPartyIds = EntityUtil.getFieldListFromEntityList(facilities, "ownerPartyId", true);
 			} catch (GenericEntityException e) {
 				Debug.logError(e, module);
+				return ServiceUtil.returnError(e.getMessage());
 			}
-		}
-		List<GenericValue> payments = FastList.newInstance();
-		List conditionList = FastList.newInstance();
-		if(UtilValidate.isNotEmpty(facilityIds)){
-			conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN, "PMNT_RECEIVED"));
-		}
-		if(UtilValidate.isNotEmpty(facilityId)){
-			conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS, facilityId));
-		}
-		if(UtilValidate.isNotEmpty(ownerPartyId)){
-			conditionList.add(EntityCondition.makeCondition("partyUd",EntityOperator.IN, ownerPartyId));
-		}
-		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN, "INVOICE_CANCELLED"));
-		conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-		conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		List extInvoiceIds = FastList.newInstance();
-		try {
-			List<String> extInvoices = delegator.findList("Invoice", condition, UtilMisc.toSet("invoiceId"), UtilMisc.toList("dueDate", "facilityId"), null, false);
-			extInvoiceIds = EntityUtil.getFieldListFromEntityList(extInvoices, "invoiceId", true); 
-		} catch (GenericEntityException e) {
-			Debug.logError(e, module);
-		}
-		List vatInvoiceIds = FastList.newInstance();
-		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN, extInvoiceIds));
-		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "VAT_SALE"));
-		EntityCondition itemCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		try {
-			List<String> extInvoices = delegator.findList("InvoiceItem", condition, UtilMisc.toSet("invoiceId"), UtilMisc.toList("dueDate", "facilityId"), null, false);
-			extInvoiceIds = EntityUtil.getFieldListFromEntityList(extInvoices, "invoiceId", true); 
-		} catch (GenericEntityException e) {
-			Debug.logError(e, module);
 		}
 		
-		Map boothReturnDetail = FastMap.newInstance();
-		for (String boothId : boothIds) {
-			List<GenericValue> boothCreditNoteDetails = FastList.newInstance();
-			if (isByParty) {
-				boothCreditNoteDetails = EntityUtil.filterByCondition(payments,EntityCondition.makeCondition("partyIdFrom",	EntityOperator.EQUALS, boothId));
-			} else {
-				boothCreditNoteDetails = EntityUtil.filterByCondition(payments,EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS, boothId));
+		Map finYearContext = FastMap.newInstance();
+		finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+		finYearContext.put("organizationPartyId", "Company");
+		finYearContext.put("userLogin", userLogin);
+		finYearContext.put("findDate", fromDate);
+		finYearContext.put("excludeNoOrganizationPeriods", "Y");
+		List customTimePeriodList = FastList.newInstance();
+		Map resultCtx = FastMap.newInstance();
+		try{
+			resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+			if(ServiceUtil.isError(resultCtx)){
+				Debug.logError("Problem in fetching financial year ", module);
+				return ServiceUtil.returnError("Problem in fetching financial year ");
 			}
-			
-
+		}catch(GenericServiceException e){
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
 		}
-		result.put("productReturnTotals", boothReturnDetail);
+		customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+		String finYearId = "";
+		if(UtilValidate.isNotEmpty(customTimePeriodList)){
+			GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+			finYearId = (String)customTimePeriod.get("customTimePeriodId");
+		}
+		List conditionList = FastList.newInstance();
+		
+		if(UtilValidate.isNotEmpty(ownerPartyIds)){
+			conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN, ownerPartyIds));
+		}
+		else{
+			if(UtilValidate.isNotEmpty(facilityIds)){
+				conditionList.add(EntityCondition.makeCondition("facilityId",EntityOperator.IN, facilityIds));
+			}
+		}
+		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+		conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "VAT_SALE"));
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		List<String> invoiceIds = FastList.newInstance();
+		List<GenericValue> extInvoices = FastList.newInstance();
+		try {
+			extInvoices = delegator.findList("InvoiceItemInvoiceItemTypeInvoice", condition, UtilMisc.toSet("invoiceId"), UtilMisc.toList("dueDate", "facilityId"), null, false);
+			invoiceIds = EntityUtil.getFieldListFromEntityList(extInvoices, "invoiceId", true);
+			
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN, invoiceIds));
+		conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId",EntityOperator.EQUALS, "VAT_INV"));
+		conditionList.add(EntityCondition.makeCondition("finYearId",EntityOperator.EQUALS, finYearId));
+		EntityCondition billOfSaleCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		List excludeInvoiceIds = FastList.newInstance();
+		try {
+			List<GenericValue> extBillOfSaleInvoices = delegator.findList("BillOfSaleInvoiceSequence", billOfSaleCond, UtilMisc.toSet("invoiceId"), null, null, false);
+			excludeInvoiceIds = EntityUtil.getFieldListFromEntityList(extBillOfSaleInvoices, "invoiceId", true); 
+		
+			invoiceIds.removeAll(excludeInvoiceIds);		
+			for(String vatInvId : invoiceIds){
+				//i++;
+				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+				billOfSale.put("billOfSaleTypeId", "VAT_INV");
+				billOfSale.put("invoiceId", vatInvId);
+				billOfSale.put("finYearId", finYearId);
+				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
+	            delegator.create(billOfSale);
+	            
+			}
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+		}
 		return result;
-	}*/
+	}
+	public static Map<String, Object> getPartyByRoleType(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String roleTypeId = (String) context.get("roleTypeId");
+		//List partyRoleTypes = UtilMisc.toList("MIS_CUSTOMER", "IC_WHOLESALE", "Retailer");
+		
+		List conditionList = FastList.newInstance();
+		if(UtilValidate.isNotEmpty(roleTypeId)){
+			conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, roleTypeId));
+		}
+		EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		List<String> partyIds = FastList.newInstance();
+		List<GenericValue> partyDetails = FastList.newInstance();
+		try {
+			partyDetails = delegator.findList("PartyRoleAndPartyDetail", condition, UtilMisc.toSet("partyId", "roleTypeId", "firstName", "lastName"), UtilMisc.toList("partyId"), null, false);
+			partyIds = EntityUtil.getFieldListFromEntityList(partyDetails, "partyId", true);
+			
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		result.put("partyDetails", partyDetails);
+		result.put("partyIds", partyIds);
+		return result;
+	}
 	
 	public static Map<String, Object> getFacilityOwnerMap(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
@@ -7823,7 +7875,7 @@ public class ByProductNetworkServices {
 
 			conditionList.add(EntityCondition.makeCondition("statusId",	EntityOperator.NOT_IN,UtilMisc.toList("INVOICE_CANCELLED", "INVOICE_WRITEOFF")));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			List<GenericValue> invoices = delegator.findList("Invoice",	condition, UtilMisc.toSet("invoiceId", "dueDate","facilityId", "partyId"), null, null, false);
+			List<GenericValue> invoices = delegator.findList("Invoice", condition, UtilMisc.toSet("invoiceId", "dueDate","facilityId", "partyId"), null, null, false);
 			int intervalDays = (UtilDateTime.getIntervalInDays(fromDate,thruDate) + 1);
 			for (int k = 0; k < intervalDays; k++) {
 

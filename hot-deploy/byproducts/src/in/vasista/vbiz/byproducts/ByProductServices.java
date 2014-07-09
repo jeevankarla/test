@@ -3842,7 +3842,8 @@ public class ByProductServices {
 		      String customTimePeriodId = (String)context.get("customTimePeriodId");
 		      String periodTypeId = (String)context.get("periodTypeId");
 		      String facilityId = (String)context.get("facilityId");
-		      String billOfSaleTypeId = "RM_CRINST";
+		      //String billOfSaleTypeId = "RM_CRINST";
+		      String billOfSaleTypeId = "";
 		      List conditionList = FastList.newInstance();
 		      List<String> facilityIds = FastList.newInstance();
 		      try{

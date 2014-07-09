@@ -28,6 +28,15 @@
         <attribute name="returnCrQuantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="returnCnQuantity" type="BigDecimal" mode="IN" optional="false"/>
     </service>
+    <service name="createSequenceForVATInvoice" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createSequenceForVATInvoice" transaction-timeout="20000">
+        <description>Create Crate and Can Return</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="facilityIds" type="List" mode="IN" optional="true"/>
+        <attribute name="isByParty" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    
     <service name="routeShiftEmpSubsidy" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="routeShiftEmpSubsidy">
         <description>Shift employee subsidy to temp route</description>
