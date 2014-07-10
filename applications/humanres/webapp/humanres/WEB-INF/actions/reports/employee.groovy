@@ -57,9 +57,19 @@ if(orgId != null){
         		EntityCondition.makeCondition("estimatedThruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp())));
         EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
 		List<GenericValue> employeePositionList = delegator.findList("EmplPosition", condition, null, null, null, false);
-		if(employeePositionList){
-			contactDetailsMap.employeePosition=(employeePositionList.get(0)).emplPositionId;
+		//if(employeePositionList){
+			//contactDetailsMap.employeePosition=(employeePositionList.get(0)).emplPositionId;
+		//}
+		if(UtilValidate.isNotEmpty(employeePositionList)){
+			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : (employeePositionList.get(0)).emplPositionTypeId], true);
+			if (emplPositionType != null) {
+				employeePosition = emplPositionType.getString("description");
+			}
+			else {
+				employeePosition = employeePositionList.get(0).emplPositionId;
+			}
 		}
+		contactDetailsMap.employeePosition=employeePosition;
 		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: employee.partyIdTo, userLogin: userLogin]);
 		contactDetailsMap.phoneNumber = partyTelephone.contactNumber;
 		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: employee.partyIdTo, userLogin: userLogin]);
