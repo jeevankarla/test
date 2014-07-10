@@ -4,7 +4,9 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+import in.vasista.vbiz.humanres.PayrollService;
 
+dctx = dispatcher.getDispatchContext();
 def populateChildren(org, employeeList) {
 	internalOrgs = EntityUtil.filterByDate(delegator.findByAnd("PartyRelationshipAndDetail", [partyIdFrom : org.partyId, partyRelationshipTypeId : "GROUP_ROLLUP"],["groupName"]));
 	internalOrgs.each { internalOrg ->
@@ -12,11 +14,14 @@ def populateChildren(org, employeeList) {
 	}
 	
 	employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", [partyIdFrom : org.partyId, roleTypeIdTo : "EMPLOYEE"],["firstName"]));
+	
 	employments.each { employment ->
 		employee = [:];
+		
 		employee.put("department", org.groupName);
 		employeePosition = "";
 		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : employment.partyId]));
+     
 		emplPositionAndFulfillment = EntityUtil.getFirst(emplPositionAndFulfillments);
 		if(UtilValidate.isNotEmpty(emplPositionAndFulfillment) && emplPositionAndFulfillment.getString("emplPositionTypeId") != null){
 			emplPositionType = delegator.findOne("EmplPositionType",[emplPositionTypeId : emplPositionAndFulfillment.getString("emplPositionTypeId")], true);
@@ -36,24 +41,50 @@ def populateChildren(org, employeeList) {
 		employee.put("employeeId", employment.partyId);
 		joinDate = UtilDateTime.toDateString(employment.appointmentDate, "dd/MM/yyyy");
 		employee.put("joinDate", joinDate)
-		
+		resignDate=UtilDateTime.toDateString(employment.resignationDate,"dd/MM/yyyy");
+		employee.put("resignDate",resignDate);
 		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: employment.partyId, userLogin: userLogin]);
 		phoneNumber = "";
 		if (partyTelephone != null && partyTelephone.contactNumber != null) {
 			phoneNumber = partyTelephone.contactNumber;
 		}
 		employee.put("phoneNumber", phoneNumber);
+		
+		
+		partyEmail= dispatcher.runSync("getPartyEmail", [partyId: employment.partyId, userLogin: userLogin]);
+		emailAddress="";
+		emailAddress=partyEmail.emailAddress;
+		employee.put("emailAddress",emailAddress);
+		employee.put("locationGeoId",employment.locationGeoId);
+		employee.put("gender",employment.gender);
+		employee.put("bloodGroup",employment.bloodGroup);
 		address = "";
+		nowDate=UtilDateTime.nowTimestamp();
+		
+		fromDate = UtilDateTime.getMonthStart(nowDate);
+
+		thruDate = UtilDateTime.getMonthEnd(nowDate,timeZone,locale);
+		
+		basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:employment.partyIdTo,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
 		//partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId: employment.partyId, userLogin: userLogin]);
 		//if (partyPostalAddress != null) {
 		//	address = partyPostalAddress.address1+partyPostalAddress.address2+partyPostalAddress.city+"-"+partyPostalAddress.postalCode;
 		//}
 		//employee.put("address", address);
+		employee.put("amount",basicSalAndGradeMap.get("amount"));
+		employee.put("payGradeId",basicSalAndGradeMap.get("payGradeId"));
+		employment.fromDate=UtilDateTime.toDateString(employment.fromDate,"dd/MM/yyyy");
+		employee.put("fromDate",employment.fromDate);
 		employeeList.add(employee);
+		
+		
 	}
 }
 
 employeeList = [];
+internalOrgs=[];
+context.internalOrgs=internalOrgs;
+context.employeeList=employeeList;
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 JSONArray employeesJSON = new JSONArray();
