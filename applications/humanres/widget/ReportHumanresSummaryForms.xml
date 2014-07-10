@@ -139,11 +139,34 @@
 		<field name="name" title-area-style="tableheadwide">
 			<display description="${firstName} ${middleName} ${lastName}" />
 		</field>		
-		<field name="employementFrom" title-area-style="tableheadwide"><display description="${fromDate}"/></field>
+		<field name="employmentFrom" title-area-style="tableheadwide"><display description="${fromDate}"/></field>
 		<field name="employeePosition" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${description}" key-field-name="emplPositionTypeId"></display-entity></field>
 		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
 		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>
 		<field name="locationGeoId" title="Location Geo" title-area-style="tableheadwide"><display description="${locationGeoId}"/></field>		
+	</form>	
+	<form name="masterEmployees" type="list" list-name="employeeList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<actions>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeTable.groovy"/>					
+		</actions>		
+		<field name="partyId" title="Employee Id" title-area-style="tableheadwide" >
+			<display description="${employeeId}" />
+		</field>
+		<field name="name" title-area-style="tableheadwide">
+			<display description="${name} " />
+		</field>		
+		<field name="employmentFrom" title-area-style="tableheadwide"><display description="${fromDate}"/></field>
+		<field name="position" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${position}" key-field-name="emplPositionTypeId"></display-entity></field>
+		<field name="department" title-area-style="tableheadwide"><display description="${department}"/></field>
+		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
+		<field name="gender" title-area-style="tableheadwide"><display description="${gender}"/></field>
+		<field name="amount" title="Basic Pay" title-area-style="tableheadwide"><display description="${amount}"/></field>
+		<field name="payGradeId" title="Grade" title-area-style="tableheadwide"><display description="${payGradeId}"/></field>
+		<field name="bloodGroup" title-area-style="tableheadwide"><display description="${bloodGroup}"/></field>
+		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>
+		<field name="locationGeoId" title="Location Geo" title-area-style="tableheadwide"><display description="${locationGeoId}"/></field>
+		<field name="resignDate" title="Retirement Date" title-area-style="tableheadwide"><display description="${resignDate}"/></field>		
 	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">

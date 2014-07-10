@@ -471,7 +471,7 @@
 													target="EmployeesListPdf.pdf" target-window="_BLANK">
 													<parameter param-name="partyId" from-field="parameters.partyId"/>
 												</link>		
-													<include-form name="Employees"
+													<include-form name="masterEmployees"
 														location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 												</screenlet>
 											</widgets>
@@ -517,6 +517,7 @@
 	<screen name="EmployeesListCsv">
 		<section>
 			<actions>
+			<set field="viewSize" value="99999"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>
@@ -530,7 +531,7 @@
                  	<widgets>				
 						<label style="h3" text="${uiLabelMap.EmployeesList}" />
 						<container>
-						<include-form name="Employees"
+						<include-form name="masterEmployees"
 							location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
 							</container>
 					</widgets>
