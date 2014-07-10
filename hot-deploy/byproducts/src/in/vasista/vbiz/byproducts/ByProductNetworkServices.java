@@ -8037,7 +8037,12 @@ public class ByProductNetworkServices {
 
 			conditionList.add(EntityCondition.makeCondition("statusId",	EntityOperator.NOT_IN,UtilMisc.toList("INVOICE_CANCELLED", "INVOICE_WRITEOFF")));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			List<GenericValue> invoices = delegator.findList("InvoiceAndItemType", condition, UtilMisc.toSet("invoiceId", "dueDate","facilityId", "partyId"), null, null, false);
+			List<GenericValue> invoiceItems = delegator.findList("InvoiceAndItemType", condition, UtilMisc.toSet("invoiceId"), null, null, false);
+			List tempInvIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceId", true);
+			
+			List<GenericValue> invoices = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.IN, tempInvIds), UtilMisc.toSet("invoiceId", "dueDate", "facilityId", "partyId"), null, null, false);
+			
+			
 			int intervalDays = (UtilDateTime.getIntervalInDays(fromDate,thruDate) + 1);
 			for (int k = 0; k < intervalDays; k++) {
 
