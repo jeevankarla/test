@@ -190,6 +190,7 @@ under the License.
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="AccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
+		                                            <include-screen name="EditAccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
 <!--		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
 		                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 
@@ -575,6 +576,24 @@ under the License.
 				<widgets>
 					<screenlet id="AccountPanel" title="${uiLabelMap.AccountDetails}" collapsible="true">
                        	<include-form name="AccountDetailsList" location="component://humanres/widget/forms/EmployeeForms.xml" />
+					</screenlet>
+			  </widgets>
+			</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="EditAccountDetails">
+		<section>
+			<actions>
+				<entity-and list="EditAccountDetails" entity-name="FinAccount" filter-by-date="true">
+					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
+				</entity-and>
+			</actions>
+			<widgets>
+			 <section>
+				<widgets>
+					<screenlet id="AccountPanel" title="${uiLabelMap.EditAccountDetails}">
+                       	<include-form name="EditAccountDetails" location="component://humanres/widget/forms/EmployeeForms.xml" />
 					</screenlet>
 			  </widgets>
 			</section>
