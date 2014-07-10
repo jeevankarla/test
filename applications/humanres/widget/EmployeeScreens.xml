@@ -129,9 +129,13 @@ under the License.
             <widgets>
                  <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    <section>
+                    <widgets> 
                         <screenlet title="${uiLabelMap.PageTitleEditEmployeeInformation}">
                             <include-form name="EditEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         </screenlet>
+                     </widgets>
+                     </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -175,6 +179,12 @@ under the License.
 		                                            <include-screen name="EmployeeInformation" location="component://humanres/widget/EmployeeScreens.xml"/>
 <!--		                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
 		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+		                                            <screenlet title="Edit Employee Identification Numbers">
+                      									<include-form name="EditEmplIdentification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                    								 </screenlet>
+                    								 <screenlet title="Create Employee Identification Numbers">
+                      									<include-form name="createEmplIdentification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                    								 </screenlet>
 		                                        </container>
 		                                        <container style="profile-right">
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>

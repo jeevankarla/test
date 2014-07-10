@@ -375,7 +375,8 @@
 		</field>
 		<field name="caste" title="${uiLabelMap.Caste}">
 			<drop-down allow-empty="true">
-				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${partyClassificationGroupId}">
+				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}">
+					<entity-constraint name="parentGroupId" value="PCG_REC_CA"/>
 					<entity-order-by field-name="partyClassificationGroupId"/>
 				</entity-options>
 			</drop-down>
@@ -524,7 +525,56 @@
             <sort-field name="cancelLink"/>
       	</sort-order>
     </form>
+    <form name="EditEmplIdentification" type="list" odd-row-style="alternate-row" header-row-style="header-row" target="updatePartyIdentification"
+    	  default-table-style="basic-table hover-bar" separate-columns="true" list-name="partyIdentificationList">
+    	  <actions>
+			<entity-condition entity-name="PartyIdentification" list="partyIdentificationList">
+			   <condition-list combine="and">
+			       <condition-expr field-name="partyId" from-field="parameters.partyId"/>
+			   </condition-list>
+    		</entity-condition>
     
+    
+		</actions>
+		<field name="partyIdentificationTypeId" >
+		<drop-down allow-empty="false">             
+				<entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
+				          <entity-order-by field-name="partyIdentificationTypeId"/>
+				</entity-options>
+			</drop-down>  
+		</field>
+		<field name="partyIdentificationTypeId"><display-entity entity-name="PartyIdentificationType"  description="${description}"></display-entity></field>
+		<field name="partyId"><hidden /></field>
+		<field name="idValue" title="Number"><text size="13"></text></field>
+		<field name="issueDate" title="Issue Date"><date-time type="date"></date-time></field>
+		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field>
+		<field name="submitButton" title="Update" separate-column="true">
+            <submit button-type="button"/></field>
+        <field name="deleteLink" title="Delete" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
+                <parameter param-name="partyId"/>
+                <parameter param-name="partyIdentificationTypeId"/>
+           </hyperlink>
+        </field>
+	  	</form>
+    <form name="createEmplIdentification" type="single" odd-row-style="alternate-row" header-row-style="header-row" target="createPartyIdentification"
+    	  default-table-style="basic-table hover-bar" separate-columns="true" >
+    	  <actions>
+		</actions>
+		<field name="partyIdentificationTypeId" >
+		<drop-down allow-empty="false">             
+				<entity-options entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId" description="${description}" >
+				          <entity-order-by field-name="partyIdentificationTypeId"/>
+				</entity-options>
+			</drop-down>  
+		</field>
+		<field name="partyId"><hidden /></field>
+		<field name="idValue" title="Number"><text></text></field>
+		<field name="issueDate" title="Issue Date"><date-time type="date" ></date-time></field>
+		<field name="expiryDate" title="Expiry Date"><date-time type="date"></date-time></field>
+		<field name="submitButton" title="Create" separate-column="true">
+            <submit button-type="button"/></field>
+		</form>
     <form name="PreviousEmploymentDetails" type="single" target="updatePreviousEmployment" default-map-name="EmployeeDetail">
 		<field name="partyId"><display></display></field>
 		<field name="previousEmployer" title="${uiLabelMap.NameOfTheEmployer}"><text></text></field>
@@ -596,7 +646,7 @@
 		<field name="shiftType" title="${uiLabelMap.ShiftType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${shiftType}"></display-entity></field>
 		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
         <field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportExpireDate}" ></display-entity></field>
-        <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>       
+        <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>
    </form>
     
    <form name="AddDependent" type="single" target="createPartyRelationshipDependent">

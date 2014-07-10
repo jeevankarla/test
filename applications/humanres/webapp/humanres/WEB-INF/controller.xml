@@ -653,6 +653,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindBenefitsOrDeductions"/>
     </request-map>
+    <!--<request-map uri="newReports">
+    	//<security https="true" auth="true"/>
+    	//<response name="success" type="view" value="NewReports"></response>
+    //</request-map>-->
     <request-map uri="updateEmployeeBenefitsOrDeductions">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateBenefitsOrDeductions"/>
@@ -1443,6 +1447,26 @@ under the License.
         <response name="error" type="view" value="calendar"/>
     </request-map>
     
+    <request-map uri="createPartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyIdentification"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
+    <request-map uri="deletePartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyIdentification"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
+    <request-map uri="updatePartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyIdentification"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
+    
+    
     <!-- Generate Report request -->
     
     <request-map uri="CompanyPunchReport">
@@ -1541,6 +1565,7 @@ under the License.
     <view-map name="ListEmployments" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListEmployments"/>
     <view-map name="EditPartyBenefits" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyBenefits"/>
     <view-map name="FindBenefitsOrDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindBenefitsOrDeductions"/>
+    <view-map name="NewReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#newReports"></view-map>
     <view-map name="EditPayrollPreferences" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPayrollPreferences"/>
     <view-map name="ListPayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListPayHistories"/>
     <view-map name="EditSalarySteps" type="screen" page="component://humanres/widget/PayGradeScreens.xml#EditSalarySteps"/>
@@ -1708,7 +1733,7 @@ under the License.
     <view-map name="FindTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#FindTrainingApprovals"/>
     <view-map name="EditTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#EditTrainingApprovals"/>
     <view-map name="LookupTraining" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupTraining"/>
-
+<view-map name="viewEmployeeProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EmployeeProfile"/>
 	<!-- Analytics -->
 	<view-map name="EmployeesTenureChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChart"/>
 	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>

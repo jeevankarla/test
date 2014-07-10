@@ -1734,6 +1734,8 @@ under the License.
       <field name="partyId" type="id-ne"></field>
       <field name="partyIdentificationTypeId" type="id-ne"></field>
       <field name="idValue" type="id-long"></field>
+       <field name="issueDate" type="date"></field>
+       <field name="expiryDate" type="date"></field>
       <prim-key field="partyId"/>
       <prim-key field="partyIdentificationTypeId"/>
       <relation type="one" fk-name="PARTY_ID_TYPE" rel-entity-name="PartyIdentificationType">
