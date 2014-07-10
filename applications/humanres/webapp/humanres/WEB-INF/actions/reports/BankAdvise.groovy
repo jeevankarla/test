@@ -17,13 +17,29 @@
 * under the License.
 */
 
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.condition.*;
-import org.ofbiz.entity.condition.EntityConditionBuilder;
-import org.ofbiz.accounting.invoice.*;
-import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtil;
+import java.util.*;
+import java.lang.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import java.sql.*;
+import java.util.Calendar;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.party.contact.ContactMechWorker;
-List employeeBankList=[];
+/*List employeeBankList=[];
 List conditionList =[];
 addresses=null;
 customTimePeriod=delegator.findList("CustomTimePeriod", EntityCondition.makeCondition("customTimePeriodId", parameters.customTimePeriodId), null,null, null, false);
@@ -54,5 +70,30 @@ depInvoiceList.each{ invoice ->
 					   
 }
 
-context.employeeBankList=employeeBankList;		
+context.employeeBankList=employeeBankList;		*/
+List conditionList =[];
+conditionList=UtilMisc.toList(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"),
+  EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+  EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+  companyBankAccountList= delegator.findList("FinAccount",condition,null,null,null,false);
+  Map bankWiseEmplDetailsMap=FastMap.newInstance();
+if(UtilValidate.isNotEmpty(companyBankAccountList)){
+	companyBankAccountList.each{ bankDetails->		
+		finAccountId= bankDetails.finAccountId;
+		List conList=FastList.newInstance();
+		conList=UtilMisc.toList(
+			EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
+			EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+		  	EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
+		finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
+		if(UtilValidate.isNotEmpty(finAccountRoleList)){
+			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
+			if(UtilValidate.isNotEmpty(partyIds)){
+				bankWiseEmplDetailsMap.put(finAccountId,partyIds);
+			}
+		}
+		
+	}
+}
+context.put("bankWiseEmplDetailsMap",bankWiseEmplDetailsMap);
 	

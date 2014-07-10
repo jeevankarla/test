@@ -833,24 +833,13 @@
     <screen name="PrintPaySlipsPdf">
 	<section>
 		<actions>
-           	 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
-             <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-             <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-             <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-             <set field="footerImageUrl" value="/images/ProcessedbyVasista.gif"/>
+           	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+            <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            <set field="footerImageUrl" value="/images/ProcessedbyVasista.gif"/>
        		<set field="parameters.partyIdFrom" from-field="parameters.partyId"/>
-       		<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>
-       		<!-- <entity-condition entity-name="InvoiceAndAttribute" list="timePeriodInvoices">
-           		<condition-list combine="and">
-               		<condition-expr field-name="partyIdFrom" operator="in" from-field="orgParties"/>
-               		<condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
-               		<condition-expr field-name="invoiceAttrName" operator="equals" value="TIME_PERIOD_ID"/>
-               		<condition-expr field-name="invoiceAttrValue" operator="equals" from-field="parameters.customTimePeriodId"/>
-           		</condition-list>
-           		<select-field field-name="invoiceId"/>
-       		</entity-condition>
-       		<script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/MapToList.groovy"/>
-            <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/PrintInvoices.groovy"/> -->
+       		<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>       		
             <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>      
    		</actions> 
 		<widgets>
@@ -863,39 +852,7 @@
 					</platform-specific>
 				</widgets>
 			</section>
-		</widgets>
-		<!-- <widgets>           	
-	      	<section>            	
-           		<condition>
-   				 	<not><if-empty field="timePeriodInvoices"/></not>
-   				</condition>    				
-   				<widgets>
-   					<platform-specific>
-                   		<xsl-fo>
-                   			<html-template location="component://accounting/webapp/accounting/invoice/ADPInvoiceTemplate.fo.ftl"/>
-                   		</xsl-fo>
-               		</platform-specific>
-   				</widgets>
-   				<fail-widgets>
-   					<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
-						<decorator-section name="body">
-	      					<section>            	
-           						<condition>
-   				 					<not><if-empty field="timePeriodInvoices"/></not>
-   								</condition>
-   								<widgets>
-   									<platform-specific>
-                   						<xsl-fo>
-                   							<html-template location="component://accounting/webapp/accounting/invoice/PrintInvoices.fo.ftl"/>
-                   						</xsl-fo>
-               						</platform-specific>
-   								</widgets>
-   							</section>
-           				</decorator-section>
-           			</decorator-screen>
-   				</fail-widgets> 
-           	</section>               
-         </widgets> -->
+		</widgets>		
 	</section>
 </screen>
 <screen name="PrintPayrollSummary">
@@ -958,7 +915,8 @@
 			<set field="partyId" value="${nameList[0].partyId}"/>
 			<!-- <script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" /> -->
 			<set field="parameters.partyId" from-field="parameters.partyId"/>
-			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>      
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>  
+			<script	location="component://humanres/webapp/humanres/WEB-INF/actions/reports/BankAdvise.groovy" />    
 		</actions>
 		<widgets>
 			<section>                                                      
