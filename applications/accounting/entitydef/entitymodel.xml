@@ -1965,6 +1965,8 @@
 		<alias name="invoiceId" entity-alias="INV" />
 		<alias name="invoiceTypeId" entity-alias="INV" />
 		<alias name="statusId" entity-alias="INV" />
+		<alias name="invoiceDate" entity-alias="INV" />
+		<alias name="referenceNumber" entity-alias="INV" />
 		<alias name="facilityId" entity-alias="INV" />
 		<alias name="paidDate" entity-alias="INV" />
 		<alias name="dueDate" entity-alias="INV" />

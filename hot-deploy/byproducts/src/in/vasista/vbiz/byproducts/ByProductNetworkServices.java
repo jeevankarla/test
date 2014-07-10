@@ -8164,11 +8164,12 @@ public class ByProductNetworkServices {
 
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS, "MIS_INCOME_IN"));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "INCO_FINEPENALTY_CHQ"));
 			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			invoices = delegator.findList("Invoice", condition, UtilMisc.toSet("invoiceId", "invoiceDate", "facilityId","referenceNumber", "partyId"), null, null, false);
+			invoices = delegator.findList("InvoiceAndItemType", condition, UtilMisc.toSet("invoiceId", "invoiceDate", "facilityId","referenceNumber", "partyId"), null, null, false);
 
 			if (UtilValidate.isNotEmpty(invoices)) {
 				List facilities = FastList.newInstance();
