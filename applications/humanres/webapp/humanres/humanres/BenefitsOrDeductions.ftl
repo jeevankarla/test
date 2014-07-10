@@ -68,6 +68,10 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/autoTab/jquery.autotab-1.1b.js</@ofbizContentUrl>"></script>
 
 <script type="application/javascript">
+function comparer(a, b) {
+  var x = a[sortcol], y = b[sortcol];
+  return (x == y ? 0 : (x > y ? 1 : -1));
+}
 	var recentChnage;
 	var type;
 	type="${parameters.type?if_exists}";
@@ -82,8 +86,8 @@
 			 	data = ${StringUtil.wrapString(headItemsJson)!'[]'};
 			</#if>
 			var columns = [		
-					{id:"id", name:"Employee Id", field:"id", width:150, minWidth:100, cssClass:"cell-title", sortable:false},
-					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:false},		
+					{id:"id", name:"Employee Id", field:"id", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
+					{id:"deptName", name:"Department", field:"deptName", width:150, minWidth:100, cssClass:"cell-title", sortable:true},		
 					<#if type?exists>
 						<#if type=="benefits">						
 							<#if benefitTypeIds?has_content> 
@@ -133,6 +137,24 @@
 			grid.onBeforeEditCell.subscribe(function(e, args) { 
 				
 			});
+			
+  grid.onSort.subscribe(function (e, args) {
+    sortdir = args.sortAsc ? 1 : -1;
+    sortcol = args.sortCol.field;
+
+    if ($.browser.msie && $.browser.version <= 8) {
+      // using temporary Object.prototype.toString override
+      // more limited and does lexicographic sort only by default, but can be much faste
+
+      // use numeric sort of % and lexicographic for everything else
+      dataView2.fastSort(args.sortAsc);
+    } else {
+      // using native sort with comparer
+      // preferred method but can be very slow in IE with huge datasets
+      dataView2.sort(comparer, args.sortAsc);
+    }
+  });			
+			
 			var columnpicker = new Slick.Controls.ColumnPicker(columns, grid, options);
 			
 			// wire up model events to drive the grid
