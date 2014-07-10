@@ -1001,6 +1001,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="MonthlyVatReportCSV"/>
     </request-map>
+     <request-map uri="SubsidyMilkReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="SubsidyMilkReportPDF"/>
+    </request-map>
     <request-map uri="DTCCostReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DTCCostReport"/>
@@ -1172,6 +1176,7 @@
 	<view-map name="ShoppeRentReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ShoppeRentReportPDF" content-type="application/pdf"/>
 	<view-map name="MonthlyVatReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyVatReportPDF" content-type="application/pdf"/>
 	<view-map name="MonthlyVatReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#MonthlyVatReportCSV" content-type="text/csv"/>
+	<view-map name="SubsidyMilkReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#SubsidyMilkReportPDF" content-type="application/pdf"/>
 	<view-map name="BoothPaymentsCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothPaymentsCSV"  content-type="text/csv"/>
 	<view-map name="EmployeeReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#EmployeeReportCSV"  content-type="text/csv"/>
 	<view-map name="DTCFinesAndPenaltiesReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCFinesAndPenaltiesReportPDF" content-type="application/pdf"/>
