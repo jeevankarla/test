@@ -926,6 +926,16 @@
         <field name="finAccountBranch" title="Account Branch" ><display default-value="${AccountDetails[0].finAccountBranch}"></display></field> 
 		<field name="ifscCode" title="Ifsc Code"><display default-value="${AccountDetails[0].ifscCode}"></display></field>
 	</form>
+	 <form name="EditAccountDetails" type="list" list-name="EditAccountDetails" default-table-style="basic-table" target="updateFinAccount" >	
+		<field name="partyId"><hidden/></field>
+		<field name="finAccountId"><hidden/></field>
+		<field name="finAccountCode" title="Account No"  ><text size="15"></text></field>
+        <field name="finAccountName" title="Account Name" ><text size="15"></text></field>
+        <field name="finAccountTypeId" title="Account Type" ><text size="15"></text></field>
+        <field name="finAccountBranch" title="Account Branch" ><text size="15"></text></field> 
+		<field name="ifscCode" title="Ifsc Code"><text size="15"></text></field>
+		 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+	</form>
 	
 	<form name="EmployeeProfilePicture" target="createEmployeeContent" type="upload" 
   		header-row-style="header-row">
