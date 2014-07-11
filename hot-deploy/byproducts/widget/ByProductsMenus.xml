@@ -81,7 +81,7 @@
 					<if-has-permission permission="BYPRODUCTS" action="_ADMIN"/>
 				</or>	 
             </condition>
-			<link target="TransporterMargins"></link>
+			<link target="Transporters"></link>
         </menu-item> 
 		
        <!--  <menu-item name="config" title="Config">
@@ -759,15 +759,15 @@
       
       
       <menu name="TransporterMarginsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="Transporters" title="Transporters">
+        	<link target="Transporters"/>
+        </menu-item>    
         <menu-item name="TransporterMargins" title="TransporterBilling">
         	<link target="TransporterMargins"/>
         </menu-item>
         <menu-item name="FinesAndPenalties" title="Fines And Penalties">
         	<link target="FinesAndPenalties"/>
-        </menu-item>
-        <menu-item name="Transporters" title="Transporters">
-        	<link target="Transporters"/>
-        </menu-item>        
+        </menu-item>    
       </menu>
        <menu name="NonRoutePaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
