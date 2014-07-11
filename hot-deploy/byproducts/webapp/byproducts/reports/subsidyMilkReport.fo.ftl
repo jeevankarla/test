@@ -47,15 +47,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">${uiLabelMap.KMFDairySubHeader}</fo:block>
                     <fo:block  text-align="left"  font-size="9pt" keep-together="always"  white-space-collapse="false" font-weight="bold">LIST OF ${unionFacility.getKey()} EMPLOYEES GETTING SUBSIDISED MILK FROM MOTHER DAIRY From :: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")} TO: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd/MM/yyyy")}</fo:block>
               		<fo:block font-size="10pt">-----------------------------------------------------------------------------------------</fo:block>
-              		<fo:block font-weight="bold" font-size="10pt">Route 			          &#160; &#160;&#160;&#160;  Code No   	 &#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Name of the Agent           &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Employee Name</fo:block>
-            		<fo:block font-size="10pt">-----------------------------------------------------------------------------------------</fo:block>
             	<fo:block>
                     <fo:table>
-				    <fo:table-column column-width="15%"/>
-			        <fo:table-column column-width="25%"/>
-			        <fo:table-column column-width="35%"/>
-			        <fo:table-column column-width="25%"/>
-			        <fo:table-column column-width="18%"/>
+				    <fo:table-column column-width="10%"/>
+			        <fo:table-column column-width="15%"/>
+			        <fo:table-column column-width="20%"/>
+			        <fo:table-column column-width="30%"/>
+			        <fo:table-column column-width="30%"/>
                     <fo:table-body>
                     	<fo:table-row>
                 			<fo:table-cell>
@@ -66,8 +64,15 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
                 			<fo:table-cell>
                     			<fo:block font-size="10pt">-----------------------------------------------------------------------------------------</fo:block>
                 			</fo:table-cell>
-                    	</fo:table-row>	
+                    	</fo:table-row>
+                    	<fo:table-row>
+                			<fo:table-cell>
+		                    	<fo:block font-weight="bold" font-size="11pt" keep-together="always">S.NO          &#160;&#160;Route 			         &#160;&#160;&#160;&#160;&#160;&#160;&#160;Code No   	&#160;&#160;&#160;&#160;&#160;&#160;&#160;Name of the Agent      &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Employee Name</fo:block>
+		            			<fo:block font-size="10pt">-----------------------------------------------------------------------------------------</fo:block>	
+                			</fo:table-cell>
+                    	</fo:table-row>
                 		 <#assign totalSize = 0>
+                		 <#assign serialNo = 1>
                 		<#assign routeValues = unionFacility.getValue().entrySet()>
                     		<#list routeValues as facilityRoute>
                     	 		<#assign facilityDetails = facilityRoute.getValue().entrySet()>
@@ -75,6 +80,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 				                	   <#assign partyDetails = eachFacility.getValue()>
 					                	   <#list partyDetails as eachParty>
 					                		<fo:table-row>	
+					                			<fo:table-cell>
+					                    			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${serialNo?if_exists}</fo:block>  
+					                			</fo:table-cell>
 					                			<fo:table-cell>
 					                    			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${facilityRoute.getKey()}</fo:block>  
 					                			</fo:table-cell>
@@ -87,6 +95,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 					                			<fo:table-cell>
 					                    			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachParty.partyName?if_exists}</fo:block>  
 					                			</fo:table-cell>
+					                			<#assign serialNo = serialNo+1>
 					                			<#assign totalSize  = totalSize + 1>
 					                    	</fo:table-row>
 	                    					</#list>
@@ -114,7 +123,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 		                    			<fo:block  keep-together="always" text-align="left" font-weight="bold"  font-size="12pt" white-space-collapse="false"></fo:block>  
 		                			</fo:table-cell>
 		                			<fo:table-cell>
-		                    			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;${totalSize}</fo:block>  
+		                    			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${totalSize}</fo:block>  
 		                			</fo:table-cell>
 		                		</fo:table-row>
 		                		<fo:table-row>
@@ -126,7 +135,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 		                			</fo:table-cell>
 		                			<#assign milkLtrs = (totalSize*totalDays)>
 		                			<fo:table-cell>
-		                    			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;${milkLtrs}</fo:block>  
+		                    			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${milkLtrs}</fo:block>  
 		                			</fo:table-cell>
 		                		</fo:table-row>	
 		                		<fo:table-row>
@@ -139,11 +148,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 		                			<#assign costPerLtr = (milkLtrs*costPerLitre?if_exists)>
 		                			<#if costPerLtr?has_content>
 		                			<fo:table-cell>
-		                    			<fo:block  keep-together="always" text-align="left"  font-size="12pt" white-space-collapse="false">&#160;&#160;${costPerLtr?if_exists?string("#0.00")}</fo:block>  
+		                    			<fo:block  keep-together="always" text-align="left"  font-size="12pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${costPerLtr?if_exists?string("#0.00")}</fo:block>  
 		                			</fo:table-cell>
 		                			<#else>
 		                			<fo:table-cell>
-		                    			<fo:block  keep-together="always" text-align="left"  font-size="12pt" white-space-collapse="false">&#160;&#160;${milkLtrs?if_exists?string("#0.00")}</fo:block>  
+		                    			<fo:block  keep-together="always" text-align="left"  font-size="12pt" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${milkLtrs?if_exists?string("#0.00")}</fo:block>  
 		                			</fo:table-cell>
 		                			</#if>
 		                		</fo:table-row>

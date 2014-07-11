@@ -99,7 +99,7 @@ under the License.
 				                        	<#assign serialNo = 1>
 		                    			<#list productDetails as prodCat>
 		                    			<#if prodCategory.getKey()=="Other Products">
-		                    				<#if prodCat.getKey()=="LASSI" || prodCat.getKey()=="GOODLIFE">
+		                    				<#if prodCat.getKey()=="Lassi" || prodCat.getKey()=="GOODLIFE">
 		                    					<#assign prodSubCat = delegator.findOne("Product", {"productId" : prodCat.getKey()}, true)?if_exists/>
 				                    			<fo:table-row>
 				                        			<fo:table-cell>
