@@ -22,7 +22,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 
 dctx = dispatcher.getDispatchContext();
-
+Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 JSONArray transportersJSON = new JSONArray();
 Map<String, String> facilityPartyMap = FastMap.newInstance();
 conditionList=[];
@@ -37,10 +37,30 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 	for (GenericValue facilityParty : facilityPartyList) {
 		String partyName = PartyHelper.getPartyName(delegator, facilityParty.getString("partyId"), true);
 		JSONArray transporterJSON = new JSONArray();
-		transporterJSON.add(facilityParty.getString("facilityId"));
+		routeId = facilityParty.getString("facilityId");
+		
+		Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
+		inputRateAmt.put("rateCurrencyUomId", "INR");
+		inputRateAmt.put("facilityId", routeId);
+		inputRateAmt.put("fromDate",nowTimestamp );
+		inputRateAmt.put("rateTypeId", "TRANSPORTER_MRGN");
+		facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+		
+		Map inputFacilitySize =  UtilMisc.toMap("userLogin", userLogin);
+		inputFacilitySize.put("rateCurrencyUomId", "LEN_km");
+		inputFacilitySize.put("facilityId", routeId);
+		inputFacilitySize.put("fromDate",nowTimestamp );
+		inputFacilitySize.put("rateTypeId", "FACILITY_SIZE");
+		facilitySizeResult = dispatcher.runSync("getRouteDistance", inputFacilitySize);
+
+		String rateAmount =  (BigDecimal) facilityRateResult.get("rateAmount");
+		String routeLength = (BigDecimal) facilitySizeResult.get("facilitySize")
+		
+		transporterJSON.add(routeId);
 		transporterJSON.add(facilityParty.getString("partyId"));
 		transporterJSON.add(partyName);
-		transporterJSON.add("");
+		transporterJSON.add(routeLength);
+		transporterJSON.add(rateAmount);
 		fromDate = "";
 		if (facilityParty.getTimestamp("fromDate") != null) {
 			fromDate = UtilDateTime.toDateString(facilityParty.getTimestamp("fromDate"), "dd/MM/yyyy");			
@@ -51,6 +71,9 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 		}
 		transporterJSON.add(fromDate);
 		transporterJSON.add(thruDate);
+		
+
+		
 		transportersJSON.add(transporterJSON);
 	}
 

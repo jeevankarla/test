@@ -37,13 +37,14 @@ $(document).ready(function() {
 			{ "title": "Route" },
 			{ "title": "Transporter Id" },			
 			{ "title": "Transporter Name" },
-			{ "title": "KMs" },			
-			{ "title": "Contract From Date" },			
-			{ "title": "Contract Thru Date" }],
-		"columnDefs": [{ type: 'date-eu', targets: [4,5] }],
+			{ "title": "Route Length (KMs)" },	
+			{ "title": "Unit Rate (Rs)" },								
+			{ "title": "Contract Start" },			
+			{ "title": "Contract End" }],
+		"columnDefs": [{ type: 'date-eu', targets: [5,6] }],
        	"iDisplayLength" : 100
 	} );	
-	datatable2.fnSort( [ [5,'asc'] ] );	 	 	
+	datatable2.fnSort( [ [6,'asc'] ] );	 	 	
 } );
 
 </script>
