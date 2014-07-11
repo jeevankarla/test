@@ -12,6 +12,7 @@
 	.cell-effort-driven {
 		text-align: center;
 	}
+
 	
 	.tooltip { /* tooltip style */
     background-color: #ffffbb;
@@ -53,6 +54,7 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/slick.editors.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/plugins/slick.cellrangedecorator.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/plugins/slick.cellrangeselector.js</@ofbizContentUrl>"></script>
+<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/plugins/slick.cellexternalcopymanager.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/plugins/slick.cellselectionmodel.js</@ofbizContentUrl>"></script>		
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/slick.grid.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/slick.groupitemmetadataprovider.js</@ofbizContentUrl>"></script>
@@ -68,6 +70,44 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/autoTab/jquery.autotab-1.1b.js</@ofbizContentUrl>"></script>
 
 <script type="application/javascript">
+
+  var undoRedoBuffer = {
+      commandQueue : [],
+      commandCtr : 0,
+
+      queueAndExecuteCommand : function(editCommand) {
+        this.commandQueue[this.commandCtr] = editCommand;
+        this.commandCtr++;
+        editCommand.execute();
+      },
+
+      undo : function() {
+        if (this.commandCtr == 0)
+          return;
+
+        this.commandCtr--;
+        var command = this.commandQueue[this.commandCtr];
+
+        if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+          command.undo();
+        }
+      },
+      redo : function() {
+        if (this.commandCtr >= this.commandQueue.length)
+          return;
+        var command = this.commandQueue[this.commandCtr];
+        this.commandCtr++;
+        if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+          command.execute();
+        }
+      }
+  }
+
+
+  var pluginOptions = {
+    clipboardCommandHandler: function(editCommand){ undoRedoBuffer.queueAndExecuteCommand.call(undoRedoBuffer,editCommand); },
+    includeHeaderWhenCopying : false
+  };
 function comparer(a, b) {
   var x = a[sortcol], y = b[sortcol];
   return (x == y ? 0 : (x > y ? 1 : -1));
@@ -137,6 +177,7 @@ function comparer(a, b) {
 			grid.onBeforeEditCell.subscribe(function(e, args) { 
 				
 			});
+    grid.registerPlugin(new Slick.CellExternalCopyManager(pluginOptions));
 			
   grid.onSort.subscribe(function (e, args) {
     sortdir = args.sortAsc ? 1 : -1;
@@ -182,6 +223,13 @@ function comparer(a, b) {
 				     }
 				     
 				}
+				if (e.which == 90 && (e.ctrlKey || e.metaKey)) {    // CTRL + (shift) + Z
+      				if (e.shiftKey){
+        				undoRedoBuffer.redo();
+      				} else {
+        			undoRedoBuffer.undo();
+      			}
+    }
 				
 			});          
 	         
