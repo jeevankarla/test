@@ -1928,8 +1928,26 @@ public class PayrollService {
 	        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");		
 	        String partyId = (String) request.getParameter("partyId");	
 	        String periodId = (String) request.getParameter("periodId");
+	        String billingTypeId = "PAYROLL_BILL";	
 	        Map paramMap = UtilHttp.getParameterMap(request);
 	        FastList payheadTypeIdsList = FastList.newInstance();
+	        // Returning error if payroll already generated
+	        List conditionList = FastList.newInstance();
+	        List periodBillingList = FastList.newInstance();
+	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS","APPROVED")));
+	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,periodId));
+	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS , billingTypeId));
+	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	try {
+	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+	    			    		
+	    	}catch (GenericEntityException e) {
+	    		 Debug.logError(e, module);             
+			} 
+	        if(UtilValidate.isNotEmpty(periodBillingList)){	    			
+    			request.setAttribute("_ERROR_MESSAGE_", "Payroll Already generated for this period, you can not edit values");
+				return "error";
+    		}
 	        try{
 	        	List<GenericValue> benefitTypes = delegator.findList("BenefitType",null, null,null, null, true);
 	        	List<GenericValue> deductionTypes = delegator.findList("DeductionType",null, null,null, null, true);
