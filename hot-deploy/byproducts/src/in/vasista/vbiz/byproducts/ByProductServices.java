@@ -3975,7 +3975,7 @@ public class ByProductServices {
 			    		  Map createInvoiceCtx = FastMap.newInstance();
 				    	  createInvoiceCtx.put("userLogin", userLogin);
 				    	  createInvoiceCtx.put("orderIds", orderIds);
-				    	  createInvoiceCtx.put("billOfSaleTypeId", billOfSaleTypeId);
+				    	  /*createInvoiceCtx.put("billOfSaleTypeId", billOfSaleTypeId);*/
 				    	  createInvoiceCtx.put("invoiceDate", dayStartThruDate);
 				    	  Map resultCtx = dispatcher.runSync("createInvoiceForAllOrders", createInvoiceCtx);
 				    	  
@@ -4109,7 +4109,7 @@ public class ByProductServices {
 	        	if(UtilValidate.isNotEmpty(billOfSaleTypeId)){
 	        		invoiceCtx.put("billOfSaleTypeId", billOfSaleTypeId);
 	        	}
-		        Map<String, Object> serviceResult = dispatcher.runSync("createInvoiceForOrder", invoiceCtx);
+		        Map<String, Object> serviceResult = dispatcher.runSync("createInvoiceForCRInstOrder", invoiceCtx);
 	        	if(ServiceUtil.isError(serviceResult)){
 	        		Debug.logWarning("There was an error while creating  invoice: " + ServiceUtil.getErrorMessage(serviceResult), module);
 	         		return ServiceUtil.returnError("There was an error while creating invoice: " + ServiceUtil.getErrorMessage(serviceResult));  

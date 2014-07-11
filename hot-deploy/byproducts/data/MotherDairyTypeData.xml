@@ -23,7 +23,7 @@
    <TenantConfiguration propertyName="enableAdvancePaymentApp" propertyValue="N" propertyTypeEnumId="LMS" description="Enable Advance payment application while trucksheet generation"/>
     <EnumerationType description="Shoppee Rent" enumTypeId="SHOPEE_RENT" />
     <Enumeration description="Shoppee Rent" enumCode="SHOPEE_RENT" enumId="SHOPEE_RENT" enumTypeId="SHOPEE_RENT"/>
-
+	<Enumeration createdStamp="2014-07-05 16:21:22.0" createdTxStamp="2014-07-05 16:21:22.0" description="VAT INVOICE SEQUENCE" enumCode="VAT INVOICE" enumId="VAT_INV" enumTypeId="CUSTOM_SEQ_NUM" lastUpdatedStamp="2014-07-05 16:21:22.0" lastUpdatedTxStamp="2014-07-05 16:21:22.0"/>
 	<ContactList contactListId="SMS_ALLOWED_TST_LST" contactListName="Allowed test list" contactListTypeId="ANNOUNCEMENT" contactMechTypeId="TELECOM_NUMBER" ownerPartyId="10030" singleUse="N"/>
     <TenantConfiguration propertyName="mobileAMIndentEndTime" propertyValue="17:00" propertyTypeEnumId="LMS" description="Cut off time for accepting mobile AM indents"/>
     <TenantConfiguration propertyName="mobilePMIndentEndTime" propertyValue="09:30" propertyTypeEnumId="LMS" description="Cut off time for accepting mobile PM indents"/>
