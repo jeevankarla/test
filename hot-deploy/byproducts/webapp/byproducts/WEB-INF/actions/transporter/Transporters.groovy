@@ -40,7 +40,7 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 		transporterJSON.add(facilityParty.getString("facilityId"));
 		transporterJSON.add(facilityParty.getString("partyId"));
 		transporterJSON.add(partyName);
-		transporterJSON.add("100.0");
+		transporterJSON.add("");
 		fromDate = "";
 		if (facilityParty.getTimestamp("fromDate") != null) {
 			fromDate = UtilDateTime.toDateString(facilityParty.getTimestamp("fromDate"), "dd/MM/yyyy");			

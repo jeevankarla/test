@@ -19,7 +19,6 @@
 	 	display: none; 
 	 }
 	 #datatable2_filter { 
-	 	display: none; 
 	 }	 
 </style>	
 
@@ -41,14 +40,10 @@ $(document).ready(function() {
 			{ "title": "KMs" },			
 			{ "title": "Contract From Date" },			
 			{ "title": "Contract Thru Date" }],
-		"columnDefs": [{ type: 'date-eu', targets: [4,5] },
-					   { "visible": false, targets: 1 }],
-       	"iDisplayLength" : 25
+		"columnDefs": [{ type: 'date-eu', targets: [4,5] }],
+       	"iDisplayLength" : 100
 	} );	
-	
-	datatable2.fnSort( [ [5,'asc'] ] );	 
-	 
-	 	
+	datatable2.fnSort( [ [5,'asc'] ] );	 	 	
 } );
 
 </script>
