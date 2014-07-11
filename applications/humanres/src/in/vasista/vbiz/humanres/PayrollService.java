@@ -2120,7 +2120,7 @@ public class PayrollService {
 	        return result;
 	 }//end of service
 	 public static Map<String, Object> populatePayrollAttedance(DispatchContext dctx, Map<String, ? extends Object> context) {
-
+               
 	        Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
 	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -2157,12 +2157,11 @@ public class PayrollService {
 	  	    	input.clear();
 	        	input.put("userLogin", userLogin);
 	        	input.put("orgPartyId", orgPartyId);
-	        	input.put("fromDate", timePeriodEnd);
-	        	Debug.log("input============"+input);
+	        	input.put("fromDate", timePeriodStart);
+	        	input.put("thruDate", timePeriodEnd);
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
 	        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 	        	Debug.log("employementList============"+employementList.size());
-	        	employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","7054"));
 	        	//general holidays in that period
 	        	input.clear();
 	    		input.put("userLogin", userLogin);
@@ -2174,7 +2173,7 @@ public class PayrollService {
 	    		List lopCalDates = FastList.newInstance();
 	    		// second saturday
 	    		Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(timePeriodEnd),0,2,timeZone,locale), -1);
-	    		Debug.log("second saturday===="+secondSaturDay);
+	    		//Debug.log("second saturday===="+secondSaturDay);
 	    		
 	        	for(GenericValue employement : employementList) {
 	        		String employeeId = employement.getString("partyIdTo");

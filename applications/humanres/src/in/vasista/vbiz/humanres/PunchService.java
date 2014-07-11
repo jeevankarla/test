@@ -307,7 +307,6 @@ public class PunchService {
 							Debug.logError(ServiceUtil.getErrorMessage(result), module);
 							return result;
 						}
-						//GenericValue emplShift = fetchLastEmplShiftDetails(dctx,context);
 					}
 					
 				}
