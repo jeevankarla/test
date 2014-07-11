@@ -42,7 +42,7 @@ $(document).ready(function() {
 			{ "title": "Unit Rate (Rs)" },								
 			{ "title": "Contract Start" },			
 			{ "title": "Contract End" }],
-		"columnDefs": [{ type: 'date-eu', targets: [676] }],
+		"columnDefs": [{ type: 'date-eu', targets: [6,7] }],
        	"iDisplayLength" : 100
 	} );	
 	datatable2.fnSort( [ [7,'asc'] ] );	 	 	
