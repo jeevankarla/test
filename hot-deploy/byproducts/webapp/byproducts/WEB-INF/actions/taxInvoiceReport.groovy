@@ -84,6 +84,7 @@
 	shipmentIds.addAll(pmShipmentIds);
 	vatProductIds=[:];
 	facilityMap=[:];
+	invoiceSequenceNumMap = [:];
 	facilityIds.each{ eachFacilityId->
 		productMap = [:];
 		conditionList.clear();
@@ -95,6 +96,24 @@
 		condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		fieldsToSelect = ["ownerPartyId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId"] as Set;
 		orderItemsList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition1, fieldsToSelect , ["estimatedDeliveryDate"], null, false);
+		
+		orderIds = EntityUtil.getFieldListFromEntityList(orderItemsList, "orderId", true);
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("categoryTypeEnum", EntityOperator.EQUALS , "CR_INST"));
+		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
+		conditionList.add(EntityCondition.makeCondition("invoiceStatusId", EntityOperator.NOT_EQUAL , "INVOICE_CANCELLED"));
+		invCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		invoiceList = delegator.findList("OrderHeaderFacAndItemBillingInv", EntityCondition.makeCondition("orderId", EntityOperator.IN , orderIds), UtilMisc.toSet("invoiceId"), null, null, false);
+		invoiceIds = EntityUtil.getFieldListFromEntityList(invoiceList, "invoiceId", true);
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN , invoiceIds));
+		billCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		invoiceData = delegator.findList("InvoiceAndBillOfSaleInvoiceSequence", billCond, null, null, null, false);
+		invoiceData.each{eachItem ->
+			invoiceSequenceNumMap.put(eachItem.invoiceId, eachItem.sequenceId);
+		}
+		
 		List vatProductIds = EntityUtil.getFieldListFromEntityList(orderItemsList, "productId", true);
 		productTotalsMap = [:];
 		if(UtilValidate.isNotEmpty(orderItemsList)){
@@ -177,3 +196,4 @@
 			
 		}
 	}
+	context.invoiceSequenceNumMap = invoiceSequenceNumMap;
