@@ -169,5 +169,18 @@ under the License.
 	PayrollBenDedCond
 	PayrollBenDedRule
   -->
-  
+   <WorkShiftPeriod  shiftPeriodId="100" startTime="09:30:00" endTime="17:30:00"/>
+   <WorkShiftPeriod  shiftPeriodId="101" startTime="14:00:00" endTime="22:00:00"/>
+   <WorkShiftPeriod  shiftPeriodId="102" startTime="06:00:00" endTime="14:00:00"/>
+   <WorkShiftPeriod  shiftPeriodId="103" startTime="22:00:00" endTime="06:00:00"/>
+   <WorkShiftPeriod  shiftPeriodId="104" startTime="08:30:00" endTime="16:30:00"/>
+   <WorkShiftPeriod  shiftPeriodId="105" startTime="10:30:00" endTime="18:30:00"/>
+     
+    <WorkShiftTypePeriodMap  shiftPeriodId="104" shiftTypeId="SHIFT_GEN" /> 
+    <WorkShiftTypePeriodMap  shiftPeriodId="105" shiftTypeId="SHIFT_GEN" />    
+    <WorkShiftTypePeriodMap  shiftPeriodId="100" shiftTypeId="SHIFT_GEN" isDefault="Y"/>    
+    <WorkShiftTypePeriodMap  shiftPeriodId="101" shiftTypeId="SHIFT_02" isDefault="Y"/> 
+    <WorkShiftTypePeriodMap  shiftPeriodId="102" shiftTypeId="SHIFT_01" isDefault="Y"/> 
+    <WorkShiftTypePeriodMap  shiftPeriodId="103" shiftTypeId="SHIFT_NIGHT" isDefault="Y"/> 
+    
 </entity-engine-xml>

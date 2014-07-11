@@ -1747,56 +1747,6 @@ public class PayrollService {
 	        result.put("payheadTypeIdsList", payheadTypeIdsList);
 	        return result;
 	    }
-	 public static Map<String, Object> createorUpdateEmployeeDailyAttendance(DispatchContext dctx, Map<String, ? extends Object> context){
-		    Delegator delegator = dctx.getDelegator();
-	        LocalDispatcher dispatcher = dctx.getDispatcher();
-	        GenericValue userLogin = (GenericValue) context.get("userLogin");
-	        String partyId = (String) context.get("partyId");
-	        String availedVehicleAllowance = (String)context.get("availedVehicleAllowance");
-	        String availedCanteen = (String)context.get("availedCanteen");
-	        String shiftType = (String)context.get("shiftType");
-	        Timestamp timePeriodStart = (Timestamp)context.get("fromDate");
-	        Locale locale = (Locale) context.get("locale");
-	        Map result = ServiceUtil.returnSuccess();
-	        
-			try {
-				List conditionList = FastList.newInstance();
-				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
-		        conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , UtilDateTime.toSqlDate(timePeriodStart)));
-		    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
-				List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
-				if(UtilValidate.isEmpty(emplDailyAttendanceDetailList)){
-					GenericValue newEntity = delegator.makeValue("EmplDailyAttendanceDetail");
-					newEntity.set("partyId", partyId);
-					newEntity.set("date", UtilDateTime.toSqlDate(timePeriodStart));
-					newEntity.set("availedVehicleAllowance", availedVehicleAllowance);
-					newEntity.set("availedCanteen", availedCanteen);
-					newEntity.set("shiftType", shiftType);
-			        try {		
-			        	delegator.setNextSubSeqId(newEntity, "seqId", 5, 1);
-			        	delegator.create(newEntity);
-			        } catch (Exception e) {
-			        	Debug.logError("", module);
-			            return ServiceUtil.returnError(e.getMessage());
-			        }
-				}else{	
-					for (int i = 0; i < emplDailyAttendanceDetailList.size(); ++i) {
-						GenericValue employDetails = emplDailyAttendanceDetailList.get(i);
-						employDetails.set("partyId",employDetails.getString("partyId"));
-						employDetails.set("availedVehicleAllowance", availedVehicleAllowance);
-						employDetails.set("availedCanteen", availedCanteen);
-						employDetails.set("shiftType", shiftType);
-						employDetails.store();
-					}
-				}
-					
-			} catch (GenericEntityException e) {
-				Debug.logError(e, module);
-				return ServiceUtil.returnError(e.toString());
-			}
-	        result = ServiceUtil.returnSuccess("Successfully Updated!!");
-	        return result;
-	    }//end of service
 	 
 	 public static Map<String, Object> getPartyIdFromEmployment(DispatchContext ctx, Map<String, ? extends Object> context) {
 	    	Delegator delegator = ctx.getDelegator();
@@ -2258,7 +2208,7 @@ public class PayrollService {
 			    		List<GenericValue> leaves = (List)resultMap.get("leaves");
 			    	   
 			    		newEntity.set("noOfLeaveDays", resultMap.get("noOfLeaveDays"));
-			    		
+			    		lossOfPayDays = lossOfPayDays+ ((BigDecimal)resultMap.get("lossOfPayDays")).doubleValue();
 			    		double noOfAttendedHoliDays =0;
 			    		
 			    		// get employee weekly off day weeklyOff

@@ -1197,10 +1197,10 @@ under the License.emplpunch
         <attribute name="periodBillingId" mode="IN" type="String" optional="false"/>
     </service>
     <service name="createorUpdateEmployeeDailyAttendance"  engine="java"
-                location="in.vasista.vbiz.humanres.PayrollService" invoke="createorUpdateEmployeeDailyAttendance" auth="true">
+                location="in.vasista.vbiz.humanres.PunchService" invoke="createorUpdateEmployeeDailyAttendance" auth="true">
         <description>Create Or Update Employee Allowence</description>
         <attribute name="partyId" mode="IN" type="String" optional="false"/>
-        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="date" mode="IN" type="java.sql.Date" optional="false"/>
         <attribute name="availedVehicleAllowance" mode="IN" type="String" optional="true"/>
         <attribute name="availedCanteen" mode="IN" type="String" optional="true"/>
         <attribute name="shiftType" mode="IN" type="String" optional="true"/>
@@ -1228,5 +1228,11 @@ under the License.emplpunch
         <attribute name="orgPartyId" mode="IN" type="String"/> 
         <attribute name="payrollPeriodId" mode="IN" type="String"/>
    </service> 
-    
+   <service name="populateEmplPunch" engine="java" auth="true" invoke="populateEmplPunch" 
+        location="in.vasista.vbiz.humanres.PunchService">
+        <description>populateEmplPunch from </description>
+        <auto-attributes mode="IN" entity-name="EmplPunchRaw" include="pk"></auto-attributes>
+        <auto-attributes mode="IN" entity-name="EmplPunchRaw" include="nonpk" optional="true"></auto-attributes>
+   </service>
+   
 </services>

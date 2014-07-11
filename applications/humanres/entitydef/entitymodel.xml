@@ -107,8 +107,8 @@ under the License.
         <relation type="one" fk-name="EMPL_REC_PUN" rel-entity-name="Enumeration">
             <key-map field-name="punchType" rel-field-name="enumId"/>
         </relation>
-        <relation type="one" fk-name="EMPL_REC_SHT" rel-entity-name="Enumeration">
-            <key-map field-name="punchType" rel-field-name="enumId"/>
+        <relation type="one" fk-name="EMPL_REC_SHT" rel-entity-name="WorkShiftType">
+            <key-map field-name="shiftType" rel-field-name="shiftTypeId"/>
         </relation>
 	</entity> 
 
@@ -669,6 +669,54 @@ under the License.
             <key-map field-name="parentTypeId" rel-field-name="leaveTypeId"/>
         </relation>
     </entity>
+    <entity entity-name="WorkShiftType"
+            package-name="org.ofbiz.humanres"
+            title="Work Shift Type Entity">
+        <field name="shiftTypeId" type="id-ne"/>
+        <field name="description" type="description"/>
+        <prim-key field="shiftTypeId"/>
+    </entity>
+    <entity entity-name="WorkShiftPeriod"
+            package-name="org.ofbiz.humanres"
+            title="Shift Period Entity">
+        <field name="shiftPeriodId" type="id-ne"/>
+        <field name="startTime" type="time"></field>
+        <field name="endTime" type="time"></field>
+        <prim-key field="shiftPeriodId"/>
+    </entity>
+     <entity entity-name="WorkShiftTypePeriodMap"
+            package-name="org.ofbiz.humanres"
+            title="Shift Period Entity">
+        <field name="shiftPeriodId" type="id-ne"/>
+        <field name="shiftTypeId" type="id-ne"></field>
+        <field name="isDefault" type="indicator"></field>
+        <prim-key field="shiftTypeId"/>
+        <prim-key field="shiftPeriodId"/>
+        <relation type="one" fk-name="WST_SPI"  rel-entity-name="WorkShiftPeriod">
+            <key-map field-name="shiftPeriodId" />
+        </relation>
+        <relation type="one" fk-name="WST_STY"  rel-entity-name="WorkShiftType">
+            <key-map field-name="shiftTypeId"/>
+        </relation>
+    </entity>
+    
+   <view-entity entity-name="WorkShiftTypePeriodAndMap"
+      package-name="org.ofbiz.humanres"
+      title="PayHeadsDetails">
+      <member-entity entity-alias="WST" entity-name="WorkShiftType"/>
+      <member-entity entity-alias="WSP" entity-name="WorkShiftPeriod"/>
+      <member-entity entity-alias="WSPM" entity-name="WorkShiftTypePeriodMap"/>
+      <alias-all entity-alias="WST"/>
+      <alias-all entity-alias="WSP"/>
+      <alias-all entity-alias="WSPM"/>
+      <view-link entity-alias="WSPM" rel-entity-alias="WST">
+        <key-map field-name="shiftTypeId"/>
+      </view-link>
+      <view-link entity-alias="WSPM" rel-entity-alias="WSP">
+        <key-map field-name="shiftPeriodId"/>
+      </view-link>
+    </view-entity>
+    
     <entity entity-name="PartyBenefit"
             package-name="org.ofbiz.humanres.employment"
             title="Party Benefit Entity">
@@ -1390,6 +1438,9 @@ under the License.
 	  <prim-key field="partyId"/>
 	  <prim-key field="date"/>
 	  <prim-key field="seqId"/>
+	  <relation type="one" fk-name="EDAD_STY"  rel-entity-name="WorkShiftType">
+            <key-map field-name="shiftType" rel-field-name="shiftTypeId"/>
+        </relation>
     </entity>
      <!-- ==================NotificationAction=============================== -->
      <entity entity-name="NotificationCond"

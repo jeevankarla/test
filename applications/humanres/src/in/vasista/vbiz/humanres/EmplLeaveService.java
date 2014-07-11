@@ -121,6 +121,7 @@ public class EmplLeaveService {
 				Map<String, Object> serviceResults = ServiceUtil.returnSuccess();
 				BigDecimal noOfLeaveDays = BigDecimal.ZERO;
 				Map leaveDetailmap = FastMap.newInstance();
+				BigDecimal lossOfPayDays = BigDecimal.ZERO;
 				try{
 					
 					List conditionList = UtilMisc.toList(
@@ -146,6 +147,9 @@ public class EmplLeaveService {
 						if(UtilValidate.isEmpty(leaveDetailmap.get(leaveTypeId))){
 							leaveDetailmap.put(leaveTypeId,BigDecimal.ZERO);
 						}
+						if(UtilValidate.isNotEmpty(leave.getBigDecimal("lossOfPayDays"))){
+							lossOfPayDays = lossOfPayDays.add(leave.getBigDecimal("lossOfPayDays"));
+						}
 						leaveDetailmap.put(leaveTypeId, ((BigDecimal)leaveDetailmap.get(leaveTypeId)).add(temp));
 						noOfLeaveDays = noOfLeaveDays.add(temp);
 					} 
@@ -154,6 +158,7 @@ public class EmplLeaveService {
 		        	return ServiceUtil.returnError(e.toString());
 				}
 				
+				serviceResults.put("lossOfPayDays", lossOfPayDays);
 				serviceResults.put("leaveDetailmap", leaveDetailmap);
 				serviceResults.put("noOfLeaveDays", noOfLeaveDays);
 		        return serviceResults; 

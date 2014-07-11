@@ -123,6 +123,5 @@ public class HumanresService {
 	    	result.put("holiDayList", holiDayList);
 	Debug.logInfo("result:" + result, module);		 
 	    	return result;
-	    }  
-
+	    } 
 }

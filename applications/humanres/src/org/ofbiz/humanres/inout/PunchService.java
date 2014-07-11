@@ -121,11 +121,12 @@ public class PunchService {
 				
 				List tops1 = delegator.findByAnd("EmplPunch", enConList);
 				Debug.logInfo("after findby..........." + tops1.size(), module);
-				if (tops1.size() > 0) {
+				//commented out for bio-metric punch
+				/*if (tops1.size() > 0) {
 					if ((tops1.size() % 2 == 1) && inout.equals("IN"))
 						return ServiceUtil
 								.returnError("Please PUNCH-OUT Before PUNCH-IN Again....");
-				}
+				}*/
 
 				List tops = delegator.findByAnd("EmplPunch", UtilMisc.toMap(
 						"partyId", partyId, "PunchType", PunchType,
@@ -237,15 +238,15 @@ public class PunchService {
 		List check = delegator.findByAnd("EmplPunch", UtilMisc.toMap(
 					"partyId", partyId, "PunchType", PunchType, "punchdate",
 					punchdate));
-
-			if (check.size() == 0) {
+		    //commented out for bio-metric punch
+			/*if (check.size() == 0) {
 
 				if (inout.equals("OUT")) {
-
+                     
 					return ServiceUtil
 							.returnError("You can't punch out without punchin");
 				}
-			}
+			}*/
 		} catch (GenericEntityException e) {
 			return ServiceUtil.returnError("Error Please contact adminstrator");
 		}
