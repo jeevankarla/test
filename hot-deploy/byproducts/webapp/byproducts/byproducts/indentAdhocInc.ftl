@@ -531,6 +531,7 @@
 	jQuery(function(){
 	     // only setupGrid when BoothId exists
 	     var boothId=$('[name=boothId]').val();
+	     var partyId=$('[name=partyId]').val();
 		 if(boothId || partyId){
 		 setupGrid1();
 	     }
