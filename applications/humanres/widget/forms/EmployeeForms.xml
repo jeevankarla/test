@@ -654,7 +654,7 @@
          <field name="partyRelationshipTypeId" title="${uiLabelMap.Relation}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
       		<drop-down allow-empty="false">
                 <entity-options entity-name="PartyRelationshipType" key-field-name="partyRelationshipTypeId" description="${description}">
-                    <entity-constraint name="parentTypeId" value="DEPENDENT"/>
+                    <entity-constraint name="parentTypeId" value="Dependent"/>
                 </entity-options>
             </drop-down>
         </field>
