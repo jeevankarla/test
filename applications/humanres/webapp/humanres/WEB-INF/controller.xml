@@ -252,6 +252,7 @@ under the License.
         <event type="service" invoke="createPartyResume"/>
         <response name="success" type="view" value="EditPartyResume"/>
     </request-map>
+    
     <request-map uri="updatePartyResume">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyResume"/>
@@ -1466,6 +1467,12 @@ under the License.
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
     
+    <request-map uri="updateFinAccount">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFinAccount"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
     
     <!-- Generate Report request -->
     
