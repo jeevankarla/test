@@ -61,7 +61,30 @@ public class POSApiServices {
         } 		
     	return false;
     }
-	    
+
+    public static Map<String, Object> getMobilePermissions(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();			
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+		List permissionsList = FastList.newInstance();
+
+        if (security.hasEntityPermission("MOB_SREP_DB", "_VIEW", userLogin)) {
+        	permissionsList.add("MOB_SREP_DB_VIEW");
+        } 	
+        if (security.hasEntityPermission("MOB_RTLR_DB", "_VIEW", userLogin)) {
+        	permissionsList.add("MOB_RTLR_DB_VIEW");
+        }         
+        if (security.hasEntityPermission("MOB_HR_DB", "_VIEW", userLogin)) {
+        	permissionsList.add("MOB_HR_DB_VIEW");
+        }   
+        
+		Map result = FastMap.newInstance();  		
+		result.put("permissionsList", permissionsList);
+Debug.logInfo("result:" + result, module);
+    	return result;
+    }
+    
     public static Map<String, Object> getProductPrices(DispatchContext dctx, Map<String, ? extends Object> context) {
     	Delegator delegator = dctx.getDelegator();
     	String boothId = (String) context.get("boothId");

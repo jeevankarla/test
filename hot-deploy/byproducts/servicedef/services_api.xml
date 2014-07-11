@@ -4,7 +4,11 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
     <description>POS API services</description>
     <vendor>Vasista</vendor>
-    
+
+    <service name="getMobilePermissions" engine="java" auth="true" export="true"
+                location="in.vasista.vbiz.byproducts.POSApiServices" invoke="getMobilePermissions">
+        <attribute name="permissionResults" mode="OUT" type="Map" optional="true"/>
+    </service>        
     
     <service name="getFacilityIndent" engine="java" auth="true" export="true"
                 location="in.vasista.vbiz.byproducts.POSApiServices" invoke="getFacilityIndent">
