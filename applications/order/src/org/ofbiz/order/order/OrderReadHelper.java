@@ -2895,23 +2895,28 @@ public class OrderReadHelper {
     }
 
    /** Get the quantity of order items that have been invoiced */
-   public static BigDecimal getOrderItemInvoicedQuantity(GenericValue orderItem) {
-       BigDecimal invoiced = BigDecimal.ZERO;
-       try {
-           // this is simply the sum of quantity billed in all related OrderItemBillings
-           List<GenericValue> billings = orderItem.getRelated("OrderItemBilling");
-           for (Iterator<GenericValue> iter = billings.iterator(); iter.hasNext();) {
-               GenericValue billing = iter.next();
-               BigDecimal quantity = billing.getBigDecimal("quantity");
-               if (quantity != null) {
-                   invoiced = invoiced.add(quantity);
-               }
-           }
-       } catch (GenericEntityException e) {
-           Debug.logError(e, e.getMessage(), module);
-       }
-       return invoiced;
-   }
+    public static BigDecimal getOrderItemInvoicedQuantity(GenericValue orderItem) {
+        BigDecimal invoiced = BigDecimal.ZERO;
+        try {
+     	   Delegator delegator = orderItem.getDelegator();
+            // this is simply the sum of quantity billed in all related OrderItemBillings
+            List<GenericValue> billings = orderItem.getRelated("OrderItemBilling");
+            for (Iterator<GenericValue> iter = billings.iterator(); iter.hasNext();) {
+                GenericValue billing = iter.next();
+                String invoiceId = billing.getString("invoiceId");
+                GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId),  false);
+                if(UtilValidate.isNotEmpty(invoice) && !((invoice.getString("statusId")).equals("INVOICE_CANCELLED"))){
+                	 BigDecimal quantity = billing.getBigDecimal("quantity");
+                     if (quantity != null) {
+                         invoiced = invoiced.add(quantity);
+                     }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, e.getMessage(), module);
+        }
+        return invoiced;
+    }
 
    public List<GenericValue> getOrderPaymentStatuses() {
        return getOrderPaymentStatuses(getOrderStatuses());
