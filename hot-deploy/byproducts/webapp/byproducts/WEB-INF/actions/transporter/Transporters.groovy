@@ -35,10 +35,16 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", condition, null, null, null, false);
 
 	for (GenericValue facilityParty : facilityPartyList) {
-		String partyName = PartyHelper.getPartyName(delegator, facilityParty.getString("partyId"), true);
+		String partyId= facilityParty.getString("partyId");
+		String partyName = PartyHelper.getPartyName(delegator, partyId, true);
 		JSONArray transporterJSON = new JSONArray();
 		routeId = facilityParty.getString("facilityId");
-		
+
+		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
+		phoneNumber = "";
+		if (partyTelephone != null && partyTelephone.contactNumber != null) {
+			phoneNumber = partyTelephone.contactNumber;
+		}		
 		Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
 		inputRateAmt.put("rateCurrencyUomId", "INR");
 		inputRateAmt.put("facilityId", routeId);
@@ -57,8 +63,9 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 		String routeLength = (BigDecimal) facilitySizeResult.get("facilitySize")
 		
 		transporterJSON.add(routeId);
-		transporterJSON.add(facilityParty.getString("partyId"));
+		transporterJSON.add(partyId);
 		transporterJSON.add(partyName);
+		transporterJSON.add(phoneNumber);
 		transporterJSON.add(routeLength);
 		transporterJSON.add(rateAmount);
 		fromDate = "";
@@ -71,9 +78,6 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 		}
 		transporterJSON.add(fromDate);
 		transporterJSON.add(thruDate);
-		
-
-		
 		transportersJSON.add(transporterJSON);
 	}
 
