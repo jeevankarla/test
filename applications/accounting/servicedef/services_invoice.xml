@@ -255,6 +255,20 @@ under the License.
         <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
         <attribute name="invoiceTypeId" type="String" mode="OUT" optional="true"/>
     </service>
+    <service name="createInvoiceForCRInstOrder" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceForCRInstOrder">
+        <description>
+            Create an invoice from existing orders
+            orderId = The orderId to associate the invoice with
+            billItems = List of ItemIssuance records to use for creating the invoice
+        </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="billItems" type="List" mode="IN" optional="false"/>
+        <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="billOfSaleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="invoiceTypeId" type="String" mode="OUT" optional="true"/>
+    </service>
     <service name="createInvoiceFromReturn" engine="java"
         location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceFromReturn">
         <description>
