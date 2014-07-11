@@ -717,6 +717,10 @@
     
     
     <!--  margin requests -->
+    <request-map uri="Transporters">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="Transporters"/>
+    </request-map>    
     <request-map uri="TransporterMargins">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TransporterMargins"/>
@@ -1220,6 +1224,7 @@
    <view-map name="DTCBankReportCSV" type="screencsv" page="component://byproducts/widget/TransporterScreens.xml#DTCBankReportCSV" content-type="text/csv"/>
    <view-map name="FinesAndPenalties" type="screen" page="component://byproducts/widget/TransporterScreens.xml#FinesAndPenalties"/>
    <view-map name="CreateNewFineorPenalty" type="screen" page="component://byproducts/widget/TransporterScreens.xml#CreateNewFineorPenalty"/>
+   <view-map name="Transporters" type="screen" page="component://byproducts/widget/TransporterScreens.xml#Transporters"/>
    
 <!-- Transporter views -->
  <view-map name="FindPastBoothPayments" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPastBoothPayments"/>

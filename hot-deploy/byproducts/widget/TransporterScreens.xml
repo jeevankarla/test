@@ -347,4 +347,22 @@
 			</widgets>
 		</section>
 	</screen>
+     <screen name="Transporters">
+        <section>
+            <actions>
+			   <set field="titleProperty" value="Transporters"/>              
+			   <set field="tabButtonItem" value="TransporterMargins" />	
+			   <set field="tabButtonItem2" value="Transporters"/> 
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/transporter/Transporters.groovy" /> 			   
+            </actions>           
+            <widgets> 
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="TransporterMarginsTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+   						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/transporter/Transporters.ftl"></html-template></html></platform-specific>
+					</decorator-section>
+				</decorator-screen>
+            </widgets>
+        </section>
+    </screen>	
  </screens>

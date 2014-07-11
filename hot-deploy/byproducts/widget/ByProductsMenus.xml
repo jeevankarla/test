@@ -74,7 +74,7 @@
             <link target="VehicleStatus">               
             </link>
         </menu-item>           
-        <menu-item name="TransporterMargins" title="TransporterBilling">
+        <menu-item name="TransporterMargins" title="Transporters">
             <condition>
                 <or>
 					<if-has-permission permission="TRNSMRGN"  action="_VIEW"/>
@@ -765,6 +765,9 @@
         <menu-item name="FinesAndPenalties" title="Fines And Penalties">
         	<link target="FinesAndPenalties"/>
         </menu-item>
+        <menu-item name="Transporters" title="Transporters">
+        	<link target="Transporters"/>
+        </menu-item>        
       </menu>
        <menu name="NonRoutePaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="subTabButtonItem">
