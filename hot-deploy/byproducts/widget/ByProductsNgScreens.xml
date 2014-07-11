@@ -16,6 +16,7 @@
         </section>
     </screen>
 	<screen name="FacilityTree">
+	
         <section>
             <actions>
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>               
@@ -1689,6 +1690,7 @@
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  --> 
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
                <set field="routeId" from-field="parameters.routeId"/>            
             </actions>
             <widgets>
@@ -1746,7 +1748,7 @@
                             	    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>
                                 </widgets>
                             <fail-widgets>
-                                <include-screen name="DirectInitInner"/>								                           
+                                <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>								                           
                             </fail-widgets>
                         </section>
                     </decorator-section>                                       
@@ -2976,7 +2978,7 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
-				 <set field="parameters.categoryTypeEnumIceCream" value="WHS_RTLR"/>				  					  
+				 <set field="parameters.roleTypeId" value="IC_WHOLESALE"/>
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -2998,7 +3000,6 @@
 	           						 <include-screen name="SalesInnerScreen"/>
 	                      		</widgets>
                       </section>
-                      
                     </decorator-section>                                       
                 </decorator-screen>
             </widgets>
@@ -3083,7 +3084,7 @@
                        	    <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>
                            </widgets>
                        <fail-widgets>
-                           <include-screen name="DirectInitInner"/>								                           
+                           <platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>								                           
                        </fail-widgets>
                    </section>
             </widgets>

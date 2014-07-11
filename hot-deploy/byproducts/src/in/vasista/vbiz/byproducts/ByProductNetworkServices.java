@@ -7436,7 +7436,7 @@ public class ByProductNetworkServices {
 		List<String> partyIds = FastList.newInstance();
 		List<GenericValue> partyDetails = FastList.newInstance();
 		try {
-			partyDetails = delegator.findList("PartyRoleAndPartyDetail", condition, UtilMisc.toSet("partyId", "roleTypeId", "firstName", "lastName"), UtilMisc.toList("partyId"), null, false);
+			partyDetails = delegator.findList("PartyRoleNameDetail", condition, UtilMisc.toSet("partyId", "roleTypeId", "firstName", "lastName", "groupName"), UtilMisc.toList("partyId"), null, false);
 			partyIds = EntityUtil.getFieldListFromEntityList(partyDetails, "partyId", true);
 			
 		} catch (GenericEntityException e) {
@@ -8165,8 +8165,8 @@ public class ByProductNetworkServices {
 			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS, "MIS_INCOME_IN"));
 			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS, "INCO_FINEPENALTY_CHQ"));
-			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-			conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			invoices = delegator.findList("InvoiceAndItemType", condition, UtilMisc.toSet("invoiceId", "invoiceDate", "facilityId","referenceNumber", "partyId"), null, null, false);
@@ -8196,8 +8196,8 @@ public class ByProductNetworkServices {
 								Timestamp dayStart = UtilDateTime.getDayStart(supplyDate);
 								Timestamp dayEnd = UtilDateTime.getDayEnd(supplyDate);
 								List dayCond = FastList.newInstance();
-								dayCond.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO,dayStart));
-								dayCond.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
+								dayCond.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO,dayStart));
+								dayCond.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
 								List<GenericValue> dayPartyPenalty = (List) EntityUtil.filterByCondition(facilityInvoices,EntityCondition.makeCondition(dayCond));
 								List invoiceDetail = FastList.newInstance();
 								if (UtilValidate.isNotEmpty(dayPartyPenalty)) {

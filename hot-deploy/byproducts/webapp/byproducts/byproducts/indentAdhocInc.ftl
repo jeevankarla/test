@@ -42,7 +42,8 @@
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
 	var data = ${StringUtil.wrapString(dataJSON)!'[]'};
-	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};	
+	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
+	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
 	var routeAutoJson = ${StringUtil.wrapString(routesJSON)!'[]'};
 	var prodIndentQtyCat=${StringUtil.wrapString(prodIndentQtyCat)!'[]'};
 	var qtyInPieces=${StringUtil.wrapString(qtyInPieces)!'[]'};
@@ -530,7 +531,7 @@
 	jQuery(function(){
 	     // only setupGrid when BoothId exists
 	     var boothId=$('[name=boothId]').val();
-		 if(boothId){
+		 if(boothId || partyId){
 		 setupGrid1();
 	     }
 		setupGrid2();		

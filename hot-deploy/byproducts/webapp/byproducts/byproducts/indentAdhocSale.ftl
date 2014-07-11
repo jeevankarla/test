@@ -20,7 +20,11 @@ $(document).ready(function(){
 			}
 		});
 		$('#ui-datepicker-div').css('clip', 'auto');
-		 $("#boothId").autocomplete({ source: boothAutoJson }).keydown(function(e){
+		<#if changeFlag?exists && changeFlag=='IcpSales'>
+			$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){
+    	<#else>
+		 	$("#boothId").autocomplete({ source: boothAutoJson }).keydown(function(e){ 
+		</#if>
 			if (e.keyCode === 13){
 		      	 $('#boothId').autocomplete('close');
 	    			$('#indententryinit').submit();
@@ -163,22 +167,37 @@ $(document).ready(function(){
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Retailer Id:</div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && (changeFlag=='IcpSalesAmul' || changeFlag=='IcpSales')>Wholesaler Id:<#else>Retailer Id:</#if></div></td>
           <td>&nbsp;</td>
-       <#if booth?exists && booth?has_content>  
-	  	  <input type="hidden" name="boothId" id="boothId" value="${booth.facilityId.toUpperCase()}"/>  
-          <td valign='middle'>
-            <div class='tabletext h2'>
-               	${booth.facilityId.toUpperCase()} [ ${booth.facilityName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-            </div>
-          </td>       
-       <#else>               
-          <td valign='middle'>
-          <input type="text" name="boothId" id="boothId" />           
-             <#--<@htmlTemplate.lookupField value="${boothId?if_exists}" formName="indententryinit" name="boothId" id="facilityId" fieldFormName="LookupFacility"/><em>*</em>-->          
-             <span class="tooltip">Input party code and press Enter</span>
-          </td>
-       </#if>
+        <#if changeFlag?exists && changeFlag=='IcpSales'>
+			<#if party?exists && party?has_content>  
+	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h2'>
+               			${party.partyId.toUpperCase()} [ ${party.groupName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+            		</div>
+          		</td>       
+       		<#else>               
+          		<td valign='middle'>
+          			<input type="text" name="partyId" id="partyId" />
+          			 <span class="tooltip">Input party code and press Enter</span>
+          		</td>
+          	</#if>
+    	<#else>
+		 	<#if booth?exists && booth?has_content>  
+	  	  		<input type="hidden" name="boothId" id="boothId" value="${booth.facilityId.toUpperCase()}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h2'>
+               			${booth.facilityId.toUpperCase()} [ ${booth.facilityName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+            		</div>
+          		</td>       
+       		<#else>               
+          		<td valign='middle'>
+          			<input type="text" name="boothId" id="boothId" />
+          			 <span class="tooltip">Input party code and press Enter</span>
+          		</td>
+          	</#if>
+        </#if>
         </tr> 
          <tr><td><br/></td></tr>    
          <#-- 
@@ -341,13 +360,13 @@ $(document).ready(function(){
 		 			<#assign formAction='processIcpSale'>		 	
 			</#if>				
 			
-	<#if booth?exists>
- <#--	<div align="center"><span class="tooltip">** Check Payment Entry Before Submit **</span></div>		-->		
-    <div align="center">
-    	<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
-    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    	<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>SupplDeliverySchedule</@ofbizUrl>');"/>   	
-    </div>     
+	<#if booth?exists || party?exists>
+ 		<#--	<div align="center"><span class="tooltip">** Check Payment Entry Before Submit **</span></div>		-->		
+    	<div align="center">
+    		<input type="submit" style="padding:.3em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
+    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>SupplDeliverySchedule</@ofbizUrl>');"/>   	
+    	</div>     
 	</#if>  
 	</div>
 </div>     
