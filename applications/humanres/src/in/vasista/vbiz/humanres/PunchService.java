@@ -138,12 +138,10 @@ public class PunchService {
 		try {
 			Time punchTime = UtilDateTime.toSqlTime(UtilDateTime.toDateString(punchDateTime, "HH:mm:ss"));
 			List condList = FastList.newInstance();
-			//condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("endTime", EntityOperator.LESS_THAN_EQUAL_TO,punchTime),EntityOperator.OR,EntityCondition.makeCondition("endTime", EntityOperator.GREATER_THAN_EQUAL_TO,punchTime)));
 			condList.add(EntityCondition.makeCondition("endTime", EntityOperator.GREATER_THAN_EQUAL_TO, punchTime));
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			//punchTime.
 			List<GenericValue> workShiftTypePeriodAndMap = delegator.findList("WorkShiftTypePeriodAndMap", null, null, UtilMisc.toList("-startTime"),null, false);
-			//Debug.log("workShiftTypePeriodAndMap=============="+workShiftTypePeriodAndMap);
 		    Time nearestTime = null;
 			if(UtilValidate.isNotEmpty(workShiftTypePeriodAndMap)){
 				nearestTime = (EntityUtil.getFirst(workShiftTypePeriodAndMap)).getTime("startTime");
@@ -236,13 +234,10 @@ public class PunchService {
 	        Timestamp punchDateTime =  (Timestamp)context.get("punchDateTime");
 	        Map result = ServiceUtil.returnSuccess();
 	        Locale locale = (Locale) context.get("locale");
-	        //TimeZone timeZone = TimeZone.getDefault();
-	        TimeZone timeZone = (TimeZone) context.get("timeZone");
 	        String shiftTypeId = null;
 			try {
 				Time punchtime = UtilDateTime.toSqlTime(UtilDateTime.toDateString(punchDateTime, "HH:mm:ss"));
 				//Debug.log("punchDateTime====="+punchDateTime);
-				//Map lastPunch = fetchLastPunch(dctx,context);
 				GenericValue lastEmplPunch = fetchLastEmplPunch(dctx,context);
 				
 				if(UtilValidate.isNotEmpty(lastEmplPunch)){
@@ -273,7 +268,7 @@ public class PunchService {
 				context.put("InOut", "IN");
 				GenericValue last_In_EmplPunch = fetchLastEmplPunch(dctx,context);
 				double shiftTimeGap  = 0;
-				Debug.logInfo("last_In_EmplPunch====="+last_In_EmplPunch,module);
+				//Debug.logInfo("last_In_EmplPunch====="+last_In_EmplPunch,module);
 				
 				if(UtilValidate.isNotEmpty(last_In_EmplPunch)){
 					Timestamp last_In_EmplPunchTime =
