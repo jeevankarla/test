@@ -81,7 +81,7 @@ public class POSApiServices {
         
 		Map result = FastMap.newInstance();  	
 		Map permissions = FastMap.newInstance();
-		permissions.put("permissionList", permissionList)
+		permissions.put("permissionList", permissionList);
 		result.put("permissionResults", permissions);
 		
 Debug.logInfo("result:" + result, module);
