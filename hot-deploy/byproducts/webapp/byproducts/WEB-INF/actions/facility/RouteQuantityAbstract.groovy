@@ -30,20 +30,43 @@ dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
 
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="routeQuantityAbstractReport"){
-		effectiveDateStr = parameters.supplyDate;
-		if (UtilValidate.isNotEmpty(effectiveDateStr)) {
+		
+		effectiveDateStr = parameters.fromDate;
+		thruEffectiveDateStr = parameters.thruDate;
+		
+		if (UtilValidate.isEmpty(effectiveDateStr)) {
+			effectiveDate = UtilDateTime.nowTimestamp();
+		}
+		else{
 			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 			try {
 				effectiveDate = new java.sql.Timestamp(sdf.parse(effectiveDateStr+" 00:00:00").getTime());
-			   }catch (ParseException e) {
-				Debug.logError(e, "Cannot parse date string: "+effectiveDateStr, "");
-			   }
-		}else{
-			effectiveDate=UtilDateTime.nowTimestamp();
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
+			}
 		}
-	   routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
+		if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
+			thruEffectiveDate = effectiveDate;
+		}
+		else{
+			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruEffectiveDateStr+" 00:00:00").getTime());
+			}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDate, "");
+			}
+		}
+		
 		dayBegin = UtilDateTime.getDayStart(effectiveDate);
-		dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
+		
+		totalDays=UtilDateTime.getIntervalInDays(dayBegin,dayEnd);
+		if(totalDays > 32){
+			Debug.logError("You Cannot Choose More Than 31 Days.","");
+			context.errorMessage = "You Cannot Choose More Than 31 Days";
+			return;
+		}
+		routeIdsList = ByProductNetworkServices.getRoutes(dctx,context).get("routesList");
 	}
 }
 
@@ -99,13 +122,14 @@ lmsProductsIdsList=EntityUtil.getFieldListFromEntityList(lmsProductsList, "produ
 byProductsIdsList=EntityUtil.getFieldListFromEntityList(byProductsList, "productId", false);
 
 context.putAt("dayBegin", dayBegin);
+context.putAt("dayEnd", dayEnd);
 
 shipmentIds = [];
 
-	amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
-	shipmentIds.addAll(amShipmentIds);
-	pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
-	shipmentIds.addAll(pmShipmentIds);
+amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"AM");
+shipmentIds.addAll(amShipmentIds);
+pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,dayBegin,dayEnd,"PM");
+shipmentIds.addAll(pmShipmentIds);
 	
 //getADHOC shipments 
 List adhocShipments=ByProductNetworkServices.getShipmentIdsByType(delegator , dayBegin,dayEnd,"RM_DIRECT_SHIPMENT");
@@ -203,7 +227,7 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 					product = delegator.findOne("Product", [productId : currentProduct], false);
 					tempVariantMap =[:];
 					productAssoc = EntityUtil.getFirst(delegator.findList("ProductAssoc", EntityCondition.makeCondition(["productAssocTypeId": "PRODUCT_VARIANT", "productIdTo": currentProduct,"thruDate":null]), null, ["-fromDate"], null, false));
-					virtualProductId =currentProduct;
+					virtualProductId = currentProduct;
 					if(UtilValidate.isNotEmpty(productAssoc)){
 						virtualProductId = productAssoc.productId;
 					}
@@ -343,8 +367,18 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 		totPmLmsQty=0;
 		facilityGroupMemberList.each{ facilityGroup->
 			if("AM_RT_GROUP".equals(facilityGroup.facilityGroupId)){
-				shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"AM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
+				conditionList=[];
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS , "AM_SHIPMENT"));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
+				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				shipments = delegator.findList("Shipment", condition, null, ["routeId"], null, false);
 				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
+				
+				/*shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"AM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
+				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);*/
 				//if(UtilValidate.isNotEmpty(boothsList)){
 					if(UtilValidate.isNotEmpty(shipmentIds)){
 						amRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
@@ -353,7 +387,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 						if(UtilValidate.isNotEmpty(amRouteTotals)){
 							routeProdTotals = amRouteTotals.get("productTotals");
 							routeAmount= amRouteTotals.get("totalRevenue");
-							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss") , facilityId:routeId]);
+							//routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss") , facilityId:routeId]);
+							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:dayBegin ,thruDate:dayEnd , facilityId:routeId]);
 							reciepts = 0;
 							if(UtilValidate.isNotEmpty(routePaidDetails)){
 								reciepts = routePaidDetails.get("invoicesTotalAmount");
@@ -395,8 +430,18 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 				
 			}
 			if("PM_RT_GROUP".equals(facilityGroup.facilityGroupId)){
-				shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"PM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
+				conditionList=[];
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "GENERATED"));
+				conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , routeId));
+				conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS , "PM_SHIPMENT"));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+				conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
+				condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				shipments = delegator.findList("Shipment", condition, null, ["routeId"], null, false);
 				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
+				
+				/*shipments = delegator.findByAnd("Shipment", [estimatedShipDate : dayBegin , shipmentTypeId :"PM_SHIPMENT", statusId: "GENERATED","routeId":routeId],["routeId"]);
+				shipmentIds=EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);*/
 					if(UtilValidate.isNotEmpty(shipmentIds)){
 						pmRouteTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds,fromDate:dayBegin, thruDate:dayEnd,includeReturnOrders:true]);
 						routeAmount=0;
@@ -406,7 +451,8 @@ if(UtilValidate.isNotEmpty(routeIdsList)){
 							
 							routeAmount= pmRouteTotals.get("totalRevenue");
 							routeTotQty= pmRouteTotals.get("totalQuantity");
-							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss") , facilityId:routeId]);
+							//routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [paymentDate: UtilDateTime.toDateString(effectiveDate, "yyyy-MM-dd HH:mm:ss") , facilityId:routeId]);
+							routePaidDetails = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:dayBegin ,thruDate:dayEnd , facilityId:routeId]);
 							reciepts = 0;
 							if(UtilValidate.isNotEmpty(routePaidDetails.get("invoicesTotalAmount"))){
 								reciepts = routePaidDetails.get("invoicesTotalAmount");

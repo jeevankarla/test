@@ -87,7 +87,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("exportDate","");
 		makeDatePicker1("bulkSmsDate","");
 		makeDatePicker("NIMCDate","");
-		makeDatePicker("rtSupplyDate","");
+		makeDatePicker("rtFromDateId","rtThruDateId");
 		makeDatePicker("RouteIndentAbstDate","");
 		makeDatePicker("ProductIndentAbstDate","");
 		makeDatePicker("RouteTrCorrDate","");
@@ -202,9 +202,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        <tr class="alternate-row">
 	      	   	<form id="RouteQuantityAbst" name="RouteQuantityAbst" method="post" action="<@ofbizUrl>routeWiseQtyAbstract.txt</@ofbizUrl>" target="_blank">	
 	      		  <td width="30%">Route Wise Sales Abstract</td>
-	      		  <td width="15%">Date<input  type="text" size="18pt" id="rtSupplyDate" readonly  name="supplyDate"/>
+	      		  <td width="15%">From<input  type="text" size="18pt" id="rtFromDateId" readonly  name="fromDate"/>
+	      		  <td width="15%">Thru<input  type="text" size="18pt" id="rtThruDateId" readonly  name="thruDate"/>
 	      		  <td width="15%"><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br></td>
-	      		  <td width="15%"></td>
 	      		  <td width="15%"></td>
 	      	   	  <td width="10%"><input type="submit" target="_blank" value="Download" class="buttontext"/></td>
 	      	   </form>
