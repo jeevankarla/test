@@ -34,6 +34,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
  <#if unionFacilityPartyMap?has_content> 
  <#assign unionFacilityList = unionFacilityPartyMap.entrySet()>
   <#list unionFacilityList as unionFacility>
+  <#if unionFacility.getKey() != "MD" && unionFacility.getKey() != "MD ">
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 			    <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -52,7 +53,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 				    <fo:table-column column-width="10%"/>
 			        <fo:table-column column-width="15%"/>
 			        <fo:table-column column-width="20%"/>
-			        <fo:table-column column-width="30%"/>
+			        <fo:table-column column-width="32%"/>
 			        <fo:table-column column-width="30%"/>
                     <fo:table-body>
                     	<fo:table-row>
@@ -89,8 +90,9 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
 					                			<fo:table-cell>
 					                    			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachFacility.getKey()}</fo:block>  
 					                			</fo:table-cell>
+					                			<#assign facility = delegator.findOne("Facility", {"facilityId" : eachFacility.getKey()}, true)?if_exists/>
 					                			<fo:table-cell>
-					                    			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, eachFacility.getKey(), false)}</fo:block>  
+					                    			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, facility.ownerPartyId, false)}</fo:block>  
 					                			</fo:table-cell>
 					                			<fo:table-cell>
 					                    			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${eachParty.partyName?if_exists}</fo:block>  
@@ -191,6 +193,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "subsidyMilkReport.pdf")}
                </fo:block> 		
 			 </fo:flow>
 			 </fo:page-sequence>	
+			 </#if>
 			  </#list>
 			  <#else>
     	<fo:page-sequence master-reference="main">
