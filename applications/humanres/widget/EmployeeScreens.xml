@@ -181,15 +181,14 @@ under the License.
 		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                            <screenlet title="Edit Employee Identification Numbers">
                       									<include-form name="EditEmplIdentification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
-                    								 </screenlet>
-                    								 <screenlet title="Create Employee Identification Numbers">
+                    								 <screenlet >
                       									<include-form name="createEmplIdentification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                    								 </screenlet>
                     								 </screenlet>
 		                                        </container>
 		                                        <container style="profile-right">
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
-		                                            <include-screen name="AccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="EditAccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
 <!--		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
 		                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
@@ -564,24 +563,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="AccountDetails">
-		<section>
-			<actions>
-				<entity-and list="AccountDetails" entity-name="FinAccount" filter-by-date="true">
-					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
-				</entity-and>
-			</actions>
-			<widgets>
-			 <section>
-				<widgets>
-					<screenlet id="AccountPanel" title="${uiLabelMap.AccountDetails}" collapsible="true">
-                       	<include-form name="AccountDetailsList" location="component://humanres/widget/forms/EmployeeForms.xml" />
-					</screenlet>
-			  </widgets>
-			</section>
-			</widgets>
-		</section>
-	</screen>
+   
 	<screen name="EditAccountDetails">
 		<section>
 			<actions>
