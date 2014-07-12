@@ -67,20 +67,23 @@ public class POSApiServices {
 		LocalDispatcher dispatcher = dctx.getDispatcher();			
         GenericValue userLogin = (GenericValue) context.get("userLogin");		
         Security security = dctx.getSecurity();
-		List permissionsList = FastList.newInstance();
+		List permissionList = FastList.newInstance();
 
         if (security.hasEntityPermission("MOB_SREP_DB", "_VIEW", userLogin)) {
-        	permissionsList.add("MOB_SREP_DB_VIEW");
+        	permissionList.add("MOB_SREP_DB_VIEW");
         } 	
         if (security.hasEntityPermission("MOB_RTLR_DB", "_VIEW", userLogin)) {
-        	permissionsList.add("MOB_RTLR_DB_VIEW");
+        	permissionList.add("MOB_RTLR_DB_VIEW");
         }         
         if (security.hasEntityPermission("MOB_HR_DB", "_VIEW", userLogin)) {
-        	permissionsList.add("MOB_HR_DB_VIEW");
+        	permissionList.add("MOB_HR_DB_VIEW");
         }   
         
-		Map result = FastMap.newInstance();  		
-		result.put("permissionsList", permissionsList);
+		Map result = FastMap.newInstance();  	
+		Map permissions = FastMap.newInstance();
+		permissions.put("permissionList", permissionList)
+		result.put("permissionResults", permissions);
+		
 Debug.logInfo("result:" + result, module);
     	return result;
     }
