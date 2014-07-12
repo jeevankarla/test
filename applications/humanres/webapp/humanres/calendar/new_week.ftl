@@ -831,6 +831,9 @@ onClick="alert('You cant modify the record.\n\nPlease contact Admin');"
  <#assign minno=0>
  <#assign secno=0>
   <#list data as Records>
+      <#assign temphrni= 0>
+      <#assign tempminni=0>
+      <#assign tempsecni=0>
      <#if Records.InOut="IN">
   <#if period.start?date=Records.punchdate> 
     <#if Records.PunchType="Normal"> 
@@ -922,7 +925,7 @@ onClick="alert('You cant modify the record.\n\nPlease contact Admin');"
         <#if ampm="PM">
         <#assign hrni=hrni-temphrni?number-12>
         <#else>
-        <#assign hrni=hrni-temphrni?number>
+           <#assign hrni=hrni-temphrni?number>
         </#if>
         <#assign minni=minni-tempminni?number>
         <#assign secni=secni-tempsecni?number>
