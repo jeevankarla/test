@@ -2596,8 +2596,8 @@ public class ByProductNetworkServices {
 				if (!UtilValidate.isEmpty(statusId)) {
 					if(!(statusId.equals("VEHICLE_CRATE_RTN"))){
 			    		// isComparsionFaild=true;
-						  Debug.logError("Failed to Update Status..Crates are Not Entered for Route:"+routeId,	module);
-			    		  return ServiceUtil.returnError("Failed to Update Status..Crates are Not Entered for Route:"+routeId);
+						  Debug.logError("Failed to Update Status..RETRUN CRATES NOT ENTERED for Route:"+routeId,	module);
+			    		  return ServiceUtil.returnError("Failed to Update Status..RETRUN CRATES NOT ENTERED for Route:"+routeId);
 			    	}
 			}
 			}
