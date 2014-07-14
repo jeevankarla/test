@@ -477,6 +477,7 @@
         <attribute name="shipmentId" mode="IN" type="String" optional="true"/>
           <attribute name="shipmentIds" mode="IN" type="List" optional="true"/>
         <attribute name="shipmentTypeId" mode="IN" type="String" optional="true"/>
+          <attribute name="statusId" mode="IN" type="String" optional="true"/>
     </service>
    <service name="createOrUpdateEmployeeSubsidy" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateEmployeeSubsidy">

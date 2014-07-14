@@ -2552,6 +2552,8 @@ public class ByProductNetworkServices {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		String estimatedShipDateStr = (String) context.get("estimatedShipDate");
 		String shipmentId = (String) context.get("shipmentId");
+		String statusId = (String) context.get("statusId");
+		
 		String shipmentTypeId = (String) context.get("shipmentTypeId");
 
 		String routeId = (String) context.get("routeId");
@@ -2588,22 +2590,16 @@ public class ByProductNetworkServices {
 		boolean isComparsionFaild = false;
 		try {
 			if (UtilValidate.isNotEmpty(shipmentId)) {
-				/*if(shipmentId.equals("allRoutes")){
-	        	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, estimatedShipDate));
-	        	conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(estimatedShipDate)));
-	        	conditionList.add(EntityCondition.makeCondition("shipmentTypeId", EntityOperator.EQUALS, shipmentTypeId));
-	        	EntityCondition shipCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	        	List<GenericValue> shipments = delegator.findList("Shipment", shipCond, null, null, null , false);
-	        	List<String> shipIds = EntityUtil.getFieldListFromEntityList(shipments, "shipmentId", false);
-        		shipmentIds.addAll(shipIds);
-        		//routeIdsList.addAll(EntityUtil.getFieldListFromEntityList(shipments, "routeId", false));
-        	}else{*/
 				GenericValue shipment = delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
 				shipmentIds.add((String) shipment.get("shipmentId"));
 				estimatedShipDate = shipment.getTimestamp("estimatedShipDate");
-				// routeIdsList.add(shipment.get("shipmentId"));
-				// }
-
+				if (!UtilValidate.isEmpty(statusId)) {
+					if(!(statusId.equals("VEHICLE_CRATE_RTN"))){
+			    		// isComparsionFaild=true;
+						  Debug.logError("Failed to Update Status..Crates are Not Entered for Route:"+routeId,	module);
+			    		  return ServiceUtil.returnError("Failed to Update Status..Crates are Not Entered for Route:"+routeId);
+			    	}
+			}
 			}
 			if (UtilValidate.isNotEmpty(shipmentIds)) {
 				Timestamp dayBegin = UtilDateTime.getDayStart(estimatedShipDate);
@@ -2620,7 +2616,6 @@ public class ByProductNetworkServices {
 		    		 isComparsionFaild=true;
 		    		  return ServiceUtil.returnError("Failed to create invoice..!"+resultCompareMap.get("failedProductItemsMap"));
 		    	}*/
-
 				if (!isComparsionFaild) {
 					for(String shipId:shipmentIds){
 		    			 GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId",shipId) , false);
