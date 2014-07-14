@@ -205,6 +205,7 @@
        				<tr>
        					<td>
 				            <input type="hidden" name="shipmentId" id="shipmentId" value="${parameters.shipmentId?if_exists}" />
+				              <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId?if_exists}" />
           				</td>
           				<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Route:</div></td>
           				<td>&nbsp;</td>
