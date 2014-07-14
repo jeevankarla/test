@@ -125,8 +125,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 							 	 <#if invoiceListMap?has_content>
 								  <fo:table-row> 
 									 <fo:table-cell> 
-									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  font-weight="bold" keep-together="always">Invoice No-${invoiceSequenceNumMap.get(invoiceList.getString("invoiceId"))?if_exists}</fo:block>
-			   							  <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  font-weight="bold" keep-together="always">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("dueDate"), "dd/MM/yy HH:mm:ss")}</fo:block>
+									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  font-weight="bold" keep-together="always">Invoice No-${invoiceListMap.get(facilityId).get("invoiceId")}</fo:block>
+			   							  <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  font-weight="bold" keep-together="always">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("dueDate"), "dd/MMMM/yy")}</fo:block>
 									 </fo:table-cell>   
 								 </fo:table-row> 
 								  <fo:table-row> 
@@ -146,10 +146,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
  	</fo:table>
  	<fo:table  table-layout="fixed">
 		 <fo:table-column column-width="10%"/>
-	     <fo:table-column column-width="20%"/>
 	     <fo:table-column column-width="30%"/>
-	     <fo:table-column column-width="40%"/>
-	     <fo:table-column column-width="40%"/>
+	     <fo:table-column column-width="30%"/>
+	     <fo:table-column column-width="30%"/>
+	     <fo:table-column column-width="30%"/>
 	     <fo:table-column column-width="40%"/>
 		     <fo:table-body>
 		     			<#assign grandTotal = 0>
@@ -212,7 +212,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 	                  	</fo:table-cell>
 	                  	<fo:table-cell>   						
 					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
-					 	      keep-together="always">${productDetails.brandName?if_exists}</fo:block>
+					 	      keep-together="always">${productDetails.description?if_exists}</fo:block>
 	                  	</fo:table-cell>
 	                  	<fo:table-cell>   						
 					 	     <fo:block text-align="right" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 

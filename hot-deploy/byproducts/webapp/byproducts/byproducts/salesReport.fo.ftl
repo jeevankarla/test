@@ -23,7 +23,7 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"  margin-bottom=".3in" margin-left=".3in" margin-right="1in">
-        <fo:region-body margin-top="1in"/>
+        <fo:region-body margin-top="1.1in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -32,25 +32,25 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
  <#if saleProductTotals?has_content> 
 <fo:page-sequence master-reference="main" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
-                    <fo:block text-align="left" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;        Sales  Report From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
-              		<fo:block>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-size="8pt">&#160;&#160;Product    						&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty(Ltr/Kg)  	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; DspAmt  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RtnQty   &#160;&#160;&#160; RtnQty(Ltr/Kg)  &#160;&#160;RtnAmt  &#160;&#160;&#160;&#160;&#160;&#160;&#160;  NetQty(L/K)  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; NetAmt  </fo:block>
-            		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+                    <fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;        Sales  Report From :: ${effectiveDateStr?if_exists}  To:: ${thruEffectiveDateStr?if_exists}</fo:block>
+              		<fo:block>------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+            		<fo:block font-size="8pt">Product    			&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspQty(L/K)  	&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DspAmt  		&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RtnQty   &#160;&#160;&#160;&#160;&#160;RtnQty(L/K)  &#160;&#160;&#160;&#160;RtnAmt  &#160;&#160;NetQty(L/K) NetAmt  </fo:block>
+            		<fo:block>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="80pt"/>
-                    <fo:table-column column-width="70pt"/>
-                    <fo:table-column column-width="100pt"/> 
-               	    <fo:table-column column-width="130pt"/>
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="130pt"/> 
+               	    <fo:table-column column-width="150pt"/>
             		<fo:table-column column-width="70pt"/> 		
             		<fo:table-column column-width="70pt"/>
-            		<fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="100pt"/>
-            		<fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="73pt"/>
+            		<fo:table-column column-width="85pt"/>
+            		<fo:table-column column-width="85pt"/>
                     <fo:table-body>
                     	<#assign grandNetTotal = 0>
                     	<#assign grandTotalQty = 0>
@@ -63,6 +63,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                     	<#list productDetails as prodTotals>
 		                        <#assign product = delegator.findOne("Product", {"productId" : prodTotals.getKey()}, true)?if_exists/>
 		                        <#assign quantity = (prodTotals.getValue().get("packetQuantity"))?if_exists>
+		                        <#assign supplyTypeTotals = (prodTotals.getValue().get("supplyTypeTotals"))?if_exists>
+		                        <#assign subsidyMilk = supplyTypeTotals.get("EMP_SUBSIDY")?if_exists>
 		                        <#if (quantity != 0)>
 								<fo:table-row>
                     				<fo:table-cell>
@@ -70,20 +72,44 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 	                       			</fo:table-cell>
 	                       			<#assign netQty = 0>
 	                       			<#assign grandTotalQty = grandTotalQty+quantity>
+	                       			 <#if subsidyMilk?has_content>
+		                       			 <#assign subQty = subsidyMilk.packetQuantity?if_exists>
+		                       			 <#assign netSubQty = quantity-subQty>
+	                       			 <fo:table-cell>
+	                            		<fo:block  text-align="right"  white-space-collapse="false">${netSubQty?if_exists?string("#0.00")}/${subQty?if_exists?string("#0.00")}*</fo:block>  
+	                       			</fo:table-cell>
+	                       			<#else>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${quantity?if_exists?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
+	                       			</#if>
 	                       			<#assign qtyLtrsKgs = (prodTotals.getValue().get("total"))?if_exists>
 	                       			<#assign netQty = netQty+qtyLtrsKgs>
 	                       			<#assign grandTotalQtyLtrs = grandTotalQtyLtrs+qtyLtrsKgs>
+	                       			<#if subsidyMilk?has_content>
+		                       			 <#assign subQtyLtrs = subsidyMilk.total?if_exists>
+		                       			 <#assign netSubQtyLtrs = qtyLtrsKgs-subQtyLtrs>
+	                       			 <fo:table-cell>
+	                            		<fo:block  text-align="right"  white-space-collapse="false">${netSubQtyLtrs?if_exists?string("#0.00")}/${subQtyLtrs?if_exists?string("#0.00")}</fo:block>  
+	                       			</fo:table-cell>
+	                       			<#else>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${qtyLtrsKgs?if_exists?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
+	                       			</#if>
 	                       			<#assign revenue = (prodTotals.getValue().get("totalRevenue"))?if_exists>
 	                       			<#assign grandTotalRevenue = grandTotalRevenue+revenue>
+	                       			<#if subsidyMilk?has_content>
+		                       			 <#assign subRevenue = subsidyMilk.totalRevenue?if_exists>
+		                       			 <#assign netSubRevenue = revenue-subRevenue>
+	                       			 <fo:table-cell>
+	                            		<fo:block  text-align="right"  white-space-collapse="false">${netSubRevenue?if_exists?string("#0.00")}/${subRevenue?if_exists?string("#0.00")}</fo:block>  
+	                       			</fo:table-cell>
+	                       			<#else>
 	                       			<fo:table-cell>
 	                            		<fo:block  text-align="right"  white-space-collapse="false">${revenue?if_exists?string("#0.00")}</fo:block>  
 	                       			</fo:table-cell>
+	                       			</#if>
 	                       			<#assign returnPrice = 0>
 	                       			<#assign retrnQtyAmount=0>
 	                       			<#assign totalNetPrice = 0>
@@ -128,22 +154,22 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
                 			</#list>
                 			<fo:table-row>
 			                   <fo:table-cell>
-			                        	<fo:block>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			                        	<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			                   </fo:table-cell>
 			               </fo:table-row>
                 			<fo:table-row>
                					<fo:table-cell>
                         			<fo:block>
 		                        	 <fo:table>
-									   	 <fo:table-column column-width="80pt"/>
-					                     <fo:table-column column-width="70pt"/>
-					                     <fo:table-column column-width="100pt"/> 
-					               	     <fo:table-column column-width="120pt"/>
-					            		 <fo:table-column column-width="70pt"/> 		
-					            		 <fo:table-column column-width="70pt"/>
-					            		 <fo:table-column column-width="100pt"/>
-					            		 <fo:table-column column-width="100pt"/>
-					            		 <fo:table-column column-width="100pt"/>
+									   	<fo:table-column column-width="80pt"/>
+					                    <fo:table-column column-width="100pt"/>
+					                    <fo:table-column column-width="130pt"/> 
+					               	    <fo:table-column column-width="150pt"/>
+					            		<fo:table-column column-width="70pt"/> 		
+					            		<fo:table-column column-width="70pt"/>
+					            		<fo:table-column column-width="73pt"/>
+					            		<fo:table-column column-width="85pt"/>
+					            		<fo:table-column column-width="85pt"/>
 										 <fo:table-body>
 							                <fo:table-row>
 						                  		 <fo:table-cell>
@@ -174,6 +200,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "salesReport.txt")}
 						                        	<fo:block text-align="right" white-space-collapse="false">${grandNetTotal?if_exists?string("#0.00")}</fo:block>
 						                      </fo:table-cell>
 							               </fo:table-row>
+							               <fo:table-row>
+							                   <fo:table-cell>
+							                        	<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+							                   </fo:table-cell>
+			               					</fo:table-row>
+							               <fo:table-row>
+						                  		 <fo:table-cell>
+						                        	<fo:block  keep-together="always" font-style="italic">*Subsidy milk quantity.</fo:block>
+						                   		</fo:table-cell>
+						                   </fo:table-row>
 					            </fo:table-body>
            				   	</fo:table> 
            				</fo:block>

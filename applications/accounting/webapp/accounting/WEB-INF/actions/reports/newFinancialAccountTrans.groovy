@@ -138,6 +138,9 @@ if (organizationPartyId) {
             }
         }
     }
+	if (UtilValidate.isNotEmpty(parameters.openingBalance)) {
+		openingBalance = new BigDecimal(parameters.openingBalance);
+	}
 	
 	financialAcctgTransList = [];
 	glAcctgTrialBalanceList = [];
