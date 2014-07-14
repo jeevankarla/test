@@ -402,6 +402,7 @@
         <section>
             <actions>
                 <entity-condition entity-name="PartyContentType" list="partyContentTypes">
+               
                     <order-by field-name="description"/>
                 </entity-condition>
                 <entity-condition entity-name="MimeType" list="mimeTypes">
@@ -412,6 +413,7 @@
                     <order-by field-name="description"/>
                     <order-by field-name="roleTypeId"/>
                 </entity-condition>
+                
             </actions>
             <widgets>
                 <platform-specific>
@@ -435,7 +437,6 @@
                 --><entity-condition entity-name="PartyContentAndDataResource" list="partyContent" filter-by-date="true">
                     <condition-list combine="or">
                         <condition-expr field-name="partyId" operator="equals"  from-field="partyId"/>
-                        <condition-expr field-name="isPublic" operator="equals" value="Y"/>
                     </condition-list>
                     <order-by field-name="-createdDate"/>
                 </entity-condition>                
