@@ -239,7 +239,7 @@ public class PunchService {
 				Time punchtime = UtilDateTime.toSqlTime(UtilDateTime.toDateString(punchDateTime, "HH:mm:ss"));
 				//Debug.log("punchDateTime====="+punchDateTime);
 				GenericValue lastEmplPunch = fetchLastEmplPunch(dctx,context);
-				
+				Debug.logInfo("lastEmplPunch====="+lastEmplPunch,module);
 				if(UtilValidate.isNotEmpty(lastEmplPunch)){
 					Timestamp lastEmplPunchTime =
 						    Timestamp.valueOf(
@@ -292,7 +292,7 @@ public class PunchService {
 					//here populate shift details(EmplDailyAttendanceDetail)
 					shiftTypeId = getShiftTypeByTime(dctx,context);
 					emplPunchMap.put("InOut", "IN");
-					if(UtilValidate.isNotEmpty(shiftTypeId) && (UtilValidate.isEmpty(lastEmplPunch) || shiftTimeGap >= (3600000*9))){
+					if(UtilValidate.isNotEmpty(shiftTypeId) && (UtilValidate.isEmpty(lastEmplPunch) || (shiftTimeGap >= (3600000*9)) || shiftTimeGap == 0)){
 						Map employeeDailyAttendanceMap = UtilMisc.toMap("userLogin", userLogin);
 						employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
 						employeeDailyAttendanceMap.put("date", UtilDateTime.toSqlDate(punchDateTime));
