@@ -617,7 +617,6 @@ under the License.
             </drop-down>
         </field>
         <field name="openingBalance" title="Opening Balance"><text></text></field>	
-        <field name="comments" title="Description"><text></text></field>
         <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
 	<form name="FinancialAccountTransCSV" type="list" list-name="financialAcctgTransList" view-size="99999">
