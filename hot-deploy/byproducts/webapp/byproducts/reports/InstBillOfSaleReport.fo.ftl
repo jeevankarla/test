@@ -61,8 +61,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 		                 <fo:table-row>
 			                   <fo:table-cell>
 			                         <fo:block  font-size = "12pt">&#160;</fo:block>
-			                         <fo:block  font-size = "13pt">TIN :${orgTinNumber}</fo:block>
-			                         <fo:block  font-size = "13pt">CST :90750068</fo:block>
+			                         <fo:block  font-weight="bold" font-size = "13pt">TIN :${orgTinNumber}</fo:block>
+			                         <fo:block  font-weight="bold" font-size = "13pt">CST :90750068</fo:block>
 			                     </fo:table-cell>
 			                    <fo:table-cell>
 			                        <fo:block text-align="left" font-size = "13pt" keep-together="always" white-space-collapse="false" font-weight="bold">&#160; KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED</fo:block>
@@ -76,8 +76,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			                   </fo:table-cell>
 			                   <fo:table-cell>
 			                         <fo:block>&#160;</fo:block>
-			                         <fo:block text-align="right" font-size = "13pt" keep-together="always" white-space-collapse="false">INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
-			                         <fo:block text-align="right" font-size = "13pt" keep-together="always" white-space-collapse="false">INVOICE NO   :&#160;&#160;&#160;&#160;&#160;&#160;${invoiceList.get("invoiceId")?if_exists}</fo:block>
+			                         <fo:block text-align="right" font-size = "13pt" font-weight="bold" keep-together="always" white-space-collapse="false">INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
+			                         <fo:block text-align="right" font-size = "13pt" font-weight="bold" keep-together="always" white-space-collapse="false">INVOICE NO   :&#160;&#160;&#160;&#160;&#160;&#160;${invoiceList.get("invoiceId")?if_exists}</fo:block>
 			                     </fo:table-cell>
 		                     </fo:table-row>
 		                     <#if (reportTypeFlag=="enclosureOfTaxInvoice")><#-- extraspace if TAX report-->
@@ -316,37 +316,37 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 						<#assign finalTotalAmnt=finalTotalAmnt+prodTotalAmount>
 						<fo:table-row>
 							<fo:table-cell>
-								<fo:block  font-size = "12pt" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.get("estimatedShipDate"), "dd-MM-yy")}</fo:block>
+								<fo:block  font-size = "12pt" font-weight="bold" text-align="left">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachItem.get("estimatedShipDate"), "dd-MM-yy")}</fo:block>
 							</fo:table-cell>
 					        <fo:table-cell>
-								<fo:block  font-size = "12pt" text-align="center">${shipmentTypeId}</fo:block>
+								<fo:block  font-size = "12pt" font-weight="bold" text-align="center">${shipmentTypeId}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  font-size = "12pt" text-align="center">${eachItem.get('orderId')?if_exists}</fo:block>
+								<fo:block  font-size = "12pt" font-weight="bold" text-align="center">${eachItem.get('orderId')?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  font-size = "12pt" text-align="center">${eachItem.get("externalId")?if_exists}</fo:block>
+								<fo:block  font-size = "12pt" font-weight="bold" text-align="center">${eachItem.get("externalId")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="left" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get("productName")?if_exists)),26)}</fo:block>
+								<fo:block  text-align="left" font-weight="bold" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get("productName")?if_exists)),26)}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block text-align="right" font-size="12pt">${eachItem.get("quantity")?string("#0.0")?if_exists}</fo:block>
+								<fo:block text-align="right" font-weight="bold" font-size="12pt">${eachItem.get("quantity")?string("#0.0")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-size="12pt">${amount?string("#0.00")?if_exists}</fo:block>
+								<fo:block  text-align="right" font-weight="bold" font-size="12pt">${amount?string("#0.00")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block text-align="right" font-size="12pt">${eachItem.get("returnQuantity")?string("#0.0")?if_exists}</fo:block>
+								<fo:block text-align="right" font-weight="bold" font-size="12pt">${eachItem.get("returnQuantity")?string("#0.0")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-size="12pt">${eachItem.get("returnAmount")?string("#0.00")?if_exists}</fo:block>
+								<fo:block  text-align="right" font-weight="bold" font-size="12pt">${eachItem.get("returnAmount")?string("#0.00")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-size="12pt">${prodTotal?string("#0.0")?if_exists}</fo:block>
+								<fo:block  text-align="right" font-weight="bold" font-size="12pt">${prodTotal?string("#0.0")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="right" font-size="12pt">${prodTotalAmount?string("#0.00")?if_exists}</fo:block>
+								<fo:block  text-align="right" font-weight="bold" font-size="12pt">${prodTotalAmount?string("#0.00")?if_exists}</fo:block>
 							</fo:table-cell>
 							<#assign totalQuantity=totalQuantity+quantity>
 							<#assign totalAmount=totalAmount+amount>
@@ -362,7 +362,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 						   </fo:table-cell>
 						</fo:table-row>
 				
-						<fo:table-row>
+						<fo:table-row font-weight="bold">
 							<fo:table-cell number-columns-spanned="5">
 								<fo:block  text-align="left" font-weight="bold" text-indent="15pt">TOTAL </fo:block>
 							</fo:table-cell>
@@ -387,7 +387,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 							</fo:table-cell>
 							
 						</fo:table-row>
-						<fo:table-row>
+						<fo:table-row font-weight="bold">
 							<fo:table-cell>
 								<fo:block  text-align="left" font-size="12pt" font-weight="bold" >&#160;&#160;Net Pay</fo:block>
 							</fo:table-cell>

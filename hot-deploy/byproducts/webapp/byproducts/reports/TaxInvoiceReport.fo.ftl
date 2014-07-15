@@ -59,7 +59,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						     <fo:table-column column-width="50%"/>
 						     <fo:table-column column-width="50%"/>
 							 <fo:table-body>
-								  <fo:table-row> 
+								  <fo:table-row font-weight="bold"> 
 									 <fo:table-cell>
 									 <fo:block>
 										<fo:table>
@@ -153,18 +153,18 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 	     <fo:table-column column-width="40%"/>
 		     <fo:table-body>
 		     			<#assign grandTotal = 0>
-				     	<fo:table-row> 
+				     	<fo:table-row font-weight="bold"> 
 					     <fo:table-cell>   						
 					 	     <fo:block text-align="left" white-space-collapse="false" font-weight="bold" keep-together="always" text-indent="250pt">DESCRIPTION</fo:block>
 					 	</fo:table-cell>
 					 	</fo:table-row>
-	                  <fo:table-row> 
+	                  <fo:table-row font-weight="bold"> 
 					     <fo:table-cell>   						
 					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
 					 	      font-weight="bold" keep-together="always">Taxable Goods </fo:block>
 	                  	</fo:table-cell>
 	                  </fo:table-row>
-	                  <fo:table-row> 
+	                  <fo:table-row font-weight="bold"> 
 					     <fo:table-cell border-style="solid">   						
 					 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  
 					 	     font-weight="bold" keep-together="always">S.NO</fo:block>
@@ -204,7 +204,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 								<#assign vatno = vatno+1>
 							</#if>
 				 	  		 <#if (vat != 0)>
-	                  <fo:table-row> 
+	                  <fo:table-row font-weight="bold"> 
 	                  	<#assign productDetails = delegator.findOne("Product", {"productId" : productTotals.getKey()}, true)?if_exists/>
 	                  	<fo:table-cell>   						
 					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
@@ -290,7 +290,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 				 	  		 	<#assign vatRetNo = vatRetNo+1>
 				 	  		 </#if>
 				 	  		 <#if (vat != 0)>
-				 	  		 <fo:table-row> 
+				 	  		 <fo:table-row font-weight="bold"> 
 	                  	<#assign productDetails = delegator.findOne("Product", {"productId" : productTotals.getKey()}, true)?if_exists/>
 	                  	<fo:table-cell>   						
 					 	     <fo:block text-align="left" text-indent="5pt" white-space-collapse="false" font-family="Courier,monospace" 
@@ -346,7 +346,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     <fo:block></fo:block>
 						 	</fo:table-cell>
 			 	       </fo:table-row>
-	                 <fo:table-row>
+	                 <fo:table-row font-weight="bold">
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  
 						 	     font-weight="bold" keep-together="always"></fo:block>
@@ -365,7 +365,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     font-weight="bold" keep-together="always">${taxTotal?string("#0.00")?if_exists}</fo:block>
 						 	</fo:table-cell>
 	                  </fo:table-row>
-	                 <fo:table-row>
+	                 <fo:table-row font-weight="bold">
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  
 						 	     font-weight="bold" keep-together="always"></fo:block>
@@ -385,7 +385,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						 	     font-weight="bold" keep-together="always">${vatGrandTotal5?string("#0.00")?if_exists}</fo:block>
 						 	</fo:table-cell>
 	                  </fo:table-row>
-	                 <fo:table-row>
+	                 <fo:table-row font-weight="bold">
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  
 						 	     font-weight="bold" keep-together="always"></fo:block>
@@ -600,7 +600,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 					</#if>-->
 					
 			 	 	<#if grandTotal?has_content && (grandTotal!=0)>
-	                 <fo:table-row>
+	                 <fo:table-row font-weight="bold">
 		                   <fo:table-cell >   						
 						 	     <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  
 						 	     font-weight="bold" keep-together="always"></fo:block>
@@ -638,7 +638,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 						<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 			      </fo:table-cell>
 			     </fo:table-row>
-			     <fo:table-row>
+			     <fo:table-row font-weight="bold">
 			     <fo:table-cell number-columns-spanned="5">   						
 			 	     <#-- <fo:block text-align="left" text-indent="5pt" font-weight="bold" white-space-collapse="false" font-family="Courier,monospace"  keep-together="always">Amount Payable:</fo:block>-->
 					 <#assign amount = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(grandTotal, "%indRupees-and-paise", locale).toUpperCase()>
