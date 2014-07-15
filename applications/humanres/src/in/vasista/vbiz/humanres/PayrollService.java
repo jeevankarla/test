@@ -2138,6 +2138,16 @@ public class PayrollService {
 	        Map input = FastMap.newInstance();
 	        
 	        try{
+	        	double lateComeMin = 0;
+	        	double earlyGoMin =0;
+	        	/* GenericValue tenantLateCome = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_LATE_COME"), false);
+	  	    	 if (UtilValidate.isNotEmpty(tenantLateCome)) {
+	  	    		lateComeMin = tenantLateCome.getDouble("propertyValue").doubleValue();
+	  	    	 }
+	  	    	GenericValue tenantEarlyGo = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_EARLY_GO"), false);
+	  	    	if (UtilValidate.isNotEmpty(tenantEarlyGo)) {
+	  	    		earlyGoMin = tenantEarlyGo.getDouble("propertyValue").doubleValue();
+	  	    	}*/
 	        	double noOfCalenderDays = UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd)+1;
 	        	// get attendance period here 
 	        	input.put("timePeriodId", payrollPeriodId);
@@ -2162,7 +2172,8 @@ public class PayrollService {
 	        	input.put("thruDate", timePeriodEnd);
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
 	        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
-	        	Debug.log("employementList============"+employementList.size());
+	        	//Debug.log("employementList============"+employementList.size());
+	        	//employementList = EntityUtil.filterByAnd(employementList, UtilMisc.toMap("partyIdTo","6728"));
 	        	//general holidays in that period
 	        	input.clear();
 	    		input.put("userLogin", userLogin);
@@ -2188,15 +2199,34 @@ public class PayrollService {
 	        		newEntity.set("noOfCompoffAvailed", BigDecimal.ZERO);
 	        		double noOfAttendedSsDays = 0;
 	        		double lossOfPayDays =0;
+	        		conditionList.clear();
 			        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
 			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
 			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
-			    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			    	EntityCondition condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			    	try {
 			    		List<GenericValue> punchList = delegator.findList("EmplPunch", condition, null,null, null, false);
+			    		//Debug.log("punchList size========"+punchList.size());
 			    		if(UtilValidate.isEmpty(punchList)){
 			    			Debug.logWarning("No punchs for employee"+employeeId, module);
+			    			newEntity.set("lossOfPayDays", new BigDecimal(lossOfPayDays));
+				    		newEntity.set("noOfAttendedHoliDays", BigDecimal.ZERO);
+				    		newEntity.set("noOfAttendedSsDays", BigDecimal.ZERO);
+				    		newEntity.set("noOfAttendedWeeklyOffDays", BigDecimal.ZERO);
+				    		newEntity.set("noOfPayableDays", BigDecimal.ZERO);
+				    		delegator.createOrStore(newEntity);
+				    		continue;
 			    		}
+			    		conditionList.clear();
+			    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
+					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
+					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
+					    condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
+			    		if(UtilValidate.isEmpty(emplDailyAttendanceDetailList)){
+			    			Debug.logWarning("No punchs for employee"+employeeId, module);
+			    		}
+			    		
 			    		//get leaves for the month
 			    		input.clear();
 			    		input.put("userLogin", userLogin);
@@ -2227,9 +2257,12 @@ public class PayrollService {
 			    			String weekName = (c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, locale));
 			    			Timestamp cTime = new Timestamp(c1.getTimeInMillis());
 			    			Timestamp cTimeEnd = UtilDateTime.getDayEnd(cTime);
-			    			List dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
+			    			Debug.log("cTime==========="+cTime);
+			    			List<GenericValue> dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
 			    			List cHoliDayList = EntityUtil.filterByCondition(holiDayList, EntityCondition.makeCondition(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,cTimeEnd) , EntityOperator.AND,EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,cTime)));
 			    			List cDayLeaves = EntityUtil.filterByDate(leaves, cTime);
+			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition(EntityCondition.makeCondition("date",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("date",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
+			    			//Debug.log("dayPunchList size==========="+dayPunchList.size());
 			    			if(UtilValidate.isNotEmpty(dayPunchList)){
 			    				if(emplWeeklyOffDay.equalsIgnoreCase(weekName)){
 			    					//noOfAttendedWeeklyOffDays = noOfAttendedWeeklyOffDays+(dayPunchList.size()/2);
@@ -2243,6 +2276,11 @@ public class PayrollService {
 			    				if(UtilValidate.isNotEmpty(cHoliDayList)){
 			    					//noOfAttendedHoliDays = noOfAttendedHoliDays+(dayPunchList.size()/2);
 			    					noOfAttendedHoliDays = noOfAttendedHoliDays+1;
+			    				}
+			    				
+			    				// here calculating  late come and early going minutes
+			    				for(GenericValue dayShift : dayShiftList){
+			    					List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
 			    				}
 			    				
 			    			}else if((!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && (cTime.compareTo(secondSaturDay) != 0) 
