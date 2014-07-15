@@ -1367,13 +1367,13 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="HRReports"/>
     </request-map>
-     <request-map uri="Attendance">
+     <request-map uri="DailyPunch">
        <security https="true" auth="true"/>
-        <response name="success" type="view" value="Attendance"/>
+        <response name="success" type="view" value="DailyPunch"/>
     </request-map>  
-     <request-map uri="AttendanceInternal">
+     <request-map uri="DailyPunchInternal">
        <security https="true" auth="true"/>
-        <response name="success" type="view" value="AttendanceInternal"/>
+        <response name="success" type="view" value="DailyPunchInternal"/>
     </request-map>        
     <request-map uri="LeaveTypes">
        <security https="true" auth="true"/>
@@ -1650,8 +1650,8 @@ under the License.
     <view-map name="FindLeaveApprovals" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindLeaveApprovals"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
 
-    <view-map name="Attendance" type="screen" page="component://humanres/widget/HumanresScreens.xml#Attendance"/>
-    <view-map name="AttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#AttendanceInternal"/>
+    <view-map name="DailyPunch" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyPunch"/>
+    <view-map name="DailyPunchInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyPunchInternal"/>
 
  <!--====================Reports View===================================-->
     <view-map name="HRReports" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>

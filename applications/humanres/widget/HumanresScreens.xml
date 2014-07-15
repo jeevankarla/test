@@ -31,15 +31,15 @@
 		</section>
 	</screen>
 	
-	 <screen name="Attendance">
+	 <screen name="DailyPunch">
         <section>
             <actions>
 				<set field="headerItem" value="Attendance" />
 				<set field="tabButtonItem" value="Attendance" />
- 				<set field="tabButtonItem2" value="Attendance" />                                           				
-				<set field="titleProperty" value="Attendance" />
+ 				<set field="tabButtonItem2" value="DailyPunch" />                                           				
+				<set field="titleProperty" value="DailyPunch" />
 				            
-				<set field="ajaxUrl" value="AttendanceInternal" type="String"/>
+				<set field="ajaxUrl" value="DailyPunchInternal" type="String"/>
             </actions>            
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator"
@@ -47,7 +47,7 @@
 					<decorator-section name="body"> 
                         <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>                                                        					   					
                         <platform-specific>
-							<html><html-template location="component://humanres/webapp/humanres/humanres/attendanceTable.ftl"></html-template></html>                         
+							<html><html-template location="component://humanres/webapp/humanres/humanres/dailyPunchTable.ftl"></html-template></html>                         
                         </platform-specific>   
                     </decorator-section>
                 </decorator-screen>
@@ -55,14 +55,14 @@
         </section>
     </screen>   
     
-	 <screen name="AttendanceInternal">
+	 <screen name="DailyPunchInternal">
         <section>
             <actions>
-				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/attendance.groovy"/>  
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/dailyPunch.groovy"/>  
             </actions>            
             <widgets>
             	<platform-specific> 
-                	<html><html-template location="component://humanres/webapp/humanres/humanres/attendanceTableInternal.ftl"/></html>
+                	<html><html-template location="component://humanres/webapp/humanres/humanres/dailyPunchTableInternal.ftl"/></html>
                 </platform-specific>   
             </widgets>
         </section>
