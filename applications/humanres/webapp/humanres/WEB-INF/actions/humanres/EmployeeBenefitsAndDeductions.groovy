@@ -85,6 +85,8 @@ conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("t
 EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 List<GenericValue> partyBenefitList = delegator.findList("PartyBenefit", condition, null, ["partyIdTo"], null, false);
 
+Debug.logError("partyBenefitList="+partyBenefitList,"");
+
 List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, ["partyIdTo"], null, false);
 
 Map benefitTypeFinalMap=FastMap.newInstance();
@@ -109,6 +111,7 @@ if(UtilValidate.isNotEmpty(partyBenefitList)){
 		
 	}
 }
+Debug.logError("benefitTypeFinalMap="+benefitTypeFinalMap,"");
 
 JSONArray headBenefitItemsJSON = new JSONArray();
 Map totalBenefitsMap=FastMap.newInstance();
@@ -206,3 +209,4 @@ if("benefits".equals(parameters.type)){
 	context.headItemsJson=headItemsJSON;
 }
 
+Debug.logError("context.headItemsJson="+context.headItemsJson,"");

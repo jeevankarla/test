@@ -1367,7 +1367,14 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="HRReports"/>
     </request-map>
-    
+     <request-map uri="Attendance">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="Attendance"/>
+    </request-map>  
+     <request-map uri="AttendanceInternal">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="AttendanceInternal"/>
+    </request-map>        
     <request-map uri="LeaveTypes">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="LeaveTypes"/>
@@ -1642,6 +1649,10 @@ under the License.
     <view-map name="EditEmplLeaveReasonTypes" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#EditEmplLeaveReasonTypes"/>
     <view-map name="FindLeaveApprovals" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#FindLeaveApprovals"/>
     <view-map name="EditEmplLeaveStatus" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#EditEmplLeaveStatus"/>
+
+    <view-map name="Attendance" type="screen" page="component://humanres/widget/HumanresScreens.xml#Attendance"/>
+    <view-map name="AttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#AttendanceInternal"/>
+
  <!--====================Reports View===================================-->
     <view-map name="HRReports" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>
  	<view-map name="LeaveTypes" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>
