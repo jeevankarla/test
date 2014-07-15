@@ -189,10 +189,10 @@ under the License.
 		                                        <container style="profile-right">
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
-		                                            <include-screen name="EditAccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
+		                                           
 <!--		                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
 		                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-
+													 <include-screen name="EditAccountDetails" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="Dependent" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                            <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
@@ -250,7 +250,7 @@ under the License.
 				</entity-and>
 			</actions>
 			<widgets>
-					 <section>
+					<section>
 							<widgets>
 								<screenlet id="DependendPanel" title="${uiLabelMap.DependentInformation}" collapsible="true">
 		                            <include-form name="AddDependent" location="component://humanres/widget/forms/EmployeeForms.xml" />		                        
@@ -263,7 +263,6 @@ under the License.
 			</widgets>
 		</section>
 	</screen>
-    
     <screen name="EmployeeInformation">
         <section>
             <actions>
@@ -567,14 +566,14 @@ under the License.
 	<screen name="EditAccountDetails">
 		<section>
 			<actions>
-				<entity-and list="EditAccountDetails" entity-name="FinAccount" filter-by-date="true">
+				<entity-and list="EditAccountDetails" entity-name="FinAccount">
 					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
 				</entity-and>
 			</actions>
 			<widgets>
 			 <section>
 				<widgets>
-					<screenlet id="AccountPanel" title="${uiLabelMap.EditAccountDetails}">
+					<screenlet id="AccountPanel1" title="${uiLabelMap.EditAccountDetails}">
                        	<include-form name="EditAccountDetails" location="component://humanres/widget/forms/EmployeeForms.xml" />
 					</screenlet>
 			  </widgets>
