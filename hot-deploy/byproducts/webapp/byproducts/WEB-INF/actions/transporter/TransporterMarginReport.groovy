@@ -211,9 +211,27 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 if(UtilValidate.isNotEmpty(transporterMargins)){
 	masterList.add(transporterMargins);
 }
+
+//rounding	total commission						
+masterList.each{eachMargin->
+	eachMargin.each{eachRouteMargin->
+		dayWiseList=eachRouteMargin.getValue();
+		dayWiseList.each{eachDayMargin->
+			totalsMap =[:];
+			totalsMap = eachDayMargin.getAt("Tot");
+			totalMargin=BigDecimal.ZERO;
+			totalMargin=totalsMap.getAt("grTotRtAmount");
+			totalMargin=new BigDecimal(totalMargin).setScale(0,BigDecimal.ROUND_HALF_UP);//rounding
+			totalMargin=new BigDecimal(totalMargin).setScale(2,BigDecimal.ROUND_HALF_UP);
+			totalsMap.putAt("grTotRtAmount",totalMargin);
+			eachDayMargin.putAt("Tot",totalsMap);
+		}
+	}
+}
+
+
 context.put("masterList", masterList);
 context.put("routePartyMap",routePartyMap);
-Debug.log("===routePartyMap===="+routePartyMap);
 facRecoveryMap=[:];
 
 facilityRecoveryResult = TransporterServices.getFacilityRecvoryForPeriodBilling(dctx,UtilMisc.toMap("periodBillingId",periodBillingId,"fromDate",monthBegin,"userLogin",userLogin));
