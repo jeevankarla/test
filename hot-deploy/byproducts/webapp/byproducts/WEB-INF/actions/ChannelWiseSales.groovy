@@ -137,6 +137,7 @@ if(addShipments){
 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
 returnCondition.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
 List boothsList = FastList.newInstance();
+routeId = "";
 if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", parameters.facilityId), false);
 	if(!facility && facility.facilityTypeId == "ROUTE" && facility.facilityTypeId == "BOOTH"){
@@ -145,21 +146,22 @@ if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	}
 	
 	if(facility.facilityTypeId == "ROUTE"){
-		customCondList = [];
-		customCondList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
-		customCondList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , facility.facilityId));
-		cond = EntityCondition.makeCondition(customCondList, EntityOperator.AND);
-		facilityList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, UtilMisc.toSet("originFacilityId"), null, null, false);
-		boothsList = EntityUtil.getFieldListFromEntityList(facilityList, "originFacilityId", true);
-
 		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , facility.facilityId));
+		routeId = facility.facilityId;
 		
 	}else{
 		boothsList.add(facility.facilityId);
 	}
+	
+}
+if(boothsList){
 	conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN, boothsList));
 	returnCondition.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN , boothsList));
 	context.facilityId = parameters.facilityId;
+}
+if(UtilValidate.isNotEmpty(routeId)){
+	conditionList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
+	returnCondition.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, routeId));
 }
 /*if(UtilValidate.isNotEmpty(parameters.productCategoryId)){
 	Map result = ByProductReportServices.getCategoryProducts(dctx, UtilMisc.toMap("productCategoryId", parameters.productCategoryId));
