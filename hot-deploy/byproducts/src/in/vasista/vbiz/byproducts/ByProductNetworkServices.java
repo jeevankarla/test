@@ -6974,7 +6974,7 @@ public class ByProductNetworkServices {
 		Map result = ServiceUtil.returnSuccess();
 		  Map<String , Object> inputRateAmt = FastMap.newInstance();
 		  inputRateAmt.putAll(context);
-			BigDecimal facilitySize = BigDecimal.ONE;
+			BigDecimal facilitySize = BigDecimal.ZERO;
 		  try{
 			   Map<String, Object> facilitySizeResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
 			   if(UtilValidate.isNotEmpty(facilitySizeResult)){
