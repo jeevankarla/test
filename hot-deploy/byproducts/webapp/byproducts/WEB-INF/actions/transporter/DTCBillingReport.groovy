@@ -32,7 +32,7 @@ monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
 
 Map<String, String> facilityPartyMap = FastMap.newInstance();
 conditionList=[];
-conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
+conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
 conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));
 conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, "Contractor"));
 conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"ROUTE"));
