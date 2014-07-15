@@ -145,7 +145,14 @@ if(UtilValidate.isNotEmpty(parameters.facilityId)){
 	}
 	
 	if(facility.facilityTypeId == "ROUTE"){
-		boothsList = (ByProductNetworkServices.getRouteBooths(delegator , facility.facilityId));
+		customCondList = [];
+		customCondList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipments));
+		customCondList.add(EntityCondition.makeCondition("routeId", EntityOperator.EQUALS , facility.facilityId));
+		cond = EntityCondition.makeCondition(customCondList, EntityOperator.AND);
+		facilityList = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, UtilMisc.toSet("originFacilityId"), null, null, false);
+		boothsList = EntityUtil.getFieldListFromEntityList(facilityList, "originFacilityId", true);
+
+		//boothsList = (ByProductNetworkServices.getRouteBooths(delegator , facility.facilityId));
 		
 	}else{
 		boothsList.add(facility.facilityId);
