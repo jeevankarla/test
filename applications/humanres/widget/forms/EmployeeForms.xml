@@ -633,7 +633,7 @@
 		<field name="quarterType" title="${uiLabelMap.QuarterType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="motherTongue" title="${uiLabelMap.MotherTongue}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="religion" title="${uiLabelMap.Religion}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
-		<field name="caste" title="${uiLabelMap.Caste}" ><display-entity entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}"></display-entity></field>
+		<field name="caste" title="${uiLabelMap.Caste}" ><display description="${caste}"></display></field>
 		<field name="nationality" title="${uiLabelMap.Nationality}" ><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="punchType" title="${uiLabelMap.PunchType}"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="weeklyOff" title="${uiLabelMap.WeeklyOff}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${weeklyOff}"></display-entity></field>
