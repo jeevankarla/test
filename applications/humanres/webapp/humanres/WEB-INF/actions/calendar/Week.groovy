@@ -24,6 +24,14 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.webapp.pseudotag.*;
 import org.ofbiz.workeffort.workeffort.*;
 import java.sql.Timestamp;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
 
 String currentDay = parameters.get("currentDay");
 String startParam = parameters.get("start");
@@ -84,3 +92,17 @@ context.put("end",end);
 context.put("prev",prev);
 context.put("next",next);
 context.put("eventsParam", eventsParam);
+
+// getting punch in type list
+
+punchList = UtilMisc.toList(
+	EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "PUNCH_TYPE"));
+condition = EntityCondition.makeCondition(punchList, EntityOperator.AND);
+punchTypeList=delegator.findList("Enumeration" , condition, null, ['sequenceId'],null,true);
+context.put("punchTypeList",punchTypeList);
+
+inOutTypeList = UtilMisc.toList(
+	EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "INOUT_TYPE"));
+condition = EntityCondition.makeCondition(inOutTypeList, EntityOperator.AND);
+inOutList=delegator.findList("Enumeration" , condition, null, ['sequenceId'],null,true);
+context.put("inOutList",inOutList);

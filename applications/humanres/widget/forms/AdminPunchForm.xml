@@ -25,10 +25,11 @@
         <field name="punchdate" title="Date"><date-time type="date" default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="emplPunchId"><hidden/></field> 
         <field name="PunchType"  widget-style="required">
-         <drop-down allow-empty="false" current="selected" no-current-selected-key="Normal">
-  		<option key="Normal" description="Normal"/>
-  		<option key="Break" description="Break"/>
-  		<option key="Lunch" description="Lunch"/>
+         <drop-down allow-empty="false" current="selected">
+  		  <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="PUNCH_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
 	</drop-down>
         </field>
         <field name="InOut"  widget-style="required">

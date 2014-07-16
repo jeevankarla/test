@@ -11,24 +11,29 @@
     <field name="emplPunchId"><hidden/></field>      
     <field name="punchtime"><display/></field>
     <field name="dateTime"><hidden/></field>        
-       <field name="InOut"  use-when="check==null" widget-style="required">
-               <drop-down allow-empty="false"  no-current-selected-key="IN">
-  		<option key="IN" description="IN"/>
-  		<option key="OUT" description="OUT"/>
-          </drop-down>
+       <field name="InOut"  use-when="check==null" widget-style="required">              
+          <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="INOUT_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
         </field>        
         <field name="InOut"  use-when="check!=null" widget-style="required">
-               <drop-down allow-empty="false"  no-current-selected-key="OUT">
-  		<option key="IN" description="IN"/>
-  		<option key="OUT" description="OUT"/>
-          </drop-down>
+             <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="INOUT_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
         </field>
-        <field name="PunchType"  widget-style="required">
-         <drop-down allow-empty="false" current="selected" no-current-selected-key="Normal">
-  		<option key="Normal" description="Normal"/>
-  		<option key="Break" description="Break"/>
-  		<option key="Lunch" description="Lunch"/>
-	</drop-down>
+        <field name="PunchType" title="Punch Type" widget-style="required">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="PUNCH_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="Note" title="${uiLabelMap.CommonNote}"><text/></field>
         <field name="submitButton" title="Submit" widget-style="smallSubmit" ><submit button-type="button"/></field>

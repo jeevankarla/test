@@ -50,6 +50,9 @@
             <link target="analytics"/>
         </menu-item>    
         <menu-item name="benefitOrDeduction" title="Benefits/Deductions">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_BENFDED_VIEW"/>
+            </condition> 
             <link target="benefitOrDeduction"/>
         </menu-item>
         <menu-item name="Attendance" title="Attendance">

@@ -92,7 +92,7 @@ under the License.
                                   </section>
                                 
                         <platform-specific>
-                            <html><html-template location="component://humanres/webapp/humanres/calendar/new_week.ftl"/></html>
+                            <html><html-template location="component://humanres/webapp/humanres/calendar/newWeek.ftl"/></html>
                         </platform-specific></screenlet>
                          <include-screen name="DailyPunchInoutTrend" location="component://humanres/widget/ReportHumanresSummaryScreens.xml"/>                          
                     </decorator-section>

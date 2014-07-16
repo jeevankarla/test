@@ -36,7 +36,7 @@ under the License.
     <SecurityPermission description="Allow In/Out in the HumanRes Manager." permissionId="HUMANRES_PUNCH_EDIT"/>
     <SecurityPermission description="Allow view of Global HR Settings in the HumanRes Manager." permissionId="HUMANRES_GLOBALHR_VIEW"/>
     <SecurityPermission description="Allow add/update/delete of Global HR Settings in the HumanRes Manager." permissionId="HUMANRES_GLOBALHR_EDIT"/>
-
+	<SecurityPermission description="Allow view of Benefits/Deductions in the HumanRes Manager." permissionId="HR_BENFDED_VIEW"/>
     <SecurityGroup description="HumanRes Admin group, has complete permissions to administer all HR activities." groupId="HUMANRES_ADMIN"/>
     <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HUMANRES_ADMIN"/>
     <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="WORKEFFORTMGR_VIEW"/>    
@@ -49,6 +49,7 @@ under the License.
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="HUMANRES_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="HUMANRES_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="HUMANRES_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_BENFDED_VIEW"/>
 
     <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_VIEW"/>      
     <SecurityGroupPermission groupId="Treasurer" permissionId="HUMANRES_CALENDAR_EDIT"/>

@@ -152,4 +152,17 @@
      <StatusItem description="Approved" sequenceId="3" statusCode="APPROVED" statusId="LOAN_APPROVED" statusTypeId="EMPL_LOAN_STATUS"/>
      <StatusItem description="Disbursed" sequenceId="4" statusCode="DISBURSED" statusId="LOAN_DISBURSED" statusTypeId="EMPL_LOAN_STATUS"/>
        
+       
+    <!-- punch in and punch out data -->   
+    <EnumerationType description="Punch Type" enumTypeId="PUNCH_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Normal" enumCode="NORMAL" enumId="Normal" sequenceId="01" enumTypeId="PUNCH_TYPE"/>
+    <Enumeration description="Break" enumCode="BREAK" enumId="Break" sequenceId="02" enumTypeId="PUNCH_TYPE"/>
+    <Enumeration description="Lunch" enumCode="LUNCH" enumId="Lunch" sequenceId="03" enumTypeId="PUNCH_TYPE"/>
+    <Enumeration description="Official on Duty" enumCode="OOD" enumId="Ood" sequenceId="04" enumTypeId="PUNCH_TYPE"/>
+    
+    <EnumerationType description="In Out Type" enumTypeId="INOUT_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="IN" enumCode="IN" enumId="IN" sequenceId="01" enumTypeId="INOUT_TYPE"/>
+    <Enumeration description="OUT" enumCode="OUT" enumId="OUT" sequenceId="02" enumTypeId="INOUT_TYPE"/>  
+       
+       
 </entity-engine-xml>
