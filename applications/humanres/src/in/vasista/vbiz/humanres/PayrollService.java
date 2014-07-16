@@ -2260,7 +2260,7 @@ public class PayrollService {
 			    			//Debug.log("cTime==========="+cTime);
 			    			List<GenericValue> dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
 			    			// filter by normal punchType
-			    			dayPunchList = EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("punchdate",EntityOperator.EQUALS,"Normal"));
+			    			dayPunchList = EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Normal"));
 			    			List cHoliDayList = EntityUtil.filterByCondition(holiDayList, EntityCondition.makeCondition(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,cTimeEnd) , EntityOperator.AND,EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,cTime)));
 			    			List cDayLeaves = EntityUtil.filterByDate(leaves, cTime);
 			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition(EntityCondition.makeCondition("date",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("date",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
