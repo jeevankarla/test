@@ -68,7 +68,44 @@
         </section>
     </screen> 	
 	
-	
+	 <screen name="EmployeeAttendance">
+        <section>
+            <actions>
+				<set field="headerItem" value="Attendance" />
+				<set field="tabButtonItem" value="Attendance" />
+ 				<set field="tabButtonItem2" value="EmployeeAttendance" />                                           				
+				<set field="titleProperty" value="EmployeeAttendance" />
+				            
+				<set field="ajaxUrl" value="EmployeeAttendanceInternal" type="String"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employees.groovy"/>  				
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>                                                        					   					
+                        <platform-specific>
+							<html><html-template location="component://humanres/webapp/humanres/humanres/EmployeeAttendance.ftl"></html-template></html>                         
+                        </platform-specific>   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+	 <screen name="EmployeeAttendanceInternal">
+        <section>
+            <actions>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeAttendance.groovy"/>  
+            </actions>            
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://humanres/webapp/humanres/humanres/employeeAttendanceInternal.ftl"/></html>
+                </platform-specific>   
+            </widgets>
+        </section>
+    </screen> 	
+    	
 	 <screen name="EmployeesTenureChart">
         <section>
             <actions>
