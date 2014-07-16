@@ -85,7 +85,7 @@
 					<decorator-section name="body"> 
                         <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>                                                        					   					
                         <platform-specific>
-							<html><html-template location="component://humanres/webapp/humanres/humanres/EmployeeAttendance.ftl"></html-template></html>                         
+							<html><html-template location="component://humanres/webapp/humanres/humanres/employeeAttendance.ftl"></html-template></html>                         
                         </platform-specific>   
                     </decorator-section>
                 </decorator-screen>
