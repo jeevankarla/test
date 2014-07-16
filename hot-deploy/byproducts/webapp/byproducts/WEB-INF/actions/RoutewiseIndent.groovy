@@ -96,6 +96,31 @@ canProductsIdsList=EntityUtil.getFieldListFromEntityList(canProductsList, "produ
 Set allProductsSet=new HashSet();
 
 conditionList=[];
+
+//
+conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
+if(UtilValidate.isNotEmpty(stopShipList)){
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, stopShipList));//get only Active booths for given period
+}
+if(UtilValidate.isEmpty(parameters.subscriptionTypeId)){
+conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.IN, ["AM","PM"]));
+}else{
+conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, parameters.subscriptionTypeId));
+}
+//conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
+conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
+conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd),
+			   EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
+condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+fieldsToSelect = ["productId", "quantity","productSubscriptionTypeId", "sequenceNum"] as Set;
+subscriptionsItemsListAll = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, fieldsToSelect , ["productId"], null, false);
+activeProductIdsList=EntityUtil.getFieldListFromEntityList(subscriptionsItemsListAll, "productId", true);
+allDispchProductsList = delegator.findList("Product",EntityCondition.makeCondition("productId", EntityOperator.IN, activeProductIdsList) , null, null, null, false);
+productBrandNames=[:];
+allDispchProductsList.each{productInfo->
+	productBrandNames[productInfo.productId]= productInfo.get("brandName");
+}
+//Debug.log("===productBrandNames==="+productBrandNames);
 routeMap = [:];
 routeWiseIndentMap = [:];
 grandProdTotal=[:];
@@ -115,33 +140,17 @@ for(i=0; i<routesList.size(); i++){
 	rtLooseCans = 0;
 	route = routesList.get(i);
 	routeId=route.get("facilityId");
-	conditionList=[];
-	conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
-	if(UtilValidate.isNotEmpty(stopShipList)){
-	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, stopShipList));//get only Active booths for given period
-    }
-	if(UtilValidate.isEmpty(parameters.subscriptionTypeId)){
-	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.IN, ["AM","PM"]));
-	}else{
-	conditionList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, parameters.subscriptionTypeId));
-	}
-	conditionList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, routeId));
-	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
-	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd),
-				   EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
-	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	fieldsToSelect = ["productId", "quantity","productSubscriptionTypeId", "sequenceNum"] as Set;
-	subscriptionsItemsList = delegator.findList("SubscriptionFacilityAndSubscriptionProduct", condition, fieldsToSelect , ["productId"], null, false);
+	List subscriptionsItemsList = EntityUtil.filterByAnd(subscriptionsItemsListAll, UtilMisc.toMap("sequenceNum", routeId));
 	if(subscriptionsItemsList){
 		subscriptionsItemsList.each { eachItem ->
 			productId = eachItem.get("productId");
-			product = delegator.findOne("Product", UtilMisc.toMap("productId" : productId), false);
+			//product = delegator.findOne("Product", UtilMisc.toMap("productId" : productId), false);
 			BigDecimal indentQty = (BigDecimal) eachItem.get("quantity");
 			productSubscriptionTypeId = eachItem.get("productSubscriptionTypeId");
 			
 			detailMap = [:];
 			detailMap["productId"] = productId;
-			detailMap["productName"] = product.get("brandName");
+			detailMap["productName"] = productBrandNames[productId];
 			
 			if(productSubscriptionTypeId == "SPECIAL_ORDER"){
 				detailMap["otherQuantity"] = BigDecimal.ZERO;
