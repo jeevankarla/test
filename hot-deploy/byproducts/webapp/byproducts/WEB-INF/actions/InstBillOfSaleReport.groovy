@@ -34,7 +34,8 @@
 	invoiceList=[];
 	periodBillingIds=[];
 	
-	partyPONumMap = [:];
+	//partyPONumMap = [:];
+	invoiceSequenceNumMap = [:];
 	/*partyIdentification = delegator.findList("PartyIdentification", EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PO_NUMBER"), null, null, null, false);
 	
 	partyIdentification.each{eachPO ->
@@ -81,10 +82,13 @@
 	billCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	invoiceData = delegator.findList("InvoiceAndBillOfSaleInvoiceSequence", billCond, null, null, null, false);
 	invoiceData.each{eachItem ->
-		partyPONumMap.put(eachItem.facilityId, eachItem.sequenceId);
+		invoiceSequenceNumMap.put(eachItem.invoiceId, eachItem.sequenceId);
 	}
-	context.partyPONumMap = partyPONumMap;
-	
+	/*invoiceData.each{eachItem ->
+		partyPONumMap.put(eachItem.facilityId, eachItem.sequenceId);
+	}*/
+	//context.partyPONumMap = partyPONumMap;
+	context.invoiceSequenceNumMap = invoiceSequenceNumMap;
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS , "RETURN_ACCEPTED"));
 	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));

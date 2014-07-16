@@ -125,7 +125,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TaxInvoice.txt")}
 							 	 <#if invoiceListMap?has_content>
 								  <fo:table-row> 
 									 <fo:table-cell> 
-									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  font-weight="bold" keep-together="always">Invoice No-${invoiceListMap.get(facilityId).get("invoiceId")}</fo:block>
+									      <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  font-weight="bold" keep-together="always">Invoice No- <#if invoiceSequenceNumMap?has_content && (invoiceSequenceNumMap.get(((invoiceListMap.get(facilityId)).get('invoiceId'))))?exists>${(invoiceSequenceNumMap.get(((invoiceListMap.get(facilityId)).get('invoiceId'))))?if_exists}<#else>${invoiceListMap.get(facilityId).get("invoiceId")}</#if></fo:block>
 			   							  <fo:block text-align="left" white-space-collapse="false" font-family="Courier,monospace"  font-weight="bold" keep-together="always">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("dueDate"), "dd/MMMM/yy")}</fo:block>
 									 </fo:table-cell>   
 								 </fo:table-row> 
