@@ -41,7 +41,7 @@ punchList = delegator.findList("EmplPunch", condition, null, null, null, false);
 
 for (GenericValue punch : punchList) {
 	String partyId= punch.getString("partyId");
-	String partyName = PartyHelper.getPartyName(delegator, partyId, true);
+	String partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	String punchTime = punch.get("punchtime").toString(); //timeFormat.parse((punch.get("punchtime")).toString());
 	String inOut = "";
 	if (punch.getString("InOut")) {

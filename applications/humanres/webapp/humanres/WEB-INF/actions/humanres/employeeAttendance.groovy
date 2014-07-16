@@ -38,7 +38,7 @@ if (fromDate == null) {
 }
 
 //String punchDateStr = UtilDateTime.toDateString(punchDate, "dd/MM/yyyy");			
-String employeeName = PartyHelper.getPartyName(delegator, employeeId, true);
+String employeeName = PartyHelper.getPartyName(delegator, employeeId, false);
 
 Timestamp timePeriodStart = UtilDateTime.getDayStart(fromDate);
 Timestamp timePeriodEnd = UtilDateTime.getDayEnd(thruDate);
@@ -49,13 +49,13 @@ conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS
 conditionList.add(EntityCondition.makeCondition("partyId", employeeId));
 
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-orderBy = UtilMisc.toList("-punchdate");
+orderBy = UtilMisc.toList("-punchdate","-punchtime");
 punchList = delegator.findList("EmplPunch", condition, null, orderBy, null, false);
 
 def outTimestamp = null;
 punchList.each { punch->
 	String partyId= punch.getString("partyId");
-	String partyName = PartyHelper.getPartyName(delegator, partyId, true);
+	String partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	String punchTime = timeFormat.format(punch.get("punchtime"));
 	String inOut = "";
 	if (punch.getString("InOut")) {
