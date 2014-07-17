@@ -2133,7 +2133,10 @@ under the License.
 		<field name="facilityId" title="Facility Id"><display/></field>
     	<field name="routeId" title="Route Id"><display description="${ownerFacilityId}"/></field>
         <field name="fromDate" title="From Date"><display/></field>
-        <field name="thruDate" title="Thru Date"><date-time type="timestamp"/></field>
+        <field name="thruDate" title="Thru Date"><display/></field>
+        <field name="submitButton" title="Close" separate-column="true">
+            <submit button-type="button"/>
+        </field>
         <field name="deleteLink" title="Delete" widget-style="buttontext">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="updateFacilityRoute">
                 <parameter param-name="facilityId"/>
@@ -2141,9 +2144,6 @@ under the License.
                 <parameter param-name="actionFlag" value="delete"/>
                 <parameter param-name="fromDate"/>
            </hyperlink>
-        </field>
-        <field name="submitButton" title="Update" separate-column="true">
-            <submit button-type="button"/>
         </field>
     </form>
       

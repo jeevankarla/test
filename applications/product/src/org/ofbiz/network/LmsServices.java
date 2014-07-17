@@ -182,7 +182,7 @@ public class LmsServices {
 		        facilityGroups = EntityUtil.filterByDate(facilityGroups, fromDate);
 		        if(UtilValidate.isNotEmpty(facilityGroups) && actionFlag.equals("update")){
 		        	GenericValue facilityGroup = facilityGroups.get(0);
-		        	facilityGroup.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(nowDate, -1)));
+		        	facilityGroup.set("thruDate", UtilDateTime.getDayEnd(nowDate));
 	        		facilityGroup.store();
 		        	Timestamp froDate = facilityGroup.getTimestamp("fromDate");
 		        }else if(UtilValidate.isNotEmpty(facilityGroups) && actionFlag.equals("delete")){
