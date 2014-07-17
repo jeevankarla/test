@@ -51,10 +51,11 @@ if(UtilValidate.isNotEmpty(benefitTypeList)){
 benefitTypeIds = EntityUtil.getFieldListFromEntityList(benefitTypeList, "benefitTypeId", true);
 
 if(benefitTypeIds.contains(parameters.benefitTypeId)){
-	context.benefitTypeIds=UtilMisc.toList(parameters.benefitTypeId);
+	benefitTypeIds=UtilMisc.toList(parameters.benefitTypeId);
 }else{
-	context.benefitTypeIds=benefitTypeIds;
+	benefitTypeIds=benefitTypeIds;
 }
+context.benefitTypeIds=benefitTypeIds;
 context.benefitDescMap=benefitDescMap;
 //getting deductions
 
@@ -69,10 +70,12 @@ if(UtilValidate.isNotEmpty(deductionTypeList)){
 }
 dedTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypeList, "deductionTypeId", true);
 if(dedTypeIds.contains(parameters.dedTypeId)){
-	context.dedTypeIds=UtilMisc.toList(parameters.dedTypeId);
+	dedTypeIds=UtilMisc.toList(parameters.dedTypeId);
 }else{
-	context.dedTypeIds=dedTypeIds;
+	dedTypeIds=dedTypeIds;
 }
+context.dedTypeIds=dedTypeIds;
+
 context.dedDescMap=dedDescMap;
 
 conditionList = [];
@@ -95,6 +98,11 @@ if(UtilValidate.isNotEmpty(partyBenefitList)){
 	partyBenefitList.each{ partyBenefit->
 		employeeId= partyBenefit.partyIdTo;
 		amount= partyBenefit.cost;
+		if(UtilValidate.isNotEmpty(amount)){
+			amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
+		}else{
+			amount=" ";
+		}
 		headerItemTypeId=partyBenefit.benefitTypeId;
 		if(UtilValidate.isNotEmpty(amount)){
 			if(UtilValidate.isEmpty(benefitTypeFinalMap.get(employeeId))){
@@ -138,13 +146,13 @@ if(UtilValidate.isNotEmpty(benefitTypeFinalMap)){
 			Iterator headerItemIter = (entry.getValue()).entrySet().iterator();
 			while(headerItemIter.hasNext()){
 				Map.Entry itemEntry = headerItemIter.next();
-				benefitAmt=((itemEntry.getValue())).setScale(0,BigDecimal.ROUND_HALF_UP);
+				benefitAmt=((itemEntry.getValue()));
 				if(UtilValidate.isEmpty(totalBenefitsMap[itemEntry.getKey()])){
 					totalBenefitsMap[itemEntry.getKey()]=benefitAmt;
 				}else{
 					totalBenefitsMap[itemEntry.getKey()]+=benefitAmt;
 				}
-				newObj.put(itemEntry.getKey(),((itemEntry.getValue())).setScale(0,BigDecimal.ROUND_HALF_UP));
+				newObj.put(itemEntry.getKey(),((itemEntry.getValue())));
 			}
 		}
 		headBenefitItemsJSON.add(newObj);
@@ -155,6 +163,11 @@ if(UtilValidate.isNotEmpty(partyDeductionList)){
 	partyDeductionList.each{ partyDed->
 		employeeId= partyDed.partyIdTo;
 		amount= partyDed.cost;
+		if(UtilValidate.isNotEmpty(amount)){
+			amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
+		}else{
+			amount=" ";
+		}
 		headerItemTypeId=partyDed.deductionTypeId;
 		if(UtilValidate.isNotEmpty(amount)){
 			if(UtilValidate.isEmpty(deductionTypeValueMap.get(employeeId))){
@@ -197,7 +210,7 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 			Iterator headerItemIter = (entry.getValue()).entrySet().iterator();
 			while(headerItemIter.hasNext()){
 				Map.Entry itemEntry = headerItemIter.next();
-				newObj.put(itemEntry.getKey(),((itemEntry.getValue())).setScale(0,BigDecimal.ROUND_HALF_UP));
+				newObj.put(itemEntry.getKey(),((itemEntry.getValue())));
 			}
 		}
 		headItemsJSON.add(newObj);

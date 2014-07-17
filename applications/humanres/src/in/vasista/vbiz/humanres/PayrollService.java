@@ -1915,7 +1915,7 @@ public class PayrollService {
 	        			Map<String, Object> payItemMap=FastMap.newInstance();
 	        			String amountStr=(String)paramMap.get(payheadTypeId);
 	        			BigDecimal amount= BigDecimal.ZERO;
-	    				if (UtilValidate.isNotEmpty(amountStr)) {	
+	    				if (UtilValidate.isNotEmpty(amountStr) && (!" ".equals(amountStr))) {	
 	    					amount = new BigDecimal(amountStr);
 	    				}
 	    				payItemMap.put("userLogin",userLogin);
@@ -1958,6 +1958,7 @@ public class PayrollService {
 	        Timestamp previousDayEnd = null;
 	        Timestamp fromDateStart  = null;
 	        Timestamp thruDateEnd  = null;
+	        String partyIdFrom = null;
 	        List benefitTypeIds = FastList.newInstance();
 	        List deductionTypeIds = FastList.newInstance();
 	        try {
@@ -1972,6 +1973,10 @@ public class PayrollService {
 	        }catch (GenericEntityException e) {
 	        	Debug.logError(e, module);
 	        	return ServiceUtil.returnError(e.getMessage());
+			}
+	        Map employmentDetails = getPartyIdFromEmployment(dctx,UtilMisc.toMap("userLogin",userLogin,"customTimePeriodId",customTimePeriodId,"partyIdTo",partyId));
+			if(UtilValidate.isNotEmpty(employmentDetails)){
+				partyIdFrom =(String)employmentDetails.get("partyIdFrom");
 			}
 			try {
 				List<GenericValue> benefitTypes = delegator.findList("BenefitType",null, null,null, null, true);
@@ -1991,7 +1996,7 @@ public class PayrollService {
 						List condList = FastList.newInstance();
 						condList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
 						condList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
-						condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,"INT10"));
+						condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,partyIdFrom));
 						condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
 						condList.add(EntityCondition.makeCondition("benefitTypeId", EntityOperator.EQUALS ,payHeadTypeId));
 				    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
@@ -2004,7 +2009,7 @@ public class PayrollService {
 						GenericValue newEntity = delegator.makeValue("PartyBenefit");
 						newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 						newEntity.set("roleTypeIdTo", "EMPLOYEE");
-						newEntity.set("partyIdFrom", "INT10");
+						newEntity.set("partyIdFrom", partyIdFrom);
 						newEntity.set("partyIdTo", partyId);
 						newEntity.set("benefitTypeId", payHeadTypeId);
 						newEntity.set("periodTypeId", "RATE_MONTH");
@@ -2031,7 +2036,7 @@ public class PayrollService {
 								GenericValue newEntity = delegator.makeValue("PartyBenefit");
 								newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 								newEntity.set("roleTypeIdTo", "EMPLOYEE");
-								newEntity.set("partyIdFrom", "INT10");
+								newEntity.set("partyIdFrom", partyIdFrom);
 								newEntity.set("partyIdTo", partyId);
 								newEntity.set("benefitTypeId", payHeadTypeId);
 								newEntity.set("periodTypeId", "RATE_MONTH");
@@ -2058,7 +2063,7 @@ public class PayrollService {
 						List condList = FastList.newInstance();
 						condList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"INTERNAL_ORGANIZATIO"));
 						condList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
-						condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,"INT10"));
+						condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,partyIdFrom));
 						condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
 						condList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.EQUALS ,payHeadTypeId));
 				    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
@@ -2072,7 +2077,7 @@ public class PayrollService {
 						GenericValue newEntity = delegator.makeValue("PartyDeduction");
 						newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 						newEntity.set("roleTypeIdTo", "EMPLOYEE");
-						newEntity.set("partyIdFrom", "INT10");
+						newEntity.set("partyIdFrom", partyIdFrom);
 						newEntity.set("partyIdTo", partyId);
 						newEntity.set("deductionTypeId", payHeadTypeId);
 						newEntity.set("periodTypeId", "RATE_MONTH");
@@ -2099,7 +2104,7 @@ public class PayrollService {
 								GenericValue newEntity = delegator.makeValue("PartyDeduction");
 								newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 								newEntity.set("roleTypeIdTo", "EMPLOYEE");
-								newEntity.set("partyIdFrom", "INT10");
+								newEntity.set("partyIdFrom", partyIdFrom);
 								newEntity.set("partyIdTo", partyId);
 								newEntity.set("deductionTypeId", payHeadTypeId);
 								newEntity.set("periodTypeId", "RATE_MONTH");
