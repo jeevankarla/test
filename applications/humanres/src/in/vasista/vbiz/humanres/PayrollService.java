@@ -2229,7 +2229,7 @@ public class PayrollService {
 					    condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
 			    		if(UtilValidate.isEmpty(emplDailyAttendanceDetailList)){
-			    			Debug.logWarning("No punchs for employee"+employeeId, module);
+			    			Debug.logWarning("No shift details for employee"+employeeId, module);
 			    		}
 			    		
 			    		//get leaves for the month
@@ -2239,6 +2239,12 @@ public class PayrollService {
 			    		input.put("timePeriodStart", timePeriodStart);
 			    		input.put("timePeriodEnd", timePeriodEnd);
 			    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
+			    		if(ServiceUtil.isError(resultMap)){
+			    			Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
+			            	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMap), 
+			            			null, null, null);
+			    		}
+			    		
 			    		newEntity.set("noOfLeaveDays", resultMap.get("noOfLeaveDays"));
 			    		List<GenericValue> leaves = (List)resultMap.get("leaves");
 			    	   

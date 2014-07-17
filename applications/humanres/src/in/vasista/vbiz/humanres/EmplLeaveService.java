@@ -138,6 +138,7 @@ public class EmplLeaveService {
 			            Timestamp from = leave.getTimestamp("fromDate");
 			            Timestamp thru = leave.getTimestamp("thruDate");			
 						if (from.compareTo(timePeriodStart) < 0 || thru.compareTo(timePeriodEnd) > 0) {
+							Debug.logError( errorMsg + ": leave cannot span multiple payroll periods", module);
 			            	return ServiceUtil.returnError(errorMsg + ": leave cannot span multiple payroll periods", 
 			            			null, null, null);				
 					 	}
