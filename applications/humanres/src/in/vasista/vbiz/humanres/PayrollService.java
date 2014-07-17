@@ -2166,8 +2166,8 @@ public class PayrollService {
 	  	    	//lastCloseAttedancePeriod = ((GenericValue)result.get("lastClosedTimePeriod"))
 	  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 	  	    		lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
-	  	    		timePeriodStart = UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate"));
-	  	    		timePeriodEnd = UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("thruDate"));
+	  	    		timePeriodStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate")));
+	  	    		timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("thruDate")));
 	  	    	}
 	        	//Active employes
 	  	    	input.clear();
