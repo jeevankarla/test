@@ -616,7 +616,8 @@
 				</entity-options>
 			</drop-down>
 		</field> -->
-        <field name="employeeId" title="Employee Id"><text size="13"/></field>
+        <!-- <field name="employeeId" title="Employee Id"><text size="13"/></field> -->
+        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
         <field name="type" title="Type" event="onchange" action="javascript:headerTypeHandler();">
         	<drop-down allow-empty="true">
         		<option key="benefits"/>

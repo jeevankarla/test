@@ -79,8 +79,8 @@ context.dedTypeIds=dedTypeIds;
 context.dedDescMap=dedDescMap;
 
 conditionList = [];
-if (UtilValidate.isNotEmpty(parameters.employeeId)) {
-	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , parameters.employeeId));
+if (UtilValidate.isNotEmpty(parameters.partyIdTo)) {
+	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , parameters.partyIdTo));
 }
 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart));
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
