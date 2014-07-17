@@ -20,7 +20,7 @@ under the License.
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-        margin-top="0.2in" margin-bottom="0.3in" margin-left=".7in" margin-right="1in">
+        margin-top="0.3in" margin-bottom="0.3in" margin-left=".7in" margin-right="1in">
           <fo:region-body margin-top=".5in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
@@ -64,28 +64,38 @@ under the License.
             </fo:table-header>
          <fo:table-body font-size="10pt">
          	<#assign totalNetAmt=0>
+         	<#assign recordCnt=0>
          	<#assign bankAdviceDetailsList=BankAdvicePayRollMap.entrySet()>
                <#list bankAdviceDetailsList as bankAdvice>
                	 <#if (companyBankDetails.getValue()).contains(bankAdvice.getKey())>
+               	   <#assign recordCnt=recordCnt+1>
                    <fo:table-row height="14px" space-start=".15in">
-                   <fo:table-cell  border="solid">
-                   		<#assign temp=(temp+1)>
-                        <fo:block text-align="center">${temp?if_exists}</fo:block>
-                   </fo:table-cell >
-                   <fo:table-cell border="solid">
-                    	<fo:block text-align="center">${bankAdvice.getValue().get("emplNo")?if_exists}</fo:block>
-                   </fo:table-cell>
-                   <fo:table-cell  border="solid">
-                        <fo:block text-align="left" keep-together="always">${bankAdvice.getValue().get("empName")?if_exists}</fo:block>
-                   </fo:table-cell>
-                    <fo:table-cell  border="solid">
-                        <fo:block text-align="left">${bankAdvice.getValue().get("acNo")?if_exists}</fo:block>
-                    </fo:table-cell>
-                    <#assign totalNetAmt=totalNetAmt+bankAdvice.getValue().get("netAmt")>
-                   <fo:table-cell  border="solid">
-                        <fo:block text-align="right">${bankAdvice.getValue().get("netAmt")?if_exists?string("#0.00")}</fo:block>
-                   </fo:table-cell>
-               </fo:table-row>
+	                   <fo:table-cell  border="solid">
+	                   		<#assign temp=(temp+1)>
+	                        <fo:block text-align="center">${temp?if_exists}</fo:block>
+	                   </fo:table-cell >
+	                   <fo:table-cell border="solid">
+	                    	<fo:block text-align="center">${bankAdvice.getValue().get("emplNo")?if_exists}</fo:block>
+	                   </fo:table-cell>
+	                   <fo:table-cell  border="solid">
+	                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${bankAdvice.getValue().get("empName")?if_exists}</fo:block>
+	                   </fo:table-cell>
+	                    <fo:table-cell  border="solid">
+	                        <fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;  ${bankAdvice.getValue().get("acNo")?if_exists}</fo:block>
+	                    </fo:table-cell>
+	                    <#assign totalNetAmt=totalNetAmt+bankAdvice.getValue().get("netAmt")>
+	                   <fo:table-cell  border="solid">
+	                        <fo:block text-align="center">${bankAdvice.getValue().get("netAmt")?if_exists?string("#0.00")}</fo:block>
+	                   </fo:table-cell>
+               		</fo:table-row>
+               		<#if recordCnt==40>
+               			 <#assign recordCnt=0>
+               			 <fo:table-row>
+               			 	<fo:table-cell>
+               			 		<fo:block page-break-after="always"></fo:block>        
+               			 	</fo:table-cell>
+               			 </fo:table-row>
+               		</#if>
                </#if>
                   </#list>
               <fo:table-row border="solid">
@@ -96,7 +106,7 @@ under the License.
               		<fo:block text-align="center" font-weight="bold">TOTAL</fo:block>
               	</fo:table-cell>
               	<fo:table-cell />
-              	<fo:table-cell border="solid"><fo:block text-align="right" font-weight="bold">${totalNetAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
+              	<fo:table-cell border="solid"><fo:block text-align="center" font-weight="bold">${totalNetAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
               </fo:table-row>    
           </fo:table-body>
         </fo:table> 
