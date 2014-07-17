@@ -82,7 +82,7 @@ for (GenericValue partyDeduction : partyDeductionList) {
 	quantity=1;
 	tempMap=[:];
 	partyId=(String) partyDeduction.getString("partyIdTo");
-	partyWiseMap["partyName"]=PartyHelper.getPartyName(delegator, partyId, true);
+	partyWiseMap["partyName"]=PartyHelper.getPartyName(delegator, partyId, false);
 	partyWiseMap["quantity"]=quantity;
 	partyWiseMap["cost"]=partyDeduction.cost;
 	tempMap[partyId]=partyWiseMap;
