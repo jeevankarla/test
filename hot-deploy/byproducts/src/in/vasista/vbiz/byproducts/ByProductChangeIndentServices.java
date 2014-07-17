@@ -1464,7 +1464,11 @@ public class ByProductChangeIndentServices {
 				  				  thruDate = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(effectiveDate, -1));
 				  				  subscriptionProd.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(effectiveDate, -1)));
 				  				  subscriptionProd.store();
-				  				  quantity=preQty;
+				  				if(str.equals("add")){
+				  					  quantity=preQty.add(BigDecimal.ONE);
+				  					}else{
+				  						quantity=preQty.subtract(BigDecimal.ONE);
+				  				 }
 						  	}
 	  				} else{
 						    preQty = subscriptionProduct.getBigDecimal("quantity");
