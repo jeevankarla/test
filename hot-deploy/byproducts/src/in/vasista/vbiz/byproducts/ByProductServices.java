@@ -4373,7 +4373,11 @@ public class ByProductServices {
 						return ServiceUtil.returnError("Error in create subsidy for employee  : "+partyId);
 				    }
 			       	if(!tempFacId.equals(facilityId)){
-			       		facilityParty.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+			       		if(UtilValidate.isNotEmpty(thruDate)){
+			       			facilityParty.set("thruDate",thruDate);
+			       		}else{
+			       		    facilityParty.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+			       		}
 			           	facilityParty.store();
 			       	}
 			        
@@ -4410,13 +4414,23 @@ public class ByProductServices {
 			   creating a new record  with new quantity  in subscription product and doing the end subscription for the old facility party  **/
 			    if(UtilValidate.isNotEmpty(tempFacId) && !tempFacId.equals(facilityId)){
 			  		 result = (Map)ByProductNetworkServices.getBoothRoute(ctx, UtilMisc.toMap("boothId", tempFacId, "subscriptionTypeId", subscriptionTypeId, "supplyDate", fromDate, "userLogin", userLogin));
-	        		 String routeId = (String)((Map) result.get("boothDetails")).get("routeId");
+			  		  if (ServiceUtil.isError(result)) {
+						String errMsg =  ServiceUtil.getErrorMessage(result);
+						Debug.logError(errMsg , module);
+						return ServiceUtil.returnError("Error in getting Booth Route"); 
+				     }
+			  		 String routeId = (String)((Map) result.get("boothDetails")).get("routeId");
 	        	     indentHelperCtx.put("boothId", tempFacId);
 	        	     indentHelperCtx.put("routeId",  routeId);
 	        		 result=ByProductNetworkServices.getBoothChandentIndent(ctx,indentHelperCtx);
+	        		 if (ServiceUtil.isError(result)) {
+	 					String errMsg =  ServiceUtil.getErrorMessage(result);
+	 					Debug.logError(errMsg , module);
+	 					return ServiceUtil.returnError("Error in getBoothChandentIndent"); 
+	 			     }
 	        		 routeId=(String)result.get("routeId");
-		   	         List changeIndentProductList=(List)result.get("changeIndentProductList");
-		   	         List<Map> prodQtyList = FastList.newInstance();
+	        		 List<Map> prodQtyList = FastList.newInstance();
+		   	         /*List changeIndentProductList=(List)result.get("changeIndentProductList");
 		   	         BigDecimal prvQty = BigDecimal.ZERO;
 		   	         BigDecimal tempPrvQty = BigDecimal.ZERO;
 			   	        if(UtilValidate.isNotEmpty(changeIndentProductList)){
@@ -4430,9 +4444,9 @@ public class ByProductServices {
 				   	         }
 				   	     }
 			   	        // Debug.log("temp facId changeIndentProductList"+changeIndentProductList);
-				   	     if(prvQty.intValue()>0){
+				   	     //if(prvQty.intValue()>0){
 				   	    	
-		   		        	 Map<String, Object> input = FastMap.newInstance();
+		   		        	/* Map<String, Object> input = FastMap.newInstance();
 			   		         input.put("userLogin", userLogin);
 			   		         input.put("facilityId", tempFacId);
 			   		         input.put("productSubscriptionTypeId", "EMP_SUBSIDY");
@@ -4443,17 +4457,18 @@ public class ByProductServices {
 			   		         } catch (GenericServiceException e) {
 			   		             Debug.logError(e, module);
 			   		             return ServiceUtil.returnError(e.getMessage());
-			   		         }
+			   		         }*/
 				   		         Map tempMap = FastMap.newInstance();
 				   		         tempMap.put("productId", productId);
 				   		         tempMap.put("sequenceNum", routeId);
-				   		         tempPrvQty=prvQty.subtract(BigDecimal.ONE);
-				   		         tempMap.put("quantity", tempPrvQty);
+				   		         /*tempPrvQty=prvQty.subtract(BigDecimal.ONE);
+				   		         tempMap.put("quantity", tempPrvQty);*/
+				   		         tempMap.put("type","sub");
 				   		         prodQtyList.add(tempMap);
 				   		        
 				   		         
-		   		         }
-				   	  if (tempPrvQty.intValue()!=0) { 
+		   		         //}
+				   	  //if (tempPrvQty.intValue()!=0) { 
 				   	     List condList = FastList.newInstance();
 				   	     condList.add(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId));
 				   	     condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, tempFacId));
@@ -4477,8 +4492,9 @@ public class ByProductServices {
 					  	 processChangeIndentHelperCtx.put("effectiveDate", fromDate);
 					  	 processChangeIndentHelperCtx.put("productQtyList", prodQtyList);
 					  	 processChangeIndentHelperCtx.put("productSubscriptionTypeId",  "EMP_SUBSIDY");
+					  	 processChangeIndentHelperCtx.put("thruDate",  thruDate);
 					  	 try{
-						  		 result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
+						  		 result = dispatcher.runSync("changeIndentHelper",processChangeIndentHelperCtx);
 								 if (ServiceUtil.isError(result)) {
 									String errMsg =  ServiceUtil.getErrorMessage(result);
 									Debug.logError(errMsg , module);
@@ -4489,18 +4505,28 @@ public class ByProductServices {
 						  	 }
 							  	 
 				  	 }//ending old facility block
-			    }
+			   // }
 			/**if facility party equals new facility id or if no record found for old facility  getting the quantity for facilitry id and incrementing with one and
 			creating a new record  with new quantity  in subscription product and end subscription for the old record with same facility **/
 				
     	     List<Map> prodQtyList = FastList.newInstance();
     	     BigDecimal createQty = BigDecimal.ZERO;
     	     result = (Map)ByProductNetworkServices.getBoothRoute(ctx, UtilMisc.toMap("boothId", facilityId, "subscriptionTypeId", subscriptionTypeId, "supplyDate", fromDate, "userLogin", userLogin));
+    	     if (ServiceUtil.isError(result)) {
+					String errMsg =  ServiceUtil.getErrorMessage(result);
+					Debug.logError(errMsg , module);
+					return ServiceUtil.returnError("Error in getting Booth Route"); 
+			 }
     	     String routeId = (String)((Map) result.get("boothDetails")).get("routeId");
 		  	 indentHelperCtx.put("boothId", facilityId);
 		  	 indentHelperCtx.put("routeId",  routeId);
     		 result=ByProductNetworkServices.getBoothChandentIndent(ctx,indentHelperCtx);
-	         List changeIndentProductList=(List)result.get("changeIndentProductList");
+    		 if (ServiceUtil.isError(result)) {
+					String errMsg =  ServiceUtil.getErrorMessage(result);
+					Debug.logError(errMsg , module);
+					return ServiceUtil.returnError("Error in getBoothChandentIndent"); 
+			 }
+	        /* List changeIndentProductList=(List)result.get("changeIndentProductList");
 		         for(int j=0;j<changeIndentProductList.size();j++){
 		        	 Map prodQty = FastMap.newInstance();
 		        	 Map tempMap = (Map)changeIndentProductList.get(j);
@@ -4508,8 +4534,7 @@ public class ByProductServices {
 		        	 if(tempProd.equals(productId)){
 		        		 createQty= (BigDecimal)tempMap.get("cQuantity");
 		        	 }
-		         }
-		         if(createQty.intValue()>0){
+		         }if(createQty.intValue()>0){
 			         Map<String, Object> input = FastMap.newInstance();
 	 		         input.put("userLogin", userLogin);
 	 		         input.put("facilityId", facilityId);
@@ -4522,11 +4547,13 @@ public class ByProductServices {
 	 		             Debug.logError(e, module);
 	 		             return ServiceUtil.returnError(e.getMessage());
 	 		         }
-	 		     }
+	 		     }*/
         	 Map prodQty = FastMap.newInstance();
         	 prodQtyList = FastList.newInstance();
         	 prodQty.put("productId", productId);
-        	 prodQty.put("quantity",createQty.add(BigDecimal.ONE));
+        	 /*prodQty.put("prvQty", createQty);
+        	 prodQty.put("quantity",createQty.add(BigDecimal.ONE));*/
+        	 prodQty.put("type","add");
         	 prodQty.put("sequenceNum", routeId);
         	 prodQtyList.add(prodQty);
         	 
@@ -4551,8 +4578,9 @@ public class ByProductServices {
 		  	 processChangeIndentHelperCtx.put("effectiveDate", fromDate);
 		  	 processChangeIndentHelperCtx.put("productQtyList", prodQtyList);
 		  	 processChangeIndentHelperCtx.put("productSubscriptionTypeId",  "EMP_SUBSIDY");
+		  	 processChangeIndentHelperCtx.put("thruDate",  thruDate);
 			  	 try{
-			  		 result = dispatcher.runSync("processChangeIndentHelper",processChangeIndentHelperCtx);
+			  		 result = dispatcher.runSync("changeIndentHelper",processChangeIndentHelperCtx);
 					 if (ServiceUtil.isError(result)) {
 						String errMsg =  ServiceUtil.getErrorMessage(result);
 						Debug.logError(errMsg , module);

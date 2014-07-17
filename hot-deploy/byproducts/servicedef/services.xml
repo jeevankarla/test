@@ -567,6 +567,19 @@
         <attribute name="smsFlag" type="Boolean" mode="INOUT" optional="true"/>
     </service>
     
+    <service name="changeIndentHelper" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductChangeIndentServices" invoke="changeIndentHelper" auth="true">
+        <description>Change indent helper to store subscription</description>
+        <attribute name="subscriptionId" type="String" mode="IN" optional="false"/>
+        <attribute name="productSubscriptionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="boothId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="productQtyList" type="List" mode="IN" optional="false"/>
+        <attribute name="subscriptionId" type="String" mode="OUT" optional="true"/>
+        <attribute name="subscriptionTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
     <service name="createCreditNoteForReturns" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createCreditNoteForReturns" auth="true" transaction-timeout="70000">
         <description>Create Credit Notes For Return Items</description>
