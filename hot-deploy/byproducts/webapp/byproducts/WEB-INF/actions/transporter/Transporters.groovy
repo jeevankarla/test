@@ -8,6 +8,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.LocalDispatcher;
 import java.text.ParseException;
 import javolution.util.FastList;
+import javolution.util.FastSet;
 import javolution.util.FastMap;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.base.util.UtilMisc;
@@ -33,64 +34,66 @@ conditionList=[];
 conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS, "Contractor"));
 conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"ROUTE"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+orderBy = UtilMisc.toList("-thruDate");
+routeSet = FastSet.newInstance();
 
-facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", condition, null, null, null, false);
+facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", condition, null, orderBy, null, false);
 
-	for (GenericValue facilityParty : facilityPartyList) {
-		String partyId= facilityParty.getString("partyId");
-		String partyName = PartyHelper.getPartyName(delegator, partyId, false);
-		JSONArray transporterJSON = new JSONArray();
-		routeId = facilityParty.getString("facilityId");
-
-		partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
-		phoneNumber = "";
-		if (partyTelephone != null && partyTelephone.contactNumber != null) {
-			phoneNumber = partyTelephone.contactNumber;
-		}		
-		Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
-		inputRateAmt.put("rateCurrencyUomId", "INR");
-		inputRateAmt.put("facilityId", routeId);
-		inputRateAmt.put("fromDate",nowTimestamp );
-		inputRateAmt.put("rateTypeId", "TRANSPORTER_MRGN");
-		facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
-		
-		Map inputFacilitySize =  UtilMisc.toMap("userLogin", userLogin);
-		inputFacilitySize.put("rateCurrencyUomId", "LEN_km");
-		inputFacilitySize.put("facilityId", routeId);
-		inputFacilitySize.put("fromDate",nowTimestamp );
-		inputFacilitySize.put("rateTypeId", "FACILITY_SIZE");
-		facilitySizeResult = dispatcher.runSync("getRouteDistance", inputFacilitySize);
-
-		String rateAmount =  ((BigDecimal) facilityRateResult.get("rateAmount")).setScale(2,rounding);
-		String routeLength = ((BigDecimal) facilitySizeResult.get("facilitySize")).setScale(2,rounding);
-		// don't show zero lengths for now, since it's misleading
-		if ("0.00".equals(routeLength)) {
-			routeLength = "";
-		}
-		transporterJSON.add(routeId);
-		transporterJSON.add(partyId);
-		transporterJSON.add(partyName);
-		transporterJSON.add(phoneNumber);
-		transporterJSON.add(routeLength);
-		transporterJSON.add(rateAmount);
-		fromDate = "";
-		if (facilityParty.getTimestamp("fromDate") != null) {
-			fromDate = UtilDateTime.toDateString(facilityParty.getTimestamp("fromDate"), "dd/MM/yyyy");			
-		}
-		thruDate = "";
-		if (facilityParty.getTimestamp("thruDate") != null) {
-			thruDate = UtilDateTime.toDateString(facilityParty.getTimestamp("thruDate"), "dd/MM/yyyy");			
-		}
-		transporterJSON.add(fromDate);
-		transporterJSON.add(thruDate);
-		transportersJSON.add(transporterJSON);
+facilityPartyList.each { facilityParty->			
+	routeId = facilityParty.getString("facilityId");
+	if (routeSet.contains(routeId)) {
+		return;
 	}
+	routeSet.add(routeId);
+	String partyId= facilityParty.getString("partyId");
+	String partyName = PartyHelper.getPartyName(delegator, partyId, false);
+	JSONArray transporterJSON = new JSONArray();
+	
 
-//	facilityWorkOrdrNumMap = [:];
-//	facilityWorkOrderNoList = delegator.findList("FacilityAttribute", EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "WORK_ORDER_NO"), null, null, null, false);
-//	facilityWorkOrderNoList.each{eachWork ->
-//		facilityWorkOrdrNumMap.put(eachWork.facilityId, eachWork.attrValue);
-//	}
+	partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
+	phoneNumber = "";
+	if (partyTelephone != null && partyTelephone.contactNumber != null) {
+		phoneNumber = partyTelephone.contactNumber;
+	}		
+	Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
+	inputRateAmt.put("rateCurrencyUomId", "INR");
+	inputRateAmt.put("facilityId", routeId);
+	inputRateAmt.put("fromDate",nowTimestamp );
+	inputRateAmt.put("rateTypeId", "TRANSPORTER_MRGN");
+	facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+	
+	Map inputFacilitySize =  UtilMisc.toMap("userLogin", userLogin);
+	inputFacilitySize.put("rateCurrencyUomId", "LEN_km");
+	inputFacilitySize.put("facilityId", routeId);
+	inputFacilitySize.put("fromDate",nowTimestamp );
+	inputFacilitySize.put("rateTypeId", "FACILITY_SIZE");
+	facilitySizeResult = dispatcher.runSync("getRouteDistance", inputFacilitySize);
+
+	String rateAmount =  ((BigDecimal) facilityRateResult.get("rateAmount")).setScale(2,rounding);
+	String routeLength = ((BigDecimal) facilitySizeResult.get("facilitySize")).setScale(2,rounding);
+	// don't show zero lengths for now, since it's misleading
+	if ("0.00".equals(routeLength)) {
+		routeLength = "";
+	}
+	transporterJSON.add(routeId);
+	transporterJSON.add(partyId);
+	transporterJSON.add(partyName);
+	transporterJSON.add(phoneNumber);
+	transporterJSON.add(routeLength);
+	transporterJSON.add(rateAmount);
+	fromDate = "";
+	if (facilityParty.getTimestamp("fromDate") != null) {
+		fromDate = UtilDateTime.toDateString(facilityParty.getTimestamp("fromDate"), "dd/MM/yyyy");			
+	}
+	thruDate = "";
+	if (facilityParty.getTimestamp("thruDate") != null) {
+		thruDate = UtilDateTime.toDateString(facilityParty.getTimestamp("thruDate"), "dd/MM/yyyy");			
+	}
+	transporterJSON.add(fromDate);
+	transporterJSON.add(thruDate);
+	transportersJSON.add(transporterJSON);
+}
+
 
 Debug.logError("transportersJSON="+transportersJSON,"");
 context.transportersJSON = transportersJSON;
