@@ -120,6 +120,31 @@ public class PayrollService {
 			public static Map<String, Object> generatePayrollBilling(DispatchContext dctx, Map<String, Object> context) throws Exception{
 				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				LocalDispatcher dispatcher = dctx.getDispatcher();
+				String periodBillingId = (String) context.get("periodBillingId");
+				GenericValue periodBilling = null;
+				try {
+					periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+				} catch (GenericEntityException e1) {
+					Debug.logError(e1,"Error While Finding PeriodBilling");
+					 periodBilling.set("statusId", "GENERATION_FAIL");
+					 periodBilling.store();
+					return ServiceUtil.returnSuccess("Error While Finding PeriodBilling" + e1);
+				}
+				Map result =  generatePayrollBillingInternal(dctx, context);
+				
+        		if(ServiceUtil.isError(result)){
+        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
+        			 periodBilling.set("statusId", "GENERATION_FAIL");
+					 periodBilling.store();
+ 		             return ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
+        		}
+				return result;
+				
+			}
+			
+			public static Map<String, Object> generatePayrollBillingInternal(DispatchContext dctx, Map<String, Object> context) throws Exception{
+				GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
 				Map<String, Object> result = ServiceUtil.returnSuccess();	
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				String partyIdFrom= (String) context.get("partyIdFrom");
@@ -147,8 +172,6 @@ public class PayrollService {
 					} catch (GenericEntityException e1) {
 						 TransactionUtil.rollback();
 						Debug.logError(e1,"Error While Finding Customtime Period");
-				    	periodBilling.set("statusId", "GENERATION_FAIL");
-						periodBilling.store();
 						return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
 					}
 					if(customTimePeriod == null){
@@ -175,8 +198,6 @@ public class PayrollService {
 						Map payHeadResult = preparePayrolHeaders(dctx,input);
 	       				if(ServiceUtil.isError(payHeadResult)){
 	       					Debug.logError("Problems in service Parol Header", module);
-					    	periodBilling.set("statusId", "GENERATION_FAIL");
-							periodBilling.store();
 				  			return ServiceUtil.returnError("Problems in service Parol Header");
 	       				}
 	       				List payHeaderList = (List)payHeadResult.get("itemsList");
@@ -196,8 +217,6 @@ public class PayrollService {
 							Map payHeadItemResult = preparePayrolItems(dctx,inputItem);
 							if(ServiceUtil.isError(payHeadItemResult)){
 		       					Debug.logError("Problems in service Parol Header Item", module);
-						    	periodBilling.set("statusId", "GENERATION_FAIL");
-								periodBilling.store();
 					  			return ServiceUtil.returnError("Problems in service Parol Header Item");
 		       				}
 							List payHeaderItemList = (List)payHeadItemResult.get("itemsList");
@@ -233,8 +252,6 @@ public class PayrollService {
 						
 					}catch (Exception e) {
 						Debug.logError(e, module);
-						periodBilling.set("statusId", "GENERATION_FAIL");
-						periodBilling.store();
 						return ServiceUtil.returnError("Error While generating PeriodBilling" + e);
 					}
 					if (generationFailed) {
@@ -247,8 +264,6 @@ public class PayrollService {
 					
 			}catch (GenericEntityException e) {
 					Debug.logError(e, module);
-					periodBilling.set("statusId", "GENERATION_FAIL");
-					periodBilling.store();
 					return ServiceUtil.returnError("Error While generating PeriodBilling" + e);
 			}
 			result.put("periodBillingId", periodBillingId);
