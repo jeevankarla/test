@@ -42,7 +42,7 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 facilityPartyList.each { facilityParty->			
 	routeId = facilityParty.getString("facilityId");
 	if (routeSet.contains(routeId)) {
-		return;
+		//return;
 	}
 	routeSet.add(routeId);
 	String partyId= facilityParty.getString("partyId");
