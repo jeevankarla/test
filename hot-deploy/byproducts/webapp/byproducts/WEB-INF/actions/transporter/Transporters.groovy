@@ -35,21 +35,27 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUA
 conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"ROUTE"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 orderBy = UtilMisc.toList("-thruDate");
-routeSet = FastSet.newInstance();
+routeMap = FastMap.newInstance();
 
 facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", condition, null, orderBy, null, false);
 
 facilityPartyList.each { facilityParty->			
 	routeId = facilityParty.getString("facilityId");
-	if (routeSet.contains(routeId)) {
-		//return;
+	if (routeMap.contains(routeId) && routeMap.) {
+		mapFacilityParty = routeMap.get(routeId);
+		if (mapFailityParty.getTimestamp("thruDate") == null ||  
+			(failityParty.getTimestamp("thruDate") != null && 
+				mapFailityParty.getTimestamp("thruDate") > facilityParty.getTimestamp("thruDate"))) {
+			return;
+		}
 	}
-	routeSet.add(routeId);
+	routeMap.put(routeId, facilityParty);
+}
+
+routeMap.each{ routeId, facilityParty ->
 	String partyId= facilityParty.getString("partyId");
 	String partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	JSONArray transporterJSON = new JSONArray();
-	
-
 	partyTelephone= dispatcher.runSync("getPartyTelephone", [partyId: partyId, userLogin: userLogin]);
 	phoneNumber = "";
 	if (partyTelephone != null && partyTelephone.contactNumber != null) {
