@@ -2043,7 +2043,9 @@ public class ByProductServices {
 			product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
 			if(UtilValidate.isEmpty(facilityCategory)){
 				facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), true);
-				facilityCategory = facility.getString("categoryTypeEnum");
+				if(UtilValidate.isNotEmpty(facility)){
+					facilityCategory = facility.getString("categoryTypeEnum");
+				}
 			}
 			List lmsProductsList = ProductWorker.getProductsByCategory(delegator ,"LMS" ,null);
 			lmsProductIdsList =  EntityUtil.getFieldListFromEntityList(lmsProductsList, "productId", true);
@@ -4376,7 +4378,7 @@ public class ByProductServices {
 			       		if(UtilValidate.isNotEmpty(thruDate)){
 			       			facilityParty.set("thruDate",thruDate);
 			       		}else{
-			       		    facilityParty.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
+			       			facilityParty.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1), TimeZone.getDefault(), locale));
 			       		}
 			           	facilityParty.store();
 			       	}
@@ -4419,7 +4421,7 @@ public class ByProductServices {
 						Debug.logError(errMsg , module);
 						return ServiceUtil.returnError("Error in getting Booth Route"); 
 				     }
-			  		 String routeId = (String)((Map) result.get("boothDetails")).get("routeId");
+	        		 String routeId = (String)((Map) result.get("boothDetails")).get("routeId");
 	        	     indentHelperCtx.put("boothId", tempFacId);
 	        	     indentHelperCtx.put("routeId",  routeId);
 	        		 result=ByProductNetworkServices.getBoothChandentIndent(ctx,indentHelperCtx);
@@ -4429,7 +4431,7 @@ public class ByProductServices {
 	 					return ServiceUtil.returnError("Error in getBoothChandentIndent"); 
 	 			     }
 	        		 routeId=(String)result.get("routeId");
-	        		 List<Map> prodQtyList = FastList.newInstance();
+		   	         List<Map> prodQtyList = FastList.newInstance();
 		   	         /*List changeIndentProductList=(List)result.get("changeIndentProductList");
 		   	         BigDecimal prvQty = BigDecimal.ZERO;
 		   	         BigDecimal tempPrvQty = BigDecimal.ZERO;
@@ -4721,9 +4723,9 @@ public class ByProductServices {
 	 	  try {
 	 		  List conditionList =FastList.newInstance();
 	 		  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, boothId));			 
-	         conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId),EntityOperator.OR,EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, null)));
+	          conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, subscriptionTypeId),EntityOperator.OR,EntityCondition.makeCondition("subscriptionTypeId", EntityOperator.EQUALS, null)));
 	         
-			EntityCondition subCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
+			  EntityCondition subCond =  EntityCondition.makeCondition(conditionList ,EntityOperator.AND);
 	 		  subscriptionList=delegator.findList("SubscriptionAndFacility", subCond, null, null, null, false);
 	 		  subscriptionList = EntityUtil.filterByDate(subscriptionList ,effectiveDate);
 	 		  if(UtilValidate.isEmpty(subscriptionList)){

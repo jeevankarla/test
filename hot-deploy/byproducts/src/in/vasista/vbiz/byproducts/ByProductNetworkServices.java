@@ -2834,7 +2834,7 @@ public class ByProductNetworkServices {
 		String supplyTime = (String) context.get("subscriptionTypeId");
 		Timestamp supplyDate = (Timestamp) context.get("supplyDate");
 		if (UtilValidate.isEmpty(supplyDate)) {
-			supplyDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+			supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		}
 		Map<String, Object> result = FastMap.newInstance();
 		GenericValue boothFacility;
@@ -7398,16 +7398,19 @@ public class ByProductNetworkServices {
 		try {
 			List<GenericValue> extBillOfSaleInvoices = delegator.findList("BillOfSaleInvoiceSequence", billOfSaleCond, UtilMisc.toSet("invoiceId"), null, null, false);
 			excludeInvoiceIds = EntityUtil.getFieldListFromEntityList(extBillOfSaleInvoices, "invoiceId", true); 
-		
+			int i = 0;
 			invoiceIds.removeAll(excludeInvoiceIds);		
 			for(String vatInvId : invoiceIds){
-				//i++;
+				i++;
 				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
 				billOfSale.put("billOfSaleTypeId", "VAT_INV");
 				billOfSale.put("invoiceId", vatInvId);
 				billOfSale.put("finYearId", finYearId);
 				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
 	            delegator.create(billOfSale);
+	            if(i%500 == 0){
+	            	Debug.log("Records processed ###########"+i);
+	            }
 	            
 			}
 		} catch (GenericEntityException e) {
@@ -7442,6 +7445,7 @@ public class ByProductNetworkServices {
 		result.put("partyIds", partyIds);
 		return result;
 	}
+	
 	
 	public static Map<String, Object> getFacilityOwnerMap(DispatchContext ctx,Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();

@@ -437,7 +437,7 @@ public class ByProductChangeIndentServices {
   	      boolean routeChange = false;
   	      
   	      if(enableContinuousIndent){
-  	    	  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "userLogin", userLogin))).get("boothDetails");
+  	    	  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "supplyDate", effectiveDate, "userLogin", userLogin))).get("boothDetails");
   	    	  defaultRouteId = (String)boothDetails.get("routeId");
   	    	  if(UtilValidate.isEmpty(defaultRouteId)){
   	    		Debug.log("Permanent Route doesn't exist for retailer " + boothId);
@@ -803,7 +803,7 @@ public class ByProductChangeIndentServices {
 			  			  tmsRouteList = EntityUtil.getFieldListFromEntityList(tmsLtrIndentList, "sequenceNum", true);
 			  			  if(UtilValidate.isNotEmpty(tmsRouteList) && tmsRouteList.size()==1){
 			  				  tmsInRoute = (String)tmsRouteList.get(0);
-			  				  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "userLogin", userLogin))).get("boothDetails");
+			  				  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "supplyDate", UtilDateTime.getDayStart(effectiveDate), "userLogin", userLogin))).get("boothDetails");
 			  				  defaultRouteId = (String)boothDetails.get("routeId");
 			  				  //if(UtilValidate.isNotEmpty(defaultRouteId) && !defaultRouteId.equalsIgnoreCase(tmsInRoute)){
 			  					  subsidyShift = true;
@@ -818,7 +818,7 @@ public class ByProductChangeIndentServices {
 			  			  tmsRouteList = EntityUtil.getFieldListFromEntityList(tmsHalfLtrIndentList, "sequenceNum", true);
 			  			  if(UtilValidate.isNotEmpty(tmsRouteList) && tmsRouteList.size()==1){
 			  				  tmsInRoute = (String)tmsRouteList.get(0);
-			  				  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "userLogin", userLogin))).get("boothDetails");
+			  				  Map boothDetails = (Map)(ByProductNetworkServices.getBoothRoute(dctx, UtilMisc.toMap("boothId", boothId, "subscriptionTypeId", subscriptionTypeId, "supplyDate", UtilDateTime.getDayStart(effectiveDate), "userLogin", userLogin))).get("boothDetails");
 			  				  defaultRouteId = (String)boothDetails.get("routeId");
 			  				  //if(UtilValidate.isNotEmpty(defaultRouteId) && !defaultRouteId.equalsIgnoreCase(tmsInRoute)){
 			  					  subsidyShift = true;
@@ -1319,7 +1319,7 @@ public class ByProductChangeIndentServices {
 	  			subscriptionProdList = delegator.findList("SubscriptionProduct", condition, null, null, null, false);
 	  			
 	  			List<GenericValue> tomorrowIndentProd = EntityUtil.filterByCondition(subscriptionProdList, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, UtilDateTime.getDayStart(effectiveDate)));
-	    		
+    
 	  			List<GenericValue> toDayIndentProd = EntityUtil.filterByCondition(subscriptionProdList, EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, UtilDateTime.getDayStart(effectiveDate)));
 	  			List<GenericValue> subscriptionProductsList = FastList.newInstance();
 	  			for(int i=0; i< productQtyList.size() ; i++){
