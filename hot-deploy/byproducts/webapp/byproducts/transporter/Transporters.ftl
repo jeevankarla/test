@@ -52,7 +52,6 @@ $(document).ready(function() {
 				var currentDate = new Date();
 				var interval = thruDate.getTime() - currentDate.getTime();
 				interval = interval/(1000*60*60*24);
-				alert("interval="+interval);
         		if (interval < 45) {
                 	$(nRow).css('color', 'red')
             	}
