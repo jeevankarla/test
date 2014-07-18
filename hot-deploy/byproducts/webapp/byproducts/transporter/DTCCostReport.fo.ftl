@@ -73,7 +73,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "DtcCostReport.pdf")}
                     </#if>
                     <#assign facilitySize = eachRoute.getValue().get("facilitySize")?if_exists>
                     <#assign facilityRate = eachRoute.getValue().get("facilityRate")?if_exists>
-                    <#if facilitySize?has_content>
+                    <#if facilitySize?has_content && facilitySize!=0>
                     	<#assign payment = (facilitySize?if_exists*facilityRate?if_exists)>
                     <#else>
                     	<#assign payment = facilityRate?if_exists>
