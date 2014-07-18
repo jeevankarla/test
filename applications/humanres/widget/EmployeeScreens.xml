@@ -185,6 +185,7 @@ under the License.
                       									<include-form name="createEmplIdentification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                     								 </screenlet>
                     								 </screenlet>
+                    								 	<include-screen name="LanguagesKnown" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                        </container>
 		                                        <container style="profile-right">
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>
@@ -252,7 +253,7 @@ under the License.
 			<widgets>
 					<section>
 							<widgets>
-								<screenlet id="DependendPanel" title="${uiLabelMap.DependentInformation}" collapsible="true">
+								<screenlet id="DependendPanel" title="Family Information" collapsible="true">
 		                            <include-form name="AddDependent" location="component://humanres/widget/forms/EmployeeForms.xml" />		                        
                             	<screenlet>                   
 		                        	<include-form name="ListDependentContacts" location="component://humanres/widget/forms/EmployeeForms.xml" />
@@ -261,6 +262,24 @@ under the License.
 						  </widgets>
 					</section>
 			</widgets>
+		</section>
+	</screen>
+	<screen name="LanguagesKnown">
+		<section>
+			<actions>
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<screenlet id="language" title="Languages Known" collapsible="true">
+		                            <include-form name="AddLanguage" location="component://humanres/widget/forms/EmployeeForms.xml" />		                        
+                            	<screenlet>                   
+		                        	<include-form name="ListLanguage" location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+								</screenlet>
+					</widgets>
+				</section>
+			</widgets>	
 		</section>
 	</screen>
     <screen name="EmployeeInformation">

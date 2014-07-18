@@ -1161,6 +1161,16 @@ under the License.
       <key-map field-name="rateTypeId"/>
     </view-link>
   </view-entity>
+  <view-entity entity-name="PartySkillAndType" 
+  package-name="org.ofbiz.humanres" title="Party Skill Type">
+  	<member-entity entity-alias="ST" entity-name="SkillType"/>
+  	<member-entity entity-alias="PS" entity-name="PartySkill"/>
+  	<alias-all entity-alias="ST"/>
+  	<alias entity-alias="PS" name="partyId"/>
+  	<view-link entity-alias="ST" rel-entity-alias="PS">
+  		<key-map field-name="skillTypeId"/>
+  	</view-link>
+  </view-entity>
 
     <!-- ========================================================= -->
     <!-- org.ofbiz.humanres.recruitment -->

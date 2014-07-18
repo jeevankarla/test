@@ -664,7 +664,17 @@
         <field name="fromDate"><hidden value="nowTimestamp"></hidden></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form> 
-    
+    <form name="AddLanguage" type="single" target="createLanguage">
+    <field name="partyId"><hidden value="${partyId}"/></field>
+    <field name="skillTypeId" title="Language Known" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required">
+    	<drop-down allow-empty="false">
+    		<entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId">
+    		<entity-constraint name="parentTypeId" value="LANGUAGE"/>
+    		</entity-options>
+    	</drop-down>
+    </field>
+   <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+   </form>
 	<form name="ListDependentContacts" type="list" list-name="dependents" default-table-style="basic-table" >	
 		<row-actions>
         	<set field="dependentBirthDate" value="${bsh:org.ofbiz.base.util.UtilDateTime.getIntervalInDays(org.ofbiz.base.util.UtilDateTime.toTimestamp(birthDate), org.ofbiz.base.util.UtilDateTime.nowTimestamp())/365}Yrs"/>
@@ -686,6 +696,14 @@
                	<parameter param-name="roleTypeIdTo" value="FAMILY_MEMBER"/>
             </hyperlink>
         </field> 
+	</form>
+	<form name="ListLanguage" type="list" list-name="languageList" default-table-style="basic-table">
+	
+	<actions><entity-condition entity-name="PartySkillAndType">
+	 <condition-expr field-name="partyId" from-field="partyId"/>
+	</entity-condition></actions>
+	<field name="partyId"><hidden value="${partyId}"/></field>
+		<field name="skillTypeId" title="Languages known"><display default-value="${description}"></display></field>
 	</form>
     
     <form name="AddEmployeeSkills" type="single" target="createEmployeeSkill" default-map-name="partySkill">
