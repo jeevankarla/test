@@ -46,13 +46,16 @@ $(document).ready(function() {
 		"columnDefs": [{ type: 'date-eu', targets: [6,7] }],
        	"iDisplayLength" : 100,
        	"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-       		var parts =aData[7].split('/');  // dd/MM/yyyy
-			var thruDate = new Date(parts[2],parts[1]-1,parts[2]);
-			var currentDate = new Date();
-			var interval = thruDate.getTime() - currentDate.getTime();
-			interval = interval/(1000*60*60*24);
-        	if (interval < 45) {
-                $(nRow).css('color', 'red')
+       		if (aData[7] && aData[7].length > 0) {
+       			var parts =aData[7].split('/');  // dd/MM/yyyy
+				var thruDate = new Date(parts[2],parts[1]-1,parts[0]);
+				var currentDate = new Date();
+				var interval = thruDate.getTime() - currentDate.getTime();
+				interval = interval/(1000*60*60*24);
+				alert("interval="+interval);
+        		if (interval < 45) {
+                	$(nRow).css('color', 'red')
+            	}
             }
          }
 	} );	
