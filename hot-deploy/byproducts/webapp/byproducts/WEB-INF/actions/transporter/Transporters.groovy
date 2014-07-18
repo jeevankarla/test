@@ -36,7 +36,7 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 
 	for (GenericValue facilityParty : facilityPartyList) {
 		String partyId= facilityParty.getString("partyId");
-		String partyName = PartyHelper.getPartyName(delegator, partyId, true);
+		String partyName = PartyHelper.getPartyName(delegator, partyId, false);
 		JSONArray transporterJSON = new JSONArray();
 		routeId = facilityParty.getString("facilityId");
 
