@@ -63,7 +63,10 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 
 		String rateAmount =  ((BigDecimal) facilityRateResult.get("rateAmount")).setScale(2,rounding);
 		String routeLength = ((BigDecimal) facilitySizeResult.get("facilitySize")).setScale(2,rounding);
-		
+		// don't show zero lengths for now, since it's misleading
+		if ("0.00".equals(routelength)) {
+			routeLength = "";
+		}
 		transporterJSON.add(routeId);
 		transporterJSON.add(partyId);
 		transporterJSON.add(partyName);
