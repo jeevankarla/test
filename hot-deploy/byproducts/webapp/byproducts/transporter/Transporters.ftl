@@ -44,7 +44,17 @@ $(document).ready(function() {
 			{ "title": "Contract Start" },			
 			{ "title": "Contract End" }],
 		"columnDefs": [{ type: 'date-eu', targets: [6,7] }],
-       	"iDisplayLength" : 100
+       	"iDisplayLength" : 100,
+       	"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+       		var parts =aData[7].split('/');  // dd/MM/yyyy
+			var thruDate = new Date(parts[2],parts[1]-1,parts[2]);
+			var currentDate = new Date();
+			var interval = thruDate.getTime() - currentDate.getTime();
+			interval = interval/(1000*60*60*24);
+        	if (interval < 45) {
+                $(nRow).css('color', 'red')
+            }
+         }
 	} );	
 	datatable2.fnSort( [ [7,'asc'] ] );	 	 	
 } );
