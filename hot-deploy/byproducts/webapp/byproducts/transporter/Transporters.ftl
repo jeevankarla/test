@@ -20,6 +20,7 @@
 	 }
 	 #datatable2_filter { 
 	 }	 
+	.myRightAlignClass{ text-align: right; } 
 </style>	
 
 
@@ -38,8 +39,8 @@ $(document).ready(function() {
 			{ "title": "Transporter Id" },			
 			{ "title": "Transporter Name" },
 			{ "title": "Phone" },			
-			{ "title": "Route Length (Km)" },	
-			{ "title": "Unit Rate (Rs)" },								
+			{ "title": "Route Length (Km)", sClass: "myRightAlignClass" } },	
+			{ "title": "Unit Rate (Rs)", sClass: "myRightAlignClass" } },								
 			{ "title": "Contract Start" },			
 			{ "title": "Contract End" }],
 		"columnDefs": [{ type: 'date-eu', targets: [6,7] }],
