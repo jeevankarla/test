@@ -35,7 +35,7 @@ $(document).ready(function(){
   //alert("employees="+employees);
 //$("#employeeId").append('<option value=""></option>');
   $.each(employees, function(key, val){
-    $("#employeeId").append('<option value="' + val.employeeId + '">' + val.name + '</option>');
+    $("#employeeId").append('<option value="' + val.employeeId + '">' + val.name + " [" + val.employeeId + "]" + '</option>');
   });
   $("#employeeId").flexselect({
   								preSelection: false,
