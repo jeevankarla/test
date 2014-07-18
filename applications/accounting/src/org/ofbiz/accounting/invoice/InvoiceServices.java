@@ -4446,6 +4446,7 @@ public class InvoiceServices {
         BigDecimal paymentAmount = (BigDecimal) context.get("amount");
         Locale locale = (Locale) context.get("locale");     
         String paymentMethodType = (String) context.get("paymentMethodTypeId");
+        String paymentMethodId = (String) context.get("paymentMethodId");
         String paymentLocationId = (String) context.get("paymentLocationId");                
         String paymentRefNum = (String) context.get("paymentRefNum");        
         Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
@@ -4454,6 +4455,8 @@ public class InvoiceServices {
         String issuingAuthority = (String) context.get("issuingAuthority");
         String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
         String paymentTypeId = (String) context.get("paymentTypeId");
+        //String isDepositWithDrawPayment =(String) context.get("isDepositWithDrawPayment");
+       // String finAccountTransTypeId =(String) context.get("finAccountTransTypeId");
         String organizationPartyId =(String) context.get("organizationPartyId");
         String statusId = (String) context.get("statusId");
         String partyId =(String) context.get("partyId");
@@ -4461,6 +4464,7 @@ public class InvoiceServices {
         String comments=(String) context.get("comments");
         Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
         List invoiceIds =(List) context.get("invoices");
+        
         String paymentId = "";
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         try {       	
@@ -4469,10 +4473,14 @@ public class InvoiceServices {
             paymentCtx.put("paymentMethodTypeId", paymentMethodType);
             paymentCtx.put("partyIdTo", organizationPartyId);
             paymentCtx.put("partyIdFrom", partyId);
+            if (!UtilValidate.isEmpty(paymentMethodId)) {
+         	   paymentCtx.put("paymentMethodId", paymentMethodId);                       	
+            }   
+           
             paymentCtx.put("isEnableAcctg", context.get("isEnableAcctg"));
             if (!UtilValidate.isEmpty(paymentLocationId) ) {
                 paymentCtx.put("paymentLocation", paymentLocationId);                        	
-            }            
+            } 
             if (!UtilValidate.isEmpty(paymentRefNum) ) {
                 paymentCtx.put("paymentRefNum", paymentRefNum);                        	
             }

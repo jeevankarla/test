@@ -12,6 +12,13 @@
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/> 
         <attribute name="billingTypeId" mode="IN" type="String" optional="true"/>                     
     </service>
+     <service name="updateDTCStatus" engine="java" auth="true" transaction-timeout="3000"
+        location="in.vasista.vbiz.byproducts.TransporterServices" invoke="updateDTCStatus">
+        <description>Update Billing StatusId.</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="false"/> 
+        <attribute name="statusId" mode="IN" type="String" optional="true"/>                     
+    </service>
+    
     
     <service name="cancelTransporterMarginReport" engine="java" auth="true" transaction-timeout="300"
         location="in.vasista.vbiz.byproducts.TransporterServices" invoke="cancelTransporterMarginReport">
