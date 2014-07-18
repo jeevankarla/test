@@ -77,22 +77,31 @@ cond =EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 partyDeductionList = delegator.findList("PartyDeduction", cond,null, ["partyIdTo"], null, false);
 totalAmount=0;
 totalQty=0;
-for (GenericValue partyDeduction : partyDeductionList) {
-	partyWiseMap=[:];
-	quantity=1;
-	tempMap=[:];
-	partyId=(String) partyDeduction.getString("partyIdTo");
-	partyWiseMap["partyName"]=PartyHelper.getPartyName(delegator, partyId, false);
-	partyWiseMap["quantity"]=quantity;
-	partyWiseMap["cost"]=partyDeduction.cost;
-	tempMap[partyId]=partyWiseMap;
-	totalQty=totalQty+quantity;
-	totalAmount=totalAmount+partyDeduction.cost;
-	finalList.add(tempMap);
-	context.finalList=finalList;
-	context.totalQty = totalQty;
-	context.totalAmount = totalAmount;
+if (UtilValidate.isNotEmpty(partyDeductionList)) {
+	for (GenericValue partyDeduction : partyDeductionList) {
+		partyWiseMap=[:];
+		quantity=1;
+		tempMap=[:];
+		partyName="";
+		cost=0;
+		partyId=(String) partyDeduction.getString("partyIdTo");
+		if (UtilValidate.isNotEmpty(partyId)) {
+		    partyName=PartyHelper.getPartyName(delegator, partyId, false);
+		}
+		if (UtilValidate.isNotEmpty(partyDeduction.cost)) {
+			cost=partyDeduction.cost;
+		}
+		partyWiseMap["partyName"]=partyName;
+		partyWiseMap["quantity"]=quantity;
+		partyWiseMap["cost"]=cost;
+		tempMap[partyId]=partyWiseMap;
+		totalQty=totalQty+quantity;
+		totalAmount=totalAmount+partyDeduction.cost;
+		finalList.add(tempMap);
+		context.finalList=finalList;
+		context.totalQty = totalQty;
+		context.totalAmount = totalAmount;
+	}
+
 }
-
-
 
