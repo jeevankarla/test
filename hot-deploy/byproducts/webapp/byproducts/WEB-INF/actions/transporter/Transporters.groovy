@@ -45,7 +45,7 @@ facilityPartyList.each { facilityParty->
 		mapFacilityParty = routeMap.get(routeId);
 		if (mapFailityParty.getTimestamp("thruDate") == null ||  
 			(failityParty.getTimestamp("thruDate") != null && 
-				mapFailityParty.getTimestamp("thruDate") > facilityParty.getTimestamp("thruDate"))) {
+				mapFacilityParty.getTimestamp("thruDate") > facilityParty.getTimestamp("thruDate"))) {
 			return;
 		}
 	}
