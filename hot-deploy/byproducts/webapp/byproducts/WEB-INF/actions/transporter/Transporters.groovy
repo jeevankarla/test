@@ -41,7 +41,7 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 
 facilityPartyList.each { facilityParty->			
 	routeId = facilityParty.getString("facilityId");
-	if (routeMap.contains(routeId) && routeMap.) {
+	if (routeMap.contains(routeId)) {
 		mapFacilityParty = routeMap.get(routeId);
 		if (mapFailityParty.getTimestamp("thruDate") == null ||  
 			(failityParty.getTimestamp("thruDate") != null && 
