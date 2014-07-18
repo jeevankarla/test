@@ -85,6 +85,7 @@ if (UtilValidate.isNotEmpty(partyDeductionList)) {
 		partyName="";
 		cost=0;
 		partyId=(String) partyDeduction.getString("partyIdTo");
+		//Debug.log("partyId ######################"+partyId);
 		if (UtilValidate.isNotEmpty(partyId)) {
 		    partyName=PartyHelper.getPartyName(delegator, partyId, false);
 		}
@@ -96,7 +97,9 @@ if (UtilValidate.isNotEmpty(partyDeductionList)) {
 		partyWiseMap["cost"]=cost;
 		tempMap[partyId]=partyWiseMap;
 		totalQty=totalQty+quantity;
-		totalAmount=totalAmount+partyDeduction.cost;
+		if(partyDeduction.cost){
+			totalAmount=totalAmount+partyDeduction.cost;
+		}
 		finalList.add(tempMap);
 		context.finalList=finalList;
 		context.totalQty = totalQty;
