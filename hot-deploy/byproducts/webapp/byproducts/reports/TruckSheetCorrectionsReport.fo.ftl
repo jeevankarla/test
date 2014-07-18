@@ -64,7 +64,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
                             		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Code</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Orginal</fo:block>  
+                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Original</fo:block>  
                             		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Quantity</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
