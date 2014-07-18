@@ -744,12 +744,12 @@
         <response name="failed" type="view" value="TransporterMargins"/>
         <response name="error" type="view" value="TransporterMargins"/>
     </request-map>
-    <request-map uri="ApproveDTCBilling">
+    <request-map uri="updateDTCStatus">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="DTCStatusUpdate"/>
-       <response name="success" type="request" value="TransporterMargins"/>
-        <response name="failed" type="view" value="TransporterMargins"/>
-        <response name="error" type="view" value="TransporterMargins"/>
+        <event type="service" path="" invoke="updateDTCStatus"/>
+       <response name="success" type="request-redirect-noparam" value="TransporterMargins"/>
+       <response name="failed" type="request-redirect-noparam" value="TransporterMargins"/>
+       <response name="error" type="request-redirect-noparam" value="TransporterMargins"/>
     </request-map>
     
      <request-map uri="GenerateTrnsptMarginReport.pdf"><security https="true" auth="true"/>

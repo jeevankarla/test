@@ -48,6 +48,7 @@
 										<parameter param-name="billingTypeId" value="PB_LMS_TRSPT_MRGN"/>
 									</link></widgets>
 									</section>
+								<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/transporter/billingStatus.ftl"></html-template></html></platform-specific>
 								</container>
 								<screenlet title="Transporter Margin Billing Reports">				
 									<include-form name="ListTransporterReports" location="component://byproducts/widget/TransporterForms.xml" />

@@ -17,7 +17,7 @@
 	 * under the License.
 	 *******************************************************************************/
 	package in.vasista.vbiz.byproducts;
-
+	
 
 
 	import java.math.BigDecimal;
@@ -49,6 +49,7 @@
 	import java.util.Locale;
 	
 	import org.ofbiz.network.LmsServices;
+	import org.ofbiz.product.product.ProductEvents;
 	import in.vasista.vbiz.byproducts.SalesHistoryServices;
 import java.text.SimpleDateFormat;
 
@@ -232,9 +233,9 @@ import java.text.SimpleDateFormat;
 						String isUpCountry = facilityDetail.getString("isUpcountry");
 						BigDecimal facilitySize=new BigDecimal(1);
 						
-						if(UtilValidate.isNotEmpty(facilityDetail.getString("facilitySize"))){
+						/*if(UtilValidate.isNotEmpty(facilityDetail.getString("facilitySize"))){
 							facilitySize=(BigDecimal)facilityDetail.getBigDecimal("facilitySize");
-						}
+						}*/
 						if(UtilValidate.isEmpty(isUpCountry)){
 							isUpCountry="N";
 						}
@@ -303,6 +304,7 @@ import java.text.SimpleDateFormat;
 							List shipmentIds = ByProductNetworkServices.getByProdShipmentIds(delegator, supplyDate, supplyDate,UtilMisc.toList(route));//this will give Today AM+PM as SALE
 							conditionList.clear();
 							conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+							conditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, route));
 							EntityCondition vhCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 							List<GenericValue> vehicleTrpList = delegator.findList("VehicleTrip", vhCondition, null, UtilMisc.toList("originFacilityId"), null, false);
 							 GenericValue vehicleTrip=EntityUtil.getFirst(vehicleTrpList);
@@ -343,7 +345,10 @@ import java.text.SimpleDateFormat;
 						        		return ServiceUtil.returnError("There was an error while getting FacilitySize !: " + ServiceUtil.getErrorMessage(facilitySizeResult));          	            
 						            }
 						    	    if(UtilValidate.isNotEmpty(facilitySizeResult)){
-						    	    	facilitySize = (BigDecimal) facilitySizeResult.get("facilitySize");
+						    	    	 BigDecimal tempFacilitySize=(BigDecimal) facilitySizeResult.get("facilitySize");
+										   if (tempFacilitySize.compareTo(BigDecimal.ZERO) > 0){
+								   			facilitySize = (BigDecimal) facilitySizeResult.get("facilitySize");
+								   		}	
 						    		}	
 	                      	   actualCommision = actualCommision.multiply(facilitySize);
 				    		}
@@ -467,8 +472,9 @@ import java.text.SimpleDateFormat;
 		                createInvoiceContext.put("partyId", "Company");
 		                createInvoiceContext.put("partyIdFrom", partyIdTo);
 		                //createInvoiceContext.put("billingAccountId", billingAccountId);
-		                createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
+		               // createInvoiceContext.put("invoiceDate", UtilDateTime.nowTimestamp());
 		                createInvoiceContext.put("dueDate", monthEnd);
+		                createInvoiceContext.put("invoiceDate", monthEnd);
 		                //createInvoiceContext.put("invoiceTypeId", "TRANSPORTER_OUT");
 		                createInvoiceContext.put("invoiceTypeId", "SALES_DIS_OUT");
 		                createInvoiceContext.put("referenceNumber", "TRSPT_MRGN_"+periodBillingId);
@@ -498,11 +504,14 @@ import java.text.SimpleDateFormat;
 		    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
 		                    }
 		                    //Fines Item
-		                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_RECOVERY_ITEM","quantity",quantity,"amount", totalFine.negate(),"userLogin", userLogin));
-		                    if (ServiceUtil.isError(result)) {
-		                    	//generationFailed = true;
-		    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
-		                    }
+		                    if(totalFine.compareTo(BigDecimal.ZERO) !=0){//if fine is zero dont add
+		                    	 resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "DTC_RECOVERY_ITEM","quantity",quantity,"amount", totalFine.negate(),"userLogin", userLogin));
+				                    if (ServiceUtil.isError(result)) {
+				                    	//generationFailed = true;
+				    	                Debug.logWarning("There was an error while creating  the InvoiceItem: " + ServiceUtil.getErrorMessage(result), module);
+				                    }
+						   }
+		                   
 		                    //for TDS Commission.
 		                   /* BigDecimal tdsMargin= totalMargin.divide(new BigDecimal(10));//for tax
 		                    resMap = dispatcher.runSync("createInvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId", "TDS_194H","quantity",quantity,"amount", tdsMargin,"userLogin", userLogin));
@@ -567,12 +576,28 @@ import java.text.SimpleDateFormat;
 	    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
 			}        
 	    	periodBilling.set("statusId", "CANCEL_INPROCESS");
+	        boolean cancelationFailed = false;	
 	    	try{
 	    		periodBilling.store();    		
 	    	}catch (Exception e) {
 	    		Debug.logError("Unable to Store PeriodBilling Status"+e, module);
 	    		return ServiceUtil.returnError("Unable to Store PeriodBilling Status"); 
 			}
+	    	//first Cancel DTC payments
+    		Map dtcPaymentCancelResult=cancelTransporterPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+    		if (ServiceUtil.isError(dtcPaymentCancelResult)) {
+    			cancelationFailed = true;
+    			periodBilling.set("statusId", "CANCEL_FAILED");
+    			try{
+    	    		periodBilling.store();    		
+    	    	}catch (Exception e) {
+    	    		Debug.logError("Unable to Store PeriodBilling Status"+e, module);
+    	    		return ServiceUtil.returnError("Unable to Store PeriodBilling Status"); 
+    			}
+                Debug.logWarning("There was an error while Canceling Payment: " + ServiceUtil.getErrorMessage(dtcPaymentCancelResult), module);
+        		return ServiceUtil.returnError("There was an error while Canceling Payment: " + ServiceUtil.getErrorMessage(dtcPaymentCancelResult));          	            
+            } 
+	           
 	    	try{
 	    		Map<String,  Object> inputContext = UtilMisc.<String, Object>toMap("periodBillingId", periodBillingId,"userLogin", userLogin);
 				dispatcher.runAsync("cancelTransporterMarginInvoice", inputContext);
@@ -580,6 +605,7 @@ import java.text.SimpleDateFormat;
 	            Debug.logError(e, "Error in canceling 'transporterMargin' service", module);
 	            return ServiceUtil.returnError(e.getMessage());
 	        } 
+	    	
 	        return result;
 	    }
 		   
@@ -1821,7 +1847,281 @@ import java.text.SimpleDateFormat;
 		        result.put("partyList", partyList);
 		        return result;
 		    }
+		    public static Map<String, Object> updateDTCStatus (DispatchContext dctx, Map<String, ? extends Object> context) {
+		    	Delegator delegator = dctx.getDelegator();
+		    	TimeZone timeZone = TimeZone.getDefault();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();       
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		    	Locale locale = (Locale) context.get("locale");
+		        Map<String, Object> result = new HashMap<String, Object>();
+		        String periodBillingId = (String) context.get("periodBillingId");
+		        String statusId = (String) context.get("statusId");
+		        if(UtilValidate.isEmpty(statusId)){
+		        	statusId="GENERATED";
+		        }
+		        GenericValue periodBilling = null;
+		        String customTimePeriodId="";
+		        try{
+		        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+		        	 customTimePeriodId =  periodBilling.getString("customTimePeriodId");
+		        	  periodBilling.set("statusId", statusId);
+					  periodBilling.store();
+		        }catch (GenericEntityException e) {
+		    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+		    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+				}   
+		        GenericValue customTimePeriod;
+				try {
+					customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+				} catch (GenericEntityException e1) {
+					Debug.logError(e1,"Error While Finding Customtime Period");
+					return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+				}
+				Debug.log("===================statusId=="+statusId);
+				if("APPROVED".equalsIgnoreCase(statusId)){
+				Map dtcInvoiceResult=createDTCInvoice(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+				result.putAll(dtcInvoiceResult);
+		       }
+				if("APPROVED_PAYMENT".equalsIgnoreCase(statusId)){
+					Map dtcPaymentResult=createTransporterPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+					try{
+			        	  periodBilling.set("statusId", "APPROVED_PAYMENT");
+						  periodBilling.store();
+			        }catch (GenericEntityException e) {
+			    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+			    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+					}   
+					result.putAll(dtcPaymentResult);
+			       }
+				if("REJECT_PAYMENT".equalsIgnoreCase(statusId)){
+					Map dtcPaymentCancelResult=cancelTransporterPayment(dctx, UtilMisc.toMap("periodBillingId",periodBillingId ,"userLogin",userLogin));
+					try{
+			        	  periodBilling.set("statusId", "REJECT_PAYMENT");
+						  periodBilling.store();
+			        }catch (GenericEntityException e) {
+			    		Debug.logError("Unable To Cancel DTC Bill Payment"+e, module);
+			    		return ServiceUtil.returnError("Unable To Cancel DTC Bill Payment.. "); 
+					}   
+					result.putAll(dtcPaymentCancelResult);
+			       }
+				
+				return result;
+		    }
+		    public static Map<String, Object> getDTCBillingInvoices(DispatchContext dctx, Map<String, ? extends Object> context) {
+		    	Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();       
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        Map<String, Object> result = new HashMap<String, Object>();
+		        Locale locale = (Locale) context.get("locale");
+		        boolean cancelationFailed = false;	
+		        String periodBillingId = (String) context.get("periodBillingId");
+		        List invoiceIdsList=FastList.newInstance();
+		        GenericValue periodBilling = null;
+		        String customTimePeriodId="";
+		        try{
+		        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+		        	 customTimePeriodId =  periodBilling.getString("customTimePeriodId");
+		        }catch (GenericEntityException e) {
+		    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+		    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+				}        
+		    	GenericValue customTimePeriod;
+				try {
+					customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+				} catch (GenericEntityException e1) {
+					Debug.logError(e1, e1.getMessage());
+					return ServiceUtil.returnError("Error in customTimePeriod" + e1);
+				}
+				Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+				Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+				
+				Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, TimeZone.getDefault(), locale);
+				Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, TimeZone.getDefault(), locale);
+				
+				try{
+					List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+					  conditionList.add(EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS,  "TRSPT_MRGN_"+periodBillingId));
+					  
+				     conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_DIS_OUT"));
+				    /* conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
+				     conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));*/
+		             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED")); 
+		            
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);      	
+		        	List<GenericValue> invoiceRows = delegator.findList("Invoice", condition, null, null, null, false);
+			        invoiceIdsList = EntityUtil.getFieldListFromEntityList(invoiceRows, "invoiceId", false);
+			        
+				  }catch(GenericEntityException e){
+			        	Debug.logError("Unable to get DTC invoices"+e, module);
+			    		return ServiceUtil.returnError("Unable to get DTC invoices "); 
+			      }
+			     result.put("invoiceIdsList", invoiceIdsList);
+		        return result;
+		    }
+		    public static Map<String, Object> createTransporterPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+				Delegator delegator = dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				 GenericValue userLogin = (GenericValue) context.get("userLogin");
+				 String periodBillingId = (String) context.get("periodBillingId");
+				Map<String, Object> result = ServiceUtil.returnSuccess();
+				
+				List<String> billingInvoiceIdsList=(List<String>)getDTCBillingInvoices(dctx, UtilMisc.toMap("periodBillingId", periodBillingId,"userLogin", userLogin)).get("invoiceIdsList");
+				Debug.log("==========billingInvoiceIdsList===="+billingInvoiceIdsList);
+				boolean useFifo = Boolean.FALSE;
+				if (UtilValidate.isNotEmpty(context.get("useFifo"))) {
+					useFifo = (Boolean) context.get("useFifo");
+				}
+				Locale locale = (Locale) context.get("locale");
+				String paymentMethodType = (String) context.get("paymentMethodTypeId");
+				
+				String facilityId = (String) context.get("facilityId");
+			
+				String orderId = (String) context.get("orderId");
+				BigDecimal paymentAmount = ProductEvents.parseBigDecimalForEntity((String) context.get("amount"));
+				String paymentRef = "TRSPT_MRGN_"+periodBillingId;
+				String paymentId = "";
+				boolean roundingAdjustmentFlag = Boolean.TRUE;
+				List exprListForParameters = FastList.newInstance();
+				List boothOrdersList = FastList.newInstance();
+				Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
+				Timestamp instrumentDate = UtilDateTime.nowTimestamp();
+				
+				Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "EXPENSE_PAYOUT");
+				paymentCtx.put("paymentMethodTypeId", "CHEQUE_PAYOUT");
+				paymentCtx.put("paymentMethodId", "");
+				paymentCtx.put("partyId","Company");	
+				/*paymentCtx.put("finAccountTransTypeId","WITHDRAWAL");
+				paymentCtx.put("isDepositWithDrawPayment","Y");*/
+			 try { 
+				for(String invoiceId:billingInvoiceIdsList){
+						
+					Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", UtilMisc.toMap("userLogin", userLogin, "invoiceId",invoiceId));
+					if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
+						Debug.logError(getInvoicePaymentInfoListResult.toString(),module);
+						return ServiceUtil.returnError(null, null, null,getInvoicePaymentInfoListResult);
+					}
+					Map invoicePaymentInfo = (Map) ((List) getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+					BigDecimal outStandingAmount = (BigDecimal) invoicePaymentInfo.get("outstandingAmount");
+					  
+					if(UtilValidate.isNotEmpty(invoicePaymentInfo)){
+						 if(outStandingAmount.compareTo(BigDecimal.ZERO)>0){
+						 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), false);
+						           // paymentCtx.put("partyIdFrom","Company");
+						            paymentCtx.put("organizationPartyId",invoice.getString("partyIdFrom"));
+						            paymentCtx.put("facilityId", invoice.getString("facilityId"));
+						            paymentCtx.put("paymentPurposeType", "");
+						            paymentCtx.put("paymentRefNum", paymentRef); 
+						            paymentCtx.put("instrumentDate", invoice.getTimestamp("dueDate"));
+									paymentCtx.put("paymentDate", invoice.getTimestamp("dueDate"));
+									paymentCtx.put("effectiveDate", invoice.getTimestamp("dueDate"));
+						            paymentCtx.put("statusId", "PMNT_RECEIVED");
+						            paymentCtx.put("isEnableAcctg", "Y");
+						            paymentCtx.put("amount", outStandingAmount);
+						            paymentCtx.put("userLogin", userLogin); 
+						            paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
+						    		try{
+						            Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+						            if (ServiceUtil.isError(paymentResult)) {
+						            	Debug.logError(paymentResult.toString(), module);
+						                return ServiceUtil.returnError(null, null, null, paymentResult);
+						            }
+						            paymentId = (String)paymentResult.get("paymentId");
+						            }catch (Exception e) {
+						            Debug.logError(e, e.toString(), module);
+						            return ServiceUtil.returnError(e.toString());
+							        }
+						 }
+					 }
+				}
+			 }catch (GenericEntityException e) {
+					Debug.logError("Error while Creating Payment for DTC"+ e.getMessage(), module);
+					return ServiceUtil.returnError("Error while Creating Payment for DTC");
+				} catch (GenericServiceException e) {
+					Debug.logError("Error while Creating Payment for DTC" + e.getMessage(),module);
+					return ServiceUtil.returnError("Error while Creating Payment for DTC");
+				}
+				result = ServiceUtil.returnSuccess("Payment successfully done for This Billing ..!");
+				return result;
+			}
 		    
+		    public static Map<String, Object> getDTCBillingPayments(DispatchContext dctx, Map<String, ? extends Object> context) {
+		    	Delegator delegator = dctx.getDelegator();
+		        LocalDispatcher dispatcher = dctx.getDispatcher();       
+		        GenericValue userLogin = (GenericValue) context.get("userLogin");
+		        Map<String, Object> result = new HashMap<String, Object>();
+		        Locale locale = (Locale) context.get("locale");
+		        boolean cancelationFailed = false;	
+		        String periodBillingId = (String) context.get("periodBillingId");
+		        List paymentIdsList=FastList.newInstance();
+		    	List dtcPaymentsList = FastList.newInstance();
+		        GenericValue periodBilling = null;
+		        String customTimePeriodId="";
+		        try{
+		        	periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId", periodBillingId), false);
+		        	 customTimePeriodId =  periodBilling.getString("customTimePeriodId");
+		        }catch (GenericEntityException e) {
+		    		Debug.logError("Unable to get PeriodBilling record from DataBase"+e, module);
+		    		return ServiceUtil.returnError("Unable to get PeriodBilling record from DataBase "); 
+				}        
+		    	/*GenericValue customTimePeriod;
+				try {
+					customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+				} catch (GenericEntityException e1) {
+					Debug.logError(e1, e1.getMessage());
+					return ServiceUtil.returnError("Error in customTimePeriod" + e1);
+				}
+				Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+				Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+				
+				Timestamp monthBegin = UtilDateTime.getDayStart(fromDateTime, TimeZone.getDefault(), locale);
+				Timestamp monthEnd = UtilDateTime.getDayEnd(thruDateTime, TimeZone.getDefault(), locale);*/
+				
+				try{
+					List conditionList = UtilMisc.toList(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
+					  conditionList.add(EntityCondition.makeCondition("paymentRefNum", EntityOperator.EQUALS,  "TRSPT_MRGN_"+periodBillingId));
+				     conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, "EXPENSE_PAYOUT"));
+		             conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("PMNT_VOID","PMNT_CANCELLED")));
+		            
+		        	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);      	
+		        	List<GenericValue> paymentsList = delegator.findList("Payment", condition, null, null, null, false);
+			        paymentIdsList = EntityUtil.getFieldListFromEntityList(paymentsList, "paymentId", false);
+			        dtcPaymentsList.addAll(paymentsList);
+				  }catch(GenericEntityException e){
+			        	Debug.logError("Unable to get DTC Payments"+e, module);
+			    		return ServiceUtil.returnError("Unable to get DTC Payments "); 
+			      }
+			     result.put("paymentIdsList", paymentIdsList);
+			     result.put("dtcPaymentsList", dtcPaymentsList);
+		        return result;
+		    }    
+		    public static Map<String, Object> cancelTransporterPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+				Delegator delegator = dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				 GenericValue userLogin = (GenericValue) context.get("userLogin");
+				 String periodBillingId = (String) context.get("periodBillingId");
+				Map<String, Object> result = ServiceUtil.returnSuccess();
+				List<String> billingPaymentIdsList=(List<String>)getDTCBillingPayments(dctx, UtilMisc.toMap("periodBillingId", periodBillingId,"userLogin", userLogin)).get("paymentIdsList");
+				Debug.log("==========billingPaymentIdsList===="+billingPaymentIdsList);
+				Locale locale = (Locale) context.get("locale");
+				if(UtilValidate.isEmpty(billingPaymentIdsList)){
+					result = ServiceUtil.returnSuccess("No Payments Found To Cancel ..!");
+					return result;
+				}
+			 try { 
+				for(String paymentId:billingPaymentIdsList){
+				            	 Map<String, Object> removePaymentApplResult = dispatcher.runSync("voidPayment", UtilMisc.toMap("userLogin" ,userLogin ,"paymentId", paymentId));
+								 if (ServiceUtil.isError(removePaymentApplResult)) {
+						            	Debug.logError(removePaymentApplResult.toString(), module);    			
+						                return ServiceUtil.returnError(null, null, null, removePaymentApplResult);
+						         }
+				    }
+			    }catch (GenericServiceException e) {
+					Debug.logError("Error while Cancel Payment for DTC" + e.getMessage(),module);
+					return ServiceUtil.returnError("Error while Cancel Payment for DTC");
+				}
+				result = ServiceUtil.returnSuccess("Payment  Cancelled For Billing ..!");
+				return result;
+			}
 }
 
 

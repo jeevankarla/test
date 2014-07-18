@@ -154,7 +154,7 @@ if(UtilValidate.isNotEmpty(dtcBankMap)){
 		 if(netAmount!=0){
 			 tempMap = [:];
 			 if(UtilValidate.isNotEmpty(routeAmount)){
-				 tempMap["routeAmount"] = routeAmount;
+				 tempMap["routeAmount"] = routeAmount.setScale(0,BigDecimal.ROUND_HALF_UP); 
 			 }
 			 if(UtilValidate.isNotEmpty(totalFine)){
 				  tempMap["totalFine"] = totalFine;

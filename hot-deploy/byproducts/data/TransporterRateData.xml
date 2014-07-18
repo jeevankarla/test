@@ -47,11 +47,20 @@
 	<InvoiceItemType invoiceItemTypeId="DTC_RECOVERY_ITEM" parentTypeId="DTC_ROUTE" hasTable="N" description="RECOVERY/FINES/PENALTIES - DTC" defaultGlAccountId="409006" />
 	<InvoiceItemTypeMap invoiceItemMapKey="INC_RECOVERY_MAP" invoiceTypeId="SALES_DIS_OUT" invoiceItemTypeId="DTC_RECOVERY_ITEM" />
    
+    <StatusItem description="Review GM Marketing" sequenceId="99" statusCode="GENERATED" statusId="GENERATED" statusTypeId="COM_EVENT_STATUS"/>
+     <StatusItem description="Approved for Payment" sequenceId="100" statusCode="APPROVED" statusId="APPROVED" statusTypeId="COM_EVENT_STATUS"/>
+      <StatusItem description="Payment Approved" sequenceId="101" statusCode="APPROVED_PAYMENT" statusId="APPROVED_PAYMENT" statusTypeId="COM_EVENT_STATUS"/>
+      <StatusItem description="Payment Rejected" sequenceId="102" statusCode="REJECT_PAYMENT" statusId="REJECT_PAYMENT" statusTypeId="COM_EVENT_STATUS"/>
+     <StatusItem description="Bill Rejected" sequenceId="103" statusCode="REJECTED" statusId="REJECTED" statusTypeId="COM_EVENT_STATUS"/>
+    
+   
      <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="COM_CANCELLED" statusTypeId="COM_EVENT_STATUS"/>
      <StatusItem description="Cancel Inprocess" sequenceId="79" statusCode="CANCEL_INPROCESS" statusId="CANCEL_INPROCESS" statusTypeId="COM_EVENT_STATUS"/>
      <StatusItem description="Cancel Failed" sequenceId="80" statusCode="CANCEL_FAILED" statusId="CANCEL_FAILED" statusTypeId="COM_EVENT_STATUS"/>
+     
      <StatusValidChange condition="" statusId="CANCEL_INPROCESS" statusIdTo="COM_CANCELLED" transitionName=" canceld in process"/>
      <StatusValidChange condition="" statusId="CANCEL_INPROCESS" statusIdTo="CANCEL_FAILED" transitionName="cancel failed"/>
+     
      <InvoiceItemType description="TDS on Commission or Brokerage (Sec. 194 H)" hasTable="N" invoiceItemTypeId="TDS_194H" parentTypeId="" defaultGlAccountId="217113" taxAuthPartyId="TAX1"/>
        <!-- end of  transporter margin related -->
     <TenantConfiguration propertyName="setVehicleStatusFinal" propertyValue="N" propertyTypeEnumId="LMS" description="SetVehcileTripStatus to Final or Not"/>
@@ -75,9 +84,14 @@
      <SecurityGroupPermission groupId="TRNSMRGNVIEW" permissionId="BYPRODUCTS_DAILREPOR"/>
 
  <!-- TRNSMRGN CANCEL  permissions -->
-    <SecurityGroup description="All 'TRNS MRGN(DTC)' permissions like create,cancel " groupId="TRNSMRGN_CANCELADMIN"/>    
+    <SecurityGroup description="'TRNS MRGN(DTC)' permissions like,\cancel " groupId="TRNSMRGN_CANCELADMIN"/>    
     <SecurityGroupPermission groupId="TRNSMRGN_CANCELADMIN" permissionId="TRNSMRGN_CANCELADMIN"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSCANCEL_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_CANCELADMIN"/>
+    
+    <!-- TRNSMRGN CANCEL  permissions -->
+    <SecurityGroup description="'TRNS MRGN(DTC)' permissions for Approve DTC " groupId="TRNSMRGN_APPROVE"/>    
+    <SecurityGroupPermission groupId="TRNSMRGN_CANCELADMIN" permissionId="TRNSMRGN_APPROVE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRNSMRGN_APPROVE"/>
    
    
     <!-- sample  -->
