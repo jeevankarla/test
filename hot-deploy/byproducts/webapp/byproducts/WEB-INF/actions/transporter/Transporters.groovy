@@ -20,7 +20,9 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.service.ServiceUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+import java.math.RoundingMode;
 
+rounding = RoundingMode.HALF_UP;
 dctx = dispatcher.getDispatchContext();
 Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 JSONArray transportersJSON = new JSONArray();
@@ -59,8 +61,8 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 		inputFacilitySize.put("rateTypeId", "FACILITY_SIZE");
 		facilitySizeResult = dispatcher.runSync("getRouteDistance", inputFacilitySize);
 
-		String rateAmount =  (BigDecimal) facilityRateResult.get("rateAmount");
-		String routeLength = (BigDecimal) facilitySizeResult.get("facilitySize")
+		String rateAmount =  ((BigDecimal) facilityRateResult.get("rateAmount")).setScale(2,rounding);
+		String routeLength = ((BigDecimal) facilitySizeResult.get("facilitySize")).setScale(2,rounding);
 		
 		transporterJSON.add(routeId);
 		transporterJSON.add(partyId);
