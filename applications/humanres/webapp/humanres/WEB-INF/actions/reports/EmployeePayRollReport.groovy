@@ -49,7 +49,12 @@ conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOper
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
 //getting benefits
-benefitTypeList = delegator.findList("BenefitType", null, null, ["sequenceNum"], null, false);
+sortBy = UtilMisc.toList("sequenceNum");
+//description
+if(UtilValidate.isNotEmpty(context.reportFlag) && (context.reportFlag).equals("summary")){
+	sortBy = UtilMisc.toList("description");
+}
+benefitTypeList = delegator.findList("BenefitType", null, null, sortBy, null, false);
 benefitDescMap=[:];
 if(UtilValidate.isNotEmpty(benefitTypeList)){
 	benefitTypeList.each{ benefit->
@@ -63,7 +68,7 @@ context.benefitTypeIds=benefitTypeIds;
 context.benefitDescMap=benefitDescMap;
 //getting deductions
 
-deductionTypeList = delegator.findList("DeductionType", null, null, ["sequenceNum"], null, false);
+deductionTypeList = delegator.findList("DeductionType", null, null, sortBy, null, false);
 dedDescMap=[:];
 if(UtilValidate.isNotEmpty(deductionTypeList)){
 	deductionTypeList.each{ deduction->
