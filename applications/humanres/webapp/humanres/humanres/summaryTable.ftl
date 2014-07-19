@@ -40,7 +40,11 @@ $(document).ready(function() {
             "sDom": 'lfTrtip',
             "tableTools": {
                 "sSwfPath": "<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf</@ofbizContentUrl>",
-                "aButtons": [ "copy", "csv", "pdf"  ]
+                "aButtons": [ 
+                { "sExtends": "copy", "oSelectorOpts": { filter: 'applied', order: 'current' } },
+                { "sExtends": "csv", "oSelectorOpts": { filter: 'applied', order: 'current' } },
+                { "sExtends": "pdf", "oSelectorOpts": { filter: 'applied', order: 'current' }  } 
+                ]
             },
 		"iDisplayLength" : 25,		
      	"fnRowCallback": function(nRow, aData, iDisplayIndex ) {
