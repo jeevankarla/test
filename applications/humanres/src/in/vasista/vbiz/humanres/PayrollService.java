@@ -989,7 +989,7 @@ public class PayrollService {
 				String timePeriodId = (String) context.get("timePeriodId");
 		        Locale locale = (Locale) context.get("locale");
 		        BigDecimal amount = BigDecimal.ZERO;
-		        Debug.log("In calculatePayHeadAmount ##################################"+payHeadTypeId);
+		        //Debug.log("In calculatePayHeadAmount ##################################"+payHeadTypeId);
 		        try{
 			           		         
 		        	    Map makePayHedPrice = FastMap.newInstance();
@@ -1092,7 +1092,7 @@ public class PayrollService {
      	                condsDescription.append("] ");
 	                    
 	                }
-	                Debug.log("allTrue #############################################"+allTrue);
+	                //Debug.log("allTrue #############################################"+allTrue);
 	                // if all true, perform all actions
 	                BigDecimal modifyAmount = BigDecimal.ZERO;
 	                if (allTrue) {
@@ -1284,7 +1284,7 @@ public class PayrollService {
 	        }
 
 	        int compare = 0;
-            Debug.log("checking condtion for ::"+payrollBenDedCond);
+            //Debug.log("checking condtion for ::"+payrollBenDedCond);
 	        if ("PAYHD_BEDE_EMPID".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            compare = employeeId.compareTo(payrollBenDedCond.getString("condValue"));
 	        } else if ("PAYHD_BEDE_POS".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
@@ -1345,7 +1345,7 @@ public class PayrollService {
 
 
 	        if (Debug.verboseOn()) Debug.logVerbose("Pay head price condition compare done, compare=" + compare, module);
-	        Debug.log("compare ::"+compare);
+	        //Debug.log("compare ::"+compare);
 	        if ("PRC_EQ".equals(payrollBenDedCond.getString("operatorEnumId"))) {
 	            if (compare == 0) return true;
 	        } else if ("PRC_NEQ".equals(payrollBenDedCond.getString("operatorEnumId"))) {
@@ -1648,7 +1648,7 @@ public class PayrollService {
 	            }
 	        
 	        result.put("amount",amount);
-	         Debug.log("result gross salary====="+result);
+	         //Debug.log("result gross salary====="+result);
 	        return result;
 	    }
 	  
@@ -1667,7 +1667,7 @@ public class PayrollService {
 			String timePeriodId = (String) context.get("timePeriodId");
 	        Locale locale = (Locale) context.get("locale");
 	        BigDecimal amount = BigDecimal.ZERO;
-	        Debug.log("in calculateShiftBasePayHeadAmount======");
+	        //Debug.log("in calculateShiftBasePayHeadAmount======");
 	        List priceInfos =FastList.newInstance();
 	        try{
 	        	Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
@@ -2341,7 +2341,7 @@ public class PayrollService {
 			    		newEntity.set("noOfAttendedSsDays", new BigDecimal(noOfAttendedSsDays));
 			    		newEntity.set("noOfAttendedWeeklyOffDays", new BigDecimal(noOfAttendedWeeklyOffDays));
 			    		newEntity.set("noOfPayableDays",(newEntity.getBigDecimal("noOfCalenderDays")).subtract(newEntity.getBigDecimal("lossOfPayDays")));
-			    		Debug.log("newEntity============="+newEntity);
+			    		//Debug.log("newEntity============="+newEntity);
 			    		delegator.createOrStore(newEntity);
 			    		
 			    	}catch (GenericEntityException e) {
