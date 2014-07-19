@@ -178,6 +178,7 @@ under the License.
 		                                        <container style="profile-left">
 		                                            <include-screen name="EmployeeInformation" location="component://humanres/widget/EmployeeScreens.xml"/>
 <!--		                                            <include-screen name="contactsAndAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>-->
+													<include-screen name="LanguagesKnown" location="component://humanres/widget/EmployeeScreens.xml"/>
 		                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
 		                                            <screenlet title="Edit Employee Identification Numbers">
                       									<include-form name="EditEmplIdentification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
@@ -185,7 +186,7 @@ under the License.
                       									<include-form name="createEmplIdentification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                     								 </screenlet>
                     								 </screenlet>
-                    								 	<include-screen name="LanguagesKnown" location="component://humanres/widget/EmployeeScreens.xml"/>
+                    								 	
 		                                        </container>
 		                                        <container style="profile-right">
 		                                            <include-screen name="EmployeeProfilePicture" location="component://humanres/widget/EmployeeScreens.xml"/>

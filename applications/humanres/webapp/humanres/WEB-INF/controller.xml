@@ -654,10 +654,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindBenefitsOrDeductions"/>
     </request-map>
-    <!--<request-map uri="newReports">
-    	//<security https="true" auth="true"/>
-    	//<response name="success" type="view" value="NewReports"></response>
-    //</request-map>-->
+   <!-- <request-map uri="newReports">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NewReports"></response>
+    </request-map>-->
     <request-map uri="updateEmployeeBenefitsOrDeductions">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.humanres.PayrollService" invoke="updateBenefitsOrDeductions"/>
@@ -833,6 +833,18 @@ under the License.
         <event type="service" invoke="createPartySkill"/>
         <response name="success" type="view" value="EditEmployeeSkills"/>
         <response name="error" type="view" value="EditEmployeeSkills"/>
+    </request-map>
+    <request-map uri="createLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartySkill"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
+    <request-map uri="deleteLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartySkill"/>
+        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
     <request-map uri="updateEmployeeSkill">
         <security https="true" auth="true"/>
@@ -1438,7 +1450,10 @@ under the License.
     <request-map uri="EmployeeBankDetailsPdf.pdf"><security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeBankDetailsPdf"></response>
         </request-map>
-      
+     <!-- <request-map uri="MonthlyAttendenceChecklist.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="MonthlyAttendenceChecklist"/>        
+    </request-map>-->
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
 <request-map uri="calendar"><security https="true" auth="true"/>
@@ -1466,19 +1481,19 @@ under the License.
     <request-map uri="createPartyIdentification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPartyIdentification"/>
-        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="success" type="view"  value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
     <request-map uri="deletePartyIdentification">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="deletePartyIdentification"/>
-        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <response name="success"  type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
     <request-map uri="updatePartyIdentification">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updatePartyIdentification"/>
-        <response name="success" type="view" value="viewEmployeeProfile"/>
+        <event type="service"  invoke="updatePartyIdentification"/>
+        <response name="success"  type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
     
@@ -1733,6 +1748,7 @@ under the License.
 	 <view-map name="AdminPunch" type="screen" page="component://humanres/widget/AdminPunchScreens.xml#EditAdminPunch"/>
      <view-map name="Month" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarMonth"/>
     <view-map name="UpComing" type="screen" page="component://humanres/widget/CalendarScreens.xml#CalendarUpcoming"/>
+  <!--  <view-map name="MonthlyAttendenceChecklist" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#MonthlyAttendenceChecklist" content-type="application/pdf" encoding="none"/>-->
     
     <!-- <view-map name="WeeklyInOutExport" type="screen" page="component://humanres/widget/CalendarScreens.xml#WeeklyInOutExport"/> -->
     
