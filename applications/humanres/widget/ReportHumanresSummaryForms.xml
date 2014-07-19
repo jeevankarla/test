@@ -424,19 +424,23 @@
    <form name="ListPayrollBilling" type="list"
 		list-name="periodBillingList" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
-		<actions>
-		    <entity-and entity-name="PeriodBilling" list="periodBillingList">
-		         <field-map field-name="billingTypeId" value="PAYROLL_BILL"/>
-		         <order-by field-name="-createdDate"/>
-		    </entity-and>
+		<actions>		    
+		    <entity-condition entity-name="PeriodBilling" list="periodBillingList">
+		    	<condition-list combine="and">
+		    		<condition-expr field-name="billingTypeId" operator="equals" value="PAYROLL_BILL"/>
+		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
+		    	</condition-list>
+		    	<order-by field-name="-createdDate"/>
+                <order-by field-name="-customTimePeriodId"/>
+		    </entity-condition>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>
 			<set field="partyId" value="${partyId}"/>
 			<set field="nowTimeStamp" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 		</actions>
-		<field name="periodBillingId">
+		<field name="periodBillingId" title="Payroll Id">
 			<display description="${periodBillingId}" />
 		</field>
-		<field name="customTimePeriodId">
+		<field name="customTimePeriodId" title="Payroll Period">
 			<display-entity entity-name="CustomTimePeriod" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}"></display-entity>
 		</field>
 		<field name="statusId" title = "Status">

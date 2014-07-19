@@ -28,25 +28,40 @@
             <link target="main">
             </link>
         </menu-item>
-        <menu-item name="FindEmployments" title="Employments">     
+        <menu-item name="FindEmployments" title="Employments"> 
+        	<condition>
+            	<if-has-permission permission="HR"  action="_EMPLOYMENT_VIEW"/>
+            </condition>  
         	<link target="FindEmployments"/>
         </menu-item>
-        <menu-item name="FindEmplPositions" title="Employee Positions">     
+        <menu-item name="FindEmplPositions" title="Employee Positions">    
+        	<condition>
+            	<if-has-permission permission="HR"  action="_EMPLPOSITION_VIEW"/>
+            </condition>   
         	<link target="FindEmplPositions"/>
         </menu-item> 
         <menu-item name="HRReports" title="${uiLabelMap.AccountingReports}">
-			<condition>
-            	<if-has-permission permission="HUMANRES"  action="_REPORTS_VIEW"/>
-            </condition>              
+        	<condition>
+            	<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
+            </condition>   
         	<link target="HRReports"><parameter param-name="organizationPartyId"/>  </link>
         </menu-item>        
 		<menu-item name="FindPayrollBilling" title="Payroll">
+			<condition>
+            	<if-has-permission permission="HR"  action="_PAYROLL_VIEW"/>
+            </condition>
 			<link target="FindPayrollBilling"/>
 		</menu-item>      
         <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_EMPLLEAVE_VIEW"/>
+            </condition>
             <link target="FindEmplLeaves"/>
         </menu-item>
         <menu-item name="analytics" title="Analytics">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_ANALYTICS_VIEW"/>
+            </condition>
             <link target="analytics"/>
         </menu-item>    
         <menu-item name="benefitOrDeduction" title="Benefits/Deductions">
@@ -56,6 +71,9 @@
             <link target="benefitOrDeduction"/>
         </menu-item>
         <menu-item name="Attendance" title="Attendance">
+        	<condition>
+            	<if-has-permission permission="HR"  action="_ATTENDANCE_VIEW"/>
+            </condition> 
             <link target="DailyPunch"/>
         </menu-item>               	                    
 	</menu>   

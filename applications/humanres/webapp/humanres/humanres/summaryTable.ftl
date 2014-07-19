@@ -44,8 +44,10 @@ $(document).ready(function() {
             },
 		"iDisplayLength" : 25,		
      	"fnRowCallback": function(nRow, aData, iDisplayIndex ) {
+     		<#if security.hasEntityPermission("HR", "_EMPLLOOKUP_VIEW", session)>
 		    $('td:eq(0)', nRow).html('<a href="EmployeeProfile?partyId=' + aData[1] + '">' +
                 aData[0] + '</a>');
+            </#if>    
             return nRow;
 			//$(nRow).click(function () {
         		//document.location.href = "viewprofile?partyId=" + aData[1];

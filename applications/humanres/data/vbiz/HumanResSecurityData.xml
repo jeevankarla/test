@@ -35,8 +35,7 @@ under the License.
     <SecurityPermission description="Allow add/update/delete of Leave in the HumanRes Manager." permissionId="HUMANRES_LEAVE_EDIT"/>
     <SecurityPermission description="Allow In/Out in the HumanRes Manager." permissionId="HUMANRES_PUNCH_EDIT"/>
     <SecurityPermission description="Allow view of Global HR Settings in the HumanRes Manager." permissionId="HUMANRES_GLOBALHR_VIEW"/>
-    <SecurityPermission description="Allow add/update/delete of Global HR Settings in the HumanRes Manager." permissionId="HUMANRES_GLOBALHR_EDIT"/>
-	<SecurityPermission description="Allow view of Benefits/Deductions in the HumanRes Manager." permissionId="HR_BENFDED_VIEW"/>
+    <SecurityPermission description="Allow add/update/delete of Global HR Settings in the HumanRes Manager." permissionId="HUMANRES_GLOBALHR_EDIT"/>	
     <SecurityGroup description="HumanRes Admin group, has complete permissions to administer all HR activities." groupId="HUMANRES_ADMIN"/>
     <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HUMANRES_ADMIN"/>
     <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="WORKEFFORTMGR_VIEW"/>    
@@ -79,13 +78,63 @@ under the License.
     
    <SecurityGroup description="HumanRes View group, has complete permissions to View all HR activities." groupId="HUMANRESVIEW"/>
     
-        <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_VIEW"/>      
+    <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_VIEW"/>      
     <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_EMPLOYEEPOS_VIEW"/>    
     <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_EMPLOYEE_VIEW"/> 
     <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_EMPLOYMENT_VIEW"/>  
     <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_GLOBALHR_VIEW"/> 
     <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="HUMANRES_REPORTS_VIEW"/>
     <SecurityGroupPermission groupId="HUMANRESVIEW" permissionId="OFBTOOLS_VIEW"/>
-   
-           
+   <!-- permission for benefits and deductions screen-->
+      <SecurityPermission description="Allow view of Benefits/Deductions in the HumanRes Manager." permissionId="HR_BENFDED_VIEW"/>  
+      <SecurityGroup description="HumanRes Benefits/Deductions screen View group, has complete permission to View Benefits/Deductions screen." groupId="HR_BENFDEDVIEW"/>
+      <SecurityGroupPermission groupId="HR_BENFDEDVIEW" permissionId="HR_BENFDED_VIEW"/> 
+   <!-- permission for LookUp Employees screen --> 
+      <SecurityPermission description="Allow view of LookUp Employees in the HumanRes Manager." permissionId="HR_EMPLLOOKUP_VIEW"/>  
+      <SecurityGroup description="HumanRes LookUp Employees screen View group, has complete permission to View LookUp Employees screen." groupId="EMPL_LOOKUPVIEW"/>
+      <SecurityGroupPermission groupId="EMPL_LOOKUPVIEW" permissionId="HR_EMPLLOOKUP_VIEW"/> 
+      
+    <!-- permission for LookUp Employees screen --> 
+      <SecurityPermission description="Allow view of Employements in the HumanRes Manager." permissionId="HR_EMPLOYMENT_VIEW"/>  
+      <SecurityGroup description="HumanRes Employements screen View group, has complete permission to View Employements screen." groupId="EMPLOYMENTVIEW"/>
+      <SecurityGroupPermission groupId="EMPLOYMENTVIEW" permissionId="HR_EMPLOYMENT_VIEW"/>   
+      
+    <!-- permission for LookUp Employees screen --> 
+      <SecurityPermission description="Allow view of  Employees Positions in the HumanRes Manager." permissionId="HR_EMPLPOSITION_VIEW"/>  
+      <SecurityGroup description="HumanRes Employees Positions screen View group, has complete permission to View Employees Positions screen." groupId="EMPL_POSITIONVIEW"/>
+      <SecurityGroupPermission groupId="EMPL_POSITIONVIEW" permissionId="HR_EMPLPOSITION_VIEW"/> 
+      
+    <!-- permission for LookUp Employees screen --> 
+      <SecurityPermission description="Allow view of  Reports in the HumanRes Manager." permissionId="HR_REPORTS_VIEW"/>  
+      <SecurityGroup description="HumanRes Reports screen View group, has complete permission to View Reports screen." groupId="HR_REPORTSVIEW"/>
+      <SecurityGroupPermission groupId="HR_REPORTSVIEW" permissionId="HR_REPORTS_VIEW"/> 
+      
+    <!-- permission for LookUp Employees screen --> 
+      <SecurityPermission description="Allow view of  Payroll Screen in the HumanRes Manager." permissionId="HR_PAYROLL_VIEW"/>  
+      <SecurityGroup description="HumanRes Payroll screen View group, has complete permission to View Payroll  screen." groupId="HR_PAYROLLVIEW"/>
+      <SecurityGroupPermission groupId="HR_PAYROLLVIEW" permissionId="HR_PAYROLL_VIEW"/>     
+      
+     <!-- permission for LookUp Employees screen --> 
+      <SecurityPermission description="Allow view of  Employee Leave Screen in the HumanRes Manager." permissionId="HR_EMPLLEAVE_VIEW"/>  
+      <SecurityGroup description="HumanRes Employee Leave screen View group, has complete permission to View Employee Leave screen." groupId="HR_EMPLLEAVEVIEW"/>
+      <SecurityGroupPermission groupId="HR_EMPLLEAVEVIEW" permissionId="HR_EMPLLEAVE_VIEW"/> 
+      
+       <!-- permission for LookUp Employees screen --> 
+      <SecurityPermission description="Allow view of  Analytics in the HumanRes Manager." permissionId="HR_ANALYTICS_VIEW"/>  
+      <SecurityGroup description="HumanRes Analytics screen View group, has complete permission to View Analytics screen." groupId="HR_ANALYTICSVIEW"/>
+      <SecurityGroupPermission groupId="HR_ANALYTICSVIEW" permissionId="HR_ANALYTICS_VIEW"/>
+      
+      <!-- permission for LookUp Employees screen --> 
+      <SecurityPermission description="Allow view of Attendance Screen in the HumanRes Manager." permissionId="HR_ATTENDANCE_VIEW"/>  
+      <SecurityGroup description="HumanRes Attendance View group, has complete permission to View Attendance screen." groupId="HR_ATTENDANCEVIEW"/>
+      <SecurityGroupPermission groupId="HR_ATTENDANCEVIEW" permissionId="HR_ATTENDANCE_VIEW"/>
+      
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_REPORTS_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_PAYROLL_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EMPLLEAVE_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ANALYTICS_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_BENFDED_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
 </entity-engine-xml>
