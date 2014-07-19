@@ -365,7 +365,7 @@ public class PayrollService {
 		                
 		            	//adjust basic here
 		                Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
-		                context.put("lossOfPayDays",employeePayrollAttedance.get("lossOfPayDays"));
+		                //context.put("lossOfPayDays",employeePayrollAttedance.get("lossOfPayDays"));
 		                context.put("noOfPayableDays",employeePayrollAttedance.get("noOfPayableDays"));
 		            	Timestamp from = row.getTimestamp("fromDate");
 			            Timestamp thru = row.getTimestamp("thruDate");
@@ -453,13 +453,13 @@ public class PayrollService {
 				//amount = amount.divide(BigDecimal.valueOf(payrollPeriodDays), 2, BigDecimal.ROUND_HALF_UP);	//::TODO:: re-visit	
 				if (propFlag) {
 					// loss of pay days adjustment
-					BigDecimal lossOfPayDays = new BigDecimal((Double)context.get("lossOfPayDays"));
+					//BigDecimal lossOfPayDays = new BigDecimal((Double)context.get("lossOfPayDays"));
 					BigDecimal noOfPayableDays = periodDays;
 					if(UtilValidate.isNotEmpty(context.get("noOfPayableDays"))){
 						noOfPayableDays = new BigDecimal((Double)context.get("noOfPayableDays"));
 					}
-					if(UtilValidate.isNotEmpty(lossOfPayDays)){
-						BigDecimal payDays = noOfPayableDays.subtract(lossOfPayDays);
+					if(UtilValidate.isNotEmpty(noOfPayableDays)){
+						BigDecimal payDays = noOfPayableDays;
 						amount = amount.multiply(payDays).divide(BigDecimal.valueOf(payrollPeriodDays), 0, BigDecimal.ROUND_HALF_UP);
 					}
 				}
