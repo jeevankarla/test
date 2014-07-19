@@ -21,9 +21,13 @@
 var dataSet = ${StringUtil.wrapString(employeesJSON!'[]')};
 
 $(document).ready(function() {
-	$('#demo').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
-
-	$('#example').dataTable( {
+    
+    $('#example tfoot th').each( function () {
+        var title = $('#example thead th').eq( $(this).index() ).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    } );
+    
+	var table = $('#example').DataTable( {
 		"data": dataSet,
 		"columns": [
 			{ "title": "Employee" },
@@ -48,9 +52,44 @@ $(document).ready(function() {
     		//});
 		}
 	} );	
+	
+	table.columns().eq( 0 ).each( function ( colIdx ) {
+        $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();
+        } );
+    } );
+	
 } );
 
 
 	</script>
 		
-		<div id="demo"></div>
+		<div id="demo">
+		
+		<table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Employee Id</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Join Date date</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+ 		<tbody></tbody>
+        <tfoot>
+            <tr>
+                <th>Employee</th>
+                <th>Employee Id</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Join Date date</th>
+                <th>Phone</th>
+            </tr>
+        </tfoot>
+		</table>
+		</div>
