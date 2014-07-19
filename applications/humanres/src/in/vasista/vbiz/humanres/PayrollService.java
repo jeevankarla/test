@@ -1953,9 +1953,9 @@ public class PayrollService {
 	    				payItemMap.put("customTimePeriodId",periodId);
 	    				payItemMap.put("amount",amount);
 	    				payItemMap.put("partyId",partyId);
-	    				payItemMap.put("payHeadTypeId",payheadTypeId);	
+	    				payItemMap.put("payHeadTypeId",payheadTypeId);	    				
 	    				try {
-	    					if(amount.compareTo(BigDecimal.ZERO) !=0){
+	    					if(amount.compareTo(BigDecimal.ZERO) >=0){
 	    						Map resultValue = dispatcher.runSync("createOrUpdatePartyBenefitOrDeduction", payItemMap);
 	    						if( ServiceUtil.isError(resultValue)) {
 	    							String errMsg =  ServiceUtil.getErrorMessage(resultValue);
@@ -2130,8 +2130,8 @@ public class PayrollService {
 								partyDeduction.store();
 							}
 						}else{	
-							// Create New One
-							if(prevAmount.compareTo(amount)!= 0){
+							// Create New One							
+							if(UtilValidate.isNotEmpty(prevAmount) && prevAmount.compareTo(amount)!= 0){
 								GenericValue newEntity = delegator.makeValue("PartyDeduction");
 								newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 								newEntity.set("roleTypeIdTo", "EMPLOYEE");
