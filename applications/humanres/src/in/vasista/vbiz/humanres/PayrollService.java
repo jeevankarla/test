@@ -247,7 +247,8 @@ public class PayrollService {
 					            EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 					            List<GenericValue> revoveryList = delegator.findList("LoanAndRecoveryAndType", cond, null, null, null, false);
 					            if(UtilValidate.isNotEmpty(revoveryList)){
-					            	GenericValue recovery = EntityUtil.getFirst(revoveryList).getRelatedOne("LoanRecovery");
+					            	GenericValue entry = EntityUtil.getFirst(revoveryList);
+					            	GenericValue recovery = delegator.findOne("LoanRecovery",UtilMisc.toMap("loanId",entry.getString("loanId"),"sequenceNum",entry.getString("sequenceNum")),false);
 					            	recovery.set("payrollHeaderId", payHeaderItem.getString("payrollHeaderId"));
 					            	recovery.set("payrollItemSeqId", payHeaderItem.getString("payrollItemSeqId"));
 					            	delegator.store(recovery);
