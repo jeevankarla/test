@@ -450,19 +450,25 @@ public class PayrollService {
 				int payrollPeriodDays;
 				periodDays = BigDecimal.valueOf(period.days() + 1); // to include the end day as well	
 				payrollPeriodDays = payrollPeriod.days() + 1; // to include the end day as well			
-				//amount = amount.divide(BigDecimal.valueOf(payrollPeriodDays), 2, BigDecimal.ROUND_HALF_UP);	//::TODO:: re-visit	
+				BigDecimal noOfPayableDays = periodDays;
+				if(UtilValidate.isNotEmpty(context.get("noOfPayableDays"))){
+					noOfPayableDays = new BigDecimal((Double)context.get("noOfPayableDays"));
+				}
 				if (propFlag) {
 					// loss of pay days adjustment
 					//BigDecimal lossOfPayDays = new BigDecimal((Double)context.get("lossOfPayDays"));
-					BigDecimal noOfPayableDays = periodDays;
-					if(UtilValidate.isNotEmpty(context.get("noOfPayableDays"))){
-						noOfPayableDays = new BigDecimal((Double)context.get("noOfPayableDays"));
-					}
+					
 					if(UtilValidate.isNotEmpty(noOfPayableDays)){
 						BigDecimal payDays = noOfPayableDays;
 						amount = amount.multiply(payDays).divide(BigDecimal.valueOf(payrollPeriodDays), 0, BigDecimal.ROUND_HALF_UP);
 					}
 				}
+				//this to handle derived basic and actual basic no.ofpayable days is then make actual basic zero
+				if(noOfPayableDays.compareTo(BigDecimal.ZERO) ==0 ){
+					BigDecimal payDays = noOfPayableDays;
+					amount = amount.multiply(payDays).divide(BigDecimal.valueOf(payrollPeriodDays), 0, BigDecimal.ROUND_HALF_UP);
+				}
+				
 				Map result = UtilMisc.toMap("amount", amount);
 				result.put("quantity", BigDecimal.ONE);	
 		//Debug.logInfo("==========>periodDays=" + periodDays, module);	
@@ -856,6 +862,13 @@ public class PayrollService {
 		        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 		        	for (int i = 0; i < employementList.size(); ++i) {		
 		        		GenericValue employment = employementList.get(i);
+		        		String employeeId = employment.getString("partyIdTo");
+		        		context.put("employeeId", employeeId);
+		        		Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
+		        		if(UtilValidate.isNotEmpty(employeePayrollAttedance.get("noOfPayableDays")) &&
+		        				((BigDecimal)employeePayrollAttedance.get("noOfPayableDays")).compareTo(BigDecimal.ZERO)==0){
+		        			  continue;
+		        		}
 		        		input.put("partyIdFrom", employment.getString("partyIdTo"));
 						Map tempInputMap = FastMap.newInstance();
 						tempInputMap.putAll(input);
