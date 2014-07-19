@@ -102,6 +102,23 @@
 			<key-map field-name="invoiceItemTypeId" />
 		</relation>		
 	</entity>
+	<view-entity entity-name="PeriodBillingAndCustomTimePeriod"
+		package-name="org.ofbiz.accounting.invoice"
+		title="PeriodBilling and CustomTimePeriod entity">
+		<member-entity entity-alias="PB" entity-name="PeriodBilling" />
+		<member-entity entity-alias="CTP" entity-name="CustomTimePeriod" />
+		<alias-all entity-alias="PB">	
+			<exclude field="createdDate" />
+			<exclude field="createdByUserLogin" />
+			<exclude field="lastModifiedDate" />
+			<exclude field="lastModifiedByUserLogin" />
+		</alias-all>	
+		<alias-all entity-alias="CTP" />
+		<view-link entity-alias="PB" rel-entity-alias="CTP">
+			<key-map field-name="customTimePeriodId" />
+		</view-link>
+	</view-entity>
+	
 	<view-entity entity-name="BudgetItemBudget"
 		package-name="org.ofbiz.accounting.budget"
 		title="BudgetItem and Budget view entity">
@@ -4364,6 +4381,8 @@
 		<field name="requireTaxIdForExemption" type="indicator"></field>
 		<field name="taxIdFormatPattern" type="long-varchar"></field>
 		<field name="taxDueDayOfMonth" type="numeric"></field>
+		<field name="taxRange" type="long-varchar"></field>
+		<field name="taxDivision" type="long-varchar"></field>
 		<field name="includeTaxInPrice" type="indicator"><!-- this is mainly for VAT 
 				tax authorities -->
 		</field>
