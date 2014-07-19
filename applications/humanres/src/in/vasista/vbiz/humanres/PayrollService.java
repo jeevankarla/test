@@ -866,7 +866,7 @@ public class PayrollService {
 		        		context.put("employeeId", employeeId);
 		        		Map employeePayrollAttedance = getEmployeePayrollAttedance(dctx,context);
 		        		if(UtilValidate.isNotEmpty(employeePayrollAttedance.get("noOfPayableDays")) &&
-		        				((BigDecimal)employeePayrollAttedance.get("noOfPayableDays")).compareTo(BigDecimal.ZERO)==0){
+		        				(new BigDecimal((Double)employeePayrollAttedance.get("noOfPayableDays"))).compareTo(BigDecimal.ZERO)==0){
 		        			  continue;
 		        		}
 		        		input.put("partyIdFrom", employment.getString("partyIdTo"));
