@@ -80,6 +80,68 @@ invoiceDates.each{eachDate ->
 	crInvoices.put(eachDate, eachDayInvoiceDetails);
 }
 
+periodTypes = UtilMisc.toList("INST_FORTNIGHT_BILL", "INST_MONTH_BILL", "INST_QUARTER_BILL", "INST_WEEK_BILL", "INST_DAILY_BILL");
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.IN, periodTypes));
+conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(dayBegin)));
+conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO ,UtilDateTime.toSqlDate(dayEnd)));
+conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS, "CR_INST_BILLING"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "GENERATED"));
+condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+periodBillingList = delegator.findList("PeriodBillingAndCustomTimePeriod", condition, null, ["fromDate"], null, true);
+
+fromBillDate = null;
+if(periodBillingList){
+	fromDateSqlFormat = periodBillingList.get(0).get("fromDate");
+	fromBillDate = UtilDateTime.toTimestamp(fromDateSqlFormat);
+}
+ 
+
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, boothList));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "CREDITNOTE_PAYIN"));
+conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromBillDate));
+conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+conditionList.add(EntityCondition.makeCondition("amount", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
+EntityCondition creditCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+creditNotePayments = delegator.findList("Payment", creditCond, null, ["paymentDate","partyIdFrom"], null, false);
+//Debug.log("creditNotePayments ##############################################"+creditNotePayments);
+//Debug.log("creditCond ##############################################"+creditCond);
+creditNoteMap = [:];
+
+creditNotePayments.each{ eachPayment ->
+	payDate = eachPayment.paymentDate;
+	payDate = UtilDateTime.getDayStart(payDate);
+	customCondList = [];
+	customCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.toSqlDate(eachPayment.paymentDate)));
+	customCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(eachPayment.paymentDate)));
+	customCondList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachPayment.partyIdFrom));
+	custExpr = EntityCondition.makeCondition(customCondList, EntityOperator.AND);
+	partyReturns = EntityUtil.filterByCondition(periodBillingList, custExpr);
+	if(partyReturns){
+		partyReturn = partyReturns.get(0);
+		thruDateSqlFormat = partyReturn.thruDate;
+		payDate = UtilDateTime.toTimestamp(thruDateSqlFormat);
+	}
+	if(creditNoteMap.get(payDate)){
+		extCrNotes = creditNoteMap.get(payDate);
+		if(extCrNotes.get(eachPayment.partyIdFrom)){
+			extAmt = extCrNotes.get(eachPayment.partyIdFrom);
+			extCrNotes.put(eachPayment.partyIdFrom, extAmt+eachPayment.amount);
+			creditNoteMap.put(payDate, extCrNotes);
+		}else{
+			extCrNotes.put(eachPayment.partyIdFrom, eachPayment.amount);
+			creditNoteMap.put(payDate, extCrNotes);
+		}
+		 
+	}else{
+		tempMap = [:];
+		tempMap.put(eachPayment.partyIdFrom, eachPayment.amount);
+		creditNoteMap.put(payDate, tempMap);
+	}
+}
+
 finYearContext = [:];
 finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
 finYearContext.put("organizationPartyId", "Company");
@@ -115,7 +177,6 @@ sequenceList = delegator.findList("BillOfSaleInvoiceSequence", cond, null, null,
 sequenceList.each{eachItem ->
 	invoiceSequenceNumMap.put(eachItem.invoiceId, eachItem.sequenceId);
 }
-//Debug.log("crInvoices ###########################"+crInvoices);
-//Debug.log("invoiceSequenceNumMap ###########################"+invoiceSequenceNumMap);
+context.creditNoteMap = creditNoteMap;
 context.crInvoices = crInvoices;
 context.invoiceSequenceNumMap = invoiceSequenceNumMap;
