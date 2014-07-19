@@ -27,6 +27,39 @@ under the License.
 </#if>
 <html lang="${docLangAttr}" dir="${langDir}" xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <script>
+	//Call the fetchMaintenanceMsgCall() function every 2-min  
+	setInterval("fetchMaintenanceMsgCall()" ,(1000*60*2));
+	var statusFlag;
+	function fetchMaintenanceMsgCall(){
+	    if(statusFlag !="Y"){
+	        $.ajax({
+             type: "POST",
+             url: "fetchDowntimeMessageStatus",
+             data: "",
+             dataType: 'json',
+             success: function(result) {
+               if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+            	   
+               }else{
+            	   statusFlag = result["statusFlag"];            	   
+            	   if(statusFlag=="Y"){
+						$("#maintenance-msg").css("display", "block");
+            	   }else{ 
+            	   		$("#maintenance-msg").css("display", "none");
+            	   }
+               }
+               
+             } ,
+             error: function() {
+            	 }
+           });  
+	    }
+	    
+	   
+	   
+	}
+  </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${layoutSettings.companyName}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)?if_exists}</#if></title>
     <#if layoutSettings.shortcutIcon?has_content>
@@ -196,4 +229,13 @@ under the License.
         </li>
       </ul>
       <br class="clear" />
+     <div id="maintenance-msg" align="center" style="display:none" class="h1">
+       <marquee behavior="alternate"> <font color="green"><b>"We will be running server maintenance in 5 minutes. Kindly save your work and log out.<br>
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  - Milkosoft Team-"  </b></font></marquee>
+  </div>
     </div>
