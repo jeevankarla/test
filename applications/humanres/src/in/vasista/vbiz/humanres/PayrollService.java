@@ -123,6 +123,7 @@ public class PayrollService {
 				String periodBillingId = (String) context.get("periodBillingId");
 				GenericValue periodBilling = null;
 				Map result = ServiceUtil.returnSuccess();
+				result.put("periodBillingId", periodBillingId);
 				try {
 					periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 				
@@ -131,14 +132,18 @@ public class PayrollService {
 	        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
 	        			 periodBilling.set("statusId", "GENERATION_FAIL");
 						 periodBilling.store();
-	 		             return ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
+						 result = ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
+					     result.put("periodBillingId", periodBillingId);
+	 		             return result;
 	        		}
         		
 				} catch (Exception e1) {
 					Debug.logError(e1,"Error While Finding PeriodBilling");
 					 periodBilling.set("statusId", "GENERATION_FAIL");
 					 periodBilling.store();
-					return ServiceUtil.returnSuccess("Error While Finding PeriodBilling" + e1);
+					 result = ServiceUtil.returnSuccess("Error While Finding PeriodBilling" + e1);
+				     result.put("periodBillingId", periodBillingId);
+					return result;
 				}
 				return result;
 				
