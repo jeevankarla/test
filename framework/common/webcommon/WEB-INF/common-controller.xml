@@ -251,6 +251,12 @@ under the License.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+   <request-map uri="fetchDowntimeMessageStatus" track-serverhit="false" track-visit="false">
+        <security https="true" auth="false"/>
+        <event type="service" invoke="fetchDowntimeMessageStatus"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     
     <!--========================== AJAX events =====================-->
 

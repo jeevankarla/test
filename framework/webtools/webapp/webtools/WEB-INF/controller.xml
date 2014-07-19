@@ -66,7 +66,7 @@ under the License.
         <response name="error" type="none"/>
         <response name="success" type="none"/>
     </request-map>
-    <request-map uri="xmlrpc">
+    <request-map uri="xmlrpc" track-serverhit="false" track-visit="false">
         <event type="xmlrpc"/>
         <response name="error" type="none"/>
         <response name="success" type="none"/>
@@ -77,7 +77,7 @@ under the License.
         <response name="error" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="ping">
+    <request-map uri="ping" track-serverhit="false" track-visit="false">
         <event type="service" invoke="ping"/>
         <response name="error" type="view" value="ping"/>
         <response name="success" type="view" value="ping"/>
