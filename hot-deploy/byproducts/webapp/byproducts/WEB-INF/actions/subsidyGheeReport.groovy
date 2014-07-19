@@ -68,9 +68,21 @@ printDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "dd/MM/yyyy")
 context.printDate = printDate;
 conditionList = [];
 finalList=[];
+
+Map employeeMap = UtilMisc.toMap("userLogin", userLogin);
+employees = dispatcher.runSync("getActiveEmployees", employeeMap);
+employeesList=employees.get("employeesResult").get("employeeList");
+employeeIdList=[];
+for(i=0;i<employeesList.size();i++){
+	employeeId=employeesList.get(i).get("employeeId");
+	employeeIdList.add(employeeId);
+	
+}
+
+conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN ,employeeIdList));
 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin)));
+	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthEnd)));
 
 conditionList.add(EntityCondition.makeCondition("deductionTypeId", EntityOperator.EQUALS , "PAYROL_DD_GH_DED"));
 cond =EntityCondition.makeCondition(conditionList,EntityOperator.AND);
