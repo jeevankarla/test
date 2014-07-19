@@ -1807,8 +1807,10 @@ public class PayrollService {
 				List<GenericValue> employmentList = delegator.findList("Employment", condition, null, null, null, false);
 				if(UtilValidate.isNotEmpty(employmentList)){
 					List activeEmploymentList = EntityUtil.filterByDate(employmentList, fromDateStart);
-					GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
-					partyIdFrom = activeEmployment.getString("partyIdFrom");
+					if(UtilValidate.isNotEmpty(activeEmploymentList)){
+						GenericValue activeEmployment = EntityUtil.getFirst(activeEmploymentList);
+						partyIdFrom = activeEmployment.getString("partyIdFrom");
+					}
 				}
 	    	} catch (GenericEntityException e) {
 	            Debug.logError(e, module);
@@ -2006,10 +2008,13 @@ public class PayrollService {
 	        	return ServiceUtil.returnError(e.getMessage());
 			}
 	        Map employmentDetails = getPartyIdFromEmployment(dctx,UtilMisc.toMap("userLogin",userLogin,"customTimePeriodId",customTimePeriodId,"partyIdTo",partyId));
-			if(UtilValidate.isNotEmpty(employmentDetails)){
+	        if(UtilValidate.isNotEmpty(employmentDetails.get("partyIdFrom"))){
 				partyIdFrom =(String)employmentDetails.get("partyIdFrom");
 			}
 			try {
+				if(UtilValidate.isEmpty(partyIdFrom)){
+					return ServiceUtil.returnError("Employee is Inactive or doesn't have Employment");
+				}
 				List<GenericValue> benefitTypes = delegator.findList("BenefitType",null, null,null, null, true);
 				benefitTypeIds = EntityUtil.getFieldListFromEntityList(benefitTypes, "benefitTypeId", true);
 	        	List<GenericValue> deductionTypes = delegator.findList("DeductionType",null, null,null, null, true);
@@ -2131,7 +2136,7 @@ public class PayrollService {
 							}
 						}else{	
 							// Create New One							
-							if(UtilValidate.isNotEmpty(prevAmount) && prevAmount.compareTo(amount)!= 0){
+							if(UtilValidate.isEmpty(prevAmount) || prevAmount.compareTo(amount)!= 0){
 								GenericValue newEntity = delegator.makeValue("PartyDeduction");
 								newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 								newEntity.set("roleTypeIdTo", "EMPLOYEE");
