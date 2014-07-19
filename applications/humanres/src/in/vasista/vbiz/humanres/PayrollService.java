@@ -122,22 +122,24 @@ public class PayrollService {
 				LocalDispatcher dispatcher = dctx.getDispatcher();
 				String periodBillingId = (String) context.get("periodBillingId");
 				GenericValue periodBilling = null;
+				Map result = ServiceUtil.returnSuccess();
 				try {
 					periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
-				} catch (GenericEntityException e1) {
+				
+					result =  generatePayrollBillingInternal(dctx, context);
+	        		if(ServiceUtil.isError(result)){
+	        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
+	        			 periodBilling.set("statusId", "GENERATION_FAIL");
+						 periodBilling.store();
+	 		             return ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
+	        		}
+        		
+				} catch (Exception e1) {
 					Debug.logError(e1,"Error While Finding PeriodBilling");
 					 periodBilling.set("statusId", "GENERATION_FAIL");
 					 periodBilling.store();
 					return ServiceUtil.returnSuccess("Error While Finding PeriodBilling" + e1);
 				}
-				Map result =  generatePayrollBillingInternal(dctx, context);
-				
-        		if(ServiceUtil.isError(result)){
-        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
-        			 periodBilling.set("statusId", "GENERATION_FAIL");
-					 periodBilling.store();
- 		             return ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
-        		}
 				return result;
 				
 			}
@@ -240,7 +242,7 @@ public class PayrollService {
 					            EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 					            List<GenericValue> revoveryList = delegator.findList("LoanAndRecoveryAndType", cond, null, null, null, false);
 					            if(UtilValidate.isNotEmpty(revoveryList)){
-					            	GenericValue recovery = EntityUtil.getFirst(revoveryList);
+					            	GenericValue recovery = EntityUtil.getFirst(revoveryList).getRelatedOne("LoanRecovery");
 					            	recovery.set("payrollHeaderId", payHeaderItem.getString("payrollHeaderId"));
 					            	recovery.set("payrollItemSeqId", payHeaderItem.getString("payrollItemSeqId"));
 					            	delegator.store(recovery);
