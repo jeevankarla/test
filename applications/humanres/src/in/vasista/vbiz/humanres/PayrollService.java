@@ -165,7 +165,7 @@ public class PayrollService {
 				boolean generationFailed = false;
 				boolean beganTransaction = false;
 				try{
-					beganTransaction = TransactionUtil.begin(72000);
+					beganTransaction = TransactionUtil.begin(7200);
 					try {
 						periodBilling =delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
 						customTimePeriodId = periodBilling.getString("customTimePeriodId");
@@ -512,6 +512,10 @@ public class PayrollService {
 						payHeadCtx.put("employeeId", partyId);
 						payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
 						Map<String, Object> result = calculatePayHeadAmount(dctx,payHeadCtx);
+						if(ServiceUtil.isError(result)){
+		        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
+		 		             return result;
+		        		}
 						if(UtilValidate.isNotEmpty(result)){
 							benefit.set("cost" ,result.get("amount"));
 						}
@@ -572,6 +576,10 @@ public class PayrollService {
 						payHeadCtx.put("employeeId", partyId);
 						payHeadCtx.put("proportionalFlag",context.get("proportionalFlag"));
 						Map<String, Object> result = calculatePayHeadAmount(dctx,payHeadCtx);
+						if(ServiceUtil.isError(result)){
+		        			 Debug.logError(ServiceUtil.getErrorMessage(result), module);
+		 		             return result;
+		        		}
 						if(UtilValidate.isNotEmpty(result)){
 							deduction.set("cost" ,result.get("amount"));
 						}
