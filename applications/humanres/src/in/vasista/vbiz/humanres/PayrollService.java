@@ -321,12 +321,12 @@ public class PayrollService {
 		}// end of service
 			private static  Map<String, Object> fetchBasicSalaryAndGrade(DispatchContext dctx, Map context) {
 				 	GenericValue userLogin = (GenericValue) context.get("userLogin");
-			        String payHeadTypeId = (String) context.get("payHeadTypeId");
+			       // String payHeadTypeId = (String) context.get("payHeadTypeId");
 			        String employeeId = (String) context.get("employeeId");
 			        String orgPartyId = (String) context.get("orgPartyId");
 			        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
 					Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
-					String timePeriodId = (String) context.get("timePeriodId");
+					//String timePeriodId = (String) context.get("timePeriodId");
 					double amount = 0;
 			        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 			        Delegator delegator = dctx.getDelegator();
@@ -336,7 +336,7 @@ public class PayrollService {
 			                    EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
 			            conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 			            conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
-			            EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);        	
+			            EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			            // sort by -fromDate to get the newest (largest) first, just in case there is more than one, should not happen but...
 			            List<GenericValue> payHistory = delegator.findList("PayHistory", condition, null, UtilMisc.toList("-fromDate"), null, false);
 			            if(UtilValidate.isEmpty(payHistory)){
