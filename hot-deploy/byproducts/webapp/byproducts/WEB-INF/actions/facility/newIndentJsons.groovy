@@ -37,7 +37,7 @@ cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 prodList = delegator.findList("Product", cond, UtilMisc.toSet("productId", "description","quantityIncluded"), UtilMisc.toList("sequenceNum"), null, false);
 */
 prodList = ProductWorker.getProductsByCategory(delegator ,"INDENT" ,UtilDateTime.getDayStart(effectiveDate));
-
+prodList = EntityUtil.filterByDate(prodList, UtilDateTime.getDayStart(effectiveDate));
 //prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap("salesDate",effDateDayBegin));
 /*crateProducts = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, "CRATE_INDENT"), UtilMisc.toSet("productId"), null, null, false);
 crateProdIds = EntityUtil.getFieldListFromEntityList(crateProducts, "productId", true);
