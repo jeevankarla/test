@@ -85,6 +85,7 @@ Map payRollSummaryMap=FastMap.newInstance();
 Map payRollEmployeeMap=FastMap.newInstance();
 Map BankAdvicePayRollMap=FastMap.newInstance();
 Map InstallmentFinalMap=FastMap.newInstance();
+Map EmplSalaryDetailsMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(periodBillingList)){
 	periodBillDetails = EntityUtil.getFirst(periodBillingList);
 	periodBillingId = periodBillDetails.get("periodBillingId");
@@ -191,6 +192,29 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			if(UtilValidate.isNotEmpty(bankAdviceDetailsMap) && (netAmount !=0)){
 				BankAdvicePayRollMap.put(partyId,bankAdviceDetailsMap);
 			}		
+			//getting actual Basic, DA, HRA for employee
+			basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, userLogin : userLogin, proportionalFlag:"Y"]);
+			Map salaryDetailsMap=FastMap.newInstance();
+			basicAmount =0;
+			if(UtilValidate.isNotEmpty(basicSalAndGradeMap)){
+				basicAmount = basicSalAndGradeMap.get("amount");
+			}
+			payHeadDAAmount = dispatcher.runSync("getPayHeadAmount", [employeeId: partyId, customTimePeriodId: parameters.customTimePeriodId,payHeadTypeId: "PAYROL_BEN_DA", proportionalFlag:"Y", userLogin: userLogin]);
+			daAmt=0;
+			if(UtilValidate.isNotEmpty(payHeadDAAmount)){
+				daAmt = payHeadDAAmount.get("amount");
+			}
+			payHeadHRAAmount = dispatcher.runSync("getPayHeadAmount", [employeeId: partyId, customTimePeriodId: parameters.customTimePeriodId,payHeadTypeId: "PAYROL_BEN_HRA", proportionalFlag:"Y", userLogin: userLogin]);
+			hraAmt=0;
+			if(UtilValidate.isNotEmpty(payHeadHRAAmount)){
+				hraAmt = payHeadHRAAmount.get("amount");
+			}
+			salaryDetailsMap.put("basic",basicAmount);
+			salaryDetailsMap.put("daAmt",daAmt);
+			salaryDetailsMap.put("hraAmt",hraAmt);
+			if(UtilValidate.isNotEmpty(salaryDetailsMap)){
+				EmplSalaryDetailsMap.put(partyId,salaryDetailsMap);
+			}
 		}
 	}
 }
@@ -236,3 +260,4 @@ context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
 context.put("payRollEmployeeMap",payRollEmployeeMap);
+context.put("EmplSalaryDetailsMap",EmplSalaryDetailsMap);
