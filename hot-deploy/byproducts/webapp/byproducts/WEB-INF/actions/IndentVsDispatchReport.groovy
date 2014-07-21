@@ -165,7 +165,8 @@ if(reportTypeFlag=="TruckSheetCorrectionsReport"){
 	
 	if(parameters.subscriptionTypeId == "ALL"){
 		 if(parameters.routeId == "All-Routes"){//to get all shipments for that day
-			 shipmentIds  = ByProductNetworkServices.getByProdShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+			 //shipmentIds  = ByProductNetworkServices.getByProdShipmentIds(delegator , UtilDateTime.toDateString(dayBegin, "yyyy-MM-dd HH:mm:ss"),null);
+			 shipmentIds  = ByProductNetworkServices.getByProdShipmentIds(delegator, dayBegin, dayEnd);
 			 shipmentIdList.addAll(shipmentIds);
 		 }else{
 			shipment = delegator.findList("Shipment", EntityCondition.makeCondition([routeId : parameters.routeId, statusId: "GENERATED", estimatedShipDate : dayBegin]), null, null, null, false);
