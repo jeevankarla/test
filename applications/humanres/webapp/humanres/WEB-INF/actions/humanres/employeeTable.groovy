@@ -34,7 +34,7 @@ nowDate=UtilDateTime.nowTimestamp();
 fromDate = UtilDateTime.getMonthStart(nowDate);
 thruDate = UtilDateTime.getMonthEnd(nowDate,timeZone,locale);
 
-resultMap=dispatcher.runSync("getCustomTimePeriodId", [periodTypeId:"HR_MONTH",fromDate:fromDate,thruDate:thruDate,userLogin:userLogin]);
+//result=dispatcher.runSync("getCustomTimePeriodId", [periodTypeId:"HR_MONTH",fromDate:fromDate,thruDate:thruDate,userLogin:userLogin]);
 
 
 def populateChildren(org, employeeList) {
@@ -60,12 +60,12 @@ def populateChildren(org, employeeList) {
 		 }
 		employee.put("qual",qual);
 		daAmount=0;
-		daAmountList=casteIds=delegator.findByAnd("PartyBenefit", [partyIdTo: employment.partyId,benefitTypeId:"PAYROL_BEN_DA"],["benefitTypeId"]);
+		/*daAmountList=casteIds=delegator.findByAnd("PartyBenefit", [partyIdTo: employment.partyId,benefitTypeId:"PAYROL_BEN_DA"],["benefitTypeId"]);
 		if(UtilValidate.isNotEmpty(daAmountList)){
 			daAmountIds=daAmountList.get(0).benefitTypeId;
-			daAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:daAmountIds,employeeId:employment.partyId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
+			daAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:daAmountIds,employeeId:employment.partyId,customTimePeriodId:result.get("customTimePeriodId"),locale:locale]);
 			daAmount=daAmountMap.get("amount");
-		}
+		}*/
 		employee.put("daAmount",daAmount);
 		employeePosition = "";
 		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : employment.partyId]));
