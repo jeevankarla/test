@@ -2261,16 +2261,7 @@ public class PayrollService {
 			    	try {
 			    		List<GenericValue> punchList = delegator.findList("EmplPunch", condition, null,null, null, false);
 			    		//Debug.log("punchList size========"+punchList.size());
-			    		if(UtilValidate.isEmpty(punchList)){
-			    			Debug.logWarning("No punchs for employee"+employeeId, module);
-			    			newEntity.set("lossOfPayDays", new BigDecimal(lossOfPayDays));
-				    		newEntity.set("noOfAttendedHoliDays", BigDecimal.ZERO);
-				    		newEntity.set("noOfAttendedSsDays", BigDecimal.ZERO);
-				    		newEntity.set("noOfAttendedWeeklyOffDays", BigDecimal.ZERO);
-				    		newEntity.set("noOfPayableDays", BigDecimal.ZERO);
-				    		delegator.createOrStore(newEntity);
-				    		continue;
-			    		}
+			    		
 			    		conditionList.clear();
 			    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
 					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
@@ -2296,8 +2287,17 @@ public class PayrollService {
 			    		
 			    		newEntity.set("noOfLeaveDays", resultMap.get("noOfLeaveDays"));
 			    		List<GenericValue> leaves = (List)resultMap.get("leaves");
-			    	   
-			    		newEntity.set("noOfLeaveDays", resultMap.get("noOfLeaveDays"));
+			    	    //here handle no punch and no leaves for the period then populate noOfPayableDays zero
+			    		if(UtilValidate.isEmpty(punchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0)){
+			    			Debug.logWarning("No punchs for employee"+employeeId, module);
+			    			newEntity.set("lossOfPayDays", new BigDecimal(lossOfPayDays));
+				    		newEntity.set("noOfAttendedHoliDays", BigDecimal.ZERO);
+				    		newEntity.set("noOfAttendedSsDays", BigDecimal.ZERO);
+				    		newEntity.set("noOfAttendedWeeklyOffDays", BigDecimal.ZERO);
+				    		newEntity.set("noOfPayableDays", BigDecimal.ZERO);
+				    		delegator.createOrStore(newEntity);
+				    		continue;
+			    		}
 			    		lossOfPayDays = lossOfPayDays+ ((BigDecimal)resultMap.get("lossOfPayDays")).doubleValue();
 			    		double noOfAttendedHoliDays =0;
 			    		
@@ -2321,11 +2321,23 @@ public class PayrollService {
 			    			List<GenericValue> dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
 			    			// filter by normal punchType
 			    			dayPunchList = EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Normal"));
+			    			
 			    			List cHoliDayList = EntityUtil.filterByCondition(holiDayList, EntityCondition.makeCondition(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,cTimeEnd) , EntityOperator.AND,EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,cTime)));
 			    			List cDayLeaves = EntityUtil.filterByDate(leaves, cTime);
 			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition(EntityCondition.makeCondition("date",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("date",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
 			    			//Debug.log("dayPunchList size==========="+dayPunchList.size());
-			    			if(UtilValidate.isNotEmpty(dayPunchList) && dayPunchList.size() >=2){
+			    			//TO:DO need to handle SHIFT_NIGHT mispunch
+			    			Boolean shiftFalg = Boolean.FALSE;
+			    			if(UtilValidate.isNotEmpty(dayShiftList)){
+			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
+			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
+			    				if(dayShifts.contains("SHIFT_NIGHT") && inPunch.size() ==1){
+			    					shiftFalg = Boolean.TRUE;
+			    				}
+			    				
+			    			}
+			    			
+			    			if((UtilValidate.isNotEmpty(dayPunchList) && dayPunchList.size() >=2) || shiftFalg){
 			    				if(emplWeeklyOffDay.equalsIgnoreCase(weekName)){
 			    					//noOfAttendedWeeklyOffDays = noOfAttendedWeeklyOffDays+(dayPunchList.size()/2);
 			    					noOfAttendedWeeklyOffDays = noOfAttendedWeeklyOffDays+1;
