@@ -239,3 +239,6 @@ under the License.
        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  - Milkosoft Team-"  </b></font></marquee>
   </div>
     </div>
+<script>
+     window.onload = fetchMaintenanceMsgCall();
+</script>
