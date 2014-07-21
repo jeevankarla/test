@@ -5663,7 +5663,7 @@ public class ByProductServices {
 		public static Map<String, Object> getCustomTimePeriodId(DispatchContext dctx, Map context) {
 			 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			 LocalDispatcher dispatcher = dctx.getDispatcher();
-			 String periodBillingId = (String) context.get("periodTypeId");
+			 String periodTypeId = (String) context.get("periodTypeId");
 		     Timestamp fromDate = (Timestamp) context.get("fromDate");
 		     Timestamp thruDate = (Timestamp) context.get("thruDate");
 		     List<GenericValue> custTimePeriodList =FastList.newInstance();
@@ -5671,7 +5671,7 @@ public class ByProductServices {
 			 Map<String, Object> result = ServiceUtil.returnSuccess();
 			 String customTimePeriodId = "";
 			try{
-				  conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,"SALES_MONTH"));
+				  conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,periodTypeId));
 	 			  conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime())));
 	 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
 	 			  EntityCondition CustCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);

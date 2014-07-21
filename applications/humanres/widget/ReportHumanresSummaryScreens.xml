@@ -83,7 +83,19 @@
 			</widgets>
 		</section>
 	</screen>
-
+	
+	<screen name="MonthlyAttendenceChecklist">
+		<section>
+			<actions>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/MonthlyAttendenceChecklist.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/MonthlyAttendenceChecklist.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="PFtransfer">
         <section>
             <actions>
@@ -702,6 +714,7 @@
 	<screen name="EmployeeProfileReport">
 		<section>
 			<actions>
+			<set field="viewSize" value="99999"/>
 			    <set field="tabButtonItem" value="HRReports"/>			
 			<set field="tabButtonItem2" value="EmployeeProfileReport"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
@@ -1030,6 +1043,7 @@
 	<screen name="EmployeeWiseSalaryDetailsCsv">
 		<section>
 			<actions>
+			<set field="viewSize" value="99999"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="REPORTS_VIEW"/>
                 </service>

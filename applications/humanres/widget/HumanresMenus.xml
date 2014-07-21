@@ -43,7 +43,7 @@
         <menu-item name="HRReports" title="${uiLabelMap.AccountingReports}">
         	<condition>
             	<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
-            </condition>   
+            </condition>  
         	<link target="HRReports"><parameter param-name="organizationPartyId"/>  </link>
         </menu-item>        
 		<menu-item name="FindPayrollBilling" title="Payroll">
@@ -63,12 +63,16 @@
             	<if-has-permission permission="HR"  action="_ANALYTICS_VIEW"/>
             </condition>
             <link target="analytics"/>
-        </menu-item>    
+        </menu-item> 
+        <menu-item name="newReports" title="New Reports">
+        <link target="newReports"/>
+        </menu-item>	   
         <menu-item name="benefitOrDeduction" title="Benefits/Deductions">
         	<condition>
             	<if-has-permission permission="HR"  action="_BENFDED_VIEW"/>
             </condition> 
             <link target="benefitOrDeduction"/>
+                             
         </menu-item>
         <menu-item name="Attendance" title="Attendance">
         	<condition>
@@ -209,22 +213,22 @@
            </link>
        </menu-item>
 
-       <menu-item name="Employees" title="${uiLabelMap.Employees}">
+     <!--   <menu-item name="Employees" title="${uiLabelMap.Employees}">
            <link target="Employees">
                <parameter param-name="organizationPartyId"/>
            </link>
-       </menu-item>
+       </menu-item>-->
        
        <menu-item name="PayHeadTypes" title="${uiLabelMap.PayHeadTypes}">
            <link target="PayHeadTypes">
                <parameter param-name="organizationPartyId"/>
            </link>
        </menu-item>
-       <menu-item name="EmployeeProfileReport" title="${uiLabelMap.HumanResEmployeeProfile}">
+      <!--  <menu-item name="EmployeeProfileReport" title="${uiLabelMap.HumanResEmployeeProfile}">
            <link target="EmployeeProfileReport">
                <parameter param-name="organizationPartyId"/>
            </link>
-       </menu-item>         
+       </menu-item>        
        <menu-item name="PaySlipEmployeeWise" title="${uiLabelMap.PaySlipEmployeeWise}">
            <link target="PaySlipEmployeeWise">
                <parameter param-name="organizationPartyId"/>
@@ -235,7 +239,7 @@
            <link target="EmployeeWiseSalaryDetails">
                <parameter param-name="organizationPartyId"/>
            </link>
-       </menu-item>
+       </menu-item>-->
 	<menu-item name="EmployeeBankDetails" title="${uiLabelMap.HumanResEmployeeBankDetails}">
 		<link target="EmployeeBankDetails">
 			<parameter param-name="organizationPartyId" />

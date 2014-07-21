@@ -44,7 +44,7 @@
 		</field> 		      
        <field name="view" title="${uiLabelMap.CommonView}"><submit/></field>
     </form>
-	<form name="ListEmployeeProfile" type="list"
+	<form name="ListEmployeeProfile" type="list" paginate="false"
 		list-name="employeeProfileList" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
 		<actions>
@@ -156,17 +156,21 @@
 		<field name="name" title-area-style="tableheadwide">
 			<display description="${name} " />
 		</field>		
-		<field name="employmentFrom" title-area-style="tableheadwide"><display description="${fromDate}"/></field>
-		<field name="position" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${position}" key-field-name="emplPositionTypeId"></display-entity></field>
+		<field name="employmentFrom" title-area-style="tableheadwide" title="Employment From"><display description="${joinDate}"/></field>
+		<field name="qual" title="Educational Qualification"><display description="${qual}"/></field>
+		<field name="position" title="Designation" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${position}" key-field-name="emplPositionTypeId"></display-entity></field>
 		<field name="department" title-area-style="tableheadwide"><display description="${department}"/></field>
 		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
 		<field name="gender" title-area-style="tableheadwide"><display description="${gender}"/></field>
+		<field name="caste" title="Caste"><display description="${caste}"/></field>
 		<field name="amount" title="Basic Pay" title-area-style="tableheadwide"><display description="${amount}"/></field>
+		<field name="daAmount" title="DA Amount"><display description="${daAmount}"/></field>
 		<field name="payGradeId" title="Grade" title-area-style="tableheadwide"><display description="${payGradeId}"/></field>
 		<field name="bloodGroup" title-area-style="tableheadwide"><display description="${bloodGroup}"/></field>
 		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>
 		<field name="locationGeoId" title="Location Geo" title-area-style="tableheadwide"><display description="${locationGeoId}"/></field>
-		<field name="resignDate" title="Retirement Date" title-area-style="tableheadwide"><display description="${resignDate}"/></field>		
+		<field name="address" title="Residential Address"><display description="${address}"/></field>
+		<field name="retirementDate" title="Retirement Date" title-area-style="tableheadwide"><display description="${retirementDate}"/></field>		
 	</form>	
 	 <form name="employeeLookup" type="single"  odd-row-style="header-row" default-table-style="basic-table"  target="EmployeeWiseSalaryDetails">
        	<field name="employeeId">
