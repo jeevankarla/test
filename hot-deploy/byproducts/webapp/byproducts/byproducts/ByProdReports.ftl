@@ -876,6 +876,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 	      				</form>
 					</tr>
+					</#if>
 					<tr class="alternate-row">
 						<form id="newOrTerminateRtlReport" name="newOrTerminateRtlReport" method="post" action="<@ofbizUrl>newOrTerminateRtlReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">New Or Terminated Retailers</td>
@@ -892,7 +893,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td> 
 	      				</form>
 					</tr>
-					</#if>
 			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	
