@@ -726,6 +726,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<input type="submit" value="CSV" onClick="javascript:appendParams('MonthlyVatReport', '<@ofbizUrl>MonthlyVatReport.csv</@ofbizUrl>');" class="buttontext"/></td>        			
 						</form>
 					</tr>
+					<#if security.hasEntityPermission("SUBSIDY", "_VIEW", session)>
 					<tr class="alternate-row">
 						<form id="SubsidyMilkReport" name="SubsidyMilkReport" method="post" action="<@ofbizUrl>SubsidyMilkReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Subsidy Milk Report</td>
@@ -736,6 +737,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>    			
 						</form>
 					</tr>
+					</#if>
 					<tr class="alternate-row">
 						<form id="SubsidyGheeReport" name="SubsidyGheeReport" method="post" action="<@ofbizUrl>SubsidyGheeReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">Subsidy Ghee Report</td>
