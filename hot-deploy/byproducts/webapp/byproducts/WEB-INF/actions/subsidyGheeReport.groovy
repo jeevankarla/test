@@ -104,6 +104,9 @@ if (UtilValidate.isNotEmpty(partyDeductionList)) {
 		if (UtilValidate.isNotEmpty(partyDeduction.cost)) {
 			cost=partyDeduction.cost;
 		}
+		if (cost==0) {
+			quantity=0;
+		}
 		partyWiseMap["partyName"]=partyName;
 		partyWiseMap["quantity"]=quantity;
 		partyWiseMap["cost"]=cost;
