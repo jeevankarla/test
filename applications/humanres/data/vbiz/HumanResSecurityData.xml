@@ -137,4 +137,22 @@ under the License.
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ANALYTICS_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_BENFDED_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
+      
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_REPORTS_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_PAYROLL_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPLLEAVE_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ANALYTICS_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_BENFDED_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
+      
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_REPORTS_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_PAYROLL_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_EMPLLEAVE_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_ANALYTICS_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_BENFDED_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
 </entity-engine-xml>
