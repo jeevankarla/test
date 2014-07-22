@@ -272,9 +272,14 @@
 	<SecurityGroupPermission groupId="BYPRODUCTS_CHQENTRY" permissionId="PAYMENTSTATUS_CANCEL"/>
 	<SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="BYPRODUCTS_CHALLAN"/>
     <SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="PAYMENTSTATUS_CANCEL"/> 
+
+    <!-- Institution Security Group-->    
+    <SecurityGroup groupId="BYPRODUCTS_INST" description="Route Marketing Credit Institution Billing"/>
+	<SecurityPermission permissionId="BYPRODUCTS_INSTBILL" description="Special permission to show and generate institution bill generation" />
+	<SecurityGroupPermission groupId="BYPRODUCTS_INST" permissionId="BYPRODUCTS_INSTBILL"/>
     
-    <SecurityGroupPermission groupId="BYPRODUCTS_CLNENTRY" permissionId="PAYMENTSTATUS_CANCEL"/> 
-     <!-- instead of adding each group one Permission group added -->
+    
+    <!-- instead of adding each group one Permission group added -->
      <SecurityGroup groupId="BYPROD_PAYMENT_WING" description="Route Marketing All Types of Payment  Entry"/>
      <SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CASH"/>
 	<SecurityGroupPermission groupId="BYPROD_PAYMENT_WING" permissionId="BYPRODUCTS_CHALLAN"/>
