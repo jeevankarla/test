@@ -188,13 +188,14 @@
            <field-map field-name="partyId" from-field="parameters.partyId"/>
         </entity-and>	
        <first-from-list entry="partyClassification" list="partyClassificationList"/>
-        <if-not-empty field="partyClassification.partyClassificationGroupId" >        	 
-	       	<set field="classification.partyId" from-field="parameters.partyId"/>
-	       	<set field="classification.partyClassificationGroupId" value="${partyClassification.partyClassificationGroupId}" />
-	       	<set field="classification.fromDate" value="${partyClassification.fromDate}" />
-	       	<call-service service-name="deletePartyClassification" in-map-name="classification"></call-service> 
-       	</if-not-empty>
+       
         <if-not-empty field="parameters.caste">
+	       	  <if-not-empty field="partyClassification.partyClassificationGroupId" >        	 
+		       	<set field="classification.partyId" from-field="parameters.partyId"/>
+		       	<set field="classification.partyClassificationGroupId" value="${partyClassification.partyClassificationGroupId}" />
+		       	<set field="classification.fromDate" value="${partyClassification.fromDate}" />
+		       	<call-service service-name="deletePartyClassification" in-map-name="classification"></call-service> 
+	       	</if-not-empty>
         	<set field="partyClassificationCtx.partyId" from-field="parameters.partyId" />
 			<set field="partyClassificationCtx.partyClassificationGroupId" from-field="parameters.caste" />
 			 <now-date-to-env field="nowDate"/>
