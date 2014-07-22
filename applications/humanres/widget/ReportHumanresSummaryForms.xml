@@ -148,8 +148,9 @@
 	<form name="masterEmployees" type="list" list-name="employeeList" 
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
 		<actions>
+		<set field="parameters.reportFlag" value="daAmount"></set>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeTable.groovy"/>					
-		</actions>		
+		</actions>
 		<field name="partyId" title="Employee Id" title-area-style="tableheadwide" >
 			<display description="${employeeId}" />
 		</field>
@@ -640,6 +641,30 @@
             </drop-down>
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
+    </form>
+    <form name="ArrearDays" type="single" header-row-style="header-row" default-table-style="basic-table" >
+   		 <field name="hideSearch"><hidden value="Y" /></field>
+		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+		 <field name="partyId">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+       	<field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+       	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>   
+    </form>
+    <form name="EditArrearDays" type="list" list-name="EditArrearDays" default-table-style="basic-table hover-bar" target="" >
+    	<field name="partyId"><hidden></hidden></field>
+    	<field name="customTimePeriodId"><display></display></field>
+    	<field name="noOfPayableDays"><display></display></field> 
+    	<field name="noOfArrearDays" title="Arrear Days"><text></text></field>
+    	 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     <form name="ListPartyBenefitOrDeduction" type="list"
 		list-name="employDetailsList" odd-row-style="alternate-row"
