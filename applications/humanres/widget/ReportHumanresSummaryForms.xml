@@ -430,13 +430,12 @@
 		list-name="periodBillingList" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
 		<actions>		    
-		    <entity-condition entity-name="PeriodBilling" list="periodBillingList">
+		    <entity-condition entity-name="PeriodBillingAndCustomTimePeriod" list="periodBillingList">
 		    	<condition-list combine="and">
 		    		<condition-expr field-name="billingTypeId" operator="equals" value="PAYROLL_BILL"/>
 		    		<condition-expr field-name="statusId" operator="not-equals" value="COM_CANCELLED"/>
 		    	</condition-list>
-		    	<order-by field-name="-createdDate"/>
-                <order-by field-name="-customTimePeriodId"/>
+		    	<order-by field-name="-thruDate"/>
 		    </entity-condition>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePersonalProfile.groovy"/>
 			<set field="partyId" value="${partyId}"/>
