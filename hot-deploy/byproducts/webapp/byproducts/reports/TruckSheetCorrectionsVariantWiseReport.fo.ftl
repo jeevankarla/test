@@ -30,8 +30,6 @@ under the License.
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
  <#if variantProductMap?has_content> 
- <#assign lineNumber = 5>
-<#assign numberOfLines = 50>
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
 				<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -51,13 +49,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
 	                    <fo:table-body>
 	                    <fo:table-row font-weight = "bold">
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Date</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Product</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Route</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Booth</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                             		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Original</fo:block>
@@ -91,30 +89,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
 		                       <#assign totRevisedQty = 0>
 								<#assign productValues = truckSheetCorrectionItem.getValue()>
 								
-								<#assign lineNumber = lineNumber + productValues.size()>
-			               			<#if (lineNumber >= numberOfLines)>
-			            			<#assign lineNumber = 5 >
-			            			<fo:table-row>
-			           	     			<fo:table-cell>
-				                        	<fo:block font-size="7pt" page-break-after="always"></fo:block>        
-				                        </fo:table-cell>
-			    		            </fo:table-row>
-			            			</#if>
-								<fo:table-row keep-together="always" font-weight = "bold">
-                        			<fo:table-cell>
-                            			<fo:block font-size="11pt">${product.description?if_exists}(${product.brandName?if_exists})</fo:block>
-                        			</fo:table-cell>
-		                       </fo:table-row>
-								<fo:table-row>
-                        			<fo:table-cell>
-                            			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
-                        			</fo:table-cell>
-		                       </fo:table-row>
-		                       	
 								<#list productValues as correctionItem>
 								<#assign orginalQuantity = correctionItem.get("orginalQuantity")>
 	                        	<#assign revisedQuantity = correctionItem.get("revisedQuantity")>
-									<fo:table-row>
+	                        	<#assign totOrignalQty = totOrignalQty+orginalQuantity>
+	                        	<#assign totRevisedQty = totRevisedQty+revisedQuantity>
+	                        	
+	                        		<#--<fo:table-row>
 	                    				<fo:table-cell>
 	                            			<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(correctionItem.get("Date"), "dd-MMM-yyyy")}</fo:block>  
 		                       			</fo:table-cell>
@@ -132,16 +113,17 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
 		                       			<fo:table-cell>
 		                            		<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${correctionItem.get("revisedQuantity")?if_exists}</fo:block>  
 		                       			</fo:table-cell>
-	                				</fo:table-row>
+	                				</fo:table-row>-->
                 				</#list>
-                				<fo:table-row>
+                				<#--<fo:table-row>
 	                        			<fo:table-cell>
 	                            			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
 	                        			</fo:table-cell>
-		                       </fo:table-row>
-		                       <fo:table-row font-weight = "bold">
+		                       </fo:table-row>-->
+		                       	<#if totOrignalQty != totRevisedQty>
+		                       <fo:table-row>
 	                       			<fo:table-cell>
-                            			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">Total</fo:block>  
+                            			<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false">${product.description?if_exists}(${product.brandName?if_exists})</fo:block>  
 	                       			</fo:table-cell>
 	                       			<fo:table-cell>
 	                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
@@ -162,9 +144,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
                     			<fo:table-cell>
                         			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
                     			</fo:table-cell>
-		                    </fo:table-row>      
+		                    </fo:table-row> 
+		                    </#if>     
                 		</#list>
-                		<fo:table-row font-weight = "bold">
+                		<#--<fo:table-row font-weight = "bold">
                    			<fo:table-cell>
                     			<fo:block  keep-together="always" text-align="left" font-weight = "bold" font-size="12pt" white-space-collapse="false">Grand Total</fo:block>  
                    			</fo:table-cell>
@@ -185,7 +168,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
                 			<fo:table-cell>
                     			<fo:block font-size="10pt">-------------------------------------------------------------------------------------</fo:block>
                 			</fo:table-cell>
-		                </fo:table-row>
+		                </fo:table-row>-->
                     </fo:table-body>
                 </fo:table>
                </fo:block> 		
