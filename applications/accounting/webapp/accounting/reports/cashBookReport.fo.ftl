@@ -146,7 +146,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
                                 	</#if>
 	                       			<fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" font-weight="bold"  keep-together="always">
+                                    <fo:block text-align="left" font-weight="bold">
                                             ${partyName?if_exists}
                                     </fo:block>
 	                                </fo:table-cell>
@@ -194,8 +194,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
 	                                </#if>
 	                                <#if ((comments)?has_content)>
-                                	<fo:table-cell border-style="solid"  keep-together="always">
-	                                    <fo:block text-align="right">${(comments)}</fo:block>
+                                	<fo:table-cell border-style="solid">
+	                                    <fo:block text-align="left">${(comments)}</fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell border-style="solid">
