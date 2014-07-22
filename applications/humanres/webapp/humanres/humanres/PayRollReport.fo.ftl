@@ -21,7 +21,7 @@ under the License.
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="11in" page-width="8.5in"
-        margin-top="0.1in" margin-bottom="0.3in" margin-left=".5in" margin-right="1in">
+        margin-top="0.1in" margin-bottom="0.3in" margin-left=".8in" margin-right=".7in">
           <fo:region-body margin-top=".3in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
@@ -61,7 +61,7 @@ under the License.
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
       	 <#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : partyId})/>
          <#assign location=delegator.findByAnd("EmployeeContactDetails", {"partyId" : partyId})/>
-         <#assign emplLeaves = delegator.findByAnd("EmplLeaveBalanceStatus", {"partyId" : partyId, "customTimePeriodId": timePeriod})/>       
+         <#assign emplLeaves = delegator.findByAnd("EmplLeaveBalanceStatus", {"partyId" : partyId, "customTimePeriodId": parameters.customTimePeriodId})/>       
             <fo:block text-align="center" border-style="solid" font-weight="bold">
             	<fo:table>
             		<fo:table-column column-width="7in"/>
@@ -90,13 +90,13 @@ under the License.
                      		 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                      		 	<fo:block>
                      		 		<fo:table width="100%" table-layout="fixed">
+                     		 			<fo:table-column column-width="2.9in"/>
                      		 			<fo:table-column column-width="2.7in"/>
-                     		 			<fo:table-column column-width="2.5in"/>
                      		 			<fo:table-column column-width="7in"/>
                      		 			<fo:table-body>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee Name       : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Employee Name       : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">PF Account Number   : ${emplDetails.presentEpf?if_exists}</fo:block>
@@ -107,7 +107,7 @@ under the License.
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee No.            : <#if emplDetails.employeeId?has_content>${emplDetails.employeeId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Employee No.            : <#if emplDetails.employeeId?has_content>${emplDetails.employeeId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">ESI Number               : ${emplDetails.presentEsic?if_exists}</fo:block>
@@ -118,7 +118,7 @@ under the License.
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Department               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Department               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee.PAN          : ${emplDetails.panId?if_exists}</fo:block>
@@ -130,7 +130,7 @@ under the License.
                      		 				<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPositionAndFulfilment[0].emplPositionTypeId?if_exists}, true)>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Designation               : <#if designation?has_content>${designation.description?if_exists}</#if></fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Designation               : <#if designation?has_content>${designation.description?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">D.O.J                         : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((doj[0].appointmentDate?if_exists), "dd/MM/yyyy")}</fo:block>
@@ -139,7 +139,7 @@ under the License.
                      		 				</fo:table-row>                     		 				
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Location                    : ${(doj[0].locationGeoId)?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Location                    : ${(doj[0].locationGeoId)?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : ${emplDetails.employeeBankAccNo?if_exists}</fo:block>
@@ -189,10 +189,10 @@ under the License.
 		       			<fo:table-row >
                 			<fo:table-cell  border-style="solid">
                 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Total Days                :</fo:block>
-                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Loss of Pay              :</fo:block>
-                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Net Paid Days          :</fo:block>
-                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Arrear   Days            :</fo:block>
+                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Total Days                </fo:block>
+                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Loss of Pay              </fo:block>
+                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Arrear   Days            </fo:block>
+                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Net Paid Days          </fo:block>
                     		</fo:table-cell>
                     		<#assign totalDays=0>
                     		<#assign lossOfPay=0>
@@ -206,10 +206,10 @@ under the License.
                     		</#if>                    		
                      		<fo:table-cell border-style="solid">
                      			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                        		<fo:block text-align="center">${totalDays?if_exists}</fo:block>
-                        		<fo:block text-align="center">${lossOfPay?if_exists}days</fo:block>
-                        		<fo:block text-align="center">${(netPaidDays?if_exists)}days</fo:block>
-                        		<fo:block text-align="center">${arrearDays?if_exists}days</fo:block>
+                        		<fo:block text-align="center" white-space-collapse="false">${totalDays?if_exists}  days</fo:block>
+                        		<fo:block text-align="center" white-space-collapse="false">${lossOfPay?if_exists}  days</fo:block>
+                        		<fo:block text-align="center" white-space-collapse="false">${arrearDays?if_exists}  days</fo:block>
+                        		<fo:block text-align="center" white-space-collapse="false">${(netPaidDays?if_exists)}  days</fo:block>                        		
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     			<fo:block>
@@ -367,6 +367,7 @@ under the License.
                             	<@ofbizCurrency amount=netAmt?string("#0")/>
                           	</fo:block>                       
                    			<fo:block white-space-collapse="false" keep-together="always">&#160;(In Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmt?string("#0")), "%rupees-and-paise", locale).toUpperCase()} ONLY)</fo:block>
+                   			 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
                    		</fo:table-cell>
                    </fo:table-row>
             		</fo:table-body>
