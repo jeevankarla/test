@@ -3611,6 +3611,7 @@
 					result-map="permResult">
 					<field-map field-name="mainAction" value="REPORTS" />
 				</service>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
 				<set field="formTargetRequest" value="FinancialAccountingTrans" />
 			</actions>

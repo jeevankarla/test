@@ -595,10 +595,10 @@ under the License.
         <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
     <form name="FinancialAccountTransForMonth" type="single" target="${formTargetRequest}">
-        <field name="fromDate" title="From Date"><date-time type="timestamp"/></field>
-        <field name="thruDate" title="Thru Date"><date-time type="timestamp"/></field>
+        <field name="fromDate" title="From Date" id-name="fromDate"><date-time type="timestamp"/></field>
+        <field name="thruDate" title="Thru Date" id-name="thruDate"><date-time type="timestamp"/></field>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="finAccountId" title="Financial Account">
+        <field name="finAccountId" title="Financial Account" id-name="finAccountId">
         	<drop-down allow-empty="false">
                 <list-options list-name="financialAccnt" key-name="finAccountId" description="${finAccountName}"/>
             </drop-down>
@@ -609,15 +609,25 @@ under the License.
                 </entity-options>
             </drop-down> -->
         </field>
-        <field name="isPosted">
+        <field name="isPosted" id-name="isPosted">
             <drop-down>
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
                 <option description="${uiLabelMap.CommonNo}" key="N"/>
                 <option description="${uiLabelMap.CommonAll}" key="ALL"/>
             </drop-down>
         </field>
-        <field name="openingBalance" title="Opening Balance"><text></text></field>	
-        <field name="submitButton" widget-style="buttontext" action=""><submit button-type="text-link"/></field>
+        <field name="openingBalance" title="Opening Balance" id-name="openingBalance"><text></text></field>
+        <field name="pdf" title=" " widget-style="buttontext" event="onclick" action="javascript:appendParams('FinancialAccountTransForMonth', this);" id-name="cashBookPdf">
+            <hyperlink target="FinancialAccountTransForMonth.pdf" description="PDF" target-window="_blank"> 	
+                  <parameter param-name="organizationPartyId" from-field="organizationPartyId"/> 
+               	  <parameter param-name="finAccountId" from-field="finAccountId" />
+               	  <parameter param-name="fromDate" from-field="fromDate" />
+               	  <parameter param-name="thruDate" from-field="thruDate" />
+               	  <parameter param-name="isPosted" from-field="isPosted" />
+               	  <parameter param-name="openingBalance" from-field="openingBalance" />
+            </hyperlink>
+        </field>
+        <field name="submitButton"  widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
 	<form name="FinancialAccountTransCSV" type="list" list-name="financialAcctgTransList" view-size="99999">
         <field name="transactionDate"><display/></field>
@@ -625,8 +635,8 @@ under the License.
         <field name="description"><display/></field>
         <field name="openingBalance"><display/></field>
         <field name="debitAmount"><display/></field>
-         <field name="creditAmount"><display/></field>
-          <field name="closingBalance"><display/></field>
+        <field name="creditAmount"><display/></field>
+        <field name="closingBalance"><display/></field>
     </form>
     <form name="FinancialAccountTransForMonthCSV" type="list" list-name="dayFinAccountTransList" view-size="99999">
         <field name="transactionDate"><display/></field>
@@ -634,9 +644,9 @@ under the License.
         <field name="partyId"><display/></field>
         <field name="openingBalance"><display/></field>
         <field name="debitAmount"><display/></field>
-         <field name="creditAmount"><display/></field>
-          <field name="closingBalance"><display/></field>
-          <field name="comments" title="Description"><display/></field>
+        <field name="creditAmount"><display/></field>
+        <field name="closingBalance"><display/></field>
+        <field name="comments" title="Description"><display/></field>
     </form>
     <form name="InventoryValuation" type="single" target="InventoryValuation" header-row-style="header-row" default-table-style="basic-table">
         <field name="facilityId" position="1">
