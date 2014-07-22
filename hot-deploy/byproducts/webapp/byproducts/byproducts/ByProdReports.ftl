@@ -271,7 +271,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td width="15%">Report Type 
 					<select name='reportTypeFlag'>
 						<option value='trSheetCrtnAgentWise'>AgentWise</option>
-						<option value='trSheetCrtnVariantWise'>VariantWise</option>
+						<option value='trSheetCrtnVariantWise'>Abstract</option>
 					</select>
 				</td>
       			<td width="15%">Route 
