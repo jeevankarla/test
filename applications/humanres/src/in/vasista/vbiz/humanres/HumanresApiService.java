@@ -54,7 +54,7 @@ public class HumanresApiService {
         	}       	
         	List conditionList = UtilMisc.toList(
 				EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));		
-        	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
+        	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"APPROVED"));
         	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	List<GenericValue> periodBillingList = delegator.findList("PeriodBilling", condition, null, null, null, false);
 
@@ -69,7 +69,7 @@ public class HumanresApiService {
         		String periodId = period.getString("customTimePeriodId");
             	conditionList.clear();
             	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PAYROLL_BILL"));            	
-            	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"GENERATED"));
+            	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"APPROVED"));
             	conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, periodId));
             	condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
             	List periodBillings = delegator.findList("PeriodBilling", condition, null, null, null, false);
