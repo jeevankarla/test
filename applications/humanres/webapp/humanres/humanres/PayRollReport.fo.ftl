@@ -61,7 +61,7 @@ under the License.
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
       	 <#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : partyId})/>
          <#assign location=delegator.findByAnd("EmployeeContactDetails", {"partyId" : partyId})/>
-         <#assign emplLeaves = delegator.findByAnd("EmplLeaveBalanceStatus", {"partyId" : partyId, "customTimePeriodId": parameters.customTimePeriodId})/>       
+         <#assign emplLeaves = delegator.findByAnd("EmplLeaveBalanceStatus", {"partyId" : partyId, "customTimePeriodId": timePeriod})/>       
             <fo:block text-align="center" border-style="solid" font-weight="bold">
             	<fo:table>
             		<fo:table-column column-width="7in"/>
