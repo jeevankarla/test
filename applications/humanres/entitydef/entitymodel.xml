@@ -82,8 +82,9 @@ under the License.
         <field name="busRouteNo" type="short-varchar"></field>
         <field name="flexibleShift" type="indicator"></field>
         <field name="punchType" type="short-varchar"></field>
-        <field name="shiftType" type="short-varchar"></field>
-      <prim-key field="partyId" />
+        <field name="shiftType" type="id"></field>
+        <field name="shiftTypePeriodId" type="id"></field>
+       <prim-key field="partyId" />
 		<relation type="one" fk-name="EMPL_DETAIL_PRTY"
 			rel-entity-name="Party">
 			<key-map field-name="partyId" />
@@ -109,6 +110,9 @@ under the License.
         </relation>
         <relation type="one" fk-name="EMPL_REC_SHT" rel-entity-name="WorkShiftType">
             <key-map field-name="shiftType" rel-field-name="shiftTypeId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_REC_SHTP" rel-entity-name="WorkShiftPeriod">
+            <key-map field-name="shiftTypePeriodId" rel-field-name="shiftPeriodId"/>
         </relation>
 	</entity> 
 
@@ -1430,6 +1434,7 @@ under the License.
 	  <field name="punchtime" type="time"/>
 	  <field name="PunchType" type="id-ne"/>
 	  <field name="InOut" type="id-ne"/>
+	  <field name="isManual" type="indicator"/>
 	  <field name="Note" type="description"/>
 	  <prim-key field="partyId"/>
 	  <prim-key field="punchdate"/>
@@ -1437,14 +1442,15 @@ under the License.
 	  <prim-key field="emplPunchId"/>
 	  <prim-key field="PunchType"/>
     </entity>
-    <entity entity-name="EmplDailyAttendanceDetail" package-name="org.ofbiz.humanres.position"	title="Empl PUnch Type">
+   <entity entity-name="EmplDailyAttendanceDetail" package-name="org.ofbiz.humanres.position"	title="Empl PUnch Type">
 	  <field name="partyId" type="id-ne"/>
 	  <field name="date" type="date"/>
 	  <field name="seqId" type="id-ne"></field>
 	  <field name="shiftType" type="id-ne"/>
 	  <field name="availedVehicleAllowance" type="indicator"/>
 	  <field name="availedCanteen" type="indicator"/>
-	   <field name="isOnField" type="indicator"/>
+	  <field name="isOnField" type="indicator"/>
+	  <field name="lateMin" type="fixed-point"/>
 	  <prim-key field="partyId"/>
 	  <prim-key field="date"/>
 	  <prim-key field="seqId"/>
