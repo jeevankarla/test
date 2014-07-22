@@ -21,7 +21,7 @@ under the License.
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="11in" page-width="8.5in"
-        margin-top="0.1in" margin-bottom="0.3in" margin-left=".8in" margin-right=".7in">
+        margin-top="0.1in" margin-bottom="0.1in" margin-left=".8in" margin-right=".7in">
           <fo:region-body margin-top=".3in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
@@ -38,17 +38,17 @@ under the License.
      <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", parameters.partyId, "userLogin", userLogin))/>
     	<#assign payRollHeaderList = payRollMap.entrySet()>
       
-     <fo:page-sequence master-reference="main"> 	 <#-- the footer -->
-        <fo:static-content flow-name="xsl-region-after">
+     <fo:page-sequence master-reference="main"> 	
+       <#-- <fo:static-content flow-name="xsl-region-after">
              <fo:block font-size="8pt" text-align="center">             
              	<#if footerImageUrl?has_content><fo:external-graphic src="<@ofbizContentUrl>${footerImageUrl?if_exists}</@ofbizContentUrl>" overflow="hidden" height="20px" content-height="scale-to-fit"/></#if>             
          	 </fo:block>  
          	 <fo:block font-size="8pt" text-align="center" space-before="10pt">
                 ${uiLabelMap.CommonPage} <fo:page-number-citation ref-id="theEnd"/> ${uiLabelMap.CommonOf} <fo:page-number-citation ref-id="theEnd"/>
             </fo:block> 
-        </fo:static-content>
+        </fo:static-content>-->
           <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-           	<fo:block id="theEnd"/>  
+           	<#--<fo:block id="theEnd"/>-->  
         <#assign pageCnt=0>   	
       <#list payRollHeaderList as payRollHeader>
       	<#assign totalEarnings =0 />
@@ -121,7 +121,7 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Department               : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee.PAN          : ${emplDetails.panId?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN          : ${emplDetails.panId?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual HRA    :  <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("hraAmt")?if_exists}</#if></fo:block>
@@ -190,8 +190,8 @@ under the License.
                 			<fo:table-cell  border-style="solid">
                 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Total Days                </fo:block>
-                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Loss of Pay              </fo:block>
-                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Arrear   Days            </fo:block>
+                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Loss of Pay Days             </fo:block>
+                    			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Arrears   Days            </fo:block>
                     			<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Net Paid Days          </fo:block>
                     		</fo:table-cell>
                     		<#assign totalDays=0>
@@ -375,6 +375,7 @@ under the License.
             </fo:block>
             <fo:block text-align="center" keep-together="always" font-size="8pt">This is a computer-generated salary slip. Does not require a Signature
             </fo:block>
+            <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block>            
 	            <#assign pageCnt=pageCnt+1> 
 	            <#if pageCnt==2>
