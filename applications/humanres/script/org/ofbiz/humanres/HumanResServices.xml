@@ -812,6 +812,7 @@
         <make-value entity-name="EmplLeave" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>
         <set-nonpk-fields value-field="newEntity" map="parameters"/>
+        <set field="newEntity.thruDate" type="Timestamp" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(newEntity.thruDate)}"/>
          <set field="newEntity.appliedBy" from-field="userLogin.partyId"/>
          <create-value value-field="newEntity"/>
         <check-errors/>

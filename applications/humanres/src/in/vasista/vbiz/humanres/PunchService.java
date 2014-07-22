@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -126,34 +127,55 @@ public class PunchService {
 
 	}
 	
-	private static String getShiftTypeByTime(DispatchContext dctx, Map<String, Object> context) {
+	private static GenericValue getShiftTypeByTime(DispatchContext dctx, Map<String, Object> context) {
     	Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();    	
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp punchDateTime =  (Timestamp)context.get("punchDateTime");
+        Boolean isOutTime = (Boolean)context.get("isOutTime");
+        if(UtilValidate.isEmpty(isOutTime)){
+        	isOutTime = Boolean.FALSE;
+        }
         Locale locale = (Locale) context.get("locale");
         TimeZone timeZone = TimeZone.getDefault();
         
-        String shiftTypeId = null;
+        GenericValue shiftType = null;
 		try {
 			Time punchTime = UtilDateTime.toSqlTime(UtilDateTime.toDateString(punchDateTime, "HH:mm:ss"));
 			List condList = FastList.newInstance();
-			condList.add(EntityCondition.makeCondition("endTime", EntityOperator.GREATER_THAN_EQUAL_TO, punchTime));
+			
+			if(isOutTime){
+				condList.add(EntityCondition.makeCondition("startTime", EntityOperator.LESS_THAN_EQUAL_TO, punchTime));
+			}else{
+				condList.add(EntityCondition.makeCondition("endTime", EntityOperator.GREATER_THAN_EQUAL_TO, punchTime));
+			}
+			condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isDefault", EntityOperator.EQUALS, "Y"),EntityOperator.AND ,EntityCondition.makeCondition("isDefault", EntityOperator.NOT_EQUAL, null)));
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-			//punchTime.
-			List<GenericValue> workShiftTypePeriodAndMap = delegator.findList("WorkShiftTypePeriodAndMap", null, null, UtilMisc.toList("-startTime"),null, false);
+			//punchTime 
+			List<GenericValue> workShiftTypePeriodAndMap = delegator.findList("WorkShiftTypePeriodAndMap", cond, null, UtilMisc.toList("-startTime"),null, false);
 		    Time nearestTime = null;
+		    
 			if(UtilValidate.isNotEmpty(workShiftTypePeriodAndMap)){
 				nearestTime = (EntityUtil.getFirst(workShiftTypePeriodAndMap)).getTime("startTime");
+				if(isOutTime){
+					nearestTime = (EntityUtil.getFirst(workShiftTypePeriodAndMap)).getTime("endTime");
+				}
 				for(GenericValue workShiftTypePeriod : workShiftTypePeriodAndMap){
 					Time tempNearestTime = workShiftTypePeriod.getTime("startTime");
+					if(isOutTime){
+						 tempNearestTime = workShiftTypePeriod.getTime("endTime");
+					}
 					if((Math.abs(punchTime.getTime()-tempNearestTime.getTime())) <= (Math.abs(punchTime.getTime()-nearestTime.getTime()))){
 						nearestTime = tempNearestTime;
 					}
-					
 				}
-				workShiftTypePeriodAndMap = EntityUtil.filterByAnd(workShiftTypePeriodAndMap, UtilMisc.toMap("startTime",nearestTime));
-				shiftTypeId = (EntityUtil.getFirst(workShiftTypePeriodAndMap)).getString("shiftTypeId");
+				if(isOutTime){
+					workShiftTypePeriodAndMap = EntityUtil.filterByAnd(workShiftTypePeriodAndMap, UtilMisc.toMap("endTime",nearestTime));
+				}else{
+					workShiftTypePeriodAndMap = EntityUtil.filterByAnd(workShiftTypePeriodAndMap, UtilMisc.toMap("startTime",nearestTime));
+				}
+				
+				shiftType = (EntityUtil.getFirst(workShiftTypePeriodAndMap));
 				
 			}
 		   	
@@ -162,7 +184,7 @@ public class PunchService {
   			Debug.logError("Error updating  Empl Punch :" + e.getMessage(), module);
   		}
     	
-    	return shiftTypeId;
+    	return shiftType;
  }
 	private static GenericValue fetchLastEmplPunch(DispatchContext dctx, Map<String, Object> context) throws Exception{
 		 Delegator delegator = dctx.getDelegator();
@@ -178,9 +200,10 @@ public class PunchService {
 
 			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
 			condList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(UtilDateTime.addDaysToTimestamp(punchDateTime, -1))));
-			if(UtilValidate.isNotEmpty(context.get("PunchType"))){
+			/*if(UtilValidate.isNotEmpty(context.get("PunchType"))){
 				condList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS,context.get("PunchType")));
-			}
+			}*/
+			condList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS,"Normal"));
 			if(UtilValidate.isNotEmpty(context.get("InOut"))){
 				condList.add(EntityCondition.makeCondition("InOut", EntityOperator.EQUALS,context.get("InOut")));
 			}
@@ -214,7 +237,7 @@ public class PunchService {
 			condList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS,UtilDateTime.toSqlDate(punchDateTime)));
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			
-			List<GenericValue> emplShiftList = delegator.findList("EmplDailyAttendanceDetail", cond, UtilMisc.toSet("partyId","date","shiftType"),null,efo, false);
+			List<GenericValue> emplShiftList = delegator.findList("EmplDailyAttendanceDetail", cond, UtilMisc.toSet("partyId","date","shiftType"),UtilMisc.toList("-seqId"),efo, false);
 			if(UtilValidate.isNotEmpty(emplShiftList)){
 				emplShift =  EntityUtil.getFirst(emplShiftList);
 			}
@@ -233,13 +256,25 @@ public class PunchService {
 	        String partyId =  (String)context.get("partyId");
 	        Timestamp punchDateTime =  (Timestamp)context.get("punchDateTime");
 	        Map result = ServiceUtil.returnSuccess();
-	        Locale locale = (Locale) context.get("locale");
 	        String shiftTypeId = null;
 			try {
+				int lateComeMin = 0;
+	        	int earlyGoMin =0;
+	        	 GenericValue tenantLateCome = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_LATE_COME"), false);
+	  	    	 if (UtilValidate.isNotEmpty(tenantLateCome)) {
+	  	    		lateComeMin = (new Double(tenantLateCome.getString("propertyValue"))).intValue();
+	  	    	 }
+	  	    	GenericValue tenantEarlyGo = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_EARLY_GO"), false);
+	  	    	if (UtilValidate.isNotEmpty(tenantEarlyGo)) {
+	  	    		earlyGoMin = (new Double(tenantEarlyGo.getString("propertyValue"))).intValue();
+	  	    	}
+	  	    	GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), true);
+	  	    	
+	  	    	
 				Time punchtime = UtilDateTime.toSqlTime(UtilDateTime.toDateString(punchDateTime, "HH:mm:ss"));
 				//Debug.log("punchDateTime====="+punchDateTime);
 				GenericValue lastEmplPunch = fetchLastEmplPunch(dctx,context);
-				Debug.logInfo("lastEmplPunch====="+lastEmplPunch,module);
+				Debug.log("lastEmplPunch====="+lastEmplPunch);
 				if(UtilValidate.isNotEmpty(lastEmplPunch)){
 					Timestamp lastEmplPunchTime =
 						    Timestamp.valueOf(
@@ -265,12 +300,12 @@ public class PunchService {
 				
 				context.put("PunchType", "Normal");
 				lastEmplPunch = fetchLastEmplPunch(dctx,context);
-				context.put("InOut", "IN");
-				GenericValue last_In_EmplPunch = fetchLastEmplPunch(dctx,context);
+				//context.put("InOut", "IN");
+				//GenericValue last_In_EmplPunch = fetchLastEmplPunch(dctx,context);
 				double shiftTimeGap  = 0;
 				//Debug.logInfo("last_In_EmplPunch====="+last_In_EmplPunch,module);
 				
-				if(UtilValidate.isNotEmpty(last_In_EmplPunch)){
+				/*if(UtilValidate.isNotEmpty(last_In_EmplPunch)){
 					Timestamp last_In_EmplPunchTime =
 						    Timestamp.valueOf(
 						        new SimpleDateFormat("yyyy-MM-dd ")
@@ -280,32 +315,94 @@ public class PunchService {
 					
 					//shiftTimeGap = (punchDateTime.getTime()-(last_In_EmplPunchTime).getTime());
 					shiftTimeGap   = UtilDateTime.getInterval(last_In_EmplPunchTime,punchDateTime);
+					
 					Debug.logInfo("interval====="+UtilDateTime.getInterval(last_In_EmplPunchTime,punchDateTime),module);
+				}*/
+				if(UtilValidate.isNotEmpty(lastEmplPunch)){
+					Timestamp lastEmplPunchTime =
+						    Timestamp.valueOf(
+						        new SimpleDateFormat("yyyy-MM-dd ")
+						        .format(lastEmplPunch.getDate("punchdate")) // get the current date as String
+						        .concat(lastEmplPunch.getString("punchtime"))        // and append the time
+						    );
+					
+					//shiftTimeGap = (punchDateTime.getTime()-(last_In_EmplPunchTime).getTime());
+					shiftTimeGap   = UtilDateTime.getInterval(lastEmplPunchTime,punchDateTime);
+					
+					Debug.logInfo("interval====="+UtilDateTime.getInterval(lastEmplPunchTime,punchDateTime),module);
 				}
-				
 				
 				Debug.logInfo("shiftTimeGap====="+shiftTimeGap,module);
+				Map employeeDailyAttendanceMap = UtilMisc.toMap("userLogin", userLogin);
+				employeeDailyAttendanceMap.put("date", UtilDateTime.toSqlDate(punchDateTime));
+				employeeDailyAttendanceMap.put("partyId", partyId);
+				double lateMin =0;
 				
 				if(UtilValidate.isNotEmpty(lastEmplPunch) && (lastEmplPunch.getString("InOut")).equals("IN") && (shiftTimeGap <= (3600000*12))){
-					emplPunchMap.put("InOut", "OUT");
+						emplPunchMap.put("InOut", "OUT");
+						//here get shiftType for out time
+						context.put("isOutTime", Boolean.TRUE);
+						GenericValue shiftType = getShiftTypeByTime(dctx,context);
+						if(UtilValidate.isNotEmpty(shiftType)){
+							shiftTypeId = shiftType.getString("shiftTypeId");
+							String endTime = shiftType.getString("endTime");
+							if(UtilValidate.isNotEmpty(employeeDetail.getString("shiftType")) && UtilValidate.isNotEmpty(employeeDetail.getString("shiftTypePeriodId")) && shiftTypeId.equalsIgnoreCase(employeeDetail.getString("shiftType"))){
+								GenericValue workShiftPeriod = delegator.findOne("WorkShiftPeriod", UtilMisc.toMap("shiftPeriodId",employeeDetail.getString("shiftTypePeriodId")), false);
+							    if(UtilValidate.isNotEmpty(workShiftPeriod)){
+							    	endTime = workShiftPeriod.getString("endTime");
+							    }
+							}
+							employeeDailyAttendanceMap.put("date", lastEmplPunch.getDate("punchdate"));
+							employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
+							Timestamp lagPunchTime =
+								    Timestamp.valueOf(
+								        new SimpleDateFormat("yyyy-MM-dd ")
+								        .format(UtilDateTime.toSqlDate(UtilDateTime.getDayStart(punchDateTime))) // get the current date as String
+								        .concat(endTime)        // and append the time
+								    );
+							lagPunchTime = new Timestamp(lagPunchTime.getTime()-(earlyGoMin*60*1000));
+							if(punchDateTime.before(lagPunchTime)){
+								 lateMin = ((UtilDateTime.getInterval(punchDateTime,lagPunchTime))/(60*1000));
+							}
+				      }
+					
 				}else{
 					//here populate shift details(EmplDailyAttendanceDetail)
-					shiftTypeId = getShiftTypeByTime(dctx,context);
-					emplPunchMap.put("InOut", "IN");
-					if(UtilValidate.isNotEmpty(shiftTypeId) && (UtilValidate.isEmpty(lastEmplPunch) || (shiftTimeGap >= (3600000*9)) || shiftTimeGap == 0)){
-						Map employeeDailyAttendanceMap = UtilMisc.toMap("userLogin", userLogin);
-						employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
-						employeeDailyAttendanceMap.put("date", UtilDateTime.toSqlDate(punchDateTime));
-						employeeDailyAttendanceMap.put("partyId", partyId);
-						result = dispatcher.runSync("createorUpdateEmployeeDailyAttendance", employeeDailyAttendanceMap);
-						if(ServiceUtil.isError(result)){
-							Debug.logError(ServiceUtil.getErrorMessage(result), module);
-							return result;
+					GenericValue shiftType = getShiftTypeByTime(dctx,context);
+					if(UtilValidate.isNotEmpty(shiftType)){
+						shiftTypeId = shiftType.getString("shiftTypeId");
+						String startTime = shiftType.getString("startTime");
+						if(UtilValidate.isNotEmpty(employeeDetail.getString("shiftType")) && UtilValidate.isNotEmpty(employeeDetail.getString("shiftTypePeriodId")) && shiftTypeId.equalsIgnoreCase(employeeDetail.getString("shiftType"))){
+							GenericValue workShiftPeriod = delegator.findOne("WorkShiftPeriod", UtilMisc.toMap("shiftPeriodId",employeeDetail.getString("shiftTypePeriodId")), false);
+						    if(UtilValidate.isNotEmpty(workShiftPeriod)){
+						    	startTime = workShiftPeriod.getString("startTime");
+						    }
 						}
+						Debug.log("startTime============"+startTime);
+						employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
+						Timestamp lagPunchTime =
+							    Timestamp.valueOf(
+							        new SimpleDateFormat("yyyy-MM-dd ")
+							        .format(UtilDateTime.toSqlDate(UtilDateTime.getDayStart(punchDateTime))) // get the current date as String
+							        .concat(startTime)        // and append the time
+							    );
+						lagPunchTime = new Timestamp(lagPunchTime.getTime()+(lateComeMin*60*1000));
+						
+						if(punchDateTime.after(lagPunchTime)){
+							lateMin = ((UtilDateTime.getInterval(lagPunchTime, punchDateTime))/(60*1000));
+						}
+						emplPunchMap.put("InOut", "IN");
+						employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
 					}
-					
 				}
-				
+				//Debug.log("lateMin============"+lateMin);
+				employeeDailyAttendanceMap.put("lateMin",new BigDecimal(lateMin));
+				result = dispatcher.runSync("createorUpdateEmployeeDailyAttendance", employeeDailyAttendanceMap);
+				if(ServiceUtil.isError(result)){
+					Debug.logError(ServiceUtil.getErrorMessage(result), module);
+					return result;
+				}
+				emplPunchMap.put("isManual","N");
 				result = dispatcher.runSync("emplPunch", emplPunchMap);
 				if(ServiceUtil.isError(result)){
 					Debug.logError(ServiceUtil.getErrorMessage(result), module);
@@ -317,21 +414,67 @@ public class PunchService {
 	    	return result;
 	 } 
   
-  /*public static Map<String, Object> populateEmplPunchFromRawForPeriod(DispatchContext dctx, Map<String, Object> context) throws Exception{
+  public static Map<String, Object> populateEmplPunchFromRawForPeriod(DispatchContext dctx, Map<String, Object> context) throws Exception{
 		 Delegator delegator = dctx.getDelegator();
 		 LocalDispatcher dispatcher=dctx.getDispatcher();
 		 GenericValue userLogin = (GenericValue) context.get("userLogin");
 		 Timestamp fromDate =(Timestamp)context.get("fromDate");
 		 Timestamp thruDate =(Timestamp)context.get("thruDate");
+		 String orgPartyId =(String)context.get("orgPartyId");
 		 Map result = ServiceUtil.returnSuccess();
+		 List<GenericValue> employementList = FastList.newInstance();
 		try {
 			List condList = FastList.newInstance();
+			if(UtilValidate.isNotEmpty(orgPartyId)){
+				Map emplInputMap = FastMap.newInstance();
+				emplInputMap.put("userLogin", userLogin);
+				emplInputMap.put("orgPartyId", orgPartyId);
+				emplInputMap.put("fromDate", fromDate);
+				emplInputMap.put("thruDate", thruDate);
+	        	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+	        	employementList = (List<GenericValue>)resultMap.get("employementList");
+	        	if(UtilValidate.isEmpty(employementList)){
+	        		Debug.logError("Invalid partyId"+orgPartyId, module);
+					return ServiceUtil.returnError("Invalid partyId"+orgPartyId);
+	        	}
+				condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true)));
+			}
+			
 			condList.add(EntityCondition.makeCondition("punchDateTime", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDate)));
 			condList.add(EntityCondition.makeCondition("punchDateTime", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.getDayEnd(thruDate)));
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			
-			List<GenericValue> emplPunchRawList = delegator.findList("EmplPunchRaw", cond, UtilMisc.toSet("partyId","punchDateTime"), UtilMisc.toList("-createdDateTime","-punchDateTime"),null, false);
+			List<GenericValue> emplPunchRawList = delegator.findList("EmplPunchRaw", cond, UtilMisc.toSet("partyId","punchDateTime"), UtilMisc.toList("punchDateTime"),null, false);
 			//Debug.log("emplPunchRaw===="+emplPunchRaw);
+			//here first delete shiftdetails and emplPunch
+			condList.clear();
+            if(UtilValidate.isNotEmpty(employementList)){
+            	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true)));
+            }
+			
+			condList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(fromDate)));
+			condList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(thruDate)));
+			condList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS,"Normal"));
+			
+			cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			
+			List<GenericValue> emplPunch = delegator.findList("EmplPunch", cond, null, null,null, false);
+			delegator.removeAll(emplPunch);
+			
+			condList.clear();
+            if(UtilValidate.isNotEmpty(employementList)){
+            	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true)));
+            }
+			
+			condList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(fromDate)));
+			condList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(thruDate)));
+			
+			cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			
+			List<GenericValue> emplShiftDetails = delegator.findList("EmplDailyAttendanceDetail", cond, null, null,null, false);
+			delegator.removeAll(emplShiftDetails);
+			
+			
 			Map  punchEntryMap = UtilMisc.toMap("userLogin",userLogin);
 			for(GenericValue emplPunchRaw:emplPunchRawList){
 				punchEntryMap.putAll(emplPunchRaw);
@@ -348,7 +491,7 @@ public class PunchService {
     result = ServiceUtil.returnSuccess();
 	return result;
 
-	}*/
+	}
   
   
   public static Map<String, Object> createorUpdateEmployeeDailyAttendance(DispatchContext dctx, Map<String, ? extends Object> context){
@@ -360,6 +503,7 @@ public class PunchService {
       String availedCanteen = (String)context.get("availedCanteen");
       String shiftType = (String)context.get("shiftType");
       Date date = (java.sql.Date)context.get("date");
+      BigDecimal lateMin= (BigDecimal)context.get("lateMin");
       Locale locale = (Locale) context.get("locale");
       Map result = ServiceUtil.returnSuccess();
       
@@ -372,7 +516,7 @@ public class PunchService {
 	        }
 	        
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
-			List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
+			List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null, UtilMisc.toList("-seqId"), null, false);
 			if(UtilValidate.isEmpty(emplDailyAttendanceDetailList)){
 				GenericValue newEntity = delegator.makeValue("EmplDailyAttendanceDetail");
 				newEntity.set("partyId", partyId);
@@ -380,6 +524,7 @@ public class PunchService {
 				newEntity.set("availedVehicleAllowance", availedVehicleAllowance);
 				newEntity.set("availedCanteen", availedCanteen);
 				newEntity.set("shiftType", shiftType);
+				newEntity.set("lateMin", lateMin);
 		        try {		
 		        	delegator.setNextSubSeqId(newEntity, "seqId", 5, 1);
 		        	delegator.create(newEntity);
@@ -389,12 +534,17 @@ public class PunchService {
 		        }
 			}else{	
 				for (int i = 0; i < emplDailyAttendanceDetailList.size(); ++i) {
-					GenericValue employDetails = emplDailyAttendanceDetailList.get(i);
-					employDetails.set("partyId",employDetails.getString("partyId"));
-					employDetails.set("availedVehicleAllowance", availedVehicleAllowance);
-					employDetails.set("availedCanteen", availedCanteen);
-					employDetails.set("shiftType", shiftType);
-					employDetails.store();
+					GenericValue employShiftDetails = emplDailyAttendanceDetailList.get(i);
+					if(UtilValidate.isNotEmpty(employShiftDetails.getBigDecimal("lateMin"))){
+						lateMin = lateMin.add(employShiftDetails.getBigDecimal("lateMin"));
+					}
+					
+					employShiftDetails.set("partyId", employShiftDetails.getString("partyId"));
+					employShiftDetails.set("availedVehicleAllowance", availedVehicleAllowance);
+					employShiftDetails.set("availedCanteen", availedCanteen);
+					employShiftDetails.set("shiftType", shiftType);
+					employShiftDetails.set("lateMin", lateMin);
+					employShiftDetails.store();
 				}
 			}
 				

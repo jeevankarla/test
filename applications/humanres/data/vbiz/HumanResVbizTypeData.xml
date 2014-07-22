@@ -151,6 +151,14 @@
      <StatusType description="Employee Loan status" hasTable="N" parentTypeId="" statusTypeId="EMPL_LOAN_STATUS"/>
      <StatusItem description="Approved" sequenceId="3" statusCode="APPROVED" statusId="LOAN_APPROVED" statusTypeId="EMPL_LOAN_STATUS"/>
      <StatusItem description="Disbursed" sequenceId="4" statusCode="DISBURSED" statusId="LOAN_DISBURSED" statusTypeId="EMPL_LOAN_STATUS"/>
+     <!-- Tenant config settings  -->
+    <Enumeration enumId="HUMANRES" enumTypeId="TENANTCONF_TYPE" sequenceId="1" description="Humanres tenant Configurations"/>
+    
+	<TenantConfiguration propertyName="HR_SHIFT_THRESHOLD" propertyValue="12" propertyTypeEnumId="HUMANRES" description="Humanres shift's threshold(in hours)"/>
+    
+    <TenantConfiguration propertyName="HR_SHIFT_LATE_COME" propertyValue="10" propertyTypeEnumId="HUMANRES" description="Humanres shift's late coming(in minutes)"/>
+    <TenantConfiguration propertyName="HR_SHIFT_EARLY_GO" propertyValue="5" propertyTypeEnumId="HUMANRES" description="Humanres shift's earlying going(in minutes)"/>
+     
        
        
     <!-- punch in and punch out data -->   

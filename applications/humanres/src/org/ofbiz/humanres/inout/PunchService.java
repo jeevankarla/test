@@ -76,6 +76,7 @@ public class PunchService {
 		String PunchType = (String) context.get("PunchType");
 		String inout = (String) context.get("InOut");
 		String note = (String) context.get("Note");
+		String isManual = (String) context.get("isManual");
 		String flag = "out";
 		String date3 = punchdate.toString();
 		String dateArr2[] = date3.split(Pattern.quote("-"));
@@ -93,7 +94,6 @@ public class PunchService {
 		int res = dai % 7;
 		if ((dai % 7) != 0) {
 			PunchId = res;
-			System.out.println("in if.........condition");
 
 		} else {
 			PunchId = 7;
@@ -450,7 +450,7 @@ public class PunchService {
 			GenericValue EmplPunch = delegator.makeValue("EmplPunch", UtilMisc
 					.toMap("partyId", partyId, "emplPunchId", emplPunchId,
 							"PunchType", PunchType, "punchdate", punchdate,
-							"InOut", inout)); // create a generic value from id
+							"InOut", inout ,"isManual" ,isManual)); // create a generic value from id
 												// we just got
 
 			EmplPunch.setNonPKFields(context); // move non-primary key fields
