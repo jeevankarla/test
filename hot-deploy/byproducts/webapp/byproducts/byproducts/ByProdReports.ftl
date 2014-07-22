@@ -268,6 +268,12 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td width="30%">TruckSheet Corrections Report </td>
       			<td width="15%">Date<input  type="text" size="18pt" id="RouteTrCorrDate" readonly  name="supplyDate"></td>
       			<#--><input type="checkbox" name="summeryOnly" value="summeryOnly">Summary Report Only<br> -->
+      			<td width="15%">Report Type 
+					<select name='reportTypeFlag'>
+						<option value='trSheetCrtnAgentWise'>AgentWise</option>
+						<option value='trSheetCrtnVariantWise'>VariantWise</option>
+					</select>
+				</td>
       			<td width="15%">Route 
 				 	<select name="routeId" class='h4'>
 						<option value='All-Routes'>All</option>
@@ -283,7 +289,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 						<option value='PM'>PM</option>
 					</select>
 				</td>
-				<td width="15%"></td>	
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>	
         </tr>

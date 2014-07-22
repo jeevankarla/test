@@ -138,8 +138,7 @@ for(int i = 0; i < productList.size(); i++){
 context.put("prodIndentAndDispatchMap", prodIndentAndDispatchMap);
 }
 
-routeProdDispatchAndDeliveredMap = [:];
-if(reportTypeFlag=="TruckSheetCorrectionsReport"){
+if(reportTypeFlag == "trSheetCrtnAgentWise" || reportTypeFlag == "trSheetCrtnVariantWise"){
 	effectiveDate = null;
 	effectiveDateStr = parameters.supplyDate;
 	if (UtilValidate.isEmpty(effectiveDateStr)) {
@@ -270,5 +269,32 @@ if(reportTypeFlag=="TruckSheetCorrectionsReport"){
 	}
 	truckSheetCorrectionList = UtilMisc.sortMaps(truckSheetCorrectionList, UtilMisc.toList("routeId"));
 	context.put("truckSheetCorrectionList", truckSheetCorrectionList);
+	
+	if(reportTypeFlag == "trSheetCrtnVariantWise"){
+		variantProductMap = [:];
+		truckSheetCorrectionList.each{ truckSheet ->
+			if(UtilValidate.isNotEmpty(truckSheet)){
+				productId = "";
+				routeId = "";
+				if(UtilValidate.isNotEmpty(truckSheet.productId)){
+					productId = truckSheet.productId;
+				}
+				if(UtilValidate.isNotEmpty(truckSheet.routeId)){
+					routeId = truckSheet.routeId;
+				}
+				if(UtilValidate.isEmpty(variantProductMap[productId])){
+					tempList=[];
+					tempList.add(truckSheet);
+					variantProductMap.put(productId,tempList);
+				}else if(UtilValidate.isNotEmpty(variantProductMap[productId])){
+					tempList=[];
+					tempList = variantProductMap.get(productId);
+					tempList.add(truckSheet);
+					variantProductMap.put(productId,tempList);
+				}
+			}
+		}
+		context.put("variantProductMap",variantProductMap);
+	}
 }
 

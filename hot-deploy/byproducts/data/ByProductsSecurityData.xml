@@ -308,7 +308,9 @@
      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODREPORTS_VIEW"/>
      <SecurityGroupPermission groupId="TRNSMRGNADMIN" permissionId="BYPRODUCTS_DAILREPOR"/>
 
-   
-    
+   <!-- EMPLOY SUBSIDY  View permissions -->
+     <SecurityGroup description="View Employee Subsidy Milk" groupId="SUBSIDYVIEW"/>    
+     <SecurityGroupPermission groupId="FULLADMIN" permissionId="SUBSIDY_VIEW"/>
+     <SecurityGroupPermission groupId="SUBSIDYVIEW" permissionId="SUBSIDY_VIEW"/>
 	
 </entity-engine-xml>

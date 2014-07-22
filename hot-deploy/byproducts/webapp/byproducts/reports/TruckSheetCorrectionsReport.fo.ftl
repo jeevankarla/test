@@ -22,7 +22,7 @@ under the License.
 
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="12in"  margin-bottom="1in" margin-left=".3in" margin-right="1in">
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-bottom="1in" margin-left=".3in" margin-right="1in">
         <fo:region-body margin-top="1.3in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
@@ -32,10 +32,10 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
  <#if truckSheetCorrectionList?has_content> 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
-                    <fo:block text-align="left" font-size="12pt" keep-together="always"  white-space-collapse="false">&#160;                      TruckSheet Corrections Report :: ${effectiveDateStr?if_exists}</fo:block>
-              		<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+					<fo:block  keep-together="always" font-weight = "bold" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
+					<fo:block  keep-together="always" font-weight = "bold" text-align="center" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+                    <fo:block text-align="center" font-weight = "bold" font-size="12pt" keep-together="always"  white-space-collapse="false">TruckSheet Corrections Report :: ${effectiveDateStr?if_exists}</fo:block>
+              		<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------</fo:block>
               		<fo:block>
 	                 	<fo:table>
 	                    <fo:table-column column-width="90pt"/>
@@ -48,7 +48,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
 	            		<fo:table-column column-width="100pt"/>
 	            		<fo:table-column column-width="80pt"/>
 	                    <fo:table-body>
-	                    <fo:table-row>
+	                    <fo:table-row font-weight = "bold">
                 				<fo:table-cell>
                             		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">&#160;Date</fo:block>  
                        			</fo:table-cell>
@@ -82,7 +82,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trCorrection.txt")}
                     </fo:table-body>
                 </fo:table>
                </fo:block> 		
-              <fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------</fo:block>
             </fo:static-content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
             	<fo:block>
