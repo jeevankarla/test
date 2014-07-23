@@ -140,11 +140,19 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 		facility = EntityUtil.getFirst(facilities);
 
 		Map inputRateAmt =  UtilMisc.toMap("userLogin", userLogin);
-			inputRateAmt.put("rateCurrencyUomId", "INR");
-			inputRateAmt.put("facilityId", facilityId);
-			inputRateAmt.put("fromDate",monthBegin );
-			inputRateAmt.put("rateTypeId", "TRANSPORTER_MRGN");
-			facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+		inputRateAmt.put("rateCurrencyUomId", "INR");
+		inputRateAmt.put("facilityId", facilityId);
+		inputRateAmt.put("fromDate",monthBegin );
+		inputRateAmt.put("rateTypeId", "TRANSPORTER_MRGN");
+		facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+		
+		Map inputFacilitySize =  UtilMisc.toMap("userLogin", userLogin);
+		inputFacilitySize.put("rateCurrencyUomId", "LEN_km");
+		inputFacilitySize.put("facilityId", facilityId);
+		inputFacilitySize.put("fromDate",monthBegin);
+		inputFacilitySize.put("rateTypeId", "FACILITY_SIZE");
+		facilitySizeResult = dispatcher.runSync("getRouteDistance", inputFacilitySize);
+			
 		
 		List dayTotalsList =  transporterMargins[facilityId];
 		dayValuesMap = dayTotalsList.get(0);
@@ -155,8 +163,9 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 			if(UtilValidate.isNotEmpty(partyId)){
 				totalsMap.put("partyCode",partyId);
 			}
-			if(UtilValidate.isNotEmpty(facility)){
-				totalsMap.put("distance", facility.facilitySize);
+			if(UtilValidate.isNotEmpty(facilitySizeResult)){
+				distance = (BigDecimal) facilitySizeResult.get("facilitySize");
+				totalsMap.put("distance", distance);
 			}
 		
 			if(UtilValidate.isNotEmpty(partyName)){
@@ -211,7 +220,6 @@ if(UtilValidate.isNotEmpty(facilityCommissionList)){
 if(UtilValidate.isNotEmpty(transporterMargins)){
 	masterList.add(transporterMargins);
 }
-
 //rounding	total commission						
 masterList.each{eachMargin->
 	eachMargin.each{eachRouteMargin->

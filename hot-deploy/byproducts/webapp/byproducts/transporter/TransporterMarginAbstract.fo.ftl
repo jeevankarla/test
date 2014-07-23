@@ -24,7 +24,7 @@ under the License.
 
 <fo:layout-master-set>
     <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-            margin-top="0.5in" margin-bottom="1in" margin-left="1in" margin-right="1in">
+            margin-top="0.3in" margin-bottom="1in" margin-left="0.3in" margin-right="0.3in">
         <fo:region-body margin-top="1.4in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>
@@ -33,69 +33,76 @@ under the License.
 			<#if masterList?has_content>		   
 				<fo:page-sequence master-reference="main" >
 					<fo:static-content flow-name="xsl-region-before"  font-weight="7pt" font-family="Courier,monospace">
-						<fo:block text-align="center" white-space-collapse="false" font-family="Courier,monospace" font-weight="bold" font-size="10pt" keep-together="always"> MOTHER DAIRY, KMF UNIT	</fo:block>
-						<fo:block text-align="center" font-weight="bold" font-size="10pt" white-space-collapse="false" keep-together="always">BANGALORE - 560065.</fo:block>
-						<fo:block text-align="center" font-size="10pt" keep-together="always"> ROUTE WISE DISTRIBUTION TRANSPORT COST ABSTRACT REPORT</fo:block>
-						<fo:block text-align="center" font-size="10pt" keep-together="always" white-space-collapse="false">FROMDATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO  DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
-		            <fo:block >------------------------------------------------------------------------------------</fo:block>
+						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairyHeader}</fo:block>
+						<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
+						<fo:block text-align="center" font-weight="bold" font-size="10pt" keep-together="always"> ROUTE WISE DISTRIBUTION TRANSPORT COST ABSTRACT REPORT</fo:block>
+						<fo:block text-align="center" font-weight="bold" font-size="10pt" keep-together="always" white-space-collapse="false">FROM: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDateTime, "dd/MM/yyyy")}   TO:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDateTime, "dd/MM/yyyy")}</fo:block>				    		
+		            <fo:block >-----------------------------------------------------------------------------------------------</fo:block>
 		            <fo:block>
 		            <fo:table >
-                    			<fo:table-column column-width="100pt"/>
-                   				<fo:table-column column-width="115pt"/>                
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>                    										
+                    <fo:table-column column-width="50pt"/>
+                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="90pt"/>  
+               	    <fo:table-column column-width="100pt"/>
+            		<fo:table-column column-width="80pt"/>
+            		<fo:table-column column-width="90pt"/> 		
+            		<fo:table-column column-width="90pt"/>
+            		<fo:table-column column-width="80pt"/>
+            		<fo:table-column column-width="90pt"/>                 										
                     			<fo:table-body>
-                    			<fo:table-row>
-                    		       <fo:table-cell>
-                    		       <fo:block text-align="left" font-size="10pt" keep-together="always">ROUTE</fo:block>
+                    			<fo:table-row font-weight = "bold">
+                    				<fo:table-cell>
+                    		       		<fo:block text-align="left" font-size="10pt" keep-together="always">S.No</fo:block>
                     		       </fo:table-cell>
-                    		       
+                    		       <fo:table-cell>
+                    		       		<fo:block text-align="left" font-size="10pt" keep-together="always">ROUTE</fo:block>
+                    		       </fo:table-cell>
+                    		       <fo:table-cell>
+                    		      		 <fo:block text-align="left" font-size="10pt" keep-together="always">FacilityRate</fo:block>
+                    		       </fo:table-cell>
+                    		       <fo:table-cell>
+                    		       		<fo:block text-align="left" font-size="10pt" keep-together="always">FacilitySize</fo:block>
+                    		       </fo:table-cell>
                     		        <fo:table-cell>
-                    		        <fo:block text-align="right" font-size="10pt" keep-together="always"> Distribution</fo:block>
-                    		        <fo:block text-align="right" font-size="10pt" keep-together="always">Cost(Gross)</fo:block>
+                    		        	<fo:block text-align="right" font-size="10pt" keep-together="always">Distribution</fo:block>
+                    		        	<fo:block text-align="right" font-size="10pt" keep-together="always">Cost(Gross)</fo:block>
                     		        </fo:table-cell>
-                    		        
                     		        <fo:table-cell>
-                    		        <fo:block text-align="right" font-size="10pt" keep-together="always"> Crates&amp;Cans</fo:block>
-                    		         <fo:block text-align="right" font-size="10pt" keep-together="always">Recovery</fo:block>
+                    		        	<fo:block text-align="right" font-size="10pt" keep-together="always">Crates&amp;Cans</fo:block>
+                    		         	<fo:block text-align="right" font-size="10pt" keep-together="always">Recovery</fo:block>
                     		        </fo:table-cell>
-                    		        
                     		        <fo:table-cell>
-                    		          <fo:block text-align="right" font-size="10pt" keep-together="always"> Penalties</fo:block>
-                    		         <fo:block text-align="right" font-size="10pt" keep-together="always"></fo:block>
+                		         	 	<fo:block text-align="right" font-size="10pt" keep-together="always">Penalties</fo:block>
+                		        		<fo:block text-align="right" font-size="10pt" keep-together="always"></fo:block>
                     		        </fo:table-cell>
-                    		        
                     		         <fo:table-cell>
-                    		         <fo:block text-align="right" font-size="10pt" keep-together="always"> NET-Amount</fo:block>
-                    		         <fo:block text-align="right" font-size="10pt" keep-together="always"></fo:block>
+                    		         	<fo:block text-align="right" font-size="10pt" keep-together="always">NET-Amount</fo:block>
+                    		         	<fo:block text-align="right" font-size="10pt" keep-together="always"></fo:block>
                     		        </fo:table-cell>
                     		     </fo:table-row>
                     		     </fo:table-body>
                     		     </fo:table>
                         </fo:block>
-		            <fo:block >------------------------------------------------------------------------------------</fo:block>
+		           <fo:block >-----------------------------------------------------------------------------------------------</fo:block>
 		            </fo:static-content>
 					<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
 						<fo:block>
-							<fo:table >
-                    			<fo:table-column column-width="100pt"/>
-                   				<fo:table-column column-width="115pt"/>                
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>
-                    			<fo:table-column column-width="115pt"/>                     										
+							<fo:table>
+                    			<fo:table-column column-width="50pt"/>
+			                    <fo:table-column column-width="70pt"/>
+			                    <fo:table-column column-width="60pt"/>  
+			               	    <fo:table-column column-width="70pt"/>
+			            		<fo:table-column column-width="120pt"/>
+			            		<fo:table-column column-width="90pt"/> 		
+			            		<fo:table-column column-width="90pt"/>
+			            		<fo:table-column column-width="100pt"/>
+			            		<fo:table-column column-width="90pt"/>                    										
                     			<fo:table-body>
                     			<#assign totGrTotRtAmt = (Static["java.math.BigDecimal"].ZERO)>  
                     			<#assign totCRandCanAmt = (Static["java.math.BigDecimal"].ZERO)>  
                     			<#assign totGrOthersAmt = (Static["java.math.BigDecimal"].ZERO)>  
                     			<#assign totGrTotNetPayable = (Static["java.math.BigDecimal"].ZERO)>   
-                    			           			
+                    			<#assign sno=1>        			
                     			<#list masterList as trnsptMarginReportEntry>
 									<#assign trnsptMarginReportEntries = (trnsptMarginReportEntry).entrySet()>	
 										<#list trnsptMarginReportEntries as trnsptMarginValues> 
@@ -106,6 +113,8 @@ under the License.
 															<#list daywiseTrnsptMarginEntries as daywiseTrnsptEntry>
                     											<#if daywiseTrnsptEntry.getKey() =="Tot">                    							
                     												<#assign grTotRtAmt = daywiseTrnsptEntry.getValue().get("grTotRtAmount")>
+                    												<#assign facilitySize = daywiseTrnsptEntry.getValue().get("distance")>
+                    												<#assign facilityRate = daywiseTrnsptEntry.getValue().get("margin")>
                     												<#-- accessing fines And Penalities-->
                     												<#assign facRecvoryMap=facilityRecoveryInfoMap.get(trnsptMarginValues.getKey())?if_exists>
                     												<#assign totalDeduction=0>
@@ -138,30 +147,41 @@ under the License.
                     												<#assign totGrTotNetPayable = totGrTotNetPayable.add(netPayable)>
                     												 
                     											<fo:table-row>
+                    												<fo:table-cell><fo:block>${sno?if_exists}</fo:block></fo:table-cell>
                     												<fo:table-cell><fo:block>${trnsptMarginValues.getKey()?if_exists}</fo:block></fo:table-cell>
+                    												<fo:table-cell><fo:block text-align="right">${facilityRate?if_exists}</fo:block></fo:table-cell>
+                    												<#if facilitySize?has_content && facilitySize!=0>
+                    													<fo:table-cell><fo:block text-align="right">${facilitySize?if_exists}</fo:block></fo:table-cell>
+                    												<#else>
+                    													<fo:table-cell><fo:block text-align="right">0</fo:block></fo:table-cell>
+                    												</#if>
                     												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${grTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
                     												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totalCrAndCan?string("#0.00")?if_exists}</fo:block></fo:table-cell>
                     												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${othersFine?string("#0.00")?if_exists}</fo:block></fo:table-cell>
                     												<#--><fo:table-cell><fo:block text-align="right">${grTotpendingDue.toEngineeringString()?if_exists}</fo:block></fo:table-cell>-->
                     												<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${netPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     											</fo:table-row>
-                    											<fo:table-row>
-                    												<fo:table-cell><fo:block >------------------------------------------------------------------------------------</fo:block></fo:table-cell>
-                    											</fo:table-row>
+                    											<#assign sno=sno+1>
                     										</#if>	
                     									</#list>	
 													</#list>
 												</#list>
 		 	    							</#list>
-                    						<fo:table-row>
+		 	    							<fo:table-row>
+                    							<fo:table-cell><fo:block >-----------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
+                    						</fo:table-row> 
+                    						<fo:table-row font-weight = "bold">
                     							<fo:table-cell><fo:block>TOTAL</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrTotRtAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totCRandCanAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
-                    							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrOthersAmt.toEngineeringString()?if_exists}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right"></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right"></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right"></fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrTotRtAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totCRandCanAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrOthersAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
                     							<fo:table-cell><fo:block text-align="right" font-size="10pt" keep-together="always">${totGrTotNetPayable?string("#0")?if_exists}.00</fo:block></fo:table-cell>
                     						</fo:table-row> 
                     						<fo:table-row>
-                    							<fo:table-cell><fo:block >------------------------------------------------------------------------------------</fo:block></fo:table-cell>
+                    							<fo:table-cell><fo:block >-----------------------------------------------------------------------------------------------</fo:block></fo:table-cell>
                     						</fo:table-row>                   							
                     					</fo:table-body>
                     				</fo:table>								
@@ -188,11 +208,6 @@ under the License.
 				            	</fo:table-cell>
 				        </fo:table-row>
 				         <fo:table-row>	
-				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				            	</fo:table-cell>
-				        </fo:table-row>
-				        <fo:table-row>	
 				            	<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				            	</fo:table-cell>
