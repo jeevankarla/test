@@ -8187,7 +8187,6 @@ public class ByProductNetworkServices {
 						} else {
 							facilityInvoices = EntityUtil.filterByCondition(invoices, EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS, facilityId));
 						}
-						Debug.log("facilityInvoices #############################"+facilityInvoices);
 						Map dayPenalty = FastMap.newInstance();
 						if (UtilValidate.isNotEmpty(facilityInvoices)) {
 							for (int k = 0; k < intervalDays; k++) {
