@@ -1312,6 +1312,7 @@ public class PayrollService {
 			String shiftTypeId = null;
 			String otherCond = null;
 			String payGradeId = null;
+			String stateId =null;
 			//String grossSalary = null;
 			Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate);
 	        if(UtilValidate.isNotEmpty(condParms)){
@@ -1320,6 +1321,7 @@ public class PayrollService {
 				 departmentId = (String)condParms.get("departmentId");
 				 shiftTypeId = (String)condParms.get("shiftTypeId");
 				 otherCond = (String)condParms.get("otherCond");
+				 stateId = (String)condParms.get("stateId");
 	        }else{
 	        	Map empPositionDetails = getEmployeePayrollCondParms(dctx, paramCtxMap);
 	        	if(ServiceUtil.isError(empPositionDetails)){
@@ -1327,6 +1329,7 @@ public class PayrollService {
 	                return false;
 	            }
 	        	geoId = (String)empPositionDetails.get("geoId");
+	        	stateId = (String)empPositionDetails.get("stateId");
 				emplPositionTypeId = (String)empPositionDetails.get("emplPositionTypeId");
 				departmentId = (String)empPositionDetails.get("departmentId");
 				shiftTypeId = (String)empPositionDetails.get("shiftTypeId");
@@ -1349,7 +1352,14 @@ public class PayrollService {
 	            } else {
 	                compare = 1;
 	            }
-	        }else if ("PAYHD_BEDE_DEPT".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
+	        }else if ("PAYHD_BEDE_STATE".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
+	            if (UtilValidate.isNotEmpty(geoId)) {
+	                compare = stateId.compareTo(payrollBenDedCond.getString("condValue"));
+	            } else {
+	                compare = 1;
+	            }
+	        }
+	        else if ("PAYHD_BEDE_DEPT".equals(payrollBenDedCond.getString("inputParamEnumId"))) {
 	            if (UtilValidate.isNotEmpty(departmentId)) {
 	                compare = departmentId.compareTo(payrollBenDedCond.getString("condValue"));
 	            } else {
@@ -1451,6 +1461,7 @@ public class PayrollService {
 	            GenericValue employment = EntityUtil.getFirst(employments);
 	            if(UtilValidate.isNotEmpty(employment)){
 	        		result.put("geoId", employment.getString("locationGeoId"));
+	        		result.put("stateId", employment.getString("stateGeoId"));
 	        		result.put("departmentId", employment.getString("partyIdFrom"));
 	        	}
 	            

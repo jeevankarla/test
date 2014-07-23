@@ -429,6 +429,7 @@ under the License.
       <field name="appointmentDate" type="date-time"></field>
       <field name="resignationDate" type="date-time"></field>
       <field name="locationGeoId" type="id"></field>
+      <field name="stateGeoId" type="id"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
