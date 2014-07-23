@@ -900,6 +900,7 @@ public class PayrollService {
 		        String customTimePeriodId = (String)context.get("customTimePeriodId");
 		        Locale locale = (Locale) context.get("locale");
 		        BigDecimal amount = BigDecimal.ZERO;
+		        String proportionalFormulaId = null;
 		        try{
 		        	GenericValue customTimePeriod;
 					try {
@@ -913,7 +914,7 @@ public class PayrollService {
 					List conditionList = UtilMisc.toList(
 			                EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employeeId));
 					conditionList.add(EntityCondition.makeCondition("benefitTypeId", EntityOperator.EQUALS, payHeadTypeId));
-			        //conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+			        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 			        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 			        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
@@ -927,7 +928,6 @@ public class PayrollService {
 			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 			        condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  
 			        payHeadTypesList.addAll(delegator.findList("PartyDeduction", condition, null, null, null, false));
-			       // payHeadTypesList = EntityUtil.filterByDate(payHeadTypesList, UtilDateTime.getDayStart(timePeriodEnd));
 			        if(UtilValidate.isEmpty(payHeadTypesList)){
 			        	 Debug.logWarning("Payhead not applicable", module);
 			        	 result.put("amount", BigDecimal.ZERO);
@@ -935,11 +935,7 @@ public class PayrollService {
 			        	 return result;
 			        }
 			        GenericValue paheadType = EntityUtil.getFirst(payHeadTypesList);
-			        if(UtilValidate.isNotEmpty(paheadType) && UtilValidate.isNotEmpty(paheadType.getBigDecimal("cost"))){
-			        	 result.put("amount", paheadType.getBigDecimal("cost"));
-			        	 result.put("priceInfos",UtilMisc.toList("Party level price"));
-			        	 return result;
-			        }
+			        
 					Map payheadAmtCtx = FastMap.newInstance();
                     payheadAmtCtx.put("userLogin", userLogin);
                     payheadAmtCtx.put("employeeId", employeeId);
@@ -951,15 +947,56 @@ public class PayrollService {
 		        			"deductionTypeId", payHeadTypeId), false);
                     if(UtilValidate.isNotEmpty(deductionTypeRow)){
                     	 payheadAmtCtx.put("proportionalFlag", deductionTypeRow.getString("proportionalFlag"));
+                    	 proportionalFormulaId = deductionTypeRow.getString("proportionalFormulaId");
                     }
                     GenericValue benifitTypeRow = delegator.findOne("BenefitType", UtilMisc.toMap(
 		        			"benefitTypeId", payHeadTypeId), false);
                     if(UtilValidate.isNotEmpty(benifitTypeRow)){
                     	 payheadAmtCtx.put("proportionalFlag", benifitTypeRow.getString("proportionalFlag"));
+                    	 proportionalFormulaId = benifitTypeRow.getString("proportionalFormulaId");
                     }
                     if(UtilValidate.isNotEmpty(context.get("proportionalFlag"))){
                     	payheadAmtCtx.put("proportionalFlag", context.get("proportionalFlag"));
 		            }
+                    
+                    if(UtilValidate.isNotEmpty(paheadType) && UtilValidate.isNotEmpty(paheadType.getBigDecimal("cost"))){
+			        	 result.put("amount", paheadType.getBigDecimal("cost"));
+			        	 if(UtilValidate.isNotEmpty(proportionalFormulaId)){
+			        		 Debug.log("proportionalFormulaId==="+proportionalFormulaId);
+			        		 Map payAttCtx = FastMap.newInstance();
+			        		 payAttCtx.put("userLogin", userLogin);
+			        		 payAttCtx.put("employeeId", employeeId);
+			        		 payAttCtx.put("timePeriodStart", timePeriodStart);
+			        		 payAttCtx.put("timePeriodEnd", timePeriodEnd);
+			        		 payAttCtx.put("timePeriodId", customTimePeriodId);
+			        		Map attendanceMap = getEmployeePayrollAttedance(dctx ,payAttCtx);
+			        		Debug.log("attendanceMap==="+attendanceMap);
+			        		Evaluator evltr = new Evaluator(dctx);
+	    					HashMap<String, Double> variables = new HashMap<String, Double>();
+ 							variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderDays"));
+ 							variables.put("NOOFATTENDEDDAYS", (Double)attendanceMap.get("noOfAttendedDays"));
+ 							variables.put("NOOFATTENDEDHOLIDAYS", (Double)attendanceMap.get("noOfAttendedHoliDays"));
+ 							variables.put("LOSSOFPAYDAYS", (Double)attendanceMap.get("lossOfPayDays"));
+ 							variables.put("NOOFATTENDEDSS", (Double)attendanceMap.get("noOfAttendedSsDays"));
+ 							variables.put("NOOFATTENDEDWEEKLYOFF", (Double)attendanceMap.get("noOfAttendedWeeklyOffDays"));
+ 							variables.put("NOOFLEAVEDAYS", (Double)attendanceMap.get("noOfLeaveDays"));
+ 							variables.put("NOOFCOMPOFFSAVAILED", (Double)attendanceMap.get("noOfCompoffAvailed"));
+ 							variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
+ 							variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
+ 							Debug.log("variables==="+variables);
+ 							double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
+ 							evltr.setFormulaIdAndSlabAmount(proportionalFormulaId, noOfAttendedDays);
+ 							evltr.addVariableValues(variables);  
+ 							Debug.log("variables==="+variables);
+ 							BigDecimal proportionalFactor = new BigDecimal(evltr.evaluate());
+ 							result.put("amount", (paheadType.getBigDecimal("cost").multiply(proportionalFactor)).setScale(0, BigDecimal.ROUND_HALF_UP));
+ 							
+			        	 }
+			        	 result.put("priceInfos",UtilMisc.toList("Party level price"));
+			        	 return result;
+			        }
+                    
+                    
 	                Map<String, Object> calcResults = calculatePayHeadAmount(dctx,payheadAmtCtx);
 	                Debug.logInfo("calcResults in calculatePayHeadAmount ############################"+calcResults ,module);
 	                result.putAll(calcResults);
