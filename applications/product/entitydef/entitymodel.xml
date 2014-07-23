@@ -192,6 +192,9 @@ under the License.
       <field name="linkOneImageUrl" type="url"></field>
       <field name="linkTwoImageUrl" type="url"></field>
       <field name="prodCatUomId" type="id"></field>
+      <field name="chapterNum" type="id"></field>
+      <field name="tarrif" type="id"></field>
+      <field name="subHeading" type="id"></field>
       <field name="detailScreen" type="long-varchar"></field>
       <field name="showInSelect" type="indicator"></field>
       <prim-key field="productCategoryId"/>

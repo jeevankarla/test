@@ -549,6 +549,7 @@ under the License.
       <field name="estimatedReadyDate" type="date-time"></field>
       <field name="estimatedShipDate" type="date-time"></field>
       <field name="estimatedShipWorkEffId" type="id"></field>
+      <field name="modeOfDespatch" type="id"></field>
       <field name="estimatedArrivalDate" type="date-time"></field>
       <field name="estimatedArrivalWorkEffId" type="id"></field>
       <field name="latestCancelDate" type="date-time"></field>

@@ -2380,6 +2380,11 @@ under the License.
       <field name="defaultShipAddr" type="id"></field>
       <field name="defaultBillAddr" type="id"></field>
       <field name="defaultPayMeth" type="id"></field>
+      <field name="defaultPLANum" type="id"></field>
+      <field name="tinNumber" type="id"></field>
+      <field name="cstNumber" type="id"></field>
+      <field name="serviceTaxNum" type="id"></field>
+      <field name="registrationNum" type="id"></field>
       <field name="defaultShipMeth" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -2749,7 +2754,28 @@ under the License.
             <key-map field-name="roleTypeId"/>
             </view-link>
     </view-entity>
-
+	<view-entity entity-name="PartyAndGroupAndDefault"
+        package-name="org.ofbiz.party.party"
+        title="Party and Party Group and Party Profile Default View Entity">
+        <member-entity entity-alias="PTY" entity-name="Party"/>
+        <member-entity entity-alias="PGRP" entity-name="PartyGroup"/>
+        <member-entity entity-alias="PPD" entity-name="PartyProfileDefault"/>
+        <alias-all entity-alias="PTY"/>
+        <alias-all entity-alias="PGRP"/>
+        <alias-all entity-alias="PPD">
+            <exclude field="comments"/>
+        </alias-all>
+        <alias-all entity-alias="PTYGRP">
+            <exclude field="comments"/>
+        </alias-all>
+        <view-link entity-alias="PTY" rel-entity-alias="PGRP">
+            <key-map field-name="partyId"/>
+        </view-link>
+        <view-link entity-alias="PTY" rel-entity-alias="PPD" rel-optional="true">
+            <key-map field-name="partyId"/>
+        </view-link>
+    </view-entity>
+    
     <view-entity entity-name="PartyRoleNameDetail"
         package-name="org.ofbiz.party.party"
         title="Party Role and Party Detail (Person, PartyGroup, etc) View Entity">
