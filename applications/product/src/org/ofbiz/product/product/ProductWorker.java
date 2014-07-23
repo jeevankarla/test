@@ -1214,6 +1214,7 @@ nextProd:
    	EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(condList, EntityOperator.AND);
    	try{
    		productList =delegator.findList("ProductAndCategoryMember", discontinuationDateCondition,null, null, null, true);
+   		productList = EntityUtil.filterByDate(productList, dayBegin);
    	}catch (GenericEntityException e) {
 			// TODO: handle exception
    		Debug.logError(e, module);
