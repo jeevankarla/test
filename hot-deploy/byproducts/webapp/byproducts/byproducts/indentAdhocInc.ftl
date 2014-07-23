@@ -60,22 +60,22 @@
 		}
 		var formId = "#" + formName;
 		var inputRowSubmit = jQuery("<input>").attr("type", "hidden").attr("name", "_useRowSubmit").val("Y");
-		jQuery(formId).append(jQuery(inputRowSubmit));	
-		var bankName = $("#bankName").val();
-		var chequeNo = $("#chequeNo").val();
-		var chequeDate = $("#chequeDate").val();
-		var amount = $("#amount").val();
-		var totAmt = $("#totAmt").val();
+		jQuery(formId).append(jQuery(inputRowSubmit));
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["productId"];
 			var prodId = productId.toUpperCase();
 			var qty = parseFloat(data[rowCount]["quantity"]);
+			var batchNo = data[rowCount]["batchNo"];
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
-				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);	
+				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
+				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
+				</#if>
 				jQuery(formId).append(jQuery(inputProd));				
-				jQuery(formId).append(jQuery(inputQty));   
+				jQuery(formId).append(jQuery(inputQty));
+				jQuery(formId).append(jQuery(batchNum));   
    			}
 		}
 		
@@ -86,16 +86,12 @@
    				jQuery(formId).append(jQuery(route));
    			 }
 		});
-		var inputBank = jQuery("<input>").attr("type", "hidden").attr("name", "bankName").val(bankName);
-		var inputChequeNo = jQuery("<input>").attr("type", "hidden").attr("name", "chequeNo").val(chequeNo);	
-		var inputChequeDate = jQuery("<input>").attr("type", "hidden").attr("name", "chequeDate").val(chequeDate);
-		var inputAmount = jQuery("<input>").attr("type", "hidden").attr("name", "amount").val(amount);	
-		var inputTotAmt = jQuery("<input>").attr("type", "hidden").attr("name", "totAmt").val(totAmt);	
-		jQuery(formId).append(jQuery(inputBank));				
-		jQuery(formId).append(jQuery(inputChequeNo));
-		jQuery(formId).append(jQuery(inputChequeDate));				
-		jQuery(formId).append(jQuery(inputAmount));
-		jQuery(formId).append(jQuery(inputTotAmt));
+		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+			var partyId = $("#partyId").val();
+			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
+			jQuery(formId).append(jQuery(party));
+		</#if>
+		
 		jQuery(formId).attr("action", action);	
 		jQuery(formId).submit();
 	}
@@ -126,34 +122,34 @@
         return productIdLabelMap[value];
     }
 
-   function productValidator(value,item) {
-      var currProdCnt = 1;
-	  for (var rowCount=0; rowCount < data.length; ++rowCount)
-	  { 
-	  	 
-		if (data[rowCount]['cProductName'] != null && data[rowCount]['cProductName'] != undefined && value == data[rowCount]['cProductName']) {
-			++currProdCnt;
-		}
-	  }
-	  
-	  var invalidProdCheck = 0;
-	  for (var rowCount=0; rowCount < availableTags.length; ++rowCount)
-	  {  
-		if (value == availableTags[rowCount]["label"]) {
-			invalidProdCheck = 1;
-		}
-	  }
-      if (currProdCnt > 1) {
-        return {valid: false, msg: "Duplicate Product " + value};      				
-      }
-      if(invalidProdCheck == 0){
-      	return {valid: false, msg: "Invalid Product " + value};
-      }
+    function productValidator(value,item) {
       
-      if (item != null && item != undefined ) {
-      	item['productId'] = productLabelIdMap[value];
-	  }      
-      return {valid: true, msg: null};
+    	var currProdCnt = 1;
+	  	for (var rowCount=0; rowCount < data.length; ++rowCount)
+	  	{ 
+			if (data[rowCount]['cProductName'] != null && data[rowCount]['cProductName'] != undefined && value == data[rowCount]['cProductName']) {
+				++currProdCnt;
+			}
+	  	}
+	  
+	  	var invalidProdCheck = 0;
+	  	for (var rowCount=0; rowCount < availableTags.length; ++rowCount)
+	  	{  
+			if (value == availableTags[rowCount]["label"]) {
+				invalidProdCheck = 1;
+			}
+	  	}
+      	if (currProdCnt > 1) {
+        	return {valid: false, msg: "Duplicate Product " + value};      				
+      	}
+      	if(invalidProdCheck == 0){
+      		return {valid: false, msg: "Invalid Product " + value};
+      	}
+      
+      	if (item != null && item != undefined ) {
+      		item['productId'] = productLabelIdMap[value];
+	  	}      
+      	return {valid: true, msg: null};
     }
     
     //quantity validator
@@ -187,8 +183,15 @@
 		var grid;
 		
 		var columns = [
-			{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator,sortable:false ,toolTip:""},
+			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+				{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor,sortable:false ,toolTip:""},
+			<#else>
+				{id:"cProductName", name:"Product", field:"cProductName", width:180, minWidth:180, cssClass:"cell-title", availableTags: availableTags, editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},	
+			</#if>
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
+			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+				{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
+			</#if>
 			<#--
 			{id:"crQuantity", name:"Qty(Cr/Can)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter}, -->
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
@@ -217,7 +220,12 @@
 			$(grid.getCellNode(0,0)).click();
 		}
          grid.onKeyDown.subscribe(function(e) {
-			var cellNav = 2;
+			var cellNav = 0;
+			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+				cellNav = 3;
+			<#else>
+				cellNav = 2;
+			</#if>
 			var cell = grid.getCellFromEvent(e);		
 			if(e.which == $.ui.keyCode.UP && cell.row == 0){
 				grid.getEditController().commitCurrentEdit();	
@@ -256,17 +264,6 @@
 				$(grid.getCellNode(cell.row, cellNav)).click();
 				e.stopPropagation();	
 			}else if (e.which == $.ui.keyCode.ENTER) {
-        	  /*	if (cell && cell.cell == 0) {
-					grid.getEditController().commitCurrentEdit();	
-					if (cell.row == 0) {
-						grid.navigateRight();    
-						grid.navigateUp(); 
-					} else {
-        				$(grid.getCellNode(cell.row - 1, cellNav)).click();
-        			}
-        			e.stopPropagation();	
-        			return false;
-        		}  */
         		grid.getEditController().commitCurrentEdit();
 				if(cell.cell == 1 || cell.cell == 2){
 					jQuery("#changeSave").click();
@@ -274,7 +271,7 @@
             	e.stopPropagation();
             	e.preventDefault();        	
             }else if (e.keyCode == 27) {
-             //here ESC to Save grid
+            //here ESC to Save grid
         		if (cell && cell.cell == 0) {
         			$(grid.getCellNode(cell.row - 1, cellNav)).click();
         			return false;
@@ -290,30 +287,8 @@
             }
         });
          
-         
-
-
-/*
-		grid.onKeyDown.subscribe(function(e) {		
-			var cell = grid.getCellFromEvent(e);			
-			if (e.which == $.ui.keyCode.RIGHT &&
-				cell && cell.cell == 1 && 
-				cell.row != data.length) {
-				grid.getEditController().commitCurrentEdit();	
-				$(grid.getCellNode(cell.row +1, 0)).click();
-				e.stopPropogation();		
-			}
-        	else if (e.which == $.ui.keyCode.ENTER) {
-				jQuery("#changeSave").click();   
-            	e.stopPropagation();
-            	e.preventDefault();        	
-            }
-            else {
-            	return false;
-            }
-        }); */
-       
-    	  grid.onAddNewRow.subscribe(function (e, args) {
+                
+    	grid.onAddNewRow.subscribe(function (e, args) {
       		var item = args.item;   
       		var productLabel = item['cProductName']; 
       		item['productId'] = productLabelIdMap[productLabel];     		 		
@@ -327,24 +302,12 @@
 				var prod = data[args.row]["productId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				var price = parseFloat(priceTags[prod]);
-				//var indentCat = prodIndentQtyCat[prod];
-				//var qtyInBulk = qtyInPieces[prod];
 				if(isNaN(price)){
 					price = 0;
 				}
 				if(isNaN(qty)){
 					qty = 0;
 				}
-				/*
-				if(indentCat == null && indentCat == undefined){
-					data[args.row]["crQuantity"] = "";
-				}
-				else{
-					if(!isNaN(qty) && qtyInBulk != 0){
-						data[args.row]["crQuantity"] = parseFloat(Math.round((qty/qtyInBulk)*100)/100);
-					}
-					
-				}*/
 				var roundedAmount;
 					roundedAmount = Math.round(qty*price);
 				if(isNaN(roundedAmount)){
@@ -368,54 +331,7 @@
 				jQuery("#totalAmount").html(dispText);
 			}
 			
-				if (args.cell == 2) {
-				var prod = data[args.row]["productId"];
-				var qty = parseFloat(data[args.row]["crQuantity"]);
-				var indentCat = prodIndentQtyCat[prod];
-				var qtyInBulk = qtyInPieces[prod];
-				var price = parseFloat(priceTags[prod]);
-				var qtyPieces;
-				if(indentCat == null && indentCat == undefined){
-					data[args.row]["quantity"] = qty;
-				}
-				else{
-					if(!isNaN(qty)){
-						data[args.row]["quantity"] = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
-						qtyPieces = parseFloat(Math.round((qty*qtyInBulk)*100)/100);
-					}
-					
-				}
-				if(isNaN(price)){
-					price = 0;
-				}
-				if(isNaN(qtyPieces)){
-					qtyPieces = 0;
-				}
-				
-				
-				var roundedAmount = Math.round(qtyPieces*price);
-				
-				if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-				}
-				data[args.row]["unitPrice"] = price;
-				data[args.row]["amount"] = roundedAmount;
-				grid.updateRow(args.row);
-				
-				var totalAmount = 0;
-				for (i = 0; i < data.length; i++) {
-					totalAmount += data[i]["amount"];
-				}
-				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 			
-				if(amt > 0 ){
-					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
-				}
-				else{
-					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
-				}
-				jQuery("#totalAmount").html(dispText);
-			}
 			
 		
 		}); 
