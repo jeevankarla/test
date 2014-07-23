@@ -41,9 +41,20 @@ $(document).ready(function() {
             "tableTools": {
                 "sSwfPath": "<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf</@ofbizContentUrl>",
                 "aButtons": [ 
-                { "sExtends": "copy", "oSelectorOpts": { filter: 'applied', order: 'current' } },
-                { "sExtends": "csv", "oSelectorOpts": { filter: 'applied', order: 'current' } },
-                { "sExtends": "pdf", "oSelectorOpts": { filter: 'applied', order: 'current' }  } 
+                { 
+                	"sExtends": "copy", 
+                	"oSelectorOpts": { filter: 'applied', order: 'current' }
+                },
+                { 
+                	"sExtends": "csv", 
+                	"oSelectorOpts": { filter: 'applied', order: 'current' },
+                	"sFileName": "EmployeeList.csv"                 	
+                },
+                { 
+                	"sExtends": "pdf", 
+                	"oSelectorOpts": { filter: 'applied', order: 'current' },
+                	"sFileName": "EmployeeList.pdf"   
+                } 
                 ]
             },
 		"iDisplayLength" : 25,		
