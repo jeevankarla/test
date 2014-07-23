@@ -133,12 +133,12 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 							if(UtilValidate.isNotEmpty(loanRecvryDetails.get("principalInstNum"))){
 								instNum = loanRecvryDetails.get("principalInstNum");
 							}
-							if(UtilValidate.isNotEmpty(loanRecvryDetails.get("principalInstNum"))){
+							if(UtilValidate.isNotEmpty(loanRecvryDetails.get("interestInstNum"))){
 								instNum = loanRecvryDetails.get("interestInstNum");
 							}
 								InstallmentNoMap.put(payrollHeaderItemTypeId,instNum);
-							}
 						}
+					}
 					
 					amount=payRollHeaderItem.get("amount");
 					if(amount >0){
