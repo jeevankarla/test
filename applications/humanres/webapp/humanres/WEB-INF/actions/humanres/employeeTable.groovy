@@ -60,7 +60,7 @@ def populateChildren(org, employeeList) {
 		 }
 		employee.put("qual",qual);
 		daAmount=0;
-		if(Flag=="daAmount"){
+		if(UtilValidate.isNotEmpty(Flag) && Flag=="daAmount"){
 			daAmountList=casteIds=delegator.findByAnd("PartyBenefit", [partyIdTo: employment.partyId,benefitTypeId:"PAYROL_BEN_DA"],["benefitTypeId"]);
 			if(UtilValidate.isNotEmpty(daAmountList)){
 				daAmountIds=daAmountList.get(0).benefitTypeId;
