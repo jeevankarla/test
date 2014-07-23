@@ -8168,8 +8168,8 @@ public class ByProductNetworkServices {
 			conditionList.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 			conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			invoices = delegator.findList("InvoiceAndItemType", condition, UtilMisc.toSet("invoiceId", "invoiceDate", "facilityId","referenceNumber", "partyId"), null, null, false);
-
+			invoices = delegator.findList("InvoiceAndItemType", condition, UtilMisc.toSet("invoiceId", "dueDate", "facilityId","referenceNumber", "partyId"), null, null, false);
+			
 			if (UtilValidate.isNotEmpty(invoices)) {
 				List facilities = FastList.newInstance();
 				if (isByParty) {
@@ -8177,7 +8177,6 @@ public class ByProductNetworkServices {
 				} else {
 					facilities = (List) EntityUtil.getFieldListFromEntityList(invoices, "facilityId", true);
 				}
-
 				if (UtilValidate.isNotEmpty(facilities)) {
 					for (int i = 0; i < facilities.size(); i++) {
 						String facilityId = (String) facilities.get(i);
@@ -8188,6 +8187,7 @@ public class ByProductNetworkServices {
 						} else {
 							facilityInvoices = EntityUtil.filterByCondition(invoices, EntityCondition.makeCondition("facilityId",EntityOperator.EQUALS, facilityId));
 						}
+						Debug.log("facilityInvoices #############################"+facilityInvoices);
 						Map dayPenalty = FastMap.newInstance();
 						if (UtilValidate.isNotEmpty(facilityInvoices)) {
 							for (int k = 0; k < intervalDays; k++) {
@@ -8197,7 +8197,8 @@ public class ByProductNetworkServices {
 								List dayCond = FastList.newInstance();
 								dayCond.add(EntityCondition.makeCondition("dueDate",EntityOperator.GREATER_THAN_EQUAL_TO,dayStart));
 								dayCond.add(EntityCondition.makeCondition("dueDate",EntityOperator.LESS_THAN_EQUAL_TO,dayEnd));
-								List<GenericValue> dayPartyPenalty = (List) EntityUtil.filterByCondition(facilityInvoices,EntityCondition.makeCondition(dayCond));
+								EntityCondition custExpr = EntityCondition.makeCondition(dayCond, EntityOperator.AND);
+								List<GenericValue> dayPartyPenalty = (List) EntityUtil.filterByCondition(facilityInvoices, custExpr);
 								List invoiceDetail = FastList.newInstance();
 								if (UtilValidate.isNotEmpty(dayPartyPenalty)) {
 									for (int j = 0; j < dayPartyPenalty.size(); j++) {
