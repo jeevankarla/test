@@ -83,28 +83,32 @@ if(UtilValidate.isNotEmpty(activeEmpMap)){
 						if(employee.earnedLeaveBalance==null){employee.earnedLeaveBalance=0;}
 						employeeMap.put("BEL",employee.earnedLeaveBalance);
 						employeeMap.put("payableDays",employeePayrollAttedance.get("noOfPayableDays"));
-						
 						nowDate=UtilDateTime.nowTimestamp();
 						nowfromDate = UtilDateTime.getMonthStart(nowDate);
 						nowthruDate = UtilDateTime.getMonthEnd(nowDate,timeZone,locale);
 						resultMap=dispatcher.runSync("getCustomTimePeriodId", [periodTypeId:"HR_MONTH",fromDate:nowfromDate,thruDate:nowthruDate,userLogin:userLogin]);
 						cldAmount=0;
+						cldDays=0;
 						cldAmountList=casteIds=delegator.findByAnd("PartyBenefit", [partyIdTo:employee.employeeId,benefitTypeId:"PAYROL_BEN_COLDALLOW"],["benefitTypeId"]);
 						if(UtilValidate.isNotEmpty(cldAmountList)){
 							cldAmountIds=cldAmountList.get(0).benefitTypeId;
 							cldAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:cldAmountIds,employeeId:employee.employeeId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
 							cldAmount=cldAmountMap.get("amount");
-							
+							if(UtilValidate.isNotEmpty(cldAmount) && cldAmount!=null)
+								cldDays=employeePayrollAttedance.get("noOfPayableDays");
 						}
-						employeeMap.put("cldallow",cldAmount)
+						employeeMap.put("cldDays",cldDays);
 						caAmount=0;
+						caDays=0;
 						caAmountList=casteIds=delegator.findByAnd("PartyBenefit", [partyIdTo:employee.employeeId,benefitTypeId:"PAYROL_BEN_CASH"],["benefitTypeId"]);
 						if(UtilValidate.isNotEmpty(caAmountList)){
 							caAmountIds=caAmountList.get(0).benefitTypeId;
 							caAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:caAmountIds,employeeId:employee.employeeId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
 							caAmount=caAmountMap.get("amount");
+							if(UtilValidate.isNotEmpty(caAmount) && caAmount!=null)
+							caDays=employeePayrollAttedance.get("noOfPayableDays");
 						}
-						employeeMap.put("cashallow",caAmount)
+						employeeMap.put("caDays",caDays);
 						employeeList.add(employeeMap);
 						
 					}

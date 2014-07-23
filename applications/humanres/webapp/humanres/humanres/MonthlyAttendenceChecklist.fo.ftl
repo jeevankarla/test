@@ -172,8 +172,8 @@ under the License.
                     <fo:table-cell><fo:block text-align="right" keep-together="always">${employee.shift_02?if_exists?string("##0.0")}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always">${employee.shift_03?if_exists?string("##0.0")}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always">${employee.shift_gen?if_exists?string("##0.0")}</fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block text-align="right" keep-together="always">${(employee.cldallow)?if_exists?string("##0.0")}</fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block text-align="right" keep-together="always">${(employee.cashallow)?if_exists?string("##0.0")}</fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block text-align="right" keep-together="always">${(employee.cldDays)?if_exists?string("##0.0")}</fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block text-align="right" keep-together="always">${(employee.caDays)?if_exists?string("##0.0")}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always">${(employee.payableDays)?if_exists?string("##0.0")}</fo:block></fo:table-cell>
                     <#assign sno=sno+1>
                     </fo:table-row>
