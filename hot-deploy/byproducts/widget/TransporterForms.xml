@@ -125,6 +125,7 @@ under the License.
     </form>
     <form name="DTCCostReportCsv" type="list" list-name="dtcCostReportCsvList" view-size="99999">
         <field name="route" title="Route No"><display/></field>
+        <field name="periodId" title="Period"><display/></field>
         <field name="routeSaleQty" title="Total Sales"><display/></field>
         <field name="averageSaleQty" title="Average Sales"><display/></field>
         <field name="routeFacilitySize" title="Distance Per Day"><display/></field>
