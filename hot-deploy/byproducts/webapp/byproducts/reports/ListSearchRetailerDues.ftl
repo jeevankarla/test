@@ -25,24 +25,24 @@ under the License.
         jQuery.each(facilities, function() {
             this.checked = master.checked;
         });
-        //getBoothRunningTotal();
+        recalcAmounts();
     }
     function getBoothRunningTotal() {
 		var checkedBoothIds = jQuery("input[name='boothIds']:checked");
+		
         if(checkedBoothIds.size() > 0) {
-            jQuery.ajax({
-                url: 'getBoothDuesRunningTotal',
-                type: 'POST',
-                async: true,
-                data: jQuery('#listBooths').serialize(),
-                success: function(data) { 
-                	
-        			var str = "<font>"+data.boothRunningTotal+"</font> ( "+checkedBoothIds.size()+" )";
-                	jQuery('#showBoothRunningTotal').html(str);
-                	testVal = data.boothRunningTotal; 
-                }
-            });
-
+        	var runningTotalVal = 0;
+        	jQuery.each(checkedBoothIds, function() {
+            	if (jQuery(this).is(':checked')) {
+            		var domObj = $(this).parent().parent();
+            		var amountObj = $(domObj).find("#currDue");
+            		var currValue = parseFloat($(amountObj).val());
+            		runningTotalVal = runningTotalVal+currValue
+	            }
+    	    });
+    	    var str = "<font>"+runningTotalVal+"</font> ( "+checkedBoothIds.size()+" )";
+            jQuery('#showBoothRunningTotal').html(str);
+            
             if(jQuery('#serviceName').val() != "") {
             	jQuery('#submitButton').removeAttr('disabled');                
             }
