@@ -3093,11 +3093,16 @@
 		<field name="proportionalFlag" type="indicator"></field>
 		<field name="sequenceNum" type="numeric"></field>
 		<field name="acctgFormulaId" type="id"></field>
+		<field name="proportionalFormulaId" type="id"></field> 
 		<field name="description" type="description" not-null="false"></field>
 		<prim-key field="deductionTypeId" />
 		<relation type="one" fk-name="DEDCTN_FORMULA"
 			rel-entity-name="AcctgFormula">
 			<key-map field-name="acctgFormulaId" />
+		</relation>
+		<relation type="one" fk-name="DEDCTN_PFORMULA"
+			rel-entity-name="AcctgFormula">
+			<key-map field-name="proportionalFormulaId" rel-field-name="acctgFormulaId"/>
 		</relation>
 		<relation type="one" fk-name="DEDCTN_CATEGORY" title="Category"
 			rel-entity-name="Enumeration">
