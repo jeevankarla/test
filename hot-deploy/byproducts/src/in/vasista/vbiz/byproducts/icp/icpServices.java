@@ -96,6 +96,7 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
 		String orderId = "";
+		boolean batchNumExists = Boolean.FALSE;
 		if(UtilValidate.isEmpty(shipmentId)){
 		    
 			GenericValue newDirShip = delegator.makeValue("Shipment");        	 
@@ -167,6 +168,7 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 			}
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("batchNo"))){
 				batchNo = (String)prodQtyMap.get("batchNo");
+				batchNumExists = true;
 			}
 			Map<String, Object> priceResult;
 			Map<String, Object> priceContext = FastMap.newInstance();
@@ -233,30 +235,29 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 		}
 		Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
 		orderId = (String) orderCreateResult.get("orderId");
-		// let's handle order rounding here
-        /*try{   
-        	Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
-        	roundAdjCtx.put("orderId", orderId);
-	  	 	result = dispatcher.runSync("adjustRoundingDiffForOrder",roundAdjCtx);  		  		 
-	  	 	if (ServiceUtil.isError(result)) {
-	  	 		String errMsg =  ServiceUtil.getErrorMessage(result);
-	  	 		Debug.logError(errMsg , module);
-	  	 		shipment.set("statusId", "GENERATION_FAIL");
-  	      	  	shipment.store();
-  	      	  	return ServiceUtil.returnError(errMsg+"==Error While  Rounding Order !");
-  	 		}
-  	 	}catch (Exception e) {
-  	 		Debug.logError(e, "Error while Creating Order", module);
-	  		try{
-	  			shipment.set("statusId", "GENERATION_FAIL");
-	      		shipment.store();
-	        }catch (Exception ex) {
-	        	Debug.logError(ex, module);        
-	            return ServiceUtil.returnError(ex.toString());
+		
+		if(UtilValidate.isNotEmpty(orderId) && batchNumExists){
+			try{
+				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId", "productId", "quantity", "orderItemSeqId"), null, null, false);
+				for(GenericValue orderItem : orderItems){
+					if(UtilValidate.isNotEmpty(productQtyList)){
+						Map batchMap = (Map)productQtyList.get(0);
+						GenericValue newItemAttr = delegator.makeValue("OrderItemAttribute");        	 
+						newItemAttr.set("orderId", orderItem.getString("orderId"));
+						newItemAttr.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
+						newItemAttr.set("attrName", "batchNumber");
+						newItemAttr.set("attrValue", (String)batchMap.get("batchNo"));
+						newItemAttr.create();            
+						productQtyList.remove(0);
+					}
+				}
+			}catch (GenericEntityException e) {
+				Debug.logError("Error in creating shipmentId for DirectOrder", module);
+				return ServiceUtil.returnError("Error in creating shipmentId for DirectOrder");
 			}
-	        return ServiceUtil.returnError(e+"==Error While  Rounding Order !");
-	  		//return resultMap;			  
-	  	}*/
+			
+		}
+		// let's handle order rounding here
         // approve the order
         if (UtilValidate.isNotEmpty(orderId)) {
             boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
@@ -266,7 +267,6 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
             		Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
                 	return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(result));          	            
                 }
-            	Debug.log("result invoiceId  #################################"+result);
             	Boolean enableAdvancePaymentApp  = Boolean.FALSE;
             	try{        	 	
             		GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableAdvancePaymentApp"), true);
@@ -313,7 +313,6 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
             }
         }
 		result.put("orderId", orderId);
-		Debug.log("result successful  #################################");
 		return result;
     }
 
