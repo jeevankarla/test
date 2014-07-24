@@ -2455,4 +2455,71 @@ public class PayrollService {
 	      //result.put("lastCloseAttedancePeriod", lastCloseAttedancePeriod);
 	      return result;  
 	 }	 
-}
+
+	 
+	 public static Map<String, Object> UpdateAttendance(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	      LocalDispatcher dispatcher = dctx.getDispatcher();
+	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+	      String partyId = (String) context.get("partyId");
+	      String customTimePeriodId = (String)context.get("customTimePeriodId");
+	      String timePeriodId = (String)context.get("timePeriodId");
+	      BigDecimal noOfArrearDays=(BigDecimal)context.get("noOfArrearDays");
+	      Map result = ServiceUtil.returnSuccess();
+	      try{
+	      			List conditionLis=FastList.newInstance();
+	      			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
+	      			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
+	      			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
+	      			List<GenericValue> statusList=delegator.findList("PeriodBilling",conditon, null, null,null,false);
+	      	if(UtilValidate.isEmpty(statusList)){
+	      		try {
+	      			List conditionList = FastList.newInstance();
+	      			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+	      			conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS , customTimePeriodId));
+	      			EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+	      			List<GenericValue> emplPayrollAttendanceDetailList = delegator.findList("PayrollAttendance", condition, null, null, null, false);
+	      				for (int i = 0; i < emplPayrollAttendanceDetailList.size(); ++i) {
+	      					GenericValue employPayrollDetails = emplPayrollAttendanceDetailList.get(i);
+	      					BigDecimal arrearDays=employPayrollDetails.getBigDecimal("noOfArrearDays");
+	      					BigDecimal noOfPayableDays= employPayrollDetails.getBigDecimal("noOfPayableDays");
+	      					if(UtilValidate.isEmpty(arrearDays)){
+	      						employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
+	      						noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
+	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+	      						employPayrollDetails.store();
+						}
+	      					else{
+	      						noOfPayableDays=noOfPayableDays.subtract(arrearDays);
+	      							noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
+	      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+	      							employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
+	      							employPayrollDetails.store();
+	      					}
+	      				}
+	      		} catch (GenericEntityException e) {
+	      			Debug.logError(e, module);
+	      			return ServiceUtil.returnError(e.toString());
+	      		}
+	      		result = ServiceUtil.returnSuccess("Successfully Updated!!");
+	      		return result;
+	      		}
+			
+	      	}
+	      	catch (GenericEntityException e) {
+	      			Debug.logError(e, module);
+	      			return ServiceUtil.returnError(e.toString());
+	      	}
+	      	GenericValue customTimePeriod;
+	      		try {
+	      			customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+	      		} catch (GenericEntityException e1) {
+	      			Debug.logError(e1,"Error While Finding Customtime Period");
+	      			return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
+	      		}
+	      		Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+	      		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	      		return ServiceUtil.returnError("Already Payroll Generated For The TimePeriod"+UtilDateTime.toDateString(fromDateTime,"dd MMMMM, yyyy")+"-"+UtilDateTime.toDateString(thruDateTime,"dd MMMMM, yyyy"));
+	  }
+
+}//end of service

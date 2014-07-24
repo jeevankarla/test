@@ -41,7 +41,7 @@
         	<link target="FindEmplPositions"/>
         </menu-item> 
         <menu-item name="HRReports" title="${uiLabelMap.AccountingReports}">
-        	<condition>
+        	 <condition>
             	<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
             </condition>  
         	<link target="HRReports"><parameter param-name="organizationPartyId"/>  </link>
@@ -89,7 +89,10 @@
         </menu-item>   
         <menu-item name="EmployeeAttendance" title="Employee Attendance Details"> 
         	<link target="EmployeeAttendance"/>
-        </menu-item>                      
+        </menu-item>  
+        <menu-item name="ArrearDays" title="Arrear Days">
+        <link target="ArrearDays"></link>
+        </menu-item>                    
     </menu>	 	
 	<menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">

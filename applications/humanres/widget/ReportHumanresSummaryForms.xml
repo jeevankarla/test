@@ -149,7 +149,7 @@
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
 		<actions>
 		<set field="parameters.reportFlag" value="daAmount"></set>
-			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeTable.groovy"/>					
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/masterEmployeeTable.groovy"/>					
 		</actions>
 		<field name="partyId" title="Employee Id" title-area-style="tableheadwide" >
 			<display description="${employeeId}" />
@@ -157,7 +157,7 @@
 		<field name="name" title-area-style="tableheadwide">
 			<display description="${name} " />
 		</field>		
-		<field name="employmentFrom" title-area-style="tableheadwide" title="Employment From"><display description="${joinDate}"/></field>
+		<field name="employmentFrom" title-area-style="tableheadwide" title="Join Date"><display description="${joinDate}"/></field>
 		<field name="qual" title="Educational Qualification"><display description="${qual}"/></field>
 		<field name="position" title="Designation" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${position}" key-field-name="emplPositionTypeId"></display-entity></field>
 		<field name="department" title-area-style="tableheadwide"><display description="${department}"/></field>
@@ -641,15 +641,15 @@
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
-    <form name="ArrearDays" type="single" header-row-style="header-row" default-table-style="basic-table" >
+    <form name="ArrearDays" type="single" header-row-style="header-row" default-table-style="basic-table" target="findArrearDays">
    		 <field name="hideSearch"><hidden value="Y" /></field>
 		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-		 <field name="partyId">
+		 <field name="partyId" title="Employee Id">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>
        	<field name="customTimePeriodId" required-field="true">
             <drop-down>
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
                     <entity-order-by field-name="-thruDate"/>
                     <entity-order-by field-name="periodNum"/>
@@ -658,9 +658,14 @@
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>   
     </form>
-    <form name="EditArrearDays" type="list" list-name="EditArrearDays" default-table-style="basic-table hover-bar" target="" >
-    	<field name="partyId"><hidden></hidden></field>
-    	<field name="customTimePeriodId"><display></display></field>
+    <form name="EditArrearDays" type="list" list-name="EditArrearDays" default-table-style="basic-table hover-bar" target="updateArrearDays" >
+    	<field name="partyId"><hidden/></field>
+    	<field name="name" title="Employee Id">
+    	<hyperlink also-hidden="false" description="${partyId}[${name}]" target="EmployeeProfile">
+                <parameter param-name="partyId" from-field="partyId"/>
+            </hyperlink></field>
+    	<field name="timePeriodId"><hidden/></field>
+    	<field name="customTimePeriodId" title="Time Period"><display></display></field>
     	<field name="noOfPayableDays"><display></display></field> 
     	<field name="noOfArrearDays" title="Arrear Days"><text></text></field>
     	 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>

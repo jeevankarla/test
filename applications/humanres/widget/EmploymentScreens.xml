@@ -443,7 +443,10 @@
     </screen>
  <screen name="newReports">
     	<section>
-    		<actions>    	
+    		<actions>  
+    		<set field="titleProperty" value="HumanResFindEmployment"/>
+            <set field="headerItem" value="newReports"/>
+			<set field="tabButtonItem" value="newReports" />   	
     		 <set field="screenFlag" value="newReports"/>	
     		 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     		</actions>

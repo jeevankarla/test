@@ -88,6 +88,14 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    <service name="updateArrearDays" engine="java" default-entity-name="PayrollAttendance"
+    		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateAttendance" auth="true">
+    	<description>Upadate Arrear Days</description>
+    	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+		<auto-attributes mode="IN" include="pk" optional="false"/>
+		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>    
+    </service>
 
     <service name="deletePartySkill" engine="simple" default-entity-name="PartySkill"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deletePartySkill" auth="true">

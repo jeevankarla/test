@@ -92,7 +92,48 @@
             </widgets>
         </section>
     </screen>   
-    
+    <screen name="EmployeeArrearDays">
+		<section>
+			<actions>
+				<set field="headerItem" value="Attendance" />
+				<set field="tabButtonItem" value="Attendance" />
+ 				<set field="tabButtonItem2" value="ArrearDays" />                                           				
+				<set field="titleProperty" value="ArrearDays" />
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>                                                        					   					
+                        <screenlet title="Employee Arrear Days">
+                        <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ArrearDays"/>
+                        </screenlet> 
+                        <include-screen name="EditArrearDays" location="component://humanres/widget/HumanresScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+			</widgets>
+		</section>    
+    </screen>
+    <screen name="EditArrearDays">
+      <section>
+			<actions>
+				<!-- <entity-and list="EditArrearDays" entity-name="PayrollAttendance">
+					<field-map field-name="partyId" from-field="parameters.partyId" />
+					<field-map field-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
+				</entity-and>-->
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ArrearDays.groovy"/>
+			</actions>
+			<widgets>
+			 <section>
+				<widgets>
+					<screenlet  title="Edit Arrear Days">
+                       	<include-form name="EditArrearDays" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+					</screenlet>
+			  </widgets>
+			</section>
+			</widgets>
+		</section>
+    </screen>
 	 <screen name="EmployeeAttendanceInternal">
         <section>
             <actions>
