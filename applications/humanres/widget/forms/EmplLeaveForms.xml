@@ -105,7 +105,6 @@
         	<set field="partyId" value="${userLogin.partyId}"/>
         </actions>
         <alt-target use-when="leaveApp==null" target="createEmplLeaveExt"/>
-        <auto-fields-service service-name="updateEmplLeave" map-name="leaveApp"/>
         <field name="partyId" tooltip="${uiLabelMap.CommonRequired}" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyId" title="Name :" use-when="!hasEmplLeaveApprovePermission"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName}"/></field>
         <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
@@ -121,11 +120,13 @@
         </field>
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
         <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
-        <field name="effectedCreditDays" tooltip="${uiLabelMap.CommonRequired}" required-field="true"></field>
-		<field name="lossOfPayDays" tooltip="${uiLabelMap.CommonRequired}" required-field="true"></field>
+        <!-- <field name="fromTime"><date-time type="time" input-method="time-dropdown"/></field>
+        <field name="thruTime"><date-time type="time" input-method="time-dropdown"/></field> -->
+        <!-- <field name="effectedCreditDays" tooltip="${uiLabelMap.CommonRequired}" required-field="true"></field>
+		<field name="lossOfPayDays" tooltip="${uiLabelMap.CommonRequired}" required-field="true"></field> -->
 		<field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
 		<field name="appliedBy"><hidden/></field>
-		 <field name="comment" title="Approver Comments"></field>
+		 <field name="comment" title="Comments"><textarea/></field>
 		<field name="submitButton" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
