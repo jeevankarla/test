@@ -2380,11 +2380,6 @@ under the License.
       <field name="defaultShipAddr" type="id"></field>
       <field name="defaultBillAddr" type="id"></field>
       <field name="defaultPayMeth" type="id"></field>
-      <field name="defaultPLANum" type="id"></field>
-      <field name="tinNumber" type="id"></field>
-      <field name="cstNumber" type="id"></field>
-      <field name="serviceTaxNum" type="id"></field>
-      <field name="registrationNum" type="id"></field>
       <field name="defaultShipMeth" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
