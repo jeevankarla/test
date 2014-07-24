@@ -697,6 +697,12 @@
         <response name="success" type="view" value="createInstBillingConfig"/>
          <response name="failed" type="view" value="createInstBillingConfig"/>
    </request-map>
+   <request-map uri="createCustomTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCustomTimePeriod"/>
+        <response name="success" type="view" value="TimePeriod"/>
+        <response name="error" type="view" value="TimePeriod"/>
+    </request-map>
   <request-map uri="cancelAdhocSalesOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelAdhocSalesOrder"/>
@@ -950,6 +956,10 @@
         <security https="true" auth="true"/>               
         <response name="success" type="view" value="InstBillingPeriodSearch"/>
     </request-map> 
+    <request-map uri="TimePeriod">
+        <security https="true" auth="true"/>               
+        <response name="success" type="view" value="TimePeriod"/>
+    </request-map> 
     <request-map uri="PartywiseBalanceAbstract.pdf">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="PartywiseBalanceAbstractPDF"/>
@@ -1005,6 +1015,11 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="NewOrTerminateRtlReportPDF"/>
     </request-map>
+    <request-map uri="RetailersSalesComprasion.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="RetailersSalesComprasionPDF"/>
+    </request-map>
+    
     <request-map uri="chequeReturnReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="chequeReturnReportPDF"/>
@@ -1190,6 +1205,7 @@
 	<view-map name="ReturnCrates" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ReturnCrates"/>
 	<view-map name="CreditInstitutionBilling" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#CreditInstitutionBilling"/>
 	<view-map name="InstBillingPeriodSearch" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InstBillingPeriodSearch"/>
+	<view-map name="TimePeriod" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#TimePeriod"/>
 	<view-map name="createInstBillingConfig" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#createInstBillingConfig"/>
 	<view-map name="PartywiseBalanceAbstractPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PartywiseBalanceAbstractPDF" content-type="application/pdf"/>
 	<view-map name="DealerBankChallanTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#DealerBankChallanTXT" content-type="text/plain"  />
@@ -1207,6 +1223,7 @@
 	<view-map name="DTCFinesAndPenaltiesReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCFinesAndPenaltiesReportPDF" content-type="application/pdf"/>
 	<view-map name="DTCBillingReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCBillingReportPDF" content-type="application/pdf"/>
 	<view-map name="NewOrTerminateRtlReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#NewOrTerminateRtlReportPDF" content-type="application/pdf"/>
+	<view-map name="RetailersSalesComprasionPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailersSalesComprasionPDF" content-type="application/pdf"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>

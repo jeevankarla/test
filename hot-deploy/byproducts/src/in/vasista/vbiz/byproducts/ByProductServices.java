@@ -5338,11 +5338,24 @@ public class ByProductServices {
 	        	thruDate=UtilDateTime.getDayEnd(thruDate);
 	        }
 	        fromDate=UtilDateTime.getDayStart(fromDate);
-	        
-	        if(fromDate.before(UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()))){
-	        	Debug.logError("From date  shoud be greater than current date : "+fromDate+ "\t",module);
-				return ServiceUtil.returnError("From date  shoud be greater than current date  : "+fromDate);
-	        }
+	        List conditionList = FastList.newInstance();
+	        List<GenericValue> periodBillingAndCustomTimePeriod = FastList.newInstance();
+	        	try{
+		    	   conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
+		    	   conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+		    	   conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(fromDate.getTime())));
+		    	   conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS, null), EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(UtilDateTime.getDayEnd(fromDate).getTime()))));
+					
+		    	   EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    	   periodBillingAndCustomTimePeriod = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, null, null, false);
+		    	   if(UtilValidate.isNotEmpty(periodBillingAndCustomTimePeriod)){
+		    			  Debug.logError("Billing is already generated for the period for the institution "+facilityId, module);
+	                      return ServiceUtil.returnError("Billing is already generated for the period for the institution "+facilityId);
+		    	   }
+				}catch (GenericEntityException e) {
+					Debug.logError(e, module);
+		            return ServiceUtil.returnError(e.getMessage());
+				}   
 				try {
 					FacilityCustBillingList = delegator.findList("FacilityCustomBilling",  EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId), null, null, null, false);
 				}catch (GenericEntityException e) {

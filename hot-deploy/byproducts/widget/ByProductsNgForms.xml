@@ -1226,5 +1226,27 @@
         
         
     </form>
-    
+    <form name="ListTimePeriods" type="list" list-name="TimePeriods"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="customTimePeriodId" title="custom Time Period Id"><display/></field>
+        <field name="periodTypeId">
+          <display-entity entity-name="PeriodType"/>
+        </field>
+        <field name="periodName" title="period Name"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+    	<field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+    </form>
+     <form name="CreateTimePeriod" type="single" title="Create Time Period" target="createCustomTimePeriod"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="organizationPartyId"><hidden value="Company"/></field>
+         <field name="periodTypeId" title="Period Type" >
+        	<drop-down>
+        		<list-options key-name="periodTypeId" list-name="periodTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="periodName" title="period Name"><text/></field>
+        <field name="fromDate" required-field="true"><date-time/></field>
+        <field name="thruDate" required-field="true"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
+    </form>
 </forms>

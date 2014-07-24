@@ -358,7 +358,7 @@
             <link target="CreditInstitutionBilling"/>
         </menu-item> -->
         
-        <menu-item name="InstBillingPeriodSearch" title="Cr. Inst. Billing Config">
+        <!--  <menu-item name="InstBillingPeriodSearch" title="Cr. Inst. Billing Config">
         	<condition>
                 <or>
 					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
@@ -366,7 +366,7 @@
 				</or>	 
         	</condition>         
             <link target="InstBillingPeriodSearch"/>
-        </menu-item>
+        </menu-item>-->
     	<menu-item name="CustomPayments" title="Route Marketing Payment"> 
     		<condition>
 				<or>
@@ -421,8 +421,8 @@
 				</or>	
             </condition>         
             <link target="FindPastBoothPayments"/>        
-       </menu-item>
-       --><menu-item name="facilityCustomTimePeriod" title="Cr. Inst. Billing">
+       </menu-item>-->
+     <menu-item name="facilityCustomTimePeriod" title="Cr. Inst. Billing">
         	<condition>
                 <or>
 					<if-has-permission permission="VNDRMRGN"  action="_VIEW"/>
@@ -431,7 +431,7 @@
         	</condition>        
             <link target="facilityCustomTimePeriod">
             </link>
-        </menu-item>
+        </menu-item>  
         <menu-item name="FacilityRate" title="Shopee Rent">
         	<condition>
         		<and>
@@ -813,5 +813,16 @@
             </condition>
             <link target="FindChequeReturns"/>
           </menu-item>     -->     
-    </menu>      
+    </menu>  
+    <menu name="CreditInstBillingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="facilityCustomTimePeriod" title="Billing">
+        	<link target="facilityCustomTimePeriod"/>
+        </menu-item>    
+        <menu-item name="InstBillingPeriodSearch" title="Config">
+        	<link target="InstBillingPeriodSearch"/>
+        </menu-item>
+        <menu-item name="TimePeriod" title="Time Period">
+        	<link target="TimePeriod"/>
+        </menu-item>    
+      </menu>    
 </menus>
