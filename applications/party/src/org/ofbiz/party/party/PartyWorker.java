@@ -31,6 +31,7 @@ import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -44,6 +45,7 @@ import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.service.DispatchContext;
 
 /**
  * Worker methods for Party Information
@@ -83,6 +85,23 @@ public class PartyWorker {
         }
         return result;
     }
+    
+    public static Map<String, Object> getPartyIdentificationDetails(Delegator delegator, String partyId) {
+
+		Map<String, Object> result = FastMap.newInstance();
+		Timestamp saleDate = UtilDateTime.nowTimestamp();
+		Map partyDetails = FastMap.newInstance();
+		try {
+			List<GenericValue> partyIdentificationDetails = delegator.findList("PartyIdentification", EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, partyId), null, null,null, false);
+			for (GenericValue eachIdentity : partyIdentificationDetails) {
+				partyDetails.put(eachIdentity.getString("partyIdentificationTypeId"), eachIdentity.getString("idValue"));
+			}
+		} catch (Exception e) {
+			Debug.logError(e, "Exception while fetching PartyIdentification details ", module);
+		}
+		result.put("partyDetails", partyDetails);
+		return result;
+	}
 
     /**
      * Generate a sequenced club id using the prefix passed and a sequence value + check digit
