@@ -260,7 +260,7 @@ under the License.
 												<#list byProdList as product>
 													<#assign columnCounter =columnCounter+1>
 													 <#if (columnCounter > 11) > <#--  11 products for each row and if morethan 11 then we will wrap to next line -->
-														<#assign columnCounter =0>
+														<#assign columnCounter =1>
 														</fo:table-row>	
 														<fo:table-row>
 													  </#if>
