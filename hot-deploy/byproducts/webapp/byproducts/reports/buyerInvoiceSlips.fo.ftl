@@ -42,7 +42,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">(A UNIT OF KMF LTD.) GKVK POST : BANGALORE - 65</fo:block>
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">(ISSUED UNDER RULE 52A &amp; 173G)</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DCC NO: ${fromPartyDetail.get('defaultPLANum')?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DCC NO: <#if fromPartyDetail?has_content>${fromPartyDetail.get('PLA_NUMBER')?if_exists}</#if></fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DEPO: </fo:block>
 					            	
@@ -61,9 +61,9 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">DUPLICATE FOR TRANSPORTER</fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">EXTRA COPY</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Service Tax No: ${fromPartyDetail.get('serviceTaxNum')?if_exists}</fo:block> 
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">TIN: ${fromPartyDetail.get('tinNumber')?if_exists}</fo:block>
-					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">CST: ${fromPartyDetail.get('cstNumber')?if_exists}</fo:block> 
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Service Tax No: <#if fromPartyDetail?has_content>${fromPartyDetail.get('SERVICETAX_NUMBER')?if_exists}</#if></fo:block> 
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">TIN: <#if fromPartyDetail?has_content>${fromPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">CST: <#if fromPartyDetail?has_content>${fromPartyDetail.get('CST_NUMBER')?if_exists}</#if></fo:block> 
 					            </fo:table-cell>
 							</fo:table-row>
 			            </fo:table-body>
@@ -91,8 +91,8 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </fo:block>  
 					            					</fo:table-cell>
 					            					<fo:table-cell>
-					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">TIN: <#if buyerPartyDetail?has_content>${buyerPartyDetail.get('tinNumber')?if_exists}</#if></fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">CST: <#if buyerPartyDetail?has_content>${buyerPartyDetail.get('cstNumber')?if_exists}</#if></fo:block>
+					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">TIN: <#if toPartyDetail?has_content>${toPartyDetail.get('TIN_NUMBER')?if_exists}</#if></fo:block>
+					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">CST: <#if toPartyDetail?has_content>${toPartyDetail.get('CST_NUMBER')?if_exists}</#if></fo:block>
 					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">AREA CODE: </fo:block>
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 					            					</fo:table-cell>
@@ -146,10 +146,10 @@ under the License.
 												</fo:table-row>
 												<fo:table-row height="20px">
 			                    					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${fromPartyDetail.get('defaultPLANum')?if_exists}</fo:block>
+					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if fromPartyDetail?has_content>${fromPartyDetail.get('PLA_NUMBER')?if_exists}</#if></fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${fromPartyDetail.get('registrationNum')?if_exists}</fo:block>
+					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if fromPartyDetail?has_content>${fromPartyDetail.get('REGISTRATION_NUMBER')?if_exists}</#if></fo:block>
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>   
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">

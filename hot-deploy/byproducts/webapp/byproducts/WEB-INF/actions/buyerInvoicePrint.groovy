@@ -31,18 +31,17 @@ import javolution.util.FastMap;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-
+import org.ofbiz.party.party.PartyWorker;
 
 invoiceDetailList = [];
 vatMap = [:];
 reportTitle = [:];
 
-today = UtilDateTime.nowTimestamp()
-partyId = "";
+today = UtilDateTime.nowTimestamp();
 
 invoiceId = parameters.invoiceId;
 invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
-invoiceItemList = delegator.findByAnd("OrderItemBillingAndInvoiceAndInvoiceItem", [invoiceId : invoice.invoiceId], null);\
+invoiceItemList = delegator.findByAnd("OrderItemBillingAndInvoiceAndInvoiceItem", [invoiceId : invoice.invoiceId], null);
 orderIds = EntityUtil.getFieldListFromEntityList(invoiceItemList, "orderId", true);
 orderId = "";
 if(orderIds){
@@ -50,19 +49,10 @@ if(orderIds){
 }
 partyIdFrom = invoice.partyIdFrom;
 partyIdTo = invoice.partyId;
-fromPartyDetailList  = delegator.findList("PartyProfileDefault", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom), null, null, null, false);
-buyerPartyDetailList  = delegator.findList("PartyProfileDefault", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdTo), null, null, null, false);
-
-fromPartyDetailList = EntityUtil.filterByDate(fromPartyDetailList, today);
-buyerPartyDetailList = EntityUtil.filterByDate(buyerPartyDetailList, today);
-
-if(fromPartyDetailList){
-	context.fromPartyDetail = fromPartyDetailList.get(0);
-}
-if(buyerPartyDetailList){
-	context.buyerPartyDetail = buyerPartyDetailList.get(0);
-	
-}
+fromPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdFrom)).get("partyDetails");
+toPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdTo)).get("partyDetails");
+context.fromPartyDetail = fromPartyDetail;
+context.toPartyDetail = toPartyDetail;
 
 OrderHeader = delegator.findOne("OrderHeader", [orderId: orderId], false);
 shipmentId = OrderHeader.shipmentId;
