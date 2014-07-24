@@ -30,5 +30,13 @@
     
     <EnumerationType description="CUSTOM SEQUENCE NUMBER" enumTypeId="CUSTOM_SEQ_NUM"/> 
     <Enumeration description="CREDIT INSTITUTION SEQUENCE" enumCode="CR INST SEQUENCE" enumId="RM_CRINST" enumTypeId="CUSTOM_SEQ_NUM"/> 
+    
+    <PartyIdentificationType partyIdentificationTypeId="CST_NUMBER" description="CST Number"/>
+    <PartyIdentificationType partyIdentificationTypeId="PAN_NUMBER" description="PAN Number"/>
+    <PartyIdentificationType partyIdentificationTypeId="PLA_NUMBER" description="Personal Ledger Account Number"/>
+    <PartyIdentificationType partyIdentificationTypeId="PO_NUMBER" description="PO Number"/>
+    <PartyIdentificationType partyIdentificationTypeId="REGISTRATION_NUMBER" description="Registration Number"/>
+    <PartyIdentificationType partyIdentificationTypeId="SERVICETAX_NUMBER" description="Service Tax Number"/>
+    <PartyIdentificationType partyIdentificationTypeId="TIN_NUMBER" description="TIN Number"/>
 
 </entity-engine-xml>
