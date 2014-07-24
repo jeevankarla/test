@@ -113,20 +113,20 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign comments = (finAcctngDetails.get("comments")?if_exists)/>
 								<fo:table-row border-style="solid">
 									<fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"> 
+	                            		<fo:block  text-align="left" keep-together="always" font-size="11pt" white-space-collapse="false"> 
                                              ${transactionDate?if_exists}
                                       </fo:block>  
 	                       			</fo:table-cell>
 									<#if ((paymentId)?has_content)>
 										<#if (paymentId != "DAY TOTAL")>
 		                       			<fo:table-cell border-style="solid">
-		                            		<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"> 
+		                            		<fo:block  text-align="left" font-size="11pt" white-space-collapse="false"> 
 	                                             ${paymentId?if_exists}/${description?if_exists}
 	                                      </fo:block>  
 		                       			</fo:table-cell>
 		                       			<#else>
 		                       			<fo:table-cell border-style="solid" font-weight="bold">
-		                            		<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"> 
+		                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"> 
 	                                             ${paymentId?if_exists}
 	                                      </fo:block>  
 		                       			</fo:table-cell>
