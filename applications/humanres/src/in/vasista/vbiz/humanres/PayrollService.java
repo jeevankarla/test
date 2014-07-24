@@ -1584,12 +1584,27 @@ public class PayrollService {
 	       
 	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	    	try {
+	    		Map input =FastMap.newInstance();
+	    		input.put("userLogin", userLogin);
+	    		input.put("partyId", employeeId);
+	    		input.put("timePeriodStart", timePeriodStart);
+	    		input.put("timePeriodEnd", timePeriodEnd);
+	    		input.put("leaveTypeId", "HPL");
+	    		Map resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
+	    		List<GenericValue> leaves = (List)resultMap.get("leaves");
+	    		input.put("leaveTypeId", "CML");
+	    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
+	    		leaves.addAll((List)resultMap.get("leaves"));
 	    		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
 	    		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
 	    			availedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"Y"))).size();
 	    			disAvailedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"N"))).size();
 		    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
 		    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
+		    			List cDayLeaves = EntityUtil.filterByDate(leaves, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getString("date")));
+		    			if(UtilValidate.isNotEmpty(cDayLeaves)){
+		    				continue;
+		    			}
 		    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
 		    			String availedCanteen = emplDailyAttendanceDetail.getString("availedCanteen");
 		    			if(UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
@@ -2377,12 +2392,14 @@ public class PayrollService {
 			    			//TO:DO need to handle SHIFT_NIGHT mispunch
 			    			Boolean shiftFalg = Boolean.FALSE;
 			    			if(UtilValidate.isNotEmpty(dayShiftList)){
+			    				for(GenericValue dayShift :dayShiftList){
+			    					lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/1440);
+			    				}
 			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
 			    				if(dayShifts.contains("SHIFT_NIGHT") && inPunch.size() ==1){
 			    					shiftFalg = Boolean.TRUE;
 			    				}
-			    				
 			    			}
 			    			
 			    			if((UtilValidate.isNotEmpty(dayPunchList) && dayPunchList.size() >=2) || shiftFalg){

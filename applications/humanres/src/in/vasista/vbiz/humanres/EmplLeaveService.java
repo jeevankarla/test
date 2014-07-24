@@ -117,7 +117,8 @@ public class EmplLeaveService {
 				String partyId = (String) context.get("partyId");	
 				GenericValue userLogin = (GenericValue) context.get("userLogin");
 				Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
-				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");        
+				Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+				String leaveTypeId = (String)context.get("leaveTypeId");
 				Map<String, Object> serviceResults = ServiceUtil.returnSuccess();
 				BigDecimal noOfLeaveDays = BigDecimal.ZERO;
 				Map leaveDetailmap = FastMap.newInstance();
@@ -126,6 +127,10 @@ public class EmplLeaveService {
 					
 					List conditionList = UtilMisc.toList(
 			            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+					if(UtilValidate.isNotEmpty(leaveTypeId)){
+						conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
+					}
+					
 					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			    	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
@@ -134,7 +139,7 @@ public class EmplLeaveService {
 					serviceResults.put("leaves", leaves);
 					for (int i = 0; i < leaves.size(); ++i) {		
 						GenericValue leave = leaves.get(i);
-						String leaveTypeId =leave.getString("leaveTypeId");
+						String leaveType =leave.getString("leaveTypeId");
 			            Timestamp from = leave.getTimestamp("fromDate");
 			            Timestamp thru = leave.getTimestamp("thruDate");			
 						if (from.compareTo(timePeriodStart) < 0 || thru.compareTo(timePeriodEnd) > 0) {
@@ -146,13 +151,13 @@ public class EmplLeaveService {
 						int intv = (UtilDateTime.getIntervalInDays(from, thru)+1);
 						BigDecimal temp = new BigDecimal(intv);	
 						
-						if(UtilValidate.isEmpty(leaveDetailmap.get(leaveTypeId))){
-							leaveDetailmap.put(leaveTypeId,BigDecimal.ZERO);
+						if(UtilValidate.isEmpty(leaveDetailmap.get(leaveType))){
+							leaveDetailmap.put(leaveType,BigDecimal.ZERO);
 						}
 						if(UtilValidate.isNotEmpty(leave.getBigDecimal("lossOfPayDays"))){
 							lossOfPayDays = lossOfPayDays.add(leave.getBigDecimal("lossOfPayDays"));
 						}
-						leaveDetailmap.put(leaveTypeId, ((BigDecimal)leaveDetailmap.get(leaveTypeId)).add(temp));
+						leaveDetailmap.put(leaveType, ((BigDecimal)leaveDetailmap.get(leaveType)).add(temp));
 						noOfLeaveDays = noOfLeaveDays.add(temp);
 					} 
 				}catch(Exception e){
