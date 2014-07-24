@@ -163,7 +163,9 @@ Debug.logInfo("result:" + result, module);
 		inputParamMap.put("boothId", facilityId);  
 		inputParamMap.put("supplyDate", amSupplyDateStr); 
 		inputParamMap.put("subscriptionTypeId", "AM"); 	
-		inputParamMap.put("productSubscriptionTypeId", "CASH"); 
+		inputParamMap.put("productSubscriptionTypeId", "CASH");
+		inputParamMap.put("fetchForSms", Boolean.TRUE); // to enable fetching indent even trucksheet has been generated
+		
 Debug.logInfo("inputParamMap:" + inputParamMap, module);		 		
     	Map indentResultsAM = ByProductNetworkServices.getBoothChandentIndent(dctx, inputParamMap);
 		if(!ServiceUtil.isError(indentResultsAM)){
