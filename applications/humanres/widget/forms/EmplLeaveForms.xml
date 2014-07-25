@@ -26,7 +26,7 @@
         	<set field="partyId" value="${userLogin.partyId}"/>
         </actions>
         <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Employee Id" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="!hasEmplLeaveApprovePermission"><hidden/></field>
         <field name="leaveTypeId">
             <drop-down allow-empty="true">
@@ -51,7 +51,7 @@
         <field name="appliedBy"><hidden/></field>
 		<field name="comment"><hidden/></field>
 		<field name="documentsProduced"><hidden/></field>
-        <field name="approverPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approverPartyId"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="description"><hidden/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -82,7 +82,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="leaveStatus"><display/></field>
+        <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
         <field name="updateLeave" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" use-when="hasEmplLeaveEditPermission&amp;&amp;&quot;${leaveStatus}&quot;!=&quot;LEAVE_APPROVED&quot;">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}" target="EditEmplLeave">
                 <parameter param-name="partyId"/>
@@ -105,9 +105,9 @@
         	<set field="partyId" value="${userLogin.partyId}"/>
         </actions>
         <alt-target use-when="leaveApp==null" target="createEmplLeaveExt"/>
-        <field name="partyId" tooltip="${uiLabelMap.CommonRequired}" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Employee Id" tooltip="${uiLabelMap.CommonRequired}" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="partyId" title="Name :" use-when="!hasEmplLeaveApprovePermission"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName}"/></field>
-        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="leaveTypeId" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType"/>
@@ -133,8 +133,11 @@
    <form name="FindLeaveApprovals" target="FindLeaveApprovals" type="single">
         <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="effectedCreditDays"><hidden/></field>
+        <field name="lossOfPayDays"><hidden/></field>
+        <field name="documentsProduced"><hidden/></field>
         <!--<field name="approverPartyId" use-when="!hasAdminPermission"><hidden value="${approverPartyId}"/></field>-->
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" title="Employee Id"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="leaveStatus">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -169,7 +172,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="leaveStatus"><display/></field>
+        <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"></display-entity></field>
         <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext">
             <hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.CommonUpdate}" >
                 <parameter param-name="partyId"/>
