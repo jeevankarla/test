@@ -72,7 +72,12 @@ depInvoiceList.each{ invoice ->
 
 context.employeeBankList=employeeBankList;		*/
 List conditionList =[];
-conditionList=UtilMisc.toList(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"),
+if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+	parameters.partyIdFrom=parameters.partyIdFrom;
+}else{
+	parameters.partyIdFrom=parameters.partyId;
+}
+conditionList=UtilMisc.toList(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.partyIdFrom),
   EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
   EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
   companyBankAccountList= delegator.findList("FinAccount",condition,null,null,null,false);

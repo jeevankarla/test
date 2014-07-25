@@ -20,8 +20,8 @@ under the License.
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-        margin-top="0.3in" margin-bottom="0.3in" margin-left=".7in" margin-right="1in">
-          <fo:region-body margin-top=".5in"/>
+        margin-top="0.3in" margin-bottom="0.3in" margin-left="1in" margin-right=".5in">
+          <fo:region-body margin-top="1.2in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
       </fo:simple-page-master>
@@ -30,15 +30,17 @@ under the License.
     <#assign totalAmount=0>
  <#if BankAdvicePayRollMap?has_content>   
  <#assign bankDetailsList=bankWiseEmplDetailsMap.entrySet()>
+ <#if bankDetailsList?has_content>  
+ <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
+ <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", parameters.partyId, "userLogin", userLogin))/>
  <#list bankDetailsList as companyBankDetails>
   <fo:page-sequence master-reference="main">
   	<fo:static-content flow-name="xsl-region-before">
-  		<#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
   		<#assign finAccDetails = delegator.findOne("FinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
-  		<#assign postalAddress=delegator.findByAnd("PartyAndPostalAddress", {"partyId" : parameters.partyId})/>
   		<#assign nowDate=Static["org.ofbiz.base.util.UtilDateTime"].getDayStart(nowTimestamp, timeZone,locale)>
-  		<fo:block white-space-collapse="false" font-weight="bold" text-align="center" keep-together="always">${partyGroup.groupName?if_exists}  ${postalAddress[0].address1?if_exists}                                     ${uiLabelMap.CommonPage}No: <fo:page-number/>    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowDate, "dd-MMM-yyyy")}</fo:block>
-        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">${finAccDetails.finAccountName?if_exists} BANK STATEMENT(SALARY) FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
+  		<fo:block white-space-collapse="false" font-weight="bold" text-align="left" text-indent="70pt" keep-together="always">${partyGroup.groupName?if_exists}, <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if> </fo:block>
+        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt">${finAccDetails.finAccountName?if_exists}             ${uiLabelMap.CommonPage}No: <fo:page-number/>    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowDate, "dd-MMM-yyyy")}</fo:block>
+        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">BANK STATEMENT(SALARY) FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
   	</fo:static-content>  	
     <fo:flow flow-name="xsl-region-body" font-family="Helvetica">    	
       <fo:block>
@@ -117,6 +119,15 @@ under the License.
     </fo:flow>
  </fo:page-sequence>
  </#list>
+ <#else>
+ 	<fo:page-sequence master-reference="main">
+			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
+   		 		<fo:block font-size="14pt">
+        			No Employee Found.......!
+   		 		</fo:block>
+			</fo:flow>
+		</fo:page-sequence>	
+ </#if>
  <#else>
  	<fo:page-sequence master-reference="main">
 			<fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">

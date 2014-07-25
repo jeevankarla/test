@@ -167,6 +167,26 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</td>
       	   </form>
       	   </tr>
+      	   <tr>
+	  	   		<form id="MonthlyBankAdviceStatement" name="MonthlyBankAdviceStatement" mothed="post" action="<@ofbizUrl>EmployeeBankDetailsPdf.pdf</@ofbizUrl>" target="_blank">
+	  	   			<td width="20%">Monthly Bank Advice Statement</td>
+	  	   			<td width="35%">Organization Id 
+				 	<select name="partyIdFrom" class='h4'>
+						<#list orgList as org>    
+  	    					<option value='${org.partyId}'>${org.groupName}</option>
+						</#list> 
+					</select>
+					</td>
+	  	   			<td width="40%">Period Id
+			  			<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+			  				<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+			  			</select>
+			  		</td>
+					<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+					</td>
+	  	   	
+	  	   		</form>
+      	   </tr>
      <!-- 	<tr class="alternate-row">
       	   	<form id="AttendanceMonthlyReport" name="AttendanceMonthlyReport" mothed="post" action="<@ofbizUrl>EmplMonthlyPunchReport.csv</@ofbizUrl>" target="_blank">
       	   	<td width="25%">Monthly Attendance Report</td>
