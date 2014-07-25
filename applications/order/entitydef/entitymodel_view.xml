@@ -1457,7 +1457,7 @@ under the License.
       <view-link entity-alias="CR" rel-entity-alias="CRI" rel-optional="true">
         <key-map field-name="custRequestId"/>
       </view-link>
-       <view-link entity-alias="CR" rel-entity-alias="CRA">
+       <view-link entity-alias="CR" rel-entity-alias="CRA" rel-optional="true">
         <key-map field-name="custRequestId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="CustRequest">
