@@ -4,39 +4,36 @@
 	   
 	<form name="CreateEmployeeSubsidyForm" odd-row-style="alternate-row" header-row-style="header-row" type="single" 
     	default-table-style="basic-table hover-bar" separate-columns="true" target="EmployeeSearch">
-    	<field name="hideSearch"><hidden value="Y" /></field>
-		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-    	<field name="roleTypeId"><hidden value="EMPSUBISDY_ROLE"></hidden></field>
+    	 <actions>
+        	<entity-condition entity-name="PartyRelationship" list="ListPartyRelationship" distinct="true" filter-by-date="true">
+                    <condition-list combine="and">
+                        <condition-expr field-name="roleTypeIdFrom" operator="equals" value="Unions"/>
+                        <condition-expr field-name="roleTypeIdTo" operator="equals" value="EMPLOYEE"/>
+                    </condition-list>
+                    <select-field field-name="partyIdFrom"/>
+                </entity-condition>
+        	<set field="facilityName" from-field="facilityName"/>
+       </actions>
     	<field name="facilityId" title="Retailer Id"><text/></field>    	
         <field name="partyId" title="Employee Id" ><text/></field>
+        <field name="unionCode" title="Union Code" required-field="true">
+        <drop-down allow-empty="true">
+        	<list-options list-name="ListPartyRelationship" key-name="partyIdFrom" description="${partyIdFrom}"/>
+            </drop-down></field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
-    <form name="EmployeeSearchResultForm" type="list" list-name="listIt" odd-row-style="alternate-row" 
-      default-entity-name="FacilityParty" default-table-style="basic-table hover-bar" >
-    	<actions>    	
-    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="FacilityParty"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service> 
-        </actions>
-        
+    <form name="EmployeeSearchResultForm" type="list" list-name="facilityPartyList" odd-row-style="alternate-row" 
+       default-table-style="basic-table hover-bar" >
          <row-actions>
-        	<entity-one entity-name="Person">
-        		<field-map field-name="partyId" from-field="partyId"/>
-        		<select-field field-name="firstName"/>
-        		<select-field field-name="lastName"/>
-        	</entity-one>
         	<entity-one entity-name="Facility">
         		<field-map field-name="facilityId" from-field="facilityId"/>
         		<select-field field-name="facilityName"/>
         	</entity-one>
         	<set field="facilityName" from-field="facilityName"/>
         </row-actions>
-       
-    	<field name="firstName" title="Employee Name" ><display description="${firstName},${lastName}" ></display></field> 
-        <field name="partyId" title="Employee Code" ><display/></field>
+    	<field name="partyName" title="Employee Name" ><display/></field> 
+        <field name="partyId" title="Employee Code" ><display description="${partyId}" ></display></field>
+        <field name="unionName" title="Union Name" ><display/></field>
         <field name="facilityId" title="Retailer Code"><display/></field>   	
         <field name="facilityName" title="Retailer Name">
         <display description="${facilityName}" ></display>
@@ -66,45 +63,24 @@
             </hyperlink>
         </field>
     </form>
-     <form name="EmployeeReportForm" type="list" list-name="listIt" odd-row-style="alternate-row" 
-      default-entity-name="FacilityParty"   paginate="false" default-table-style="basic-table hover-bar" >
-    	<actions>    	
-    	   <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="FacilityParty"/>
-            </service> 
-        </actions>
+     <form name="EmployeeReportForm" type="list" list-name="facilityPartyList" odd-row-style="alternate-row" 
+        paginate="false" default-table-style="basic-table hover-bar" >
          <row-actions>
-        	<entity-one entity-name="Person">
-        		<field-map field-name="partyId" from-field="partyId"/>
-        		<select-field field-name="firstName"/>
-        		<select-field field-name="lastName"/>
-        	</entity-one>
         	<entity-one entity-name="Facility">
         		<field-map field-name="facilityId" from-field="facilityId"/>
         		<select-field field-name="facilityName"/>
         	</entity-one>
-        	 
-            <entity-and entity-name="PartyRelationship" list="PartyRelationship" filter-by-date="true">
-                <field-map field-name="partyIdTo" from-field="partyId"/>
-            </entity-and>
-        	<set field="UnionCode" from-field="PartyRelationship[0].partyIdFrom" type="Object"/>
-        	<entity-one entity-name="PartyGroup">
-        		<field-map field-name="partyId" from-field="UnionCode"/>
-        		<select-field field-name="groupName"/>
-        	</entity-one>
-        	<set field="UnionName" from-field="groupName"/>
         	<set field="facilityName" from-field="facilityName"/>
-        </row-actions>
+                </row-actions>
+    	<field name="partyName" title="Employee Name" ><display/></field> 
+        <field name="partyId" title="Employee Code" ><display description="${partyId}" ></display></field>
        
-    	<field name="firstName" title="Employee Name" ><display description="${firstName},${lastName}" ></display></field> 
-        <field name="partyId" title="Employee Code" ><display/></field>
         <field name="facilityId" title="Retailer Code"><display/></field>   	
         <field name="facilityName" title="Retailer Name">
-        <display description="${facilityName}" ></display>
-      </field>  
-        <field name="UnionName" title="Union / Unit Name"><display description="${UnionName}" ></display></field>
-    	<field name="UnionCode" title="Union / Unit Code"><display description="${UnionCode}" ></display>
-      </field>  
+        <display description="${facilityName}" ></display>  
+       </field>  
+        <field name="unionCode" title="Union Code" ><display/></field>
+        <field name="unionName" title="Union Name" ><display/></field>
+        
     </form>
 </forms>

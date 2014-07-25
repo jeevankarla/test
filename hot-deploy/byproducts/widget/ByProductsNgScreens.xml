@@ -87,15 +87,16 @@
         <section>
             <actions>
             <set field="tabButtonItem" value="EmployeeSearch"/>
-            <set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
-            <set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set> 
+            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EmployeeSubsidy.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                       <decorator-section name="body">
                       	<section>
                         	<widgets>
+                        	<container style="button-bar">
                         	<link target="EmployeeSubsidy" text="Create" style="buttontext"></link>
+                        	</container>
                         		<screenlet title="Employee Search">
                         			<include-form name="CreateEmployeeSubsidyForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml"/>
                         		</screenlet>
@@ -103,6 +104,7 @@
 	                        		<link target="employeeReport.csv" text="Export As CSV" style="buttontext create">
 										<parameter param-name="facilityId" from-field="parameters.facilityId"/>
 										<parameter param-name="partyId" from-field="parameters.partyId"/>
+										<parameter param-name="unionCode" from-field="parameters.unionCode"/>
 					  	        	</link>
                         			<include-form name="EmployeeSearchResultForm" location="component://byproducts/widget/EmployeeSubsidyForm.xml"/>
                         		</screenlet>

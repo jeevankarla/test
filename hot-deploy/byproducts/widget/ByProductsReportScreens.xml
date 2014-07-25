@@ -1503,17 +1503,7 @@
 	<screen name="EmployeeReportCSV">
 		<section>
 			<actions>
-				<set field="titleProperty" value="pageTitleFindPayments" />
-				<set field="parameters.hideSearch" value="Y"/>
-		        <set field="parameters.noConditionFind" value="N"/>
-    	        <set field="parameters.roleTypeId" value="EMPSUBISDY_ROLE"/>
-				<service service-name="performFind" result-map="result" >
-	                <field-map field-name="inputFields" from-field="parameters"/>
-	                <field-map field-name="entityName" value="FacilityParty"/>
-	                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                    <field-map field-name="viewSize" from-field="viewSize"/>   
-	            </service> 
-	            <set field="listIt" from-field="result.listIt" />
+	             <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EmployeeSubsidy.groovy"/>
 			</actions>
 			<widgets>						
 	        	<container>	
