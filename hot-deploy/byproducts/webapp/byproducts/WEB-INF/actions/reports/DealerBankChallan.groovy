@@ -36,14 +36,6 @@ if(parameters.supplyDate){
 	} catch (ParseException e) {
 		Debug.logError(e, "Cannot parse date string: "+parameters.supplyDate, "");
 	}
-	
-	/*SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	try {
-		estimatedDeliveryDateTime = new java.sql.Timestamp(formatter.parse(parameters.supplyDate).getTime());
-		
-	}catch (ParseException e) {
-	Debug.logError("==unparsable Date=="+parameters.supplyDate,e.toString())
-	}*/
 }else{
 	estimatedDeliveryDateTime=UtilDateTime.nowTimestamp();
 }
@@ -141,7 +133,18 @@ totalShipmentIds = [];
 totalShipmentIds.addAll(amShipmentIds);
 totalShipmentIds.addAll(pmShipmentIds);
 
-orderHeader = delegator.findList("OrderHeaderItemProductShipmentAndFacility", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, totalShipmentIds), ["originFacilityId", "shipmentId", "ownerPartyId"] as Set, null, null, false);
+orderHeader = delegator.findList("OrderHeaderItemProductShipmentAndFacility", EntityCondition.makeCondition("shipmentId", EntityOperator.IN, totalShipmentIds), ["originFacilityId", "shipmentId", "ownerPartyId", "routeId"] as Set, null, null, false);
+
+distinctRoutes = EntityUtil.getFieldListFromEntityList(orderHeader, "routeId", true);
+routeBoothsMap = [:];
+indentFacilities = [];
+distinctRoutes.each{eachRoute ->
+	routeBooths = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("routeId", EntityOperator.EQUALS, eachRoute));
+	routeBoothIds = EntityUtil.getFieldListFromEntityList(routeBooths, "originFacilityId", true);
+	routeBoothsMap.put(eachRoute, routeBoothIds);
+	indentFacilities.addAll(routeBoothIds);
+}
+facilitiesRef = delegator.findList("Facility", EntityCondition.makeCondition("facilityId", EntityOperator.IN, indentFacilities), UtilMisc.toSet("facilityId", "ownerPartyId"), null, null, false);
 
 orderHeaderAM = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("shipmentId", EntityOperator.IN, amShipmentIds));
 orderHeaderPM = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("shipmentId", EntityOperator.IN, pmShipmentIds));
@@ -166,7 +169,6 @@ orderHeaderPM.each{eachEntry ->
 		}
 	}
 	
-	
 }
 context.challanSerialNumMap = challanSerialNumMap;
 
@@ -190,6 +192,7 @@ if(UtilValidate.isNotEmpty(pmShipmentIds)){
 		pmBoothTotals = dayTotals.get("boothTotals");
 	}
 }
+excludeFacilityList = [];
 routeWiseMap =[:];
 facilityBankMap =[:];
 for(int i=0; i< routeIdsList.size();i++){
@@ -197,6 +200,19 @@ for(int i=0; i< routeIdsList.size();i++){
 	boothIdsList=[];
 	getBoothRes=ByProductNetworkServices.getRouteBooths(delegator , UtilMisc.toMap("routeId",routeId));
 	boothsList =getBoothRes.get("boothsList");
+	
+	if(routeBoothsMap){
+		boothIds = routeBoothsMap.get(routeId);
+		if(boothIds){
+			condList = [];
+			condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothIds));
+			condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.NOT_IN, excludeFacilityList));
+			exprCond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			boothsList = EntityUtil.filterByCondition(facilitiesRef, exprCond);
+			excludeFacilityList.addAll(boothIds);
+		}
+		
+	}
 	//boothIdsList = getBoothRes.get("boothIdsList");
 	boothsList = EntityUtil.filterByDate(boothsList, estimatedDeliveryDateTime, "openedDate", "closedDate", true);
 	profilePartyIds= [];

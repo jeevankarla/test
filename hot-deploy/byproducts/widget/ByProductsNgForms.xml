@@ -685,7 +685,7 @@
                	   <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
-        <field use-when="&quot;${statusId}&quot;==&quot;ORDER_APPROVED&quot; &amp;&amp; originFacilityId == null" name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
+        <field use-when="&quot;${statusId}&quot;==&quot;ORDER_APPROVED&quot;" name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
             <hyperlink target="buyerInvoice.pdf" description="New Invoice Format" target-window="_blank"> 	
                   <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
                	  <parameter param-name="estimatedShipDate" from-field="estimatedDeliveryDate"/>
