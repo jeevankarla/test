@@ -2023,30 +2023,32 @@ public class PayrollService {
 	        		if(UtilValidate.isNotEmpty(paramMap.get(payheadTypeId))){
 	        			Map<String, Object> payItemMap=FastMap.newInstance();
 	        			String amountStr=(String)paramMap.get(payheadTypeId);
-	        			BigDecimal amount= BigDecimal.ZERO;
-	    				if (UtilValidate.isNotEmpty(amountStr) && (!" ".equals(amountStr))) {	
-	    					amount = new BigDecimal(amountStr);
-	    				}
-	    				payItemMap.put("userLogin",userLogin);
-	    				payItemMap.put("customTimePeriodId",periodId);
-	    				payItemMap.put("amount",amount);
-	    				payItemMap.put("partyId",partyId);
-	    				payItemMap.put("payHeadTypeId",payheadTypeId);	    				
-	    				try {
-	    					if(amount.compareTo(BigDecimal.ZERO) >=0){
-	    						Map resultValue = dispatcher.runSync("createOrUpdatePartyBenefitOrDeduction", payItemMap);
-	    						if( ServiceUtil.isError(resultValue)) {
-	    							String errMsg =  ServiceUtil.getErrorMessage(resultValue);
-	    							Debug.logWarning(errMsg , module);
-	    							request.setAttribute("_ERROR_MESSAGE_",errMsg);
-	    							
-	    							return "error";
-	    						}
-	    					}
-	    					
-	    				} catch (GenericServiceException s) {
-	    					s.printStackTrace();
-	    				} 
+	        			if((!" ".equals(amountStr))){
+		        			BigDecimal amount= BigDecimal.ZERO;
+		    				if (UtilValidate.isNotEmpty(amountStr)) {	
+		    					amount = new BigDecimal(amountStr);
+		    				}
+		    				payItemMap.put("userLogin",userLogin);
+		    				payItemMap.put("customTimePeriodId",periodId);
+		    				payItemMap.put("amount",amount);
+		    				payItemMap.put("partyId",partyId);
+		    				payItemMap.put("payHeadTypeId",payheadTypeId);	    				
+		    				try {
+		    					if(amount.compareTo(BigDecimal.ZERO) >=0){
+		    						Map resultValue = dispatcher.runSync("createOrUpdatePartyBenefitOrDeduction", payItemMap);
+		    						if( ServiceUtil.isError(resultValue)) {
+		    							String errMsg =  ServiceUtil.getErrorMessage(resultValue);
+		    							Debug.logWarning(errMsg , module);
+		    							request.setAttribute("_ERROR_MESSAGE_",errMsg);
+		    							
+		    							return "error";
+		    						}
+		    					}
+		    					
+		    				} catch (GenericServiceException s) {
+		    					s.printStackTrace();
+		    				} 
+	        			}
 	        		}
 	        	}
 	        }
@@ -2127,6 +2129,8 @@ public class PayrollService {
 						newEntity.set("periodTypeId", "RATE_MONTH");
 						newEntity.set("fromDate", fromDateStart);
 						newEntity.set("cost", amount);
+						newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+				        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 						newEntity.create();
 					}else{	
 						GenericValue partyBenefit = partyBenefitList.get(0);
@@ -2140,6 +2144,7 @@ public class PayrollService {
 								partyBenefit.set("partyIdTo",partyBenefit.getString("partyIdTo"));
 								partyBenefit.set("benefitTypeId",partyBenefit.getString("benefitTypeId"));
 								partyBenefit.set("cost", amount);
+								partyBenefit.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 								partyBenefit.store();
 							}
 						}else{	
@@ -2154,6 +2159,8 @@ public class PayrollService {
 								newEntity.set("periodTypeId", "RATE_MONTH");
 								newEntity.set("fromDate", fromDateStart);
 								newEntity.set("cost", amount);
+								newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+						        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 								newEntity.create();
 								
 								partyBenefit.set("thruDate", previousDayEnd);
@@ -2195,6 +2202,8 @@ public class PayrollService {
 						newEntity.set("periodTypeId", "RATE_MONTH");
 						newEntity.set("fromDate", fromDateStart);
 						newEntity.set("cost", amount);
+						newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+				        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 						newEntity.create();
 					}else{	
 						GenericValue partyDeduction = partyDeductionList.get(0);
@@ -2208,6 +2217,7 @@ public class PayrollService {
 								partyDeduction.set("partyIdTo",partyDeduction.getString("partyIdTo"));
 								partyDeduction.set("deductionTypeId",partyDeduction.getString("deductionTypeId"));
 								partyDeduction.set("cost", amount);
+								partyDeduction.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 								partyDeduction.store();
 							}
 						}else{	
@@ -2222,6 +2232,8 @@ public class PayrollService {
 								newEntity.set("periodTypeId", "RATE_MONTH");
 								newEntity.set("fromDate", fromDateStart);
 								newEntity.set("cost", amount);
+								newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+						        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 								newEntity.create();
 								
 								partyDeduction.set("thruDate", previousDayEnd);

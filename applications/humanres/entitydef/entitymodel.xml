@@ -741,6 +741,8 @@ under the License.
       <field name="cost" type="currency-amount"></field>
       <field name="actualEmployerPaidPercent" type="floating-point"></field>
       <field name="availableTime" type="numeric"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
@@ -781,6 +783,8 @@ under the License.
       <field name="periodTypeId" type="id"></field>
       <field name="cost" type="currency-amount"></field>
       <field name="actualEmployerPaidPercent" type="floating-point"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+	  <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
