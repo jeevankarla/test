@@ -2,17 +2,28 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+    <form name="UploadSRDocument" target="createEmployeeContent" type="upload" 
+  		header-row-style="header-row">
+
+		<field name="partyId" map-name="parameters"><hidden/></field>  
+        <field name="partyContentTypeId"><hidden value="INTERNAL"/></field>
+        <!-- <field name="dataResourceTypeId"><hidden value="IMAGE_OBJECT"/></field> -->
+        
+        <field name="contentTypeId"><hidden value="SR_DOCUMENT"/></field>
+        <field name="statusId"><hidden value="CTNT_AVAILABLE"/></field>
+        
+        <field name="uploadedFile" title="${uiLabelMap.CommonUpload}"><file/></field>
+        <field name="dataCategoryId"><hidden value="SR_DOCUMENT"/></field>
+        <field name="isPublic"><hidden value="Y"/></field>
+             
+        <field name="createButton" title="Upload File"><submit button-type="button"/></field>
+    </form> 
     <form name="ListPartyContent" type="list" list-name="partyContent"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <row-actions>
-            <entity-one entity-name="DataCategory" value-field="dataCategory">
-            </entity-one> 
-            <set field="dataCategoryId" from-field="dataCategory.categoryName"/>
-        </row-actions>
+
         <field name="contentName" title="Document"><display/></field>
-        <field name="dataCategoryId" title="Category"><display/></field>
-        <field name="partyId" title="Owner"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}"/></field>
-        <field name="createdDate">
+        <field name="partyId" title="Uploaded By"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}"/></field>
+        <field name="createdDate" title="Uploaded Date">
             <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdDate, &quot;dd/MM/yyyy&quot;);}"/>        
         </field>
 		<field name="action" title=" " widget-style="buttontext">

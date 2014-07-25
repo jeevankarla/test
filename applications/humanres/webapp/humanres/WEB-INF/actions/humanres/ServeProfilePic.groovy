@@ -24,7 +24,7 @@
 	String requestUrl = httpRequest.getRequestURL();
 	String source = requestUrl.replace(actualRequest, "");
 	
-	partyContentDetails = delegator.findList("PartyContentDetail", EntityCondition.makeCondition([partyId : partyId, partyContentTypeId : "INTERNAL", contentTypeId : "IMAGE_FRAME", statusId : "CTNT_AVAILABLE", mimeTypeId : "image/jpeg"]), null, ["-fromDate"], null, false);
+	partyContentDetails = delegator.findList("PartyContentDetail", EntityCondition.makeCondition([partyId : partyId, partyContentTypeId : "INTERNAL", contentTypeId : "PROFILE_PIC", statusId : "CTNT_AVAILABLE", mimeTypeId : "image/jpeg"]), null, ["-fromDate"], null, false);
 	
 	if(UtilValidate.isNotEmpty(partyContentDetails)){
 		dataResourceId = (EntityUtil.getFirst(partyContentDetails)).get("dataResourceId");

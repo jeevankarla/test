@@ -435,13 +435,17 @@
                     <field-map field-name="partyId" from-field="partyId"/>
                 </entity-and>
                 --><entity-condition entity-name="PartyContentAndDataResource" list="partyContent" filter-by-date="true">
-                    <condition-list combine="or">
+                    <condition-list combine="and">
                         <condition-expr field-name="partyId" operator="equals"  from-field="partyId"/>
+                        <condition-expr field-name="contentTypeId" operator="equals"  value="SR_DOCUMENT"/>
+                        <condition-expr field-name="dataCategoryId" operator="equals"  value="SR_DOCUMENT"/>
+                        <!-- <condition-expr field-name="isPublic" operator="equals" value="Y"/> -->
                     </condition-list>
                     <order-by field-name="-createdDate"/>
                 </entity-condition>                
             </actions>
             <widgets>
+            	<include-form name="UploadSRDocument" location="component://party/widget/partymgr/ProfileForms.xml"/>
                 <include-form name="ListPartyContent" location="component://party/widget/partymgr/ProfileForms.xml"/>
             </widgets>
         </section>
