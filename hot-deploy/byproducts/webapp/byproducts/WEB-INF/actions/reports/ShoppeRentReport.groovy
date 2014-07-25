@@ -33,39 +33,28 @@ context.printDate = printDate;
 finalList =[];
 facilityIdsList =[];
 conditionList =[];
-Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",parameters.customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));
-List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+//Map<String, Object> resultMaplst=dispatcher.runSync("getPeriodBillingList", UtilMisc.toMap("billingTypeId","SHOPEE_RENT","customTimePeriodId",parameters.customTimePeriodId,"statusId","GENERATED","userLogin", userLogin));
+//List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
 
-if (UtilValidate.isNotEmpty(periodBillingList)) {
-	periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);
-
-	conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.IN ,periodBillingIds));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL  ,"INVOICE_CANCELLED"));
+boothList = ByProductNetworkServices.getAllBooths(delegator, "SHP_RTLR").get("boothsDetailsList");
+boothList = (List)((Map)ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, "SHP_RTLR" ,dayBegin)).get("boothActiveList");
+boothList.each{facility ->
+	Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
+	inputRateAmt.put("rateCurrencyUomId", "INR");
+	inputRateAmt.put("facilityId", facility.facilityId);
+	inputRateAmt.put("fromDate",dayBegin);
+	inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
 	
-	cond=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	invoiceList = delegator.findList("Invoice", cond, ["facilityId"] as Set , null, null, false);
-	facilityIdsList = EntityUtil.getFieldListFromEntityList(invoiceList, "facilityId", true);
-	facilityIdsList. each {facilityId ->
-		facilityDetails = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
-		boothFacilityId = facilityDetails.get("facilityId");
-		facilityName = facilityDetails.get("description");
-		Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
-		inputRateAmt.put("rateCurrencyUomId", "INR");
-		inputRateAmt.put("facilityId", boothFacilityId);
-		inputRateAmt.put("fromDate",dayBegin);
-		inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
-		
-		facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
-		BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
-		BigDecimal basicRateAmount = (rateAmount.divide(new BigDecimal(1.1236) , 0, rounding));
-		
-		tempMap =[:];
-		tempMap.put("boothId", boothFacilityId);
-		tempMap.put("facilityName", facilityName);
-		tempMap.put("rateAmount", rateAmount);
-		tempMap.put("basicRateAmount", basicRateAmount);
-		finalList.addAll(tempMap);
-	}
+	facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
+	BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
+	BigDecimal basicRateAmount = (rateAmount.divide(new BigDecimal(1.1236) , 0, rounding));
+	
+	tempMap =[:];
+	tempMap.put("boothId", facility.facilityId);
+	tempMap.put("facilityName", facility.facilityName);
+	tempMap.put("rateAmount", rateAmount);
+	tempMap.put("basicRateAmount", basicRateAmount);
+	finalList.addAll(tempMap);
 }
 context.putAt("finalList", finalList);
 
