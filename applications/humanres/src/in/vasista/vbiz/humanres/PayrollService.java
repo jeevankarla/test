@@ -941,6 +941,7 @@ public class PayrollService {
 		        	GenericValue customTimePeriod;
 					try {
 						customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", timePeriodId), false);
+						 Debug.logInfo("timePeriodId ########:"+timePeriodId,module);
 					} catch (GenericEntityException e1) {
 						Debug.logError(e1,"Error While Finding Customtime Period");
 						return ServiceUtil.returnError("Error While Finding Customtime Period" + e1);
