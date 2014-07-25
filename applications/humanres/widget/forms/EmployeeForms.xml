@@ -335,6 +335,18 @@
     </form>
     
     <form name="EditEmployee" extends="EditPerson" target="updateEmployee" extends-resource="component://party/widget/partymgr/PartyForms.xml">
+    	<actions>
+     		<entity-condition entity-name="PartyClassification" list="classification" filter-by-date="true">
+     			<condition-list>
+     				<condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
+     			</condition-list>
+     		</entity-condition>
+     		<set field="partyClassificationGroupId" value="${classification[0].partyClassificationGroupId}"/>
+     		<!-- <entity-one entity-name="PartyClassificationGroup" value-field="partyClassificationGroup">
+					<field-map field-name="partyClassificationGroupId" from-field="partyClassificationGroupId" />
+			</entity-one> -->
+		   
+     	</actions>
     	<field name="employeeId" title="${uiLabelMap.EmployeeId}"><hidden></hidden></field>                 
     	<field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><text></text></field>
 		<field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><text></text></field>	
@@ -374,7 +386,7 @@
 			</drop-down>
 		</field>
 		<field name="caste" title="${uiLabelMap.Caste}">
-			<drop-down allow-empty="true">
+			<drop-down allow-empty="true" no-current-selected-key="${partyClassificationGroupId}">
 				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}">
 					<entity-constraint name="partyClassificationTypeId" value="PCG_REC_CA"/>
 					<entity-order-by field-name="partyClassificationGroupId"/>
