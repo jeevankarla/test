@@ -84,7 +84,7 @@ under the License.
         </if-empty>
         <create-value value-field="newEntity"/>
         <call-simple-method method-name="updateCustRequestLastModifiedDate" xml-resource="component://order/script/org/ofbiz/order/request/CustRequestServices.xml"/>
-        <set field="setStat.statusId" value="assigned"/>
+        <set field="setStat.statusId" value="ASSIGNED"/>
         <set field="setStat.custRequestId" from-field="newEntity.custRequestId"/>
         <call-service service-name="createCustRequestStatus" in-map-name="setStat"/>
         <entity-one value-field="custRequest" entity-name="CustRequest">
