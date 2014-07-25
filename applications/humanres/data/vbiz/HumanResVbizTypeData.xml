@@ -171,6 +171,11 @@
     <EnumerationType description="In Out Type" enumTypeId="INOUT_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="IN" enumCode="IN" enumId="IN" sequenceId="01" enumTypeId="INOUT_TYPE"/>
     <Enumeration description="OUT" enumCode="OUT" enumId="OUT" sequenceId="02" enumTypeId="INOUT_TYPE"/>  
-       
+
+    <DataCategory categoryName="Profile Pic" dataCategoryId="PROFILE_PIC" parentCategoryId="ROOT"/> 
+    <ContentType contentTypeId="PROFILE_PIC" description="Profile Picture"/> 
+
+    <DataCategory categoryName="SR Document" dataCategoryId="SR_DOCUMENT" parentCategoryId="ROOT"/> 
+    <ContentType contentTypeId="SR_DOCUMENT" description="SR Document"/>        
        
 </entity-engine-xml>
