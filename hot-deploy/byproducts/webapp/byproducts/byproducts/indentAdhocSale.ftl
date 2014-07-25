@@ -20,7 +20,7 @@ $(document).ready(function(){
 			}
 		});
 		$('#ui-datepicker-div').css('clip', 'auto');
-		<#if changeFlag?exists && changeFlag=='IcpSales'>
+		<#if changeFlag?exists && (changeFlag=='IcpSales' || changeFlag=='IcpSalesAmul')>
 			$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){
     	<#else>
 		 	$("#boothId").autocomplete({ source: boothAutoJson }).keydown(function(e){ 
@@ -169,7 +169,7 @@ $(document).ready(function(){
           <td>&nbsp;</td>
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && (changeFlag=='IcpSalesAmul' || changeFlag=='IcpSales')>Wholesaler Id:<#else>Retailer Id:</#if></div></td>
           <td>&nbsp;</td>
-        <#if changeFlag?exists && changeFlag=='IcpSales'>
+        <#if changeFlag?exists && (changeFlag=='IcpSales' || changeFlag=='IcpSalesAmul') >
 			<#if party?exists && party?has_content>  
 	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
           		<td valign='middle'>
@@ -352,10 +352,8 @@ $(document).ready(function(){
 			<#assign formAction =''>			
 		    <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 		 		<#assign formAction='processAdhocSale'>
-		 	<#elseif changeFlag?exists && changeFlag=='IcpSalesAmul'>
-	             <#assign formAction='processIcpAmulSale'>
-	        <#elseif changeFlag?exists && changeFlag=='IcpSales'>
-	         <#assign formAction='processIcpSale'>
+		 	<#elseif changeFlag?exists && (changeFlag=='IcpSales' || changeFlag=='IcpSalesAmul')>
+		         <#assign formAction='processIcpSale'>
 		 	<#else>
 		 			<#assign formAction='processIcpSale'>		 	
 			</#if>				
