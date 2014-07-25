@@ -933,7 +933,7 @@ public class PayrollService {
 		        if(UtilValidate.isNotEmpty(context.get("timePeriodId"))){
 		        	timePeriodId = (String)context.get("timePeriodId");
 		        }
-		        
+		        Debug.logInfo("calculating ########:"+payHeadTypeId,module);
 		        Locale locale = (Locale) context.get("locale");
 		        BigDecimal amount = BigDecimal.ZERO;
 		        String proportionalFormulaId = null;
