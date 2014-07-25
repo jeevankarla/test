@@ -1791,7 +1791,11 @@ import java.text.SimpleDateFormat;
 		        try {
 		        	// Send SMS notification to contractor
 		        	Map facilityParty=(Map)ByProductNetworkServices.getFacilityPartyContractor(dctx, UtilMisc.toMap("saleDate",createdDate ,"facilityId",facilityId)).get("facilityPartyMap");
-		        	 Map<String, Object> getTelParams = FastMap.newInstance();
+		        	if(UtilValidate.isEmpty(facilityParty.get(facilityId))){
+	        			 Debug.logError("'Route "+facilityId+" Expired or No Contarctor Assigned To This Route....!'Entry Not Possible", module);
+	        			 return ServiceUtil.returnError("'Route "+facilityId+" Expired or No Contarctor Assigned To This Route....!'Entry Not Possible");   
+	        		}
+		        	Map<String, Object> getTelParams = FastMap.newInstance();
 		        	 getTelParams.put("partyId", facilityParty.get(facilityId));
 		        	 if(UtilValidate.isNotEmpty(partyId)){
 		        		 getTelParams.put("partyId", partyId);
