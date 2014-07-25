@@ -36,5 +36,6 @@ under the License.
     <PartyRole partyId="DemoEmployee" roleTypeId="REQ_TAKER"/>
     <PartyRelationship partyIdFrom="Company" roleTypeIdFrom="_NA_" partyIdTo="DemoEmployee" roleTypeIdTo="REQ_TAKER" fromDate="2000-01-01 00:00:00"/><!-- so DemoEmployee can hadle incoming cust request 'support' types -->
     
-
+   <PartyRelationship partyIdFrom="Company" roleTypeIdFrom="_NA_" partyIdTo="6013" roleTypeIdTo="REQ_TAKER" fromDate="2000-01-01 00:00:00"/><!-- so DemoEmployee can hadle incoming cust request 'support' types -->
+    
 </entity-engine-xml>
