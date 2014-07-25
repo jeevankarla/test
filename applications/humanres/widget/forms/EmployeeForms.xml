@@ -602,11 +602,11 @@
      				<condition-expr field-name="partyId" operator="equals" value="${partyId}"/>
      			</condition-list>
      		</entity-condition>
-     		<set field="partyClassificationTypeId" value="${classification[0].partyClassificationGroupId}"/>
-     		<entity-one entity-name="PartyClassificationType" value-field="partyClassificationType">
-					<field-map field-name="partyClassificationTypeId" from-field="partyClassificationTypeId" />
+     		<set field="partyClassificationGroupId" value="${classification[0].partyClassificationGroupId}"/>
+     		<entity-one entity-name="PartyClassificationGroup" value-field="partyClassificationGroup">
+					<field-map field-name="partyClassificationGroupId" from-field="partyClassificationGroupId" />
 				</entity-one>
-				<set field="caste" value="${partyClassificationType.description}"/>
+				<set field="caste" value="${partyClassificationGroup.description}"/>
      	</actions>
      	
         <field name="partyId"><display/></field>
