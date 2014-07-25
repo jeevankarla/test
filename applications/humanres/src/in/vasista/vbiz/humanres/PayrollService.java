@@ -1741,7 +1741,7 @@ public class PayrollService {
 	           if(UtilValidate.isNotEmpty(result.get("itemsList"))){
 		    	   itemsList.addAll((List)result.get("itemsList"));
 		       }
-	           
+	           Debug.logInfo("gross itemsList size====="+itemsList.size(),module);
 		       for(int i=0;i<itemsList.size();i++){
 		        	Map itemEntry =  (Map)itemsList.get(i);
 		        	BigDecimal tempAmount = BigDecimal.ZERO;
@@ -1760,7 +1760,7 @@ public class PayrollService {
 	            }
 	        
 	        result.put("amount",amount);
-	         //Debug.log("result gross salary====="+result);
+	        Debug.logInfo("result gross salary====="+result,module);
 	        return result;
 	    }
 	  
