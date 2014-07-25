@@ -1156,12 +1156,12 @@ public class PayrollService {
 	                for (GenericValue payrollBenDedCond : payrollBenDedCondList) {
 	                	
                          if(UtilValidate.isNotEmpty(condParms)){
-                        	 if (!checkPriceCondition(payrollBenDedCond,userLogin,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,condParms)) {
+                        	 if (!checkPriceCondition(payrollBenDedCond,userLogin,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,timePeriodId , condParms)) {
      	                        allTrue = false;
      	                        break;
      	                    }
                          }else{
-                        	 if (!checkPriceCondition(payrollBenDedCond, userLogin ,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd ,null)) {
+                        	 if (!checkPriceCondition(payrollBenDedCond, userLogin ,employeeId, dctx, delegator, timePeriodStart ,timePeriodEnd, timePeriodId ,null)) {
      	                        allTrue = false;
      	                        break;
      	                    }
@@ -1339,7 +1339,7 @@ public class PayrollService {
             calcResults.put("priceInfos", priceInfos);
             return calcResults;
 	        }  
-	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond,GenericValue userLogin, String employeeId,DispatchContext dctx,Delegator delegator, Timestamp fromDate ,Timestamp thruDate , Map condParms) throws GenericEntityException {
+	 public static boolean checkPriceCondition(GenericValue payrollBenDedCond,GenericValue userLogin, String employeeId,DispatchContext dctx,Delegator delegator, Timestamp fromDate ,Timestamp thruDate ,String timePeriodId , Map condParms) throws GenericEntityException {
 	        if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + payrollBenDedCond, module);
 	        
 	      //get Employee Payroll Cond Parms details here
@@ -1351,7 +1351,7 @@ public class PayrollService {
 			String payGradeId = null;
 			String stateId =null;
 			//String grossSalary = null;
-			Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate);
+			Map paramCtxMap = UtilMisc.toMap("userLogin",userLogin,"employeeId",employeeId,"timePeriodStart",fromDate,"timePeriodEnd" ,thruDate ,"timePeriodId",timePeriodId);
 	        if(UtilValidate.isNotEmpty(condParms)){
 	        	 geoId = (String)condParms.get("geoId");
 				 emplPositionTypeId = (String)condParms.get("emplPositionTypeId");
