@@ -504,6 +504,7 @@ under the License.
                                 <condition-expr field-name="statusId" operator="equals" value="CRQ_SUBMITTED"/>
                                 <condition-expr field-name="statusId" operator="equals" value="CRQ_REVIEWED"/>
                                 <condition-expr field-name="statusId" operator="equals" value="CRQ_ACCEPTED"/>
+                                <condition-expr field-name="statusId" operator="equals" value="ASSIGNED"/>                                
                             </condition-list>                        
                             <condition-list combine="and">
                             <condition-expr field-name="roleTypeId" operator="equals" value="REQ_TAKER"/>
