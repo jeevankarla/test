@@ -113,6 +113,13 @@
                 <entity-options description="${description}" key-field-name="leaveTypeId" entity-name="EmplLeaveType"/>
             </drop-down>
         </field>
+        <field name="dayFractionId" position="1" title="First/Second Half">
+             <radio>
+                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
+                   <entity-constraint name="enumTypeId" operator="equals" value="LEAVE_DAY_TYPE"/>
+                </entity-options>
+            </radio>
+        </field>
         <field name="emplLeaveReasonTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>

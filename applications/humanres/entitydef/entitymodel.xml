@@ -555,6 +555,7 @@ under the License.
         <field name="fromDate" type="date-time"/>
         <field name="thruDate" type="date-time"/>
         <field name="effectedCreditDays" type="fixed-point"/>
+        <field name="dayFractionId" type="id"/>
         <field name="appliedBy" type="short-varchar"/>
         <field name="lossOfPayDays" type="fixed-point"/>
         <field name="approverPartyId" type="id-ne"/>
@@ -576,6 +577,9 @@ under the License.
         </relation>
         <relation type="one" fk-name="EMPL_LEAVE_APPR" title="Approver" rel-entity-name="Party">
             <key-map field-name="approverPartyId" rel-field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="EMPL_LEAVE_DF" title="DayFraction" rel-entity-name="Enumeration">
+            <key-map field-name="dayFractionId" rel-field-name="enumId"/>
         </relation>
     </entity>
     <entity entity-name="EmplLeaveBalanceStatus"
@@ -648,7 +652,7 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
   </entity>
-  <entity entity-name="PayrollAttendanceShiftWise"
+ <entity entity-name="PayrollAttendanceShiftWise"
             package-name="org.ofbiz.humanres.employment"
             title="Attendance Entry Entity">
         <field name="partyId" type="id-ne"/>

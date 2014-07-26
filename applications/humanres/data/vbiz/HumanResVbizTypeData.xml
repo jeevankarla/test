@@ -178,5 +178,10 @@
 
     <DataCategory categoryName="SR Document" dataCategoryId="SR_DOCUMENT" parentCategoryId="ROOT"/> 
     <ContentType contentTypeId="SR_DOCUMENT" description="SR Document"/>        
-       
+     
+     
+    <EnumerationType description="Leave Day Fraction" enumTypeId="LEAVE_DAY_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="First Half" enumCode="FIRST_HALF" enumId="FIRST_HALF" sequenceId="01" enumTypeId="LEAVE_DAY_TYPE"/>
+    <Enumeration description="Second Half" enumCode="SECOND_HALF" enumId="SECOND_HALF" sequenceId="02" enumTypeId="LEAVE_DAY_TYPE"/>  
+    
 </entity-engine-xml>
