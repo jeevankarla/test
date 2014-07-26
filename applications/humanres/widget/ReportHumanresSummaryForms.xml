@@ -644,7 +644,7 @@
     <form name="ArrearDays" type="single" header-row-style="header-row" default-table-style="basic-table" target="findArrearDays">
    		 <field name="hideSearch"><hidden value="Y" /></field>
 		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-		 <field name="partyId" title="Employee Id">
+		 <field name="partyId" title="Employee Id" required-field="true">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>
        	<field name="customTimePeriodId" required-field="true">
