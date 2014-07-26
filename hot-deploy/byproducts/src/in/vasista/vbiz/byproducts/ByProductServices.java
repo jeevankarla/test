@@ -5890,7 +5890,7 @@ public class ByProductServices {
 	 			     result=dispatcher.runSync("updateCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "customTimePeriodId", customTimePeriodId,"thruDate",new java.sql.Date(thruDate.getTime())));
 	 			 }
 	 			 else{
-	 				 result=dispatcher.runSync("createCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "periodTypeId", periodTypeId,"fromDate",new java.sql.Date(fromDate.getTime()),"thruDate",new java.sql.Date(thruDate.getTime()),"isClosed","N"));
+	 				 result=dispatcher.runSync("createCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "periodTypeId", periodTypeId,"fromDate",new java.sql.Date(fromDate.getTime()),"thruDate",new java.sql.Date(thruDate.getTime()),"isClosed","N","organizationPartyId","Company"));
 	 			 }
 	 			
 			}catch(Exception e){
