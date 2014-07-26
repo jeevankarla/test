@@ -1606,7 +1606,7 @@ public class PayrollService {
 	        }catch (Exception e) {
 				// TODO: handle exception
 			}
-	       Debug.logInfo("lastCloseAttedancePeriod==========="+lastCloseAttedancePeriod,module);
+	       /*Debug.logInfo("lastCloseAttedancePeriod==========="+lastCloseAttedancePeriod,module);
 	        conditionList.clear();
 	        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
 	        if(UtilValidate.isNotEmpty(lastCloseAttedancePeriod)){
@@ -1660,7 +1660,20 @@ public class PayrollService {
 		    		}
 	    		}
 	    		
-	    			
+*/	    
+	        
+	        
+	     try {
+	    	 
+			List<GenericValue> payrollAttendanceShiftWiseList = delegator.findByAnd("PayrollAttendanceShiftWise", UtilMisc.toMap("partyId",employeeId,"customTimePeriodId",attendancePeriodId));
+			if(UtilValidate.isNotEmpty(payrollAttendanceShiftWiseList)){
+	    		for( GenericValue  payrollAttendanceShiftWise : payrollAttendanceShiftWiseList){
+	    			String shiftType = payrollAttendanceShiftWise.getString("shiftTypeId");
+	    			shiftDetailMap.put(shiftType, payrollAttendanceShiftWise.getBigDecimal("noOfDays"));
+	    			availedCanteenDetailMap.put(shiftType, payrollAttendanceShiftWise.getBigDecimal("availedCanteenDays"));
+	    		}
+    		}
+			
 			GenericValue payrollAttendance = delegator.findOne("PayrollAttendance", UtilMisc.toMap("partyId",employeeId,"customTimePeriodId",attendancePeriodId), false);
 			result.put("lossOfPayDays", 0.0);
 			result.put("noOfAttendedDays",0.0);
@@ -1710,8 +1723,8 @@ public class PayrollService {
 			} 
             result.put("shiftDetailMap" ,shiftDetailMap);
             result.put("availedCanteenDetailMap" , availedCanteenDetailMap);
-            result.put("availedVehicleDays" , availedVehicleDays);
-            result.put("disAvailedVehicleDays" , disAvailedVehicleDays);
+           // result.put("availedVehicleDays" , availedVehicleDays);
+            //result.put("disAvailedVehicleDays" , disAvailedVehicleDays);
             //Debug.log("getEmployeePayrollAttendance result:" + result);
 	    
 	        return result;
@@ -2519,11 +2532,15 @@ public class PayrollService {
 			    		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
 			    		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
 				    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
+				    			Debug.log("emplDailyAttendanceDetail==========="+emplDailyAttendanceDetail);
 				    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
-				    			List cDayLeaves = EntityUtil.filterByDate(leavesList, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getString("date")));
-				    			if(UtilValidate.isNotEmpty(cDayLeaves)){
-				    				continue;
+				    			if(UtilValidate.isNotEmpty(leavesList)){
+				    				List cDayLeaves = EntityUtil.filterByDate(leavesList, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getString("date")));
+					    			if(UtilValidate.isNotEmpty(cDayLeaves)){
+					    				continue;
+					    			}
 				    			}
+				    			
 				    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
 				    			String availedCanteen = emplDailyAttendanceDetail.getString("availedCanteen");
 				    			if(UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
@@ -2543,19 +2560,22 @@ public class PayrollService {
 			    		}
                        if(UtilValidate.isNotEmpty(shiftDetailMap)){
                     	   Iterator entries = shiftDetailMap.entrySet().iterator();
-                    	   GenericValue newEntityShift = delegator.makeValue("PayrollAttendance");
+                    	   GenericValue newEntityShift = delegator.makeValue("PayrollAttendanceShiftWise");
                     	   newEntityShift.set("customTimePeriodId", lastCloseAttedancePeriod.getString("customTimePeriodId"));
                     	   newEntityShift.set("partyId",employeeId);
                     	  
                            while (entries.hasNext()) {
                              Entry entry = (Entry) entries.next();
                              String shiftTypeId = (String)entry.getKey();
-                             Double noOfDays = (Double)entry.getValue();
+                             Integer noOfDays = (Integer)entry.getValue();
                              newEntityShift.set("shiftTypeId", shiftTypeId);
-                      	     newEntityShift.set("noOfDays", noOfDays);
-                      	     newEntityShift.set("availedCanteenDays", availedCanteenDetailMap.get(shiftTypeId));
+                      	     newEntityShift.set("noOfDays", new BigDecimal(noOfDays));
+                      	     newEntityShift.set("availedCanteenDays",BigDecimal.ZERO);
+                      	     if(UtilValidate.isNotEmpty(availedCanteenDetailMap.get(shiftTypeId))){
+                      	    	newEntityShift.set("availedCanteenDays", availedCanteenDetailMap.get(shiftTypeId));
+                      	     }
                       	     //newEntityShift.set("availedVehicleDays", availedVehicleDays);
-                      	     delegator.store(newEntityShift);
+                      	     delegator.createOrStore(newEntityShift);
                              
                            }
                     	   
