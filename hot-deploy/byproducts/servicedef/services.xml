@@ -804,4 +804,11 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    <service name="createOrUpdateCustomTimePeriod" engine="java"
+            location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createOrUpdateCustomTimePeriod">
+        <description>create Facility Rate</description>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
 </services>

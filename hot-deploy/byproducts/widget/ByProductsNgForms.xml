@@ -520,7 +520,6 @@
         	</drop-down>
         </field>
         <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
 	    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit/></field>       
     </form>
     <form name="configCrates" odd-row-style="alternate-row" header-row-style="header-row" type="single" target="updateCrateQtyConfig"

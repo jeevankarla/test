@@ -5328,8 +5328,10 @@ public class ByProductServices {
 	        Timestamp thruDate = (Timestamp) context.get("thruDate");
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
 	        List<GenericValue> FacilityCustBillingList = null;
+	        List<GenericValue> futurePeriodBillingList=null; 
 	        Timestamp tempfromDate=null;
 	        String tempPeriodTypeId="";
+	        Timestamp date=null;
 	        boolean isNewCustBilling = true;
 	        if(fromDate==null){
 	        	fromDate= UtilDateTime.nowTimestamp();
@@ -5341,18 +5343,19 @@ public class ByProductServices {
 	        List conditionList = FastList.newInstance();
 	        List<GenericValue> periodBillingAndCustomTimePeriod = FastList.newInstance();
 	        	try{
-		    	   conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
-		    	   conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-		    	   conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(fromDate.getTime())));
-		    	   conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS, null), EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(UtilDateTime.getDayEnd(fromDate).getTime()))));
-					
-		    	   EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		    	   periodBillingAndCustomTimePeriod = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, null, null, false);
-		    	   if(UtilValidate.isNotEmpty(periodBillingAndCustomTimePeriod)){
+	        		Map inputPeriodBilling = FastMap.newInstance();
+	        		inputPeriodBilling.put("periodTypeId", periodTypeId);
+	        		inputPeriodBilling.put("statusId", "COM_CANCELLED");
+	        		inputPeriodBilling.put("facilityId", facilityId);
+	        		inputPeriodBilling.put("fromDate", fromDate);
+	        		inputPeriodBilling.put("userLogin", userLogin);
+	        		Map<String, Object> resultMaplst=getPeriodBilling(ctx, inputPeriodBilling);
+					List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+					if(UtilValidate.isNotEmpty(periodBillingList)){
 		    			  Debug.logError("Billing is already generated for the period for the institution "+facilityId, module);
 	                      return ServiceUtil.returnError("Billing is already generated for the period for the institution "+facilityId);
-		    	   }
-				}catch (GenericEntityException e) {
+		    	    }
+				}catch (Exception e) {
 					Debug.logError(e, module);
 		            return ServiceUtil.returnError(e.getMessage());
 				}   
@@ -5363,7 +5366,33 @@ public class ByProductServices {
 		            return ServiceUtil.returnError(e.getMessage());
 				} 
 				if(UtilValidate.isNotEmpty(FacilityCustBillingList)){
+					 List<GenericValue> futureList = EntityUtil.filterByCondition(FacilityCustBillingList, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, fromDate));
 	                 List<GenericValue> facilityCustBill= EntityUtil.filterByDate(FacilityCustBillingList,fromDate);
+	                 if(UtilValidate.isNotEmpty(futureList)){
+	                	 for(GenericValue futureLst : futureList){
+		                	try {
+		                	    Timestamp tempDate = futureLst.getTimestamp("fromDate");
+		                	    conditionList.clear();
+		                	    conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
+		                	    conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "COM_CANCELLED"));
+		      		    	    conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+		      		    	    conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(tempDate.getTime())));
+		      		    	    conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS, null), EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(UtilDateTime.getDayEnd(tempDate).getTime()))));
+		      		    	    EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		      		    	    futurePeriodBillingList = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, null, null, false);
+			      		    	  if(UtilValidate.isEmpty(futurePeriodBillingList)){
+									 delegator.removeValue(futureLst);
+			      		    	  }
+							} catch (GenericEntityException e) {
+								Debug.logError("Error while deleting future Dates  : "+facilityId+ "\t"+e.toString(),module);
+								return ServiceUtil.returnError(e.getMessage());
+							}
+	                	 }
+	                	 GenericValue future = EntityUtil.getFirst(futureList);
+	   	                 if(UtilValidate.isNotEmpty(future)){
+	   	                  date = future.getTimestamp("fromDate");
+	   	                 }
+	                 }
 	 	            if(UtilValidate.isNotEmpty(facilityCustBill)){
 	 			       try {
 	 	 			       	GenericValue facilityList = facilityCustBill.get(0);
@@ -5379,8 +5408,14 @@ public class ByProductServices {
 					       		 if(UtilValidate.isNotEmpty(thruDate)){
 					       		   facilityList.set("thruDate",thruDate);
 					       		 }
-					       		facilityList.store();
-					       		isNewCustBilling=false;
+					       		 if(tempPeriodTypeId.equals(periodTypeId)){
+						       		isNewCustBilling=false;
+						       		facilityList.store();
+						       	 }else{
+						       		delegator.removeValue(facilityList);
+						       		isNewCustBilling=true;
+						       	 }
+					       		
 					       	}
 						}catch (GenericEntityException e) {
 							Debug.logError("Error in Facility Custom Billing : "+facilityId+ "\t"+e.toString(),module);
@@ -5393,7 +5428,9 @@ public class ByProductServices {
 	     	        newEntity.set("facilityId", facilityId);
 	     	        newEntity.set("periodTypeId", periodTypeId);
 	     	        newEntity.set("fromDate", fromDate);
-	     	        newEntity.set("thruDate", thruDate);
+		     	    if(UtilValidate.isNotEmpty(futurePeriodBillingList)){
+		     	    	  newEntity.set("thruDate", UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(date, -1), TimeZone.getDefault(), locale));
+		     	    }
 	     	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
 	   	            newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
 	   	            newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
@@ -5817,4 +5854,79 @@ public class ByProductServices {
 		        }
 		        return result;
 		    }
+		 public static Map<String, Object> createOrUpdateCustomTimePeriod(DispatchContext dctx, Map context) {
+			 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			 LocalDispatcher dispatcher = dctx.getDispatcher();
+			 GenericValue userLogin = (GenericValue) context.get("userLogin");
+			 String periodTypeId = (String) context.get("periodTypeId");
+		     Timestamp fromDate = (Timestamp) context.get("fromDate");
+		     Timestamp thruDate = (Timestamp) context.get("thruDate");
+		     List<GenericValue> custTimePeriodList =FastList.newInstance();
+			 List conditionList = FastList.newInstance();
+			 Map<String, Object> result = ServiceUtil.returnSuccess();
+			 String customTimePeriodId = "";
+			 if(UtilValidate.isNotEmpty(thruDate)){
+		        	thruDate = UtilDateTime.getDayEnd(thruDate);
+		       }
+			try{
+				Map inputPeriodBilling = FastMap.newInstance();
+        		inputPeriodBilling.put("periodTypeId", periodTypeId);
+        		inputPeriodBilling.put("statusId", "COM_CANCELLED");
+        		inputPeriodBilling.put("fromDate", fromDate);
+        		inputPeriodBilling.put("userLogin", userLogin);
+        		Map<String, Object> resultMaplst=getPeriodBilling(dctx, inputPeriodBilling);
+				List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+				  if(UtilValidate.isNotEmpty(periodBillingList)){
+	    			  Debug.logError("Billing is already generated for the custom period", module);
+                      return ServiceUtil.returnError("Billing is already generated for the custom period");
+	    	      }
+				  conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,periodTypeId));
+	 			  conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS,new java.sql.Date(fromDate.getTime())));
+	 			  EntityCondition CustCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	 			 
+	 			  custTimePeriodList = delegator.findList("CustomTimePeriod", CustCondition, null, null, null,false); 
+	 			 if(UtilValidate.isNotEmpty(custTimePeriodList)){
+	 			     customTimePeriodId=((GenericValue)EntityUtil.getFirst(custTimePeriodList)).getString("customTimePeriodId");
+	 			     result=dispatcher.runSync("updateCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "customTimePeriodId", customTimePeriodId,"thruDate",new java.sql.Date(thruDate.getTime())));
+	 			 }
+	 			 else{
+	 				 result=dispatcher.runSync("createCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "periodTypeId", periodTypeId,"fromDate",new java.sql.Date(fromDate.getTime()),"thruDate",new java.sql.Date(thruDate.getTime()),"isClosed","N"));
+	 			 }
+	 			
+			}catch(Exception e){
+				Debug.logError(e, module);
+				Debug.logError(e, "Error in createOrupdate CustomperiodBilling", module);	 		  		  
+ 		  		return ServiceUtil.returnError("Error in createOrupdate CustomperiodBilling");
+			}
+			return result;
+		}
+		 public static Map<String, Object> getPeriodBilling(DispatchContext dctx, Map context) {
+			 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			 LocalDispatcher dispatcher = dctx.getDispatcher();
+			 String periodTypeId = (String) context.get("periodTypeId");
+		     String facilityId = (String) context.get("facilityId");
+		     String statusId = (String) context.get("statusId");
+		     Timestamp fromDate = (Timestamp) context.get("fromDate");
+		     List<GenericValue> custTimePeriodList =FastList.newInstance();
+			 List conditionList = FastList.newInstance();
+			 Map<String, Object> result = ServiceUtil.returnSuccess();
+			 List<GenericValue> periodBillingAndCustomTimePeriod = FastList.newInstance();
+			try{
+				   conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
+		    	   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, statusId));
+		    	   if(UtilValidate.isNotEmpty(facilityId)){
+		    	    conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+		    	   }
+		    	   conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(fromDate.getTime())));
+		    	   conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS, null), EntityOperator.OR,EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(UtilDateTime.getDayEnd(fromDate).getTime()))));
+		    	   EntityCondition cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		    	   periodBillingAndCustomTimePeriod = delegator.findList("PeriodBillingAndCustomTimePeriod", cond, null, null, null, false);
+		    	   result.put("periodBillingList", periodBillingAndCustomTimePeriod);
+			}catch(Exception e){
+				Debug.logError(e, module);
+				Debug.logError(e, "Problem in getting periodBilling", module);	 		  		  
+		  		return ServiceUtil.returnError("Problem in getting periodBilling");
+			}
+			return result;
+		}
 }
