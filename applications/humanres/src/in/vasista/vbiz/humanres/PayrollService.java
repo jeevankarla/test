@@ -999,7 +999,7 @@ public class PayrollService {
                     if(UtilValidate.isNotEmpty(paheadType) && UtilValidate.isNotEmpty(paheadType.getBigDecimal("cost"))){
 			        	 result.put("amount", paheadType.getBigDecimal("cost"));
 			        	 if(UtilValidate.isNotEmpty(proportionalFormulaId)){
-			        		 Debug.log("proportionalFormulaId==="+proportionalFormulaId);
+			        		 //Debug.log("proportionalFormulaId==="+proportionalFormulaId);
 			        		 Map payAttCtx = FastMap.newInstance();
 			        		 payAttCtx.put("userLogin", userLogin);
 			        		 payAttCtx.put("employeeId", employeeId);
@@ -1007,7 +1007,7 @@ public class PayrollService {
 			        		 payAttCtx.put("timePeriodEnd", timePeriodEnd);
 			        		 payAttCtx.put("timePeriodId", timePeriodId);
 			        		Map attendanceMap = getEmployeePayrollAttedance(dctx ,payAttCtx);
-			        		Debug.log("attendanceMap==="+attendanceMap);
+			        		//Debug.log("attendanceMap==="+attendanceMap);
 			        		Evaluator evltr = new Evaluator(dctx);
 	    					HashMap<String, Double> variables = new HashMap<String, Double>();
  							variables.put("NOOFCALENDERDAYS", (Double)attendanceMap.get("noOfCalenderDays"));
@@ -1020,11 +1020,11 @@ public class PayrollService {
  							variables.put("NOOFCOMPOFFSAVAILED", (Double)attendanceMap.get("noOfCompoffAvailed"));
  							variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
  							variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
- 							Debug.log("variables==="+variables);
+ 							//Debug.log("variables==="+variables);
  							double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
  							evltr.setFormulaIdAndSlabAmount(proportionalFormulaId, noOfAttendedDays);
  							evltr.addVariableValues(variables);  
- 							Debug.log("variables==="+variables);
+ 							//Debug.log("variables==="+variables);
  							BigDecimal proportionalFactor = new BigDecimal(evltr.evaluate());
  							result.put("amount", (paheadType.getBigDecimal("cost").multiply(proportionalFactor)).setScale(0, BigDecimal.ROUND_HALF_UP));
  							
