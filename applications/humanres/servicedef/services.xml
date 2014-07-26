@@ -1194,7 +1194,7 @@ under the License.emplpunch
         <attribute name="periodBillingId" mode="OUT" type="String"></attribute>
     </service>
     <service name="generatePayrollBilling"  engine="java"
-                location="in.vasista.vbiz.humanres.PayrollService" invoke="generatePayrollBilling" auth="true" transaction-timeout="1000">
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="generatePayrollBilling" auth="true" transaction-timeout="5000">
         <description>Create an ProductPriceRule</description>
         <attribute name="partyId" mode="IN" type="String"></attribute>
         <attribute name="partyIdFrom" mode="IN" type="String"></attribute>
