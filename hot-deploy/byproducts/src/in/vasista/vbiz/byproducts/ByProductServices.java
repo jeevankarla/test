@@ -5876,6 +5876,10 @@ public class ByProductServices {
         		inputPeriodBilling.put("userLogin", userLogin);
         		Map<String, Object> resultMaplst=getPeriodBilling(dctx, inputPeriodBilling);
 				List<GenericValue> periodBillingList=(List<GenericValue>)resultMaplst.get("periodBillingList");
+				if(thruDate.before(fromDate)){
+		        	Debug.logError("thruDate shoud be greater than FromDate date : "+thruDate+ "\t",module);
+					return ServiceUtil.returnError("thruDate shoud be greater than FromDate: "+thruDate);
+		        }
 				  if(UtilValidate.isNotEmpty(periodBillingList)){
 	    			  Debug.logError("Billing is already generated for the custom period", module);
                       return ServiceUtil.returnError("Billing is already generated for the custom period");
