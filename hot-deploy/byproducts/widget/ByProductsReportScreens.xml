@@ -573,7 +573,47 @@
 				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-				 <set field="reportTypeFlag" value="TruckSheetCorrectionsReport"/>
+				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/IndentVsDispatchReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="trSheetCrtnAgentWise" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                    <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/TruckSheetCorrectionsReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="trSheetCrtnVariantWise" field="reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+		                   <xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/TruckSheetCorrectionsVariantWiseReport.fo.ftl" />
+							</xsl-fo>
+		                </platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="TruckSheetCorrectionsVariantWiseReport">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="reportTypeFlag" value="TruckSheetCorrectionsVariantWiseReport"/>
 				<script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/IndentVsDispatchReport.groovy" />
 			</actions>
 			<widgets>
@@ -582,7 +622,7 @@
 						<platform-specific>
 							<xsl-fo>
 								<html-template
-									location="component://byproducts/webapp/byproducts/reports/TruckSheetCorrectionsReport.fo.ftl" />
+									location="component://byproducts/webapp/byproducts/reports/TruckSheetCorrectionsVariantWiseReport.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
@@ -590,6 +630,7 @@
 			</widgets>
 		</section>
 	</screen>
+	
 	<screen name="DueParticularsTXT">
 		<section>
 			<actions>
