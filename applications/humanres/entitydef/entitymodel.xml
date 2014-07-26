@@ -648,26 +648,29 @@ under the License.
             <key-map field-name="partyId"/>
         </relation>
   </entity>
-   <!-- <entity entity-name="EmplLeaveStatus" package-name="org.ofbiz.humanres.employment">
-    	<field name="partyId" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="leaveUomId" type="short-varchar"/>        
-        <field name="availableLeaves" type="fixed-point"/>        
-        <field name="availedLeaves" type="fixed-point"/>
-        <field name="accruedLeaves" type="fixed-point"/>
-         <prim-key field="partyId"/>
-         <prim-key field="leaveTypeId"/>
-         <relation type="one" fk-name="EMPL_LEAVE_ST_PRTY" rel-entity-name="Party">
+  <entity entity-name="PayrollAttendanceShiftWise"
+            package-name="org.ofbiz.humanres.employment"
+            title="Attendance Entry Entity">
+        <field name="partyId" type="id-ne"/>
+        <field name="customTimePeriodId" type="id-ne"/>
+        <field name="shiftTypeId" type="id-ne"/>
+        <field name="noOfDays" type="fixed-point"/>
+        <field name="availedCanteenDays" type="fixed-point"/>
+        <field name="availedVehicleDays" type="fixed-point"/>
+        <prim-key field="partyId"/>
+        <prim-key field="customTimePeriodId"/>
+        <prim-key field="shiftTypeId"/>
+        <relation type="one" fk-name="PAYROLL_SHI_CUST_TP" rel-entity-name="CustomTimePeriod">
+            <key-map field-name="customTimePeriodId"/>
+        </relation>
+        <relation type="one" fk-name="PAYROLL_SHI_PARTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
         </relation>
-        <relation type="one" fk-name="EMPL_LEAVE_ST_TYP" title="Leave Type" rel-entity-name="EmplLeaveType">
-            <key-map field-name="leaveTypeId"/>
+        <relation type="one" fk-name="PAYROLL_SHI_STY" rel-entity-name="WorkShiftType">
+            <key-map field-name="shiftTypeId"/>
         </relation>
-        <relation type="one" fk-name="EMPL_LEAVE_ST_UOM" title="Uom" rel-entity-name="Uom">
-            <key-map field-name="leaveUomId" rel-field-name="uomId"/>
-        </relation>
-    </entity> -->
-    <entity entity-name="EmplLeaveType"
+  </entity>
+  <entity entity-name="EmplLeaveType"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Type Entity">
         <field name="leaveTypeId" type="id-ne"/>

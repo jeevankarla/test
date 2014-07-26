@@ -129,6 +129,7 @@
     <EnumerationType description="Payhead Price Parent Enum Type" enumTypeId="PYHD_PRICE" hasTable="N" parentTypeId=""/>
     <EnumerationType description="Payhead Price Input Parameter" enumTypeId="PYHD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PYHD_PRICE"/>
     <Enumeration description="Location" enumCode="PAYHD_BEDE_GEO" enumId="PAYHD_BEDE_GEO" sequenceId="01" enumTypeId="PYHD_PRICE_IN_PARAM"/>
+    <Enumeration description="State" enumCode="PAYHD_BEDE_STATE" enumId="PAYHD_BEDE_STATE" sequenceId="07" enumTypeId="PYHD_PRICE_IN_PARAM"/>
     <Enumeration description="PositionType" enumCode="PAYHD_BEDE_POS" enumId="PAYHD_BEDE_POS" sequenceId="02" enumTypeId="PYHD_PRICE_IN_PARAM"/>
     <Enumeration description="Employee" enumCode="PAYHD_BEDE_EMPID" enumId="PAYHD_BEDE_EMPID" sequenceId="03" enumTypeId="PYHD_PRICE_IN_PARAM"/>
     <Enumeration description="Department" enumCode="PAYHD_BEDE_DEPT" enumId="PAYHD_BEDE_DEPT" sequenceId="04" enumTypeId="PYHD_PRICE_IN_PARAM"/>
