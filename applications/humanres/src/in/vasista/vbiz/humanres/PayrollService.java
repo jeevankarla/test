@@ -1684,6 +1684,7 @@ public class PayrollService {
 			result.put("noOfCompoffAvailed", 0.0);
 			result.put("noOfLeaveDays", 0.0);
 			result.put("noOfPayableDays",result.get("noOfCalenderDays"));
+			result.put("availedVehicleDays" , 0.0);
 			if(UtilValidate.isNotEmpty(payrollAttendance)){
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays"))){
 					result.put("lossOfPayDays", (payrollAttendance.getBigDecimal("lossOfPayDays")).doubleValue());
@@ -1723,7 +1724,6 @@ public class PayrollService {
 			} 
             result.put("shiftDetailMap" ,shiftDetailMap);
             result.put("availedCanteenDetailMap" , availedCanteenDetailMap);
-           // result.put("availedVehicleDays" , availedVehicleDays);
             //result.put("disAvailedVehicleDays" , disAvailedVehicleDays);
             //Debug.log("getEmployeePayrollAttendance result:" + result);
 	    
