@@ -36,13 +36,13 @@ thruDate = UtilDateTime.getMonthEnd(nowDate,timeZone,locale);
 Flag=parameters.reportFlag;
 if(Flag=="daAmount")
 result=dispatcher.runSync("getCustomTimePeriodId", [periodTypeId:"HR_MONTH",fromDate:fromDate,thruDate:thruDate,userLogin:userLogin]);
-
 def populateChildren(org, employeeList) {
 		EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId,fromDate:fromDateStart,thruDate:thruDateStart]);
 		employments=EmploymentsMap.get("employementList");
 	employments.each { employment ->
 		employee = [:];
 		group=delegator.findByAnd("PartyRelationshipAndDetail", [partyId: employment.partyIdFrom, partyTypeId : "PARTY_GROUP"],["groupName"]);
+		if(UtilValidate.isNotEmpty(group))
 		employee.put("department", group.get(0).groupName);
 		casteName="";
 		casteIds=delegator.findByAnd("PartyClassification", [partyId: employment.partyId],["partyClassificationGroupId"]);
@@ -161,5 +161,3 @@ employeeList.each {employee ->
 }
 context.employeesJSON = employeesJSON;
 //Debug.logError("employeesJSON="+employeesJSON,"");
-
-
