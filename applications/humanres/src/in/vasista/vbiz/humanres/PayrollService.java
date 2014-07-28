@@ -954,7 +954,7 @@ public class PayrollService {
 			        conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 			        conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
-			        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+			        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  
 					List<GenericValue> payHeadTypesList = delegator.findList("PartyBenefit", condition, null, null, null, false);
 					
 					conditionList.clear();
@@ -1638,10 +1638,13 @@ public class PayrollService {
 	    			disAvailedVehicleDays = (EntityUtil.filterByAnd(emplDailyAttendanceDetailList, UtilMisc.toMap("availedVehicleAllowance" ,"N"))).size();
 		    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
 		    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
-		    			List cDayLeaves = EntityUtil.filterByDate(leaves, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getString("date")));
-		    			if(UtilValidate.isNotEmpty(cDayLeaves)){
-		    				continue;
+		    			if(UtilValidate.isNotEmpty(leaves)){
+		    				List cDayLeaves = EntityUtil.filterByDate(leaves, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getString("date")));
+			    			if(UtilValidate.isNotEmpty(cDayLeaves)){
+			    				continue;
+			    			}
 		    			}
+		    			
 		    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
 		    			String availedCanteen = emplDailyAttendanceDetail.getString("availedCanteen");
 		    			if(UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
@@ -1684,6 +1687,8 @@ public class PayrollService {
 			result.put("noOfCompoffAvailed", 0.0);
 			result.put("noOfLeaveDays", 0.0);
 			result.put("noOfPayableDays",result.get("noOfCalenderDays"));
+			result.put("noOfArrearDays", 0.0);
+			
 			result.put("availedVehicleDays" , availedVehicleDays);
 			if(UtilValidate.isNotEmpty(payrollAttendance)){
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays"))){
@@ -1715,6 +1720,9 @@ public class PayrollService {
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfPayableDays"))){
 					result.put("noOfPayableDays", (payrollAttendance.getBigDecimal("noOfPayableDays")).doubleValue());
 				}
+				if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfArrearDays"))){
+					result.put("noOfArrearDays", (payrollAttendance.getBigDecimal("noOfArrearDays")).doubleValue());
+				}
 				
 			}
     		
@@ -1726,8 +1734,8 @@ public class PayrollService {
             result.put("availedCanteenDetailMap" , availedCanteenDetailMap);
             //result.put("disAvailedVehicleDays" , disAvailedVehicleDays);
             //Debug.log("getEmployeePayrollAttendance result:" + result);
-	    
 	        return result;
+	       
 	    }
 	 
 	 public static Map<String, Object> getEmployeeGrossSalary(DispatchContext dctx, Map<String,  Object> context) {
