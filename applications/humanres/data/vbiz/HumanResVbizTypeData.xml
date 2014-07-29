@@ -184,4 +184,7 @@
     <Enumeration description="First Half" enumCode="FIRST_HALF" enumId="FIRST_HALF" sequenceId="01" enumTypeId="LEAVE_DAY_TYPE"/>
     <Enumeration description="Second Half" enumCode="SECOND_HALF" enumId="SECOND_HALF" sequenceId="02" enumTypeId="LEAVE_DAY_TYPE"/>  
     
+    
+    <EnumerationType description="Insurance Type" enumTypeId="INSURANCE_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Party Lic Insurance" enumCode="LIC_INSR" enumId="LIC_INSR" sequenceId="01" enumTypeId="INSURANCE_TYPE"/>    
 </entity-engine-xml>

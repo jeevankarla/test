@@ -1415,5 +1415,22 @@ under the License.
         <attribute name="countryCode" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+    </service>    
+     <service name="createPartyInsurance" engine="java" auth="true" invoke="createPartyInsurance" 
+        location="org.ofbiz.party.party.PartyServices">
+        <description>Create Party Insurance</description>
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="policyNo" mode="IN" type="String" optional="false"/> 
+        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/> 
+        <attribute name="fromDate" mode="IN" type="Timestamp"/> 
+        <attribute name="thruDate" mode="IN" type="Timestamp"/> 
+        <attribute name="insuranceId" mode="OUT" type="String"  optional="true"/> 
     </service>
+     <service name="deletePartyInsurance" engine="java" auth="true" invoke="deletePartyInsurance" 
+        location="org.ofbiz.party.party.PartyServices">
+        <description>Delete Party Insurance</description>
+        <attribute name="insuranceId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+    </service>   
+    
 </services>

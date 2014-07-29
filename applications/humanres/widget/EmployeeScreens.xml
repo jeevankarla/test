@@ -186,6 +186,12 @@ under the License.
                       									<include-form name="createEmplIdentification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                     								 </screenlet>
                     								 </screenlet>
+                    								 <screenlet title="Employee LIC Details">
+                      									<include-form name="ListInsurance" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                    								 <screenlet >
+                      									<include-form name="createEmplLICDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                    								 </screenlet>
+                    								 </screenlet>
                     								 	
 		                                        </container>
 		                                        <container style="profile-right">

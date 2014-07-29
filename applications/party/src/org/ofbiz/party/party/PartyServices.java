@@ -37,6 +37,9 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import java.math.BigDecimal;
+
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -1827,4 +1830,59 @@ public class PartyServices {
         return result;
     }
 
+    public static Map<String, Object> createPartyInsurance(DispatchContext dctx, Map<String, ? extends Object> context) {
+     Delegator delegator = dctx.getDelegator();
+     LocalDispatcher dispatcher = dctx.getDispatcher();
+     GenericValue userLogin = (GenericValue) context.get("userLogin");
+     Map<String, Object> result = ServiceUtil.returnSuccess();
+ 	 String partyId = (String) context.get("partyId"); 	
+ 	 String policyNo = (String) context.get("policyNo");
+     Timestamp fromDate = (Timestamp)context.get("fromDate");
+     Timestamp thruDate = (Timestamp)context.get("thruDate");
+     BigDecimal amount =(BigDecimal) context.get("amount");
+     String insuranceId = null;
+     GenericValue newEntity = delegator.makeValue("PartyInsurance");
+     newEntity.set("insuranceTypeId","LIC_INSR");
+     newEntity.set("partyId",partyId);
+     newEntity.set("insuranceNumber",policyNo);     
+     newEntity.set("insuredValue",amount);
+     newEntity.set("fromDate",fromDate);
+     newEntity.set("thruDate",thruDate);
+     newEntity.set("createdDate",UtilDateTime.nowTimestamp());
+     newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+     newEntity.set("createdByUserLogin",userLogin.getString("userLoginId"));     
+     newEntity.set("lastModifiedByUserLogin",userLogin.getString("userLoginId"));
+     try {  
+			delegator.createSetNextSeqId(newEntity);
+			insuranceId = (String) newEntity.get("insuranceId");
+		} catch (GenericEntityException e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError("Failed to create a new Entry "+ e);
+		}
+		result.put("insuranceId", insuranceId);
+		return result; 
+	}
+    
+	public static Map<String, Object>  deletePartyInsurance(DispatchContext dctx, Map<String, ? extends Object> context)  {
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = FastMap.newInstance();	
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String insuranceId = (String) context.get("insuranceId");
+		String partyId = (String) context.get("partyId");
+		GenericValue insuranceRecord =null;				
+		try{		 
+			insuranceRecord = delegator.findOne("PartyInsurance", false, UtilMisc.toMap("insuranceId",insuranceId));
+			 if(UtilValidate.isNotEmpty(insuranceRecord)){
+				 insuranceRecord.remove(); 
+			 }				
+		}catch(GenericEntityException e){
+			Debug.logError("error while removing  Record"+e.getMessage(), module);
+			result = ServiceUtil.returnError("Error while removing record"); 
+		}
+		result = ServiceUtil.returnSuccess("Insurace Removed Successfully");
+		return result;
+	}
+    
+    
 }

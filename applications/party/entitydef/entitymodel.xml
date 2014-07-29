@@ -3210,4 +3210,23 @@ under the License.
             <key-map field-name="partyId"/>
         </view-link>
     </view-entity>
+    <entity entity-name="PartyInsurance" package-name="org.ofbiz.party.party "
+		title="Party Insurance Entity">
+		<field name="insuranceId" type="id-ne"></field>
+		<field name="insuranceTypeId" type="id"></field>
+		<field name="partyId" type="id"></field>
+		<field name="insuranceNumber" type="long-varchar"></field>
+		<field name="insuredValue" type="currency-amount"></field>
+		<field name="insuranceProvider" type="name"></field>
+		<field name="fromDate" type="date-time"></field>
+		<field name="thruDate" type="date-time"></field>
+		<field name="createdByUserLogin" type="id-vlong"></field>
+		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		<field name="createdDate" type="date-time"></field>      
+      	<field name="lastModifiedDate" type="date-time"></field>
+		<prim-key field="insuranceId" />
+		<relation type="one" fk-name="INSR_PTID" rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+	</entity>
 </entitymodel>

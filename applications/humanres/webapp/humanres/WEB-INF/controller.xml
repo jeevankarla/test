@@ -1505,7 +1505,19 @@ under the License.
         <response name="success"  type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
-    <request-map uri="updatePartyIdentification">
+    <request-map uri="createPartyInsurance">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="createPartyInsurance"/>
+        <response name="success"  type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
+     <request-map uri="deletePartyInsurance">
+        <security https="true" auth="true"/>
+        <event type="service"  invoke="deletePartyInsurance"/>
+        <response name="success"  type="view" value="viewEmployeeProfile"/>
+        <response name="error" type="view" value="viewEmployeeProfile"/>
+    </request-map>
+     <request-map uri="updatePartyIdentification">
         <security https="true" auth="true"/>
         <event type="service"  invoke="updatePartyIdentification"/>
         <response name="success"  type="view" value="viewEmployeeProfile"/>
