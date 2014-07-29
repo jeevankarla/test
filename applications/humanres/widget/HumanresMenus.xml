@@ -243,11 +243,11 @@
                <parameter param-name="organizationPartyId"/>
            </link>
        </menu-item>-->
-	<menu-item name="EmployeeBankDetails" title="${uiLabelMap.HumanResEmployeeBankDetails}">
+	<!-- <menu-item name="EmployeeBankDetails" title="${uiLabelMap.HumanResEmployeeBankDetails}">
 		<link target="EmployeeBankDetails">
 			<parameter param-name="organizationPartyId" />
 		</link>
-	</menu-item>
+	</menu-item> -->
 	<menu-item name="AttendanceReport" title="${uiLabelMap.AttendanceReport}">
         <link target="AttendanceReport">
             <parameter param-name="organizationPartyId" />
