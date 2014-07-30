@@ -160,8 +160,8 @@ under the License.
 										        				        
 				        <fo:table-row>
 				            	<fo:table-cell>
-				            		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Prepared By    	    BVB I/C			    Preauditor	       MANAGER (Mktg)</fo:block>  
-				            	</fo:table-cell>
+				            		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Prepared By    	    BVB I/C			    Preauditor	       Gen.Mgr(MKtg)</fo:block>  
+				            	</fo:table-cell> 
 				            </fo:table-row>
 	                </fo:table-body>
                 </fo:table>
