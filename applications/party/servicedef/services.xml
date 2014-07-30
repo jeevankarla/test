@@ -1421,6 +1421,7 @@ under the License.
         <description>Create Party Insurance</description>
         <attribute name="partyId" mode="IN" type="String" optional="false"/>
         <attribute name="policyNo" mode="IN" type="String" optional="false"/> 
+        <attribute name="insuranceTypeId" mode="IN" type="String" optional="false"/>
         <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/> 
         <attribute name="fromDate" mode="IN" type="Timestamp"/> 
         <attribute name="thruDate" mode="IN" type="Timestamp"/> 

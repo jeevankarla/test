@@ -599,6 +599,7 @@
 		<field name="insuranceId"><hidden/></field>
 		<field name="partyId"><hidden/></field>
 		<field name="insuranceNumber" title="Policy No"><display></display></field>
+		<field name="insuranceTypeId" title="Insurance Type"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"></display-entity></field>
 		<field name="insuredValue" title="Amount"><display></display></field>
 		<field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd/MM/yyyy&quot;);}" also-hidden="true"/></field>
 		<field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd/MM/yyyy&quot;);}" also-hidden="true"/></field>
@@ -615,6 +616,14 @@
 		</actions>
 		<field name="partyId"><hidden /></field>
 		<field name="policyNo" title="Policy No"><text size="15"></text></field>
+		<field name="insuranceTypeId" title="Insurance Type">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="INSURANCE_TYPE" />
+					<entity-order-by field-name="sequenceId" />
+				</entity-options>
+			</drop-down>
+		</field>
 		<field name="amount" title="Amount"><text size="15"></text></field>
 		<field name="fromDate"><date-time type="date" ></date-time></field>
         <field name="thruDate"><date-time type="date"/></field>

@@ -186,5 +186,6 @@
     
     
     <EnumerationType description="Insurance Type" enumTypeId="INSURANCE_TYPE" hasTable="N" parentTypeId=""/>
-    <Enumeration description="Party Lic Insurance" enumCode="LIC_INSR" enumId="LIC_INSR" sequenceId="01" enumTypeId="INSURANCE_TYPE"/>    
+    <Enumeration description="MD LIC" enumCode="LIC_MD_INSR" enumId="LIC_MD_INSR" sequenceId="01" enumTypeId="INSURANCE_TYPE"/>
+    <Enumeration description="Mother Dairy LIC" enumCode="LIC_DAIRY_INSR" enumId="LIC_DAIRY_INSR" sequenceId="02" enumTypeId="INSURANCE_TYPE"/>    
 </entity-engine-xml>

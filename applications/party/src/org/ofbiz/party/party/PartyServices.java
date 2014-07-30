@@ -1835,14 +1835,15 @@ public class PartyServices {
      LocalDispatcher dispatcher = dctx.getDispatcher();
      GenericValue userLogin = (GenericValue) context.get("userLogin");
      Map<String, Object> result = ServiceUtil.returnSuccess();
- 	 String partyId = (String) context.get("partyId"); 	
+ 	 String partyId = (String) context.get("partyId"); 
+ 	 String insuranceTypeId = (String) context.get("insuranceTypeId"); 
  	 String policyNo = (String) context.get("policyNo");
      Timestamp fromDate = (Timestamp)context.get("fromDate");
      Timestamp thruDate = (Timestamp)context.get("thruDate");
      BigDecimal amount =(BigDecimal) context.get("amount");
      String insuranceId = null;
      GenericValue newEntity = delegator.makeValue("PartyInsurance");
-     newEntity.set("insuranceTypeId","LIC_INSR");
+     newEntity.set("insuranceTypeId",insuranceTypeId);
      newEntity.set("partyId",partyId);
      newEntity.set("insuranceNumber",policyNo);     
      newEntity.set("insuredValue",amount);
