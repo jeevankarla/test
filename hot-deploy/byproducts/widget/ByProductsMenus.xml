@@ -817,12 +817,12 @@
     <menu name="CreditInstBillingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="facilityCustomTimePeriod" title="Reports">
         	<link target="facilityCustomTimePeriod"/>
-        </menu-item>    
+        </menu-item> 
+         <menu-item name="TimePeriod" title="Time Period">
+        	<link target="TimePeriod"/>
+        </menu-item>      
         <menu-item name="InstBillingPeriodSearch" title="Billing generation">
         	<link target="InstBillingPeriodSearch"/>
         </menu-item>
-        <menu-item name="TimePeriod" title="Time Period">
-        	<link target="TimePeriod"/>
-        </menu-item>    
       </menu>    
 </menus>
