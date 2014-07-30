@@ -21,21 +21,26 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.network.LmsServices;
 dctx = dispatcher.getDispatchContext();
 
-customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
-fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-context.put("fromDateTime", fromDateTime);
-context.put("thruDateTime", thruDateTime);
-
-monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
-monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
+if (UtilValidate.isEmpty(parameters.newOrTerminateDate)) {
+		newOrTerminateDate = UtilDateTime.nowTimestamp();
+}
+else{
+	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	try {
+		newOrTerminateDate = new java.sql.Timestamp(sdf.parse(parameters.newOrTerminateDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + parameters.newOrTerminateDate, "");
+	}
+}
+openedDate = UtilDateTime.getDayStart(newOrTerminateDate);
+closeDate = UtilDateTime.getDayEnd(newOrTerminateDate);
+context.newOrTerminateDate = openedDate;
 printDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "dd/MM/yyyy");
 context.printDate = printDate;
 conditionList=[];
-conditionList1=[];
 
-conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
-conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));
+conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,openedDate));
+conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.LESS_THAN_EQUAL_TO ,closeDate));
 conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"BOOTH"));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 List<GenericValue> facilityList = delegator.findList("Facility", condition, null, null, null, false);
@@ -55,8 +60,6 @@ if(UtilValidate.isNotEmpty(facilityList)){
 					finalMap.put(facilityId,tempMap);
 					facilitySaleMap.put(categoryType,finalMap);
 				}
-				
-				
 			 }else{
 				 tempMap = [:];
 				 Map finalMap=FastMap.newInstance();
