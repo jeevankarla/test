@@ -129,6 +129,11 @@ under the License.
       <SecurityGroup description="HumanRes Attendance View group, has complete permission to View Attendance screen." groupId="HR_ATTENDANCEVIEW"/>
       <SecurityGroupPermission groupId="HR_ATTENDANCEVIEW" permissionId="HR_ATTENDANCE_VIEW"/>
       
+       <!-- security group for Approve Employees Leaves  screen --> 
+      <SecurityPermission description="Allow to Access Leave Approval Screen in the HumanRes Manager." permissionId="HR_LEAVE_APPROVAL"/>  
+      <SecurityGroup description="Allow to Access Leave Approval Screen in the HumanRes Manager." groupId="HR_LEAVEAPPROVAL"/>
+      <SecurityGroupPermission groupId="HR_LEAVEAPPROVAL" permissionId="HR_LEAVE_APPROVAL"/>
+      
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_REPORTS_VIEW"/>
@@ -137,6 +142,7 @@ under the License.
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ANALYTICS_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_BENFDED_VIEW"/>
       <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
+      <SecurityGroupPermission groupId="HUMANRES_ADMIN" permissionId="HR_LEAVE_APPROVAL"/>
       
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
@@ -146,6 +152,7 @@ under the License.
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ANALYTICS_VIEW"/>
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_BENFDED_VIEW"/>
       <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
+      <SecurityGroupPermission groupId="FULLADMIN" permissionId="HR_LEAVE_APPROVAL"/>
       
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_EMPLLOOKUP_VIEW"/>
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_EMPLPOSITION_VIEW"/>
@@ -155,4 +162,5 @@ under the License.
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_ANALYTICS_VIEW"/>
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_BENFDED_VIEW"/>
       <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_ATTENDANCE_VIEW"/>
+      <SecurityGroupPermission groupId="BIZADMIN" permissionId="HR_LEAVE_APPROVAL"/>
 </entity-engine-xml>

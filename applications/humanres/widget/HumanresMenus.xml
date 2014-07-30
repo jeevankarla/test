@@ -574,7 +574,10 @@
             <link target="FindEmplLeaves"/>
         </menu-item>
         <menu-item name="Approval" title="${uiLabelMap.HumanResLeaveApproval}">
-            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <condition>
+            	<if-has-permission permission="HR_LEAVE" action="_APPROVAL"/>
+            
+            </condition>
             <link target="FindLeaveApprovals"/>
         </menu-item>
     </menu>

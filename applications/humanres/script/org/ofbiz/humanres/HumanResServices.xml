@@ -815,6 +815,8 @@
         <set field="newEntity.thruDate" type="Timestamp" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(newEntity.thruDate)}"/>
          <set field="newEntity.appliedBy" from-field="userLogin.partyId"/>
          <create-value value-field="newEntity"/>
+         <set field="responseMessage" value="Leave created successfully."/>
+        <field-to-result field="responseMessage" result-name="successMessage"/>
         <check-errors/>
     </simple-method>
 
@@ -822,6 +824,8 @@
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
+        <set field="responseMessage" value="Leave Updated successfully."/>
+        <field-to-result field="responseMessage" result-name="successMessage"/>
     </simple-method>
 
     <simple-method method-name="deleteEmplLeave" short-description="Delete Employee Leave">
@@ -1056,6 +1060,8 @@
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
+        <set field="responseMessage" value="${parameters.leaveStatus} successfully."/>
+        <field-to-result field="responseMessage" result-name="successMessage"/>
     </simple-method>
      <!-- ================Time sheet========================= -->
      <simple-method method-name="emplpunch" short-description="Add punch">
