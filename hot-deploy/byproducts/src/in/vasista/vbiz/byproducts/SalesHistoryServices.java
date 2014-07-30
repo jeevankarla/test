@@ -249,6 +249,7 @@ public class SalesHistoryServices {
 					Timestamp saleDate = UtilDateTime.addDaysToTimestamp(fromDate, +i);
 					Date summaryDate = new Date(saleDate.getTime());
 					for(Object shipment : shipmentList){
+						Debug.log("SummaryDate==="+summaryDate+"===========SupplyType=="+shipment.toString());
 						Map<String, Object> salesTotals = ByProductNetworkServices.getDayTotals(dctx, saleDate, shipment.toString() , false, false, null);
 						productsMap = (Map)salesTotals.get("productTotals");
 						shipmentIds=(List)salesTotals.get("shipmentIds");
@@ -327,7 +328,7 @@ public class SalesHistoryServices {
 	    	        			List<String> routeBooths = FastList.newInstance();
 	    	        			//routeBooths = ByProductNetworkServices.getRouteBooths(delegator,route,null);
 	    	        			routeBooths =(List<String>) ByProductNetworkServices.getBoothsRouteByShipment(delegator,UtilMisc.toMap("facilityId", route,"shipmentIds",shipmentIds,"effectiveDate",UtilDateTime.getDayStart(saleDate))).get("boothIdsList");
-	    	        			Debug.log("RouteId==="+route+"==TIME=="+shipment.toString()+"==routeBooths===="+routeBooths);
+	    	        			
 	    	        			for(String booth : routeBooths){
 	    	        				//populating Booths
 	    	        				Map boothSalesMap = (Map) boothTotals.get(booth);
@@ -556,10 +557,10 @@ public class SalesHistoryServices {
 					Timestamp monthStart = UtilDateTime.getMonthStart(saleDate);
 					Timestamp monthEnd = UtilDateTime.getMonthEnd(saleDate, timeZone, locale);
 					Timestamp currentDate = UtilDateTime.getDayEnd(saleDate);
-					/*if(monthEnd.equals(currentDate)){
+					if(monthEnd.equals(currentDate)){
 						//populating monthly totals at start date of the month.
 						SalesHistoryServices.populateLMSMonthlySalesSummary(dctx, context, "SALES_MONTH",monthStart,monthEnd);
-					}*/
+					}
 				}//days
 			} catch (GenericEntityException e) {
 				Debug.logError(e, module);
@@ -610,8 +611,8 @@ public class SalesHistoryServices {
       		Debug.log("lmsSalesSummaryDetailList Size======> "+lmsSalesSummaryDetailList.size()+"===Bfr=Facility===", "");
       		lmsSalesSummaryBoothsList = EntityUtil.getFieldListFromEntityList(lmsSalesSummaryDetailList, "facilityId", true);
       		
-      		Debug.logImportant("Populating Monthly Data From "+lmsSalesSummaryBoothsList.size()+" Facilities", "");
-      		Debug.log("Populating Monthly Data From======> "+lmsSalesSummaryBoothsList.size()+" Facilities", "");
+      		Debug.logImportant("Populating Monthly Data From ======>"+lmsSalesSummaryBoothsList.size()+" Facilities", "");
+      		//Debug.log("Populating Monthly Data From======> "+lmsSalesSummaryBoothsList.size()+" Facilities", "");
       		conditionsList.clear();
       		conditionsList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, lmsSalesSummaryBoothsList));
   			conditionsList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "BOOTH"));
@@ -635,6 +636,7 @@ public class SalesHistoryServices {
   			        	List<BigDecimal> qtyForPeriod = FastList.newInstance();
   			         	BigDecimal totQty = BigDecimal.ZERO;
   			        	BigDecimal totRevenu = BigDecimal.ZERO;
+  			        	String isReturn="";
   			        	
   			            GenericValue prodType = prodSubTypeIter.next();
   			            String productId = prodType.getString("productId");
@@ -656,6 +658,7 @@ public class SalesHistoryServices {
 								salesSummary.put("productSubscriptionTypeId", productSubscriptionTypeId);
 								salesSummary.put("productId", productId);
 								salesSummary.put("periodTypeId", "SALES_MONTH");
+								salesSummary.put("isReturn", prodType.getString("isReturn"));
 								delegator.createOrStore(salesSummary);	
   				    	}
   			    	}
@@ -722,6 +725,7 @@ public class SalesHistoryServices {
 						    							Map<String, Object> routeProdMap = FastMap.newInstance();
 						    							routeProdMap.put("totalQty", totQty);
 	    						        				routeProdMap.put("totalRevenue", totRevenu);
+	    						        				routeProdMap.put("isReturn",prodType.getString("isReturn"));
 	    						        				routeProdSubTypeMap.put(productId, routeProdMap);
 						    						}	
   						    					routeDataMap.put(productSubscriptionTypeId,routeProdSubTypeMap);
@@ -730,6 +734,7 @@ public class SalesHistoryServices {
   						    					Map<String, Object> routeProdMap = FastMap.newInstance();
   						    					routeProdMap.put("totalQty", totQty);
   						    					routeProdMap.put("totalRevenue", totRevenu);
+  						    					routeProdMap.put("isReturn", prodType.getString("isReturn"));
   						    					routeProdSubTypeMap.put(productId, routeProdMap);
   						    					routeDataMap.put(productSubscriptionTypeId, routeProdSubTypeMap);
   						    				}
@@ -740,6 +745,7 @@ public class SalesHistoryServices {
 						    					Map<String, Object> routeProdMap = FastMap.newInstance();
 						    					routeProdMap.put("totalQty", totQty);
 						    					routeProdMap.put("totalRevenue", totRevenu);
+						    					routeProdMap.put("isReturn", prodType.getString("isReturn"));
 						    					routeProdSubTypeMap.put(productId, routeProdMap);
 						    					routeDataMap.put(productSubscriptionTypeId, routeProdSubTypeMap);
 						    					routesTotMap.put(route, routeDataMap);
@@ -798,6 +804,7 @@ public class SalesHistoryServices {
       									salesSummaryDetail.put("productSubscriptionTypeId", productSubscriptionTypeId);
       									salesSummaryDetail.put("productId", productId);
       									salesSummaryDetail.put("periodTypeId", "SALES_MONTH");
+      									salesSummaryDetail.put("isReturn",prodType.getString("isReturn"));
       									delegator.createOrStore(salesSummaryDetail);
   						    	  	}	
   	    				    	}//prod
@@ -901,6 +908,9 @@ public class SalesHistoryServices {
 							String productId = (String) entry.getKey();
 							BigDecimal Quantity = (BigDecimal)productsSalesMap.get("totalQty");
 							BigDecimal Revenue = (BigDecimal)productsSalesMap.get("totalRevenue");
+							if(!UtilValidate.isEmpty(isReturn)){
+							isReturn=(String)productsSalesMap.get("isReturn");
+							}
 							GenericValue periodSalesSummaryDetail = delegator.makeValue("LMSPeriodSalesSummaryDetail");
 		        			periodSalesSummaryDetail.put("salesDate", salesDate);
 		        			periodSalesSummaryDetail.put("totalQuantity", Quantity);
