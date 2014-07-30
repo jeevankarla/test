@@ -38,9 +38,9 @@ under the License.
   	<fo:static-content flow-name="xsl-region-before">
   		<#assign finAccDetails = delegator.findOne("FinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
   		<#assign nowDate=Static["org.ofbiz.base.util.UtilDateTime"].getDayStart(nowTimestamp, timeZone,locale)>
-  		<fo:block white-space-collapse="false" font-weight="bold" text-align="left" text-indent="70pt" keep-together="always">${partyGroup.groupName?if_exists}, <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if> </fo:block>
-        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt">${finAccDetails.finAccountName?if_exists}             ${uiLabelMap.CommonPage}No: <fo:page-number/>    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowDate, "dd-MMM-yyyy")}</fo:block>
-        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">BANK STATEMENT(SALARY) FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}</fo:block>
+  		<fo:block white-space-collapse="false" font-weight="bold" text-align="left" text-indent="60pt" keep-together="always">${partyGroup.groupName?if_exists}, <#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if> </fo:block>
+        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt">${finAccDetails.finAccountName?if_exists}                                                     																					${uiLabelMap.CommonPage}No: <fo:page-number/></fo:block>
+        <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">BANK STATEMENT(SALARY) FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}                                             Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowDate, "dd-MMM-yyyy")}</fo:block>
   	</fo:static-content>  	
     <fo:flow flow-name="xsl-region-body" font-family="Helvetica">    	
       <fo:block>
