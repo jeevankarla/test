@@ -7235,6 +7235,7 @@ public class ByProductNetworkServices {
 			paymentCtx.put("amount", paymentAmount);
 			paymentCtx.put("userLogin", userLogin);
 			paymentCtx.put("invoices", invoiceIds);
+			Debug.log("=====paymentAmount===="+paymentAmount+"=====invoiceIds=="+invoiceIds);
 			Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
 			if (ServiceUtil.isError(paymentResult)) {
 				Debug.logError(paymentResult.toString(), module);
