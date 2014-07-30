@@ -5860,6 +5860,7 @@ public class ByProductServices {
 			 LocalDispatcher dispatcher = dctx.getDispatcher();
 			 GenericValue userLogin = (GenericValue) context.get("userLogin");
 			 String periodTypeId = (String) context.get("periodTypeId");
+			 String periodName = (String) context.get("periodName");
 		     Timestamp fromDate = (Timestamp) context.get("fromDate");
 		     Timestamp thruDate = (Timestamp) context.get("thruDate");
 		     List<GenericValue> custTimePeriodList =FastList.newInstance();
@@ -5892,10 +5893,10 @@ public class ByProductServices {
 	 			  custTimePeriodList = delegator.findList("CustomTimePeriod", CustCondition, null, null, null,false); 
 	 			 if(UtilValidate.isNotEmpty(custTimePeriodList)){
 	 			     customTimePeriodId=((GenericValue)EntityUtil.getFirst(custTimePeriodList)).getString("customTimePeriodId");
-	 			     result=dispatcher.runSync("updateCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "customTimePeriodId", customTimePeriodId,"thruDate",new java.sql.Date(thruDate.getTime())));
+	 			     result=dispatcher.runSync("updateCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "customTimePeriodId", customTimePeriodId,"periodName", periodName,"thruDate",new java.sql.Date(thruDate.getTime())));
 	 			 }
 	 			 else{
-	 				 result=dispatcher.runSync("createCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "periodTypeId", periodTypeId,"fromDate",new java.sql.Date(fromDate.getTime()),"thruDate",new java.sql.Date(thruDate.getTime()),"isClosed","N","organizationPartyId","Company"));
+	 				 result=dispatcher.runSync("createCustomTimePeriod", UtilMisc.toMap("userLogin", userLogin, "periodTypeId", periodTypeId,"periodName", periodName,"fromDate",new java.sql.Date(fromDate.getTime()),"thruDate",new java.sql.Date(thruDate.getTime()),"isClosed","N","organizationPartyId","Company"));
 	 			 }
 	 			
 			}catch(Exception e){
