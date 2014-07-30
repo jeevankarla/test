@@ -3663,7 +3663,6 @@ public class ByProductServices {
 			    		totalPrice = totalPrice.multiply(quantity);
 		                totalReturnAmount = totalReturnAmount.add(totalPrice);
 			  	  }
-
 		    	  if(totalReturnAmount.compareTo(BigDecimal.ZERO)>0 && enableCreditNote){
 		    		  
 		    		  Map paymentInputMap = FastMap.newInstance();
@@ -3750,9 +3749,7 @@ public class ByProductServices {
 		    		  totalPrice = totalPrice.multiply(qty);
 	                  totalReturnAmount = totalReturnAmount.add(totalPrice);
   			  }
-	    		  Debug.log("====totalReturnAmount=="+totalReturnAmount);
-	    		  totalReturnAmount = totalReturnAmount.setScale(decimals,rounding);//rounding totalAmount
-	    		  Debug.log("====totalReturnAmount=AfterrrrRounding="+totalReturnAmount);
+	    		
   			  GenericValue retHeader = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
   			  String payReference = retHeader.getString("paymentId");
   			  Timestamp dayBegin = UtilDateTime.getDayStart(effectiveDate);
@@ -3779,6 +3776,9 @@ public class ByProductServices {
 	                       return ServiceUtil.returnError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap));          	            
 	                  }
   			  }
+  			  Debug.log("==IN========totalReturnAmount###########=="+totalReturnAmount);
+    		  totalReturnAmount = totalReturnAmount.setScale(decimals,rounding);//rounding totalAmount
+    		  Debug.log("==IN======totalReturnAmount##################=AfterrrrRounding="+totalReturnAmount);
   			  if(totalReturnAmount.compareTo(BigDecimal.ZERO)>0 && enableCreditNote){
 	  			  
   				  Map paymentInputMap = FastMap.newInstance();
