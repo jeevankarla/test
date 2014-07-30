@@ -3229,6 +3229,7 @@ public class ByProductNetworkServices {
 			 * condList.add(EntityCondition.makeCondition("estimatedDeliveryDate",
 			 * EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			 */
+			
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 			List<GenericValue> orderBooths = delegator.findList("OrderHeaderItemProductShipmentAndFacility", cond, null,null, null, true);
 			boothIds = EntityUtil.getFieldListFromEntityList(orderBooths,"originFacilityId", true);
@@ -3683,7 +3684,22 @@ public class ByProductNetworkServices {
 			if (!UtilValidate.isEmpty(shipmentList)) {
 				shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
 			}
-		} else {// combine both shipments AM nd PM
+		} else if(UtilValidate.isNotEmpty(supplyTypeId)&&("DIRECT".equals(supplyTypeId))){
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.IN,	UtilMisc.toList("RM_DIRECT_SHIPMENT")));
+			conditionList.add(EntityCondition.makeCondition("statusId",	EntityOperator.EQUALS, "GENERATED"));
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin));
+			conditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO,	dayEnd));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			try {
+				shipmentList = delegator.findList("Shipment", condition, null,null, null, false);
+			} catch (Exception e) {
+				Debug.logError(e, "Unable to get shipment list: ", module);
+			}
+			if (!UtilValidate.isEmpty(shipmentList)) {
+				shipments.addAll(EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", false));
+			}
+		}else {// combine both shipments AM nd PM
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.IN, UtilMisc.toList("AM_SHIPMENT","AM_SHIPMENT_SUPPL", "PM_SHIPMENT","PM_SHIPMENT_SUPPL")));
 			conditionList.add(EntityCondition.makeCondition("statusId",	EntityOperator.EQUALS, "GENERATED"));
@@ -9855,9 +9871,9 @@ public class ByProductNetworkServices {
         		//shipmentIds = getByProductShipmentIds(delegator , UtilDateTime.toDateString(salesDate, "yyyy-MM-dd HH:mm:ss"),null);
         		shipmentIds =getByProdShipmentIds(delegator,salesDate,salesDate);
         	}else{
-        			shipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(salesDate, "yyyy-MM-dd HH:mm:ss"),subscriptionType);
+        			//shipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(salesDate, "yyyy-MM-dd HH:mm:ss"),subscriptionType);
+        			shipmentIds=getShipmentIdsSupplyType(delegator, salesDate,salesDate,subscriptionType);
         	}
-        	Debug.log("salesDate=" + salesDate + "shipmentIds=" + shipmentIds, module);	
            //Debug.logInfo("salesDate=" + salesDate + "shipmentIds=" + shipmentIds, module);
             List conditionList= FastList.newInstance(); 
         	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
@@ -10332,6 +10348,215 @@ public class ByProductNetworkServices {
         result.put("zoneTotals", zoneTotals);
         result.put("boothTotals", boothTotals);
         result.put("distributorTotals", distributorTotals);
+        result.put("productTotals", productTotals);      
+        result.put("supplyTypeTotals", supplyTypeTotals);  
+        result.put("shipmentIds", shipmentIds); //used to get ShipmentBooths
+        
+        return result;
+    }  
+    public static Map<String, Object> getDayReturnTotals(DispatchContext ctx, Map<String, ? extends Object> context) {
+   // public static Map<String, Object> getDayReturnTotals(DispatchContext ctx, Timestamp salesDate, String subscriptionType, boolean onlySummary, boolean onlyVendorAndPTCBooths, List facilityIds) {
+    	Delegator delegator = ctx.getDelegator();
+    	List<GenericValue> returnItemsList= FastList.newInstance();
+    	List<String> facilityIds = (List<String>) context.get("facilityIds");
+		List<String> shipmentIds = (List<String>) context.get("shipmentIds");
+		Timestamp salesDate = UtilDateTime.nowTimestamp();
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		if (!UtilValidate.isEmpty(context.get("salesDate"))) {
+			 salesDate = (Timestamp) context.get("salesDate");
+		}
+		if (UtilValidate.isEmpty(fromDate)) {
+			fromDate=salesDate;
+		}
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		if (UtilValidate.isEmpty(thruDate)) {
+			thruDate=salesDate;
+		}
+		String subscriptionType = (String) context.get("subscriptionType");
+    	Map productAttributes = new TreeMap<String, Object>();    
+    	List productSubscriptionTypeList = FastList.newInstance();
+    	//List shipmentIds =FastList.newInstance();
+    	boolean isByParty = Boolean.FALSE;
+		if (UtilValidate.isNotEmpty(context.get("isByParty"))) {
+			isByParty = (Boolean) context.get("isByParty");
+		}
+		List ownerPartyIds = FastList.newInstance();
+		if (isByParty && UtilValidate.isNotEmpty(facilityIds)) {
+			try {
+				List<GenericValue> facilities = delegator.findList("Facility",EntityCondition.makeCondition("facilityId",EntityOperator.IN, facilityIds), UtilMisc.toSet("ownerPartyId"), null, null, false);
+				ownerPartyIds = EntityUtil.getFieldListFromEntityList(facilities, "ownerPartyId", true);
+			} catch (Exception e) {
+				Debug.logError(e, e.toString(), module);
+				return ServiceUtil.returnError(e.toString());
+			}
+
+		}
+    	try {
+        	if(UtilValidate.isEmpty(subscriptionType)){
+        		//shipmentIds = getByProductShipmentIds(delegator , UtilDateTime.toDateString(salesDate, "yyyy-MM-dd HH:mm:ss"),null);
+        		shipmentIds =getByProdShipmentIds(delegator,salesDate,salesDate);
+        	}else{
+        			//shipmentIds = getShipmentIdsByAMPM(delegator , UtilDateTime.toDateString(salesDate, "yyyy-MM-dd HH:mm:ss"),subscriptionType);
+        			shipmentIds=getShipmentIdsSupplyType(delegator, salesDate,salesDate,subscriptionType);
+        	}
+        	Debug.log("salesDate===INRETURNS==" + salesDate + "shipmentIds=" + shipmentIds+"===SUBSCRIPTION==="+subscriptionType, module);	
+        	List returnConditionList = FastList.newInstance();
+			returnConditionList.add(EntityCondition.makeCondition("shipmentId",	EntityOperator.IN, shipmentIds));
+			if (isByParty) {
+				if (UtilValidate.isNotEmpty(ownerPartyIds)) {
+					returnConditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, ownerPartyIds));
+				}
+			} else {
+				if (UtilValidate.isNotEmpty(facilityIds)) {
+					returnConditionList.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.IN,facilityIds));
+				}
+			}
+			returnConditionList.add(EntityCondition.makeCondition("returnStatusId",EntityOperator.EQUALS, "RETURN_ACCEPTED"));
+			EntityCondition returnCondition = EntityCondition.makeCondition(returnConditionList, EntityOperator.AND);
+			if(!UtilValidate.isEmpty(shipmentIds)){        		
+				returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondition,null, null, null, false);
+        	}
+
+    	} catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+    	BigDecimal totalQuantity = ZERO;
+    	BigDecimal totalRevenue = ZERO;
+    	BigDecimal totalFat = ZERO;
+    	BigDecimal totalSnf = ZERO;
+    	
+    	Map<String, Object> boothZoneMap = FastMap.newInstance();
+    	
+    	Map<String, Object> boothTotals = new TreeMap<String, Object>();
+    	Map<String, Object> zoneTotals = new TreeMap<String, Object>();
+    	Map<String, Object> distributorTotals = new TreeMap<String, Object>();
+    	Map<String, Object> productTotals = new TreeMap<String, Object>();
+    	Map<String, Object> supplyTypeTotals = new TreeMap<String, Object>();
+    	
+        Iterator<GenericValue> itemIter = returnItemsList.iterator();
+    	while(itemIter.hasNext()) {
+            GenericValue orderItem = itemIter.next();
+            String prodSubscriptionTypeId = "";//orderItem.getString("productSubscriptionTypeId");
+            BigDecimal quantity  = orderItem.getBigDecimal("returnQuantity");
+            BigDecimal price  = orderItem.getBigDecimal("returnPrice"); 
+            BigDecimal revenue = price.multiply(quantity);
+            totalRevenue = totalRevenue.add(revenue);
+          //  quantity = quantity.multiply(orderItem.getBigDecimal("quantityIncluded"));
+            quantity = orderItem.getBigDecimal("returnQuantity");
+    		totalQuantity = totalQuantity.add(quantity);   
+    		BigDecimal fat = ZERO;
+    		BigDecimal snf = ZERO;
+    		String productName = "";
+			String productId = orderItem.getString("productId");
+		    		
+    			//Map zone = (Map)boothZoneMap.get(orderItem.getString("originFacilityId"));
+    			
+    			// Handle booth totals    			
+    			String boothId = orderItem.getString("originFacilityId");
+    			if (boothTotals.get(boothId) == null) {
+    				Map<String, Object> newMap = FastMap.newInstance();
+
+    				newMap.put("total", quantity);
+    				newMap.put("totalRevenue", revenue);
+    				newMap.put("excludeIncentive", orderItem.getString("excludeIncentive"));
+    				newMap.put("categoryTypeEnum", orderItem.getString("categoryTypeEnum"));
+    				Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
+    				Map<String, Object> iteratorMap = FastMap.newInstance();
+    				Map<String, Object> productItemMap = FastMap.newInstance();
+    				productItemMap.put("name", productName);
+                    productItemMap.put("total", quantity);
+    				productItemMap.put("totalRevenue", revenue);
+    				
+    				Map<String, Object> productMap = FastMap.newInstance();
+    				productMap.put(productId, productItemMap);
+    				newMap.put("productTotals", productMap);
+    				boothTotals.put(boothId, newMap);
+    			}
+    			else {
+    				Map boothMap = (Map)boothTotals.get(boothId);
+    				BigDecimal runningTotal = (BigDecimal)boothMap.get("total");
+    				runningTotal = runningTotal.add(quantity);
+    				boothMap.put("total", runningTotal);
+    				BigDecimal runningTotalRevenue = (BigDecimal)boothMap.get("totalRevenue");
+    				runningTotalRevenue = runningTotalRevenue.add(revenue);
+    				boothMap.put("totalRevenue", runningTotalRevenue);    			    				
+					// next handle product totals
+					Map boothProductTotals = (Map)boothMap.get("productTotals");
+					Map productMap = (Map)boothProductTotals.get(productId);
+					
+					if(UtilValidate.isEmpty(productMap)){
+						Map<String, Object> productItemMap = FastMap.newInstance();
+	    				productItemMap.put("name", productName);
+	    				productItemMap.put("total", quantity);
+	    				productItemMap.put("totalRevenue", revenue);
+	    				boothProductTotals.put(productId, productItemMap);
+					}else{
+						BigDecimal productRunningTotal = (BigDecimal)productMap.get("total");
+						 productRunningTotal = productRunningTotal.add(quantity);
+	    				productMap.put("total", productRunningTotal);
+	    				BigDecimal productRunningTotalRevenue = (BigDecimal)productMap.get("totalRevenue");
+	    				productRunningTotalRevenue = productRunningTotalRevenue.add(revenue);
+	    				productMap.put("totalRevenue", productRunningTotalRevenue);
+	    			}
+				}
+    			
+    			// Handle product totals
+     			if (productTotals.get(productId) == null) {
+    				Map<String, Object> newMap = FastMap.newInstance();
+    				newMap.put("name", productName);
+    				newMap.put("total", quantity);
+    				newMap.put("totalRevenue", revenue);
+    				newMap.put("totalFat", fat);
+    				newMap.put("totalSnf", snf);
+    				productTotals.put(productId, newMap);
+    			}
+    			else {
+    				Map productMap = (Map)productTotals.get(productId);
+    				BigDecimal runningTotal = (BigDecimal)productMap.get("total");
+    				runningTotal = runningTotal.add(quantity);
+    				productMap.put("total", runningTotal);
+    				BigDecimal runningTotalRevenue = (BigDecimal)productMap.get("totalRevenue");
+    				runningTotalRevenue = runningTotalRevenue.add(revenue);
+    				productMap.put("totalRevenue", runningTotalRevenue);
+    				BigDecimal runningTotalFat = (BigDecimal)productMap.get("totalFat");
+    				runningTotalFat = runningTotalFat.add(fat);
+    				productMap.put("totalFat", runningTotalFat);
+    				BigDecimal runningTotalSnf = (BigDecimal)productMap.get("totalSnf");
+    				runningTotalSnf = runningTotalSnf.add(snf);
+    				productMap.put("totalSnf", runningTotalSnf);
+    			}
+    		
+    	}    	
+		totalQuantity = totalQuantity.setScale(decimals, rounding);  
+		totalRevenue = totalRevenue.setScale(decimals, rounding);    
+		totalFat = totalFat.setScale(decimals, rounding);    
+		totalSnf = totalSnf.setScale(decimals, rounding);    
+		
+		// set scale
+		
+	        for ( Map.Entry<String, Object> entry : productTotals.entrySet() ) {
+	        	Map<String, Object> productValue = (Map<String, Object>)entry.getValue();
+	        	BigDecimal tempVal = (BigDecimal)productValue.get("total");
+	        	tempVal = tempVal.setScale(decimals, rounding); 
+	        	productValue.put("total", tempVal);
+	        	tempVal = (BigDecimal)productValue.get("totalRevenue");
+	        	tempVal = tempVal.setScale(decimals, rounding); 
+	        	productValue.put("totalRevenue", tempVal);	    
+	        	tempVal = (BigDecimal)productValue.get("totalFat");
+	        	tempVal = tempVal.setScale(decimals, rounding); 
+	        	productValue.put("totalFat", tempVal);	
+	        	tempVal = (BigDecimal)productValue.get("totalSnf");
+	        	tempVal = tempVal.setScale(decimals, rounding); 
+	        	productValue.put("totalSnf", tempVal);		        	
+	        }
+		
+		
+		Map<String, Object> result = FastMap.newInstance();        
+        result.put("totalQuantity", totalQuantity);
+        result.put("totalRevenue", totalRevenue);
+        result.put("totalFat", totalFat);   
+        result.put("totalSnf", totalSnf);                
+        result.put("boothTotals", boothTotals);
         result.put("productTotals", productTotals);      
         result.put("supplyTypeTotals", supplyTypeTotals);  
         result.put("shipmentIds", shipmentIds); //used to get ShipmentBooths
