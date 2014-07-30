@@ -3663,6 +3663,9 @@ public class ByProductServices {
 			    		totalPrice = totalPrice.multiply(quantity);
 		                totalReturnAmount = totalReturnAmount.add(totalPrice);
 			  	  }
+		    	  Debug.log("==IN=ELSEEE=======totalReturnAmount###########=="+totalReturnAmount);
+	    		  totalReturnAmount = totalReturnAmount.setScale(decimals,rounding);//rounding totalAmount
+	    		  Debug.log("==IN==ELSEEEE====totalReturnAmount##################=AfterrrrRounding="+totalReturnAmount);
 		    	  if(totalReturnAmount.compareTo(BigDecimal.ZERO)>0 && enableCreditNote){
 		    		  
 		    		  Map paymentInputMap = FastMap.newInstance();
@@ -3776,9 +3779,9 @@ public class ByProductServices {
 	                       return ServiceUtil.returnError("There was an error in cancelling credit note: " + ServiceUtil.getErrorMessage(resultPayMap));          	            
 	                  }
   			  }
-  			  Debug.log("==IN========totalReturnAmount###########=="+totalReturnAmount);
+  			  Debug.log("==IN=ELSEEE=======totalReturnAmount###########=="+totalReturnAmount);
     		  totalReturnAmount = totalReturnAmount.setScale(decimals,rounding);//rounding totalAmount
-    		  Debug.log("==IN======totalReturnAmount##################=AfterrrrRounding="+totalReturnAmount);
+    		  Debug.log("==IN==ELSEEEE====totalReturnAmount##################=AfterrrrRounding="+totalReturnAmount);
   			  if(totalReturnAmount.compareTo(BigDecimal.ZERO)>0 && enableCreditNote){
 	  			  
   				  Map paymentInputMap = FastMap.newInstance();
