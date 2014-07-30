@@ -1238,8 +1238,9 @@
      <form name="CreateTimePeriod" type="single" title="Create Time Period" target="createCustomTimePeriod"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden value="Company"/></field>
-         <field name="periodTypeId" title="Period Type" >
-        	<drop-down>
+        <field name="isClosed"><hidden value="N"/></field>
+          <field name="periodTypeId" title="Period Type" >
+        	  	<drop-down>
         		<list-options key-name="periodTypeId" list-name="periodTypes" description="${description}"/>
         	</drop-down>
         </field>
