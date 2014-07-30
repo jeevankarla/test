@@ -3750,7 +3750,9 @@ public class ByProductServices {
 		    		  totalPrice = totalPrice.multiply(qty);
 	                  totalReturnAmount = totalReturnAmount.add(totalPrice);
   			  }
-  			  
+	    		  Debug.log("====totalReturnAmount=="+totalReturnAmount);
+	    		  totalReturnAmount = totalReturnAmount.setScale(decimals,rounding);//rounding totalAmount
+	    		  Debug.log("====totalReturnAmount=AfterrrrRounding="+totalReturnAmount);
   			  GenericValue retHeader = delegator.findOne("ReturnHeader", UtilMisc.toMap("returnId", returnId), false);
   			  String payReference = retHeader.getString("paymentId");
   			  Timestamp dayBegin = UtilDateTime.getDayStart(effectiveDate);
