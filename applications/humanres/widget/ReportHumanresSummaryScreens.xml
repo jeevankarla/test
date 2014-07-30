@@ -96,6 +96,18 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="LeaveAvailedReport">
+		<section>
+			<actions>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/leaveAvailedReport.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/leaveAvailedReport.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="PFtransfer">
         <section>
             <actions>

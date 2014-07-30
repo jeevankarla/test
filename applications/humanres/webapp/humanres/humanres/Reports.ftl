@@ -58,6 +58,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("thruDate","");
 		makeDatePicker("mclfromDate","mclfromDate");
 		makeDatePicker("mclthruDate","mclthruDate");
+		makeDatePicker("larfromDate","larfromDate");
+		makeDatePicker("larthruDate","larthruDate");
 		
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -145,7 +147,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 				</td>	
   			<td width="35%">Custom Time Period Id
   			<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
-  			<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+  			<#assign customTimePeriodList=customTimePeriodList?sort>
+  			<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
   			</select>
   			</td>
   			<td width="20%">Employee Id<input type="text" id="PartyId" name="employeeId"/></td>
@@ -159,7 +162,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
   			<td width="20%">Employee Id<input type="text" id="PartyId" name="employeeId"/></td>
   			<td width="40%">Custom Time Period Id
   			<select name="customTimePeriodId" id="customTimePeriodId" class='h5' >
-  			<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+  			<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
   			</select>
   			</td>
   			<td width="15%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeWiseSalaryDetails', '<@ofbizUrl>EmployeeWiseSalaryDetailsPdf.pdf</@ofbizUrl>');" class="buttontext"/>
@@ -179,7 +182,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</td>
 	  	   			<td width="40%">Period Id
 			  			<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-			  				<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+			  				<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
 			  			</select>
 			  		</td>
 					<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
@@ -207,6 +210,22 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					</td>
       	   </form>
       	   </tr>-->
+      	   <tr class="alternate-row">
+      	   	<form id="LeaveAvailedReport" name="LeaveAvailedReport" mothed="post" action="<@ofbizUrl>LeaveAvailedReport.pdf</@ofbizUrl>" target="_blank">
+      	   	<td width="20%">Leave Availed Report</td>
+      	   	<td width="15%">Leave Type
+  			<select name="leaveTypeId" id="leaveTypeId" class='h5' >
+  			<option value="ALL">ALL</option>
+  			<#list leaveTypeList as leave>
+  			<option value='${leave.leaveTypeId}'>${leave.description}</option></#list>
+  			</select>
+  			</td>
+      	   	<td width="15%">From Date<input  type="text"  id="larfromDate"   name="larFromDate"/>Thru Date<input  type="text"  id="larthruDate"   name="larThruDate"/></td>
+			<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+					</td>
+      	   	
+      	   </form>
+      	   </tr>
     	</table>
     </div>
 </div>
