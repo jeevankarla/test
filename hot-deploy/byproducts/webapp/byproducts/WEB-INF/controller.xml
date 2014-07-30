@@ -699,7 +699,7 @@
    </request-map>
    <request-map uri="createCustomTimePeriod">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createCustomTimePeriod"/>
+        <event type="service" invoke="createOrUpdateCustomTimePeriod"/>
         <response name="success" type="view" value="TimePeriod"/>
         <response name="error" type="view" value="TimePeriod"/>
     </request-map>
@@ -1015,9 +1015,9 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="NewOrTerminateRtlReportPDF"/>
     </request-map>
-    <request-map uri="RetailersSalesComprasion.pdf">
+    <request-map uri="fixedDepositReport.pdf">
      <security https="true" auth="true"/>
-    	<response name="success" type="view" value="RetailersSalesComprasionPDF"/>
+    	<response name="success" type="view" value="FixedDepositReportPDF"/>
     </request-map>
     
     <request-map uri="chequeReturnReport.pdf">
@@ -1223,7 +1223,7 @@
 	<view-map name="DTCFinesAndPenaltiesReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCFinesAndPenaltiesReportPDF" content-type="application/pdf"/>
 	<view-map name="DTCBillingReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCBillingReportPDF" content-type="application/pdf"/>
 	<view-map name="NewOrTerminateRtlReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#NewOrTerminateRtlReportPDF" content-type="application/pdf"/>
-	<view-map name="RetailersSalesComprasionPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailersSalesComprasionPDF" content-type="application/pdf"/>
+	<view-map name="FixedDepositReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#FixedDepositReportPDF" content-type="application/pdf"/>
 	
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>
