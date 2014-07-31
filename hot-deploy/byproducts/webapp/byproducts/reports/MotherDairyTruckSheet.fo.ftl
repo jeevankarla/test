@@ -311,11 +311,12 @@ under the License.
 			</fo:block>
 			<fo:block text-align="left" keep-together="always" white-space-collapse="false">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 		</#list>
-		boothDetailList
 		<#if (boothDetailList.size()%10==0) >
     		<fo:block  break-after="page"></fo:block>
     	</#if>
-    		
+    	<#if (boothDetailList.size()%10==8) >
+    		<fo:block  break-after="page"></fo:block>
+    	</#if>
 		<#assign routeTotals = (routesMap.getValue().get("routeWiseTotals"))>
 		<fo:block font-size="6pt">
 			<fo:table>
