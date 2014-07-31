@@ -36,5 +36,7 @@ under the License.
     <CreditCard paymentMethodId="AMEX_01" cardType="AmericanExpress" cardNumber="378282246310005" expireDate="02/2020" companyNameOnCard="Your Company Name"
         titleOnCard="" firstNameOnCard="Smart" middleNameOnCard="" lastNameOnCard="Guy" suffixOnCard="" contactMechId="9000"/>
     <PaymentMethod paymentMethodId="PETTY_CASH" paymentMethodTypeId="CASH" partyId="Company" description="Petty Cash" glAccountId="110000" fromDate="2009-04-01 00:00:00.000"/>
+   <!-- Debit Note Configuration -->
+    <PaymentMethod description="Debit Note" finAccountId="FIN_ACCNT1" fromDate="2011-07-12 00:00:00.0" glAccountId="112200"  partyId="Company" paymentMethodId="DEBIT_NOTE" paymentMethodTypeId="CASH_PAYOUT"/> 
 
 </entity-engine-xml>
