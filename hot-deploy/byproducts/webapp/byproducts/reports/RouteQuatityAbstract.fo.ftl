@@ -167,7 +167,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if routeProdTotals.get(product)?has_content>
-													<#assign qty= routeProdTotals.get(product).get("total")>
+													<#assign qty= routeProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -188,7 +188,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if routeProdTotals.get(product)?has_content>
-													<#assign byProdQty= routeProdTotals.get(product).get("total")>
+													<#assign byProdQty= routeProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -298,7 +298,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if pmRouteProdTotals.get(product)?has_content>
-															<#assign qty= pmRouteProdTotals.get(product).get("total")>
+															<#assign qty= pmRouteProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -319,7 +319,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if pmRouteProdTotals.get(product)?has_content>
-													<#assign byProdQty= pmRouteProdTotals.get(product).get("total")>
+													<#assign byProdQty= pmRouteProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -387,7 +387,7 @@ under the License.
 					<fo:table-body>
 						<fo:table-row>
 							<fo:table-cell>
-							<#if adhocBoothMap.getKey()!="Total">
+							<#if adhocBoothMap.getKey()!="packetQuantity">
 									<fo:block text-align="center"  font-size="3pt" keep-together="always">RetailerId:${adhocBoothMap.getKey()}</fo:block>
 							<#else>
 							<fo:block text-align="center"  font-size="3pt" keep-together="always">CounterSale Total:</fo:block>
@@ -432,7 +432,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if adhocBoothProdTotals.get(product)?has_content>
-															<#assign qty= adhocBoothProdTotals.get(product).get("total")>
+															<#assign qty= adhocBoothProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -453,7 +453,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if adhocBoothProdTotals.get(product)?has_content>
-													<#assign byProdQty= adhocBoothProdTotals.get(product).get("total")>
+													<#assign byProdQty= adhocBoothProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -486,7 +486,7 @@ under the License.
 														<#if adhocBoothPaymentMap.get(adhocBoothMap.getKey())?has_content>
 														<#assign adhocPaidAmnt=adhocBoothPaymentMap.get(adhocBoothMap.getKey())>
 														</#if>
-													<#if adhocBoothMap.getKey()!="Total">
+													<#if adhocBoothMap.getKey()!="packetQuantity">
 													<fo:table-cell>
 														<fo:block text-align="center">${adhocPaidAmnt?string("#0.00")}</fo:block>
 													</fo:table-cell>
@@ -562,7 +562,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if grandProdTotals.get(product)?has_content>
-															<#assign qty= grandProdTotals.get(product).get("total")>
+															<#assign qty= grandProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -583,7 +583,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if grandProdTotals.get(product)?has_content>
-															<#assign byProdQty= grandProdTotals.get(product).get("total")>
+															<#assign byProdQty= grandProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -750,7 +750,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if routeProdTotals.get(product)?has_content>
-													<#assign qty= routeProdTotals.get(product).get("total")>
+													<#assign qty= routeProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -771,7 +771,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if routeProdTotals.get(product)?has_content>
-													<#assign byProdQty= routeProdTotals.get(product).get("total")>
+													<#assign byProdQty= routeProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -862,7 +862,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if pmRouteProdTotals.get(product)?has_content>
-															<#assign qty= pmRouteProdTotals.get(product).get("total")>
+															<#assign qty= pmRouteProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -884,7 +884,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if pmRouteProdTotals.get(product)?has_content>
-													<#assign byProdQty= pmRouteProdTotals.get(product).get("total")>
+													<#assign byProdQty= pmRouteProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -939,7 +939,7 @@ under the License.
 							<#assign adhocBoothTotalsList = adhocBoothTotals.entrySet()>
 							<#assign noOfBooths=0>	
 							<#list adhocBoothTotalsList as adhocBoothMap>		
-							<#if adhocBoothMap.getKey()=="Total">	
+							<#if adhocBoothMap.getKey()=="packetQuantity">	
 								<#assign adhocBoothProdTotals = adhocBoothMap.getValue().get("productTotals")>
 										<fo:table-row>
 											<fo:table-cell>
@@ -984,7 +984,7 @@ under the License.
 																</#if>
 																<#assign qty=0>
 																<#if adhocBoothProdTotals.get(product)?has_content>
-																			<#assign qty= adhocBoothProdTotals.get(product).get("total")>
+																			<#assign qty= adhocBoothProdTotals.get(product).get("packetQuantity")>
 																</#if>
 																<#if qty !=0>
 																	<fo:table-cell>		
@@ -1005,7 +1005,7 @@ under the License.
 																</#if>
 																<#assign byProdQty=0>
 																<#if adhocBoothProdTotals.get(product)?has_content>
-																	<#assign byProdQty= adhocBoothProdTotals.get(product).get("total")>
+																	<#assign byProdQty= adhocBoothProdTotals.get(product).get("packetQuantity")>
 																</#if>
 																<#if byProdQty !=0>
 																	<fo:table-cell>		
@@ -1094,7 +1094,7 @@ under the License.
 												</#if>
 												<#assign qty=0>
 												<#if grandProdTotals.get(product)?has_content>
-															<#assign qty= grandProdTotals.get(product).get("total")>
+															<#assign qty= grandProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if qty !=0>
 													<fo:table-cell>		
@@ -1115,7 +1115,7 @@ under the License.
 												</#if>
 												<#assign byProdQty=0>
 												<#if grandProdTotals.get(product)?has_content>
-															<#assign byProdQty= grandProdTotals.get(product).get("total")>
+															<#assign byProdQty= grandProdTotals.get(product).get("packetQuantity")>
 												</#if>
 												<#if byProdQty !=0>
 													<fo:table-cell>		
@@ -1129,7 +1129,6 @@ under the License.
 											</#list>
 										</fo:table-row>
 												<fo:table-row>							
-													<fo:table-cell/>
 													<fo:table-cell/>
 													<fo:table-cell/>
 													<fo:table-cell/>
