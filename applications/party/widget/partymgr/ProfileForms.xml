@@ -26,9 +26,9 @@
         <field name="createdDate" title="Uploaded Date">
             <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdDate, &quot;dd/MM/yyyy&quot;);}"/>        
         </field>
-		<field name="action" title=" " widget-style="buttontext">
-            <hyperlink  target="img/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK">
-            	<parameter param-name="imgId" value="${dataResourceId}"/>
+		<field name="action" title="View" widget-style="buttontext">
+            <hyperlink  target="stream/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK" target-type="content">
+            	<parameter param-name="contentId" value="${contentId}"/>
             </hyperlink>              
         </field>        
     </form>
