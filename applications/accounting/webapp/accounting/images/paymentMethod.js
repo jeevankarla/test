@@ -33,9 +33,9 @@ function setPaymentMethodTypeFields() {
 			jQuery("input[name='paymentRefNum']").parent().parent().show();
 			jQuery("input[name='effictiveDate']").parent().parent().show();
 			jQuery("input[name='issuingAuthority']").parent().parent().show();
-			jQuery("input[name='paymentRefNum']").addClass("required");
+			//jQuery("input[name='paymentRefNum']").addClass("required"); 
 			jQuery("input[name='effictiveDate_i18n']").addClass("required");
-			jQuery("input[name='issuingAuthority']").addClass("required");	
+			//jQuery("input[name='issuingAuthority']").addClass("required");	
 		}
 	
 		}
