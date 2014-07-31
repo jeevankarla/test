@@ -744,6 +744,27 @@
 				<parameter param-name="paymentId" from-field="payment.paymentId" />
 			</link>
 		</menu-item>
+		<menu-item name="DebitNote"
+			title="Debit/Credit Note">
+			<condition>
+				<and>
+					<if-has-permission permission="ACCOUNTING"
+						action="_PAYMENTSTATUS_CANCEL" />
+					<not>
+						<if-empty field="payment.paymentId" />
+					</not>
+					<and>
+						<if-compare field="payment.statusId" operator="not-equals"
+							value="PMNT_CONFIRMED" />
+						<if-compare field="payment.statusId" operator="not-equals"
+							value="PMNT_VOID" />
+					</and>
+				</and>
+			</condition>
+			<link target="DebitNote">
+				<parameter param-name="paymentId" from-field="payment.paymentId" />
+			</link>
+		</menu-item>
 	</menu>
 
 	<menu name="PaymentGroupTabBar" extends="CommonTabBarMenu"
