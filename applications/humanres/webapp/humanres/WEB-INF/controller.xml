@@ -1139,7 +1139,7 @@ under the License.
     <request-map uri="createEmplLeaveExt">
         <security https="true" auth="true"/>
         <event type="service" invoke="createEmplLeave"/>
-        <response name="success" type="view" value="EditEmplLeave"/>
+        <response name="success" type="view" value="FindEmplLeaves"/>
         <response name="error" type="view" value="EditEmplLeave"/>
     </request-map>
     <request-map uri="updateEmplLeaveExt">
