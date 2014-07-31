@@ -60,6 +60,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("mclthruDate","mclthruDate");
 		makeDatePicker("larfromDate","larfromDate");
 		makeDatePicker("larthruDate","larthruDate");
+		makeDatePicker("LICfromDate","LICfromDate");
+		makeDatePicker("LICthruDate","LICthruDate");
 		
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -188,6 +190,20 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
 					</td>
 	  	   	
+	  	   		</form>
+      	   </tr>
+      	    <tr>
+	  	   		<form id="LICPolicyDetailsEmployeeWise" name="LICPolicyDetailsEmployeeWise" mothed="post" action="<@ofbizUrl>LICPolicyDetailsEmployeeWise.pdf</@ofbizUrl>" target="_blank">
+	  	   			<td width="20%">LIC Policy Details Employee Wise</td>
+	      		  	<td width="25%">Insurance Type 
+					 	<select name="InsuranceType" class='h4'>
+							<#list finalInsuranceTypeList as org>    
+	  	    					<option value='${org}'>${org}</option>
+							</#list> 
+						</select>
+					</td>	
+	      			<td width="30%">From Date<input  type="text" size="18pt" id="LICfromDate"   name="LICfromDate"/>Thru Date<input  type="text" size="18pt" id="LICthruDate"   name="LICthruDate"/></td>
+					<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
 	  	   		</form>
       	   </tr>
      <!-- 	<tr class="alternate-row">

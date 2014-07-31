@@ -28,4 +28,12 @@ context.employeeList=employeeList;
 company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 
+finalInsuranceTypeList = [];
+InsuranceTypeList = [];
+
+InsuranceTypeList.add("MD LIC");
+InsuranceTypeList.add("Mother Dairy LIC");
+
+finalInsuranceTypeList.addAll(InsuranceTypeList);
+context.put("finalInsuranceTypeList",finalInsuranceTypeList);
 
