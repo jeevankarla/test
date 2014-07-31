@@ -958,6 +958,7 @@ public class SalesHistoryServices {
 	        
 			Timestamp monthStart = UtilDateTime.getMonthStart(fromDate);
 			Timestamp monthEnd = UtilDateTime.getMonthEnd(thruDate, timeZone, locale);
+			Debug.log("======monthStart=="+monthStart+"=monthEnd===="+monthEnd);
 			try{
 				Date mntStartDate = new Date(monthStart.getTime());
 				Date mntEndDate = new Date(monthEnd.getTime());
