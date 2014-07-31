@@ -29,7 +29,6 @@
                  <entity-condition list="paymentMethodList" entity-name="PaymentMethodType">
 					<condition-list combine="or">
                 		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
-                		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYIN"/>
                 		<condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHALLAN_PAYIN"/>
                 	</condition-list>
                  	<order-by field-name="-description"/>
@@ -1591,6 +1590,29 @@
 							<xsl-fo>
 								<html-template
 									location="component://byproducts/webapp/byproducts/reports/NewOrTerminateRtlReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="FixedDepositReportPDF">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://byproducts/webapp/byproducts/WEB-INF/actions/FixedDepositReport.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://byproducts/webapp/byproducts/reports/FixedDepositReport.fo.ftl" />
 							</xsl-fo>
 						</platform-specific>
 					</widgets>
