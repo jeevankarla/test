@@ -1,6 +1,6 @@
 function paymentFieldsOnchange(){
 	var str=jQuery("select[name='paymentMethodTypeId']").val();	
-	if(str.search(/(CASH)+/g) >= 0){
+	if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)){
 		
 		jQuery("input[name='paymentRefNum']").parent().parent().hide();
 		jQuery("input[name='effectiveDate']").parent().parent().hide();
