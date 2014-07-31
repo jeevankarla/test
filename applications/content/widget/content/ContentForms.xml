@@ -90,8 +90,8 @@ under the License.
         </actions>
         <field name="view">
         	  <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
-                <sub-hyperlink  target="img/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK" link-style="smallSubmit" target-type="content">
-                    <parameter param-name="imgId" value="${dataResourceId}"/>
+                <sub-hyperlink  target="stream/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK" link-style="smallSubmit" target-type="content">
+                    <parameter param-name="contentId" value="${contentId}"/>
                 </sub-hyperlink>                
             </display-entity>        
         </field>       
