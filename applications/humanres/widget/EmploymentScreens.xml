@@ -422,7 +422,7 @@
 		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
 		                            <decorator-section name="search-options">
 		                                <include-form name="FindBenefitsOrDeductions" location="component://humanres/widget/forms/EmploymentForms.xml"/>
-		                            </decorator-section>
+		                            </decorator-section>		                           	 
 		                            <decorator-section name="search-results">
 		                               <section>
 		                               		 <widgets>
@@ -444,18 +444,25 @@
  <screen name="newReports">
     	<section>
     		<actions>  
-    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
+	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
-    		<set field="titleProperty" value="HumanResFindEmployment"/>
-            <set field="headerItem" value="newReports"/>
-			<set field="tabButtonItem" value="newReports" />   	
-    		 <set field="screenFlag" value="newReports"/>
+	    		<set field="titleProperty" value="HumanResFindEmployment"/>
+	            <set field="headerItem" value="newReports"/>
+				<set field="tabButtonItem" value="newReports" />   	
+	    		<set field="screenFlag" value="newReports"/>	
+	    		<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
+					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
+					<order-by field-name="sequenceNum"/>
+				</entity-condition>
+				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<order-by field-name="sequenceNum"/>					
+				</entity-condition>
     		 <entity-condition entity-name="Enumeration" list="finalInsuranceTypeList" use-cache="true">
                 	<condition-list>
                     	<condition-expr field-name="enumTypeId" value="INSURANCE_TYPE"/>                    	
                     </condition-list>                    
                 </entity-condition>  	
-    		 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     		</actions>
     		<widgets>
     		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">

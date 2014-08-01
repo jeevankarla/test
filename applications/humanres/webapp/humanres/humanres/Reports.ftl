@@ -246,6 +246,56 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	   	
       	   </form>
       	   </tr>
+      	   <tr>
+	  	   		<form id="BenefitsOrDeductionsExport" name="BenefitsOrDeductionsExport" mothed="post" action="<@ofbizUrl>ExportEmployeeBenefitsOrDeductions</@ofbizUrl>" target="_blank">
+	  	   			<table class="basic-table" cellspacing="0">
+	  	   				<tr>
+	  	   					<td ><span class='h3'>BenefitsOrDeductions</span></td>
+	  	   					<td ><span class='h3'>Type</span></td>
+	  	   					<td >
+	  	   						<span class='h6'>
+	  	   							<select name="type" class='h4'>
+		 								<option value=''></option>
+										<option value='benefits'>benefits</option>
+										<option value='deductions'>deductions</option>
+									</select>
+								</span>
+							</td>
+							<td ><span class='h3'>Benefits</span></td>
+	  	   					<td >
+	  	   						<span class='h6'>
+	  	   							<select name="benefitTypeId" class='h6'>
+								 		<option value=''></option>
+									 	<#list allBenefitsTypeList as benefits>
+					  	    				<option value='${benefits.benefitTypeId}'>${benefits.benefitName?if_exists}</option>
+					  	    			</#list>	
+									</select>
+								</span>
+							</td>
+							<td ><span class='h3'>Deduction</span></td>
+	  	   					<td >
+	  	   						<span class='h6'>
+	  	   							<select name="dedTypeId" class='h6'>
+								 		<option value=''></option>
+									 	<#list allDeductionTypeList as deductions>
+					  	    				<option value='${deductions.deductionTypeId}'>${deductions.deductionName?if_exists}</option>
+					  	    			</#list>	
+									</select>
+								</span>
+							</td>
+							<td ><span class='h3'>Period</span></td>
+	  	   					<td >
+	  	   						<span class='h6'>
+	  	   							<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+						  				<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+						  			</select>
+								</span>
+							</td>
+							<td ><input type="submit" value="Download" class="buttontext"></td>
+	  	   				</tr>
+	  	   			</table>
+	  	   		</form>
+      	   </tr>
     	</table>
     </div>
 </div>

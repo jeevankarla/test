@@ -23,6 +23,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilNumber;
 import in.vasista.vbiz.humanres.PayrollService;
 import org.ofbiz.party.party.PartyHelper;
+import in.vasista.vbiz.humanres.HumanresService;
 if (parameters.customTimePeriodId == null) {
 	return;
 }
@@ -38,6 +39,20 @@ context.timePeriodStart= timePeriodStart;
 
 context.timePeriodEnd= timePeriodEnd;
 
+Map emplInputMap = FastMap.newInstance();
+emplInputMap.put("userLogin", userLogin);
+emplInputMap.put("orgPartyId", "Company");
+emplInputMap.put("fromDate", timePeriodStart);
+emplInputMap.put("thruDate", timePeriodEnd);
+Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
+employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+if(parameters.partyIdTo){
+	employementIds=UtilMisc.toList(parameters.partyIdTo);
+}else{
+	employementIds=employementIds;
+}
 //getting benefits
 benefitTypeList = delegator.findList("BenefitType", EntityCondition.makeCondition("benefitTypeId", EntityOperator.NOT_EQUAL ,"PAYROL_BEN_SALARY"), null, ["sequenceNum"], null, false);
 benefitDescMap=[:];
@@ -79,19 +94,19 @@ context.dedTypeIds=dedTypeIds;
 context.dedDescMap=dedDescMap;
 
 conditionList = [];
-if (UtilValidate.isNotEmpty(parameters.partyIdTo)) {
-	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , parameters.partyIdTo));
-}
+conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN , UtilMisc.toList("6398","7056")));
 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 List<GenericValue> partyBenefitList = delegator.findList("PartyBenefit", condition, null, ["partyIdTo"], null, false);
 
-Debug.logError("partyBenefitList="+partyBenefitList,"");
+//Debug.logError("partyBenefitList="+partyBenefitList,"");
 
 List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, ["partyIdTo"], null, false);
 
+Map headerDetailsMap=FastMap.newInstance();
+List benfitItemIdsList=FastList.newInstance();
 Map benefitTypeFinalMap=FastMap.newInstance();
 
 if(UtilValidate.isNotEmpty(partyBenefitList)){
@@ -104,6 +119,7 @@ if(UtilValidate.isNotEmpty(partyBenefitList)){
 			amount=" ";
 		}
 		headerItemTypeId=partyBenefit.benefitTypeId;
+		benfitItemIdsList.add(headerItemTypeId);
 		if(UtilValidate.isNotEmpty(amount)){
 			if(UtilValidate.isEmpty(benefitTypeFinalMap.get(employeeId))){
 				Map tempBenefitMap=FastMap.newInstance();
@@ -119,7 +135,7 @@ if(UtilValidate.isNotEmpty(partyBenefitList)){
 		
 	}
 }
-Debug.logError("benefitTypeFinalMap="+benefitTypeFinalMap,"");
+//Debug.logError("benefitTypeFinalMap="+benefitTypeFinalMap,"");
 
 JSONArray headBenefitItemsJSON = new JSONArray();
 Map totalBenefitsMap=FastMap.newInstance();
@@ -159,6 +175,7 @@ if(UtilValidate.isNotEmpty(benefitTypeFinalMap)){
 	}
 }
 Map deductionTypeValueMap=FastMap.newInstance();
+List dedItemIdsList=FastList.newInstance();
 if(UtilValidate.isNotEmpty(partyDeductionList)){
 	partyDeductionList.each{ partyDed->
 		employeeId= partyDed.partyIdTo;
@@ -169,6 +186,7 @@ if(UtilValidate.isNotEmpty(partyDeductionList)){
 			amount=" ";
 		}
 		headerItemTypeId=partyDed.deductionTypeId;
+		dedItemIdsList.add(headerItemTypeId);
 		if(UtilValidate.isNotEmpty(amount)){
 			if(UtilValidate.isEmpty(deductionTypeValueMap.get(employeeId))){
 				Map tempDedMap=FastMap.newInstance();
@@ -184,7 +202,17 @@ if(UtilValidate.isNotEmpty(partyDeductionList)){
 		
 	}
 }
-
+//this is for report purpose
+if(UtilValidate.isNotEmpty(parameters.benefitTypeId)){
+	benfitItemIdsList=UtilMisc.toList(parameters.benefitTypeId);
+}else{
+	benfitItemIdsList=benfitItemIdsList;
+}
+if(UtilValidate.isNotEmpty(parameters.dedTypeId)){
+	dedItemIdsList=UtilMisc.toList(parameters.dedTypeId);
+}else{
+	dedItemIdsList=dedItemIdsList;
+}
 JSONArray headItemsJSON = new JSONArray();
 if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 	Iterator dedIter = deductionTypeValueMap.entrySet().iterator();
@@ -216,10 +244,15 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 		headItemsJSON.add(newObj);
 	}
 }
+
 if("benefits".equals(parameters.type)){
 	context.headItemsJson=headBenefitItemsJSON;
+	context.headerDetailsMap=benefitTypeFinalMap;
+	context.headerItemIdsList=benfitItemIdsList;
 }else{
 	context.headItemsJson=headItemsJSON;
+	context.headerDetailsMap=deductionTypeValueMap;
+	context.headerItemIdsList=dedItemIdsList;
 }
 
-Debug.logError("context.headItemsJson="+context.headItemsJson,"");
+//Debug.logError("context.headItemsJson="+context.headItemsJson,"");
