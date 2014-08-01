@@ -43,12 +43,12 @@ under the License.
        						<fo:table-cell><fo:block keep-together="always" text-align="center" font-size="10pt" font-weight="bold" border-style="solid">Name</fo:block></fo:table-cell>
        						<#if parameters.type=="benefits">
 	       						<#list headerItemIdsList as headerItem>
-	       							<fo:table-cell border-style="solid"><fo:block text-align="center" keep-together="always" font-size="10pt" font-weight="bold">${headerItem?if_exists}</fo:block></fo:table-cell>
+	       							<fo:table-cell border-style="solid"><fo:block text-align="center" keep-together="always" font-size="10pt" font-weight="bold">${headerItem.replace("PAYROL_BEN_"," ")?if_exists}</fo:block></fo:table-cell>
 	       						</#list>
 	       					</#if>	
        						<#if parameters.type=="deductions">
        							<#list headerItemIdsList as headerItem>
-	       							<fo:table-cell border-style="solid"><fo:block text-align="center" keep-together="always" font-size="10pt" font-weight="bold">${headerItem?if_exists}</fo:block></fo:table-cell>
+	       							<fo:table-cell border-style="solid"><fo:block text-align="center" keep-together="always" font-size="10pt" font-weight="bold">${headerItem.replace("PAYROL_DD_"," ")?if_exists}</fo:block></fo:table-cell>
 	       						</#list>
        						</#if>
        					</fo:table-body>
@@ -67,18 +67,20 @@ under the License.
        					</#list>	
        					<fo:table-column column-width="60pt"/>
        					<fo:table-body>
-       						<fo:table-cell><fo:block keep-together="always" border-style="solid">${header.getKey()}</fo:block></fo:table-cell>
-       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, header.getKey(), false))),15)}</fo:block></fo:table-cell>
-       						<#if parameters.type=="benefits">
-	       						<#list headerItemIdsList as headerItem>
-	       							<fo:table-cell><fo:block text-align="right" keep-together="always" font-weight="bold">${header.getValue().get(headerItem)?if_exists}</fo:block></fo:table-cell>
-	       						</#list>
-	       					</#if>	
-       						<#if parameters.type=="deductions">
-       							<#list headerItemIdsList as headerItem>
-	       							<fo:table-cell border-style="solid"><fo:block text-align="center" keep-together="always" font-weight="bold">${header.getValue().get(headerItem)?if_exists}</fo:block></fo:table-cell>
-	       						</#list>
-       						</#if>
+       						<fo:table-row>
+	       						<fo:table-cell><fo:block keep-together="always" border-style="solid">${header.getKey()}</fo:block></fo:table-cell>
+	       						<fo:table-cell><fo:block keep-together="always"  text-align="left" border-style="solid" text-indent="5pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, header.getKey(), false))),15)}</fo:block></fo:table-cell>
+	       						<#if parameters.type=="benefits">
+		       						<#list headerItemIdsList as headerItem>
+		       							<fo:table-cell border-style="solid"><fo:block text-align="center" keep-together="always" font-weight="bold">${header.getValue().get(headerItem)?if_exists}</fo:block></fo:table-cell>
+		       						</#list>
+		       					</#if>	
+	       						<#if parameters.type=="deductions">
+	       							<#list headerItemIdsList as headerItem>
+		       							<fo:table-cell border-style="solid"><fo:block text-align="center" keep-together="always" font-weight="bold">${header.getValue().get(headerItem)?if_exists}</fo:block></fo:table-cell>
+		       						</#list>
+	       						</#if>
+       						</fo:table-row>	
        					</fo:table-body>
            			</fo:table>           		
            		</fo:block>
