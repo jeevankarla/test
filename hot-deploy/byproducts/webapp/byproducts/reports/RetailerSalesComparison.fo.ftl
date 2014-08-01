@@ -92,35 +92,40 @@ under the License.
                     				</fo:table-row>
                     			</fo:table-header>
                     			<fo:table-body>
+                    			<#assign crntGTot = 0>
+                               <#assign pGTot = 0>
+                                <#assign incrTot = 0>
+                                  <#assign dicrTot = 0>
+                    		<#list categorysList as category>
                     			<#assign cTot = 0>
                                <#assign pTot = 0>
                                 <#assign incr = 0>
                                   <#assign dicr = 0>
                     				<#assign sNo = 0>
-            					<#assign facilitiesDataMap = facilityCurntSaleMap.entrySet()>
-            					<#list facilitiesDataMap as facData>
-            					<#assign boothId = facData.getKey()>
+            				<#--<#assign facilitiesDataMap = facilityCurntSaleMap.entrySet()>
+            					<#list facilitiesDataMap as facData>-->
+            					<#list categoryTotalMap.get(category) as facData>
+            					<#assign boothId = facData.get("facilityId")>
             					<#assign sNo =sNo+1>
             						<#assign thisMonthAvg = 0>
             						<#assign prevMonthAvg = 0>
-            						  <#if facilityPrevSaleMap.get(facData.getKey())?has_content>
-	                    				<#assign prevMonthMap = facilityPrevSaleMap.get(facData.getKey())>
+            						  <#if facilityPrevSaleMap.get(boothId)?has_content>
+	                    				<#assign prevMonthMap = facilityPrevSaleMap.get(boothId)>
 	                    				  <#if prevMonthMap?has_content>
-	                    				<#assign prevMonthAvg = prevMonthMap.get("milkAvgTotal")>
+	                    				    <#assign prevMonthAvg = prevMonthMap.get("milkAvgTotal")>
 	                    				 </#if>
-	                    			 </#if>
-	                    				<#assign thisMonthMap = facData.getValue()>
-	                    				<#assign thisMonthAvg = thisMonthMap.get("milkAvgTotal")>
-	                    					<#assign cTot =cTot+ thisMonthAvg>
-	                    					<#assign pTot =pTot+ prevMonthAvg>
+	                    			   </#if>
+	                    			<#assign thisMonthAvg = facData.get("milkAvgTotal")>
+	                    			<#assign cTot =cTot+ thisMonthAvg>
+	                    			<#assign pTot =pTot+ prevMonthAvg>
                     				<fo:table-row>
                     				    <fo:table-cell>
                     						<fo:block font-size="8pt">${sNo}</fo:block>
                     					</fo:table-cell>
                     					<fo:table-cell>
-                    						<fo:block font-size="8pt">${facData.getKey()}</fo:block>
+                    						<fo:block font-size="8pt">${boothId?if_exists}</fo:block>
                     					</fo:table-cell>
-                    					<#assign facility = delegator.findOne("Facility", {"facilityId" : facData.getKey()}, true)>
+                    					<#assign facility = delegator.findOne("Facility", {"facilityId" : boothId}, true)>
                     					<fo:table-cell>
                     						<fo:block keep-together="always" font-size="8pt">${(Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(facility.get("facilityName"))),20))?if_exists}</fo:block>
                     					</fo:table-cell>
@@ -159,6 +164,49 @@ under the License.
 	                    				
                     				</fo:table-row>
                     			</#list>	
+                    			  <fo:table-row>
+                    					<fo:table-cell>
+                    						<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                    					</fo:table-cell>
+                    				</fo:table-row>
+                    				<fo:table-row>
+                    					<fo:table-cell>
+                    						<fo:block font-size="9pt"></fo:block>
+                    					</fo:table-cell>
+                    					<fo:table-cell>
+                    						<fo:block keep-together="always" text-align="center" font-size="8pt"></fo:block>
+                    					</fo:table-cell>
+                    					<fo:table-cell>
+                    						<fo:block keep-together="always" text-align="center" font-size="8pt"><#if category?exists>  	<#assign enumeration = delegator.findOne("Enumeration", {"enumId" : category}, true)>${enumeration.description?if_exists}<#else>ALL </#if> TOTAL</fo:block>
+                    					</fo:table-cell>
+                    					<fo:table-cell>
+	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${pTot?string("##0.00")}</fo:block>
+	                    				</fo:table-cell>
+	                    				        <#assign pGTot = pGTot+pTot>
+	                   		                 	<#assign pTot = 0>
+	                    				<fo:table-cell>
+	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${cTot?string("##0.00")}</fo:block>
+	                    						<#assign crntGTot = crntGTot+cTot>
+	                   		                 	<#assign cTot = 0>
+	                    						
+	                    				</fo:table-cell>
+	                    				<fo:table-cell>
+	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${incr?string("##0.00")}</fo:block>
+	                    				</fo:table-cell>
+	                    				         <#assign incrTot = incrTot+incr>
+	                   		                 	<#assign incr = 0>
+	                    				<fo:table-cell>
+	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${((-1)*dicr)?string("##0.00")}</fo:block>
+	                    				</fo:table-cell>
+	                    				        <#assign dicrTot = dicrTot+dicr>
+	                   		                 	<#assign dicr = 0>
+                    				  </fo:table-row>
+                    			     <fo:table-row>
+                    					<fo:table-cell>
+                    						<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+                    					</fo:table-cell>
+                    				</fo:table-row>
+                    			</#list>	
                     			<fo:table-row>
                     					<fo:table-cell>
                     						<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
@@ -173,26 +221,22 @@ under the License.
                     						<fo:block keep-together="always" text-align="center" font-size="8pt"></fo:block>
                     					</fo:table-cell>
                     					<fo:table-cell>
-                    						<fo:block keep-together="always" text-align="center" font-size="8pt">Total</fo:block>
+                    						<fo:block keep-together="always" text-align="center" font-size="8pt">GRAND TOTAL</fo:block>
                     					</fo:table-cell>
                     					<fo:table-cell>
-	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${pTot?string("##0.00")}</fo:block>
+	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${pGTot?string("##0.00")}</fo:block>
 	                    				</fo:table-cell>
-	                    				
 	                    				<fo:table-cell>
-	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${cTot?string("##0.00")}</fo:block>
+	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${crntGTot?string("##0.00")}</fo:block>
 	                    				</fo:table-cell>
-	                    				
 	                    				<fo:table-cell>
-	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${incr?string("##0.00")}</fo:block>
+	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${incrTot?string("##0.00")}</fo:block>
 	                    				</fo:table-cell>
-	                    				
 	                    				<fo:table-cell>
-	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${((-1)*dicr)?string("##0.00")}</fo:block>
+	                    						<fo:block keep-together="always" font-size="8pt" text-align="right">${((-1)*dicrTot)?string("##0.00")}</fo:block>
 	                    				</fo:table-cell>
-                    				</fo:table-row>
-                    				
-                    			<fo:table-row>
+                    				  </fo:table-row>
+                    			     <fo:table-row>
                     					<fo:table-cell>
                     						<fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                     					</fo:table-cell>
