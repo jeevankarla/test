@@ -3866,6 +3866,10 @@ public class ByProductNetworkServices {
 		if (UtilValidate.isNotEmpty(context.get("enableCRInst"))) {
 			enableCRInst = (Boolean) context.get("enableCRInst");
 		}
+		boolean excludeCreditNote = Boolean.FALSE;
+		if (UtilValidate.isNotEmpty(context.get("excludeCreditNote"))) {
+			excludeCreditNote = (Boolean) context.get("excludeCreditNote");
+		}
 		boolean orderByBankName = Boolean.FALSE;
 		if (context.get("orderByBankName") != null) {
 			orderByBankName = (Boolean) context.get("orderByBankName");
@@ -4011,6 +4015,10 @@ public class ByProductNetworkServices {
 		if (!UtilValidate.isEmpty(paymentMethodTypeId)) {
 			exprList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, paymentMethodTypeId));
 		}
+		if (excludeCreditNote) {// consider only Flag is True
+			exprList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.NOT_EQUAL, "CREDITNOTE_PAYIN"));
+		}
+		
 		if (!UtilValidate.isEmpty(paymentIds)) {
 			exprList.add(EntityCondition.makeCondition("paymentId",EntityOperator.IN, paymentIds));
 		}
