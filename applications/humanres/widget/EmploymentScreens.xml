@@ -449,7 +449,12 @@
     		<set field="titleProperty" value="HumanResFindEmployment"/>
             <set field="headerItem" value="newReports"/>
 			<set field="tabButtonItem" value="newReports" />   	
-    		 <set field="screenFlag" value="newReports"/>	
+    		 <set field="screenFlag" value="newReports"/>
+    		 <entity-condition entity-name="Enumeration" list="finalInsuranceTypeList" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="INSURANCE_TYPE"/>                    	
+                    </condition-list>                    
+                </entity-condition>  	
     		 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     		</actions>
     		<widgets>

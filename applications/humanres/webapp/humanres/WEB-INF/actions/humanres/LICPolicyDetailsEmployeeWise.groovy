@@ -14,23 +14,14 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 dctx = dispatcher.getDispatchContext();
 
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
-try {
-	if (parameters.LICfromDate) {
-		fromDateStart = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.LICfromDate).getTime()));
-	}
-	if (parameters.LICthruDate) {
-		thruDateEnd = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.LICthruDate).getTime()));
-	}
-} catch (ParseException e) {
-	Debug.logError(e, "Cannot parse date string: " + e, "");
-	context.errorMessage = "Cannot parse date string: " + e;
-	return;
-}
+
+GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
+fromDateStart=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+thruDateEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 context.put("fromDate",fromDateStart);
 context.put("thruDate",thruDateEnd);
 
-mdLicFinalMap=[:];
-dairyLicFinalMap=[:];
+LicFinalMap=[:];
 emplInputMap = [:];
 emplInputMap.put("userLogin", userLogin);
 emplInputMap.put("orgPartyId", "Company");
@@ -40,11 +31,13 @@ Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employments=EmploymentsMap.get("employementList");
 employments = UtilMisc.sortMaps(employments, UtilMisc.toList("partyId"));
 
+if(UtilValidate.isNotEmpty(employments)){
 	employments.each { employment ->
 		partyId=employment.get("partyId");
 		context.put("partyId",partyId);
 		List conditionList=[];
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+		conditionList.add(EntityCondition.makeCondition("insuranceTypeId", EntityOperator.EQUALS, (parameters.InsuranceType)));
 		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart));
 		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd));
 		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -52,39 +45,21 @@ employments = UtilMisc.sortMaps(employments, UtilMisc.toList("partyId"));
 		
 		if(UtilValidate.isNotEmpty(InsuranceDetails)){
 			InsuranceDetails.each { insurance ->
-				if((parameters.InsuranceType).equals("MD LIC")){
-					if(insurance.get("insuranceTypeId").equals("LIC_MD_INSR")){
-						mdLicDetailsMap=[:];
-						insuranceId=insurance.get("insuranceId")
-						employeeName=employment.get("firstName");
-						referenceNo=insurance.get("insuranceNumber");
-						employeeNo=insurance.get("partyId");
-						amount=insurance.get("insuredValue");
-						mdLicDetailsMap.put("employeeName",employeeName);
-						mdLicDetailsMap.put("referenceNo",referenceNo);
-						mdLicDetailsMap.put("employeeNo",employeeNo);
-						mdLicDetailsMap.put("amount",amount);
-						mdLicFinalMap.put(insuranceId,mdLicDetailsMap);
-					}
-				}
-				if((parameters.InsuranceType).equals("Mother Dairy LIC")){
-					if(insurance.get("insuranceTypeId").equals("LIC_DAIRY_INSR")){
-						Map dairyLicDetailsMap=[:];
-						insuranceId=insurance.get("insuranceId")
-						employeeName=employment.get("firstName");
-						referenceNo=insurance.get("insuranceNumber");
-						employeeNo=insurance.get("partyId");
-						amount=insurance.get("insuredValue");
-						dairyLicDetailsMap.put("employeeName",employeeName);
-						dairyLicDetailsMap.put("referenceNo",referenceNo);
-						dairyLicDetailsMap.put("employeeNo",employeeNo);
-						dairyLicDetailsMap.put("amount",amount);
-						dairyLicFinalMap.put(insuranceId,dairyLicDetailsMap);
-					}
-				}
+				LicDetailsMap=[:];
+				insuranceId=insurance.get("insuranceId")
+				employeeName=employment.get("firstName");
+				referenceNo=insurance.get("insuranceNumber");
+				employeeNo=insurance.get("partyId");
+				amount=insurance.get("insuredValue");
+				LicDetailsMap.put("employeeName",employeeName);
+				LicDetailsMap.put("referenceNo",referenceNo);
+				LicDetailsMap.put("employeeNo",employeeNo);
+				LicDetailsMap.put("amount",amount);
+				LicFinalMap.put(insuranceId,LicDetailsMap);
 			}
 		}	
 	}
-	context.put("mdLicFinalMap",mdLicFinalMap);
-	context.put("dairyLicFinalMap",dairyLicFinalMap);
+}
+
+context.put("LicFinalMap",LicFinalMap);
 	
