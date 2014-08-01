@@ -39,6 +39,18 @@ thruDate=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 context.put("dayBegin",fromDate);
 printDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "dd/MM/yyyy");
 context.printDate = printDate;
+exprList=[];
+exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
+exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
+exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, "Milk"));
+exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
+		 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, fromDate)));
+  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+	prodIdsList=EntityUtil.getFieldListFromEntityList(prodList, "productId", false);
+	
+	//Debug.log("=====prodIdsList===="+prodIdsList);
+	
 facilityList = (List)((Map)ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator,null,fromDate)).get("boothActiveList");
 shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,null);
 curntMonthDays= UtilDateTime.getIntervalInDays(fromDate,thruDate)+1;
@@ -63,10 +75,13 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 						prodTotals.each{ productValue ->
 							if(UtilValidate.isNotEmpty(productValue)){
 								currentProduct = productValue.getKey();
-								product = delegator.findOne("Product", [productId : currentProduct], false);
-								if("Milk".equals(product.primaryProductCategoryId)){
+								if(prodIdsList.contains(currentProduct)){
 									milkSaleTotal=milkSaleTotal+productValue.getValue().get("total");
 								}
+								/*product = delegator.findOne("Product", [productId : currentProduct], false);
+								if("Milk".equals(product.primaryProductCategoryId)){
+									milkSaleTotal=milkSaleTotal+productValue.getValue().get("total");
+								}*/
 							}
 						}
 						
@@ -126,10 +141,13 @@ if(UtilValidate.isNotEmpty(prvShipmentIds)){
 						prodTotals.each{ productValue ->
 							if(UtilValidate.isNotEmpty(productValue)){
 								currentProduct = productValue.getKey();
-								product = delegator.findOne("Product", [productId : currentProduct], false);
-								if("Milk".equals(product.primaryProductCategoryId)){
+								if(prodIdsList.contains(currentProduct)){
 									milkSaleTotal=milkSaleTotal+productValue.getValue().get("total");
 								}
+								/*product = delegator.findOne("Product", [productId : currentProduct], false);
+								if("Milk".equals(product.primaryProductCategoryId)){
+									milkSaleTotal=milkSaleTotal+productValue.getValue().get("total");
+								}*/
 							}
 						}
 						
