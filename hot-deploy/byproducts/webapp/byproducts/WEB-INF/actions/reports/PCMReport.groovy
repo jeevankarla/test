@@ -43,6 +43,8 @@ facilityList = (List)((Map)ByProductNetworkServices.getAllActiveOrInactiveBooths
 shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,null);
 curntMonthDays= UtilDateTime.getIntervalInDays(fromDate,thruDate)+1;
 Debug.log("curntMonthDays===="+curntMonthDays);
+categoryTotalMap = [:];
+categorysList = [];
 facilityCurntSaleMap=[:];
 facCount=1;
 if(UtilValidate.isNotEmpty(shipmentIds)){
@@ -69,27 +71,42 @@ if(UtilValidate.isNotEmpty(shipmentIds)){
 						}
 						
 						}
+					boothInnerMap["facilityId"]=facilityId;
+					boothInnerMap["categoryType"]=categoryType;
 					boothInnerMap["milkSaleTotal"]=milkSaleTotal;
 					boothInnerMap["milkAvgTotal"]=(milkSaleTotal/curntMonthDays);
-					if("SCT_RTLR"==categoryType){
 					facilityCurntSaleMap[facilityId]=boothInnerMap;
+					
+					if(categoryTotalMap.containsKey(categoryType)){
+						tempCatList = categoryTotalMap.get(categoryType);
+						tempCatList.addAll(boothInnerMap);
+						categoryTotalMap.putAt(categoryType, tempCatList);
+					}else{
+						tempList = [];
+						tempList.add(boothInnerMap);
+						categoryTotalMap.putAt(categoryType, tempList);
+						categorysList.add(categoryType);
 					}
+					
 					}
 		}
 	}
   }
 
 
-Debug.log("facilityCurntSaleMap===="+facilityCurntSaleMap);
+//Debug.log("facilityCurntSaleMap===="+facilityCurntSaleMap);
+Debug.log("categorysList===="+categorysList);
 Timestamp monthStart=UtilDateTime.getMonthStart(fromDate,TimeZone.getDefault(),Locale.getDefault());
 Timestamp pMonthStart=UtilDateTime.getMonthStart(UtilDateTime.addDaysToTimestamp(monthStart, -1),TimeZone.getDefault(),Locale.getDefault());
 Timestamp pMonthEnd=UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(pMonthStart), timeZone, locale);
-Debug.log("pMonthStart===="+pMonthStart+"===pMonthEnd=="+pMonthEnd);
+//Debug.log("pMonthStart===="+pMonthStart+"===pMonthEnd=="+pMonthEnd);
 prvShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,pMonthStart,pMonthEnd,null);
 context.put("cMonthStart",monthStart);
 context.put("pMonthStart",pMonthStart);
 prevMonthDays= UtilDateTime.getIntervalInDays(pMonthStart,pMonthEnd)+1;
 Debug.log("prevMonthDays===="+prevMonthDays);
+prevCategoryTotalMap = [:];
+prevCategorysList = [];
 facilityPrevSaleMap=[:];
 facCount=1;
 
@@ -117,18 +134,33 @@ if(UtilValidate.isNotEmpty(prvShipmentIds)){
 						}
 						
 						}
+					boothInnerMap["facilityId"]=facilityId;
+					boothInnerMap["categoryType"]=categoryType;
 					boothInnerMap["milkSaleTotal"]=milkSaleTotal;
 					boothInnerMap["milkAvgTotal"]=(milkSaleTotal/prevMonthDays);
-					if("SCT_RTLR"==categoryType){
-						facilityPrevSaleMap[facilityId]=boothInnerMap;
-					 }
+					facilityPrevSaleMap[facilityId]=boothInnerMap;
+					
+					if(prevCategoryTotalMap.containsKey(categoryType)){
+						tempCatList = categoryTotalMap.get(categoryType);
+						tempCatList.addAll(boothInnerMap);
+						prevCategoryTotalMap.putAt(categoryType, tempCatList);
+					}else{
+						tempList = [];
+						tempList.add(boothInnerMap);
+						prevCategoryTotalMap.putAt(categoryType, tempList);
+						prevCategorysList.add(categoryType);
+					}
 					}
 		}
   }
 }
-Debug.log("facilityPrevSaleMap===="+facilityPrevSaleMap);
+//Debug.log("prevCategoryTotalMap===="+prevCategoryTotalMap);
+//Debug.log("categoryTotalMap===="+categoryTotalMap);
+context.categorysList=categorysList;
+context.categoryTotalMap=categoryTotalMap;
+
 context.facilityCurntSaleMap=facilityCurntSaleMap;
 context.facilityPrevSaleMap=facilityPrevSaleMap;
+Debug.log("prevCategorysList===="+prevCategorysList);
 
-context.pMonthStart=pMonthStart;
 
