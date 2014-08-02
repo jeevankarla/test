@@ -79,9 +79,9 @@ $(document).ready(function(){
                 
                 $("#tooltip").remove();
                 var x = item.datapoint[0];
-                var y = item.datapoint[1].toFixed(2);
+                var y = item.datapoint[1];
                 showTooltip(item.pageX, item.pageY,
-                            timeConverter(x)+ "<br>" + y + " ltrs");
+                            timeConverter(x)+ "<br>" + y + " hits");
             }
         }
         else {

@@ -15,7 +15,6 @@ startTime = UtilDateTime.getDayStart(startTime);
 
 //Debug.logInfo("startTime="+startTime+"; endTime=" + endTime, "");
 JSONArray listJSON= new JSONArray();
-JSONArray listRevJSON= new JSONArray();
 
 iterTime = startTime;
 while (iterTime <= endTime) {
@@ -30,10 +29,11 @@ while (iterTime <= endTime) {
 	JSONArray dayList= new JSONArray();
 	dayList.add(iterTime.getTime());
 	dayList.add(apiHits.size());
-
+	listJSON.add(dayList);
+	
 	iterTime = UtilDateTime.addDaysToTimestamp(iterTime, 1);
 }
 
-//Debug.logInfo("listJSON="+listJSON, "");
+Debug.logInfo("listJSON="+listJSON, "");
 context.listJSON=listJSON;
 
