@@ -38,12 +38,18 @@
             </condition>
         	<link target="findVisits"/>
         </menu-item>
-        <menu-item name="apiHits" title="Mobile Hits">
+        <menu-item name="apiHits" title="Mobile Hits Trend">
             <condition>
                 <if-service-permission service-name="partyBasePermissionCheck" main-action="ADMIN"/>
             </condition>
         	<link target="apiHits"/>
-        </menu-item>        
+        </menu-item> 
+        <menu-item name="apiHitsDaily" title="Mobile Hits Daily">
+            <condition>
+                <if-service-permission service-name="partyBasePermissionCheck" main-action="ADMIN"/>
+            </condition>
+        	<link target="apiHitsDaily"/>
+        </menu-item>                 
         <menu-item name="loggedinusers" title="${uiLabelMap.PartyLoggedInUsers}">
             <condition>
                 <if-service-permission service-name="partyBasePermissionCheck" main-action="ADMIN"/>

@@ -149,5 +149,49 @@ under the License.
             </widgets>
         </section>
     </screen>    
+    
+	 <screen name="ApiHitsDaily">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Mobile Hits Daily"/>
+                <set field="headerItem" value="apiHitsDaily"/>
+				            
+				<set field="ajaxUrl" value="apiHitsDailyInternal" type="String"/>
+            </actions>            
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://party/webapp/partymgr/visit/ApiHitsDailyTable.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>            
+            </widgets>
+        </section>
+    </screen>   
+    
+	 <screen name="ApiHitsDailyInternal">
+        <section>
+            <actions>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/ApiHitsDaily.groovy"/>            
+            </actions>            
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://party/webapp/partymgr/visit/ApiHitsDailyTableInternal.ftl"/></html>
+                </platform-specific>   
+            </widgets>
+        </section>
+    </screen> 	    
 </screens>
 

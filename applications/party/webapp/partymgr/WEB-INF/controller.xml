@@ -604,6 +604,8 @@ under the License.
     <request-map uri="visitdetail"><security https="true" auth="true"/><response name="success" type="view" value="visitdetail"/></request-map>
     <request-map uri="listLoggedInUsers"><security https="true" auth="true"/><response name="success" type="view" value="listLoggedInUsers"/></request-map>
     <request-map uri="apiHits"><security https="true" auth="true"/><response name="success" type="view" value="apiHits"/></request-map>
+    <request-map uri="apiHitsDaily"><security https="true" auth="true"/><response name="success" type="view" value="apiHitsDaily"/></request-map>
+    <request-map uri="apiHitsDailyInternal"><security https="true" auth="true"/><response name="success" type="view" value="apiHitsDailyInternal"/></request-map>
     
     <request-map uri="pushPage">
         <security https="true" auth="true"/>
@@ -1328,6 +1330,8 @@ under the License.
     <view-map name="visitdetail" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#visitdetail"/>
     <view-map name="listLoggedInUsers" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#ListLoggedInUsers"/>
     <view-map name="apiHits" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#ApiHitsScreen"/>
+    <view-map name="apiHitsDaily" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#ApiHitsDaily"/>
+    <view-map name="apiHitsDailyInternal" type="screen" page="component://party/widget/partymgr/VisitScreens.xml#ApiHitsDailyInternal"/>
 
     <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
     <view-map name="LookupPartyEmail" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyEmail"/>
