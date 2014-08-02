@@ -21,19 +21,30 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.network.LmsServices;
 dctx = dispatcher.getDispatchContext();
 
-if (UtilValidate.isEmpty(parameters.newOrTerminateDate)) {
-		newOrTerminateDate = UtilDateTime.nowTimestamp();
+if (UtilValidate.isEmpty(parameters.fromDate)) {
+		fromDate = UtilDateTime.nowTimestamp();
 }
 else{
 	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 	try {
-		newOrTerminateDate = new java.sql.Timestamp(sdf.parse(parameters.newOrTerminateDate+" 00:00:00").getTime());
+		fromDate = new java.sql.Timestamp(sdf.parse(parameters.fromDate+" 00:00:00").getTime());
 	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + parameters.newOrTerminateDate, "");
+		Debug.logError(e, "Cannot parse date string: " + parameters.fromDate, "");
 	}
 }
-openedDate = UtilDateTime.getDayStart(newOrTerminateDate);
-closeDate = UtilDateTime.getDayEnd(newOrTerminateDate);
+if (UtilValidate.isEmpty(parameters.thruDate)) {
+	thruDate = UtilDateTime.nowTimestamp();
+}
+else{
+def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+try {
+	thruDate = new java.sql.Timestamp(sdf.parse(parameters.thruDate+" 00:00:00").getTime());
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: " + parameters.thruDate, "");
+}
+}
+openedDate = UtilDateTime.getDayStart(fromDate);
+closeDate = UtilDateTime.getDayEnd(thruDate);
 context.newOrTerminateDate = openedDate;
 printDate = UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "dd/MM/yyyy");
 context.printDate = printDate;

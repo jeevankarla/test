@@ -114,7 +114,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("cacdFromDateId","cacdThruDateId");
 		makeDatePicker("subGheeFromDateId","subGheeThruDateId");
 		makeDatePicker("crInstFromDateId","crInstThruDateId");
-		makeDatePicker("newOrTerminateDate","");
+		makeDatePicker("fixedDepositDate","");
+		makeDatePicker("newOrTerminatefDate","newOrTerminatetDate");
 		
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -565,11 +566,9 @@ function makeDatePicker1(fromDateId ,thruDateId){
          </#if>
          <tr class="alternate-row">
 			<form id="newOrTerminateRtlReport" name="newOrTerminateRtlReport" method="post" action="<@ofbizUrl>newOrTerminateRtlReport.pdf</@ofbizUrl>" target="_blank">	
-				<td width="30%">New Or Terminated Retailers</td>
-				<td width="15%">Date<input  type="text" size="18pt" id="newOrTerminateDate" readonly  name="newOrTerminateDate"/></td>
-      			<td width="15%">
-      			    <input  type="hidden"  name="routeId" value="All"/>
-      			</td>
+				<td width="30%">New Retailers Report</td>
+				<td width="15%">From<input  type="text" size="18pt" id="newOrTerminatefDate" readonly  name="fromDate"/></td>
+			    <td width="15%">To<input  type="text" size="18pt" id="newOrTerminatetDate" readonly  name="thruDate"/></td>
       			<td width="15%"></td>
       			<td width="15%"></td>
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
