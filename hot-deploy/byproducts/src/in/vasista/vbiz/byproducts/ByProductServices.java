@@ -2021,7 +2021,8 @@ public class ByProductServices {
 	    GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    String facilityId = (String) context.get("facilityId");
 	    String productId = (String) context.get("productId"); 
-	    String partyId = (String) context.get("partyId");            
+	    String partyId = (String) context.get("partyId");
+	    String geoTax = (String) context.get("geoTax");
 	    String productStoreId = (String) context.get("productStoreId");
 	    String shipmentTypeId = (String) context.get("shipmentTypeId");
 	    String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
@@ -2088,27 +2089,25 @@ public class ByProductServices {
         	}else {
         		rateTypeId = facilityCategory + "_MRGN";
         	}
-        		inputRateAmt.put("rateCurrencyUomId", currencyDefaultUomId);  
-        		inputRateAmt.put("rateTypeId", rateTypeId);
-        		inputRateAmt.put("periodTypeId", "RATE_HOUR");
-        		inputRateAmt.put("fromDate", priceDate);
-        		inputRateAmt.put("productId", productId);
-        		Map<String, Object> serviceResults = dispatcher.runSync("getPartyDiscountAmount", inputRateAmt);
-        		
-        		if (ServiceUtil.isError(serviceResults)) {
-        			Debug.logError( "Unable to determine discount for [" + partyId +"]========="+facilityCategory, module);
-        			//return ServiceUtil.returnError("Unable to determine discount for " + facilityCategory, null, null, serviceResults);
-        		}else if(UtilValidate.isNotEmpty(serviceResults.get("rateAmount"))){
-        				discountAmount = (BigDecimal)serviceResults.get("rateAmount");
-        				rateAmountEntry = (GenericValue) serviceResults.get("rateAmountEntry");
-        				if(UtilValidate.isNotEmpty(rateAmountEntry)){
-        					priceActionTypeId = rateAmountEntry.getString("priceActionTypeId");
-        				}
-        				
-        			      			
-        		}
-	        		//PRICE_FLAT
-	        		Debug.logInfo( "PartyId ==========["+partyId+"]=========discountAmount   :"+discountAmount, module);
+    		inputRateAmt.put("rateCurrencyUomId", currencyDefaultUomId);  
+    		inputRateAmt.put("rateTypeId", rateTypeId);
+    		inputRateAmt.put("periodTypeId", "RATE_HOUR");
+    		inputRateAmt.put("fromDate", priceDate);
+    		inputRateAmt.put("productId", productId);
+    		Map<String, Object> serviceResults = dispatcher.runSync("getPartyDiscountAmount", inputRateAmt);
+    		
+    		if (ServiceUtil.isError(serviceResults)) {
+    			Debug.logError( "Unable to determine discount for [" + partyId +"]========="+facilityCategory, module);
+    			//return ServiceUtil.returnError("Unable to determine discount for " + facilityCategory, null, null, serviceResults);
+    		}else if(UtilValidate.isNotEmpty(serviceResults.get("rateAmount"))){
+				discountAmount = (BigDecimal)serviceResults.get("rateAmount");
+				rateAmountEntry = (GenericValue) serviceResults.get("rateAmountEntry");
+				if(UtilValidate.isNotEmpty(rateAmountEntry)){
+					priceActionTypeId = rateAmountEntry.getString("priceActionTypeId");
+				}
+    		}
+	        //PRICE_FLAT
+	        Debug.logInfo( "PartyId ==========["+partyId+"]=========discountAmount   :"+discountAmount, module);
 	        		// since the discounts are per litre, adjust proportionally
 	        		//discountAmount = discountAmount.multiply(quantityIncluded);
 	        	/*
@@ -2159,29 +2158,35 @@ public class ByProductServices {
 		    
 		    List<GenericValue> applicableTaxTypes = null;
 			try {
-		    	applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
+				applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
 			} catch (GenericEntityException e) {
 				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 			}
 			List applicableTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
-			
 			List<GenericValue> prodPriceType = null;
 		    
 		    conditionList.clear();
 		    conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
-			conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, productPriceTypeId+"%"));
-			conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, applicableTaxTypeList));
+		    /*conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, productPriceTypeId+"%"));*/
+			if(UtilValidate.isNotEmpty(geoTax)){
+				if(geoTax.equals("VAT")){
+					applicableTaxTypeList.remove("CST_SALE");
+				}
+				else{
+					applicableTaxTypeList.remove("VAT_SALE");
+				}
+			}
+			conditionList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.IN, applicableTaxTypeList));
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 	    			 EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, priceDate)));
 			
 			EntityCondition priceCondition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		    
 		    try {
 		    	prodPriceType = delegator.findList("ProductPriceAndType", priceCondition, null, null, null, true);
 			} catch (GenericEntityException e) {
-				Debug.logError(e, "Failed to retrive InventoryItem ", module);
-				return ServiceUtil.returnError("Failed to retrive InventoryItem " + e);
+				Debug.logError(e, "Failed to retrive ProductPriceAndType ", module);
+				return ServiceUtil.returnError("Failed to retrive ProductPriceAndType " + e);
 			}
 			
 		
@@ -2231,13 +2236,12 @@ public class ByProductServices {
 			
 	    
 	    // lets look for party specific discount rates if any and adjust the discount
-			  BigDecimal basicPrice = BigDecimal.ZERO;
-			 if(UtilValidate.isNotEmpty(priceActionTypeId) && priceActionTypeId.equals("PRICE_FLAT")){
-				  basicPrice = discountAmount;
-        			
-        		}else{
-        			basicPrice = resultPrice.getBigDecimal("price").subtract(discountAmount);
-        		}
+			BigDecimal basicPrice = BigDecimal.ZERO;
+			if(UtilValidate.isNotEmpty(priceActionTypeId) && priceActionTypeId.equals("PRICE_FLAT")){
+				basicPrice = discountAmount;
+       		}else{
+       			basicPrice = resultPrice.getBigDecimal("price").subtract(discountAmount);
+       		}
         
        // basicPrice = basicPrice.setScale( decimals,rounding);
 		List<GenericValue> taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, prodPriceType);
@@ -2265,7 +2269,7 @@ public class ByProductServices {
 				}
 			}
 			
-			if(!taxType.equals("VAT_SALE")){
+			if(!taxType.equals("VAT_SALE") && !taxType.equals("CST_SALE")){
 				totalExciseDuty = totalExciseDuty.add(amount);
 			}
 			
@@ -2292,7 +2296,7 @@ public class ByProductServices {
 	    result.put("totalPrice", totalPrice);
 	    result.put("taxList", taxDetailList);
 	    return result;
-}
+    }
 	
 	public static Map<String, Object> getPartyDiscountAmount(DispatchContext dctx, Map context) {
 		
@@ -2440,6 +2444,45 @@ public class ByProductServices {
 		result = ServiceUtil.returnSuccess("Successfully cancelled returned items with Id:"+returnId);
 		return result;
 	}
+	
+	public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map context) {
+		
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+		String orderId = (String) context.get("orderId");
+        boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+        result.put("salesChannelEnumId", salesChannelEnumId);
+        return result;
+	}
+	
+	public static Map<String, Object> cancelICPOrder(DispatchContext dctx, Map context) {
+		
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String orderId = (String) context.get("orderId");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+		try{
+			if(UtilValidate.isNotEmpty(orderId)){
+				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
+			 		return ServiceUtil.returnError("Problem cancelling orders in Correction");
+				} 
+			}
+			  			
+		}catch (GenericServiceException e) {
+			  Debug.logError(e, e.toString(), module);
+			  return ServiceUtil.returnError("Problem cancelling order");
+		}
+		result.put("salesChannelEnumId", salesChannelEnumId);
+		return result;
+	}
+	
 	
 	public static String makeTransporterPayment(HttpServletRequest request, HttpServletResponse response) {
 	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");

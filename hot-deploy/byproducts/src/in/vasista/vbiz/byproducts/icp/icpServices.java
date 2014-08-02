@@ -4,10 +4,13 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
@@ -24,8 +27,11 @@ import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -33,6 +39,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -88,76 +95,52 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 	    Locale locale = (Locale) context.get("locale");
 	    String productStoreId = (String) context.get("productStoreId");
 	  	String salesChannel = (String) context.get("salesChannel");
-	  	String vehicleId = (String) context.get("vehicleId");
+	  	String orderTaxType = (String) context.get("orderTaxType");
 	  	String partyId = (String) context.get("partyId");
 	  	String currencyUomId = "INR";
-	  	String shipmentId = (String) context.get("shipmentId");
-	  	String shipmentTypeId = (String) context.get("shipmentTypeId");
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
 		Timestamp effectiveDate = UtilDateTime.getDayStart(supplyDate);
 		String orderId = "";
 		boolean batchNumExists = Boolean.FALSE;
-		if(UtilValidate.isEmpty(shipmentId)){
-		    
-			GenericValue newDirShip = delegator.makeValue("Shipment");        	 
-			newDirShip.set("estimatedShipDate", effectiveDate);
-			newDirShip.set("shipmentTypeId", shipmentTypeId);
-			newDirShip.set("statusId", "GENERATED");
-			newDirShip.set("vehicleId", vehicleId);
-			newDirShip.set("createdDate", nowTimeStamp);
-			newDirShip.set("createdByUserLogin", userLogin.get("userLoginId"));
-			newDirShip.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-			try {
-				delegator.createSetNextSeqId(newDirShip);            
-				shipmentId = (String) newDirShip.get("shipmentId");
-			} catch (GenericEntityException e) {
-				Debug.logError("Error in creating shipmentId for DirectOrder", module);
-				return ServiceUtil.returnError("Error in creating shipmentId for DirectOrder");
-			}  
-		}
 		if (UtilValidate.isEmpty(partyId)) {
 			Debug.logError("Cannot create order without partyId: "+ partyId, module);
 			return ServiceUtil.returnError("partyId is empty");
 		}
 		GenericValue product =null;
 		String productPriceTypeId = null;
-		GenericValue shipment = null;
-		try{
-			shipment=delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), false);
-			
-		}catch(GenericEntityException e){
-			Debug.logError("Error in fetching shipment : "+ shipmentId, module);
-			return ServiceUtil.returnError("Error in fetching shipment : "+shipmentId);
+		String geoTax = "";
+		if(UtilValidate.isNotEmpty(orderTaxType)){
+			if(orderTaxType.equals("INTER")){
+				geoTax = "CST";
+			}else{
+				geoTax = "VAT";
+			}
 		}
+		
 		ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale,currencyUomId);
 		
 		try {
 			cart.setOrderType("SALES_ORDER");
-	        cart.setIsEnableAcctg("N");
+	        cart.setIsEnableAcctg("Y");
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
 			cart.setBillToCustomerPartyId(partyId);
 			cart.setPlacingCustomerPartyId(partyId);
 			cart.setShipToCustomerPartyId(partyId);
 			cart.setEndUserCustomerPartyId(partyId);
-			cart.setShipmentId(shipmentId);
+			//cart.setShipmentId(shipmentId);
 			cart.setEstimatedDeliveryDate(effectiveDate);
 			cart.setOrderDate(effectiveDate);
 			cart.setUserLogin(userLogin, dispatcher);
 		} catch (Exception e) {
-			shipment.set("statusId", "GENERATION_FAIL");
-			try{
-				shipment.store();
-			}catch(GenericEntityException e1){
-				Debug.logError(e1, module);
-				return ServiceUtil.returnError("Error in storing shipment status");
-			}
 			Debug.logError(e, "Error in setting cart parameters", module);
 			return ServiceUtil.returnError("Error in setting cart parameters");
 		}
+		
 		String productId = "";
 		BigDecimal quantity = BigDecimal.ZERO;
 		String batchNo = "";
+		List productList = FastList.newInstance();
 		for (Map<String, Object> prodQtyMap : productQtyList) {
 			
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
@@ -170,6 +153,7 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 				batchNo = (String)prodQtyMap.get("batchNo");
 				batchNumExists = true;
 			}
+			productList.add(productId);
 			Map<String, Object> priceResult;
 			Map<String, Object> priceContext = FastMap.newInstance();
 			priceContext.put("userLogin", userLogin);
@@ -177,6 +161,7 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 			priceContext.put("productId", productId);
 			priceContext.put("partyId", partyId);
 			priceContext.put("priceDate", effectiveDate);
+			priceContext.put("geoTax", geoTax);
 			priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);
 			if (ServiceUtil.isError(priceResult)) {
 					Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
@@ -212,20 +197,32 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 			Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
 		}
-	
-		List applicableTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
-
-		List<GenericValue> prodPriceType = null;
-		List condList = FastList.newInstance();
-		condList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.LIKE, productPriceTypeId+"%"));
-		condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, applicableTaxTypeList));
-		EntityCondition condition2 = EntityCondition.makeCondition(condList,EntityOperator.AND);
-		try {
-			prodPriceType = delegator.findList("ProductPriceAndType", condition2, null, null, null, false);
-		} catch (GenericEntityException e) {
-			Debug.logError(e, "Failed to retrive ProductPriceAndType ", module);
-			return ServiceUtil.returnError("Failed to retrive ProductPriceAndType " + e);
+		
+	  	List applTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
+	  	if(UtilValidate.isNotEmpty(geoTax)){
+			if(geoTax.equals("VAT")){
+				applTaxTypeList.remove("CST_SALE");
+			}
+			else{
+				applTaxTypeList.remove("VAT_SALE");
+			}
 		}
+	  	
+		List<GenericValue> prodPriceType = null;
+		
+	  	List condsList = FastList.newInstance();
+	  	condsList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productList));
+	  	condsList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.IN, applTaxTypeList));
+	  	condsList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "TAX"));
+		EntityCondition priceCond = EntityCondition.makeCondition(condsList,EntityOperator.AND);
+		
+		try {
+			prodPriceType = delegator.findList("ProductPriceAndType", priceCond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+			return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+		}
+		
 		prodPriceType = EntityUtil.filterByDate(prodPriceType, effectiveDate);
 		try {
 			checkout.calcAndAddTax(prodPriceType);
@@ -236,8 +233,17 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 		Map<String, Object> orderCreateResult = checkout.createOrder(userLogin);
 		orderId = (String) orderCreateResult.get("orderId");
 		
+		
 		if(UtilValidate.isNotEmpty(orderId) && batchNumExists){
 			try{
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				if(geoTax.equals("CST")){
+					orderHeader.set("isInterState", "N");
+				}else{
+					orderHeader.set("isInterState", "Y");
+				}
+				orderHeader.store();
+				
 				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderId", "productId", "quantity", "orderItemSeqId"), null, null, false);
 				for(GenericValue orderItem : orderItems){
 					if(UtilValidate.isNotEmpty(productQtyList)){
@@ -257,66 +263,168 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 			}
 			
 		}
-		// let's handle order rounding here
-        // approve the order
-        if (UtilValidate.isNotEmpty(orderId)) {
-            boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-           	try{
-           		result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", orderId,"eventDate", effectiveDate,"userLogin", userLogin));
-            	if (ServiceUtil.isError(result)) {
-            		Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
-                	return ServiceUtil.returnError("There was an error while creating the invoice: " + ServiceUtil.getErrorMessage(result));          	            
-                }
-            	Boolean enableAdvancePaymentApp  = Boolean.FALSE;
-            	try{        	 	
-            		GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableAdvancePaymentApp"), true);
-               		if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
-               			enableAdvancePaymentApp = Boolean.TRUE;
-               		} 
-       	        }catch (GenericEntityException e) {
-       	        	Debug.logError(e, module);
-       			}
-          		if(context.get("enableAdvancePaymentApp") != null){
-          			enableAdvancePaymentApp = (Boolean)context.get("enableAdvancePaymentApp");
-           		}
-       	      	if(enableAdvancePaymentApp){
-       	      		Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", result.get("invoiceId"));
-    	            invoiceCtx.put("userLogin", userLogin);
-    	            invoiceCtx.put("statusId","INVOICE_READY");
-    	            try{
-    	            	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
-    	             	if (ServiceUtil.isError(invoiceResult)) {
-    	             		Debug.logError(invoiceResult.toString(), module);
-    	                    return ServiceUtil.returnError(null, null, null, invoiceResult);
-    	                }	             	
-    	            }catch(GenericServiceException e){
-    	             	 Debug.logError(e, e.toString(), module);
-    	                 return ServiceUtil.returnError(e.toString());
-    	            }  
-    	            // apply invoice if any adavance payments from this  party
-	     			Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", (String)result.get("invoiceId"),"userLogin", userLogin));
-	     			if (ServiceUtil.isError(resultPaymentApp)) {						  
-	     				Debug.logError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp), module);			             
-	     	            return ServiceUtil.returnError("There was an error while  adjusting advance payment" + ServiceUtil.getErrorMessage(resultPaymentApp));  
-	     		    }
-        		}//end of advance payment appl   
-            }catch (Exception e) {
-            	Debug.logError(e, module);
-                try{
-                	shipment.set("statusId", "GENERATION_FAIL");
-             		shipment.store();
-                }catch (Exception ex) {
-                	Debug.logError(e, module);        
-                	return ServiceUtil.returnError(e.toString());
-       			}
-                return ServiceUtil.returnError(e.toString()); 
-            }
-        }
+		
 		result.put("orderId", orderId);
 		return result;
     }
+	
+	public static String createShipmentAndInvoiceForOrders(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		String shipDateStr = (String) request.getParameter("shipDate");
+		String vehicleId = (String) request.getParameter("vehicleId");
+		String modeOfDespatch = (String) request.getParameter("modeOfDespatch");
+		String salesChannelEnumId = (String) request.getParameter("salesChannelEnumId");
+		String shipmentTypeId = (String) request.getParameter("shipmentTypeId");
+		Map resultMap = FastMap.newInstance();
+		String partyIdFrom = "";
+		String shipmentId = "";
+		Map processOrderContext = FastMap.newInstance();
+		boolean beganTransaction = false;
+		Timestamp effectiveDate=null;
+		BigDecimal quantity = BigDecimal.ZERO;
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		if (UtilValidate.isNotEmpty(shipDateStr)) { //2011-12-25 18:09:45
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");             
+			try {
+				effectiveDate = new java.sql.Timestamp(sdf.parse(shipDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + shipDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + shipDateStr, module);
+			}
+		}
+		else{
+			effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+		
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "success";
+		}
+		try{
+			
+			beganTransaction = TransactionUtil.begin(7200);
+			if(UtilValidate.isEmpty(shipmentId)){
+			    
+				GenericValue newDirShip = delegator.makeValue("Shipment");        	 
+				newDirShip.set("estimatedShipDate", effectiveDate);
+				newDirShip.set("shipmentTypeId", shipmentTypeId);
+				newDirShip.set("statusId", "GENERATED");
+				newDirShip.set("vehicleId", vehicleId);
+				newDirShip.set("modeOfDespatch", modeOfDespatch);
+				newDirShip.set("createdDate", UtilDateTime.nowTimestamp());
+				newDirShip.set("createdByUserLogin", userLogin.get("userLoginId"));
+				newDirShip.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+				delegator.createSetNextSeqId(newDirShip);            
+				shipmentId = (String) newDirShip.get("shipmentId");
+			}
+			
+			List<String> orderIdsList = FastList.newInstance();
+			String orderId = "";
+			for (int i = 0; i < rowCount; i++) {
+				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				if (paramMap.containsKey("orderId" + thisSuffix)) {
+					orderId = (String) paramMap.get("orderId" + thisSuffix);
+					orderIdsList.add(orderId);
+				}
+			}//end row count for loop
+		  
+			if( UtilValidate.isEmpty(orderIdsList)){
+				Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
+				request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
+				TransactionUtil.rollback();
+				return "error";
+			}
+			
+			Boolean enableAdvancePaymentApp  = Boolean.FALSE;
+    		GenericValue tenantConfigEnableAdvancePaymentApp = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableAdvancePaymentApp"), true);
+       		if (UtilValidate.isNotEmpty(tenantConfigEnableAdvancePaymentApp) && (tenantConfigEnableAdvancePaymentApp.getString("propertyValue")).equals("Y")) {
+       			enableAdvancePaymentApp = Boolean.TRUE;
+       		}
+       		
+       		for(String eachOrderId : orderIdsList){
 
-
+       			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachOrderId), false);
+    			orderHeader.set("shipmentId", shipmentId);
+    			orderHeader.store();
+    			
+    			
+    			String invoiceId = "";
+    			result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", eachOrderId,"eventDate", effectiveDate,"userLogin", userLogin));
+    	        if (ServiceUtil.isError(result)) {
+    	        	Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
+    	        	request.setAttribute("_ERROR_MESSAGE_", "There was an error while creating the invoice for order: "+eachOrderId);
+    	        	TransactionUtil.rollback();
+    	        	return "error";
+    	        }
+    	        
+    	        invoiceId = (String) result.get("invoiceId");
+    	        
+    	        Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+		        invoiceCtx.put("userLogin", userLogin);
+		        invoiceCtx.put("statusId","INVOICE_READY");
+		            
+		        Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+		        if (ServiceUtil.isError(invoiceResult)) {
+		           	Debug.logError(invoiceResult.toString(), module);
+			       	request.setAttribute("_ERROR_MESSAGE_", "There was an error setting invoice status");
+			       	TransactionUtil.rollback();
+			       	return "error";
+		        }
+    	        if(enableAdvancePaymentApp){
+    		            // apply invoice if any adavance payments from this  party
+    	     		Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", invoiceId,"userLogin", userLogin));
+    	     		if (ServiceUtil.isError(resultPaymentApp)) {						  
+    	     			Debug.logError(resultPaymentApp.toString(), module);
+    			        request.setAttribute("_ERROR_MESSAGE_", "There was an error in service settleInvoiceAndPayments");
+    			        TransactionUtil.rollback();
+    			        return "error";
+    	     		}
+    	    	}
+    		}
+			
+		}catch(GenericEntityException e){
+			//Debug.logWarning("Error associating order to shipment ", module);
+			//request.setAttribute("_ERROR_MESSAGE_", "Error associating order to shipment ");
+			try {
+				// only rollback the transaction if we started one...
+	  			TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  		} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+	  		Debug.logError("An entity engine error occurred while fetching data", module);
+			return "error";
+		}
+		catch(GenericServiceException e){
+			//Debug.logWarning("Error creating invoice for the order "+eachOrderId, module);
+			//request.setAttribute("_ERROR_MESSAGE_", "Error creating invoice for the order "+eachOrderId);
+			try {
+				// only rollback the transaction if we started one...
+	  			TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+			} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+			return "error";
+		}
+		finally {
+	  		  // only commit the transaction if we started one... this will throw an exception if it fails
+	  		  try {
+	  			  TransactionUtil.commit(beganTransaction);
+	  		  } catch (GenericEntityException e) {
+	  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		  }
+	  	}
+		request.setAttribute("_EVENT_MESSAGE_", "Successfully processed shipment ");	  	 
+		return "success";
+	}
+	
 	public static String processIcpSale(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -325,21 +433,17 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 		String partyId = (String) request.getParameter("partyId");
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
-		String vehicleId = (String) request.getParameter("vehicleId");
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
+		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
-		String shipmentTypeId = (String) request.getParameter("shipmentTypeId");
 		String subscriptionTypeId = "AM";
 		String partyIdFrom = "";
 		String shipmentId = "";
 		Map processOrderContext = FastMap.newInstance();
 		String salesChannel = (String)request.getParameter("salesChannel");
-	   
-		if(UtilValidate.isNotEmpty(shipmentTypeId) && shipmentTypeId.equals("RM_DIRECT_SHIPMENT") && UtilValidate.isEmpty(salesChannel)){
-			salesChannel = "RM_DIRECT_CHANNEL";      	
-		}
-		if(UtilValidate.isNotEmpty(shipmentTypeId) && shipmentTypeId.equals("ICP_DIRECT_SHIPMENT") && UtilValidate.isEmpty(salesChannel)){
-			salesChannel = "ICP_NANDINI_CHANNEL";      	
+		
+		if(UtilValidate.isEmpty(productSubscriptionTypeId)){
+			productSubscriptionTypeId = "CASH";      	
 		}
 	  
 		String productId = null;
@@ -447,11 +551,9 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);
-		processOrderContext.put("vehicleId", vehicleId);
+		processOrderContext.put("orderTaxType", orderTaxType);
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
-		processOrderContext.put("shipmentTypeId", shipmentTypeId);
 		processOrderContext.put("productStoreId", productStoreId);
-
 		result = processICPSaleOrder(dctx, processOrderContext);
 		if(ServiceUtil.isError(result)){
 			Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
@@ -462,5 +564,53 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId);	  	 
 		return "success";
 	}
-    
+	
+	public static Map<String, Object> cancelICPShipment(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher = dctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    Locale locale = (Locale) context.get("locale");
+	    String shipmentId = (String) context.get("shipmentId");
+		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
+		List<String> orderIds = FastList.newInstance();
+		List<String> invoiceIds = FastList.newInstance();
+		try{
+			
+			List<GenericValue> orderHeaders = delegator.findList("OrderHeader", EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId), null, null, null, false);
+			orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
+			
+			for(GenericValue orderHeader : orderHeaders){
+				orderHeader.set("shipmentId", null);
+				orderHeader.store();
+			}
+			
+       		List<GenericValue> partyInvoiceList = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds), UtilMisc.toSet("invoiceId") , null, null, false);   
+       		invoiceIds = EntityUtil.getFieldListFromEntityList(partyInvoiceList, "invoiceId", true);    		
+
+			result = dispatcher.runSync("massChangeInvoiceStatus", UtilMisc.toMap("invoiceIds", invoiceIds, "statusId","INVOICE_CANCELLED","userLogin", userLogin));
+   		 
+   		 	if (ServiceUtil.isError(result)) {
+   		 		Debug.logError("There was an error while Cancel  the invoices: " + ServiceUtil.getErrorMessage(result), module);	               
+	            return ServiceUtil.returnError("There was an error while Cancel  the invoices: ");   			 
+   		 	}
+   		 	
+   		 	GenericValue shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+   		 	
+   		 	shipment.set("statusId", "SHIPMENT_CANCELLED");
+   		 	shipment.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+   		 	shipment.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+     		shipment.store();
+			
+		}catch(GenericEntityException e){
+			Debug.logError("Error in fetching shipment : "+ shipmentId, module);
+			return ServiceUtil.returnError("Error in fetching shipment : "+shipmentId);
+		}
+		catch(GenericServiceException e){
+			Debug.logError("Error cancelling invoices adn shipment : "+ shipmentId, module);
+			return ServiceUtil.returnError("Error cancelling invoices adn shipment : "+shipmentId);
+		}
+		return result;
+    }
+	
 }

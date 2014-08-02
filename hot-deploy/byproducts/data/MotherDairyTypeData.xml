@@ -38,5 +38,8 @@
     <PartyIdentificationType partyIdentificationTypeId="REGISTRATION_NUMBER" description="Registration Number"/>
     <PartyIdentificationType partyIdentificationTypeId="SERVICETAX_NUMBER" description="Service Tax Number"/>
     <PartyIdentificationType partyIdentificationTypeId="TIN_NUMBER" description="TIN Number"/>
-
+	
+	<ShipmentType description="ICP Nandini Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_NANDINI_SHIPMENT"/>
+	<ShipmentType description="ICP Amul Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_AMUL_SHIPMENT"/>
+	  <Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 </entity-engine-xml>

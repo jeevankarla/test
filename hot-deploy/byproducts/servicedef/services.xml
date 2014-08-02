@@ -45,6 +45,24 @@
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="false"/>
     </service>
     
+    <service name="cancelICPShipment" engine="java" 
+        location="in.vasista.vbiz.byproducts.icp.icpServices" invoke="cancelICPShipment">
+        <description>Shift employee subsidy to temp route</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="approveICPOrder" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="approveICPOrder">
+        <description>Approve ICP Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    <service name="cancelICPOrder" engine="java" 
+        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelICPOrder">
+        <description>Cancel ICP Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    
     <service name="getRoutesByAMPM" engine="java"
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="getRoutesByAMPM">
         <description>
@@ -111,6 +129,7 @@
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="geoTax" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="priceDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="productPriceTypeId" type="String" mode="IN" optional="true"/>
