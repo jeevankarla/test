@@ -44,7 +44,7 @@ exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL
 exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
 exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, "Milk"));
 exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
-		 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, fromDate)));
+  EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, fromDate)));
   EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
 	prodIdsList=EntityUtil.getFieldListFromEntityList(prodList, "productId", false);
@@ -60,7 +60,7 @@ categorysList = [];
 facilityCurntSaleMap=[:];
 facCount=1;
 if(UtilValidate.isNotEmpty(shipmentIds)){
-	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:fromDate, thruDate:thruDate,includeReturnOrders:true]);
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:fromDate, thruDate:thruDate,includeReturnOrders:true,isByParty:true]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		boothTotalsMap=dayTotals.get("boothTotals");
 		if(UtilValidate.isNotEmpty(boothTotalsMap)){
@@ -126,7 +126,7 @@ facilityPrevSaleMap=[:];
 facCount=1;
 
 if(UtilValidate.isNotEmpty(prvShipmentIds)){
-	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:prvShipmentIds, fromDate:pMonthStart, thruDate:pMonthEnd,includeReturnOrders:true]);
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:prvShipmentIds, fromDate:pMonthStart, thruDate:pMonthEnd,includeReturnOrders:true,isByParty:true]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		boothTotalsMap=dayTotals.get("boothTotals");
 		if(UtilValidate.isNotEmpty(boothTotalsMap)){
@@ -159,7 +159,7 @@ if(UtilValidate.isNotEmpty(prvShipmentIds)){
 					facilityPrevSaleMap[facilityId]=boothInnerMap;
 					
 					if(prevCategoryTotalMap.containsKey(categoryType)){
-						tempCatList = categoryTotalMap.get(categoryType);
+						tempCatList = prevCategoryTotalMap.get(categoryType);
 						tempCatList.addAll(boothInnerMap);
 						prevCategoryTotalMap.putAt(categoryType, tempCatList);
 					}else{
