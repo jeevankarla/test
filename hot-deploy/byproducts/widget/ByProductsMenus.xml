@@ -744,6 +744,17 @@
          <menu-item name="IcpSalesTab" title="Nandini Icp Sales">
         	<link target="IcpSales"/>
         </menu-item>
+        <menu-item name="ProcessNandiniOrders" title="Process Orders">
+        	<link target="processNandiniOrders">
+        		<parameter param-name="salesChannelEnumId" value="ICP_NANDINI_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindICPNandiniShipment" title="Find Shipments">
+        	<link target="FindICPNandiniShipment">
+        		<parameter param-name="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/>
+        	</link>
+        </menu-item>
          <menu-item name="FindIcpSalesOrder" title="Find Nandini Icp Orders">
         	<link target="FindIcpSalesOrder"></link>
         </menu-item>
@@ -751,6 +762,17 @@
       <menu name="IcpAmulSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
          <menu-item name="IcpSalesAmul" title="Amul Icp Sales">
         	<link target="IcpSalesAmul"/>
+        </menu-item>
+        <menu-item name="ProcessAmulOrders" title="Process Orders">
+        	<link target="processAmulOrders">
+        		<parameter param-name="salesChannelEnumId" value="ICP_AMUL_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindICPAmulShipment" title="Find Shipments">
+        	<link target="FindICPAmulShipment">
+        		<parameter param-name="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/>
+        	</link>
         </menu-item>
          <menu-item name="FindIcpAmulOrder" title="Find Amul Icp Orders">
         	<link target="FindIcpAmulOrder"></link>

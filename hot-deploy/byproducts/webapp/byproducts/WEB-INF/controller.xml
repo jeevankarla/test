@@ -45,7 +45,18 @@
         <response name="success" type="request" value="FindInstitutionPayment"/>
         <response name="error" type="request" value="FindInstitutionPayment"/>
     </request-map>
-    
+    <request-map uri="cancelICPNandiniShipment">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindICPNandiniShipment"/>
+        <response name="error" type="request" value="FindICPNandiniShipment"/>
+    </request-map>
+    <request-map uri="cancelICPAmulShipment">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindICPAmulShipment"/>
+        <response name="error" type="request" value="FindICPAmulShipment"/>
+    </request-map>
     <request-map uri="ViewFacilityGeoPoint">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewFacilityGeoPoint"/>
@@ -627,7 +638,63 @@
         <response name="success" type="view" value="IcpSalesAmul"/>   
        <response name="failed" type="view" value="IcpSalesAmul"/>  
     </request-map>
-      <request-map uri="FindIcpSalesOrder">
+    <request-map uri="processNandiniOrders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessNandiniOrders"/>   
+       <response name="failed" type="view" value="ProcessNandiniOrders"/>  
+    </request-map>
+    <request-map uri="processAmulOrders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessAmulOrders"/>   
+       <response name="failed" type="view" value="ProcessAmulOrders"/>  
+    </request-map>
+    <request-map uri="approveICPNandiniOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessNandiniOrders"/>   
+       <response name="failed" type="view" value="ProcessNandiniOrders"/>  
+    </request-map>
+    <request-map uri="cancelICPNandiniOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessNandiniOrders"/>   
+       <response name="failed" type="view" value="ProcessNandiniOrders"/>  
+    </request-map>
+    <request-map uri="approveICPAmulOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessAmulOrders"/>   
+       <response name="failed" type="view" value="ProcessAmulOrders"/>  
+    </request-map>
+    <request-map uri="cancelICPAmulOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessAmulOrders"/>   
+       <response name="failed" type="view" value="ProcessAmulOrders"/>  
+    </request-map>
+    <request-map uri="createShipmentAndInvoiceForNandiniOrders">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessNandiniOrders"/>   
+       <response name="failed" type="view" value="ProcessNandiniOrders"/>  
+    </request-map>
+    <request-map uri="createShipmentAndInvoiceForAmulOrders">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessAmulOrders"/>   
+       <response name="failed" type="view" value="ProcessAmulOrders"/>  
+    </request-map>
+    <request-map uri="FindICPNandiniShipment">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="FindICPNandiniShipment"/>   
+       	<response name="failed" type="view" value="FindICPNandiniShipment"/>  
+    </request-map>
+    <request-map uri="FindICPAmulShipment">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="FindICPAmulShipment"/>   
+       	<response name="failed" type="view" value="FindICPAmulShipment"/>  
+    </request-map>	
+    <request-map uri="FindIcpSalesOrder">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindIcpSalesOrder"/>   
        <response name="failed" type="view" value="FindIcpSalesOrder"/>  
@@ -678,8 +745,6 @@
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="IcpSalesAmul"/>
     </request-map>
-   
-    
     
     
     <request-map uri="FindAdhocSalesOrder">
@@ -724,7 +789,6 @@
         <response name="success" type="view" value="printAdhocOrderPDF"/>
     </request-map>
    
-  
      <request-map uri="DailyPaymentCheckList.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="DailyPaymentCheckList"/>        
@@ -842,7 +906,7 @@
     </request-map>
     
     <request-map uri="FindBoothPayments">
-    	<security https="true" auth="true"  />    	
+    	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FindBoothPayments"/>    	
     </request-map>
     <request-map uri="FindPastBoothPayments">
@@ -1018,7 +1082,7 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="DTCBillingReportPDF"/>
     </request-map>
-     <request-map uri="newOrTerminateRtlReport.pdf">
+    <request-map uri="newOrTerminateRtlReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="NewOrTerminateRtlReportPDF"/>
     </request-map>
@@ -1026,6 +1090,7 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="FixedDepositReportPDF"/>
     </request-map>
+    
     <request-map uri="chequeReturnReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="chequeReturnReportPDF"/>
@@ -1103,7 +1168,6 @@
         <response name="success" type="view" value="EditFixedDepositDetails"/>
         <response name="error" type="view" value="EditFixedDepositDetails"/>
     </request-map>
-  
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
     <view-map name="mainNg" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#mainNg"/>
@@ -1229,7 +1293,6 @@
 	<view-map name="EmployeeReportCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#EmployeeReportCSV"  content-type="text/csv"/>
 	<view-map name="DTCFinesAndPenaltiesReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCFinesAndPenaltiesReportPDF" content-type="application/pdf"/>
 	<view-map name="DTCBillingReportPDF" type="screenfop" page="component://byproducts/widget/TransporterScreens.xml#DTCBillingReportPDF" content-type="application/pdf"/>
-	
 	<view-map name="NewOrTerminateRtlReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#NewOrTerminateRtlReportPDF" content-type="application/pdf"/>
 	<view-map name="FixedDepositReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#FixedDepositReportPDF" content-type="application/pdf"/>
 	<view-map name="RetailerSalesComparisonTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="text/plain"/>
@@ -1292,6 +1355,10 @@
  <!-- IceCreamPlant -->  
  <view-map name="IcpSales" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSales"/>
  <view-map name="FindIcpSalesOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpSalesOrder"/>
+ <view-map name="ProcessNandiniOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessNandiniOrders"/>
+ <view-map name="ProcessAmulOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessAmulOrders"/>
+ <view-map name="FindICPNandiniShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPNandiniShipment"/>
+ <view-map name="FindICPAmulShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPAmulShipment"/>
  <view-map name="IcpSalesAmul" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSalesAmul"/>
  <view-map name="FindIcpAmulOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpAmulOrder"/>
     
