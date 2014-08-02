@@ -631,9 +631,8 @@ public class TaxAuthorityServices {
                 	priceFindMap.put("productPriceTypeId", taxTypeId);
                 }
                 List<GenericValue> productTaxList =FastList.newInstance();
-                
                 if(UtilValidate.isNotEmpty(taxTypeList)){
-                	multiLevel = true;
+                	//multiLevel = true;
                 	productTaxList = taxTypeList;
 
                 	if(UtilValidate.isNotEmpty(taxTypeId)){
@@ -643,7 +642,6 @@ public class TaxAuthorityServices {
                 	productTaxList = delegator.findByAnd("ProductPriceAndType", priceFindMap, UtilMisc.toList("-fromDate"));
                     productTaxList = EntityUtil.filterByDate(productTaxList, true);
                 }
-
                 Iterator<GenericValue> taxIt = productTaxList.iterator();
                 while (taxIt.hasNext()) {
                 	
@@ -652,9 +650,16 @@ public class TaxAuthorityServices {
                 	if(multiLevel){
                 		productPriceTypeId = taxItem.getString("parentTypeId");
                 	}
-                	BigDecimal taxRate = taxItem.get("taxPercentage") != null ? taxItem.getBigDecimal("taxPercentage") : ZERO_BASE;                	
+                	BigDecimal taxRate = taxItem.get("taxPercentage") != null ? taxItem.getBigDecimal("taxPercentage") : ZERO_BASE;
+                	BigDecimal taxPrice = taxItem.get("price") != null ? taxItem.getBigDecimal("price") : ZERO_BASE;
+                	BigDecimal taxAmount = BigDecimal.ZERO;
+                	if(taxRate.compareTo(BigDecimal.ZERO)>0){
+                		taxAmount = (itemAmount.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+                	}
+                	if(taxPrice.compareTo(BigDecimal.ZERO)>0){
+                		taxAmount = itemQuantity.multiply(taxPrice).setScale(salestaxCalcDecimals, salestaxRounding);
+                	}
                 	
-                	BigDecimal taxAmount = (itemAmount.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
                 	if(UtilValidate.isNotEmpty(taxItem.get("taxAmount"))){
                 		taxAmount = itemQuantity.multiply(taxItem.getBigDecimal("taxAmount")).setScale(salestaxCalcDecimals, salestaxRounding);
                 	}
