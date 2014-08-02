@@ -22,6 +22,8 @@ while (iterTime <= endTime) {
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("startDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(iterTime)));
 	conditionList.add(EntityCondition.makeCondition("startDateTime", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(iterTime)));
+	conditionList.add(EntityCondition.makeCondition("userLoginId", EntityOperator.NOT_EQUAL, 'hrmsapi'));
+	
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	
 	apiHits = delegator.findList("ApiHit", condition, null, null, null, false);
