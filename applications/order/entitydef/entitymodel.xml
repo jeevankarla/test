@@ -390,6 +390,7 @@ under the License.
       <field name="transactionId" type="id-long"></field>
       <field name="autoOrderShoppingListId" type="id"></field>
       <field name="needsInventoryIssuance" type="indicator"></field>
+      <field name="isInterState" type="indicator"></field>
       <field name="isRushOrder" type="indicator"></field>
       <field name="internalCode" type="id-long"></field>
       <field name="remainingSubTotal" type="currency-amount"></field>
@@ -536,6 +537,8 @@ under the License.
       <field name="bedcessAmount" type="currency-precise" ></field>
       <field name="bedseccessPercent" type="fixed-point"></field>
       <field name="bedseccessAmount" type="currency-precise" ></field>
+      <field name="cstPercent" type="fixed-point"></field>
+      <field name="cstAmount" type="currency-precise" ></field>
      
       <field name="recurringFreqUomId" type="id"></field>
       <field name="itemDescription" type="description"></field>

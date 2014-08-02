@@ -162,7 +162,9 @@ public class ShoppingCartItem implements java.io.Serializable {
     private BigDecimal bedcessAmount = null;
     private BigDecimal bedseccessPercent = null;
     private BigDecimal bedseccessAmount = null;
-   
+    private BigDecimal cstPercent = null;
+    private BigDecimal cstAmount = null;
+    
     
   
     private Map<String, String> contactMechIdsMap = FastMap.newInstance();
@@ -723,6 +725,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         
         this.vatPercent = item.getVatPercent();
         this.vatAmount = item.getVatAmount();
+        this.cstPercent = item.getCstPercent();
+        this.cstAmount = item.getCstAmount();
         this.bedPercent = item.getBedPercent();
         this.bedAmount = item.getBedAmount();
         this.bedcessPercent = item.getBedcessPercent();
@@ -2183,6 +2187,16 @@ public class ShoppingCartItem implements java.io.Serializable {
         return vatAmount;
     }
     
+    /** Returns the cst percent. */
+    public BigDecimal getCstPercent() {
+        return cstPercent;
+    }
+    
+    /** Returns the cst amount. */
+    public BigDecimal getCstAmount() {
+        return cstAmount;
+    }
+    
     /** Returns the bed percent. */
     public BigDecimal getBedPercent() {
         return bedPercent;
@@ -2218,6 +2232,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     	for(int i=0;i<taxList.size(); i++){
     		 Map taxComp = (Map)taxList.get(i);
     		 String taxType= (String) taxComp.get("taxType");
+    		 Debug.log("taxComp #################"+taxComp);
     		 BigDecimal percentage = (BigDecimal) taxComp.get("percentage");
     		 BigDecimal amount = (BigDecimal) taxComp.get("amount");
     		 if(taxType.startsWith("VAT_")){
@@ -2235,7 +2250,10 @@ public class ShoppingCartItem implements java.io.Serializable {
     		 }else if(taxType.startsWith("BEDSECCESS_")){
     			 this.bedseccessPercent = percentage;
     			 this.bedseccessAmount = amount;
-    			 
+    		 }
+    		 else if(taxType.startsWith("CST_")){
+    			 this.cstPercent = percentage;
+    			 this.cstAmount = amount;
     		 }
     	}// end of tax list 
     }
