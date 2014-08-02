@@ -28,11 +28,19 @@ under the License.
 <html lang="${docLangAttr}" dir="${langDir}" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <script>
-	//Call the fetchMaintenanceMsgCall() function every 2-min  
-	setInterval("fetchMaintenanceMsgCall()" ,(1000*60*2));
+	//Call the fetchMaintenanceMsgCall() function every 1-min  
+	setInterval("fetchMaintenanceMsgCall()" ,(1000*60*1));
+	var isActive;
+	window.onblur = function () { 
+  	  isActive = false; 
+    };
+   window.onfocus = function () { 
+      isActive = true; 
+  };
 	var statusFlag;
 	function fetchMaintenanceMsgCall(){
-	    if(statusFlag !="Y"){
+	    if(statusFlag !="Y" && isActive){
+	        alert("in ajax");
 	        $.ajax({
              type: "POST",
              url: "fetchDowntimeMessageStatus",
