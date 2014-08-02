@@ -37,7 +37,6 @@ if(changeFlag=="IcpSales"){
 if(changeFlag=="IcpSalesAmul"){
 	productCatageoryId="ICE_CREAM_AMUL";
 }
-Debug.log("========changeFlag=="+changeFlag);
 subscriptionProdList = [];
 displayGrid = true;
 effDateDayBegin="";
@@ -67,10 +66,11 @@ routeId = parameters.routeId;
 partyId="";
 facility = null;
 prodPriceMap = [:];
-if(changeFlag == "IcpSales"){
+if(changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul"){
 	partyId = parameters.partyId;
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);	
 	context.party = party;
+	context.orderTaxType = parameters.orderTaxType;
 }else{
 	facility = delegator.findOne("Facility", [facilityId : boothId],false);
 	if(facility){
@@ -98,7 +98,7 @@ if(partyPostalAddress){
 }
 
 prodList=[];
-
+//productCatageoryId = "INDENT";
 if(UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
 	prodList= ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
 }else if(UtilValidate.isNotEmpty(productCatageoryId)){
@@ -110,7 +110,7 @@ if(UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 	  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 		prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
-		Debug.log("=====discontinuationDateCondition===="+discontinuationDateCondition);
+		//Debug.log("=====discontinuationDateCondition===="+discontinuationDateCondition);
 }
 else{
 	prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
