@@ -88,8 +88,11 @@
 		});
 		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 			var partyId = $("#partyId").val();
+			var orderTaxType = $("#orderTaxType").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
+			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
 			jQuery(formId).append(jQuery(party));
+			jQuery(formId).append(jQuery(tax));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	

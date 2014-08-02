@@ -122,10 +122,10 @@ $(document).ready(function(){
           <input type="hidden" name="isFormSubmitted"  value="YES" />
             <input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
             <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
-              <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_DIRECT_SHIPMENT"/> 
+              <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/> 
               <input type="hidden" name="salesChannel" id="salesChannel" value="ICP_AMUL_CHANNEL"/> 
             <#elseif changeFlag?exists && changeFlag=='IcpSales'>
-             <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_DIRECT_SHIPMENT"/> 
+             <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/> 
                <input type="hidden" name="salesChannel" id="salesChannel" value="ICP_NANDINI_CHANNEL"/> 
              
             <#else>
@@ -142,28 +142,48 @@ $(document).ready(function(){
           	</td>       
        	  <#else> 
           	  	<td valign='middle'>          
-            		<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		</td>
+            		<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
+            	</td>
        	</#if>
         </tr>
-         <tr><td><br/></td></tr>    
-          <tr>
-          <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Vehicle Number:</div></td>
-          <td>&nbsp;</td>
-       <#if vehicleId?exists && vehicleId?has_content>  
-	  	  <input type="hidden" name="?if_exists" id="?if_exists" value="${vehicleId?if_exists}"/>  
-          <td valign='middle'>
-            <div class='tabletext h2'>
-               	${vehicleId?if_exists}              
-            </div>
-          </td>       
-       <#else>               
-          <td valign='middle'>
-          <input type="text" name="vehicleId" id="vehicleId" />    
-             <span class="tooltip">Fill if Vehicle Number exists</span>       
-          </td>
-       </#if>
-        </tr> 
+        <tr><td><br/></td></tr>
+        <#if changeFlag?exists && changeFlag == "AdhocSaleNew">
+          	<tr>
+          		<td>&nbsp;</td>
+          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Vehicle Number:</div></td>
+          		<td>&nbsp;</td>
+       			<#if vehicleId?exists && vehicleId?has_content>  
+	  	  			<input type="hidden" name="?if_exists" id="?if_exists" value="${vehicleId?if_exists}"/>  
+          			<td valign='middle'>
+            			<div class='tabletext h2'>${vehicleId?if_exists}</div>
+          			</td>       	
+       			<#else>      	         
+          			<td valign='middle'>
+          				<input type="text" name="vehicleId" id="vehicleId" />    
+             			<span class="tooltip">Fill if Vehicle Number exists</span>       
+          			</td>
+       			</#if>
+        	</tr>
+        <#else>
+        	<tr>
+          		<td>&nbsp;</td>
+          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Order Tax Type:</div></td>
+          		<td>&nbsp;</td>
+       			<#if orderTaxType?exists && orderTaxType?has_content>  
+	  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
+          			<td valign='middle'>
+            			<div class='tabletext h2'>${orderTaxType?if_exists}</div>
+          			</td>       	
+       			<#else>      	         
+          			<td valign='middle'>
+          				<select name="orderTaxType" id="orderTaxType" class='h2'>
+          					<option value="INTRA">Intra State</option>
+          					<option value="INTER">Inter State</option>
+          			</td>
+       			</#if>
+        	</tr>
+		</#if>
+          
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
@@ -352,10 +372,10 @@ $(document).ready(function(){
 			<#assign formAction =''>			
 		    <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 		 		<#assign formAction='processAdhocSale'>
-		 	<#elseif changeFlag?exists && (changeFlag=='IcpSales' || changeFlag=='IcpSalesAmul')>
+		 	<#elseif changeFlag?exists && changeFlag=='IcpSales'>
 		         <#assign formAction='processIcpSale'>
 		 	<#else>
-		 			<#assign formAction='processIcpSale'>		 	
+		 			<#assign formAction='processIcpAmulSale'>		 	
 			</#if>				
 			
 	<#if booth?exists || party?exists>
