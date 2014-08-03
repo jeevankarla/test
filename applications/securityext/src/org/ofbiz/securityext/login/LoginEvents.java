@@ -46,9 +46,11 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.product.ProductEvents;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.LoginWorker;
 
 /**
@@ -164,6 +166,52 @@ public class LoginEvents {
         errMsg = UtilProperties.getMessage(resource, "loginevents.password_hint_is", messageMap, UtilHttp.getLocale(request));
         request.setAttribute("_EVENT_MESSAGE_", errMsg);
         return "success";
+    }
+    
+    public static void smsPassword(LocalDispatcher dispatcher, Delegator delegator, Map<String, Object> context) {
+        Map<String, Object> serviceResult;
+        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String partyId = (String) context.get("partyId");
+        String passwordToSend = (String) context.get("passwordToSend");
+        String text = "This is in response to your request to have a new password sent to you. " +
+        	"Your password has been reset to: \"" + passwordToSend + "\" -Milkosoft Support";
+        try {
+        	boolean enableSMSPassword = false;
+	    	GenericValue tenantEnableSMSPassword = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","SMS", "propertyName","enableSMSPassword"), false);
+  	    	if (UtilValidate.isNotEmpty(tenantEnableSMSPassword) && (tenantEnableSMSPassword.getString("propertyValue")).equals("Y")) {
+  	    		enableSMSPassword = Boolean.TRUE;
+  	    	}    
+  	    	if (!enableSMSPassword) {
+  	    		// nothing more to do
+  	    		return;
+  	    	}
+		    Map<String, Object> getTelParams = FastMap.newInstance();
+		    getTelParams.put("partyId", partyId);
+		    getTelParams.put("userLogin", userLogin);                    	
+		    serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+		    if (ServiceUtil.isError(serviceResult)) {
+		    	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+		    	return;
+		    } 
+		    if(UtilValidate.isEmpty(serviceResult.get("contactNumber"))){
+		    	Debug.logError( "No  contactNumber found for userLogin : "+userLogin, module);
+		    	return;
+		    }
+		    String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
+		    Map<String, Object> sendSmsParams = FastMap.newInstance();      
+		    sendSmsParams.put("contactNumberTo", contactNumberTo);          
+		    sendSmsParams.put("text", text);   
+		    serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
+		    if (ServiceUtil.isError(serviceResult)) {
+		    	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+		    	return;
+		    } 
+        }
+	    catch (Exception e) {
+			Debug.logError(e, "Error sending sms ", module);
+			return;			
+		}   
     }
 
     /**
@@ -298,7 +346,7 @@ public class LoginEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-
+        
         StringBuilder emails = new StringBuilder();
         GenericValue party = null;
 
@@ -308,7 +356,14 @@ public class LoginEvents {
             Debug.logWarning(e, "", module);
             party = null;
         }
+       
         if (party != null) {
+            Map smsPasswordCtx = FastMap.newInstance();
+            smsPasswordCtx.put("userLogin", supposedUserLogin);
+            smsPasswordCtx.put("partyId", party.getString("partyId"));
+            smsPasswordCtx.put("passwordToSend", passwordToSend);
+            smsPassword(dispatcher, delegator, smsPasswordCtx); 
+            
             Iterator<GenericValue> emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
             while (emailIter != null && emailIter.hasNext()) {
                 GenericValue email = emailIter.next();
