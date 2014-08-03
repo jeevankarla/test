@@ -25,7 +25,8 @@ $(document).ready(function() {
 			{ "title": "Hits Date" },
 			{ "title": "Hits Time" },			
 			{ "title": "User" },			
-			{ "title": "Content Id" }],	
+			{ "title": "Content Id" },
+			{ "title": "Time (ms)"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0] }],
        	"iDisplayLength" : 100
 	} );	

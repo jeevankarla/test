@@ -46,6 +46,7 @@ for (GenericValue hit : hitList) {
 
 	String userLoginId= hit.getString("userLoginId");
 	String contentId= hit.getString("contentId");
+	String totalTimeMillis = hit.getLong("totalTimeMillis");
 	
 	JSONArray hitJSON = new JSONArray();	
 	hitJSON.add(hitDate);
