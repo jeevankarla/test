@@ -40,12 +40,16 @@ condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 hitList = delegator.findList("ApiHit", condition, null, null, null, false);
 
 for (GenericValue hit : hitList) {
-	String startDateTime = hit.get("startDateTime").toString(); 
+	//String startDateTime = hit.get("startDateTime").toString(); 
+	String hitDate = UtilDateTime.toDateString(hit.get("startDateTime"), "dd/MM/yyyy");
+    String hitTime = UtilDateTime.toDateString(hit.get("startDateTime"), "hh:mm:ss");
+
 	String userLoginId= hit.getString("userLoginId");
 	String contentId= hit.getString("contentId");
 	
 	JSONArray hitJSON = new JSONArray();	
-	hitJSON.add(startDateTime);
+	hitJSON.add(hitDate);
+	hitJSON.add(hitTime);
 	hitJSON.add(userLoginId);
 	hitJSON.add(contentId);
 

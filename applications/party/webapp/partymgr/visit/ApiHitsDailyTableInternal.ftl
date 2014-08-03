@@ -22,13 +22,14 @@ $(document).ready(function() {
 	var datatable2 = $('#datatable2').dataTable( {
 		"data": hitsTable,
 		"columns": [
-			{ "title": "Hits Time" },
+			{ "title": "Hits Date" },
+			{ "title": "Hits Time" },			
 			{ "title": "User" },			
 			{ "title": "Content Id" }],	
 		"columnDefs": [{ type: 'date-eu', targets: [0] }],
        	"iDisplayLength" : 100
 	} );	
-	datatable2.fnSort( [ [0,'desc'] ] );		 	
+	datatable2.fnSort( [ [1,'desc'] ] );		 	
 } );
 
 </script>
