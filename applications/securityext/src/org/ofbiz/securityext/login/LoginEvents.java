@@ -168,7 +168,7 @@ public class LoginEvents {
         return "success";
     }
     
-    public static void smsPassword(LocalDispatcher dispatcher, Delegator delegator, Map<String, Object> context) {
+    public static boolean smsPassword(LocalDispatcher dispatcher, Delegator delegator, Map<String, Object> context) {
         Map<String, Object> serviceResult;
         
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -184,19 +184,19 @@ public class LoginEvents {
   	    	}    
   	    	if (!enableSMSPassword) {
   	    		// nothing more to do
-  	    		return;
+		    	Debug.logError("enableSMSPassword is turned off", module);  	    		
+  	    		return false;
   	    	}
 		    Map<String, Object> getTelParams = FastMap.newInstance();
 		    getTelParams.put("partyId", partyId);
-		    getTelParams.put("userLogin", userLogin);                    	
 		    serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
 		    if (ServiceUtil.isError(serviceResult)) {
 		    	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
-		    	return;
+		    	return false;
 		    } 
 		    if(UtilValidate.isEmpty(serviceResult.get("contactNumber"))){
 		    	Debug.logError( "No  contactNumber found for userLogin : "+userLogin, module);
-		    	return;
+		    	return false;
 		    }
 		    String contactNumberTo = (String) serviceResult.get("countryCode") + (String) serviceResult.get("contactNumber");            
 		    Map<String, Object> sendSmsParams = FastMap.newInstance();      
@@ -205,13 +205,14 @@ public class LoginEvents {
 		    serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);       
 		    if (ServiceUtil.isError(serviceResult)) {
 		    	Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
-		    	return;
+		    	return false;
 		    } 
         }
 	    catch (Exception e) {
 			Debug.logError(e, "Error sending sms ", module);
-			return;			
+			return false;			
 		}   
+	    return true;
     }
 
     /**
@@ -362,7 +363,7 @@ public class LoginEvents {
             smsPasswordCtx.put("userLogin", supposedUserLogin);
             smsPasswordCtx.put("partyId", party.getString("partyId"));
             smsPasswordCtx.put("passwordToSend", passwordToSend);
-            smsPassword(dispatcher, delegator, smsPasswordCtx); 
+            boolean smsSent = smsPassword(dispatcher, delegator, smsPasswordCtx); 
             
             Iterator<GenericValue> emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
             while (emailIter != null && emailIter.hasNext()) {
