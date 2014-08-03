@@ -708,7 +708,7 @@ under the License.
         </if-not-empty>
     </simple-method>
 
-    <simple-method method-name="getPartyTelephone" short-description="Get the telephone number of the party">
+    <simple-method method-name="getPartyTelephone" short-description="Get the telephone number of the party" login-required="false">
         <set field="findMap.partyId" from-field="parameters.partyId"/>
         <if-empty field="parameters.contactMechPurposeTypeId">
             <!-- search in this order if not provided-->
