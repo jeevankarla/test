@@ -40,7 +40,6 @@ under the License.
 	var statusFlag;
 	function fetchMaintenanceMsgCall(){
 	    if(statusFlag !="Y" && isActive){
-	        alert("in ajax");
 	        $.ajax({
              type: "POST",
              url: "fetchDowntimeMessageStatus",
