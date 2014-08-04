@@ -32,7 +32,7 @@ under the License.
       "${password}"
       
       <br/>
-      <div>- Vbiz Support</div>
+      <div>- Milkosoft Support</div>
   </div>
 </body>
 </html>

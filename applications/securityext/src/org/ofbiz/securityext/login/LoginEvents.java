@@ -357,13 +357,14 @@ public class LoginEvents {
             Debug.logWarning(e, "", module);
             party = null;
         }
-       
+        boolean smsSent = true;
+        boolean emailSent = true;
         if (party != null) {
             Map smsPasswordCtx = FastMap.newInstance();
             smsPasswordCtx.put("userLogin", supposedUserLogin);
             smsPasswordCtx.put("partyId", party.getString("partyId"));
             smsPasswordCtx.put("passwordToSend", passwordToSend);
-            boolean smsSent = smsPassword(dispatcher, delegator, smsPasswordCtx); 
+            smsSent = smsPassword(dispatcher, delegator, smsPasswordCtx); 
             
             Iterator<GenericValue> emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
             while (emailIter != null && emailIter.hasNext()) {
@@ -375,8 +376,10 @@ public class LoginEvents {
         if (!UtilValidate.isNotEmpty(emails.toString())) {
             // the Username was not found
             errMsg = UtilProperties.getMessage(resource, "loginevents.no_primary_email_address_set_contact_customer_service", UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
+            Debug.logError(errMsg, module);
+            emailSent = false;
+            //request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            //return "error";
         }
 
         String bodyScreenLocation = defaultScreenLocation;
@@ -403,14 +406,24 @@ public class LoginEvents {
             if (ModelService.RESPOND_ERROR.equals((String) result.get(ModelService.RESPONSE_MESSAGE))) {
                 Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", result.get(ModelService.ERROR_MESSAGE));
                 errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service_errorwas", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                return "error";
+                Debug.logError(errMsg, module);
+                emailSent = false;
+                // request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                // return "error";
             }
         } catch (GenericServiceException e) {
             Debug.logWarning(e, "", module);
             errMsg = UtilProperties.getMessage(resource, "loginevents.error_unable_email_password_contact_customer_service", UtilHttp.getLocale(request));
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
+            Debug.logError(errMsg, module);
+            emailSent = false;            
+//            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+//            return "error";
+        }
+        
+        if (!smsSent && !emailSent) {
+            request.setAttribute("_ERROR_MESSAGE_", "Valid email or mobile number not available to send password." +
+            		" Please contact your system administrator");
+            return "error";        	
         }
 
         // don't save password until after it has been sent
@@ -419,13 +432,13 @@ public class LoginEvents {
                 supposedUserLogin.store();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
-                errMsg = UtilProperties.getMessage(resource, "loginevents.error_saving_new_password_email_not_correct_password", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                //Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
+                //errMsg = UtilProperties.getMessage(resource, "loginevents.error_saving_new_password_email_not_correct_password", messageMap, UtilHttp.getLocale(request));
+                request.setAttribute("_ERROR_MESSAGE_", "Error saving new password. Please contact your system administrator");
                 return "error";
             }
         }
-
+/*
         if (useEncryption) {
             errMsg = UtilProperties.getMessage(resource, "loginevents.new_password_createdandsent_check_email", UtilHttp.getLocale(request));
             request.setAttribute("_EVENT_MESSAGE_", errMsg);
@@ -433,6 +446,16 @@ public class LoginEvents {
             errMsg = UtilProperties.getMessage(resource, "loginevents.new_password_sent_check_email", UtilHttp.getLocale(request));
             request.setAttribute("_EVENT_MESSAGE_", errMsg);
         }
+*/
+        if (smsSent && emailSent) {
+            request.setAttribute("_EVENT_MESSAGE_", "Your new password has been sent, please check your email/sms.");
+        }
+        else if (smsSent) {
+            request.setAttribute("_EVENT_MESSAGE_", "Your new password has been sent, please check your sms.");        	
+        }
+        else if (emailSent) {
+            request.setAttribute("_EVENT_MESSAGE_", "Your new password has been sent, please check your email.");        	
+        }        
         return "success";
     }
 
