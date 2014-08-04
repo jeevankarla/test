@@ -70,12 +70,12 @@
 	 		if (!isNaN(qty)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
-				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
-					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
-				</#if>
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
-				jQuery(formId).append(jQuery(batchNum));   
+				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
+					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
+					jQuery(formId).append(jQuery(batchNum));
+				</#if>
    			}
 		}
 		
