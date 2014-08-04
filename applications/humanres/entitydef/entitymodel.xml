@@ -1468,6 +1468,7 @@ under the License.
 	  <field name="availedCanteen" type="indicator"/>
 	  <field name="isOnField" type="indicator"/>
 	  <field name="lateMin" type="fixed-point"/>
+	  <field name="extraMin" type="fixed-point"/>
 	  <prim-key field="partyId"/>
 	  <prim-key field="date"/>
 	  <prim-key field="seqId"/>
