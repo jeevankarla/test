@@ -277,7 +277,7 @@ if (organizationPartyId) {
 					closingBalance = (openingBalance+debitAmount-creditAmount);
 					
 					transactionDate = acctgTransEntry.transactionDate;
-					transactionDateStr=UtilDateTime.toDateString(transactionDate ,"MMMM dd, yyyy");
+					transactionDateStr=UtilDateTime.toDateString(transactionDate ,"dd-MM-yy");
 					
 					if(prevDateStr == transactionDateStr){
 						// Add Credit and Debit
@@ -383,7 +383,7 @@ financialAcctgTransList.each{ dayFinAccount ->
 	transactionDate = null;
 	transactionDateStr = dayFinAccount.transactionDate;
 	if(transactionDateStr != null){
-		def sdf1 = new SimpleDateFormat("MMMM dd, yyyy");
+		def sdf1 = new SimpleDateFormat("dd-MM-yy");
 		try {
 			transactionDate = new java.sql.Timestamp(sdf1.parse(transactionDateStr+" 00:00:00").getTime());
 		} catch (ParseException e) {
