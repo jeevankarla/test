@@ -2937,6 +2937,10 @@ public class ByProductNetworkServices {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		String categoryTypeEnum = (String) context.get("categoryTypeEnum");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		boolean activeOnly = Boolean.FALSE;
+		if (UtilValidate.isNotEmpty(context.get("activeOnly"))) {
+			activeOnly = (Boolean) context.get("activeOnly");
+		}		
 		Map<String, Object> result = FastMap.newInstance();
 		List boothsDetailsList = FastList.newInstance();
 		List conditionList = FastList.newInstance();
@@ -2954,6 +2958,9 @@ public class ByProductNetworkServices {
 			}
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			List<GenericValue> booths = delegator.findList("Facility", condition, null,UtilMisc.toList("facilityId"), null, false);
+			if (activeOnly) {
+				booths = EntityUtil.filterByDate(booths, UtilDateTime.nowTimestamp(), "openedDate", "closedDate",Boolean.FALSE);
+			}
 			Iterator<GenericValue> boothIter = booths.iterator();
 			while (boothIter.hasNext()) {
 				BigDecimal fixedDeposit = BigDecimal.ZERO;

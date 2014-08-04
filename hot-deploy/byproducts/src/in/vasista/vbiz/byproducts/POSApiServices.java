@@ -544,7 +544,7 @@ Debug.logInfo("result:" + result, module);
             Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch facilities!", module);
             return ServiceUtil.returnError("You do not have permission for this transaction.");
         }    	
-		Map boothsDetails = ByProductNetworkServices.getAllBoothsDetails(dctx, UtilMisc.toMap("userLogin", userLogin));
+		Map boothsDetails = ByProductNetworkServices.getAllBoothsDetails(dctx, UtilMisc.toMap("userLogin", userLogin,"activeOnly", Boolean.TRUE));
 		Map result = FastMap.newInstance();  		
 		result.put("facilitiesResult", boothsDetails);
 Debug.logInfo("result:" + result, module);		 
