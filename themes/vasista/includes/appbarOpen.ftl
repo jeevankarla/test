@@ -105,6 +105,6 @@ under the License.
         </li>
         </ul>
 <#else>
-        <h2>APDDCF OMS</h2>
+        <h2>MDKMF</h2>
 </#if>        
       </div>
