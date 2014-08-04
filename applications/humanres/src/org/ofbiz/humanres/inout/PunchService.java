@@ -168,11 +168,11 @@ public class PunchService {
 
 			if (sub % 2 == 0) {
 
-				if (!PunchType.equals("Normal")) {
+				/*if (!PunchType.equals("Normal")) {
 
 					return ServiceUtil.returnError("You can't punch for ["
 							+ PunchType + "] without Normal Punch ");
-				}
+				}*/
 			}
 		} catch (GenericEntityException e) {
 			return ServiceUtil
