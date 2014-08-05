@@ -347,7 +347,7 @@ public class PunchService {
 				
 				GenericValue lastShiftType =fetchLastEmplShiftDetails(dctx,context);
 				
-				if(UtilValidate.isNotEmpty(lastShiftType) && shiftTimeGap <= (3600000*9)){
+				if(UtilValidate.isNotEmpty(lastShiftType) && shiftTimeGap <= (3600000*shiftThreshold)){
 					shiftTypeId = lastShiftType.getString("shiftType");
 					List condList = FastList.newInstance();
 					condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, shiftTypeId));
@@ -577,7 +577,7 @@ public class PunchService {
 			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
 			condList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , punchdate));
 	        if(UtilValidate.isNotEmpty(shiftType)){
-	        	condList.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS , shiftType));
+	        	condList.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS, shiftTypeId));
 	        }
 	        
 	    	EntityCondition condition=EntityCondition.makeCondition(condList,EntityOperator.AND); 		
