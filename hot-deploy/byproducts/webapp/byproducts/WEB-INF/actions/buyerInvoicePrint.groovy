@@ -22,8 +22,8 @@ import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.base.util.Debug;
-import java.util.Date;
 import java.util.*;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.util.EntityUtil;
@@ -32,67 +32,133 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.party.party.PartyWorker;
-
+import org.ofbiz.product.product.ProductWorker;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 invoiceDetailList = [];
 vatMap = [:];
 reportTitle = [:];
 
 today = UtilDateTime.nowTimestamp();
+/*
+cxt = [:];
+cxt.put("userLogin", userLogin);
+cxt.put("productId", "518");
+cxt.put("partyId", "ABDUL");
+cxt.put("priceDate", UtilDateTime.nowTimestamp());
+cxt.put("productStoreId", "1006");
+cxt.put("productPriceTypeId", "MRP_IS");
+cxt.put("geoTax", "VAT");
 
-invoiceId = parameters.invoiceId;
-invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
-invoiceItemList = delegator.findByAnd("OrderItemBillingAndInvoiceAndInvoiceItem", [invoiceId : invoice.invoiceId], null);
-orderIds = EntityUtil.getFieldListFromEntityList(invoiceItemList, "orderId", true);
-orderId = "";
-if(orderIds){
-	orderId = orderIds.get(0);
-}
-partyIdFrom = invoice.partyIdFrom;
-partyIdTo = invoice.partyId;
-fromPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdFrom)).get("partyDetails");
-toPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdTo)).get("partyDetails");
-context.fromPartyDetail = fromPartyDetail;
-context.toPartyDetail = toPartyDetail;
-
-OrderHeader = delegator.findOne("OrderHeader", [orderId: orderId], false);
-shipmentId = OrderHeader.shipmentId;
-
-shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], false);
-billingAddress = [:];
-if ("PURCHASE_INVOICE".equals(invoice.invoiceTypeId)) {
-	billingAddress = InvoiceWorker.getSendFromAddress(invoice);
-} else {
-	billingAddress = InvoiceWorker.getBillToAddress(invoice);
-}
-context.invoice = invoice;
-context.shipment = shipment;
-context.billingAddress = billingAddress;
-
-orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-
-orderItemAttributes = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
-invoiceItems = [];
-orderItems.each{ eachItem ->
-	tempMap = [:];
-	tempMap.put("productId", eachItem.productId);
-	tempMap.put("itemDescription", eachItem.itemDescription);
-	tempMap.put("quantity", eachItem.quantity);
-	tempMap.put("unitListPrice", eachItem.unitListPrice);
-	tempMap.put("unitPrice", eachItem.unitPrice);
-	batchList = EntityUtil.filterByAnd(orderItemAttributes, UtilMisc.toMap("orderId", eachItem.orderId, "orderItemSeqId", eachItem.orderItemSeqId));
-	if(batchList){
-		batchItem = batchList.get(0);
-		tempMap.put("batchNo", batchItem.getString("attrValue"));
-	}else{
-		tempMap.put("batchNo", "");
+result = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, cxt);
+Debug.log("result############"+result);
+*/
+/*finalProdList = [];
+prodList= ProductWorker.getProductsByCategory(delegator ,"ICE_CREAM_AMUL" ,null);
+finalProdList.addAll(prodList);
+prodList= ProductWorker.getProductsByCategory(delegator ,"ICE_CREAM_NANDINI" ,null);
+finalProdList.addAll(prodList);
+finalProdIdsList = EntityUtil.getFieldListFromEntityList(finalProdList, "productId", true);
+productPrices = delegator.findList("ProductPrice", EntityCondition.makeCondition("productId", EntityOperator.IN, finalProdIdsList), null, null, null, false);
+duplicateProdList = [];
+finalProdIdsList.each{ eachProdId ->
+	prodPriceList = EntityUtil.filterByCondition(productPrices, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachProdId));
+	if(prodPriceList.size()>5){
+		duplicateProdList.add(eachProdId);
 	}
-	invoiceItems.add(tempMap);
+	
+}*/
+//Debug.log("##########duplicateProdList######"+duplicateProdList);
+
+invoiceSlipsMap = [:];
+shipmentId = parameters.shipmentId;
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+orderHeaders = delegator.findList("OrderHeader", condition, UtilMisc.toSet("orderId"), null, null, false);
+orderIds = EntityUtil.getFieldListFromEntityList(orderHeaders, "orderId", true);
+
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+invoices = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, UtilMisc.toSet("invoiceId"), null, null, false);
+invoiceIds = EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
+
+invoiceIds.each { invoiceId ->
+	invoiceDetailMap = [:];
+	invoice = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+	invoiceOrderItemList = delegator.findByAnd("OrderItemBillingAndInvoiceAndInvoiceItem", [invoiceId : invoiceId], null);
+	orderIds = EntityUtil.getFieldListFromEntityList(invoiceOrderItemList, "orderId", true);
+	orderId = "";
+	if(orderIds){
+		orderId = orderIds.get(0);
+	}
+	partyIdFrom = invoice.partyIdFrom;
+	partyIdTo = invoice.partyId;
+	fromPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdFrom)).get("partyDetails");
+	toPartyDetail = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, partyIdTo)).get("partyDetails");
+	invoiceDetailMap.put("fromPartyDetail", fromPartyDetail);
+	invoiceDetailMap.put("toPartyDetail", toPartyDetail);
+	
+	OrderHeader = delegator.findOne("OrderHeader", [orderId: orderId], false);
+	shipmentId = OrderHeader.shipmentId;
+	
+	shipment = delegator.findOne("Shipment", [shipmentId : shipmentId], false);
+	billingAddress = [:];
+	if ("PURCHASE_INVOICE".equals(invoice.invoiceTypeId)) {
+		billingAddress = InvoiceWorker.getSendFromAddress(invoice);
+	} else {
+		billingAddress = InvoiceWorker.getBillToAddress(invoice);
+	}
+	invoiceDetailMap.put("invoice", invoice);
+	invoiceDetailMap.put("shipment", shipment);
+	invoiceDetailMap.put("billingAddress", billingAddress);
+	invoiceItems = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
+	productIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "productId", true);
+	Debug.log("productIds ##################################"+productIds);
+	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
+	orderItemAttributes = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+	invoiceItemDetail = [];
+	invoiceTaxItems = [:];
+	invoiceItems.each{ eachItem ->
+		
+		if(eachItem.productId){
+			
+			orderSeqList = EntityUtil.filterByAnd(invoiceOrderItemList, UtilMisc.toMap("invoiceId", eachItem.invoiceId, "invoiceItemSeqId", eachItem.invoiceItemSeqId));
+			tempMap = [:];
+			List prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
+			prodDetail = EntityUtil.getFirst(prodDetails);
+			tempMap.put("productId", eachItem.productId);
+			tempMap.put("itemDescription", eachItem.description);
+			tempMap.put("quantityLtr", (eachItem.quantity)*prodDetail.quantityIncluded);
+			tempMap.put("quantity", eachItem.quantity);
+			tempMap.put("mrpPrice", 0);
+			tempMap.put("defaultPrice", eachItem.unitPrice);
+			if(orderSeqList){
+				orderItemSeqId = (EntityUtil.getFirst(orderSeqList)).get("orderItemSeqId");
+				batchList = EntityUtil.filterByAnd(orderItemAttributes, UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
+				if(batchList){
+					batchItem = batchList.get(0);
+					tempMap.put("batchNo", batchItem.getString("attrValue"));
+				}else{
+					tempMap.put("batchNo", "");
+				}
+			}
+			invoiceItemDetail.add(tempMap);
+		}
+		else{
+			invoiceTaxItems.put(eachItem.invoiceItemTypeId, eachItem.amount);
+		}
+	}
+	invoiceDetailMap.put("invoiceItems", invoiceItemDetail);
+	invoiceDetailMap.put("invoiceTaxItems", invoiceTaxItems);
+	invoiceSlipsMap.put(partyIdTo, invoiceDetailMap);
 }
-context.invoiceItems = invoiceItems;
 
 taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX2"), false);
 taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX2"), false);
-
+context.invoiceSlipsMap = invoiceSlipsMap;
 context.taxParty = taxParty;
 context.taxAuthority = taxAuthority;
 

@@ -28,6 +28,17 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "buyerInvoice.pdf")}
+        <#if invoiceSlipsMap?has_content>
+        <#assign partyInvoiceMap = invoiceSlipsMap.entrySet()> 
+        <#list  partyInvoiceMap as eachInvoice>
+        <#assign invoiceDetail = eachInvoice.getValue()>
+        <#assign fromPartyDetail = invoiceDetail.get('fromPartyDetail')>
+        <#assign toPartyDetail = invoiceDetail.get('toPartyDetail')>
+        <#assign shipment = invoiceDetail.get('shipment')>
+        <#assign billingAddress = invoiceDetail.get('billingAddress')>
+        <#assign invoice = invoiceDetail.get('invoice')>
+        <#assign invoiceItems = invoiceDetail.get('invoiceItems')>
+        <#assign invoiceTaxItems = invoiceDetail.get('invoiceTaxItems')>
         <fo:page-sequence master-reference="main" font-size="10pt">	
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         		<fo:block text-align="left" font-size="13pt" keep-together="always"  white-space-collapse="false">
@@ -290,7 +301,7 @@ under the License.
 							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('batchNo')?if_exists}</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-							            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists}</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('quantity')?if_exists}</fo:block>
@@ -299,15 +310,16 @@ under the License.
 							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">0.00</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('unitListPrice')?if_exists?string("#0.00")}</fo:block>
+							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('mrpPrice')?if_exists?string("#0.00")}</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${(eachItem.get('unitListPrice') * eachItem.get('quantity'))?if_exists?string("#0.00")}</fo:block>
+							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${(eachItem.get('mrpPrice') * eachItem.get('quantity'))?if_exists?string("#0.00")}</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('unitPrice')?if_exists?string("#0.00")}</fo:block>
+							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('defaultPrice')?if_exists?string("#0.00")}</fo:block>
 							            					</fo:table-cell>
-							            					<#assign totalItemAmt = eachItem.get('unitPrice')*eachItem.get('quantity')>
+							            					<#assign totalItemAmt = eachItem.get('defaultPrice')*eachItem.get('quantity')>
+							            					totalTaxAmt
 							            					<#assign totalAmt = totalAmt+totalItemAmt>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${totalItemAmt?if_exists?string("#0.00")}</fo:block>
@@ -348,31 +360,41 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${totalAmt?if_exists?string("#0.00")}</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
-												<fo:table-row height="30px">
-			                    					<fo:table-cell number-columns-spanned="3" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Total</fo:block>
-					            					</fo:table-cell>
-					            					<fo:table-cell number-columns-spanned="6" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">EXCISE DUTY (DEPOSIT) INCLUDING CESS 2.06%</fo:block>
-					            					</fo:table-cell>
-					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
+												<#if invoiceTaxItems?has_content>
+													<#assign taxDetails = invoiceTaxItems.entrySet()>
+													<#list taxDetails as eachTax>
+														<fo:table-row height="30px">
+					                    					<fo:table-cell number-columns-spanned="3" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
+							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false"></fo:block>
+							            					</fo:table-cell>
+							            					<#assign text = "">
+							            					<#if eachTax.getKey()=="BED_SALE">
+							            						<#assign text = "Excise Duty (Deposit) Including CESS 2.06%">
+							            					<#elseif eachTax.getKey()=="CST_SALE">
+							            						<#assign text = "Central Sales Tax(CST) 2.0%">
+							            					<#else>
+							            						<#assign text = "Value Added Tax(VAT) ">
+							            					</#if>
+							            					<fo:table-cell number-columns-spanned="6" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
+							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> ${text?if_exists}</fo:block>
+							            					</fo:table-cell>
+							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
+							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachTax.getValue()?if_exists?string("#0.00")}</fo:block>
+							            					</fo:table-cell>
+														</fo:table-row>
+													</#list>
+												</#if>
+												<#-- <fo:table-row>
+			                    					<fo:table-cell number-columns-spanned="4" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					            					</fo:table-cell>
-												</fo:table-row>
-												<fo:table-row>
-			                    					<fo:table-cell number-columns-spanned="3" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
-					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					            					</fo:table-cell>
-					            					<fo:table-cell border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">CST</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell number-columns-spanned="5" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">CST 2.06%</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">CST  2.0%</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"><#if invoiceTaxItem?has_content && invoiceTaxItem.get('VAT_SALE')?exists>${invoiceTaxItem.get("VAT_SALE")?if_exists?string("#0.00")}</#if></fo:block>
 					            					</fo:table-cell>
-												</fo:table-row>
+												</fo:table-row>-->
 												<fo:table-row height="25px">
 			                    					<fo:table-cell number-columns-spanned="9" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">GRAND TOTAL</fo:block>
@@ -397,6 +419,16 @@ under the License.
 				<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">1. Certificate that the particulars given above are true &amp; correct &amp; the amount indicated represents the actual charged &amp; that there is no  </fo:block>
 				<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">flow of additional consideration directly or indirectly from the buyer.  </fo:block>
 			</fo:flow>
-		</fo:page-sequence> 
+		</fo:page-sequence>
+		</#list>
+		<#else>
+    	<fo:page-sequence master-reference="main">
+	    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+	       		 <fo:block font-size="14pt">
+	            	${uiLabelMap.NoOrdersFound}.
+	       		 </fo:block>
+	    	</fo:flow>
+		</fo:page-sequence>	
+    </#if> 
  </fo:root>
 </#escape>

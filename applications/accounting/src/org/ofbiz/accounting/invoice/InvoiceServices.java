@@ -793,6 +793,7 @@ public class InvoiceServices {
         if (DECIMALS == -1 || ROUNDING == -1) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingAritmeticPropertiesNotConfigured",locale));
         }
+        String purposeTypeId = (String) context.get("purposeTypeId");
         String billOfSaleTypeId = (String) context.get("billOfSaleTypeId");
         String orderId = (String) context.get("orderId");
         List<GenericValue> billItems = UtilGenerics.checkList(context.get("billItems"));
@@ -883,6 +884,9 @@ public class InvoiceServices {
                 createInvoiceContext.put("description", orderHeader.getString("productSubscriptionTypeId"));
                 createInvoiceContext.put("invoiceDate", invoiceDate);
                 createInvoiceContext.put("dueDate", dueDate);
+                if(UtilValidate.isNotEmpty(purposeTypeId)){
+                	createInvoiceContext.put("purposeTypeId", purposeTypeId);
+                }
                 createInvoiceContext.put("billOfSaleTypeId", billOfSaleTypeId);
                 createInvoiceContext.put("isEnableAcctg", orderHeader.getString("isEnableAcctg"));
                 createInvoiceContext.put("invoiceTypeId", invoiceType);
@@ -1064,6 +1068,14 @@ public class InvoiceServices {
                 createInvoiceItemContext.put("quantity", billingQuantity);
                 createInvoiceItemContext.put("amount", billingAmount);
                 createInvoiceItemContext.put("productId", orderItem.get("productId"));
+                createInvoiceItemContext.put("unitPrice", orderItem.get("unitPrice"));
+                createInvoiceItemContext.put("unitListPrice", orderItem.get("unitListPrice"));
+                createInvoiceItemContext.put("bedAmount", orderItem.get("bedAmount"));
+                createInvoiceItemContext.put("bedPercent", orderItem.get("bedPercent"));
+                createInvoiceItemContext.put("vatAmount", orderItem.get("vatAmount"));
+                createInvoiceItemContext.put("vatPercent", orderItem.get("vatPercent"));
+                createInvoiceItemContext.put("cstAmount", orderItem.get("cstAmount"));
+                createInvoiceItemContext.put("cstPercent", orderItem.get("cstPercent"));
                 createInvoiceItemContext.put("productFeatureId", orderItem.get("productFeatureId"));
                 createInvoiceItemContext.put("overrideGlAccountId", orderItem.get("overrideGlAccountId"));
                 //createInvoiceItemContext.put("uomId", "");
@@ -4673,4 +4685,73 @@ public class InvoiceServices {
      result.put("invoiceId", invoiceId);
      return result;
 	}
+	
+	public static Map<String, Object> createTaxInvoiceSequence(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();              
+        String invoiceId = (String) context.get("invoiceId");
+        Locale locale = (Locale) context.get("locale");        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue invoiceDetails = null;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        try {
+        	
+        	Boolean enableTaxInvSeq  = Boolean.FALSE;
+    		GenericValue tenantConfigEnableTaxInvSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableTaxInvSeq"), false);
+       		if (UtilValidate.isNotEmpty(tenantConfigEnableTaxInvSeq) && (tenantConfigEnableTaxInvSeq.getString("propertyValue")).equals("Y")) {
+       			enableTaxInvSeq = Boolean.TRUE;
+       		}
+       		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
+       			List<GenericValue> invoiceItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceItemTypeId", "dueDate"), null, null, false);
+       			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceItemTypeId", true);
+       			Timestamp invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate");
+       			Map finYearContext = FastMap.newInstance();
+   				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+   				finYearContext.put("organizationPartyId", "Company");
+   				finYearContext.put("userLogin", userLogin);
+   				finYearContext.put("findDate", invDate);
+   				finYearContext.put("excludeNoOrganizationPeriods", "Y");
+   				List customTimePeriodList = FastList.newInstance();
+   				Map resultCtx = FastMap.newInstance();
+   				try{
+   					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+   					if(ServiceUtil.isError(resultCtx)){
+   						Debug.logError("Problem in fetching financial year ", module);
+   						return ServiceUtil.returnError("Problem in fetching financial year ");
+   					}
+   				}catch(GenericServiceException e){
+   					Debug.logError(e, module);
+   					return ServiceUtil.returnError(e.getMessage());
+   				}
+   				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+   				String finYearId = "";
+   				if(UtilValidate.isNotEmpty(customTimePeriodList)){
+   					GenericValue customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+   					finYearId = (String)customTimePeriod.get("customTimePeriodId");
+   				}
+       			if(invoiceItemTypeIds.contains("BED_SALE")){
+       				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+    				billOfSale.put("billOfSaleTypeId", "EXCISE_INV");
+    				billOfSale.put("invoiceId", invoiceId);
+    				billOfSale.put("finYearId", finYearId);
+    				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
+    	            delegator.create(billOfSale);
+       				
+       			}
+       			else if(invoiceItemTypeIds.contains("VAT_SALE") || invoiceItemTypeIds.contains("CST_SALE")){
+       				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+    				billOfSale.put("billOfSaleTypeId", "VAT_INV");
+    				billOfSale.put("invoiceId", invoiceId);
+    				billOfSale.put("finYearId", finYearId);
+    				delegator.setNextSubSeqId(billOfSale, "sequenceId", 10, 1);
+    	            delegator.create(billOfSale);
+       			}
+       		}
+        }catch(Exception e){
+        	Debug.logError(e, e.toString(), module);
+        	return ServiceUtil.returnError(e.toString());
+        }
+        return result;
+	}
+	
 }
