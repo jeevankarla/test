@@ -118,7 +118,23 @@
 			<key-map field-name="customTimePeriodId" />
 		</view-link>
 	</view-entity>
-	
+	<view-entity entity-name="InvoiceAndItem"
+		package-name="org.ofbiz.accounting.invoice"
+		title="Invoice and Invoice Item entity">
+		<member-entity entity-alias="INV" entity-name="Invoice" />
+		<member-entity entity-alias="INVITM" entity-name="InvoiceItem" />
+		<alias-all entity-alias="INV">	
+			<exclude field="billingAccountId" />
+			<exclude field="contactMechId" />
+			<exclude field="recurrenceInfoId" />
+			<exclude field="createdByUserLogin" />
+			<exclude field="lastModifiedByUserLogin" />
+		</alias-all>	
+		<alias-all entity-alias="INVITM" />
+		<view-link entity-alias="INV" rel-entity-alias="INVITM">
+			<key-map field-name="invoiceId" />
+		</view-link>
+	</view-entity>
 	<view-entity entity-name="BudgetItemBudget"
 		package-name="org.ofbiz.accounting.budget"
 		title="BudgetItem and Budget view entity">
@@ -1327,7 +1343,8 @@
 		<field name="contactMechId" type="id"></field>
 		<field name="facilityId" type="id"></field>	
 		<field name="isEnableAcctg" type="indicator"></field>	
-		<field name="shipmentId" type="id"></field>	
+		<field name="shipmentId" type="id"></field>
+		<field name="purposeTypeId" type="id"></field>	
 		<field name="invoiceDate" type="date-time"></field>
 		<field name="dueDate" type="date-time"></field>
 		<field name="paidDate" type="date-time"></field>
@@ -1482,6 +1499,15 @@
 		<field name="taxAuthGeoId" type="id-ne" />
 		<field name="taxAuthorityRateSeqId" type="id-ne"></field>
 		<field name="salesOpportunityId" type="id-ne"></field>
+		<field name="unitPrice" type="currency-precise" ></field>
+      	<field name="unitListPrice" type="currency-precise"></field>
+        <field name="vatPercent" type="fixed-point"></field>
+        <field name="vatAmount" type="currency-precise" ></field>
+        <field name="bedPercent" type="fixed-point"></field>
+        <field name="bedAmount" type="currency-precise" ></field>
+        <field name="cstPercent" type="fixed-point"></field>
+      	<field name="cstAmount" type="currency-precise" ></field>
+		
 		<prim-key field="invoiceId" />
 		<prim-key field="invoiceItemSeqId" />
 		<relation type="one" fk-name="INVOICE_ITMITYP"
