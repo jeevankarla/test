@@ -755,9 +755,9 @@
         		<parameter param-name="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/>
         	</link>
         </menu-item>
-         <menu-item name="FindIcpSalesOrder" title="Find Nandini Icp Orders">
+         <!-- <menu-item name="FindIcpSalesOrder" title="Find Nandini Icp Orders">
         	<link target="FindIcpSalesOrder"></link>
-        </menu-item>
+        </menu-item> -->
       </menu>
       <menu name="IcpAmulSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
          <menu-item name="IcpSalesAmul" title="Amul Icp Sales">
@@ -774,9 +774,9 @@
         		<parameter param-name="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/>
         	</link>
         </menu-item>
-         <menu-item name="FindIcpAmulOrder" title="Find Amul Icp Orders">
+         <!-- <menu-item name="FindIcpAmulOrder" title="Find Amul Icp Orders">
         	<link target="FindIcpAmulOrder"></link>
-        </menu-item>
+        </menu-item> -->
       </menu>
       
       
