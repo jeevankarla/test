@@ -287,6 +287,7 @@ under the License.
 					            					</fo:table-cell>
 												</fo:table-row>
 												<#assign totalAmt = 0>
+												<#assign grandTotal = 0>
 												<#if invoiceItems?has_content>
 													<#assign slNo = 1>
 													<#list invoiceItems as eachItem>
@@ -319,7 +320,7 @@ under the License.
 							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('defaultPrice')?if_exists?string("#0.00")}</fo:block>
 							            					</fo:table-cell>
 							            					<#assign totalItemAmt = eachItem.get('defaultPrice')*eachItem.get('quantity')>
-							            					totalTaxAmt
+							            					<#assign grandTotal = grandTotal+totalItemAmt>
 							            					<#assign totalAmt = totalAmt+totalItemAmt>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${totalItemAmt?if_exists?string("#0.00")}</fo:block>
@@ -381,6 +382,7 @@ under the License.
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachTax.getValue()?if_exists?string("#0.00")}</fo:block>
 							            					</fo:table-cell>
+							            					<#assign grandTotal = grandTotal+eachTax.getValue()>
 														</fo:table-row>
 													</#list>
 												</#if>
@@ -400,7 +402,7 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">GRAND TOTAL</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${grandTotal?if_exists?string("#0.00")}</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
 												<fo:table-row height="20px">
