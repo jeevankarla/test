@@ -46,7 +46,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
-
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 public class icpServices {
 
@@ -158,11 +158,11 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 			Map<String, Object> priceContext = FastMap.newInstance();
 			priceContext.put("userLogin", userLogin);
 			priceContext.put("productStoreId", productStoreId);
-			priceContext.put("productId", productId);
+			priceContext.put("productId", productId);	
 			priceContext.put("partyId", partyId);
 			priceContext.put("priceDate", effectiveDate);
 			priceContext.put("geoTax", geoTax);
-			priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);
+			priceResult = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, priceContext);
 			if (ServiceUtil.isError(priceResult)) {
 					Debug.logError("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult), module);
 					return ServiceUtil.returnError("There was an error while calculating the price");
@@ -171,7 +171,7 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 			List taxList = (List)priceResult.get("taxList");
 			ShoppingCartItem item = null;
 			try{
-				int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("price"),
+				int itemIndx = cart.addItem(0, ShoppingCartItem.makeItem(Integer.valueOf(0), productId, null,	quantity, (BigDecimal)priceResult.get("basicPrice"),
 				            null, null, null, null, null, null, null, null, null, null, null, null, null, dispatcher,
 				            cart, Boolean.FALSE, Boolean.FALSE, null, Boolean.TRUE, Boolean.TRUE));
 				
@@ -357,7 +357,7 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
     			
     			
     			String invoiceId = "";
-    			result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", eachOrderId,"eventDate", effectiveDate,"userLogin", userLogin));
+    			result = dispatcher.runSync("createInvoiceForOrderAllItems", UtilMisc.<String, Object>toMap("orderId", eachOrderId,"eventDate", effectiveDate,"userLogin", userLogin, "purposeTypeId", salesChannelEnumId));
     	        if (ServiceUtil.isError(result)) {
     	        	Debug.logError("There was an error while creating  the invoice: " + ServiceUtil.getErrorMessage(result), module);
     	        	request.setAttribute("_ERROR_MESSAGE_", "There was an error while creating the invoice for order: "+eachOrderId);
@@ -561,7 +561,6 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
 			return "error";
 		}
 		
-		request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId);	  	 
 		return "success";
 	}
 	

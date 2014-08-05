@@ -29,7 +29,8 @@
     <TenantConfiguration propertyName="mobilePMIndentEndTime" propertyValue="09:30" propertyTypeEnumId="LMS" description="Cut off time for accepting mobile PM indents"/>
     
     <EnumerationType description="CUSTOM SEQUENCE NUMBER" enumTypeId="CUSTOM_SEQ_NUM"/> 
-    <Enumeration description="CREDIT INSTITUTION SEQUENCE" enumCode="CR INST SEQUENCE" enumId="RM_CRINST" enumTypeId="CUSTOM_SEQ_NUM"/> 
+    <Enumeration description="VAT INVOICE SEQUENCE" enumCode="VAT INVOICE" enumId="VAT_INV" enumTypeId="CUSTOM_SEQ_NUM"/>
+    <Enumeration description="EXCISE INVOICE SEQUENCE" enumCode="EXCISE INVOICE" enumId="EXCISE_INV" enumTypeId="CUSTOM_SEQ_NUM"/> 
     
     <PartyIdentificationType partyIdentificationTypeId="CST_NUMBER" description="CST Number"/>
     <PartyIdentificationType partyIdentificationTypeId="PAN_NUMBER" description="PAN Number"/>
@@ -42,4 +43,5 @@
 	<ShipmentType description="ICP Nandini Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_NANDINI_SHIPMENT"/>
 	<ShipmentType description="ICP Amul Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_AMUL_SHIPMENT"/>
 	  <Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	  <Enumeration description="ICP Nandini channel" enumCode="ICP Nandini" enumId="ICP_NANDINI_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 </entity-engine-xml>

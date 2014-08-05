@@ -25,6 +25,7 @@ import javolution.util.FastMap;
 import javolution.util.FastList;
 import javolution.util.FastSet;
 
+import org.ofbiz.accounting.tax.TaxAuthorityServices;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.DateTimeConverters;
 import org.ofbiz.base.util.Debug;
@@ -6475,7 +6476,201 @@ public class ByProductNetworkServices {
 
 		return result;
 	}
+	
+	public static Map<String, Object> calculateStoreProductPrices(Delegator delegator, LocalDispatcher dispatcher, Map<String, ? extends Object> context) {
+	    Map<String, Object> result = FastMap.newInstance();
+	   
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    String productId = (String) context.get("productId"); 
+	    String partyId = (String) context.get("partyId");
+	    String geoTax = (String) context.get("geoTax");
+	    String productStoreId = (String) context.get("productStoreId");
+	    String shipmentTypeId = (String) context.get("shipmentTypeId");
+	    String productSubscriptionTypeId = (String) context.get("productSubscriptionTypeId");
+	    Timestamp priceDate = (Timestamp) context.get("priceDate");
+	    String productStoreGroupId = "_NA_";
+	    String productPriceTypeId = (String) context.get("productPriceTypeId");
+	    GenericValue product;
+	    String currencyDefaultUomId = (String) context.get("currencyUomId");
+	    BigDecimal discountAmount = BigDecimal.ZERO;
+	    String productCategory = "";
+	    List lmsProductIdsList = FastList.newInstance();
+	    List byprodProductIdsList = FastList.newInstance();
+	    if (UtilValidate.isEmpty(currencyDefaultUomId)) {
+	        currencyDefaultUomId = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "INR");
+	    }
+		GenericValue productStore;
+		try {
+			productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+		} catch (GenericEntityException e) {
+			Debug.logError(e, e.toString(), module);
+	        return ServiceUtil.returnError(e.toString());
+		}
+		try {
+			product = delegator.findOne("Product", UtilMisc.toMap("productId", productId),false);
+		} catch (GenericEntityException e) {
+			Debug.logError(e, e.toString(), module);
+	        return ServiceUtil.returnError(e.toString());
+		}
+		
+	    if (UtilValidate.isEmpty(priceDate)) {
+	    	priceDate = UtilDateTime.nowTimestamp();
+	    }
+	    List conditionList = FastList.newInstance();
+	    
+	    try {
+    		Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin,"partyId", partyId);
+    		inputRateAmt.put("rateCurrencyUomId", currencyDefaultUomId);  
+    		inputRateAmt.put("rateTypeId", "VENDOR_DEDUCTION");
+    		inputRateAmt.put("periodTypeId", "RATE_HOUR");
+    		inputRateAmt.put("partyId", partyId);
+    		inputRateAmt.put("fromDate", priceDate);
+    		inputRateAmt.put("productId", productId);
+    		Map<String, Object> serviceResults = dispatcher.runSync("getPartyDiscountAmount", inputRateAmt);
+    		
+    		if (ServiceUtil.isError(serviceResults)) {
+    			Debug.logError( "Unable to determine discount for [" + partyId +"]=========", module);
+    			//return ServiceUtil.returnError("Unable to determine discount for " + facilityCategory, null, null, serviceResults);
+    		}else if(UtilValidate.isNotEmpty(serviceResults.get("rateAmount"))){
+				discountAmount = (BigDecimal)serviceResults.get("rateAmount");
+				//rateAmountEntry = (GenericValue) serviceResults.get("rateAmountEntry");
+    		}
+	        		
+        }catch (GenericServiceException e) {
+			Debug.logError(e, "Unable to get margin/discount: " + e.getMessage(), module);
+	        return ServiceUtil.returnError("Unable to get margin/discount: " + e.getMessage());
+        }
 
+	    if(UtilValidate.isNotEmpty(productSubscriptionTypeId) && productSubscriptionTypeId.equals("EMP_SUBSIDY")){
+	    	productPriceTypeId ="MRP_PRICE";
+	    }
+	    
+	    if(UtilValidate.isEmpty(productPriceTypeId)){
+	    	  productPriceTypeId = "DEFAULT_PRICE";
+	    }
+	    
+	    boolean taxInPrice = false;
+	    List<GenericValue> productPricesComponents = FastList.newInstance();
+	    conditionList.clear();
+    	conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+    	EntityCondition productPriceCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    	try{
+    		productPricesComponents = delegator.findList("ProductPrice", productPriceCond, null, null, null, false);
+    	}catch(GenericEntityException e){
+    		Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+    	}
+    	
+    	productPricesComponents = EntityUtil.filterByDate(productPricesComponents, priceDate);
+    	BigDecimal basicPrice = BigDecimal.ZERO;
+    	List taxDetailList = FastList.newInstance();
+		BigDecimal totalExciseDuty = BigDecimal.ZERO;
+		BigDecimal totalTaxAmt = BigDecimal.ZERO;
+		BigDecimal MRPPrice = BigDecimal.ZERO;
+		
+    	List<GenericValue> productComponentPrices = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, productPriceTypeId));
+    	if(UtilValidate.isNotEmpty(productComponentPrices)){
+    		String taxFlag = (EntityUtil.getFirst(productComponentPrices)).getString("taxInPrice");
+    		basicPrice = (BigDecimal)(EntityUtil.getFirst(productComponentPrices)).getBigDecimal("price");
+    		if(UtilValidate.isNotEmpty(taxFlag) && taxFlag.equalsIgnoreCase("Y")){
+    			taxInPrice = true;
+    		}
+    	}
+	    if(!taxInPrice){
+	    	
+	    	List<GenericValue> applicableTaxTypes = null;
+			try {
+				applicableTaxTypes = delegator.findList("ProductPriceType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"TAX"), null, null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+				return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+			}
+
+			List applicableTaxTypeList = EntityUtil.getFieldListFromEntityList(applicableTaxTypes, "productPriceTypeId", true);
+			
+			List<GenericValue> prodPriceType = null;
+			String MRPPriceType = "";
+
+			if(UtilValidate.isNotEmpty(geoTax) && geoTax.equals("CST")){
+					MRPPriceType = "MRP_OS";
+					applicableTaxTypeList.remove("VAT_SALE");
+			}
+			else{
+				MRPPriceType = "MRP_IS";
+				applicableTaxTypeList.remove("CST_SALE");
+			}
+			//Calculate MRP price for excise duty amount
+			
+			List<GenericValue> MRPPriceList = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, MRPPriceType));
+			
+			List<GenericValue> prodPriceTypes = EntityUtil.filterByCondition(productPricesComponents, EntityCondition.makeCondition("productPriceTypeId", EntityOperator.IN, applicableTaxTypeList));
+			
+			if(UtilValidate.isNotEmpty(MRPPriceList)){
+				MRPPrice = (BigDecimal)(EntityUtil.getFirst(MRPPriceList)).get("price");
+			}
+			
+			List<GenericValue> productTaxTypes = FastList.newInstance();
+			for(GenericValue priceType : prodPriceTypes){
+				String taxType = priceType.getString("productPriceTypeId"); 
+				if(taxType.equals("BED_SALE")){
+					BigDecimal taxPercent = priceType.getBigDecimal("taxPercentage");
+					if(UtilValidate.isNotEmpty(taxPercent) && taxPercent.compareTo(BigDecimal.ZERO)>0){
+						BigDecimal amount = (MRPPrice.multiply(taxPercent)).divide(new BigDecimal(100), 2, rounding);
+						priceType.set("price", amount);
+						priceType.set("taxPercentage", null);
+					}
+				}
+				productTaxTypes.add(priceType);
+			}
+			// basicPrice = basicPrice.setScale( decimals,rounding);
+			List<GenericValue> taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, productTaxTypes);
+			for (GenericValue taxItem : taxList) {
+				String taxType = (String) taxItem.get("orderAdjustmentTypeId");
+				BigDecimal amount = BigDecimal.ZERO;
+				
+				BigDecimal percentage = BigDecimal.ZERO;
+				if(UtilValidate.isNotEmpty(taxItem.get("amount"))){
+					amount = (BigDecimal) taxItem.get("amount");
+				}
+				if(UtilValidate.isNotEmpty(taxItem.get("sourcePercentage")) && amount.compareTo(BigDecimal.ZERO)== 0){
+					percentage = (BigDecimal) taxItem.get("sourcePercentage");
+					if(UtilValidate.isNotEmpty(percentage) && UtilValidate.isNotEmpty(basicPrice)){
+						amount = (basicPrice.multiply(percentage)).divide(new BigDecimal(100), 2, rounding);
+					}
+				}
+				
+				if(taxType.equals("BED_SALE")){
+					totalExciseDuty = totalExciseDuty.add(amount);
+				}
+				else{
+					totalTaxAmt = totalTaxAmt.add(amount);
+				}
+				
+				Map taxDetailMap = FastMap.newInstance();
+				
+				taxDetailMap.put("taxType", taxType);
+				taxDetailMap.put("amount", amount);
+				taxDetailMap.put("percentage", percentage);
+			
+				Map tempDetailMap = FastMap.newInstance();
+				tempDetailMap.putAll(taxDetailMap);
+				
+				taxDetailList.add(tempDetailMap);
+			}
+	    }
+    
+	    BigDecimal price = basicPrice.add(totalExciseDuty);
+	    price = price.subtract(discountAmount);
+	    BigDecimal totalPrice = price.add(totalTaxAmt);
+
+	    result.put("basicPrice", basicPrice);
+	    result.put("mrpPrice", MRPPrice);	    
+	    result.put("price", price);
+	    result.put("totalPrice", totalPrice);
+	    result.put("taxList", taxDetailList);
+	    return result;
+    }
+	
 	public static Map<String, Object> getFacilityByCategory(DispatchContext ctx, Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
