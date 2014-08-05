@@ -946,7 +946,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	  				</tr>
 	  				<tr class="alternate-row">
 	  					<form id="PCMRetailersWorkingNotes" name="PCMRetailersWorkingNotes" method="post" action="<@ofbizUrl>PCMReport.pdf</@ofbizUrl>" target="_blank">	
-	  						<td width="30%">PCM Retailers Working Notes<input  type="hidden"  value="PCMRetailersWorkingNotes"  name="reportTypeFlag"/></td>
+	  						<td width="30%">Details of Retailers Working Notes<input  type="hidden"  value="PCMRetailersWorkingNotes"  name="reportTypeFlag"/></td>
 	  						<td width="15%">Period
 	  							<select name="customTimePeriodId" class='h4'>
 	            					<#list shopeeTimePeriodList as timePeriod>    

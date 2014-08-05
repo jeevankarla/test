@@ -1086,6 +1086,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="NewOrTerminateRtlReportPDF"/>
     </request-map>
+     <request-map uri="PCMReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PCMReportPDF"/>
+    </request-map>
     <request-map uri="fixedDepositReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="FixedDepositReportPDF"/>
@@ -1297,6 +1301,7 @@
 	<view-map name="FixedDepositReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#FixedDepositReportPDF" content-type="application/pdf"/>
 	<view-map name="RetailerSalesComparisonTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="text/plain"/>
 	
+	<view-map name="PCMReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="application/pdf"/>
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>
 	<view-map name="ShopeeComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ShopeeComparison"/>
 	<view-map name="RouteComparison" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#RouteComparison"/>
