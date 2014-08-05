@@ -649,7 +649,7 @@
     	<field name="busRouteNo" title="Bus Root Number" tooltip="${uiLabelMap.CommonRequired}">
     		<drop-down>
     			<entity-options entity-name="Enumeration" key-field-name="description" description="${description}" filter-by-date="false">
-    				<entity-constraint name="enumTypeId" operator="equals" value="BUS_ROOT"/>
+    				<entity-constraint name="enumTypeId" operator="equals" value="BUS_ROUTE"/>
     			</entity-options>
     		</drop-down>
     	</field>
@@ -673,6 +673,7 @@
            </hyperlink>
            </field>
     </form>
+    
     <form name="ArrearDays" type="single" header-row-style="header-row" default-table-style="basic-table" target="findArrearDays">
    		 <field name="hideSearch"><hidden value="Y" /></field>
 		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
