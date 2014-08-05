@@ -115,7 +115,13 @@ under the License.
             <key-map field-name="shiftTypePeriodId" rel-field-name="shiftPeriodId"/>
         </relation>
 	</entity> 
-
+	<entity entity-name="DailyBusTimings" package-name="org.ofbiz.humanres" title="Daily Bus Timings">
+		 <field name="busRouteNo" type="short-varchar"></field>
+		 <field name="date" type="date"></field>	
+		 <field name="inTime" type="time"></field>	
+		 <prim-key field="busRouteNo"/>
+		 <prim-key field="date"/>
+	</entity>
     <entity entity-name="PartyQual" package-name="org.ofbiz.humanres.ability" title="Party Qualification Entity">
         <field name="partyId" type="id-ne"></field>
         <field name="partyQualTypeId" type="id-ne"></field>
@@ -1190,6 +1196,15 @@ under the License.
   	<alias entity-alias="PS" name="partyId"/>
   	<view-link entity-alias="ST" rel-entity-alias="PS">
   		<key-map field-name="skillTypeId"/>
+  	</view-link>
+  </view-entity>
+  <view-entity entity-name="PayrollHeaderAndHeaderItem" package-name="org.ofbiz.humanres" title="Payroll Header HeaderItem">
+  	<member-entity entity-alias="PH" entity-name="PayrollHeader"/>
+	<member-entity entity-alias="PHI" entity-name="PayrollHeaderItem"/>
+	<alias-all entity-alias="PH"/>
+	<alias-all entity-alias="PHI"/>
+  	<view-link entity-alias="PH" rel-entity-alias="PHI">
+  		<key-map field-name="payrollHeaderId"/>
   	</view-link>
   </view-entity>
 

@@ -283,6 +283,22 @@ under the License.
         <response name="success" type="view" value="FindPartySkills"/>
         <response name="error" type="view" value="FindPartySkills"/>
     </request-map>
+    <request-map uri="createBusTimings">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createBusTimings"/>
+    	<response name="success" type="view" value="DailyBusTimings"/>
+    	<response name="error" type="view" value="DailyBusTimings"/>
+    </request-map>
+    <request-map uri="findBusTimings">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="DailyBusTimings"/>
+    	<response name="error" type="view" value="DailyBusTimings"/>
+    </request-map>
+    <request-map uri="deleteBusTiming">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteBusTiming"/>
+        <response name="success" type="view" value="DailyBusTimings"/>
+    </request-map>
      <request-map uri="findArrearDays">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EmployeeArrearDays"/>
@@ -1406,6 +1422,10 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeArrearDays"/>
     </request-map>
+    <request-map uri="busTimings">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="DailyBusTimings"></response>
+    </request-map>
      <request-map uri="EmployeeAttendanceInternal">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeAttendanceInternal"/>
@@ -1721,6 +1741,7 @@ under the License.
 
     <view-map name="EmployeeAttendance" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendance"/>
     <view-map name="EmployeeArrearDays" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeArrearDays"></view-map>
+    <view-map name="DailyBusTimings" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyBusTimings"></view-map>
     <view-map name="EmployeeAttendanceInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendanceInternal"/>
 
  <!--====================Reports View===================================-->

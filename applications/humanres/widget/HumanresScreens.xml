@@ -134,6 +134,50 @@
 			</widgets>
 		</section>
     </screen>
+	 <screen name="DailyBusTimings">
+	 	<section>
+			<actions>
+				<set field="headerItem" value="busTimings" />
+				<set field="tabButtonItem" value="busTimings" />
+				<set field="titleProperty" value="Daily Bus Timings" />
+				<set field="layoutSettings.javaScripts[]" value="/partymgr/static/inTime.js" global="true"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<container>
+							<screenlet title="Daily Bus Timings">
+								<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="DailyBusTimings"/>
+							</screenlet>
+							<include-screen name="findBusTimings" location="component://humanres/widget/HumanresScreens.xml"/>
+						</container>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	 </screen>
+	 <screen name="findBusTimings">
+	 	<section>
+			<actions>
+				<entity-and list="buslist" entity-name="DailyBusTimings">
+					<field-map field-name="date" from-field="parameters.date"/>
+				</entity-and>
+			</actions>
+			<widgets>
+			 <section>
+				<widgets>
+					<screenlet  title="Find Bus Timings">
+                       	<include-form name="FindBusTimings" location="component://humanres/widget/ReportHumanresSummaryForms.xml" />
+                       	<screenlet >
+                       		<include-form name="BusTimings" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+                       	</screenlet>
+					</screenlet>
+			  </widgets>
+			</section>
+			</widgets>
+		</section>
+	 </screen>
 	 <screen name="EmployeeAttendanceInternal">
         <section>
             <actions>
