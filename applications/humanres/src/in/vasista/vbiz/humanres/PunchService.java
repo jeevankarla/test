@@ -338,16 +338,15 @@ public class PunchService {
 					Debug.logInfo("interval====="+UtilDateTime.getInterval(lastEmplPunchTime,punchDateTime),module);
 				}*/
 				
-				Debug.logInfo("shiftTimeGap====="+shiftTimeGap,module);
+				//Debug.log("shiftTimeGap====="+shiftTimeGap);
 				Map employeeDailyAttendanceMap = UtilMisc.toMap("userLogin", userLogin);
 				employeeDailyAttendanceMap.put("date", UtilDateTime.toSqlDate(punchDateTime));
 				employeeDailyAttendanceMap.put("partyId", partyId);
 				GenericValue shiftType = getShiftTypeByTime(dctx,context);
 				shiftTypeId = shiftType.getString("shiftTypeId");
-				
 				GenericValue lastShiftType =fetchLastEmplShiftDetails(dctx,context);
 				
-				if(UtilValidate.isNotEmpty(lastShiftType) && shiftTimeGap <= (3600000*shiftThreshold)){
+				if(UtilValidate.isNotEmpty(lastShiftType) && shiftTimeGap !=0 && shiftTimeGap <= (3600000*shiftThreshold)){
 					shiftTypeId = lastShiftType.getString("shiftType");
 					List condList = FastList.newInstance();
 					condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, shiftTypeId));
@@ -360,6 +359,7 @@ public class PunchService {
 					}
 					
 				}
+				//Debug.log("shiftTypeId===="+shiftTypeId);
 				employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
 				double lateMin =0;
 				double extraMin =0;
@@ -420,7 +420,7 @@ public class PunchService {
 						}
 						emplPunchMap.put("InOut", "IN");
 					}
-					if(punchtime.after(shiftType.getTime("endTime")) || shiftTimeGap >= (3600000*shiftThreshold)){
+					if(punchtime.after(shiftType.getTime("endTime"))){
 						shiftType = getShiftTypeByTime(dctx,context);
 						shiftTypeId = shiftType.getString("shiftTypeId");
 						employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
