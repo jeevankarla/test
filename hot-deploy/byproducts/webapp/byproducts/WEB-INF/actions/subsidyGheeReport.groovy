@@ -106,19 +106,20 @@ if (UtilValidate.isNotEmpty(partyDeductionList)) {
 		}
 		if (cost==0) {
 			quantity=0;
+		}else{
+			  partyWiseMap["partyName"]=partyName;
+			  partyWiseMap["quantity"]=quantity;
+			  partyWiseMap["cost"]=cost;
+			  tempMap[partyId]=partyWiseMap;
+			  totalQty=totalQty+quantity;
+			  if(partyDeduction.cost){
+				totalAmount=totalAmount+partyDeduction.cost;
+			  }
+			  finalList.add(tempMap);
+			  context.finalList=finalList;
+			  context.totalQty = totalQty;
+			  context.totalAmount = totalAmount;
 		}
-		partyWiseMap["partyName"]=partyName;
-		partyWiseMap["quantity"]=quantity;
-		partyWiseMap["cost"]=cost;
-		tempMap[partyId]=partyWiseMap;
-		totalQty=totalQty+quantity;
-		if(partyDeduction.cost){
-			totalAmount=totalAmount+partyDeduction.cost;
-		}
-		finalList.add(tempMap);
-		context.finalList=finalList;
-		context.totalQty = totalQty;
-		context.totalAmount = totalAmount;
 	}
 
 }
