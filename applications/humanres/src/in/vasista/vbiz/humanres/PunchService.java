@@ -420,7 +420,7 @@ public class PunchService {
 						}
 						emplPunchMap.put("InOut", "IN");
 					}
-					if(punchtime.after(shiftType.getTime("endTime"))){
+					if(punchtime.after(shiftType.getTime("endTime")) || shiftTimeGap >= (3600000*shiftThreshold)){
 						shiftType = getShiftTypeByTime(dctx,context);
 						shiftTypeId = shiftType.getString("shiftTypeId");
 						employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
