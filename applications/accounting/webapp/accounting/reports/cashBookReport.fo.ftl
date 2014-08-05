@@ -23,10 +23,10 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
-            margin-top="0.2in" margin-bottom=".3in" margin-left=".2in" margin-right=".2in">
+            margin-top="0.2in" margin-bottom=".3in" margin-left=".7in" margin-right=".5in">
         <fo:region-body margin-top="1.4in"/>
-        <fo:region-before extent="1in"/>
-        <fo:region-after extent="1in"/>        
+        <fo:region-before extent="1.5in"/>
+        <fo:region-after extent="1.5in"/>        
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
@@ -113,7 +113,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign comments = (finAcctngDetails.get("comments")?if_exists)/>
 								<fo:table-row border-style="solid">
 									<fo:table-cell border-style="solid">
-	                            		<fo:block  text-align="left" keep-together="always" font-size="11pt" white-space-collapse="false"> 
+	                            		<fo:block  text-align="left" keep-together="always" font-size="13pt" white-space-collapse="false"> 
                                              ${transactionDate?if_exists}
                                       </fo:block>  
 	                       			</fo:table-cell>
@@ -126,7 +126,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 		                       			</fo:table-cell>
 		                       			<#else>
 		                       			<fo:table-cell border-style="solid" font-weight="bold">
-		                            		<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"> 
+		                            		<fo:block  keep-together="always" text-align="left" font-size="13pt" white-space-collapse="false"> 
 	                                             ${paymentId?if_exists}
 	                                      </fo:block>  
 		                       			</fo:table-cell>
@@ -138,7 +138,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </#if>	
 	                       			<#if ((partyId)?has_content)>
                                 	<fo:table-cell border-style="solid" font-weight="bold">
-	                                    <fo:block text-align="left">${(partyId)}</fo:block>
+	                                    <fo:block font-size="13pt" text-align="left">${(partyId)}</fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell border-style="solid">
@@ -146,56 +146,56 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
                                 	</#if>
 	                       			<fo:table-cell border-style="solid">
-                                    <fo:block text-align="left" font-weight="bold">
+                                    <fo:block text-align="left" font-size="13pt" font-weight="bold">
                                             ${partyName?if_exists}
                                     </fo:block>
 	                                </fo:table-cell>
 	                                <#if (paymentId != "DAY TOTAL")>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right" font-size="13pt">
 	                                            <#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right" font-size="13pt">
 	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right" font-size="13pt">
 	                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right" font-size="13pt">
 	                                            <#if closingBalance?has_content>${(closingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <#else>
 	                                <fo:table-cell border-style="solid" font-weight="bold">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right" font-size="13pt"> 
 	                                            <#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid" font-weight="bold">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right" font-size="13pt">
 	                                             <#if debitAmount?has_content>${(debitAmount)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid" font-weight="bold">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right" font-size="13pt">
 	                                             <#if creditAmount?has_content>${(creditAmount)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                <fo:table-cell border-style="solid" font-weight="bold">
-	                                    <fo:block text-align="right">
+	                                    <fo:block text-align="right" font-size="13pt">
 	                                            <#if closingBalance?has_content>${(closingBalance)?string("##0.00")}<#else>0.00</#if>
 	                                    </fo:block>
 	                                </fo:table-cell>
 	                                </#if>
 	                                <#if ((comments)?has_content)>
                                 	<fo:table-cell border-style="solid">
-	                                    <fo:block text-align="left">${(comments)}</fo:block>
+	                                    <fo:block text-align="left" font-size="13pt">${(comments)}</fo:block>
 	                                </fo:table-cell>
                                  	<#else>
                                  	<fo:table-cell border-style="solid">
@@ -203,6 +203,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                </fo:table-cell>
                                 	</#if>
                               </fo:table-row>
+                              <fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
                           </#list>
                           <fo:table-row>
 							<fo:table-cell>
