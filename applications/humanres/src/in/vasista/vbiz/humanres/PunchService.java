@@ -347,7 +347,7 @@ public class PunchService {
 				
 				GenericValue lastShiftType =fetchLastEmplShiftDetails(dctx,context);
 				
-				if(UtilValidate.isNotEmpty(lastShiftType) && shiftTimeGap <= (3600000*shiftThreshold)){
+				if(UtilValidate.isNotEmpty(lastShiftType) && shiftTimeGap <= (3600000*9)){
 					shiftTypeId = lastShiftType.getString("shiftType");
 					List condList = FastList.newInstance();
 					condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, shiftTypeId));
@@ -452,18 +452,21 @@ public class PunchService {
 	    	return result;
 	 } 
   
-  /*public static Map<String, Object> populateEmplShiftDetails(DispatchContext dctx, Map<String, Object> context) {
+ /* public static Map<String, Object> populateEmplShiftDetails(DispatchContext dctx, Map<String, Object> context) {
   	   Delegator delegator = dctx.getDelegator();
 	   LocalDispatcher dispatcher = dctx.getDispatcher();    	
       GenericValue userLogin = (GenericValue) context.get("userLogin");
       String partyId =  (String)context.get("partyId");
-      Timestamp punchDateTime =  (Timestamp)context.get("punchDateTime");
+      Date punchdate=  (Date)context.get("punchdate");
+      Time punchtime =  (Time)context.get("punchtime");
+      String shiftType = (String)context.get("shiftType");
+      Timestamp punchDateTime = UtilDateTime.nowTimestamp();
       Map result = ServiceUtil.returnSuccess();
       String shiftTypeId = null;
 		try {
 			int lateComeMin = 0;
-      	int earlyGoMin =0;
-      	 GenericValue tenantLateCome = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_LATE_COME"), false);
+			int earlyGoMin =0;
+      	   GenericValue tenantLateCome = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_LATE_COME"), false);
 	    	 if (UtilValidate.isNotEmpty(tenantLateCome)) {
 	    		lateComeMin = (new Double(tenantLateCome.getString("propertyValue"))).intValue();
 	    	 }
@@ -474,7 +477,7 @@ public class PunchService {
 	    	GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), true);
 	    	
 	    	
-			Time punchtime = UtilDateTime.toSqlTime(UtilDateTime.toDateString(punchDateTime, "HH:mm:ss"));
+			//Time punchtime = UtilDateTime.toSqlTime(UtilDateTime.toDateString(punchDateTime, "HH:mm:ss"));
 			//Debug.log("punchDateTime====="+punchDateTime);
 			GenericValue lastEmplPunch = fetchLastEmplPunch(dctx,context);
 			//Debug.log("lastEmplPunch====="+lastEmplPunch);
