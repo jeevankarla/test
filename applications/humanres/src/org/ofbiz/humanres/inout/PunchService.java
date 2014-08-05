@@ -77,6 +77,7 @@ public class PunchService {
 		String inout = (String) context.get("InOut");
 		String note = (String) context.get("Note");
 		String isManual = (String) context.get("isManual");
+		String shiftTypeId = (String) context.get("shiftType");
 		String flag = "out";
 		String date3 = punchdate.toString();
 		String dateArr2[] = date3.split(Pattern.quote("-"));
@@ -447,18 +448,36 @@ public class PunchService {
 
 		try {
 
-			GenericValue EmplPunch = delegator.makeValue("EmplPunch", UtilMisc
+			GenericValue emplPunch = delegator.makeValue("EmplPunch", UtilMisc
 					.toMap("partyId", partyId, "emplPunchId", emplPunchId,
 							"PunchType", PunchType, "punchdate", punchdate,
 							"InOut", inout ,"isManual" ,isManual)); // create a generic value from id
 												// we just got
 
-			EmplPunch.setNonPKFields(context); // move non-primary key fields
+			emplPunch.setNonPKFields(context); // move non-primary key fields
 												// from input parameters to
 												// genericvalue
-
+			emplPunch.set("shiftType", shiftTypeId);
 			// delegator.create(EmplPunch);
-			delegator.createOrStore(EmplPunch);
+			/*if(UtilValidate.isNotEmpty(shiftTypeId)){
+				emplPunch.set("shiftType", shiftTypeId);
+				List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("shiftTypeId", EntityOperator.EQUALS, shiftTypeId));
+				condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isDefault", EntityOperator.EQUALS, "Y"),EntityOperator.AND ,EntityCondition.makeCondition("isDefault", EntityOperator.NOT_EQUAL, null)));
+				EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+				//punchTime 
+				GenericValue shiftType =null;
+				List<GenericValue> workShiftTypePeriodAndMap = delegator.findList("WorkShiftTypePeriodAndMap", cond, null, UtilMisc.toList("-startTime"),null, false);
+				if(UtilValidate.isNotEmpty(workShiftTypePeriodAndMap)){
+					shiftType = EntityUtil.getFirst(workShiftTypePeriodAndMap);
+				}
+				int shiftThreshold =0;
+				GenericValue tenantShiftThreshold = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_THRESHOLD"), false);
+	  	    	if (UtilValidate.isNotEmpty(tenantShiftThreshold)) {
+	  	    		shiftThreshold = (new Double(tenantShiftThreshold.getString("propertyValue"))).intValue();
+	  	    	}
+			}*/
+			delegator.createOrStore(emplPunch);
 			return ServiceUtil.returnSuccess("Data added successfully");
 
 		} catch (GenericEntityException e) {

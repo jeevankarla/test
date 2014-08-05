@@ -1451,6 +1451,7 @@ under the License.
 	  <field name="punchtime" type="time"/>
 	  <field name="PunchType" type="id-ne"/>
 	  <field name="InOut" type="id-ne"/>
+	  <field name="shiftType" type="id"/>
 	  <field name="isManual" type="indicator"/>
 	  <field name="Note" type="description"/>
 	  <prim-key field="partyId"/>
@@ -1458,6 +1459,9 @@ under the License.
 	  <prim-key field="InOut"/>
 	  <prim-key field="emplPunchId"/>
 	  <prim-key field="PunchType"/>
+	  <relation type="one" fk-name="EMP_STY"  rel-entity-name="WorkShiftType">
+            <key-map field-name="shiftType" rel-field-name="shiftTypeId"/>
+      </relation>
     </entity>
    <entity entity-name="EmplDailyAttendanceDetail" package-name="org.ofbiz.humanres.position"	title="Empl PUnch Type">
 	  <field name="partyId" type="id-ne"/>
@@ -1474,7 +1478,7 @@ under the License.
 	  <prim-key field="seqId"/>
 	  <relation type="one" fk-name="EDAD_STY"  rel-entity-name="WorkShiftType">
             <key-map field-name="shiftType" rel-field-name="shiftTypeId"/>
-        </relation>
+      </relation>
     </entity>
      <!-- ==================NotificationAction=============================== -->
      <entity entity-name="NotificationCond"
