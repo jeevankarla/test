@@ -117,10 +117,12 @@ under the License.
 	</entity> 
 	<entity entity-name="DailyBusTimings" package-name="org.ofbiz.humanres" title="Daily Bus Timings">
 		 <field name="busRouteNo" type="short-varchar"></field>
+		  <field name="shiftType" type="short-varchar"></field>
 		 <field name="date" type="date"></field>	
 		 <field name="inTime" type="time"></field>	
 		 <prim-key field="busRouteNo"/>
 		 <prim-key field="date"/>
+		 <prim-key field="shiftType"/>
 	</entity>
     <entity entity-name="PartyQual" package-name="org.ofbiz.humanres.ability" title="Party Qualification Entity">
         <field name="partyId" type="id-ne"></field>
