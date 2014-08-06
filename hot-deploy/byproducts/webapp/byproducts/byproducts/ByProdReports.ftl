@@ -374,10 +374,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<option value='SHP_RTLR'>BVB</option>
 					<option value='SCT_RTLR'>Sachets</option>
 					</select>
-					<#list routesList as route>    
-  	    				<option value='${route}'>${route}</option>
-					</#list>  
-					</select>
 				</td>
 				<td width="15%"></td>
       			<td width="15%"></td>
