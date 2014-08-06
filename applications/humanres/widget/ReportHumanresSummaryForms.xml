@@ -646,7 +646,7 @@
     	<set field="nowTime" value="${groovy: org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;HH:mm:ss&quot;)}" type="String"/> 
           <set field="dateTime" value="${groovy:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" type="Date"/>
     </actions>
-    	<field name="busRouteNo" title="Bus Root Number" tooltip="${uiLabelMap.CommonRequired}">
+    	<field name="busRouteNo" title="Bus Route Number" tooltip="${uiLabelMap.CommonRequired}">
     		<drop-down>
     			<entity-options entity-name="Enumeration" key-field-name="description" description="${description}" filter-by-date="false">
     				<entity-constraint name="enumTypeId" operator="equals" value="BUS_ROUTE"/>
@@ -663,7 +663,7 @@
     	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="BusTimings" type="list" list-name="buslist" default-table-style="basic-table hover-bar" >
-    	<field name="busRouteNo" title="Bus Root Number"><display></display></field>
+    	<field name="busRouteNo" title="Bus Route Number"><display></display></field>
     	<field name="date" title="Date" ><display></display></field>
     	<field name="inTime" title="In Time"><display></display></field>
     	<field name="deleteLink" title="Delete" widget-style="buttontext">
@@ -673,6 +673,7 @@
            </hyperlink>
            </field>
     </form>
+   
     
     <form name="ArrearDays" type="single" header-row-style="header-row" default-table-style="basic-table" target="findArrearDays">
    		 <field name="hideSearch"><hidden value="Y" /></field>
