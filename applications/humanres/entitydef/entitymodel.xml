@@ -1462,6 +1462,7 @@ under the License.
   <entity entity-name="EmplPunch" package-name="org.ofbiz.humanres.position"	title="Empl PUnch Type">
 	  <field name="emplPunchId" type="id-ne"/>
 	  <field name="partyId" type="id-ne"/>
+	  <field name="punchDateTime" type="date-time"/>
 	  <field name="punchdate" type="date"/>
 	  <field name="punchtime" type="time"/>
 	  <field name="PunchType" type="id-ne"/>

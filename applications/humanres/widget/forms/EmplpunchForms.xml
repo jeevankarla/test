@@ -10,7 +10,8 @@
 	<field name="partyId" title="Name :"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName}"/></field>
     <field name="emplPunchId"><hidden/></field>      
     <field name="punchtime"><display/></field>
-    <field name="dateTime"><hidden/></field>        
+    <field name="dateTime"><hidden/></field>
+    <field name="isManual"><hidden value="Y"/></field>	      
        <field name="InOut"  use-when="check==null" widget-style="required">              
           <drop-down allow-empty="false">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">

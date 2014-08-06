@@ -16,14 +16,21 @@
           <set field="dateTime" value="${groovy:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" type="Date"/> 
           </actions>
           <auto-fields-service default-field-type="hidden" service-name="adminPunch"/>  
-        <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>	 
+        <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
+        <field name="isManual"><hidden value="Y"/></field>	
         <field name="partyId"><lookup target-form-name="LookupPartyName" default-value="${partyId}" target-parameter="roleTypeId"/></field>
         <field name="punchtime" use-when="punchtime==null" title="Punch Time"><text default-value="${nowTime}"/></field>
         <field name="punchtime" use-when="punchtime!=null" title="Punch Time"><text/></field>
          <field name="dateTime"><hidden/></field>
         
         <field name="punchdate" title="Date"><date-time type="date" default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
-        <field name="emplPunchId"><hidden/></field> 
+        <field name="emplPunchId"><hidden/></field>
+        <!--  <field name="shiftType">
+	         <drop-down allow-empty="true" current="selected">
+	  		  	<entity-options entity-name="WorkShiftType" description="${description}" key-field-name="shiftTypeId">
+	            </entity-options>
+			</drop-down>
+        </field>  -->
         <field name="PunchType"  widget-style="required">
          <drop-down allow-empty="false" current="selected">
   		  <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">

@@ -206,7 +206,7 @@ onMouseout="this.style.backgroundColor='#F0F8FF';"<#if (security.hasEntityPermis
   <#if period.start?date=Records.punchdate>   
     <#if Records.PunchType="Normal">   
       <#if Records.emplPunchId=cellid?string>    
-      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Normal&InOut=IN&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}')" 
+      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Normal&InOut=IN&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType}')" 
      <#assign x=0>
         <#break> 
      </#if>
@@ -229,7 +229,7 @@ onMouseout="this.style.backgroundColor='#F0F8FF';"<#if (security.hasEntityPermis
    
 <#assign emp=period.start?string("dd/MM/yyyy")>
 <#if x!=1>
-onClick="empclick('${emp}');if(document.getElementById('empdate').value==1){leapTo('/humanres/control/EmpPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Normal&InOut=IN&dateTime=${period.start?string}&emplPunchId=${cellid?string}')}else{alert('You cant modify the record.\n\nPlease contact Admin');}"
+onClick="empclick('${emp}');if(document.getElementById('empdate').value==1){leapTo('/humanres/control/EmpPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Normal&InOut=IN&dateTime=${period.start?string}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType}')}else{alert('You cant modify the record.\n\nPlease contact Admin');}"
 <#assign x=0>
 <#else>
 onClick="alert('You cant modify the record.\n\nPlease contact Admin');"
@@ -304,7 +304,7 @@ onMouseout="this.style.backgroundColor='#F0F8FF';"<#if (security.hasEntityPermis
   <#if period.start?date=Records.punchdate>   
     <#if Records.PunchType="Normal">  
        <#if Records.emplPunchId=cellid?string>     
-      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Normal&InOut=OUT&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}')" 
+      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Normal&InOut=OUT&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType}')" 
      <#assign x=0>
         <#break> 
      </#if></#if>
@@ -327,7 +327,7 @@ onMouseout="this.style.backgroundColor='#F0F8FF';"<#if (security.hasEntityPermis
    
 <#assign emp=period.start?string("dd/MM/yyyy")>
 <#if x!=1>
-onClick="empclick('${emp}');if(document.getElementById('empdate').value==1){leapTo('/humanres/control/EmpPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Normal&InOut=OUT&dateTime=${period.start?string}&emplPunchId=${cellid?string}')}else{alert('You cant modify the record.\n\nPlease contact Admin');}"
+onClick="empclick('${emp}');if(document.getElementById('empdate').value==1){leapTo('/humanres/control/EmpPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Normal&InOut=OUT&dateTime=${period.start?string}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType}')}else{alert('You cant modify the record.\n\nPlease contact Admin');}"
 <#assign x=0>
 <#else>
 onClick="alert('You cant modify the record.\n\nPlease contact Admin');"
@@ -423,7 +423,7 @@ onMouseout="this.style.backgroundColor='white';" <#if (security.hasEntityPermiss
   <#if period.start?date=Records.punchdate>   
     <#if Records.PunchType="Lunch"> 
       <#if Records.emplPunchId=cellid?string>      
-      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Lunch&InOut=IN&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}')" 
+      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Lunch&InOut=IN&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?string}')" 
      <#assign x=0>
         <#break> 
      </#if></#if>
@@ -524,7 +524,7 @@ onMouseout="this.style.backgroundColor='white';" <#if (security.hasEntityPermiss
   <#if period.start?date=Records.punchdate>   
     <#if Records.PunchType="Lunch">       
       <#if Records.emplPunchId=cellid?string>
-      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Lunch&InOut=OUT&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}')" 
+      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Lunch&InOut=OUT&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?string}')" 
      <#assign x=0>
         <#break> 
      </#if></#if>
@@ -644,7 +644,7 @@ onMouseout="this.style.backgroundColor='#F0F8FF';" <#if (security.hasEntityPermi
   <#if period.start?date=Records.punchdate>   
     <#if Records.PunchType="Break">   
      <#if Records.emplPunchId=cellid?string>    
-      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Break&InOut=IN&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}')" 
+      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Break&InOut=IN&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?string}')" 
      <#assign x=0>
         <#break> 
      </#if></#if>
@@ -741,7 +741,7 @@ onMouseout="this.style.backgroundColor='#F0F8FF';" <#if (security.hasEntityPermi
   <#if period.start?date=Records.punchdate>   
     <#if Records.PunchType="Break"> 
      <#if Records.emplPunchId=cellid?string>      
-      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Break&InOut=OUT&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}')" 
+      onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=Break&InOut=OUT&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?string}')" 
      <#assign x=0>
         <#break> 
      </#if></#if>

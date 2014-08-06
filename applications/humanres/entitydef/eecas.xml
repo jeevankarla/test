@@ -24,5 +24,8 @@
     <eca entity="EmplPunchRaw" operation="create" event="return">
         <action service="populateEmplPunch" mode="sync"/>
     </eca>
-    
+   <eca entity="EmplPunch" operation="create-store-remove" event="return">
+        <condition operator="is-not-empty" field-name="shiftType"/>
+        <action service="populateEmplShiftDetails" mode="sync"/>
+    </eca> 
 </entity-eca>

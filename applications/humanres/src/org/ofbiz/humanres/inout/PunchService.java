@@ -458,6 +458,16 @@ public class PunchService {
 												// from input parameters to
 												// genericvalue
 			emplPunch.set("shiftType", shiftTypeId);
+			
+			Timestamp punchDateTime =
+				    Timestamp.valueOf(
+				        new SimpleDateFormat("yyyy-MM-dd ")
+				        .format(punchdate) // get the current date as String
+				        .concat(punchtime.toString())        // and append the time
+				    );
+			
+			emplPunch.set("punchDateTime", punchDateTime);
+			
 			// delegator.create(EmplPunch);
 			/*if(UtilValidate.isNotEmpty(shiftTypeId)){
 				emplPunch.set("shiftType", shiftTypeId);
