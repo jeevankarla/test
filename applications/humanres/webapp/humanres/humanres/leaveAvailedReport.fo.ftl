@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 		<fo:layout-master-set>
-			<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
+			<fo:simple-page-master master-name="main" page-height="10in" page-width="12in"
 					 margin-left="0.2in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
 				<fo:region-body margin-top="3.4in"/>
 				<fo:region-before extent="1in"/>
@@ -34,30 +34,30 @@ under the License.
 		<#list finalLists as employee>
 		<#assign leaveTypeId=employee.getKey()>
 		<fo:page-sequence master-reference="main">
-			<fo:static-content font-size="14pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-				<fo:block text-align="cemter" white-space-collapse="false">&#160;                                         MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
-				<fo:block text-align="cemter" white-space-collapse="false">&#160;                                  G.K.V.K POST, BANGALORE, KARNATAKA - 560065																							Date					 			:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MM/yyyy")}               </fo:block>
+			<fo:static-content font-size="13.5pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
+				<fo:block text-align="center" white-space-collapse="false">&#160;   MOTHER DAIRY A UNIT OF K.M.F						          													</fo:block>
+				<fo:block text-align="center" white-space-collapse="false">&#160;                        G.K.V.K POST, BANGALORE, KARNATAKA - 560065				 		Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd/MM/yyyy")}               </fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;         MD/ESI/05/${year}-${year+1}					                                                                   Print Time 	 :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "hh:mm:ss")}         </fo:block>
+				<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;         MD/ESI/05/${year}-${year+1}					                                               Time :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "hh:mm:ss")}         </fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                                            Leave Report                                       Page Number  :    <fo:page-number/></fo:block>
+				<fo:block text-align="center" keep-together="always" white-space-collapse="false">&#160;                                     Leave Report                 	       Page Number  : <fo:page-number/></fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 <fo:block text-align="center" keep-together="always" white-space-collapse="false">The following officers/officials  are sanctioned  leave for the period mentioned against their names.</fo:block>
+				 <fo:block text-align="center" keep-together="always" white-space-collapse="false">The following officers/officials are sanctioned leave for the period mentioned against their names.</fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                                Leave Code	:${leaveTypeId}</fo:block>
+				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;                                          Leave Code	:${leaveTypeId}</fo:block>
 				 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">From Date	:${fromlarDate}			To Date	:${thrularDate}</fo:block>
-				 <fo:block text-align="left" keep-together="always"  >--------------------------------------------------------------------------------------------------------------------------</fo:block>
+				 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;From Date	:${fromlarDate}			To Date	:${thrularDate}</fo:block>
+				 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
 				 <fo:block font-family="Courier,monospace">
 				<fo:table >
-					<fo:table-column column-width="60pt"/>
-					<fo:table-column column-width="60pt"/>
+					<fo:table-column column-width="41pt"/>
+					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="130pt"/>
-					<fo:table-column column-width="180pt"/>
+					<fo:table-column column-width="150pt"/>
+					<fo:table-column column-width="90pt"/>
+					<fo:table-column column-width="110pt"/>
 					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="140pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="130pt"/>
+					<fo:table-column column-width="120pt"/>
 					<fo:table-column column-width="100pt"/>
 					<fo:table-body>
 					 <fo:table-row >
@@ -88,7 +88,7 @@ under the License.
 							</fo:table-row>
 							 <fo:table-row >
 							   <fo:table-cell >
-									 <fo:block text-align="left" keep-together="always"  >--------------------------------------------------------------------------------------------------------------------------</fo:block>
+									 <fo:block text-align="left" keep-together="always"  >&#160;----------------------------------------------------------------------------------------------------</fo:block>
 								</fo:table-cell>
 						   </fo:table-row>
 					</fo:table-body>
@@ -101,14 +101,14 @@ under the License.
 				 <#assign sno=1>
 				 <#list employees as emp>
 				<fo:table >
-					 <fo:table-column column-width="50pt"/>
+					 <fo:table-column column-width="30pt"/>
+					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="80pt"/>
 					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="110pt"/>
 					<fo:table-column column-width="75pt"/>
-					<fo:table-column column-width="100pt"/>
 					<fo:table-column column-width="60pt"/>
+					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="40pt"/>
 					<fo:table-column column-width="50pt"/>
 					<fo:table-column column-width="40pt"/>
@@ -150,7 +150,7 @@ under the License.
 					</fo:table-body>
 				   </fo:table>
 				   </#list>
-				   <fo:block text-align="left" keep-together="always"  >--------------------------------------------------------------------------------------------------------------------------</fo:block>
+				   <fo:block text-align="left" keep-together="always"  >&#160;------------------------------------------------------------------------------------------------</fo:block>
 				   </fo:block>
 				   <fo:block font-family="Courier,monospace"  font-size="14pt">
                 	<fo:table >
@@ -181,7 +181,7 @@ under the License.
                    			</fo:table-row>
                    			<fo:table-row>
                      			<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
-                     			<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;To Manager Marketing                                           Director MotherDairy</fo:block></fo:table-cell>
+                     			<fo:table-cell><fo:block text-align="left" keep-together="always" white-space-collapse="false" >&#160;To Manager Marketing                                    Director MotherDairy</fo:block></fo:table-cell>
                    			</fo:table-row>
                    			<fo:table-row>
                      			<fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
