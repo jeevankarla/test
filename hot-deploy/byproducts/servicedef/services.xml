@@ -746,6 +746,7 @@
      <service name="createInvoiceForShopeeRent" engine="java"
             location="in.vasista.vbiz.byproducts.ByProductServices" invoke="createInvoiceForShopeeRent">
         <description>create Facility Rate</description>
+        <attribute name="invoiceDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="dueDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>

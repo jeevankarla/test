@@ -439,11 +439,13 @@ public class ByProductServices {
 	      	Timestamp pMonthEnd=UtilDateTime.getMonthEnd(estimatedDeliveryDate,TimeZone.getDefault(),Locale.getDefault());
   			int endDay=UtilDateTime.getDayOfMonth(pMonthEnd,TimeZone.getDefault(),Locale.getDefault());
 	      	int day=UtilDateTime.getDayOfMonth(estimatedDeliveryDate,TimeZone.getDefault(),Locale.getDefault());
+	      	Timestamp dueDate=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(pMonthEnd, 5));
 	        if(day==endDay){
 	        try{
 	        	Timestamp pMonthStart=UtilDateTime.getMonthStart(estimatedDeliveryDate);
 	        	Map createInvoiceForShopeeRentHelperCtx = UtilMisc.toMap("userLogin",userLogin);
-	        	createInvoiceForShopeeRentHelperCtx.put("dueDate", estimatedDeliveryDate);
+	        	createInvoiceForShopeeRentHelperCtx.put("invoiceDate", pMonthEnd);
+	        	createInvoiceForShopeeRentHelperCtx.put("dueDate", dueDate);
 	        	createInvoiceForShopeeRentHelperCtx.put("fromDate", pMonthStart);
 	        	createInvoiceForShopeeRentHelperCtx.put("thruDate", pMonthEnd);
 	     		result = dispatcher.runSync("createInvoiceForShopeeRent",createInvoiceForShopeeRentHelperCtx);
@@ -5584,6 +5586,7 @@ public class ByProductServices {
 		      String customTimePeriodId = "";
 		      String partyIdFrom = "Company";
 		      String periodTypeId = "SALES_MONTH";
+		      Timestamp invoiceDate = (Timestamp) context.get("invoiceDate");
 		      Timestamp dueDate = (Timestamp) context.get("dueDate");
 		      Timestamp fromDate = (Timestamp) context.get("fromDate");
 		      Timestamp thruDate = (Timestamp) context.get("thruDate");
@@ -5600,7 +5603,9 @@ public class ByProductServices {
 			    	  if(UtilValidate.isEmpty(dueDate)){
 			    	  		dueDate = UtilDateTime.getDayStart(now);
 			    	  }
-			    	  
+			    	  if(UtilValidate.isEmpty(invoiceDate)){
+			    		  invoiceDate = UtilDateTime.getDayStart(now);
+			    	  }
 			    	  Map<String, Object> resultMap=dispatcher.runSync("getCustomTimePeriodId", UtilMisc.toMap("periodTypeId",periodTypeId,"fromDate",fromDate,"thruDate",thruDate,"userLogin", userLogin));   
 			    	  if (ServiceUtil.isError(resultMap)) {
 		                	Debug.logError("Error getting Custom Time Period", module);	
@@ -5625,6 +5630,7 @@ public class ByProductServices {
 		    	  	  facilityList= (List)((Map)ByProductNetworkServices.getAllActiveOrInactiveBooths(delegator, "SHP_RTLR" ,fromDate)).get("boothActiveList");
 		    	  	  for(GenericValue eachFacility: facilityList){
 			    		  String invoiceId ="";
+			    		  BigDecimal rateAmount=BigDecimal.ZERO;
 			    		  partyId = eachFacility.getString("ownerPartyId");
 				    	  facilityId = eachFacility.getString("facilityId");
 			    	     Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin);
@@ -5633,7 +5639,9 @@ public class ByProductServices {
 							inputRateAmt.put("fromDate",fromDate);
 							inputRateAmt.put("rateTypeId", "SHOPEE_RENT");
 							Map<String, Object> facilityRateResult = dispatcher.runSync("getFacilityRateAmount", inputRateAmt);
-							BigDecimal rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
+							if (UtilValidate.isNotEmpty(facilityRateResult)) {
+							    rateAmount=(BigDecimal)facilityRateResult.get("rateAmount");
+							}
 							if(rateAmount.intValue()<=0){
 								continue;
 							}
@@ -5642,8 +5650,8 @@ public class ByProductServices {
 				            createInvoiceMap.put("partyId", partyId);
 				            createInvoiceMap.put("facilityId", facilityId);
 				            createInvoiceMap.put("partyIdFrom", partyIdFrom);
-				            createInvoiceMap.put("invoiceDate", dueDate);
-			                createInvoiceMap.put("dueDate", dueDate);
+				            createInvoiceMap.put("invoiceDate", UtilDateTime.getDayStart(invoiceDate));
+			                createInvoiceMap.put("dueDate", UtilDateTime.getDayStart(dueDate));
 				            createInvoiceMap.put("invoiceTypeId", "SHOPEE_RENT");
 				            createInvoiceMap.put("statusId", "INVOICE_IN_PROCESS");
 				            createInvoiceMap.put("userLogin", userLogin);
