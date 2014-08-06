@@ -90,7 +90,7 @@ bankPaymentMethodList = delegator.findList("PaymentMethodType", EntityCondition.
 cashPaymentMethodList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"CASH"), null, null, null, false);
 
 bankPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(bankPaymentMethodList, "paymentMethodTypeId", false);
-cashPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(bankPaymentMethodList, "paymentMethodTypeId", false);
+cashPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(cashPaymentMethodList, "paymentMethodTypeId", false);
 if("SALES_INVOICE"==parentTypeId){
 	cashPaymentMethodList.each{ methodTypeEach->
 		JSONObject newPMethodObj = new JSONObject();
@@ -128,7 +128,8 @@ if("SALES_INVOICE"==parentTypeId){
 	voucherPaymentMethodJSON.put("BANK",bankMethodItemsJSON);
 	voucherPaymentMethodJSON.put("ALL",allMethodItemsJSON);
 	
-    
+	Debug.log("cashMethodItemsJSON=======>"+cashMethodItemsJSON);
+	Debug.log("bankMethodItemsJSON=======>"+bankMethodItemsJSON);
 context.voucherPaymentMethodJSON=voucherPaymentMethodJSON;
 Debug.log("voucherPaymentMethodJSON=======>"+voucherPaymentMethodJSON);
 
