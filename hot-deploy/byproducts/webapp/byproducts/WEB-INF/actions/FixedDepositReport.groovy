@@ -52,7 +52,7 @@ if(UtilValidate.isNotEmpty(facilityList)){
 	for(i=0;i<facilityList.size();i++){
 		categoryType=facilityList.get(i).get("categoryTypeEnum");
 		Map facilityFDRDetail=[:];
-		facilityId=facilityList.get(i).get("facilityId");
+		facilityId=facilityList.get(i).get("ownerPartyId");
         if(!categoryType.equals("CR_INST")){
 			if(UtilValidate.isEmpty(facilityFixedDepositMap[categoryType])){
 				facDetailsMap=[:];

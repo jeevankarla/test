@@ -39,16 +39,16 @@ under the License.
                     	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160; &#160;&#160;&#160;&#160;&#160;&#160;   UNIT : MOTHER DAIRY , G.K.V.K POST : YELAHANKA, BANGALORE -560065.</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${printDate?if_exists}</fo:block>
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==============================================================================================</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always" font-size="12pt" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">SI  RETAILER	 RETAILER	           SEC.DEP.	REF		           BANK              FD	       EXP    </fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  font-size="12pt" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">NO  CODE		    NAME 	              AMOUNT		 NO		            NAME              AMOUNT    DATE  </fo:block> 
+		        		<fo:block text-align="left"  keep-together="always" font-size="12pt" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">SI  RETAILER	RETAILER	           SEC.DEP.	REF		       		BANK              FD	       EXP    </fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  font-size="12pt" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">NO  CODE		   NAME 	              AMOUNT		 NO		        		NAME              AMOUNT    DATE  </fo:block> 
 		        		<fo:block text-align="left"  keep-together="always"   white-space-collapse="false">==============================================================================================</fo:block> 
             	<fo:block>
                  	<fo:table>
                  	 <fo:table-column column-width="30pt"/>
-                    <fo:table-column column-width="70pt"/>
+                    <fo:table-column column-width="60pt"/>
                     <fo:table-column column-width="100pt"/> 
             		<fo:table-column column-width="90pt"/> 
-            		<fo:table-column column-width="110pt"/> 
+            		<fo:table-column column-width="120pt"/> 
                     <fo:table-body>
                     <#assign facilityList=facilityFixedDepositMap.entrySet()>
                     <#assign gTSecDeposit=0>
@@ -83,14 +83,14 @@ under the License.
                        			<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(sachetfacility.getValue().get("name")?if_exists)),15)?if_exists}</fo:block>  
                    			</fo:table-cell>
                    			<fo:table-cell>
-                       			<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"><#if securityDeposit &gt; 0>${securityDeposit?string("#0.00")}</#if></fo:block>  
+                       			<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"><#if securityDeposit &gt; 0>${securityDeposit}</#if></fo:block>  
                    			</fo:table-cell>
                      		<fo:table-cell>
                        			<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">
 		                       			<fo:table>
-					            		<fo:table-column column-width="140pt"/> 		
+					            		<fo:table-column column-width="100pt"/> 		
 					            		<fo:table-column column-width="110pt"/> 	
-					            		<fo:table-column column-width="70pt"/> 
+					            		<fo:table-column column-width="90pt"/> 
 					            		<fo:table-column column-width="50pt"/> 	
 		                                <fo:table-body>
 		                                <#assign fdrList="">
@@ -102,13 +102,13 @@ under the License.
 					                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">&#160;&#160;${fdrItem.get("fdrNumber")}</fo:block>  
 					                       		</fo:table-cell>
 												<fo:table-cell>
-					                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(fdrItem.get("bankName")?if_exists)),15)?if_exists}</fo:block>  
+					                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(fdrItem.get("bankName")?if_exists)),18)?if_exists}</fo:block>  
 					                       		</fo:table-cell>
 					                       		<fo:table-cell>
-					                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${fdrItem.get("amount")?string("#0.00")}</fo:block>  
+					                           		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${fdrItem.get("amount")?string("0")}</fo:block>  
 					                       		</fo:table-cell>
 					                       		<fo:table-cell>
-					                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fdrItem.get("thruDate"), "dd-MMM-yyyy")}</fo:block>  
+					                           		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fdrItem.get("thruDate"), "dd/MM/yy")}</fo:block>  
 					                       		</fo:table-cell>
 							             	</fo:table-row>
 						             	</#list>
@@ -125,23 +125,23 @@ under the License.
 				        </fo:table-row>
 						 <fo:table-row>
 							<fo:table-cell>
-				            		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">GRAND TOTAL</fo:block> 
+				            		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">TOTAL</fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            		      <fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
-				            		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalSecDeposit?string("#0.00")}</fo:block> 
+				            			<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"></fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalSecDeposit}</fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
 				            	<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">
 		                       		<fo:table>
-					            		<fo:table-column column-width="140pt"/> 		
+					            		<fo:table-column column-width="100pt"/> 		
 					            		<fo:table-column column-width="110pt"/> 	
-					            		<fo:table-column column-width="70pt"/> 	
+					            		<fo:table-column column-width="90pt"/> 	
 					            		<fo:table-column column-width="50pt"/> 		
 		                                <fo:table-body>
 		                                 <fo:table-row>
@@ -152,7 +152,7 @@ under the License.
 							            		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">&#160;</fo:block>  
 							            	</fo:table-cell>
 		                                    <fo:table-cell>
-				            		          <fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalAmount?string("#0.00")}</fo:block> 
+				            		          <fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${totalAmount?string("0")}</fo:block> 
 				            		         </fo:table-cell>
 				            		         </fo:table-row>
 								             </fo:table-body>
@@ -160,7 +160,7 @@ under the License.
 							            </fo:block> 		
 				            	</fo:table-cell>
 				       </fo:table-row>
-				         <#assign gTotalAmount=gTotalAmount+totalAmount>
+				          <#assign gTotalAmount=gTotalAmount+totalAmount>
 						</#list>
 						 <fo:table-row>
 							<fo:table-cell>
@@ -169,23 +169,23 @@ under the License.
 				        </fo:table-row>
 						 <fo:table-row>
 							<fo:table-cell>
-				            		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">TOTAL</fo:block> 
+				            		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">GRAND TOTAL</fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            		      <fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false"></fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
-				            		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${gTSecDeposit?string("#0.00")}</fo:block> 
+				            			<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false"></fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				            		<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${gTSecDeposit}</fo:block> 
 				            	</fo:table-cell>
 				            	<fo:table-cell>
 				            	<fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">
 		                       		<fo:table>
-					            		<fo:table-column column-width="140pt"/> 		
+					            		<fo:table-column column-width="100pt"/> 		
 					            		<fo:table-column column-width="110pt"/> 	
-					            		<fo:table-column column-width="70pt"/> 	
+					            		<fo:table-column column-width="90pt"/> 	
 					            		<fo:table-column column-width="50pt"/> 		
 		                                <fo:table-body>
 		                                 <fo:table-row>
@@ -196,7 +196,7 @@ under the License.
 							            		<fo:block  keep-together="always" font-size="12pt" text-align="left" white-space-collapse="false">&#160;</fo:block>  
 							            	</fo:table-cell>
 		                                    <fo:table-cell>
-				            		          <fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${gTotalAmount?string("#0.00")}</fo:block> 
+				            		          <fo:block  keep-together="always" font-size="12pt" text-align="right" white-space-collapse="false">${gTotalAmount?string("0")}</fo:block> 
 				            		         </fo:table-cell>
 				            		         </fo:table-row>
 								             </fo:table-body>
