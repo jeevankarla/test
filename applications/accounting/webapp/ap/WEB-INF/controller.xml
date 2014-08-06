@@ -89,6 +89,45 @@ under the License.
         <response name="success" type="view" value="paymentOverview"/>
         <response name="error" type="view" value="NewOutgoingPayment"/>
     </request-map>
+    <request-map uri="findAdvances">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindApAdvances"/>
+    </request-map>
+    <request-map uri="newAdvance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewOutgoingAdvance"/>
+    </request-map>
+    <request-map uri="findDeposits">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindApDeposits"/>
+    </request-map>
+    <request-map uri="newDeposit">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewOutgoingDeposit"/>
+    </request-map>
+    <request-map uri="findApBranchPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindApBranchPayments"/>
+    </request-map>
+    <request-map uri="newApBranchPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewApBranchPayments"/>
+    </request-map>
+    <request-map uri="createApAdvance">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="FindApAdvances"/>
+    </request-map>
+    <request-map uri="createApDeposit">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="FindApDeposits"/>
+    </request-map>
+    <request-map uri="createApBranchPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="FindApBranchPayments"/>
+    </request-map>
      <request-map uri="createPettyCashPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPettyCashPayment"/>
@@ -172,6 +211,12 @@ under the License.
     <view-map name="FindApPayments" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApPayments"/>
     <view-map name="NewOutgoingPayment" type="screen" page="component://accounting/widget/ap/ApScreens.xml#NewOutgoingPayment"/>
     <view-map name="CommissionReport" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#CommissionReport"/>
+    <view-map name="FindApAdvances" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApAdvances"/>
+    <view-map name="FindApDeposits" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApDeposits"/>
+    <view-map name="NewOutgoingDeposit" type="screen" page="component://accounting/widget/ap/ApScreens.xml#NewOutgoingDeposit"/>
+    <view-map name="NewOutgoingAdvance" type="screen" page="component://accounting/widget/ap/ApScreens.xml#NewOutgoingAdvance"/>
+    <view-map name="FindApBranchPayments" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApBranchPayments"/>
+    <view-map name="NewApBranchPayments" type="screen" page="component://accounting/widget/ap/ApScreens.xml#NewApBranchPayments"/>
     <view-map name="FindApPaymentGroups" type="screen" page="component://accounting/widget/ap/ApScreens.xml#FindApPaymentGroups"/>
 
     <!-- PDFs  -->

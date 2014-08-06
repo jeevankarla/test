@@ -57,6 +57,45 @@ under the License.
         <response name="success" type="view" value="paymentOverview"/>
         <response name="error" type="view" value="NewIncomingPayment"/>
     </request-map>
+    <request-map uri="findAdvances">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindAdvances"/>
+    </request-map>
+    <request-map uri="newAdvance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewIncomingAdvance"/>
+    </request-map>
+    <request-map uri="findDeposits">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindDeposits"/>
+    </request-map>
+    <request-map uri="newDeposit">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewIncomingDeposit"/>
+    </request-map>
+     <request-map uri="findArBranchPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindArBranchPayments"/>
+    </request-map>
+    <request-map uri="newArBranchPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewArBranchPayments"/>
+    </request-map>
+     <request-map uri="createArAdvance">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="FindAdvances"/>
+    </request-map>
+    <request-map uri="createArDeposit">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="FindDeposits"/>
+    </request-map>
+    <request-map uri="createArBranchPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="FindArBranchPayments"/>
+    </request-map>
     <request-map uri="findInvoices">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindArInvoices"/>
@@ -136,6 +175,12 @@ under the License.
     <view-map name="FindPayments" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindPayments"/>
     <view-map name="BatchPayments" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#BatchPayments"/>
     <view-map name="FindArPaymentGroups" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindArPaymentGroups"/>
+    <view-map name="FindAdvances" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindAdvances"/>
+    <view-map name="FindDeposits" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindDeposits"/>
+    <view-map name="NewIncomingDeposit" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#NewIncomingDeposit"/>
+    <view-map name="NewIncomingAdvance" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#NewIncomingAdvance"/>
+    <view-map name="FindArBranchPayments" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#FindArBranchPayments"/>
+    <view-map name="NewArBranchPayments" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#NewArBranchPayments"/>
     <view-map name="NewIncomingPayment" type="screen" page="component://accounting/widget/ar/ArPaymentScreens.xml#NewIncomingPayment"/>
     <view-map name="FindArInvoices" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#FindArInvoices"/>
     <view-map name="NewSalesInvoice" type="screen" page="component://accounting/widget/ar/InvoiceScreens.xml#NewSalesInvoice"/>
