@@ -452,7 +452,7 @@ public class PunchService {
 	    	return result;
 	 } 
   
-  public static Map<String, Object> populateEmplShiftDetails(DispatchContext dctx, Map<String, Object> context) {
+  public static Map<String, Object> populateEmplDailyShiftDetails(DispatchContext dctx, Map<String, Object> context) {
   	   Delegator delegator = dctx.getDelegator();
 	   LocalDispatcher dispatcher = dctx.getDispatcher();    	
       GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -538,9 +538,27 @@ public class PunchService {
 				    	 Timestamp lagPunchTime =
 								    Timestamp.valueOf(
 								        new SimpleDateFormat("yyyy-MM-dd ")
-								        .format(UtilDateTime.toSqlDate(firstInPunch.getDate("punchdate"))) // get the current date as String
+								        .format(UtilDateTime.toSqlDate(shiftDate)) // get the current date as String
 								        .concat(startTime)        // and append the time
 								    );
+				    	    if(UtilValidate.isNotEmpty(employeeDetail.getString("companyBus")) && employeeDetail.getString("companyBus").equalsIgnoreCase("Y")){
+				    	    	List<GenericValue> busInTimeList = delegator.findByAnd(
+										"DailyBusTimings", UtilMisc.toMap("date",
+												shiftDate, "shiftType", shiftType.getString("shiftTypeId")),
+										null);
+				    	    	GenericValue busInTime = EntityUtil.getFirst(busInTimeList);
+				    	    	if(UtilValidate.isNotEmpty(busInTime)){
+				    	    		Timestamp busInDateTime = 
+				    	    				    Timestamp.valueOf(
+											        new SimpleDateFormat("yyyy-MM-dd ")
+											        .format(busInTime.getDate("date")) // get the current date as String
+											        .concat(busInTime.getString("inTime"))        // and append the time
+											    );
+				    	    		if(busInDateTime.after(lagPunchTime)){
+				    	    			lagPunchTime = busInDateTime;
+									}
+				    	    	}
+				    	    }
 							lagPunchTime = new Timestamp(lagPunchTime.getTime()+(lateComeMin*60*1000));
 							/*Timestamp punchDateTime =
 								    Timestamp.valueOf(

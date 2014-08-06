@@ -1266,7 +1266,7 @@ under the License.emplpunch
         <auto-attributes mode="IN" entity-name="EmplPunchRaw" include="pk"></auto-attributes>
         <auto-attributes mode="IN" entity-name="EmplPunchRaw" include="nonpk" optional="true"></auto-attributes>
    </service>
-  <service name="populateEmplShiftDetails" engine="java" auth="true" invoke="populateEmplShiftDetails" 
+  <service name="populateEmplDailyShiftDetails" engine="java" auth="true" invoke="populateEmplDailyShiftDetails" 
         location="in.vasista.vbiz.humanres.PunchService">
         <description>populateEmplPunch from </description>
         <auto-attributes mode="IN" entity-name="EmplPunch" include="pk"></auto-attributes>
