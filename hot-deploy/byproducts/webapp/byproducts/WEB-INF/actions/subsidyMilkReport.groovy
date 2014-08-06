@@ -93,9 +93,9 @@ unionPartiesList.each { union ->
 					conditionList=[];
 					conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS , booth.facilityId));
 					conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "EMPSUBISDY_ROLE"));
-					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-							EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+							EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd)));
 					condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 					List<GenericValue> facilityPartyList = delegator.findList("FacilityParty", condition, null, null, null, false);
 					if(UtilValidate.isNotEmpty(facilityPartyList)){
@@ -108,9 +108,9 @@ unionPartiesList.each { union ->
 								condList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS , "Unions"));
 								condList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS , "EMPLOYEE"));
 								condList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS , "EMPLOYMENT"));
-								condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+								condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, dayBegin));
 								condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-										EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd)));
+										EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayEnd)));
 								cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 								List<GenericValue> partyRelationshipList = delegator.findList("PartyRelationship", cond, null, null, null, false);
 								partyRelationship = EntityUtil.getFirst(EntityUtil.filterByDate(partyRelationshipList));
