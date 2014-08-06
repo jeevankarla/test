@@ -193,8 +193,11 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 		 amount=amount1;
 		 var methodOptionList =[];
 		 var payMethodList="";
+		 
 		 if(voucherType != undefined && voucherType != "" && voucherPaymentMethodTypeMap != undefined){
+		
 		  payMethodList=voucherPaymentMethodTypeMap[voucherType];
+		  // alert("===="+partyIdFrom+"==partyIdTo="+partyIdTo+"===voucherType=="+voucherType+"===payMethodList==="+payMethodList);
 	 	 if(payMethodList != undefined && payMethodList != ""){
 			$.each(payMethodList, function(key, item){
 			  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
@@ -212,7 +215,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Payment Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId'  class='h4'>"+
 						"<#if paymentTypes?has_content><#list paymentTypes as eachMethodType><option value='${eachMethodType.paymentTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            
 						"</select></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='60%'>Payment Method Type :</td><td align='left' width='60%'><select name='paymentMethodTypeId' id='paymentMethodTypeId'  class='h4'>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'><#if parentTypeId?exists && parentTypeId=="SALES_INVOICE">Payment Method Type :<#else>Payment Method Id:</#if> </td><td align='left' width='60%'><select <#if parentTypeId?exists && parentTypeId=="SALES_INVOICE"> name='paymentMethodTypeId' <#else> name='paymentMethodId' </#if> id='paymentMethodTypeId'  class='h4'>"+
 						"</select></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='effectiveDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
 				 		"<tr class='h3'><td align='left' class='h3' width='60%'>Amount :</td><td align='left' width='60%'><input class='h4' type='text' id='amount' name='amount'/><input class='h4' type='hidden' id='partyIdFrom' name='partyIdFrom' /><input class='h4' type='hidden' id='partyIdTo' name='partyIdTo'/><input class='h4' type='hidden' id='invoiceId' name='invoiceId' /><input class='h4' type='hidden' id='voucherType' name='voucherType' /></td></tr>" +
@@ -277,6 +280,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
+          <td>parypeentT</td>
           <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
           <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
@@ -298,6 +302,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", Static["org.ofbiz.base.util.UtilMisc"].toMap("invoiceId", invoice.invoiceId, "userLogin", userLogin))/>
           <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)?if_exists>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
+            <td>${invoice.get("parentTypeId")}</td>
               <td><a class="buttontext" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
               <td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />

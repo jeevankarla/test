@@ -328,6 +328,7 @@ under the License.
         <attribute name="orderId" mode="IN" type="String" optional="true"/> 
          <attribute name="invoiceId" mode="IN" type="String" optional="false"/> 
          <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/> 
+          <attribute name="paymentMethodId" mode="IN" type="String" optional="true"/> 
          <attribute name="paymentTypeId" mode="IN" type="String" optional="true"/> 
          <attribute name="comments" mode="IN" type="String" optional="true"/> 
          

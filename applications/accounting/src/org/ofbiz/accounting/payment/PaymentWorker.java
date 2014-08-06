@@ -445,6 +445,8 @@ public class PaymentWorker {
         String orderId = (String) context.get("orderId");
         BigDecimal paymentAmount = ProductEvents.parseBigDecimalForEntity((String) context.get("amount"));
         String paymentMethodType = (String) context.get("paymentMethodTypeId");
+        String paymentMethodId = (String) context.get("paymentMethodId");
+        
         String paymentType = (String) context.get("paymentTypeId");
         String comments = (String) context.get("comments");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -468,7 +470,8 @@ public class PaymentWorker {
         try {
         Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
         Debug.log("===paymentMethodType===="+paymentMethodType+"===partyIdFrom==="+partyIdFrom+"===partyId=="+partyIdTo+"==paymentMethodType=="+paymentMethodType+"===paymentType=="+paymentType);
-        paymentCtx.put("paymentMethodTypeId", paymentMethodType);
+        paymentCtx.put("paymentMethodTypeId", paymentMethodType);//from AR mandatory
+        paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
         paymentCtx.put("organizationPartyId", partyIdTo);
         paymentCtx.put("partyId", partyIdFrom);
         paymentCtx.put("facilityId", facilityId);
