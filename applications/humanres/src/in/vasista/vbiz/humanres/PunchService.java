@@ -390,7 +390,7 @@ public class PunchService {
 							if(punchDateTime.before(lagPunchTime)){
 								 lateMin = ((UtilDateTime.getInterval(punchDateTime,lagPunchTime))/(60*1000));
 							}else{
-								extraMin = ((UtilDateTime.getInterval(lagPunchTime,punchDateTime))/(60*1000));
+								extraMin = ((UtilDateTime.getInterval(lagPunchTime,punchDateTime))/(60*1000))-earlyGoMin;
 							}
 				      }
 					
@@ -469,7 +469,7 @@ public class PunchService {
 			int earlyGoMin =0;
 			int shiftThreshold =0;
       	    GenericValue tenantLateCome = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_LATE_COME"), false);
-	    	 if (UtilValidate.isNotEmpty(tenantLateCome)) {
+	    	if (UtilValidate.isNotEmpty(tenantLateCome)) {
 	    		lateComeMin = (new Double(tenantLateCome.getString("propertyValue"))).intValue();
 	    	 }
 	    	GenericValue tenantEarlyGo = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_EARLY_GO"), false);
@@ -499,17 +499,13 @@ public class PunchService {
 			condList.add(EntityCondition.makeCondition("shiftType", EntityOperator.EQUALS,shiftTypeId));
 			
 			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			List<GenericValue> emplPunch = delegator.findList("EmplPunch", cond, null, UtilMisc.toList("-punchdate","-punchtime"),null, false);
 			
-			List<GenericValue> emplPunch = delegator.findList("EmplPunch", cond, UtilMisc.toSet("partyId","punchdate","PunchType","punchtime","InOut","shiftType"), UtilMisc.toList("-punchdate","-punchtime"),null, false);
-			
-			if(UtilValidate.isEmpty(emplPunch) || (EntityUtil.filterByCondition(emplPunch, EntityCondition.makeCondition(EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood"))).size()<=0)){
-				Debug.logError("no normal emplPunch====="+emplPunch, inOut);
+			if(UtilValidate.isEmpty(emplPunch)){
+				Debug.logError("no normal emplPunch====="+emplPunch, module);
             	return result;
             }
-			double shiftTimeGap  = 0;
-			Debug.log("no normal emplPunch====="+emplPunch);
-			
-			Debug.logInfo("shiftTimeGap====="+shiftTimeGap,module);
+			emplPunch = EntityUtil.filterByCondition(emplPunch, EntityCondition.makeCondition(EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Normal")));
 			
 			GenericValue shiftType = null;
 			condList.clear();
@@ -528,9 +524,6 @@ public class PunchService {
 			if(UtilValidate.isEmpty(shiftType)){
 				return result;
 			}
-				//here get shiftType for out time
-				//context.put("isOutTime", Boolean.TRUE);
-				//GenericValue shiftType = getShiftTypeByTime(dctx,context);
 			   String startTime = shiftType.getString("startTime");
 			   String endTime = shiftType.getString("endTime");
 			   //shiftTypeId = shiftType.getString("shiftTypeId");
@@ -549,19 +542,20 @@ public class PunchService {
 								        .concat(startTime)        // and append the time
 								    );
 							lagPunchTime = new Timestamp(lagPunchTime.getTime()+(lateComeMin*60*1000));
-							Timestamp punchDateTime =
+							/*Timestamp punchDateTime =
 								    Timestamp.valueOf(
 								        new SimpleDateFormat("yyyy-MM-dd ")
 								        .format(UtilDateTime.toSqlDate(firstInPunch.getDate("punchdate"))) // get the current date as String
 								        .concat(firstInPunch.getString("punchtime"))        // and append the time
-								    );
+								    );*/
+							Timestamp punchDateTime = firstInPunch.getTimestamp("punchDateTime");
 							if(punchDateTime.after(lagPunchTime)){
 								lateMin = ((UtilDateTime.getInterval(lagPunchTime, punchDateTime))/(60*1000));
 							}
+							emplPunch.remove(firstInPunch);
 			    	 }
 			    	 
 			     }
-			     
 			    List<GenericValue> outPunchList = EntityUtil.filterByCondition(emplPunch, EntityCondition.makeCondition(EntityCondition.makeCondition("InOut",EntityOperator.EQUALS,"OUT")));
 			   if(UtilValidate.isNotEmpty(outPunchList)){
 				    outPunchList = EntityUtil.orderBy(outPunchList, UtilMisc.toList("-punchdate","-punchtime"));
@@ -574,21 +568,39 @@ public class PunchService {
 								        .concat(endTime)        // and append the time
 								    );
 							lagPunchTime = new Timestamp(lagPunchTime.getTime()-(earlyGoMin*60*1000));
-							Timestamp punchDateTime =
+							/*Timestamp punchDateTime =
 								    Timestamp.valueOf(
 								        new SimpleDateFormat("yyyy-MM-dd ")
 								        .format(UtilDateTime.toSqlDate(lastOutPunch.getDate("punchdate"))) // get the current date as String
 								        .concat(lastOutPunch.getString("punchtime"))        // and append the time
-								    );
+								    );*/
+							Timestamp punchDateTime = lastOutPunch.getTimestamp("punchDateTime");
 							if(punchDateTime.before(lagPunchTime)){
 								 lateMin = lateMin+((UtilDateTime.getInterval(punchDateTime,lagPunchTime))/(60*1000));
 							}else{
 								extraMin = ((UtilDateTime.getInterval(lagPunchTime,punchDateTime))/(60*1000));
 							}
+							emplPunch.remove(lastOutPunch);
 			    	 }
 			    	 
 			   }
-					
+			  //calculate latemin for out between shifts
+			   if(UtilValidate.isNotEmpty(emplPunch)){
+				   for( GenericValue emplPunchEntry : emplPunch){
+					   inPunchList = EntityUtil.filterByCondition(emplPunch, EntityCondition.makeCondition(EntityCondition.makeCondition("InOut",EntityOperator.EQUALS,"IN")));
+					   inPunchList = EntityUtil.orderBy(inPunchList, UtilMisc.toList("punchdate","punchtime"));
+					   outPunchList = EntityUtil.filterByCondition(emplPunch, EntityCondition.makeCondition(EntityCondition.makeCondition("InOut",EntityOperator.EQUALS,"OUT")));
+					   outPunchList = EntityUtil.orderBy(outPunchList, UtilMisc.toList("punchdate","punchtime"));
+					   GenericValue inPunchEntry = EntityUtil.getFirst(inPunchList);
+					   GenericValue outPunchEntry = EntityUtil.getFirst(outPunchList);
+					   if(UtilValidate.isNotEmpty(inPunchEntry) && UtilValidate.isNotEmpty(outPunchEntry)){
+						   lateMin = lateMin+((UtilDateTime.getInterval(outPunchEntry.getTimestamp("punchDateTime"),inPunchEntry.getTimestamp("punchDateTime")))/(60*1000));
+					       emplPunch.remove(inPunchEntry);
+					       emplPunch.remove(outPunchEntry);
+					   }
+				   }
+				   
+			   }
 			condList.clear();
 			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
 			condList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , shiftDate));

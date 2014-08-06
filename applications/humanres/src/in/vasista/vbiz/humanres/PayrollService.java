@@ -2476,6 +2476,12 @@ public class PayrollService {
 			    			}
 			    			
 			    			if((UtilValidate.isNotEmpty(dayPunchList) && dayPunchList.size() >=2) || shiftFalg){
+			    				if(!shiftFalg && (dayPunchList.size()%2) !=0){
+			    					// miss punch consider it as loss of pay
+			    					lossOfPayDays = lossOfPayDays+1;
+			    					c1.add(Calendar.DATE,1);
+			    					continue;
+			    				}
 			    				if(emplWeeklyOffDay.equalsIgnoreCase(weekName)){
 			    					//noOfAttendedWeeklyOffDays = noOfAttendedWeeklyOffDays+(dayPunchList.size()/2);
 			    					noOfAttendedWeeklyOffDays = noOfAttendedWeeklyOffDays+1;

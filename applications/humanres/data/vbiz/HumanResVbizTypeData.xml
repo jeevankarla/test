@@ -183,6 +183,11 @@
     <EnumerationType description="Leave Day Fraction" enumTypeId="LEAVE_DAY_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="First Half" enumCode="FIRST_HALF" enumId="FIRST_HALF" sequenceId="01" enumTypeId="LEAVE_DAY_TYPE"/>
     <Enumeration description="Second Half" enumCode="SECOND_HALF" enumId="SECOND_HALF" sequenceId="02" enumTypeId="LEAVE_DAY_TYPE"/>  
+    <!--Company Bus Routes -->
+    <EnumerationType description="Company Bus Route" enumTypeId="BUS_ROUTE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Route-1" enumCode="ROUTE1" enumId="ROUTE1" sequenceId="01" enumTypeId="BUS_ROUTE"/>
+    <Enumeration description="Route-2" enumCode="ROUTE2" enumId="ROUTE2" sequenceId="02" enumTypeId="BUS_ROUTE"/>  
+    <Enumeration description="Route-3" enumCode="ROUTE3" enumId="ROUTE3" sequenceId="03" enumTypeId="BUS_ROUTE"/>  
     
     
     <EnumerationType description="Insurance Type" enumTypeId="INSURANCE_TYPE" hasTable="N" parentTypeId=""/>
