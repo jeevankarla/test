@@ -502,7 +502,7 @@ public class PunchService {
 			
 			List<GenericValue> emplPunch = delegator.findList("EmplPunch", cond, UtilMisc.toSet("partyId","punchdate","PunchType","punchtime","InOut","shiftType"), UtilMisc.toList("-punchdate","-punchtime"),null, false);
 			
-			if(UtilValidate.isEmpty(emplPunch)){
+			if(UtilValidate.isEmpty(emplPunch) || (EntityUtil.filterByCondition(emplPunch, EntityCondition.makeCondition(EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood"))).size()<=0)){
 				Debug.logError("no normal emplPunch====="+emplPunch, inOut);
             	return result;
             }
