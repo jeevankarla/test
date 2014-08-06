@@ -2546,7 +2546,7 @@ public class PayrollService {
 				    			Debug.log("emplDailyAttendanceDetail==========="+emplDailyAttendanceDetail);
 				    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
 				    			if(UtilValidate.isNotEmpty(leavesList)){
-				    				List cDayLeaves = EntityUtil.filterByDate(leavesList, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getString("date")));
+				    				List cDayLeaves = EntityUtil.filterByDate(leavesList, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getDate("date")));
 					    			if(UtilValidate.isNotEmpty(cDayLeaves)){
 					    				continue;
 					    			}
