@@ -2583,9 +2583,8 @@ public class PayrollService {
                       	     newEntityShift.set("noOfDays", new BigDecimal(noOfDays));
                       	     newEntityShift.set("availedCanteenDays",BigDecimal.ZERO);
                       	     if(UtilValidate.isNotEmpty(availedCanteenDetailMap.get(shiftTypeId))){
-                      	    	newEntityShift.set("availedCanteenDays", availedCanteenDetailMap.get(shiftTypeId));
+                      	    	newEntityShift.set("availedCanteenDays", new BigDecimal((Integer)availedCanteenDetailMap.get(shiftTypeId)));
                       	     }
-                      	     //newEntityShift.set("availedVehicleDays", availedVehicleDays);
                       	     delegator.createOrStore(newEntityShift);
                              
                            }
