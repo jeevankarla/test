@@ -398,6 +398,7 @@
             </link>	        
        </menu-item>
        
+       
     	<!--<menu-item name="Payments" title="${uiLabelMap.DuesPayment}"> 
        		<condition>
                 <or>
@@ -858,6 +859,17 @@
             <link target="FindPaymentNonRoute">
             	<parameter param-name="subTabItem" value="ChequePayment"/>
             	<parameter param-name="paymentMethodTypeId" value="CHEQUE_PAYIN"/>
+            </link>            
+          </menu-item>
+          <menu-item name="FundTransfer" title="Fund Transfer">
+            <condition>
+				<or>
+            		<if-has-permission permission="BYPRODUCTS"  action="_CHEQUE"/>
+            	</or>            
+            </condition>
+            <link target="FindPaymentNonRoute">
+            	<parameter param-name="subTabItem" value="FundTransfer"/>
+            	<parameter param-name="paymentMethodTypeId" value="FT_PAYIN"/>
             </link>            
           </menu-item>
            <!-- 
