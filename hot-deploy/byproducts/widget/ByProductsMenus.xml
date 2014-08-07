@@ -491,8 +491,30 @@
         </condition>  
       	 <link target="IcpSalesAmul">    
          </link>
+        </menu-item>
+         
+        <menu-item name="PowderPlantSale" title="Powder Plant Sales"> 
+        <condition>
+        	<or>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+        		
+        	</or>        		
+        </condition>  
+      	 <link target="PowderPlantSale">    
+         </link>
+        </menu-item>
+        <menu-item name="FGSProductSale" title="FGS Product Sales"> 
+        <condition>
+        	<or>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+        		
+        	</or>        		
+        </condition>  
+      	 <link target="FGSProductSale">    
+         </link>
         </menu-item> 
-        
     </menu>
     
     <menu name="ReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
@@ -741,7 +763,7 @@
         </menu-item>
       </menu>
        <menu name="IcpSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-         <menu-item name="IcpSalesTab" title="Nandini Icp Sales">
+         <menu-item name="IcpSalesTab" title="Order Entry">
         	<link target="IcpSales"/>
         </menu-item>
         <menu-item name="ProcessNandiniOrders" title="Process Orders">
@@ -751,16 +773,14 @@
         	</link>
         </menu-item>
         <menu-item name="FindICPNandiniShipment" title="Find Shipments">
-        	<link target="FindICPNandiniShipment">
-        		<parameter param-name="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/>
-        	</link>
+        	<link target="FindICPNandiniShipment"/>
         </menu-item>
          <!-- <menu-item name="FindIcpSalesOrder" title="Find Nandini Icp Orders">
         	<link target="FindIcpSalesOrder"></link>
         </menu-item> -->
       </menu>
       <menu name="IcpAmulSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-         <menu-item name="IcpSalesAmul" title="Amul Icp Sales">
+         <menu-item name="IcpSalesAmul" title="Order Entry">
         	<link target="IcpSalesAmul"/>
         </menu-item>
         <menu-item name="ProcessAmulOrders" title="Process Orders">
@@ -770,15 +790,40 @@
         	</link>
         </menu-item>
         <menu-item name="FindICPAmulShipment" title="Find Shipments">
-        	<link target="FindICPAmulShipment">
-        		<parameter param-name="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/>
-        	</link>
+        	<link target="FindICPAmulShipment" />
         </menu-item>
          <!-- <menu-item name="FindIcpAmulOrder" title="Find Amul Icp Orders">
         	<link target="FindIcpAmulOrder"></link>
         </menu-item> -->
       </menu>
-      
+      <menu name="PowderPlantSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="PowderPlantSale" title="Order Entry">
+        	<link target="PowderPlantSale"/>
+        </menu-item>
+        <menu-item name="ProcessPowderOrders" title="Process Orders">
+        	<link target="processPowderOrders">
+        		<parameter param-name="salesChannelEnumId" value="POWDER_PLANT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="POWDER_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindPowderShipment" title="Find Shipments">
+        	<link target="FindPowderShipment" />
+        </menu-item>
+      </menu>
+      <menu name="FGSSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="FGSProductSale" title="Order Entry">
+        	<link target="FGSProductSale"/>
+        </menu-item>
+        <menu-item name="ProcessFGSOrders" title="Process Orders">
+        	<link target="processFGSOrders">
+        		<parameter param-name="salesChannelEnumId" value="FGS_PRODUCT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="FGS_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindFGSShipment" title="Find Shipments">
+        	<link target="FindFGSShipment" />
+        </menu-item>
+      </menu>
       
       <menu name="TransporterMarginsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="Transporters" title="Transporters">

@@ -37,6 +37,12 @@ if(changeFlag=="IcpSales"){
 if(changeFlag=="IcpSalesAmul"){
 	productCatageoryId="ICE_CREAM_AMUL";
 }
+if(changeFlag=="PowderSales"){
+	productCatageoryId="MILK_POWDER";
+}
+if(changeFlag=="FgsSales"){
+	productCatageoryId="ICE_CREAM_AMUL";
+}
 subscriptionProdList = [];
 displayGrid = true;
 effDateDayBegin="";
@@ -66,7 +72,7 @@ routeId = parameters.routeId;
 partyId="";
 facility = null;
 prodPriceMap = [:];
-if(changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul"){
+if(changeFlag != "AdhocSaleNew"){
 	partyId = parameters.partyId;
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);	
 	context.party = party;

@@ -57,6 +57,18 @@
         <response name="success" type="request" value="FindICPAmulShipment"/>
         <response name="error" type="request" value="FindICPAmulShipment"/>
     </request-map>
+    <request-map uri="cancelPowderShipment">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindPowderShipment"/>
+        <response name="error" type="request" value="FindPowderShipment"/>
+    </request-map>
+    <request-map uri="cancelFGSShipment">
+     	<security https="true" auth="true"/>     	
+        <event type="service" invoke="cancelICPShipment"/>
+        <response name="success" type="request" value="FindFGSShipment"/>
+        <response name="error" type="request" value="FindFGSShipment"/>
+    </request-map>
     <request-map uri="ViewFacilityGeoPoint">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewFacilityGeoPoint"/>
@@ -281,7 +293,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
+    <request-map uri="getOrderDetails">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/" invoke="OrderDetail.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     <!-- <request-map uri="byProdReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ByProdReports"/>
@@ -521,6 +538,10 @@
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="BuyerInvoicePDF"/>
     </request-map>
+    <request-map uri="nonRouteGatePass.pdf">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="NonRouteGatePassPDF"/>
+    </request-map>
      <request-map uri="orderSlip.txt">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="orderSlipTXT"/>
@@ -638,15 +659,61 @@
         <response name="success" type="view" value="IcpSalesAmul"/>   
        <response name="failed" type="view" value="IcpSalesAmul"/>  
     </request-map>
+    <request-map uri="PowderPlantSale">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PowderPlantSale"/>   
+       <response name="failed" type="view" value="PowderPlantSale"/>  
+    </request-map>
+    <request-map uri="FGSProductSale">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FGSProductSale"/>   
+       <response name="failed" type="view" value="FGSProductSale"/>  
+    </request-map>
+    
     <request-map uri="processNandiniOrders">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProcessNandiniOrders"/>   
        <response name="failed" type="view" value="ProcessNandiniOrders"/>  
     </request-map>
+    <request-map uri="processPowderOrders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessPowderOrders"/>   
+       <response name="failed" type="view" value="ProcessPowderOrders"/>  
+    </request-map>
+    <request-map uri="processFGSOrders">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessFGSOrders"/>   
+       <response name="failed" type="view" value="ProcessFGSOrders"/>  
+    </request-map>
+    
     <request-map uri="processAmulOrders">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProcessAmulOrders"/>   
        <response name="failed" type="view" value="ProcessAmulOrders"/>  
+    </request-map>
+    <request-map uri="approvePowderOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessPowderOrders"/>   
+       <response name="failed" type="view" value="ProcessPowderOrders"/>  
+    </request-map>
+    <request-map uri="approveFGSOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessFGSOrders"/>   
+       <response name="failed" type="view" value="ProcessFGSOrders"/>  
+    </request-map>
+    <request-map uri="cancelFGSOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessFGSOrders"/>   
+       <response name="failed" type="view" value="ProcessFGSOrders"/>  
+    </request-map>
+    <request-map uri="cancelPowderOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessPowderOrders"/>   
+       <response name="failed" type="view" value="ProcessPowderOrders"/>  
     </request-map>
     <request-map uri="approveICPNandiniOrder">
         <security https="true" auth="true"/>
@@ -678,6 +745,18 @@
         <response name="success" type="view" value="ProcessNandiniOrders"/>   
        <response name="failed" type="view" value="ProcessNandiniOrders"/>  
     </request-map>
+    <request-map uri="createShipmentAndInvoiceForPowderOrders">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessPowderOrders"/>   
+       <response name="failed" type="view" value="ProcessPowderOrders"/>  
+    </request-map>
+    <request-map uri="createShipmentAndInvoiceForFGSOrders">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessFGSOrders"/>   
+       <response name="failed" type="view" value="ProcessFGSOrders"/>  
+    </request-map>
     <request-map uri="createShipmentAndInvoiceForAmulOrders">
         <security https="true" auth="true"/>
         <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
@@ -689,6 +768,17 @@
         <response name="success" type="view" value="FindICPNandiniShipment"/>   
        	<response name="failed" type="view" value="FindICPNandiniShipment"/>  
     </request-map>
+    <request-map uri="FindPowderShipment">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="FindPowderShipment"/>   
+       	<response name="failed" type="view" value="FindPowderShipment"/>  
+    </request-map>
+    <request-map uri="FindFGSShipment">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFGSShipment"/>   
+       	<response name="failed" type="view" value="FindFGSShipment"/>  
+    </request-map>
+    
     <request-map uri="FindICPAmulShipment">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="FindICPAmulShipment"/>   
@@ -718,21 +808,35 @@
         <response name="success"  type="request-redirect-noparam" value="AdhocSale">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
-     		<redirect-parameter name="orderFacility"/>
-     		<redirect-parameter name="orderRoute"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="AdhocSale"/>
     </request-map>
-     <request-map uri="processIcpSale">
+    <request-map uri="processIcpSale">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
         <response name="success"  type="request-redirect-noparam" value="IcpSales">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
-     		<redirect-parameter name="orderFacility"/>
-     		<redirect-parameter name="orderRoute"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="IcpSales"/>
+    </request-map>
+    <request-map uri="processPowderSale">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="PowderPlantSale">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="PowderPlantSale"/>
+    </request-map>
+    <request-map uri="processFGSProductSale">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="FGSProductSale">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="FGSProductSale"/>
     </request-map>
     <request-map uri="processIcpAmulSale">
         <security https="true" auth="true"/>
@@ -740,8 +844,6 @@
         <response name="success"  type="request-redirect-noparam" value="IcpSalesAmul">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
-     		<redirect-parameter name="orderFacility"/>
-     		<redirect-parameter name="orderRoute"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="IcpSalesAmul"/>
     </request-map>
@@ -1253,7 +1355,7 @@
     <view-map name="RouteAbstractReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetReportTXT" content-type="text/plain"/>
     <view-map name="InvoiceTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#InvoiceTXT" content-type="text/plain"/><!-- for AdhocSale We are Using Invoice -->
     <view-map name="BuyerInvoicePDF" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#BuyerInvoicePDF" content-type="application/pdf"/><!-- for AdhocSale We are Using Invoice -->
-   
+	<view-map name="NonRouteGatePassPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#NonRouteGatePassPDF" content-type="application/pdf"/>   
    <view-map name="orderSlipTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#orderSlipTXT" content-type="text/plain"/> 
     
      <view-map name="MLDGenerateTruckSheetTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetReportTXT" content-type="text/plain"/>
@@ -1357,14 +1459,20 @@
  <view-map name="FindPaymentNonRoute" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPaymentNonRoute"/>
  <view-map name="NewNonRouteReceipt" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#NewNonRouteReceipt"/>
  
- <!-- IceCreamPlant -->  
+ <!-- IceCreamPlant and powder plant -->  
  <view-map name="IcpSales" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSales"/>
  <view-map name="FindIcpSalesOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpSalesOrder"/>
  <view-map name="ProcessNandiniOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessNandiniOrders"/>
+ <view-map name="ProcessPowderOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessPowderOrders"/>
+ <view-map name="ProcessFGSOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessFGSOrders"/>
  <view-map name="ProcessAmulOrders" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessAmulOrders"/>
  <view-map name="FindICPNandiniShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPNandiniShipment"/>
+ <view-map name="FindFGSShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindFGSShipment"/>
+ <view-map name="FindPowderShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindPowderShipment"/>
  <view-map name="FindICPAmulShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindICPAmulShipment"/>
  <view-map name="IcpSalesAmul" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#IcpSalesAmul"/>
+ <view-map name="PowderPlantSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#PowderPlantSale"/>
+ <view-map name="FGSProductSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FGSProductSale"/>
  <view-map name="FindIcpAmulOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpAmulOrder"/>
     
 </site-conf>

@@ -605,7 +605,7 @@
         <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
         <field name="orderId"><text-find/></field>
         <field name="orderType"><hidden value="SALES_ORDER"/></field>
-        <field name="salesChannelEnumId"><hidden value="${ChannalType}"  > </hidden></field>
+        <field name="salesChannelEnumId"><hidden value="${ChannalType}"  /></field>
         <field use-when="&quot;${ChannalType}&quot; == &quot;RM_DIRECT_CHANNEL&quot;" name="productSubscriptionTypeId" title="Supply Type">
         	<drop-down><option key="CASH" description="CASH"/>
        		 <option key="SPECIAL_ORDER" description="SPL ORDER"/></drop-down>
@@ -628,10 +628,9 @@
         
         <field title="shipment Date" name="estimatedShipDate"><date-find/></field>
         <field name="shipmentId"><text-find/></field>
-        <field name="shipmentTypeId"><hidden value="${parameters.shipmentTypeId}"/></field>
+        <field name="shipmentTypeId"><hidden value="${shipmentTypeId}"/></field>
         <field name="statusId"><hidden value="GENERATED"/></field>
         <field name="vehicleId" title="Vehicle Number"><text-find/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listICPNandiniShipments" type="list" list-name="listIt" paginate-target="FindICPNandiniShipment"
@@ -649,9 +648,7 @@
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="vehicleId" title="Vehicle Number"><display/></field>
         <field name="GatePass" widget-style="buttontext" >
-            <hyperlink target="AdhocTruckSheetReport.txt" description="GatePass" target-window="_blank">
-                 <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
-               	  <parameter param-name="estimatedShipDate" from-field="estimatedDeliveryDate"/>
+            <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field> 
@@ -682,9 +679,7 @@
         <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="vehicleId" title="Vehicle Number"><display/></field>
         <field name="GatePass" widget-style="buttontext" >
-            <hyperlink target="AdhocTruckSheetReport.txt" description="GatePass" target-window="_blank">
-                 <parameter param-name="shipmentTypeId" from-field="shipmentTypeId"/> 
-               	  <parameter param-name="estimatedShipDate" from-field="estimatedDeliveryDate"/>
+            <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field> 
@@ -696,6 +691,68 @@
       
         <field name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelICPAmulShipment" description="Cancel Shipment">
+	            <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
+    </form>
+    <form name="listPowderShipments" type="list" list-name="listIt" paginate-target="FindPowderShipment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Shipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="shipmentId" ><display/></field>
+        <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="vehicleId" title="Vehicle Number"><display/></field>
+        <field name="GatePass" widget-style="buttontext" >
+            <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field> 
+        <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
+            <hyperlink target="buyerInvoice.pdf" description="Invoice Slips" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
+      
+        <field name="cancelShipment" widget-style="buttontext">
+            <hyperlink target="cancelPowderShipment" description="Cancel Shipment">
+	            <parameter param-name="shipmentId"/>
+            </hyperlink>
+        </field> 
+    </form>
+    <form name="listFGSShipments" type="list" list-name="listIt" paginate-target="FindFGSShipment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Shipment"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField" value="-lastUpdatedStamp"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="shipmentId" ><display/></field>
+        <field name="estimatedShipDate" title="Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="vehicleId" title="Vehicle Number"><display/></field>
+        <field name="GatePass" widget-style="buttontext" >
+            <hyperlink target="nonRouteGatePass.pdf" description="GatePass" target-window="_blank">
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field> 
+        <field name="buyerInvoice" widget-style="buttontext" id-name = "invoiceSlips">
+            <hyperlink target="buyerInvoice.pdf" description="Invoice Slips" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
+      
+        <field name="cancelShipment" widget-style="buttontext">
+            <hyperlink target="cancelFGSShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
             </hyperlink>
         </field> 

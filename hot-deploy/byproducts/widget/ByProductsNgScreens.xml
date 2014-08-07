@@ -2988,6 +2988,49 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="FGSProductSale">
+        <section>
+            <actions>
+               <set field="titleProperty" value="FGS Product Sales"/>              
+			   <set field="tabButtonItem" value="FGSProductSale" />	
+			   <set field="tabButtonItem2" value="FGSProductSale"/>  
+			    <set field="changeFlag" value="FgsSales"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+				 <set field="parameters.roleTypeId" value="FGS_WHOLESALE"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">   
+                      <include-menu name="FGSSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                      	<section>
+	                    	<condition>
+	                        	<if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                        </condition>
+                      		<widgets>
+           						<include-screen name="AdhocSaleInner"/>
+                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                          <widgets>
+      						 <include-screen name="SalesInnerScreen"/>
+                 		</widgets>
+                      </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="IcpSales">
         <section>
             <actions>
@@ -3032,8 +3075,54 @@
             </widgets>
         </section>
     </screen> 
+    	
+    <screen name="PowderPlantSale">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Powder Plant Sales"/>              
+			   <set field="tabButtonItem" value="PowderPlantSale" />	
+			   <set field="tabButtonItem2" value="PowderPlantSale"/>  
+			    <set field="changeFlag" value="PowderSales"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="orderFacility" from-field="parameters.orderFacility"/> 
+               <set field="orderRoute" from-field="parameters.orderRoute"/> 
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+			   <set field="parameters.roleTypeId" value="POWDER_CUSTOMER"/>							  					  
+            </actions>
+            <widgets>
+              <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">   
+                      <include-menu name="PowderPlantSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	           						<include-screen name="AdhocSaleInner"/>
+	                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                         <widgets>
+     						 <include-screen name="SalesInnerScreen"/>
+                		</widgets>
+                      </section>
+                      
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
-        <screen name="IcpSalesAmul">
+    <screen name="IcpSalesAmul">
         <section>
             <actions>
                <set field="titleProperty" value=" Amul Ice Cream Sales"/>              
@@ -3117,6 +3206,71 @@
                    </section>
             </widgets>
         </section>
+    </screen>
+    
+    <screen name="ProcessFGSOrders">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PROCESS FGS Orders"/>              
+			    <set field="tabButtonItem" value="FGSProductSale" />	
+			   <set field="tabButtonItem2" value="ProcessFGSOrders"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+               <set field="screenFlag" value="fgsSales"/>
+               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+            </actions>
+            <widgets>
+                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="FGSSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+               					<screenlet title="Powder Plant Orders">
+               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
+               					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="ProcessPowderOrders">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Process Powder Orders"/>              
+			    <set field="tabButtonItem" value="PowderPlantSale" />	
+			   <set field="tabButtonItem2" value="ProcessPowderOrders"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+               <set field="screenFlag" value="powderSales"/>
+               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+            </actions>
+            <widgets>
+                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="FGSSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+               					<screenlet title="FGS Orders">
+               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
+               					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
     </screen> 
     <screen name="ProcessNandiniOrders">
         <section>
@@ -3141,7 +3295,7 @@
                         <section>
                             <widgets>
                					<screenlet title="Ice Cream Orders">
-               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
+               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
                					</screenlet>
                             </widgets>
                         </section>
@@ -3173,7 +3327,7 @@
                         <section>
                             <widgets>
                					<screenlet title="Ice Cream Orders">
-               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
+               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
                					</screenlet>
                             </widgets>
                         </section>
@@ -3226,6 +3380,73 @@
             </widgets>            
         </section>
     </screen>
+    
+    <screen name="FindFGSShipment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find FGS Shipment"/>              
+			    <set field="tabButtonItem" value="FGSProductSale" />	
+			   <set field="tabButtonItem2" value="FindFGSShipment"/>       
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindFGSShipment"/>
+               <set field="shipmentTypeId" value="FGS_SHIPMENT"/>
+            </actions>
+            <widgets>
+                  <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="FGSSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindICPShipment" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                      						<include-form name="listFGSShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="FindPowderShipment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Powder Shipment"/>              
+			    <set field="tabButtonItem" value="PowderPlantSale" />	
+			   <set field="tabButtonItem2" value="FindPowderShipment"/>       
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindPowderShipment"/>
+               <set field="shipmentTypeId" value="POWDER_SHIPMENT"/> 
+            </actions>
+            <widgets>
+                  <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="PowderPlantSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindICPShipment" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                      						<include-form name="listPowderShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
     <screen name="FindICPNandiniShipment">
         <section>
             <actions>
@@ -3234,6 +3455,7 @@
 			   <set field="tabButtonItem2" value="FindICPNandiniShipment"/>       
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindICPNandiniShipment"/>
+             	<set field="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/> 
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3246,7 +3468,7 @@
                             			<include-form name="FindICPShipment" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       				</decorator-section>
                       				<decorator-section name="search-results">
-                      					<screenlet title="">
+                      					<screenlet title="${parameters.hideSearch}">
                       						<include-form name="listICPNandiniShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
                       					</screenlet>
                       				</decorator-section>
@@ -3266,7 +3488,8 @@
 			   <set field="tabButtonItem2" value="FindICPAmulShipment"/>       
                <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
                <set field="targetRequest" value="FindICPAmulShipment"/>
-               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/>
+               
             </actions>
             <widgets>
                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">

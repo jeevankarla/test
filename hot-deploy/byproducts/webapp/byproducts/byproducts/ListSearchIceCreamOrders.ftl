@@ -70,6 +70,12 @@ under the License.
     	jQuery('#processOrdersForm').submit();
         
     }
+    function getDCReport(orderId){
+		var formId = "#" + "dcForm";
+		var param1 = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
+		jQuery(formId).append(jQuery(param1));
+        jQuery(formId).submit();
+    }
     
     function approveIceCreamOrder(orderId, salesChannel){
 		var formId = "#" + "orderApproveForm";
@@ -90,21 +96,67 @@ under the License.
         
 //]]>
 </script>
-<set field="screenFlag" value=""/>
-<form name="orderCancelForm" id="orderCancelForm" method="post" <#if screenFlag?exists && screenFlag=="icpSales">action="cancelICPNandiniOrder"<#elseif screenFlag?exists && screenFlag=="icpAmulSales">action="cancelICPAmulOrder"<#else></#if>>
+<#include "viewOrderDetails.ftl"/>
+
+<form name="dcForm" id="dcForm" method="post" 
+	<#if screenFlag?exists && screenFlag=="icpSales">
+		action="nonRouteGatePass.pdf"
+	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
+		action="nonRouteGatePass.pdf"
+	<#elseif screenFlag?exists && screenFlag=="powderSales">
+		action="nonRouteGatePass.pdf"
+	<#elseif screenFlag?exists && screenFlag=="fgsSales">
+		action="nonRouteGatePass.pdf"
+	</#if>>
 </form>
-<form name="orderApproveForm" id="orderApproveForm" method="post" <#if screenFlag?exists && screenFlag=="icpSales">action="approveICPNandiniOrder"<#elseif screenFlag?exists && screenFlag=="icpAmulSales">action="approveICPAmulOrder"<#else></#if>>
+
+<form name="orderCancelForm" id="orderCancelForm" method="post" 
+	<#if screenFlag?exists && screenFlag=="icpSales">
+		action="cancelICPNandiniOrder"
+	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
+		action="cancelICPAmulOrder"
+	<#elseif screenFlag?exists && screenFlag=="powderSales">
+		action="cancelPowderOrder"
+	<#elseif screenFlag?exists && screenFlag=="fgsSales">
+		action="cancelFGSOrder"
+	</#if>>
 </form>
-<form name="processOrdersForm" id="processOrdersForm" method="post" <#if screenFlag?exists && screenFlag=="icpSales">action="createShipmentAndInvoiceForNandiniOrders"<#elseif screenFlag?exists && screenFlag=="icpAmulSales">action="createShipmentAndInvoiceForAmulOrders"<#else></#if>>
+<form name="orderApproveForm" id="orderApproveForm" method="post" 
+	<#if screenFlag?exists && screenFlag=="icpSales">
+		action="approveICPNandiniOrder"
+	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
+		action="approveICPAmulOrder"
+	<#elseif screenFlag?exists && screenFlag=="powderSales">
+		action="approvePowderOrder"
+	<#elseif screenFlag?exists && screenFlag=="fgsSales">
+		action="approveFGSOrder"
+	</#if>>
 </form>
+
+<form name="processOrdersForm" id="processOrdersForm" method="post" 
+	<#if screenFlag?exists && screenFlag=="icpSales">
+		action="createShipmentAndInvoiceForNandiniOrders"
+	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
+		action="createShipmentAndInvoiceForAmulOrders"
+	<#elseif screenFlag?exists && screenFlag=="powderSales">
+		action="createShipmentAndInvoiceForPowderOrders"
+	<#elseif screenFlag?exists && screenFlag=="fgsSales">
+		action="createShipmentAndInvoiceForFGSOrders"
+	</#if>>
+</form>
+
 <#if orderList?has_content>
   
   <form name="listOrders" id="listOrders"  method="post">
     <div align="right" width="100%">
     	<#if screenFlag?exists && screenFlag=="icpSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_NANDINI_SHIPMENT'/>
-    	<#else>
+    	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_AMUL_SHIPMENT'/>
+    	<#elseif screenFlag?exists && screenFlag=="powderSales">
+    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='POWDER_SHIPMENT'/>
+    	<#elseif screenFlag?exists && screenFlag=="fgsSales">
+    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='FGS_SHIPMENT'/>
     	</#if>
     	
     	<table width="100%">
@@ -125,6 +177,8 @@ under the License.
           <td>Party Name</td>
           <td>Order Id</td>
           <td>Order Date</td>
+          <td>View Order</td>
+          <td>DC Report</td>
           <td>Approve</td>
           <td>Cancel</td>
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>
@@ -139,12 +193,13 @@ under the License.
               	<td>${eachOrder.partyName?if_exists}</td>
               	<td>${eachOrder.orderId?if_exists}</td>
               	<td>${eachOrder.orderDate?if_exists}</td>
+              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}');"/></td>
               	<#if eachOrder.get('statusId') == "ORDER_CREATED">
               		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#else>
               		<td>${eachOrder.statusId?if_exists}</td>
               	</#if>
-        		
+        		<td><input type="button" name="dcReport" id="dcReport" value="Delivery Challan" onclick="javascript:getDCReport('${eachOrder.orderId?if_exists}');" target="_blank"/></td>
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">

@@ -116,7 +116,6 @@ invoiceIds.each { invoiceId ->
 	invoiceDetailMap.put("billingAddress", billingAddress);
 	invoiceItems = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
 	productIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "productId", true);
-	Debug.log("productIds ##################################"+productIds);
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 	orderItemAttributes = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 	invoiceItemDetail = [];
@@ -125,6 +124,18 @@ invoiceIds.each { invoiceId ->
 		
 		if(eachItem.productId){
 			
+			cxt = [:];
+			cxt.put("userLogin", userLogin);
+			cxt.put("productId", eachItem.productId);
+			cxt.put("partyId", partyIdTo);
+			cxt.put("priceDate", UtilDateTime.nowTimestamp());
+			cxt.put("productStoreId", "_NA_");
+			cxt.put("productPriceTypeId", "MRP_IS");
+			cxt.put("geoTax", "VAT");
+			
+			result = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, cxt);
+			mrpPrice = result.get("totalPrice");
+		
 			orderSeqList = EntityUtil.filterByAnd(invoiceOrderItemList, UtilMisc.toMap("invoiceId", eachItem.invoiceId, "invoiceItemSeqId", eachItem.invoiceItemSeqId));
 			tempMap = [:];
 			List prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
@@ -133,7 +144,7 @@ invoiceIds.each { invoiceId ->
 			tempMap.put("itemDescription", eachItem.description);
 			tempMap.put("quantityLtr", (eachItem.quantity)*prodDetail.quantityIncluded);
 			tempMap.put("quantity", eachItem.quantity);
-			tempMap.put("mrpPrice", 0);
+			tempMap.put("mrpPrice", mrpPrice);
 			tempMap.put("defaultPrice", eachItem.unitPrice);
 			if(orderSeqList){
 				orderItemSeqId = (EntityUtil.getFirst(orderSeqList)).get("orderItemSeqId");

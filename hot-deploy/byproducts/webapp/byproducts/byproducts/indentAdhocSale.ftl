@@ -20,10 +20,10 @@ $(document).ready(function(){
 			}
 		});
 		$('#ui-datepicker-div').css('clip', 'auto');
-		<#if changeFlag?exists && (changeFlag=='IcpSales' || changeFlag=='IcpSalesAmul')>
-			$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){
+		<#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
+			$("#boothId").autocomplete({ source: boothAutoJson }).keydown(function(e){
     	<#else>
-		 	$("#boothId").autocomplete({ source: boothAutoJson }).keydown(function(e){ 
+		 	$("#partyId").autocomplete({ source: partyAutoJson }).keydown(function(e){ 
 		</#if>
 			if (e.keyCode === 13){
 		      	 $('#boothId').autocomplete('close');
@@ -72,11 +72,15 @@ $(document).ready(function(){
       
     <div class="screenlet-body">
     <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
-     <form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesAmul</@ofbizUrl>" id="indententryinit">  
+     	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSalesAmul</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='IcpSales'>
-    <form method="post" name="indententryinit" action="<@ofbizUrl>IcpSales</@ofbizUrl>" id="indententryinit">  
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>IcpSales</@ofbizUrl>" id="indententryinit">
+    <#elseif changeFlag?exists && changeFlag=='PowderSales'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>PowderPlantSale</@ofbizUrl>" id="indententryinit">  
+    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSale</@ofbizUrl>" id="indententryinit">  
     <#else>
-    <form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
     </#if>
 	
       <table width="100%" border="0" cellspacing="0" cellpadding="0">  
@@ -118,20 +122,26 @@ $(document).ready(function(){
        </tr>    
        </#if>
         <tr>
-          <td>&nbsp;<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
-          <input type="hidden" name="isFormSubmitted"  value="YES" />
-            <input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
-            <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
-              <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/> 
-              <input type="hidden" name="salesChannel" id="salesChannel" value="ICP_AMUL_CHANNEL"/> 
-            <#elseif changeFlag?exists && changeFlag=='IcpSales'>
-             <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/> 
-               <input type="hidden" name="salesChannel" id="salesChannel" value="ICP_NANDINI_CHANNEL"/> 
-             
-            <#else>
-              <input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/> 
-            </#if>
-           </td>
+        	<td>&nbsp;<input type="hidden" name="productSubscriptionTypeId"  value="CASH" />
+		      	<input type="hidden" name="isFormSubmitted"  value="YES" />
+		      	<input type="hidden" name="changeFlag"  value="${changeFlag?if_exists}" />
+		        <#if changeFlag?exists && changeFlag=='IcpSalesAmul'>
+		        	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_AMUL_SHIPMENT"/> 
+		          	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_AMUL_CHANNEL"/> 
+		        <#elseif changeFlag?exists && changeFlag=='IcpSales'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="ICP_NANDINI_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="ICP_NANDINI_CHANNEL"/> 
+		        <#elseif changeFlag?exists && changeFlag=='PowderSales'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="POWDER_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="POWDER_PLANT_CHANNEL"/>
+		        <#elseif changeFlag?exists && changeFlag=='FgsSales'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="FGS_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="FGS_PRODUCT_CHANNEL"/> 
+		        <#else>
+		          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
+		          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
+		        </#if>
+           	</td>
           <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>${uiLabelMap.SupplyDate}:</div></td>
           <td>&nbsp;</td>
           <#if effectiveDate?exists && effectiveDate?has_content>  
@@ -141,10 +151,10 @@ $(document).ready(function(){
             	</div>
           	</td>       
        	  <#else> 
-          	  	<td valign='middle'>          
-            		<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
-            	</td>
-       	</#if>
+          	<td valign='middle'>          
+            	<input class='h2' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
+            </td>
+       	  </#if>
         </tr>
         <tr><td><br/></td></tr>
         <#if changeFlag?exists && changeFlag == "AdhocSaleNew">
@@ -177,8 +187,8 @@ $(document).ready(function(){
        			<#else>      	         
           			<td valign='middle'>
           				<select name="orderTaxType" id="orderTaxType" class='h2'>
-          					<option value="INTRA">Intra State</option>
-          					<option value="INTER">Inter State</option>
+          					<option value="INTRA">With in State</option>
+          					<option value="INTER">Out of State</option>
           			</td>
        			</#if>
         	</tr>
@@ -187,24 +197,10 @@ $(document).ready(function(){
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && (changeFlag=='IcpSalesAmul' || changeFlag=='IcpSales')>Wholesaler Id:<#else>Retailer Id:</#if></div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer Id:<#else>Wholesaler Id:</#if></div></td>
           <td>&nbsp;</td>
-        <#if changeFlag?exists && (changeFlag=='IcpSales' || changeFlag=='IcpSalesAmul') >
-			<#if party?exists && party?has_content>  
-	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
-          		<td valign='middle'>
-            		<div class='tabletext h2'>
-               			${party.partyId.toUpperCase()} [ ${party.groupName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-            		</div>
-          		</td>       
-       		<#else>               
-          		<td valign='middle'>
-          			<input type="text" name="partyId" id="partyId" />
-          			 <span class="tooltip">Input party code and press Enter</span>
-          		</td>
-          	</#if>
-    	<#else>
-		 	<#if booth?exists && booth?has_content>  
+        <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
+			<#if booth?exists && booth?has_content>  
 	  	  		<input type="hidden" name="boothId" id="boothId" value="${booth.facilityId.toUpperCase()}"/>  
           		<td valign='middle'>
             		<div class='tabletext h2'>
@@ -214,6 +210,20 @@ $(document).ready(function(){
        		<#else>               
           		<td valign='middle'>
           			<input type="text" name="boothId" id="boothId" />
+          			 <span class="tooltip">Input party code and press Enter</span>
+          		</td>
+          	</#if>
+    	<#else>
+		 	<#if party?exists && party?has_content>  
+	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
+          		<td valign='middle'>
+            		<div class='tabletext h2'>
+               			${party.partyId.toUpperCase()} [ ${party.groupName?if_exists} ] ${partyAddress?if_exists} <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+            		</div>
+          		</td>       
+       		<#else>               
+          		<td valign='middle'>
+          			<input type="text" name="partyId" id="partyId" />
           			 <span class="tooltip">Input party code and press Enter</span>
           		</td>
           	</#if>
@@ -374,8 +384,14 @@ $(document).ready(function(){
 		 		<#assign formAction='processAdhocSale'>
 		 	<#elseif changeFlag?exists && changeFlag=='IcpSales'>
 		         <#assign formAction='processIcpSale'>
+		    <#elseif changeFlag?exists && changeFlag=='IcpSalesAmul'>
+		         <#assign formAction='processIcpAmulSale'>
+		    <#elseif changeFlag?exists && changeFlag=='PowderSales'>
+		         <#assign formAction='processPowderSale'>
+		    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
+		         <#assign formAction='processFGSProductSale'>     
 		 	<#else>
-		 			<#assign formAction='processIcpAmulSale'>		 	
+				<#assign formAction='processIcpSale'>		 					 	
 			</#if>				
 			
 	<#if booth?exists || party?exists>
