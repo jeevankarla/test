@@ -31,6 +31,7 @@
                 <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
                 <set field="fromDate" from-field="parameters.fromDate"/>
                 <set field="emplLeaveCtx" from-field="parameters"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/EmployeeLeaveList.groovy"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="APPROVE"/>
                 </service>
