@@ -20,7 +20,7 @@ function setPaymentMethodTypeFields() {
 		var paymentMethod = allPaymentMethods[i];
 		if(jQuery("[name='paymentMethodId']").val() == paymentMethod['paymentMethodId']) {
 			var str=paymentMethod['paymentMethodTypeId'];
-			if(str.search(/(CASH)+/g) >= 0){
+		if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)|| (str.search(/(DEBITNOTE)+/g) >= 0) ){
 		
 		jQuery("input[name='paymentRefNum']").parent().parent().hide();
 		jQuery("input[name='effictiveDate']").parent().parent().hide();
