@@ -2900,7 +2900,8 @@ under the License.
         <event type="service" invoke="createPayment"/>
         <response name="success" type="request-redirect-noparam"  value="FindPaymentNonRoute">
            <redirect-parameter name="paymentMethodTypeId"/>
-        	<redirect-parameter name="subTabItem" value="ChequePayment"/>
+        	<redirect-parameter name="subTabItem"  />
+        	<redirect-parameter name="noConditionFind" value="Y" />
         </response>
         <response name="error" type="request-redirect-noparam"  value="FindPaymentNonRoute">
             <redirect-parameter name="paymentMethodTypeId"/>
