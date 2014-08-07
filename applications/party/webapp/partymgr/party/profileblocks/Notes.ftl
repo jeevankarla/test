@@ -22,7 +22,7 @@ under the License.
       <ul>
         <li class="h3">${uiLabelMap.CommonNotes}</li>
         <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
-          <li><a href="<@ofbizUrl>AddPartyNote?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.CommonCreateNew}</a></li>
+          <li><a href="<@ofbizUrl>AddEmployeeNote?partyId=${partyId}</@ofbizUrl>">${uiLabelMap.CommonCreateNew}</a></li>
         </#if>
       </ul>
       <br class="clear" />
@@ -41,6 +41,13 @@ under the License.
               </td>
               <td>
                 ${noteRef.noteInfo}
+              </td>
+              <td>
+              	<form name="removeNotesForm_${noteRef.noteId}${noteRef.targetPartyId}" method="post" action="<@ofbizUrl>RemoveEmployeeNote</@ofbizUrl>">
+                  <input type="hidden" name="partyId" value="${noteRef.targetPartyId}"/>
+                  <input type="hidden" name="noteId" value="${noteRef.noteId}"/>
+                  <a href="javascript:document.removeNotesForm_${noteRef.noteId}${noteRef.targetPartyId}.submit()" class="buttontext">Remove</a>
+                </form>
               </td>
             </tr>
             <#if noteRef_has_next>

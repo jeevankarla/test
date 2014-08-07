@@ -30,6 +30,14 @@
             <hyperlink  target="stream/${contentName}" description="${uiLabelMap.CommonView}" target-window="_BLANK" target-type="content">
             	<parameter param-name="contentId" value="${contentId}"/>
             </hyperlink>              
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit">
+            <hyperlink target="removeSRDocument" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="contentId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="partyContentTypeId"/>                
+                <parameter param-name="fromDate"/>
+            </hyperlink>
         </field>        
     </form>
     

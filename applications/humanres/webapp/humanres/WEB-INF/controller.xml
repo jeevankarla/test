@@ -1171,6 +1171,29 @@ under the License.
         <event type="service" invoke="uploadPartyContentFile"/>
         <response name="success" type="view" value="EmployeeProfile"/>
     </request-map>
+    <request-map uri="removeSRDocument">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="removePartyContent"/>
+        <response name="success" type="request-redirect" value="EmployeeProfile">
+            <redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
+    <request-map uri="AddEmployeeNote"><security https="true" auth="true"/><response name="success" type="view" value="AddEmployeeNote"/></request-map>
+    <request-map uri="createEmployeeNote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyNote"/>
+        <response name="success" type="request-redirect" value="EmployeeProfile">
+            <redirect-parameter name="partyId"/>
+        </response>
+        <response name="error" type="view" value="AddEmployeeNote"/>
+    </request-map>
+    <request-map uri="RemoveEmployeeNote">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="removePartyNote"/>
+        <response name="success" type="request-redirect" value="EmployeeProfile">
+            <redirect-parameter name="partyId"/>
+        </response>
+    </request-map>
 	
     <!--====================Recruitment Requests===================================-->
     <request-map uri="FindJobRequisitions">
@@ -1853,5 +1876,8 @@ under the License.
 	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>
 	<view-map name="SalaryAnalysisChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#SalaryAnalysisChart"/>
 	<view-map name="SalaryAnalysisChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#SalaryAnalysisChartInternal"/>
+	
+	<!-- Employee Content -->
+	<view-map name="AddEmployeeNote" type="screen" page="component://humanres/widget/EmployeeScreens.xml#AddEmployeeNote"/>
 	
 </site-conf>

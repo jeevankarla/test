@@ -395,6 +395,7 @@ under the License.
     <form name="AddPartyNote" type="single" target="createPartyNote"
         focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createPartyNote"/>
+        <field name="tenantId"><ignored/></field>
         <field name="partyId"><hidden/></field>
         <field name="noteId" tooltip="${uiLabelMap.PartyOptional}"><hidden/></field>
         <field name="noteName" title="${uiLabelMap.FormFieldTitle_noteName}" tooltip="${uiLabelMap.PartyOptional}"> </field>

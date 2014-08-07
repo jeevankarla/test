@@ -19,7 +19,7 @@ under the License.
   <div id="partyContent" class="screenlet">
     <div class="screenlet-title-bar">
       <ul>
-        <li class="h3">My Documents</li>
+        <li class="h3">SR Documents</li>
       </ul>
       <br class="clear" />
     </div>

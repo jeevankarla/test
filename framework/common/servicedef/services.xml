@@ -63,6 +63,7 @@ under the License.
         <description>Create a new note record</description>
         <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
         <attribute name="noteName" type="String" mode="IN" optional="true"/>
+        <attribute name="noteDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="note" type="String" mode="IN" allow-html="safe"/>
         <attribute name="noteId" type="String" mode="OUT"/>
     </service>
@@ -73,6 +74,11 @@ under the License.
         <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="noteInfo" allow-html="safe"/>
+    </service>
+    <service name="removePartyNote" engine="java" default-entity-name="PartyNote"
+            location="org.ofbiz.common.CommonServices" invoke="removePartyNote" auth="true">
+        <description>Remove a PartyNote and NoteData record</description>
+        <auto-attributes mode="INOUT" include="pk" optional="true"/>
     </service>
     
     <service name="adjustDebugLevels" engine="java"

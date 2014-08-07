@@ -640,4 +640,25 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="AddEmployeeNote">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleNewPartyNote"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="PageTitleNewPartyNote"/>
+
+                <set field="donePage" from-field="parameters.DONE_PAGE" default-value="viewprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleNewPartyNote}">
+                            <include-form name="AddEmployeeNote" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

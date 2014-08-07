@@ -1026,6 +1026,23 @@
              
         <field name="createButton" title="Upload Pic"><submit button-type="button"/></field>
     </form> 
+    <form name="AddEmployeeNote" type="single" target="createEmployeeNote"
+        focus-field-name="noteId" header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="createPartyNote"/>
+        <field name="tenantId"><ignored/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="noteId" tooltip="${uiLabelMap.PartyOptional}"><hidden/></field>
+        <field name="noteDate"><date-time type="timestamp"></date-time></field>
+        <field name="noteName" title="${uiLabelMap.FormFieldTitle_noteName}" tooltip="${uiLabelMap.PartyOptional}"> </field>
+        <field name="note"><textarea cols="70" rows="10"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="cancelLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="smallSubmit">
+            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
     
 </forms>
 
