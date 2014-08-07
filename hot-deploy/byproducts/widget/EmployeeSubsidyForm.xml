@@ -16,7 +16,7 @@
        </actions>
     	<field name="facilityId" title="Retailer Id"><text/></field>    	
         <field name="partyId" title="Employee Id" ><text/></field>
-        <field name="unionCode" title="Union Code" required-field="true">
+        <field name="unionCode" title="Union Code">
         <drop-down allow-empty="true">
         	<list-options list-name="ListPartyRelationship" key-name="partyIdFrom" description="${partyIdFrom}"/>
             </drop-down></field>
