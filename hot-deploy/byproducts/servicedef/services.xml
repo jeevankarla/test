@@ -27,6 +27,8 @@
         <attribute name="routeId" type="String" mode="IN" optional="true"/>
         <attribute name="returnCrQuantity" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="returnCnQuantity" type="BigDecimal" mode="IN" optional="false"/>
+        <attribute name="statusIdTo" type="String" mode="IN" optional="true"/>
+        
     </service>
     <service name="createSequenceForVATInvoice" engine="java" 
         location="in.vasista.vbiz.byproducts.ByProductNetworkServices" invoke="createSequenceForVATInvoice" transaction-timeout="20000">

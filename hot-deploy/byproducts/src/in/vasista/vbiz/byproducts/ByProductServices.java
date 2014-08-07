@@ -4225,6 +4225,7 @@ public class ByProductServices {
       	BigDecimal returnCrQuantity = (BigDecimal)context.get("returnCrQuantity");
       	BigDecimal returnCnQuantity = (BigDecimal)context.get("returnCnQuantity");
       	String shipmentId = (String)context.get("shipmentId");
+    	String statusId="VEHICLE_CRATE_RTN";
       	String routeId="";
       	Map<String, Object> result = ServiceUtil.returnSuccess();
       	List conditionList = FastList.newInstance();
@@ -4242,18 +4243,21 @@ public class ByProductServices {
 					routeId = (EntityUtil.getFirst(shipmentList)).getString("routeId");
 				}
 			}
-			
+			if(!UtilValidate.isEmpty(context.get("statusIdTo"))){
+				 statusId=(String)context.get("statusIdTo");//for Update Dispatch
+			}
+			if("VEHICLE_CRATE_RTN".equals(statusId)){
 			GenericValue crateCanAcct = delegator.findOne("CrateCanAccount", UtilMisc.toMap("shipmentId", shipmentId), false);
 			if(UtilValidate.isEmpty(crateCanAcct)){
 				Debug.logError("No Entry in crate/can accounting for shipment "+shipmentId,module);
  				return ServiceUtil.returnError("No Entry in crate/can accounting for shipment "+shipmentId);
 			}
-			
 			crateCanAcct.set("cratesReceived",returnCrQuantity);
 			crateCanAcct.set("cansReceived", returnCnQuantity);
 			crateCanAcct.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 			crateCanAcct.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			crateCanAcct.store();
+			}
 		} catch (Exception e) {
 			Debug.logError(e, module);
 			return ServiceUtil.returnError(e.toString());
@@ -4272,7 +4276,7 @@ public class ByProductServices {
 	    			 vehicleTripStatusMap.put("facilityId",vehicleTrip.getString("originFacilityId"));
 	    			 vehicleTripStatusMap.put("sequenceNum", vehicleTrip.getString("sequenceNum"));
 	    			 vehicleTripStatusMap.put("userLogin", userLogin);
-	    			 vehicleTripStatusMap.put("statusId", "VEHICLE_CRATE_RTN");
+	    			 vehicleTripStatusMap.put("statusId", statusId);
 	    			 vehicleTripStatusMap.put("lastModifiedDate", UtilDateTime.nowTimestamp());
 	    			 vehicleTripStatusMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
 			        try {
@@ -4296,7 +4300,11 @@ public class ByProductServices {
 			            return ServiceUtil.returnError(e.getMessage());
 			        }
 	    		 }
-        result = ServiceUtil.returnSuccess("Successfully received crates from transporter!!");
+	    			if("VEHICLE_CRATE_RTN".equals(statusId)){
+                       result = ServiceUtil.returnSuccess("Successfully received crates from transporter!!");
+	    			}else{
+	    				 result = ServiceUtil.returnSuccess("Updated VehicleStatus Successfully For Route:"+routeId);
+	    			}
         return result;
     }
 	
