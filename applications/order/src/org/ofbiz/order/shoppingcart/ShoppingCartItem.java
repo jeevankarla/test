@@ -2232,7 +2232,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     	for(int i=0;i<taxList.size(); i++){
     		 Map taxComp = (Map)taxList.get(i);
     		 String taxType= (String) taxComp.get("taxType");
-    		 Debug.log("taxComp #################"+taxComp);
     		 BigDecimal percentage = (BigDecimal) taxComp.get("percentage");
     		 BigDecimal amount = (BigDecimal) taxComp.get("amount");
     		 if(taxType.startsWith("VAT_")){
