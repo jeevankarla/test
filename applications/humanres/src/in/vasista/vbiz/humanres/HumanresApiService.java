@@ -179,7 +179,13 @@ Debug.logInfo("getEmployeePayslips: condition->" + condition, module);
 	    				employee.put("halfPayLeaveBalance", leaveBalances.get("HPL"));
 	    			}
 	    		}
-	    	}			
+	    	}	
+    		String emplWeeklyOffDay = "SUNDAY";
+    		GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employment.getString("partyId")), false);
+	        if(UtilValidate.isNotEmpty(employeeDetail) && UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
+	        	emplWeeklyOffDay = employeeDetail.getString("weeklyOff");
+	        }
+			employee.put("weeklyOff", emplWeeklyOffDay);  	        
 		} catch(Exception e){
 			Debug.logError("Error fetching employee profile " + e.getMessage(), module);
 		}
@@ -303,5 +309,68 @@ Debug.logInfo("result:" + result, module);
 Debug.logInfo("result:" + result, module);		 
     	return result;
     }          
-    
+
+    /*
+     * Fetches all leaves applied since last 45 days for given employee
+     */
+    public static Map<String, Object> fetchEmployeeRecentLeaves(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_MYEMPLOYEE", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch employees!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }    	
+        
+    	if (userLogin == null || userLogin.get("partyId") == null) {
+            Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " not mapped to a party!", module);
+            return ServiceUtil.returnError("Valid employee code not found.");    		
+    	}
+		List leaves = FastList.newInstance();        
+    	String partyId = (String)userLogin.get("partyId");
+    	Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -45));
+
+		try{    	
+			List conditionList = UtilMisc.toList(
+	            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  		
+			List<GenericValue> emplLeaves = delegator.findList("EmplLeave", condition, null, null, null, false);
+			for (int i = 0; i < emplLeaves.size(); ++i) {
+		    	Map<String, Object> leave = FastMap.newInstance();
+				GenericValue emplLeave = emplLeaves.get(i);
+				leave.put("leaveTypeId", emplLeave.getString("leaveTypeId"));
+				String leaveFromDate = UtilDateTime.toDateString(emplLeave.getTimestamp("fromDate"), "yyyy-MM-dd");
+				String leaveThruDate = UtilDateTime.toDateString(emplLeave.getTimestamp("thruDate"), "yyyy-MM-dd");	
+				leave.put("leaveStatus", emplLeave.getString("leaveStatus"));				
+				leave.put("leaveFromDate", leaveFromDate);
+				leave.put("leaveThruDate", leaveThruDate);		
+				leaves.add(leave);
+			}
+		
+		} catch(Exception e){
+			Debug.logError("Error fetching employee leaves " + e.getMessage(), module);
+		} 
+		Map<String, Object> employeeLeavesMap = FastMap.newInstance();  
+		employeeLeavesMap.put("employeeId", partyId);    	 		
+		employeeLeavesMap.put("recentLeaves", leaves);    	 
+    	Map leaveBalancesResult = EmplLeaveService.getEmployeeLeaveBalance(dctx, UtilMisc.toMap("employeeId", partyId));
+    	if (UtilValidate.isNotEmpty(leaveBalancesResult)) {
+    		if (leaveBalancesResult.get("leaveBalanceDate") != null) {
+    			employeeLeavesMap.put("leaveBalanceDate", leaveBalancesResult.get("leaveBalanceDate"));
+    			Map leaveBalances = (Map)leaveBalancesResult.get("leaveBalances");
+    			if (leaveBalances != null) {
+    				employeeLeavesMap.put("earnedLeaveBalance", leaveBalances.get("EL"));
+    				employeeLeavesMap.put("casualLeaveBalance", leaveBalances.get("CL"));
+    				employeeLeavesMap.put("halfPayLeaveBalance", leaveBalances.get("HPL"));
+    			}
+    		}
+    	}			
+    	Map result = FastMap.newInstance(); 	
+    	result.put("employeeLeavesResult", employeeLeavesMap);	
+Debug.logInfo("result:" + result, module);		 
+    	return result;
+    }          
 }
