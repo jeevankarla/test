@@ -2463,6 +2463,11 @@ public class PayrollService {
 			    			List cHoliDayList = EntityUtil.filterByCondition(holiDayList, EntityCondition.makeCondition(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,cTimeEnd) , EntityOperator.AND,EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,cTime)));
 			    			List cDayLeaves = EntityUtil.filterByDate(leaves, cTime);
 			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition(EntityCondition.makeCondition("date",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("date",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
+			    			// handle no punch employees here
+			    			if((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("N")))){
+			    				c1.add(Calendar.DATE,1);
+		    					continue;
+		    				}
 			    			//Debug.log("dayPunchList size==========="+dayPunchList.size());
 			    			//TO:DO need to handle SHIFT_NIGHT mispunch
 			    			Boolean shiftFalg = Boolean.FALSE;
