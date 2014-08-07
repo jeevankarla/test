@@ -1220,6 +1220,7 @@ public class PayrollService {
 	    									"NOOFATTENDEDHOLIDAYS" ,"NOOFATTENDEDSS" ,"NOOFATTENDEDWEEKLYOFF" ,"NOOFLEAVEDAYS","NOOFCOMPOFFSAVAILED");
 	    							supportedVaribules.add("NOOFAVAILEDVEHICLEDAYS");
 	    							supportedVaribules.add("NOOFPAYABLEDAYS");
+	    							supportedVaribules.add("NOOFARREARDAYS");
 	    							
 	    							for(int i= 0;i<varibuleKeyList.size();i++){
 	    								String varibuleKey = (String)varibuleKeyList.get(i);
@@ -1240,6 +1241,7 @@ public class PayrollService {
 		    							variables.put("NOOFCOMPOFFSAVAILED", (Double)attendanceMap.get("noOfCompoffAvailed"));
 		    							variables.put("NOOFAVAILEDVEHICLEDAYS", (new Double((Integer)attendanceMap.get("availedVehicleDays"))));
 		    							variables.put("NOOFPAYABLEDAYS", (Double)attendanceMap.get("noOfPayableDays"));
+		    							variables.put("NOOFARREARDAYS", (Double)attendanceMap.get("noOfArrearDays"));
 		    							
 		    							double noOfAttendedDays = ((Double)attendanceMap.get("noOfAttendedDays")).doubleValue();
 		    							evltr.setFormulaIdAndSlabAmount(formulaId, noOfAttendedDays);
