@@ -26,7 +26,13 @@
     
    <service name="fetchEmployeeDetails" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.humanres.HumanresApiService" invoke="fetchEmployeeDetails">
-        <description>Service to get all active employees</description>
+        <description>Service to fetch employee details</description>
         <attribute type="Map" mode="OUT" name="employeeDetailsResult" optional="true"/>
     </service>  
+    
+   <service name="fetchEmployeeRecentLeaves" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.humanres.HumanresApiService" invoke="fetchEmployeeRecentLeaves">
+        <description>Service to fetch employee leaves</description>
+        <attribute type="Map" mode="OUT" name="employeeLeavesResult" optional="true"/>
+   </service>     
 </services>   
