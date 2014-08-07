@@ -648,6 +648,34 @@ public class UtilDateTime {
         calendar.setTime(date);
         return dateFormat.format(date);
     }
+    /**
+     * Makes a date String in ,0 1 1 2 2 0 1 4, in the given from a Date
+     *
+     * @param date The Date
+     * @return A date String in the given format
+     */
+    public static String toDateStringBankFormat(java.util.Date date, String format) {
+        if (date == null) return "";
+        SimpleDateFormat dateFormat = null;
+        if (format != null) {
+            dateFormat = new SimpleDateFormat(format);
+        } else {
+            dateFormat = new SimpleDateFormat();
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(date);
+       // return dateFormat.format(date);
+        String tempformat=(String)dateFormat.format(date);
+        char[]  dateStrCharArry=tempformat.toCharArray();
+        String newBankFormat="";
+        for(int i=0;i<dateStrCharArry.length;i++){
+        	
+        	newBankFormat=newBankFormat+" "+dateStrCharArry[i];
+        }
+        return newBankFormat;
+    }
 
     /**
      * Makes a date String in the format MM/DD/YYYY from a Date
