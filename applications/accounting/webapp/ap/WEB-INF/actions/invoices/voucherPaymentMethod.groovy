@@ -26,41 +26,9 @@ import org.ofbiz.entity.util.EntityUtil;
 
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
 
-/*<field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
-<drop-down allow-empty="false">
-	<entity-options description="${description}" entity-name="PaymentType">
-		<entity-constraint name="parentTypeId" value="RECEIPT"/>
-		<entity-order-by field-name="description"/>
-	</entity-options>
-</drop-down>
-</field>
-<field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
-<drop-down allow-empty="false">
-	<entity-options entity-name="PaymentMethodType"  description="${description}">
-		<entity-constraint name="paymentMethodTypeId" operator="like" value="%_PAYIN%"/>
-		<entity-order-by field-name="description"/>
-	</entity-options>
-</drop-down>
-</field>
 
-//ap Payment
-<entity-condition entity-name="PaymentType" list="paymentTypes">
-<condition-list combine="or">
-	<condition-expr field-name="parentTypeId" operator="equals" value="DISBURSEMENT"/>
-	<condition-expr field-name="parentTypeId" operator="equals" value="TAX_PAYMENT"/>
-</condition-list>
-<order-by field-name="description"/>
-</entity-condition>
-
-<field name="paymentMethodId" id-name="paymentMethodId" position="2" event="onchange" action="javascript:setPaymentMethodTypeFields();" >
-	<drop-down allow-empty="false">
-		<entity-options entity-name="PaymentMethod" description="${description}">
-			<entity-constraint name="partyId" operator="equals" env-name="paymentPartyId"/>
-			<entity-order-by field-name="description"/>
-		</entity-options>
-	</drop-down>
-</field>*/
 parentTypeId=parameters.parentTypeId;
+actionName="createVoucherPayment";
 condList = [];
 //AP PaymentTypes
 condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("DISBURSEMENT","TAX_PAYMENT")));
@@ -73,21 +41,35 @@ condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, Ut
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 arPaymentTypes = delegator.findList("PaymentType", cond, null, ["description"], null, false);
 paymentTypes=[];
+paymentMethodLike="";
 if("SALES_INVOICE"==parentTypeId){
 	context.paymentTypes=arPaymentTypes;
+	paymentMethodLike="%_PAYIN%";
+	actionName="createArVoucherPayment";
 }else if("PURCHASE_INVOICE"==parentTypeId){
 context.paymentTypes=apPaymentTypes;
+paymentMethodLike="%_PAYOUT%";
+actionName="createApVoucherPayment";
 }else{
 context.paymentTypes=paymentTypes;
 }
 context.parentTypeId=parentTypeId;
+context.actionName=actionName;
+
 JSONObject voucherPaymentMethodJSON = new JSONObject();
 JSONArray cashMethodItemsJSON = new JSONArray();
 JSONArray bankMethodItemsJSON = new JSONArray();
 JSONArray allMethodItemsJSON = new JSONArray();
-
-bankPaymentMethodList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"BANK"), null, null, null, false);
-cashPaymentMethodList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"CASH"), null, null, null, false);
+condList.clear();
+condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike));
+condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"BANK"));
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+bankPaymentMethodList = delegator.findList("PaymentMethodType",cond, null, null, null, false);
+condList.clear();
+condList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.LIKE, paymentMethodLike));
+condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"CASH"));
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+cashPaymentMethodList = delegator.findList("PaymentMethodType", cond, null, null, null, false);
 
 bankPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(bankPaymentMethodList, "paymentMethodTypeId", false);
 cashPaymentMethodIdsList=EntityUtil.getFieldListFromEntityList(cashPaymentMethodList, "paymentMethodTypeId", false);
@@ -128,10 +110,10 @@ if("SALES_INVOICE"==parentTypeId){
 	voucherPaymentMethodJSON.put("BANK",bankMethodItemsJSON);
 	voucherPaymentMethodJSON.put("ALL",allMethodItemsJSON);
 	
-	Debug.log("cashMethodItemsJSON=======>"+cashMethodItemsJSON);
-	Debug.log("bankMethodItemsJSON=======>"+bankMethodItemsJSON);
+	//Debug.log("cashMethodItemsJSON=======>"+cashMethodItemsJSON);
+	//Debug.log("bankMethodItemsJSON=======>"+bankMethodItemsJSON);
 context.voucherPaymentMethodJSON=voucherPaymentMethodJSON;
-Debug.log("voucherPaymentMethodJSON=======>"+voucherPaymentMethodJSON);
+//Debug.log("voucherPaymentMethodJSON=======>"+voucherPaymentMethodJSON);
 
 
 voucherType=parameters.prefPaymentMethodTypeId;

@@ -195,22 +195,22 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 		 var payMethodList="";
 		 
 		 if(voucherType != undefined && voucherType != "" && voucherPaymentMethodTypeMap != undefined){
-		
 		  payMethodList=voucherPaymentMethodTypeMap[voucherType];
-		  // alert("===="+partyIdFrom+"==partyIdTo="+partyIdTo+"===voucherType=="+voucherType+"===payMethodList==="+payMethodList);
+		  //alert("=IN IFFF==="+partyIdFrom+"==partyIdTo="+partyIdTo+"===voucherType=="+voucherType+"===payMethodList==="+payMethodList);
 	 	 if(payMethodList != undefined && payMethodList != ""){
 			$.each(payMethodList, function(key, item){
 			  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
 			});
 	 	   }
 		 }else{
+		  //alert("=IN=ELSEE==="+partyIdFrom+"==partyIdTo="+partyIdTo+"===voucherType=="+voucherType+"===payMethodList==="+payMethodList);
 	 	   payMethodList=voucherPaymentMethodTypeMap['ALL'];
 	 	   	$.each(payMethodList, function(key, item){
 			  methodOptionList.push('<option value="'+item.value+'">'+item.text+'</option>');
 			});
 	 	   }
 		  paymentMethodList = methodOptionList;
-		message += "<html><head></head><body><form action='createVoucherPayment' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+		message += "<html><head></head><body><form action='${actionName?if_exists}' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Payment Type :</td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId'  class='h4'>"+
 						"<#if paymentTypes?has_content><#list paymentTypes as eachMethodType><option value='${eachMethodType.paymentTypeId?if_exists}' >${eachMethodType.description?if_exists}</option></#list></#if>"+            

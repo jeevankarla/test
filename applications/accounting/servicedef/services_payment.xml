@@ -326,11 +326,15 @@ under the License.
         <attribute name="partyIdTo" mode="IN" type="String" optional="false"/>
         <attribute name="amount" mode="IN" type="String" optional="false"/>
         <attribute name="orderId" mode="IN" type="String" optional="true"/> 
-         <attribute name="invoiceId" mode="IN" type="String" optional="false"/> 
+         <attribute name="instrumentDate" mode="IN" type="String" optional="true"/> 
+         <attribute name="invoiceId" mode="INOUT" type="String" optional="false"/> 
          <attribute name="paymentMethodTypeId" mode="IN" type="String" optional="true"/> 
           <attribute name="paymentMethodId" mode="IN" type="String" optional="true"/> 
          <attribute name="paymentTypeId" mode="IN" type="String" optional="true"/> 
          <attribute name="comments" mode="IN" type="String" optional="true"/> 
+         <attribute name="paymentId" mode="OUT" type="String" optional="true"/> 
+          <attribute name="noConditionFind" mode="OUT" type="String"  optional="true"/> 
+          <attribute name="hideSearch" mode="OUT" type="String" optional="true"/> 
          
     </service>
 </services>

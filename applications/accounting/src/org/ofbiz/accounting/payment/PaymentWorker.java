@@ -23,7 +23,8 @@ import java.math.MathContext;
 import java.util.List;
 import java.util.Map;
 import java.sql.Timestamp;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.servlet.ServletRequest;
 
 import javolution.util.FastList;
@@ -48,6 +49,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.product.product.ProductEvents;
+
 
 
 /**
@@ -446,7 +448,7 @@ public class PaymentWorker {
         BigDecimal paymentAmount = ProductEvents.parseBigDecimalForEntity((String) context.get("amount"));
         String paymentMethodType = (String) context.get("paymentMethodTypeId");
         String paymentMethodId = (String) context.get("paymentMethodId");
-        
+        String instrumentDateStr=(String) context.get("instrumentDate");
         String paymentType = (String) context.get("paymentTypeId");
         String comments = (String) context.get("comments");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -467,9 +469,20 @@ public class PaymentWorker {
         Timestamp paymentTimestamp = UtilDateTime.nowTimestamp();
       
         Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+        if (UtilValidate.isNotEmpty(instrumentDateStr)) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMMM, yyyy");
+			try {
+				instrumentDate = new java.sql.Timestamp(sdf.parse(instrumentDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ instrumentDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: "	+ instrumentDateStr, module);
+			}
+		}
+        Debug.log("=====instrumentDate==="+instrumentDate);
         try {
         Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
-        Debug.log("===paymentMethodType===="+paymentMethodType+"===partyIdFrom==="+partyIdFrom+"===partyId=="+partyIdTo+"==paymentMethodType=="+paymentMethodType+"===paymentType=="+paymentType);
+       // Debug.log("===paymentMethodType===="+paymentMethodType+"===partyIdFrom==="+partyIdFrom+"===partyId=="+partyIdTo+"==paymentMethodType=="+paymentMethodType+"===paymentType=="+paymentType);
         paymentCtx.put("paymentMethodTypeId", paymentMethodType);//from AR mandatory
         paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
         paymentCtx.put("organizationPartyId", partyIdTo);
@@ -503,7 +516,14 @@ public class PaymentWorker {
         Debug.logError(e, e.toString(), module);
         return ServiceUtil.returnError(e.toString());
         }
+        
+      
+        
          result = ServiceUtil.returnSuccess("Payment successfully done for Party "+partyIdTo+" ..!");
+         result.put("invoiceId",invoiceId);
+         result.put("paymentId",paymentId);
+         result.put("noConditionFind","Y");
+         result.put("hideSearch","Y");
         return result; 
    }
     public static Map<String, Object> depositCashReceiptPayment(DispatchContext dctx, Map<String, ? extends Object> context){

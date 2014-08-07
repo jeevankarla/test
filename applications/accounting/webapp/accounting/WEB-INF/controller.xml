@@ -2854,13 +2854,26 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="InvoiceSearchResultPdf"/>
     </request-map>    
-     <request-map uri="createVoucherPayment">
+     <request-map uri="createApVoucherPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createVoucherPayment"/>
-        <response name="success" type="view-last"/>
-        <response name="error" type="view-last"/>
+        <response name="success" type="request-redirect-noparam" value="FindApInvoices">
+        <redirect-parameter  name="invoiceId"/> 
+        </response>
+        <response name="error" type="request-redirect-noparam" value="FindApInvoices">
+        <redirect-parameter name="invoiceId"/>
+        </response>
     </request-map>
-    
+    <request-map uri="createArVoucherPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createVoucherPayment"/>
+        <response name="success" type="request-redirect-noparam" value="FindArInvoices">
+         <redirect-parameter  name="invoiceId" > </redirect-parameter> 
+         </response>
+        <response name="error" type="request-redirect-noparam" value="FindArInvoices">
+        </response>
+    </request-map>
+   
      <request-map uri="cashierPortal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="cashierPortal"/>
