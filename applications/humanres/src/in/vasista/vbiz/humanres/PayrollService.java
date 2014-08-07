@@ -2481,7 +2481,7 @@ public class PayrollService {
 			    					shiftFalg = Boolean.TRUE;
 			    				}
 			    			}
-			    			
+			    			List encashmentStatusList = EntityUtil.getFieldListFromEntityList(dayShiftList, "encashmentStatus", true);
 			    			if((UtilValidate.isNotEmpty(dayPunchList) && dayPunchList.size() >=2) || shiftFalg){
 			    				if(!shiftFalg && (dayPunchList.size()%2) !=0){
 			    					// miss punch consider it as loss of pay
@@ -2493,12 +2493,12 @@ public class PayrollService {
 			    					//noOfAttendedWeeklyOffDays = noOfAttendedWeeklyOffDays+(dayPunchList.size()/2);
 			    					noOfAttendedWeeklyOffDays = noOfAttendedWeeklyOffDays+1;
 			    				}
-			    				if(cTime.compareTo(secondSaturDay)== 0){
+			    				if(cTime.compareTo(secondSaturDay)== 0 && UtilValidate.isNotEmpty(encashmentStatusList) && encashmentStatusList.contains("CASH_ENCASHMENT")){
 			    					//noOfAttendedSsDays = noOfAttendedSsDays+(dayPunchList.size()/2);
 			    					noOfAttendedSsDays = noOfAttendedSsDays+1;
 			    				}
 			    				
-			    				if(UtilValidate.isNotEmpty(cHoliDayList)){
+			    				if(UtilValidate.isNotEmpty(cHoliDayList) && UtilValidate.isNotEmpty(encashmentStatusList) && encashmentStatusList.contains("CASH_ENCASHMENT")){
 			    					//noOfAttendedHoliDays = noOfAttendedHoliDays+(dayPunchList.size()/2);
 			    					noOfAttendedHoliDays = noOfAttendedHoliDays+1;
 			    				}

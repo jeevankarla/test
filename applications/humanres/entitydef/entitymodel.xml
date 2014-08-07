@@ -1493,6 +1493,7 @@ under the License.
 	  <field name="overrideLateMin" type="fixed-point"></field>
 	  <field name="overridenBy" type="id-vlong"></field>
 	  <field name="extraMin" type="fixed-point"/>
+	  <field name="encashmentStatus" type="id"/>
 	  <prim-key field="partyId"/>
 	  <prim-key field="date"/>
 	  <prim-key field="seqId"/>
