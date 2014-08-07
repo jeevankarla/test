@@ -2470,7 +2470,7 @@ public class PayrollService {
 			    				}
 			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
-			    				if(dayShifts.contains("SHIFT_NIGHT") && inPunch.size() ==1){
+			    				if((inPunch.size() ==1) && (dayShifts.contains("SHIFT_NIGHT") || (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("O"))))){
 			    					shiftFalg = Boolean.TRUE;
 			    				}
 			    			}
