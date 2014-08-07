@@ -216,7 +216,28 @@ public class CommonServices {
         result.put("partyId", partyId);
         return result;
     }
+    
+    public static Map<String, Object> removePartyNote(DispatchContext ctx, Map<String, ?> context) {
+        Delegator delegator = ctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String partyId = (String) context.get("partyId");
+        String noteId = (String) context.get("noteId");
+        Locale locale = (Locale) context.get("locale");
+        try {
+ 			GenericValue partyNote = delegator.findOne("PartyNote", UtilMisc.toMap("partyId", partyId, "noteId", noteId), true);
+			delegator.removeValue(partyNote);
+			
+			GenericValue noteData = delegator.findOne("NoteData", UtilMisc.toMap("noteId", noteId), true);
+			delegator.removeValue(noteData);
 
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonNoteCannotBeUpdated", UtilMisc.toMap("errorString", e.getMessage()), locale));
+        }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("partyId", partyId);
+        return result;
+    }
+    
     /**
      * Service for setting debugging levels.
      *@param dctc The DispatchContext that this service is operating in

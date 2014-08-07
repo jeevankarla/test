@@ -649,6 +649,11 @@ public class PartyServices {
         String noteId = (String) context.get("noteId");
         String noteName = (String) context.get("noteName");
         Locale locale = (Locale) context.get("locale");
+        Timestamp noteDate = (Timestamp) context.get("noteDate");
+        if(UtilValidate.isEmpty(noteDate)){
+        	noteDate = UtilDateTime.nowTimestamp();
+        }
+        
         //Map noteCtx = UtilMisc.toMap("note", noteString, "userLogin", userLogin);
 
         //Make sure the note Id actually exists if one is passed to avoid a foreign key error below
@@ -670,7 +675,7 @@ public class PartyServices {
             Map<String, Object> noteRes = null;
             try {
                 noteRes = dispatcher.runSync("createNote", UtilMisc.toMap("partyId", userLogin.getString("partyId"),
-                         "note", noteString, "userLogin", userLogin, "locale", locale, "noteName", noteName));
+                         "note", noteString, "userLogin", userLogin, "locale", locale, "noteName", noteName, "noteDate", noteDate));
             } catch (GenericServiceException e) {
                 Debug.logError(e, e.getMessage(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
