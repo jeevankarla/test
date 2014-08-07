@@ -94,6 +94,13 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    <service name="updateLateMins" engine="java" default-entity-name="EmplDailyAttendanceDetail"
+    		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateLateMins" auth="true">
+    	<description>Upadate Late Minutes</description>
+    	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+		<auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>  
+    </service>
 
     <service name="updatePartySkill" engine="simple" default-entity-name="PartySkill"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updatePartySkill" auth="true">

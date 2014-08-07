@@ -706,7 +706,10 @@
 		<field name="partyId" title="EmployeeId" ><display/></field>
 	    <field name="date" title="Date"><display/></field>
 	    <field name="shiftType" title="Shift Type"><display/></field>
-	    <field name="lateMin" title="Late Minutes"><text size="10"/></field>
+	    <field name="seqId"><hidden/></field>
+	    <field name="lateMin" title="Late Minutes"><display/></field>
+	    <field name="customTimePeriodId"><hidden/></field>
+	    <field name="overrideLateMin" title="Edit Late Minutes"><text size="10"/></field>
 	    <!-- <field name="extraMin" title="Extra Minutes"><display/></field>-->
 	     <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>

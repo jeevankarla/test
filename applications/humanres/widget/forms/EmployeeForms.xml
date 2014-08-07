@@ -439,7 +439,15 @@
 				<option key="N" />
 			</drop-down>
 		</field>
-		<field name="busRouteNo" title="${uiLabelMap.BusRouteNo}"><text /></field>
+		<field name="busRouteNo" title="${uiLabelMap.BusRouteNo}">
+		<drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="description" description="${description}" filter-by-date="false">
+    				<entity-constraint name="enumTypeId" operator="equals" value="BUS_ROUTE"/>
+    			</entity-options>
+            </drop-down>
+		
+		</field>
+		<field name="presentEpf" title="PF Number" ><text/></field>
 		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
 				<option key="Y"></option>
@@ -531,6 +539,7 @@
 			<sort-field name="canteenFacin" />
 			<sort-field name="companyBus" />
 			<sort-field name="busRouteNo" />
+			<sort-field name="presentEpf"/>
 			<sort-field name="flexibleShift" />
 			<sort-field name="shiftType" />  
             <sort-field name="submitButton"/>
@@ -700,6 +709,7 @@
 		<field name="flexibleShift" title="${uiLabelMap.FlexibleShift}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${flexibleShift}"></display-entity></field>
 		<field name="shiftType" title="${uiLabelMap.ShiftType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${shiftType}"></display-entity></field>
 		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
+		<field name="presentEpf" title="PF Number"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${presentEpf}"></display-entity></field>
         <field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportExpireDate}" ></display-entity></field>
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>
    </form>

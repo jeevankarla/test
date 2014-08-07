@@ -178,6 +178,46 @@
 			</widgets>
 		</section>
 	 </screen>
+	 <screen name="EditEmplLateHours">
+		<section>
+			<actions>
+				<set field="headerItem" value="Attendance" />
+				<set field="tabButtonItem" value="Attendance" />
+ 				<set field="tabButtonItem2" value="EditLateHours" />                                           				
+				<set field="titleProperty" value="EditLateHours" />
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>                                                        					   					
+                        <screenlet title="Edit Late Hours">
+                        <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="EditLateHours"/>
+                        </screenlet> 
+                        <include-screen name="findEmplDetails" location="component://humanres/widget/HumanresScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+			</widgets>
+		</section>    
+    </screen>
+    <screen name="findEmplDetails">
+	 	<section>
+			<actions>
+				<entity-and list="emplList" entity-name="EmplDailyAttendanceDetail">
+					<field-map field-name="partyId" from-field="parameters.partyId"/>
+				</entity-and>
+			</actions>
+			<widgets>
+			 <section>
+				<widgets>
+					<screenlet  title="Employee Details">
+                       		<include-form name="EmplDetails" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+					</screenlet>
+			  </widgets>
+			</section>
+			</widgets>
+		</section>
+	 </screen>
 	 <screen name="EmployeeAttendanceInternal">
         <section>
             <actions>

@@ -2687,5 +2687,36 @@ public class PayrollService {
 	      		Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 	      		return ServiceUtil.returnError("Already Payroll Generated For The TimePeriod"+UtilDateTime.toDateString(fromDateTime,"dd MMMMM, yyyy")+"-"+UtilDateTime.toDateString(thruDateTime,"dd MMMMM, yyyy"));
 	  }
+	 
+	 
+	 public static Map<String, Object> UpdateLateMins(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	      LocalDispatcher dispatcher = dctx.getDispatcher();
+	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+	      String partyId = (String) context.get("partyId");
+	      Date date=(Date)context.get("date");
+	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
+	      Map result = ServiceUtil.returnSuccess();
+	      try{
+  				String userId= (String) userLogin.get("userLoginId");
+  				List conditionList = FastList.newInstance();
+  				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+  				conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , date));
+  				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+  				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
+  				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
+  					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
+  					DailyAttendanceDetail.set("overrideLateMin",overrideLateMin);
+  					DailyAttendanceDetail.set("overridenBy", userId);
+  					DailyAttendanceDetail.store();
+  				}
+  		} catch (GenericEntityException e) {
+  				Debug.logError(e, module);
+  				return ServiceUtil.returnError(e.toString());
+  			}
+  		result = ServiceUtil.returnSuccess("Successfully Updated!!");
+  		return result;
+  	}
+			
 
 }//end of service

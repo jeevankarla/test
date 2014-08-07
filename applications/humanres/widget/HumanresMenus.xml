@@ -95,7 +95,10 @@
         </menu-item>  
         <menu-item name="ArrearDays" title="Arrear Days">
         <link target="ArrearDays"></link>
-        </menu-item>                    
+        </menu-item>        
+        <menu-item name="EditLateHours" title="Edit Late Hours">
+        <link target="EditLateHours"></link>
+        </menu-item>            
     </menu>	 	
 	<menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">
