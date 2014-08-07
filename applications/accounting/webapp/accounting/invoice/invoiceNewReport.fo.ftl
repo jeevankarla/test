@@ -81,8 +81,9 @@ under the License.
 						        						<fo:table-cell border-style="solid">
 						        								<fo:block font-size="12pt" keep-together="never"  white-space-collapse="false" >&#160;  </fo:block>
 						        						</fo:table-cell>
+						        						  <#assign partyFullName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, dispalyParty.partyId?if_exists, false)>
 						        							<fo:table-cell border-style="solid">
-						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYEE CODE:<#if billingParty?has_content>${dispalyParty.partyId}</#if></fo:block>
+						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYEE NAME:<#if billingParty?has_content>${partyFullName}</#if></fo:block>
 						        						</fo:table-cell> 
 						        					</fo:table-row>	
 						        					<fo:table-row>
@@ -336,7 +337,7 @@ under the License.
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; PROCD.  A.A.O:</fo:block>
+						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PROCD.  A.A.O:</fo:block>
 						        								
 						        						</fo:table-cell>
 						        							<fo:table-cell border-bottom-style="hidden" border-style="solid">
@@ -344,14 +345,14 @@ under the License.
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; ACCOUNTANT &#160; &#160; &#160;&#160;&#160;&#160; &#160; SECRETARY</fo:block>
+						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">ACCOUNTANT &#160; &#160; &#160; For Mother Dairy</fo:block>
 						        						</fo:table-cell>
 						        						<fo:table-cell border-left-style="hidden" border-top-style="solid">
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-						        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; PRINCIPAL DIRECTOR &#160;</fo:block>
+						        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; D.Mgr(Finance)/Mgr(Finance)</fo:block>
 						        						</fo:table-cell>  
 
 						        						</fo:table-row>	
