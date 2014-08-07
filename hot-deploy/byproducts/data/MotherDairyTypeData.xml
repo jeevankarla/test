@@ -42,6 +42,10 @@
 	
 	<ShipmentType description="ICP Nandini Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_NANDINI_SHIPMENT"/>
 	<ShipmentType description="ICP Amul Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_AMUL_SHIPMENT"/>
-	  <Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
-	  <Enumeration description="ICP Nandini channel" enumCode="ICP Nandini" enumId="ICP_NANDINI_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	<ShipmentType description="Powder Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="POWDER_SHIPMENT"/>
+    <ShipmentType description="FGS Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="FGS_SHIPMENT"/>
+    <Enumeration description="FGS Product Channel" enumCode="FGS CHANNEL" enumId="FGS_PRODUCT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+    <Enumeration description="Powder Plant Channel" enumCode="POWDER PLANT CHANNEL" enumId="POWDER_PLANT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	<Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	<Enumeration description="ICP Nandini channel" enumCode="ICP Nandini" enumId="ICP_NANDINI_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 </entity-engine-xml>
