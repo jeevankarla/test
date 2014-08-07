@@ -915,11 +915,11 @@ under the License.
             </drop-down>
         </field>
          <field name="paymentDate" position="1" title="${uiLabelMap.paymentDate}"><date-time type="timestamp" ></date-time></field>
-          <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>
+          <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" ><text></text></field>
        <!--  <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><date-time type="timestamp"></date-time></field> 
        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>   -->     
         <field name="amount" position="1" required-field="true"><text/></field>
-        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
+        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" ><text/></field>
        <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
