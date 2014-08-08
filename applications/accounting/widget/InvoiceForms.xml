@@ -332,7 +332,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="dueDate" required-field="true"><date-time/></field>        
+        <field position="2" name="invoiceDate" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><date-time/></field>   
+        <field name="dueDate"  ><hidden ></hidden></field>     
         <field position="1" name="roleTypeId" >   
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType">
