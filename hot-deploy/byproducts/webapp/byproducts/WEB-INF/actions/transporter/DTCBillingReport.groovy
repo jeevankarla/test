@@ -21,15 +21,21 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.network.LmsServices;
 dctx = dispatcher.getDispatchContext();
 
-customTimePeriod=delegator.findOne("CustomTimePeriod",[customTimePeriodId : parameters.customTimePeriodId], false);
-fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
-thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
-context.put("fromDateTime", fromDateTime);
-context.put("thruDateTime", thruDateTime);
+month = parameters.month;
+if(UtilValidate.isEmpty(month)){
+	Debug.logError("Month Cannot Be Empty","");
+	context.errorMessage = "Month Cannot Be Empty";
+	return;
+}
 
-monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
-monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
-
+def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+try {
+	monthTime = new java.sql.Timestamp(sdf.parse(month+"-01 00:00:00").getTime());
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: ", "");
+}
+Timestamp monthBegin = UtilDateTime.getMonthStart(monthTime);
+Timestamp monthEnd = UtilDateTime.getMonthEnd(monthTime, timeZone, locale);
 Map<String, String> facilityPartyMap = FastMap.newInstance();
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthBegin));
@@ -60,5 +66,5 @@ facilityPartyList = delegator.findList("FacilityFacilityPartyAndPerson", conditi
 		facilityWorkOrdrNumMap.put(eachWork.facilityId, eachWork.attrValue);
 	}
 context.facilityWorkOrdrNumMap = facilityWorkOrdrNumMap;//workOrder Numbers
-Debug.log("facilityPartyMap==="+facilityPartyMap);
+//Debug.log("facilityPartyMap==="+facilityPartyMap);
 context.facilityPartyMap = facilityPartyMap;
