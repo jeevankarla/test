@@ -894,13 +894,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<tr class="alternate-row">
 						<form id="DTCBillingReport" name="DTCBillingReport" method="post" action="<@ofbizUrl>DTCBillingReport.pdf</@ofbizUrl>" target="_blank">	
 							<td width="30%">DTC Contractor Agreements Ending</td>
-							<td width="15%">Period
-	  							<select name="customTimePeriodId" class='h4'>
-	            					<#list dtcTimePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-	            					</#list>            
-								</select>
-	      					</td>
+							<td width="15%">Month: <input type='text' id='month' name='month' onmouseover='monthPicker()' class="monthPicker"/></td>
 	      					<td width="15%"></td>
 	      					<td width="15%"></td>
 	      					<td width="15%"></td>
