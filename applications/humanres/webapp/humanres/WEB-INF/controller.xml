@@ -1539,9 +1539,9 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="EmployeeMisPunchData"/>        
     </request-map>
-    <request-map uri="LICPolicyDetailsEmployeeWise.pdf">
+    <request-map uri="LICRDReport.pdf">
         <security https="true" auth="true"/>                        
-        <response name="success" type="view" value="LICPolicyDetailsEmployeeWise"/>        
+        <response name="success" type="view" value="LICRDReport"/>        
     </request-map>
      <!--====================Trainings Requests===================================-->
  <!--====================Cal Requests===================================-->
@@ -1886,7 +1886,7 @@ under the License.
     <view-map name="EditTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#EditTrainingApprovals"/>
     <view-map name="LookupTraining" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupTraining"/>
 	<view-map name="viewEmployeeProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EmployeeProfile"/>
-	<view-map name="LICPolicyDetailsEmployeeWise" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#LICPolicyDetailsEmployeeWise" content-type="application/pdf" encoding="none"/>
+	<view-map name="LICRDReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#LICRDReport" content-type="application/pdf" encoding="none"/>
 	<!-- Analytics -->
 	<view-map name="EmployeesTenureChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChart"/>
 	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>
