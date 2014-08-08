@@ -244,26 +244,25 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 	conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"BOOTH"));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	List<GenericValue> facilityList = delegator.findList("Facility", condition, null, null, null, false);
-	curFacilityMap = [:];
+	curNewFacilityMap = [:];
 	curCount=0;
 	if(UtilValidate.isNotEmpty(facilityList)){
 		for(i=0;i<facilityList.size();i++){
 			categoryType=facilityList.get(i).get("categoryTypeEnum");
 			facilityId=facilityList.get(i).get("facilityId");
 			if(UtilValidate.isNotEmpty(categoryType)){
-				if(UtilValidate.isEmpty(curFacilityMap[categoryType])){
-					    curCount++
-						curFacilityMap.put(categoryType,curCount);
+				if(UtilValidate.isEmpty(curNewFacilityMap[categoryType])){
+						curNewFacilityMap.put(categoryType,curCount+1);
 				 }else{
 					 tempMap = [:];
-					 curCount+=curFacilityMap.get(categoryType);
-					 curFacilityMap[categoryType] = curCount;
+					 curCount=curNewFacilityMap.get(categoryType)+1;
+					 curNewFacilityMap[categoryType] = curCount;
 				 }
 			   }
 		}
 	}
-	Debug.log("curFacilityMap==="+curFacilityMap);
-	context.curFacilityMap=curFacilityMap;
+   //Debug.log("curNewFacilityMap==="+curNewFacilityMap);
+	context.curNewFacilityMap=curNewFacilityMap;
 }
 	context.curntCatAbsMap=curntCatAbsMap;
 	
@@ -317,26 +316,25 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)
 		conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"BOOTH"));
 		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		List<GenericValue> prvfacilityList = delegator.findList("Facility", condition, null, null, null, false);
-		prvFacilityMap = [:];
+		prvNewFacilityMap = [:];
 		prvCount=0;
 		if(UtilValidate.isNotEmpty(prvfacilityList)){
 			for(i=0;i<prvfacilityList.size();i++){
 				categoryType=prvfacilityList.get(i).get("categoryTypeEnum");
 				facilityId=prvfacilityList.get(i).get("facilityId");
 				if(UtilValidate.isNotEmpty(categoryType)){
-					if(UtilValidate.isEmpty(prvFacilityMap[categoryType])){
-							prvCount++;
-							prvFacilityMap.put(categoryType,prvCount);
+					if(UtilValidate.isEmpty(prvNewFacilityMap[categoryType])){
+							prvNewFacilityMap.put(categoryType,prvCount+1);
 					 }else{
-						 prvCount+=prvFacilityMap.get(categoryType);
-						 prvFacilityMap[categoryType] = prvCount;
+						 prvCount=prvNewFacilityMap.get(categoryType)+1;
+						 prvNewFacilityMap[categoryType] = prvCount;
 					 }
 				   }
 			}
 		}
 
-	//Debug.log("prvFacilityMap==="+prvFacilityMap);
-	context.prvFacilityMap=prvFacilityMap;
+	//Debug.log("prvNewFacilityMap==="+prvNewFacilityMap);
+	context.prvNewFacilityMap=prvNewFacilityMap;
 	}
 	context.prvCatAbsMap=prvCatAbsMap;
 	
