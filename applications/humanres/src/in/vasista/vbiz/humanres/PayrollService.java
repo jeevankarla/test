@@ -1811,7 +1811,7 @@ public class PayrollService {
 	        	Map shiftDetailMap = (Map)employeePayrollAttedance.get("shiftDetailMap");
 	        	Map availedCanteenDetailMap = (Map)employeePayrollAttedance.get("availedCanteenDetailMap");
 	        	int availedVehicleDays = ((Integer)employeePayrollAttedance.get("availedVehicleDays")).intValue();
-	        	int disAvailedVehicleDays = ((Integer)employeePayrollAttedance.get("disAvailedVehicleDays")).intValue();
+	        	//int disAvailedVehicleDays = ((Integer)employeePayrollAttedance.get("disAvailedVehicleDays")).intValue();
 	        	
 	        	priceInfoDescription.append("\n \n[ Attendance Details ::"+employeePayrollAttedance);
 				priceInfoDescription.append("  ]\n \n ");
@@ -1883,6 +1883,102 @@ public class PayrollService {
 	        // utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
 	        return result;
 	    }
+	    
+	   public static Map<String, Object> calculateLICPayHeadAmount(DispatchContext dctx, Map<String, ? extends Object> context) {
+
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String payHeadTypeId = (String) context.get("payHeadTypeId");
+	        String employeeId = (String) context.get("employeeId");
+	        String orgPartyId = (String) context.get("orgPartyId");
+	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+			Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+			String timePeriodId = (String) context.get("timePeriodId");
+	        Locale locale = (Locale) context.get("locale");
+	        BigDecimal amount = BigDecimal.ZERO;
+	        List priceInfos =FastList.newInstance();
+	        try{
+	        	StringBuilder priceInfoDescription = new StringBuilder();
+	        	
+				priceInfoDescription.append(" \n ");
+	        	List condList = FastList.newInstance();
+	        	condList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, employeeId));
+	        	condList.add(EntityCondition.makeCondition("deductionTypeId",EntityOperator.EQUALS, payHeadTypeId));
+	        	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+	        	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+	        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+	        	
+	        	List<GenericValue> partyInsuranceList = delegator.findList("PartyInsuranceAndType", cond, null, null, null, false);
+				for(GenericValue partyInsurance : partyInsuranceList){
+					if(UtilValidate.isNotEmpty(partyInsurance.getBigDecimal("premiumAmount"))){
+						amount = amount.add(partyInsurance.getBigDecimal("premiumAmount"));
+					}
+					
+				}
+				priceInfoDescription.append("found "+ partyInsuranceList.size()+" active loans");
+	        	
+	        	priceInfos.add(priceInfoDescription);
+	            } catch (Exception e) {
+	                Debug.logError(e, "Error getting rules from the database while calculating price", module);
+	                return ServiceUtil.returnError(e.toString());
+	            }
+	           
+	          result.put("amount", amount);
+	          result.put("priceInfos", priceInfos);
+	        return result;
+	    }
+	   
+	   /*public static Map<String, Object> calculateLoanPayHeadAmount(DispatchContext dctx, Map<String, ? extends Object> context) {
+
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        Map<String, Object> result = FastMap.newInstance();
+	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        String payHeadTypeId = (String) context.get("payHeadTypeId");
+	        String employeeId = (String) context.get("employeeId");
+	        String orgPartyId = (String) context.get("orgPartyId");
+	        Timestamp timePeriodStart = (Timestamp)context.get("timePeriodStart");
+			Timestamp timePeriodEnd = (Timestamp)context.get("timePeriodEnd");
+			String timePeriodId = (String) context.get("timePeriodId");
+	        Locale locale = (Locale) context.get("locale");
+	        BigDecimal amount = BigDecimal.ZERO;
+	        List priceInfos =FastList.newInstance();
+	        try{
+	        	StringBuilder priceInfoDescription = new StringBuilder();
+	        	
+				priceInfoDescription.append(" \n ");
+	        	List condList = FastList.newInstance();
+	        	condList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, employeeId));
+	        	condList.add(EntityCondition.makeCondition("deductionTypeId",EntityOperator.EQUALS, payHeadTypeId));
+	        	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+	        	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+	        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+	        	
+	        	List<GenericValue> partyInsuranceList = delegator.findList("PartyInsuranceAndType", cond, null, null, null, false);
+				for(GenericValue partyInsurance : partyInsuranceList){
+					if(UtilValidate.isNotEmpty(partyInsurance.getBigDecimal("premiumAmount"))){
+						amount = amount.add(partyInsurance.getBigDecimal("premiumAmount"));
+					}
+					
+				}
+				priceInfoDescription.append("found "+ partyInsuranceList.size()+" active loans");
+	        	
+	        	priceInfos.add(priceInfoDescription);
+	            } catch (Exception e) {
+	                Debug.logError(e, "Error getting rules from the database while calculating price", module);
+	                return ServiceUtil.returnError(e.toString());
+	            }
+	          result.put("amount", amount);
+	          result.put("priceInfos", priceInfos);
+	        return result;
+	    }*/
+	    
 	 public static Map<String, Object> getPayheadTypes(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 	        Delegator delegator = dctx.getDelegator();
@@ -2422,8 +2518,10 @@ public class PayrollService {
 			    		
 			    		newEntity.set("noOfLeaveDays", resultMap.get("noOfLeaveDays"));
 			    		List<GenericValue> leaves = (List)resultMap.get("leaves");
+			    		GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
 			    	    //here handle no punch and no leaves for the period then populate noOfPayableDays zero
-			    		if(UtilValidate.isEmpty(punchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0)){
+			    		if(UtilValidate.isEmpty(punchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0) &&
+			    				   (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && !(employeeDetail.getString("punchType").equalsIgnoreCase("N")))){
 			    			Debug.logWarning("No punchs for employee"+employeeId, module);
 			    			newEntity.set("lossOfPayDays", new BigDecimal(lossOfPayDays));
 				    		newEntity.set("noOfAttendedHoliDays", BigDecimal.ZERO);
@@ -2444,7 +2542,7 @@ public class PayrollService {
 			    		Calendar c2=Calendar.getInstance();
 			    		c2.setTime(UtilDateTime.toSqlDate(timePeriodEnd));
 			    		String emplWeeklyOffDay = "SUNDAY";
-			    		GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
+			    		
 				        if(UtilValidate.isNotEmpty(employeeDetail) && UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
 				        	emplWeeklyOffDay = employeeDetail.getString("weeklyOff");
 				         }

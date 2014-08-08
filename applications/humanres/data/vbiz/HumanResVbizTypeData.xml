@@ -189,9 +189,8 @@
     <Enumeration description="Route-2" enumCode="ROUTE2" enumId="ROUTE2" sequenceId="02" enumTypeId="BUS_ROUTE"/>  
     <Enumeration description="Route-3" enumCode="ROUTE3" enumId="ROUTE3" sequenceId="03" enumTypeId="BUS_ROUTE"/>  
     
+    <InsuranceType description="LIC of KMF"  insuranceTypeId="LIC_KMF" deductionTypeId="PAYROL_DD_LIC_KMF"/>
+    <InsuranceType description="Mother Dairy LIC"  insuranceTypeId="LIC_MD_INSR" deductionTypeId=""/>
+    <InsuranceType description="Recurring Deposit" insuranceTypeId="RECCR_DEPOSIT" deductionTypeId="PAYROL_DD_RD_BNK"/>
     
-    <EnumerationType description="Insurance Type" enumTypeId="INSURANCE_TYPE" hasTable="N" parentTypeId=""/>
-    <Enumeration description="MD LIC" enumCode="LIC_MD_INSR" enumId="LIC_MD_INSR" sequenceId="01" enumTypeId="INSURANCE_TYPE"/>
-    <Enumeration description="Mother Dairy LIC" enumCode="LIC_DAIRY_INSR" enumId="LIC_DAIRY_INSR" sequenceId="02" enumTypeId="INSURANCE_TYPE"/>  
-    <Enumeration description="Recurring Deposit" enumCode="RECCR_DEPOSIT" enumId="RECCR_DEPOSIT" sequenceId="03" enumTypeId="INSURANCE_TYPE"/>  
 </entity-engine-xml>

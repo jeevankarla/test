@@ -493,7 +493,10 @@ public class PunchService {
 				   GenericValue oldRecord = delegator.findOne("EmplPunch",UtilMisc.toMap("emplPunchId", emplPunchId,
 							"partyId", partyId, "PunchType", oldPunchType,
 							"punchdate", punchdate, "InOut", inout), true);
-				   delegator.removeValue(oldRecord);				  
+				   if(UtilValidate.isNotEmpty(oldRecord)){
+					   delegator.removeValue(oldRecord);
+				   }
+				  				  
 			}
 			return ServiceUtil.returnSuccess("Data added successfully");
 

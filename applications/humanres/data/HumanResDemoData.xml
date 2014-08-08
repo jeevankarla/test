@@ -164,6 +164,14 @@ under the License.
     <PayrollBenDedCond condValue="12" inputParamEnumId="PAYHD_BEDE_GRADE" operatorEnumId="PRC_LTE" payrollBenDedCondSeqId="02" payrollBenDedRuleId="309"/>
     <PayHeadPriceAction amount="216.00" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_FLAT" payrollBenDedRuleId="309" />
      
+     
+     <PayrollBenDedRule payrollBenDedRuleId="LOAN_BNK1" ruleName="APEX Bank Loan" payHeadTypeId="PAYROL_DD_APEX" fromDate="2001-01-01 12:00:00.0"/>
+     <PayHeadPriceAction customPriceCalcService="calculateLoanPayHeadAmount" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_SERVICE" payrollBenDedRuleId="LOAN_BNK1" />
+     
+     <PayrollBenDedRule payrollBenDedRuleId="LIC_RULE" ruleName="LIC of KMF" payHeadTypeId="PAYROL_DD_LIC_KMF" fromDate="2001-01-01 12:00:00.0"/>
+     <PayHeadPriceAction customPriceCalcService="calculateLICPayHeadAmount" payHeadPriceActionSeqId="01" payHeadPriceActionTypeId="PRICE_SERVICE" payrollBenDedRuleId="LIC_RULE" />
+    
+    
 <!-- PayHeadPriceAction
 	PayHeadPriceActionType
 	PayrollBenDedCond

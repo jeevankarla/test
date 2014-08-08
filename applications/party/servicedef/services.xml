@@ -1418,14 +1418,15 @@ under the License.
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
     </service>    
      <service name="createPartyInsurance" engine="java" auth="true" invoke="createPartyInsurance" 
-        location="org.ofbiz.party.party.PartyServices">
+        location="org.ofbiz.party.party.PartyServices" >
         <description>Create Party Insurance</description>
         <attribute name="partyId" mode="IN" type="String" optional="false"/>
         <attribute name="policyNo" mode="IN" type="String" optional="false"/> 
         <attribute name="insuranceTypeId" mode="IN" type="String" optional="false"/>
-        <attribute name="amount" mode="IN" type="BigDecimal" optional="false"/> 
+        <attribute name="insuredValue" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="premiumAmount" mode="IN" type="BigDecimal" optional="false"/>  
         <attribute name="fromDate" mode="IN" type="Timestamp"/> 
-        <attribute name="thruDate" mode="IN" type="Timestamp"/> 
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/> 
         <attribute name="insuranceId" mode="OUT" type="String"  optional="true"/> 
     </service>
      <service name="deletePartyInsurance" engine="java" auth="true" invoke="deletePartyInsurance" 

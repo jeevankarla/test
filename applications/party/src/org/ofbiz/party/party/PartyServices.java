@@ -1845,13 +1845,15 @@ public class PartyServices {
  	 String policyNo = (String) context.get("policyNo");
      Timestamp fromDate = (Timestamp)context.get("fromDate");
      Timestamp thruDate = (Timestamp)context.get("thruDate");
-     BigDecimal amount =(BigDecimal) context.get("amount");
+     BigDecimal premiumAmount =(BigDecimal) context.get("premiumAmount");
+     BigDecimal insuredValue =(BigDecimal) context.get("insuredValue");
      String insuranceId = null;
      GenericValue newEntity = delegator.makeValue("PartyInsurance");
      newEntity.set("insuranceTypeId",insuranceTypeId);
      newEntity.set("partyId",partyId);
      newEntity.set("insuranceNumber",policyNo);     
-     newEntity.set("insuredValue",amount);
+     newEntity.set("insuredValue",insuredValue);
+     newEntity.set("premiumAmount",premiumAmount);
      newEntity.set("fromDate",fromDate);
      newEntity.set("thruDate",thruDate);
      newEntity.set("createdDate",UtilDateTime.nowTimestamp());

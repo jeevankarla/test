@@ -627,13 +627,12 @@
 		<field name="policyNo" title="Policy No"><text size="15"></text></field>
 		<field name="insuranceTypeId" title="Insurance Type">
 			<drop-down allow-empty="true">
-				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="INSURANCE_TYPE" />
-					<entity-order-by field-name="sequenceId" />
+				<entity-options entity-name="InsuranceType" key-field-name="insuranceTypeId" description="${description}">
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="amount" title="Amount"><text size="15"></text></field>
+		<!-- <field name="insuredValue" title="InsuredValue"><text size="15"></text></field> -->
+		<field name="premiumAmount" title="Premium Amount"><text size="15"></text></field>
 		<field name="fromDate"><date-time type="date" ></date-time></field>
         <field name="thruDate"><date-time type="date"/></field>
 		<field name="submitButton" title="Create" separate-column="true">

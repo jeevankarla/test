@@ -3244,7 +3244,7 @@ under the License.
 		</relation>
     </entity>
      <view-entity entity-name="PartyInsuranceAndType" package-name="org.ofbiz.party.party">
-        <member-entity entity-alias="PTIN" entity-name="PartyContent"/>
+        <member-entity entity-alias="PTIN" entity-name="PartyInsurance"/>
         <member-entity entity-alias="INTYP" entity-name="InsuranceType"/>
         <alias-all entity-alias="PTIN"/>
         <alias-all entity-alias="INTYP"/>

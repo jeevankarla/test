@@ -1203,7 +1203,30 @@ under the License.emplpunch
         <description>Calculate amunt for the given payhead type</description>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
         <attribute name="employeeId" mode="IN" type="String"/> 
-        <attribute name="customTimePeriodId" mode="IN" type="String"/>
+        <attribute name="timePeriodId" mode="IN" type="String"/>
+        <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>       
+    </service>
+    <service name="calculateLICPayHeadAmount" engine="java" auth="true" invoke="calculateLICPayHeadAmount" 
+        location="in.vasista.vbiz.humanres.PayrollService" validate="false">
+        <description>Calculate amunt for the given payhead type</description>
+        <attribute name="payHeadTypeId" mode="IN" type="String"/> 
+        <attribute name="employeeId" mode="IN" type="String"/>
+        <attribute name="timePeriodStart" mode="IN" type="Timestamp"/>
+        <attribute name="timePeriodEnd" mode="IN" type="Timestamp"/> 
+        <attribute name="timePeriodId" mode="IN" type="String"/>
+        <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>       
+    </service>
+    
+     <service name="calculateLoanPayHeadAmount" engine="java" auth="true" invoke="calculateLoanPayHeadAmount" 
+        location="in.vasista.vbiz.humanres.PayrollService" validate="false">
+        <description>Calculate amunt for the given payhead type</description>
+        <attribute name="payHeadTypeId" mode="IN" type="String"/> 
+        <attribute name="employeeId" mode="IN" type="String"/>
+        <attribute name="timePeriodStart" mode="IN" type="Timestamp"/>
+        <attribute name="timePeriodEnd" mode="IN" type="Timestamp"/>  
+        <attribute name="timePeriodId" mode="IN" type="String"/>
         <attribute name="amount" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="priceInfos" type="List" mode="OUT" optional="true"/>       
     </service> 
