@@ -872,6 +872,78 @@ public class ByProductNetworkServices {
 		result.put("priceMap", prodPriceMap);
 		return result;
 	}
+	
+	public static Map<String, Object> getStoreProductPricesByDate(Delegator delegator, LocalDispatcher dispatcher,Map<String, ? extends Object> context) {
+		Map<String, Object> result = FastMap.newInstance();
+		DispatchContext dctx = dispatcher.getDispatchContext();
+		Map<String, Object> priceByDateMap = FastMap.newInstance();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String productStoreId = (String) context.get("productStoreId");
+		String partyId = (String) context.get("partyId");
+		String productCategoryId = (String) context.get("productCategoryId");
+		String geoTax = (String) context.get("geoTax");
+		Timestamp priceDate = (Timestamp) context.get("priceDate");
+		Map prodPriceMap = FastMap.newInstance();
+		if (UtilValidate.isEmpty(priceDate)) {
+			priceDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+		String productPriceTypeId = (String) context.get("productPriceTypeId");
+		List conditionList = FastList.newInstance();
+		if (UtilValidate.isEmpty(productPriceTypeId)) {
+	    	try{
+	    		conditionList.clear();
+	    		conditionList.add(EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "PRICE_TYPE"));
+	    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	    		EntityCondition expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	    		
+	    		List<GenericValue> partyClassifications = delegator.findList("PartyClassificationAndGroupAndType", expr, null, null, null, false);
+	    		partyClassifications = EntityUtil.filterByDate(partyClassifications, priceDate);
+	    		if(UtilValidate.isNotEmpty(partyClassifications)){
+	    			productPriceTypeId = (EntityUtil.getFirst(partyClassifications)).getString("partyClassificationGroupId");
+	    		}
+	    		else{
+	    			productPriceTypeId = "DEFAULT_PRICE";
+	    		}
+	    	}
+	    	catch (GenericEntityException e) {
+				Debug.logError(e, e.toString(), module);
+		        return ServiceUtil.returnError(e.toString());
+			}
+		}
+		if(UtilValidate.isEmpty(geoTax)){
+			geoTax="VAT";
+		}
+		String currencyDefaultUomId = (String) context.get("currencyUomId");
+		if (UtilValidate.isEmpty(currencyDefaultUomId)) {
+			currencyDefaultUomId = UtilProperties.getPropertyValue("general","currency.uom.id.default", "INR");
+		}
+		
+		List<GenericValue> indentProductList = ProductWorker.getProductsByCategory(delegator, productCategoryId, null);
+
+		List productIdsList = EntityUtil.getFieldListFromEntityList(indentProductList, "productId", false);
+
+		if (UtilValidate.isNotEmpty(productIdsList)) {
+			for (int i = 0; i < productIdsList.size(); i++) {
+				String eachProd = (String) productIdsList.get(i);
+				Map<String, Object> priceContext = FastMap.newInstance();
+				priceContext.put("userLogin", userLogin);
+				priceContext.put("productStoreId", productStoreId);
+				priceContext.put("productId", eachProd);
+				priceContext.put("priceDate", priceDate);
+				priceContext.put("productPriceTypeId", productPriceTypeId);
+				priceContext.put("partyId", partyId);
+				priceContext.put("geoTax", geoTax);
+				Map priceResult = calculateStoreProductPrices(delegator, dispatcher, priceContext);
+				if (ServiceUtil.isError(priceResult)) {
+					Debug.logError("There was an error while calculating the price: "+ ServiceUtil.getErrorMessage(priceResult),module);
+					return ServiceUtil.returnError("There was an error while calculating the price: "+ ServiceUtil.getErrorMessage(priceResult));
+				}
+				prodPriceMap.put(eachProd, priceResult.get("totalPrice"));
+			}
+		}
+		result.put("priceMap", prodPriceMap);
+		return result;
+	}
 
 	public static Map<String, Object> getBoothChandentIndent(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();

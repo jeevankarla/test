@@ -741,25 +741,25 @@
     </request-map>
     <request-map uri="createShipmentAndInvoiceForNandiniOrders">
         <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
         <response name="success" type="view" value="ProcessNandiniOrders"/>   
        <response name="failed" type="view" value="ProcessNandiniOrders"/>  
     </request-map>
     <request-map uri="createShipmentAndInvoiceForPowderOrders">
         <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
         <response name="success" type="view" value="ProcessPowderOrders"/>   
        <response name="failed" type="view" value="ProcessPowderOrders"/>  
     </request-map>
     <request-map uri="createShipmentAndInvoiceForFGSOrders">
         <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
         <response name="success" type="view" value="ProcessFGSOrders"/>   
        <response name="failed" type="view" value="ProcessFGSOrders"/>  
     </request-map>
     <request-map uri="createShipmentAndInvoiceForAmulOrders">
         <security https="true" auth="true"/>
-        <event type="java" path="in.vasista.vbiz.byproducts.icp.icpServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
         <response name="success" type="view" value="ProcessAmulOrders"/>   
        <response name="failed" type="view" value="ProcessAmulOrders"/>  
     </request-map>
@@ -813,7 +813,7 @@
     </request-map>
     <request-map uri="processIcpSale">
         <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
         <response name="success"  type="request-redirect-noparam" value="IcpSales">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
@@ -822,7 +822,7 @@
     </request-map>
     <request-map uri="processPowderSale">
         <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
         <response name="success"  type="request-redirect-noparam" value="PowderPlantSale">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
@@ -831,7 +831,7 @@
     </request-map>
     <request-map uri="processFGSProductSale">
         <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
         <response name="success"  type="request-redirect-noparam" value="FGSProductSale">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
@@ -840,14 +840,13 @@
     </request-map>
     <request-map uri="processIcpAmulSale">
         <security https="true" auth="true"/>
-     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.icpServices"  invoke="processIcpSale" global-transaction="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
         <response name="success"  type="request-redirect-noparam" value="IcpSalesAmul">
         <redirect-parameter name="orderStatus"/>
      		<redirect-parameter name="orderId"/>
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="IcpSalesAmul"/>
     </request-map>
-    
     
     <request-map uri="FindAdhocSalesOrder">
         <security https="true" auth="true"/>

@@ -16,7 +16,7 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
-import in.vasista.vbiz.byproducts.icp.icpServices;
+import in.vasista.vbiz.byproducts.icp.ICPServices;
 
 if(parameters.boothId){
 	parameters.boothId = parameters.boothId.toUpperCase();
@@ -70,6 +70,7 @@ exprList = [];
 result = [:];
 routeId = parameters.routeId;
 partyId="";
+orderTaxType = parameters.orderTaxType;
 facility = null;
 prodPriceMap = [:];
 if(changeFlag != "AdhocSaleNew"){
@@ -121,20 +122,33 @@ if(UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
 else{
 	prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 }
-productStoreId = icpServices.getIceCreamFactoryStore(delegator).get("factoryStoreId");
+productStoreId = ICPServices.getIceCreamFactoryStore(delegator).get("factoryStoreId");
 Map inputProductRate = FastMap.newInstance();
 inputProductRate.put("productStoreId", productStoreId);
-inputProductRate.put("fromDate",effDateDayBegin);
 inputProductRate.put("facilityId",boothId);
 inputProductRate.put("partyId",partyId);
-if(facility){
-	inputProductRate.put("facilityCategory",facility.categoryTypeEnum);
-}
 inputProductRate.put("userLogin",userLogin);
-inputProductRate.put("productsList",prodList);
-Map priceResultMap =ByProductNetworkServices.getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
+priceResultMap = [:];
+if(facility){
+	inputProductRate.put("fromDate",effDateDayBegin);
+	inputProductRate.put("facilityCategory",facility.categoryTypeEnum);
+	inputProductRate.put("productsList",prodList);
+	priceResultMap = ByProductNetworkServices.getProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
+}else{
+	inputProductRate.put("priceDate",effDateDayBegin);
+	inputProductRate.put("productCategoryId", productCatageoryId);
+	if(orderTaxType){
+		if(orderTaxType == "INTRA"){
+			inputProductRate.put("geoTax", "VAT");
+		}
+		else{
+			inputProductRate.put("geoTax", "CST");
+		}
+	}
+	priceResultMap = ByProductNetworkServices.getStoreProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
+}
+ 
 prodPriceMap = (Map)priceResultMap.get("priceMap");
-
 
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();

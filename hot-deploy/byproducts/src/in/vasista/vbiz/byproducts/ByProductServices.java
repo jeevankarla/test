@@ -2447,45 +2447,6 @@ public class ByProductServices {
 		return result;
 	}
 	
-	public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map context) {
-		
-		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
-		LocalDispatcher dispatcher = dctx.getDispatcher();
-		Map<String, Object> result = ServiceUtil.returnSuccess();
-		GenericValue userLogin = (GenericValue) context.get("userLogin");
-		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
-		String orderId = (String) context.get("orderId");
-        boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-        result.put("salesChannelEnumId", salesChannelEnumId);
-        return result;
-	}
-	
-	public static Map<String, Object> cancelICPOrder(DispatchContext dctx, Map context) {
-		
-		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
-		LocalDispatcher dispatcher = dctx.getDispatcher();
-		Map<String, Object> result = ServiceUtil.returnSuccess();
-		GenericValue userLogin = (GenericValue) context.get("userLogin");
-		String orderId = (String) context.get("orderId");
-		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
-		try{
-			if(UtilValidate.isNotEmpty(orderId)){
-				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
-				if (ServiceUtil.isError(result)) {
-					Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
-			 		return ServiceUtil.returnError("Problem cancelling orders in Correction");
-				} 
-			}
-			  			
-		}catch (GenericServiceException e) {
-			  Debug.logError(e, e.toString(), module);
-			  return ServiceUtil.returnError("Problem cancelling order");
-		}
-		result.put("salesChannelEnumId", salesChannelEnumId);
-		return result;
-	}
-	
-	
 	public static String makeTransporterPayment(HttpServletRequest request, HttpServletResponse response) {
 	  	  Delegator delegator = (Delegator) request.getAttribute("delegator");
 	  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");

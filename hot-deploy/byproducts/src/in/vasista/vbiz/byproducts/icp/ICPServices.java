@@ -19,7 +19,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import org.ofbiz.entity.GenericDelegator;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
@@ -48,14 +48,14 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
-public class icpServices {
+public class ICPServices {
 
-    public static final String module = icpServices.class.getName();
+    public static final String module = ICPServices.class.getName();
 
    
     
 	    
-public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
+    public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
         
     	Map<String, Object> result = FastMap.newInstance(); 
     	String productStoreGroupId = "ICECREAM_PRODUCTS";
@@ -83,6 +83,43 @@ public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
          }
          
     	return result;
+	}
+    
+public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+		String orderId = (String) context.get("orderId");
+        boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+        result.put("salesChannelEnumId", salesChannelEnumId);
+        return result;
+	}
+	
+	public static Map<String, Object> cancelICPOrder(DispatchContext dctx, Map context) {
+		
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String orderId = (String) context.get("orderId");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+		try{
+			if(UtilValidate.isNotEmpty(orderId)){
+				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
+				if (ServiceUtil.isError(result)) {
+					Debug.logError("Problem cancelling orders in Correction", module);	 		  		  
+			 		return ServiceUtil.returnError("Problem cancelling orders in Correction");
+				} 
+			}
+			  			
+		}catch (GenericServiceException e) {
+			  Debug.logError(e, e.toString(), module);
+			  return ServiceUtil.returnError("Problem cancelling order");
+		}
+		result.put("salesChannelEnumId", salesChannelEnumId);
+		return result;
 	}
 
 	public static Map<String, Object> processICPSaleOrder(DispatchContext dctx, Map<String, ? extends Object> context) {

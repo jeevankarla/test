@@ -48,18 +48,18 @@
     </service>
     
     <service name="cancelICPShipment" engine="java" 
-        location="in.vasista.vbiz.byproducts.icp.icpServices" invoke="cancelICPShipment">
-        <description>Shift employee subsidy to temp route</description>
+        location="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="cancelICPShipment">
+        <description>Cancel ICP Shipment</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="approveICPOrder" engine="java" 
-        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="approveICPOrder">
+        location="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="approveICPOrder">
         <description>Approve ICP Orders</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="cancelICPOrder" engine="java" 
-        location="in.vasista.vbiz.byproducts.ByProductServices" invoke="cancelICPOrder">
+        location="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="cancelICPOrder">
         <description>Cancel ICP Orders</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
