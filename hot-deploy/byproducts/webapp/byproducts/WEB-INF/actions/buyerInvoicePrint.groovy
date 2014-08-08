@@ -167,8 +167,8 @@ invoiceIds.each { invoiceId ->
 	invoiceSlipsMap.put(partyIdTo, invoiceDetailMap);
 }
 
-taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX2"), false);
-taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX2"), false);
+taxParty = delegator.findOne("Party", UtilMisc.toMap("partyId", "TAX10"), false);
+taxAuthority = delegator.findOne("TaxAuthority", UtilMisc.toMap("taxAuthGeoId","IND", "taxAuthPartyId","TAX10"), false);
 context.invoiceSlipsMap = invoiceSlipsMap;
 context.taxParty = taxParty;
 context.taxAuthority = taxAuthority;
