@@ -1,7 +1,6 @@
 import org.ofbiz.base.util.Debug;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
-import java.math.RoundingMode;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
@@ -14,12 +13,28 @@ import org.ofbiz.party.party.PartyHelper;
 //Debug.logError("parameters.customTimePeriodId="+parameters.customTimePeriodId, "");
 //Debug.logError("payRollSummaryMap="+payRollSummaryMap, "");
 //Debug.logError("payRollMap="+payRollMap, "");
-rounding = RoundingMode.HALF_UP;
+payRollSummaryMap = context.payRollSummaryMap;
+Debug.logError("payRollSummaryMap="+payRollSummaryMap, "");
+
 benefitDescMap=context.benefitDescMap;
 benefitTypeIds=context.benefitTypeIds;
-benefitTypeNames=[];
+dedTypeIds=context.dedTypeIds;
+dedDescMap=context.dedDescMap;
+
+payheadTypeIds = [];
+payheadTypeNames = [];
+
 benefitTypeIds.each{ benefitTypeId->
-	benefitTypeNames.add(benefitDescMap.get(benefitTypeId));
+	if (payRollSummaryMap.containsKey(benefitTypeId)) {
+		payheadTypeIds.add(benefitTypeId);
+		payheadTypeNames.add(benefitDescMap.get(benefitTypeId));
+	}
+}
+dedTypeIds.each{ dedTypeId->
+	if (payRollSummaryMap.containsKey(dedTypeId)) {
+		payheadTypeIds.add(dedTypeId);
+		payheadTypeNames.add(dedDescMap.get(dedTypeId));
+	}
 }
 
 JSONArray benefitsTableJSON = new JSONArray();
@@ -41,18 +56,17 @@ if (payRollEmployeeMap != null) {
 		employeePayrollJSON.add(partyName);
 		employeePayrollJSON.add(employeeDeptMap.get(partyId));
 		employeePayrollItems = employeePayroll.getValue();
-		benefitTypeIds.each{ benefitTypeId->
+		payheadTypeIds.each{ payheadTypeId->
 			amount = 0;
-			if (employeePayrollItems.containsKey(benefitTypeId)) {
-				amount = employeePayrollItems.get(benefitTypeId).setScale(0,rounding);
+			if (employeePayrollItems.containsKey(payheadTypeId)) {
+				amount = employeePayrollItems.get(payheadTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
 			}
-			//employeePayrollJSON.add(benefitTypeId);
 			employeePayrollJSON.add(amount);
 		}
 		employeesPayrollTableJSON.add(employeePayrollJSON);
 	}
 }
-Debug.logError("employeesPayrollTableJSON="+employeesPayrollTableJSON,"");
+//Debug.logError("employeesPayrollTableJSON="+employeesPayrollTableJSON,"");
 
-context.benefitTypes = benefitTypeNames;
+context.payheadTypes = payheadTypeNames;
 context.employeesPayrollTableJSON = employeesPayrollTableJSON;

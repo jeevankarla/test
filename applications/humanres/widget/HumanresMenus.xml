@@ -638,8 +638,8 @@
         <menu-item name="Payroll" title="Payroll">
             <link target="FindPayrollBilling"/>
         </menu-item>
-        <menu-item name="EmployeeWisePayrollAnalysis" title="Employee Wise Payroll Analysis">
-            <link target="EmployeeWisePayrollAnalysis"/>
+        <menu-item name="EmployeeWisePaySheet" title="Employee Wise Pay Sheet">
+            <link target="EmployeeWisePaySheet"/>
         </menu-item>
     </menu>    
 

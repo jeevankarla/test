@@ -650,7 +650,7 @@ under the License.
         <response name="error" type="view" value="FindPayrollBilling"/>
     </request-map>
 
-     <request-map uri="EmployeeWisePayrollAnalysis">
+     <request-map uri="EmployeeWisePaySheet">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeWisePayrollAnalysis"/>
     </request-map>

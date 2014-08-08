@@ -30,14 +30,14 @@ $(document).ready(function() {
 	var numPayheads = 0;
 	var salaryTableData = ${StringUtil.wrapString(employeesPayrollTableJSON!'[]')};
 	var tfooter = '<tfoot><tr><td></td><td></td><td></td>';
-	<#if benefitTypes?exists> 
-		<#assign len = benefitTypes?size>
+	<#if payheadTypes?exists> 
+		<#assign len = payheadTypes?size>
 		numPayheads = numPayheads + ${len};
-		<#list benefitTypes as benefitType>
+		<#list payheadTypes as payheadType>
 			tfooter = tfooter + '<td></td>';
 		</#list>
 	</#if> 
-alert("numPayheads="+numPayheads);
+//alert("numPayheads="+numPayheads);
 	tfooter = tfooter + '</tr></tfoot>';
 	$('#salaryAnalysisTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable1">' + tfooter + '</table>' );
 
@@ -47,9 +47,9 @@ alert("numPayheads="+numPayheads);
 			{ "title": "Id" },	
 			{ "title": "Name" },										
 			{ "title": "Dept" },	
-        <#if benefitTypes?exists> 
-	        <#list benefitTypes as benefitType>				
-				{"title":"${benefitType}", sClass: "myRightAlignClass", sType: "numeric"  },
+        <#if payheadTypes?exists> 
+	        <#list payheadTypes as payheadType>				
+				{"title":"${payheadType}", sClass: "myRightAlignClass", sType: "numeric"  },
 			</#list>			
 		</#if>											
 		],
@@ -84,7 +84,7 @@ alert("numPayheads="+numPayheads);
             	total = 0;
 				$.each(columnData,function(){total+=parseFloat(this) || 0;});
             	// Update footer
-            	$( api.column( index).footer() ).html(total);  
+            	$( api.column( index).footer() ).html(Math.round(total));  
             }          
         }		
 	 });
@@ -99,7 +99,7 @@ alert("numPayheads="+numPayheads);
 <div class="container">
 <div class="screenlet">
 	<div class="screenlet-title-bar">
-      	<h3>Employe Wise Salary Analysis</h3>	
+      	<h3>Employe Wise Pay Sheet</h3>	
      </div>
     <div class="screenlet-body">
     	<div id="salaryAnalysisTable"/>

@@ -311,7 +311,7 @@
     <screen name="FindPayrollBilling">
         <section>
             <actions>
-                <set field="titleProperty" value="FindPayrollBilling"/>
+                <set field="titleProperty" value="Payroll"/>
                 <set field="tabButtonItem" value="FindPayrollBilling"/> 
  				<set field="tabButtonItem2" value="Payroll" />                  
                 <entity-and list="orgList" entity-name="PartyRoleAndPartyDetail">
@@ -352,9 +352,9 @@
 	 <screen name="EmployeeWisePayrollAnalysis">
         <section>
             <actions>
-                <set field="titleProperty" value="FindPayrollBilling"/>
+                <set field="titleProperty" value="Employee Wise Pay Sheet"/>
                 <set field="tabButtonItem" value="FindPayrollBilling"/>
- 				<set field="tabButtonItem2" value="EmployeeWisePayrollAnalysis" />                                           
+ 				<set field="tabButtonItem2" value="EmployeeWisePaySheet" />                                           
 				<set field="ajaxUrl" value="EmployeeWisePayrollAnalysisInternal" type="String"/>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysis.groovy"/>  				
             </actions>            
