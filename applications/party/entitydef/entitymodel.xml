@@ -3217,6 +3217,7 @@ under the License.
 		<field name="partyId" type="id"></field>
 		<field name="insuranceNumber" type="long-varchar"></field>
 		<field name="insuredValue" type="currency-amount"></field>
+		<field name="premiumAmount" type="currency-amount"></field>
 		<field name="insuranceProvider" type="name"></field>
 		<field name="fromDate" type="date-time"></field>
 		<field name="thruDate" type="date-time"></field>
@@ -3228,5 +3229,17 @@ under the License.
 		<relation type="one" fk-name="INSR_PTID" rel-entity-name="Party">
 			<key-map field-name="partyId" />
 		</relation>
+		<relation type="one" fk-name="INSR_TYP" rel-entity-name="InsuranceType">
+			<key-map field-name="insuranceTypeId" />
+		</relation>
 	</entity>
+	<entity entity-name="InsuranceType" package-name="org.ofbiz.party.party "
+		title="Insurance Type Entity">
+		<field name="insuranceTypeId" type="id-ne"></field>
+		<field name="description" type="description"></field>
+		<field name="deductionTypeId" type="id"></field>
+		<relation type="one" fk-name="INTYP_DTYP" rel-entity-name="DeductionType">
+			<key-map field-name="deductionTypeId" />
+		</relation>
+    </entity>
 </entitymodel>
