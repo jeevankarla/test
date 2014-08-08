@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".5in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".5in" margin-bottom=".5in">
                 <fo:region-body margin-top="1.7in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -155,7 +155,7 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">Commodity</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
-												<fo:table-row height="20px">
+												<fo:table-row>
 			                    					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if fromPartyDetail?has_content>${fromPartyDetail.get('PLA_NUMBER')?if_exists}</#if></fo:block>
 					            					</fo:table-cell>
@@ -291,7 +291,7 @@ under the License.
 												<#if invoiceItems?has_content>
 													<#assign slNo = 1>
 													<#list invoiceItems as eachItem>
-														<fo:table-row height="20px">
+														<fo:table-row>
 					                    					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${slNo?if_exists}</fo:block>
 							            					</fo:table-cell>
@@ -329,7 +329,7 @@ under the License.
 														</fo:table-row>
 													</#list>
 												</#if>
-												<fo:table-row height="20px">
+												<fo:table-row>
 			                    					<fo:table-cell border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            					</fo:table-cell>
@@ -364,7 +364,7 @@ under the License.
 												<#if invoiceTaxItems?has_content>
 													<#assign taxDetails = invoiceTaxItems.entrySet()>
 													<#list taxDetails as eachTax>
-														<fo:table-row height="30px">
+														<fo:table-row>
 					                    					<fo:table-cell number-columns-spanned="3" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false"></fo:block>
 							            					</fo:table-cell>
@@ -397,7 +397,7 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"><#if invoiceTaxItem?has_content && invoiceTaxItem.get('VAT_SALE')?exists>${invoiceTaxItem.get("VAT_SALE")?if_exists?string("#0.00")}</#if></fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>-->
-												<fo:table-row height="25px">
+												<fo:table-row >
 			                    					<fo:table-cell number-columns-spanned="9" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">GRAND TOTAL</fo:block>
 					            					</fo:table-cell>
@@ -405,7 +405,7 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${grandTotal?if_exists?string("#0.00")}</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
-												<fo:table-row height="20px">
+												<fo:table-row >
 			                    					<fo:table-cell number-columns-spanned="10" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">In Words: </fo:block>
 					            					</fo:table-cell>
