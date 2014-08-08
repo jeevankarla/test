@@ -1674,8 +1674,8 @@ public class PayrollService {
 			if(UtilValidate.isNotEmpty(payrollAttendanceShiftWiseList)){
 	    		for( GenericValue  payrollAttendanceShiftWise : payrollAttendanceShiftWiseList){
 	    			String shiftType = payrollAttendanceShiftWise.getString("shiftTypeId");
-	    			shiftDetailMap.put(shiftType, payrollAttendanceShiftWise.getBigDecimal("noOfDays"));
-	    			availedCanteenDetailMap.put(shiftType, payrollAttendanceShiftWise.getBigDecimal("availedCanteenDays"));
+	    			shiftDetailMap.put(shiftType, payrollAttendanceShiftWise.getBigDecimal("noOfDays").intValue());
+	    			availedCanteenDetailMap.put(shiftType, payrollAttendanceShiftWise.getBigDecimal("availedCanteenDays").intValue());
 	    		}
     		}
 			
@@ -1810,7 +1810,7 @@ public class PayrollService {
 	        	StringBuilder priceInfoDescription = new StringBuilder();
 	        	Map shiftDetailMap = (Map)employeePayrollAttedance.get("shiftDetailMap");
 	        	Map availedCanteenDetailMap = (Map)employeePayrollAttedance.get("availedCanteenDetailMap");
-	        	int availedVehicleDays = ((BigDecimal)employeePayrollAttedance.get("availedVehicleDays")).intValue();
+	        	int availedVehicleDays = ((Integer)employeePayrollAttedance.get("availedVehicleDays")).intValue();
 	        	//int disAvailedVehicleDays = ((Integer)employeePayrollAttedance.get("disAvailedVehicleDays")).intValue();
 	        	
 	        	priceInfoDescription.append("\n \n[ Attendance Details ::"+employeePayrollAttedance);
