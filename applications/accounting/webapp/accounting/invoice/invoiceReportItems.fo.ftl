@@ -93,6 +93,7 @@ under the License.
     <fo:table-body font-size="10pt">
         <#assign currentShipmentId = "">
         <#assign newShipmentId = "">
+        <#assign description = "">
         <#-- if the item has a description, then use its description.  Otherwise, use the description of the invoiceItemType -->
         <#list invoiceItems as invoiceItem>
             <#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
@@ -124,7 +125,7 @@ under the License.
                 -->
                 <fo:table-row height="14px">
                     <fo:table-cell number-columns-spanned="5">
-                            <fo:block></fo:block>
+                            <fo:block>${isItemAdjustment}</fo:block>
                        </fo:table-cell>
                 </fo:table-row>
                 <fo:table-row height="14px">
@@ -134,7 +135,7 @@ under the License.
                 </fo:table-row>
                 <#assign currentShipmentId = newShipmentId>
             </#if>
-            <#if !isItemAdjustment>
+            <#if isItemAdjustment?exists && !isItemAdjustment>
                 <fo:table-row height="14px" space-start=".15in">
                     <fo:table-cell>
                         <fo:block text-align="left">${invoiceItem.productId?if_exists} </fo:block>
@@ -161,10 +162,19 @@ under the License.
                     </fo:table-row>
                 </#if>
                 <fo:table-row height="14px" space-start=".15in">
-                    <fo:table-cell number-columns-spanned="2">
-                        <fo:block text-align="right">${description?if_exists}</fo:block>
+                    <fo:table-cell>
+                        <fo:block text-align="left">${invoiceItem.productId?if_exists} </fo:block>
                     </fo:table-cell>
-                    <fo:table-cell text-align="right" number-columns-spanned="3">
+                    <fo:table-cell border-top-style="solid" border-top-width="thin" border-top-color="black">
+                        <fo:block text-align="left">${description?if_exists}</fo:block>
+                    </fo:table-cell>
+                      <fo:table-cell>
+                        <fo:block text-align="right"> <#if invoiceItem.quantity?exists>${invoiceItem.quantity?string.number}</#if> </fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell text-align="right">
+                        <fo:block> <#if invoiceItem.quantity?exists><@ofbizCurrency amount=invoiceItem.amount?if_exists isoCode=invoice.currencyUomId?if_exists/></#if> </fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell text-align="right">
                         <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId?if_exists/> </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
@@ -193,7 +203,7 @@ under the License.
               <fo:block/>
            </fo:table-cell>
         </fo:table-row>
-        <fo:table-row height="14px">
+        <#--<fo:table-row height="14px">
            <fo:table-cell number-columns-spanned="2">
               <fo:block/>
            </fo:table-cell>
@@ -205,7 +215,7 @@ under the License.
                  <@ofbizCurrency amount=invoiceNoTaxTotal isoCode=invoice.currencyUomId?if_exists/>
               </fo:block>
            </fo:table-cell>
-        </fo:table-row>
+        </fo:table-row>-->
     </fo:table-body>
  </fo:table>
 
@@ -250,6 +260,6 @@ under the License.
 </#if>
 
  <#-- a block with the invoice message-->
- <#if invoice.invoiceMessage?has_content><fo:block>${invoice.invoiceMessage}</fo:block></#if>
+ <#if invoice.invoiceMessage?has_content><fo:block>Invoice Message -- ${invoice.invoiceMessage}</fo:block></#if>
  <fo:block></fo:block>
 </#escape>

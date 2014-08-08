@@ -24,6 +24,34 @@ import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.service.LocalDispatcher;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.ofbiz.base.util.UtilMisc;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.List;
+import java.text.SimpleDateFormat;
+import javax.swing.text.html.parser.Entity;
+import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+import in.vasista.vbiz.byproducts.ByProductServices;
+import org.ofbiz.product.product.ProductWorker;
+import java.util.Map;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.network.LmsServices;
+import in.vasista.vbiz.byproducts.TransporterServices;
+import org.ofbiz.party.party.PartyHelper;
+
 
 // rounding mode
 decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
@@ -31,6 +59,23 @@ rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
 context.decimals = decimals;
 context.rounding = rounding;
 
+//for cheque printing
+paymentMethodId = "";
+amount = BigDecimal.ZERO;
+paymentId = parameters.paymentId;
+if(UtilValidate.isNotEmpty(paymentId)){
+	paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
+	if(UtilValidate.isNotEmpty(paymentDetails.paymentMethodId)){
+		paymentMethodId = paymentDetails.paymentMethodId;
+	}
+	if(UtilValidate.isNotEmpty(paymentDetails.amount)){
+		amount = paymentDetails.amount;
+	}
+	context.put("paymentMethodId",paymentMethodId);
+	context.put("amount",amount);
+}
+
+Debug.log("paymentMethodId======="+paymentMethodId);
 // list of payments
 payments = [];
 
