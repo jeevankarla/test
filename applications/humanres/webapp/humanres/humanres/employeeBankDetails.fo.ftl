@@ -68,8 +68,8 @@ under the License.
          	<#assign totalNetAmt=0>
          	<#assign recordCnt=0>
          	<#assign bankAdviceDetailsList=BankAdvicePayRollMap.entrySet()>
-               <#list bankAdviceDetailsList as bankAdvice>
-               	 <#if (companyBankDetails.getValue()).contains(bankAdvice.getKey())>
+         	  <#assign partyIdList=companyBankDetails.getValue()>
+               <#list partyIdList as partyId>               	
                	   <#assign recordCnt=recordCnt+1>
                    <fo:table-row height="14px" space-start=".15in">
 	                   <fo:table-cell  border="solid">
@@ -77,17 +77,17 @@ under the License.
 	                        <fo:block text-align="center">${temp?if_exists}</fo:block>
 	                   </fo:table-cell >
 	                   <fo:table-cell border="solid">
-	                    	<fo:block text-align="center">${bankAdvice.getValue().get("emplNo")?if_exists}</fo:block>
+	                    	<fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("emplNo")?if_exists}</fo:block>
 	                   </fo:table-cell>
 	                   <fo:table-cell  border="solid">
-	                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${bankAdvice.getValue().get("empName")?if_exists}</fo:block>
+	                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${BankAdvicePayRollMap.get(partyId).get("empName")?if_exists}</fo:block>
 	                   </fo:table-cell>
 	                    <fo:table-cell  border="solid">
-	                        <fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;  ${bankAdvice.getValue().get("acNo")?if_exists}</fo:block>
+	                        <fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;  ${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</fo:block>
 	                    </fo:table-cell>
-	                    <#assign totalNetAmt=totalNetAmt+bankAdvice.getValue().get("netAmt")>
+	                    <#assign totalNetAmt=totalNetAmt+BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists>
 	                   <fo:table-cell  border="solid">
-	                        <fo:block text-align="center">${bankAdvice.getValue().get("netAmt")?if_exists?string("#0.00")}</fo:block>
+	                        <fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists?string("#0.00")}</fo:block>
 	                   </fo:table-cell>
                		</fo:table-row>
                		<#if recordCnt==40>
@@ -98,7 +98,7 @@ under the License.
                			 	</fo:table-cell>
                			 </fo:table-row>
                		</#if>
-               </#if>
+              
                   </#list>
               <fo:table-row border="solid">
               	<fo:table-cell/>

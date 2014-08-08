@@ -94,6 +94,9 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
 			if(UtilValidate.isNotEmpty(partyIds)){
+				List<GenericValue> partyBenefitList = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN , partyIds), null, ["finAccountCode"], null, false);
+				partyBenefitList = UtilMisc.sortMaps(partyBenefitList, UtilMisc.toList("finAccountCode"));
+				partyIds = EntityUtil.getFieldListFromEntityList(partyBenefitList, "ownerPartyId", true);
 				bankWiseEmplDetailsMap.put(finAccountId,partyIds);
 			}
 		}
