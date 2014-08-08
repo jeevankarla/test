@@ -148,6 +148,6 @@ priceContext.put("facilityId", "S01");
 priceContext.put("priceDate", dayBegin);
 
 Map priceResult = ByProductServices.calculateByProductsPrice(delegator, dispatcher, priceContext);
-BigDecimal defaultPrice = (BigDecimal)priceResult.get("totalPrice");
+BigDecimal defaultPrice = (BigDecimal)priceResult.get("mrpPrice");
 BigDecimal costPerLitre = (defaultPrice*0.5);
 context.put("costPerLitre",costPerLitre);
