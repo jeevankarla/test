@@ -1810,7 +1810,7 @@ public class PayrollService {
 	        	StringBuilder priceInfoDescription = new StringBuilder();
 	        	Map shiftDetailMap = (Map)employeePayrollAttedance.get("shiftDetailMap");
 	        	Map availedCanteenDetailMap = (Map)employeePayrollAttedance.get("availedCanteenDetailMap");
-	        	int availedVehicleDays = ((Integer)employeePayrollAttedance.get("availedVehicleDays")).intValue();
+	        	int availedVehicleDays = ((BigDecimal)employeePayrollAttedance.get("availedVehicleDays")).intValue();
 	        	//int disAvailedVehicleDays = ((Integer)employeePayrollAttedance.get("disAvailedVehicleDays")).intValue();
 	        	
 	        	priceInfoDescription.append("\n \n[ Attendance Details ::"+employeePayrollAttedance);
@@ -1919,7 +1919,7 @@ public class PayrollService {
 					}
 					
 				}
-				priceInfoDescription.append("found "+ partyInsuranceList.size()+" active loans");
+				priceInfoDescription.append("found "+ partyInsuranceList.size()+" active LIC's");
 	        	
 	        	priceInfos.add(priceInfoDescription);
 	            } catch (Exception e) {
@@ -1932,7 +1932,7 @@ public class PayrollService {
 	        return result;
 	    }
 	   
-	   /*public static Map<String, Object> calculateLoanPayHeadAmount(DispatchContext dctx, Map<String, ? extends Object> context) {
+	   public static Map<String, Object> calculateLoanPayHeadAmount(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 	        Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1955,19 +1955,18 @@ public class PayrollService {
 	        	List condList = FastList.newInstance();
 	        	condList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, employeeId));
 	        	condList.add(EntityCondition.makeCondition("deductionTypeId",EntityOperator.EQUALS, payHeadTypeId));
-	        	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
-	        	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-			        		EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+	        	condList.add(EntityCondition.makeCondition("disbDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodStart));
+	        	condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("setlDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+			        		EntityCondition.makeCondition("setlDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodEnd)));
 	        	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
 	        	
-	        	List<GenericValue> partyInsuranceList = delegator.findList("PartyInsuranceAndType", cond, null, null, null, false);
-				for(GenericValue partyInsurance : partyInsuranceList){
-					if(UtilValidate.isNotEmpty(partyInsurance.getBigDecimal("premiumAmount"))){
-						amount = amount.add(partyInsurance.getBigDecimal("premiumAmount"));
-					}
+	        	List<GenericValue> loanList = delegator.findList("LoanAndType", cond, null, null, null, false);
+	        	GenericValue loan = EntityUtil.getFirst(loanList);
+				/*if(UtilValidate.isNotEmpty(loan)){
+					List<GenericValue> loanRecoveryList = delegator.findByAnd("LoanRecoveryAndCustomTimePeriod", "");
 					
-				}
-				priceInfoDescription.append("found "+ partyInsuranceList.size()+" active loans");
+				}*/
+				priceInfoDescription.append("found "+ loanList.size()+" active loans");
 	        	
 	        	priceInfos.add(priceInfoDescription);
 	            } catch (Exception e) {
@@ -1977,7 +1976,7 @@ public class PayrollService {
 	          result.put("amount", amount);
 	          result.put("priceInfos", priceInfos);
 	        return result;
-	    }*/
+	    }
 	    
 	 public static Map<String, Object> getPayheadTypes(DispatchContext dctx, Map<String, ? extends Object> context) {
 
