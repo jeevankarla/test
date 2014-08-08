@@ -41,7 +41,7 @@ under the License.
                     	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    WITH COMPARISION TO PREVIOUS MONTH SALES(SACHET ROUTES) </fo:block>
                     	<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${printDate?if_exists}</fo:block>
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">==============================================================================================</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">PARTICULARS				                           				      ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(pMonthStart, "MMM-yy")}		                    ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "MMM-yy")}	       </fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">PARTICULARS				                           				      ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(pMonthStart, "MMM-yy")}		                    ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(cMonthStart, "MMM-yy")}	       </fo:block> 
 		        		<fo:block text-align="left"  keep-together="always"   white-space-collapse="false">==============================================================================================</fo:block> 
             	<fo:block>
                  	<fo:table>
@@ -204,7 +204,7 @@ under the License.
                        		</fo:table-cell>
                        	
                        	<#list categorysList as eachCat>
-                       	 	<#assign catValue = prvFacilityMap.get(eachCat)>
+                       	 	<#assign catValue = prvNewFacilityMap.get(eachCat)?if_exists>
                        		<#if catValue?has_content>
                        			<fo:table-cell>
 	                           		<fo:block  keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false">${catValue}</fo:block>  
@@ -216,7 +216,7 @@ under the License.
                        		</#if>
                        	</#list>
                        		<#list categorysList as eachCat>
-                       	 	<#assign catValue = curFacilityMap.get(eachCat)>
+                       	 	<#assign catValue = curNewFacilityMap.get(eachCat)?if_exists>
                        		<#if catValue?has_content>
                        			<fo:table-cell>
 	                           		<fo:block  keep-together="always" font-size="11pt" text-align="right" white-space-collapse="false">${catValue}</fo:block>  
