@@ -205,7 +205,7 @@
             </entity-one>  
         </actions>
         <auto-fields-service service-name="createPayHistory"/>
-        <field name="roleTypeIdFrom"><hidden/></field>
+        <field name="roleTypeIdFrom"><hidden /></field>
         <field name="roleTypeIdTo"><hidden/></field>
         <field name="partyIdFrom"><hidden/></field>
         <field name="partyIdTo"><hidden/></field>
@@ -216,19 +216,25 @@
         <field name="periodTypeId"><display description="${periodType.description}"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>        
-    <form name="ListPayHistories" type="list" target="updatePayHistory" title="" paginate-target="findPayHistories"
+    <form name="ListPayHistories" type="list" target="updatePayHistory" title="" paginate-target="findPayHistories" list-name="listIt"
         odd-row-style="alternate-row" default-table-style="basic-table" separate-columns="true" header-row-style="header-row">
         <actions>
-            <entity-condition entity-name="PayHistory" filter-by-date="false">
+             <entity-condition entity-name="PayHistory" filter-by-date="false">
                 <condition-list combine="and">
                     <condition-expr field-name="roleTypeIdFrom" operator="equals" from-field="parameters.roleTypeIdFrom"/>
                     <condition-expr field-name="roleTypeIdTo" operator="equals" from-field="parameters.roleTypeIdTo"/>
                     <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.partyIdFrom"/>
                     <condition-expr field-name="partyIdTo" operator="equals" from-field="parameters.partyIdTo"/>
-<!--                    <condition-expr field-name="fromDate" operator="equals" from-field="parameters.fromDate"/>-->
+                   <!-- <condition-expr field-name="fromDate" operator="equals" from-field="parameters.fromDate"/> -->
                 </condition-list>
             	<order-by field-name="-fromDate"/>                
-            </entity-condition>
+            </entity-condition> 
+           <!--  <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PayHistory"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> -->
             <entity-one entity-name="PeriodType" value-field="periodType">
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>             
@@ -272,7 +278,7 @@
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>             
         </actions>
-        <auto-fields-service service-name="updatePartyBenefit"/>
+        <!-- <auto-fields-service service-name="updatePartyBenefit"/> -->
         <field name="roleTypeIdFrom"><hidden/></field>
         <field name="roleTypeIdTo"><hidden/></field>
         <field name="partyIdFrom"><hidden/></field>
@@ -330,10 +336,10 @@
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>            
               
-            <service service-name="getPartyBenefitCost" result-map="costMap">
+          <!--   <service service-name="getPartyBenefitCost" result-map="costMap">
                 <field-map field-name="partyId" from-field="partyIdTo"/>
                 <field-map field-name="benefitTypeId" from-field="benefitTypes[0].benefitTypeId"/>
-            </service>     
+            </service>     --> 
             <set field="cost" from-field="costMap.amount"/>
             
         </actions>
@@ -427,10 +433,10 @@
             <entity-one entity-name="PeriodType" value-field="periodType">
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>               
-            <service service-name="getPartyDeductionAmount" result-map="amtMap">
+            <!-- <service service-name="getPartyDeductionAmount" result-map="amtMap">
                 <field-map field-name="partyId" from-field="partyIdTo"/>
                 <field-map field-name="deductionTypeId" from-field="deductionTypes[0].deductionTypeId"/>
-            </service>     
+            </service>   -->   
             <set field="flatAmount" from-field="amtMap.amount"/>
             
         </actions>        

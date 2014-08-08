@@ -155,14 +155,15 @@
     <screen name="ListPayHistories">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResListPayHistories"/>
-                <set field="headerItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditPayHistory"/>
+                <set field="titleProperty" value="ListPayHistories"/>
+                <set field="headerItem" value="PayrollItems"/>
+                <set field="tabButtonItem" value="PayrollItems"/>
+                <set field="tabButtonItem2" value="ListPayHistories"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
                 <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
-                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>                
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYMENT_EDIT"/>
                 </service>
@@ -170,11 +171,13 @@
                 <service service-name="humanResManagerPermission" result-map="permResult">
                     <field-map field-name="mainAction" value="EMPLOYMENT_VIEW"/>
                 </service>
-                <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                                   
+                <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                    
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                   <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmploymentViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -203,16 +206,17 @@
             </widgets>
         </section>
     </screen>
-    <screen name="EditPartyBenefits">
+     <screen name="EditPartyBenefits">
         <section>
             <actions>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.1.6.4.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.overflow.js" global="true"/>                            
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/loading/jquery.loading.1.6.css" global="true"/>            
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payrolFetcher.js" global="true"/>            
-                <set field="titleProperty" value="HumanResListPartyBenefits"/>
-                <set field="headerItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditPartyBenefit"/>
+                <set field="titleProperty" value="EditPartyBenefit"/>
+                <set field="headerItem" value="PayrollItems"/>
+                <set field="tabButtonItem" value="PayrollItems"/>
+                <set field="tabButtonItem2" value="EditPartyBenefits"/>
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
@@ -228,8 +232,10 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                             
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                   <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmploymentViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -269,10 +275,11 @@
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.1.6.4.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/images/jquery/plugins/loading/jquery.loading.overflow.js" global="true"/>                            
                 <set field="layoutSettings.styleSheets[+0]" value="/images/jquery/plugins/loading/jquery.loading.1.6.css" global="true"/>                        
-				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payrolFetcher.js" global="true"/>                        
-                <set field="titleProperty" value="HumanResListPayrollPreferences"/>
-                <set field="headerItem" value="Employment"/>
-                <set field="tabButtonItem" value="EditPayrollPreference"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payrolFetcher.js" global="true"/>   
+				<set field="titleProperty" value="EditPayrollPreference"/>
+                <set field="headerItem" value="PayrollItems"/>
+                <set field="tabButtonItem" value="PayrollItems"/>
+                <set field="tabButtonItem2" value="EditPayrollPreference"/>                     
                 <set field="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
                 <set field="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
                 <set field="partyIdTo" from-field="parameters.partyIdTo"/>
@@ -292,8 +299,10 @@
                 <set field="hasEmploymentViewPermission" from-field="permResult.hasPermission"/>                                
             </actions>
             <widgets>
-                <decorator-screen name="CommonEmploymentDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+                   <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
                     	<section>
                     	    <condition>
                             	<if-compare field="hasEmploymentViewPermission" operator="equals" value="true" type="Boolean"/>
@@ -402,9 +411,10 @@
      <screen name="FindBenefitsOrDeductions">
         <section>
             <actions>
-                <set field="titleProperty" value="HumanResFindEmployment"/>
-                <set field="headerItem" value="benefitOrDeduction"/>
-				<set field="tabButtonItem" value="benefitOrDeduction" />      
+                <set field="titleProperty" value="EditPartyBenefits"/>
+                <set field="headerItem" value="PayrollItems"/>
+                <set field="tabButtonItem" value="PayrollItems"/>
+                <set field="tabButtonItem2" value="EditPartyBenefits"/>
 				<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
 					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
 					<order-by field-name="sequenceNum"/>
@@ -417,6 +427,8 @@
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
                     	<section>
 		                    <widgets>                       
 		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">

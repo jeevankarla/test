@@ -22,7 +22,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="20in"
-                     margin-left="0.1in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
+                     margin-left="0.09in" margin-right="0.2in"  margin-top="0.09in" margin-bottom="0.2in" >
                 <fo:region-body margin-top="1.5in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -31,11 +31,11 @@ under the License.
         ${setRequestAttribute("OUTPUT_FILENAME", "mnthlyAttendencechlst.txt")}
         
 		<fo:page-sequence master-reference="main">
-        	<fo:static-content font-size="14pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">        
-        		<fo:block text-align="left" white-space-collapse="false">&#160;                                                        KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED                       Page:<fo:page-number/></fo:block>
-        		<fo:block text-align="center" keep-together="always" white-space-collapse="false">UNIT :  MOTHER DAIRY BANGALORE - 560065</fo:block>	 	 	  
-        		 <fo:block text-align="center" keep-together="always">ATTENDANCE CHECK LIST FROM ${fromDate}  TO   ${thruDate}</fo:block>
-        		 <fo:block text-align="left" keep-together="always"  >--------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+        	<fo:static-content font-size="14pt" font-family="Courier,monospace"  flow-name="xsl-region-before">        
+        		<fo:block text-align="left" white-space-collapse="false"  font-weight="bold">&#160;                                                        KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LIMITED                       Page:<fo:page-number/></fo:block>
+        		<fo:block text-align="center" keep-together="always" white-space-collapse="false"  font-weight="bold">UNIT :  MOTHER DAIRY BANGALORE - 560065</fo:block>	 	 	  
+        		 <fo:block text-align="center" keep-together="always"  font-weight="bold">ATTENDANCE CHECK LIST FROM ${fromDate}  TO   ${thruDate}</fo:block>
+        		 <fo:block text-align="left" keep-together="always"  font-weight="bold" >--------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
         		 <fo:block font-family="Courier,monospace">                
                 <fo:table >
                     <fo:table-column column-width="40pt"/>
@@ -149,7 +149,7 @@ under the License.
 	                        </fo:table-row>	
 	                         <fo:table-row >
 	                           <fo:table-cell >	
-	             <fo:block text-align="left" keep-together="always"  >--------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+	             <fo:block text-align="left" keep-together="always"  font-weight="bold" >--------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 	                            </fo:table-cell>
 	                       </fo:table-row>
                     </fo:table-body>

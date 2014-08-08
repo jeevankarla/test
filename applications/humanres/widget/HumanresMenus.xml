@@ -437,6 +437,10 @@
         <menu-item name="EmployeeProfile" title="${uiLabelMap.PartyProfile}">
             <link target="EmployeeProfile">
                 <parameter param-name="partyId"/>
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="fromDate"/>
             </link>
         </menu-item>
         
@@ -492,8 +496,48 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
+        <menu-item name="PayrollItems" title="Payroll Items">
+        	<link target="ListPayHistories">
+        		<parameter param-name="roleTypeIdFrom" from-field="parameters.roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo" from-field="parameters.roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                <parameter param-name="partyIdTo" from-field="parameters.partyId"/>
+                <parameter param-name="fromDate" from-field="parameters.fromDate"/>
+        	</link>
+        </menu-item>
     </menu>
-
+	
+	<menu name="PayrollItemsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="ListPayHistories" title="Pay History"> 
+        	<link target="ListPayHistories">
+        	<parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+        	</link>
+        </menu-item>  
+        <menu-item name="EditPartyBenefit" title="${uiLabelMap.HumanResEditPartyBenefit}">
+            <link target="EditPartyBenefits" >
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditPayrollPreference" title="${uiLabelMap.HumanResEditPayrollPreference}">
+            <link target="EditPayrollPreferences" >
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+        </menu-item> 
+              
+    </menu>	 	
 	<menu name="EmployeeUpdate">
     <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
             <link target="editEmployee">

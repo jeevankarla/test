@@ -60,7 +60,11 @@ timePeriodId=parameters.customTimePeriodId;
 				noOfArrearDays=payrollAttendance.get("noOfArrearDays");
 				if(noOfArrearDays==null)
 				noOfArrearDays=0;
+				lossOfPayDays=payrollAttendance.get("lossOfPayDays");
+				if(lossOfPayDays==null)
+				lossOfPayDays=0;
 				EditArrearDaysMap.put("noOfArrearDays",noOfArrearDays);
+				EditArrearDaysMap.put("lossOfPayDays",lossOfPayDays);
 				EditArrearDays.add(EditArrearDaysMap);
 				EditArrearDaysMap.put("timePeriodId", timePeriodId);
 			}

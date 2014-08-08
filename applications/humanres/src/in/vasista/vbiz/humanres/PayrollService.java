@@ -2729,6 +2729,7 @@ public class PayrollService {
 	      String customTimePeriodId = (String)context.get("customTimePeriodId");
 	      String timePeriodId = (String)context.get("timePeriodId");
 	      BigDecimal noOfArrearDays=(BigDecimal)context.get("noOfArrearDays");
+	      BigDecimal lossOfPayDays=(BigDecimal)context.get("lossOfPayDays");
 	      Map result = ServiceUtil.returnSuccess();
 	      try{
 	      			List conditionLis=FastList.newInstance();
@@ -2752,13 +2753,17 @@ public class PayrollService {
 	      						noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
 	      						employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
 	      						employPayrollDetails.store();
-						}
+	      					}
 	      					else{
 	      						noOfPayableDays=noOfPayableDays.subtract(arrearDays);
 	      							noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
 	      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
 	      							employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
 	      							employPayrollDetails.store();
+	      					}
+	      					if(UtilValidate.isNotEmpty(lossOfPayDays)){
+	      						employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
+      							employPayrollDetails.store();
 	      					}
 	      				}
 	      		} catch (GenericEntityException e) {

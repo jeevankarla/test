@@ -38,6 +38,10 @@ under the License.
     <SecurityGroup description="Mobile employee" groupId="MOB_EMPLOYEE"/>
     <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_EMPLOYEES_VIEW"/>  
     <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_MYEMPLOYEE_VIEW"/>    
-    <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_HR_DB_VIEW"/>    
+    <SecurityGroupPermission groupId="MOB_EMPLOYEE" permissionId="MOB_HR_DB_VIEW"/>  
+    
+    <SecurityGroup description="Employee LOP Edit" groupId="EMP_LOP_EDIT"/> 
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EMP_LOP_EDIT_UPDATE"/>
+    <SecurityGroupPermission groupId="EMP_LOP_EDIT" permissionId="EMP_LOP_EDIT_UPDATE"/> 
       
 </entity-engine-xml>
