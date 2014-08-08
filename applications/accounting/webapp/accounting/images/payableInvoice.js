@@ -50,11 +50,14 @@ function disablePettyCash() {
 	//jQuery('#NewPurchaseInvoice_roleTypeId').val('');
 	jQuery('#0_lookupId_NewPurchaseInvoice_partyIdFrom').val('');		
 }
-
+function setInvoiceDateAsDueDate() {
+	jQuery('#NewPurchaseInvoice_dueDate').val(jQuery('#NewPurchaseInvoice_invoiceDate').val());
+}
 function setInvoiceAction(){
     var defaultAction = 'createInvoice';	
     var payrolAction = 'createPayrolInvoice';
     var action;
+    
     if (jQuery('#NewPurchaseInvoice_invoiceTypeId').val() == 'PAYROL_INVOICE') {
     	action = payrolAction;
 		enablePayrol();					
@@ -79,6 +82,7 @@ jQuery(document).ready(function() {
 	getRoleTypes();	
 	setRoleTypeDropdown();	
 	setInvoiceAction();
+	 setInvoiceDateAsDueDate();
 });
 
 
