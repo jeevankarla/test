@@ -53,15 +53,15 @@ exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesD
 	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
 	prodIdsList=EntityUtil.getFieldListFromEntityList(prodList, "productId", false);
 
-shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,fromDate,thruDate,null);
-curntMonthDays= UtilDateTime.getIntervalInDays(fromDate,thruDate)+1;
+shipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator,monthStart,monthEnd,null);
+curntMonthDays= UtilDateTime.getIntervalInDays(monthStart,monthEnd)+1;
 //Debug.log("curntMonthDays===="+curntMonthDays);
 categoryTotalMap = [:];
 categorysList = [];
 facilityCurntSaleMap=[:];
 
 if(UtilValidate.isNotEmpty(shipmentIds)){
-	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:fromDate, thruDate:thruDate,includeReturnOrders:true,isByParty:true]);
+	dayTotals = ByProductNetworkServices.getPeriodTotals(dispatcher.getDispatchContext(), [shipmentIds:shipmentIds, fromDate:monthStart, thruDate:monthEnd,includeReturnOrders:true,isByParty:true]);
 	if(UtilValidate.isNotEmpty(dayTotals)){
 		boothTotalsMap=dayTotals.get("boothTotals");
 		if(UtilValidate.isNotEmpty(boothTotalsMap)){
@@ -239,8 +239,8 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && ("PCMReport".equals(reportTypeFlag
    }
 if(UtilValidate.isNotEmpty(reportTypeFlag) && "PCMReport".equals(reportTypeFlag)){
 	conditionList=[];
-	conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,fromDate));
-	conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
+	conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,monthStart));
+	conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.LESS_THAN_EQUAL_TO ,monthEnd));
 	conditionList.add(EntityCondition.makeCondition("facilityTypeId",  EntityOperator.EQUALS,"BOOTH"));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	List<GenericValue> facilityList = delegator.findList("Facility", condition, null, null, null, false);
