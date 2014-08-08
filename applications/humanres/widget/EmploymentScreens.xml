@@ -457,10 +457,8 @@
 				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
-    		 <entity-condition entity-name="Enumeration" list="finalInsuranceTypeList" use-cache="true">
-                	<condition-list>
-                    	<condition-expr field-name="enumTypeId" value="INSURANCE_TYPE"/>                    	
-                    </condition-list>                    
+    		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
+                	                 
                 </entity-condition>  	
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
     		</actions>

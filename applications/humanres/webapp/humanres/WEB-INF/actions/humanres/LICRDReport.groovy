@@ -50,7 +50,7 @@ if(UtilValidate.isNotEmpty(employments)){
 				employeeName=employment.get("firstName");
 				referenceNo=insurance.get("insuranceNumber");
 				employeeNo=insurance.get("partyId");
-				amount=insurance.get("insuredValue");
+				amount=insurance.get("premiumAmount");
 				LicDetailsMap.put("employeeName",employeeName);
 				LicDetailsMap.put("referenceNo",referenceNo);
 				LicDetailsMap.put("employeeNo",employeeNo);
@@ -79,7 +79,7 @@ if(UtilValidate.isNotEmpty(LicFinalMap)){
 			CumulativeDetails.each { cumulative ->
 				cumulativeAmount = 0;
 				employeeId=cumulative.get("partyId");
-				amount=cumulative.get("insuredValue");
+				amount=cumulative.get("premiumAmount");
 				if(UtilValidate.isEmpty(cummulativeMap.get(employeeId))){
 					cumulativeAmount=amount;
 				}else{
