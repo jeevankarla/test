@@ -649,11 +649,22 @@ under the License.
         <response name="success" type="view" value="FindPayrollBilling"/>
         <response name="error" type="view" value="FindPayrollBilling"/>
     </request-map>
+
+     <request-map uri="EmployeeWisePayrollAnalysis">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeWisePayrollAnalysis"/>
+    </request-map>
     
+     <request-map uri="EmployeeWisePayrollAnalysisInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EmployeeWisePayrollAnalysisInternal"/>
+    </request-map>   
+         
     <request-map uri="BenefitDeductionCalculator">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BenefitDeductionCalculator"/>
     </request-map>
+    
     <request-map uri="calculateEmployeeBenefitDeduction">
         <security https="true" auth="true"/>
         <event type="service" invoke="getPayHeadAmount"/>
@@ -1834,7 +1845,9 @@ under the License.
 	 <view-map name="TDSemployee" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSemployee" content-type="application/pdf" encoding="none"/>
 	 <view-map name="TDSform16a" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSform16a" content-type="application/pdf" encoding="none"/>
 	 <view-map name="TDSchallan" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#TDSchallan" content-type="application/pdf" encoding="none"/>
-	 <view-map name="FindPayrollBilling" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#FindPayrollBilling"/>
+	 <view-map name="FindPayrollBilling" type="screen" page="component://humanres/widget/HumanresScreens.xml#FindPayrollBilling"/>
+	 <view-map name="EmployeeWisePayrollAnalysis" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysis"/>
+	 <view-map name="EmployeeWisePayrollAnalysisInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeWisePayrollAnalysisInternal"/>
 	 <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
 	 <view-map name="EmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeDailyAttendance"/>
 	 <view-map name="createEmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#createEmployeeDailyAttendance"/>

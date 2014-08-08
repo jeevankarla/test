@@ -631,5 +631,16 @@
             <link target="FindLeaveApprovals"/>
         </menu-item>
     </menu>
+    
+    <menu name="EmplPayrollTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="Payroll" type="simple" menu-container-style="button-bar tab-bar" 
+        default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="Payroll" title="Payroll">
+            <link target="FindPayrollBilling"/>
+        </menu-item>
+        <menu-item name="EmployeeWisePayrollAnalysis" title="Employee Wise Payroll Analysis">
+            <link target="EmployeeWisePayrollAnalysis"/>
+        </menu-item>
+    </menu>    
 
 </menus>

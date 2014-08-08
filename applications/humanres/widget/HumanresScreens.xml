@@ -305,5 +305,86 @@
                 </platform-specific>   
             </widgets>
         </section>
-    </screen>      
+    </screen>   
+    
+    <!-- TODO move this out of here -->
+    <screen name="FindPayrollBilling">
+        <section>
+            <actions>
+                <set field="titleProperty" value="FindPayrollBilling"/>
+                <set field="tabButtonItem" value="FindPayrollBilling"/> 
+ 				<set field="tabButtonItem2" value="Payroll" />                  
+                <entity-and list="orgList" entity-name="PartyRoleAndPartyDetail">
+                     <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                     <order-by field-name="partyId"/>
+                </entity-and>
+                <entity-and list="customTimePeriodList" entity-name="CustomTimePeriod">
+                     <field-map field-name="periodTypeId" value="HR_MONTH"/>
+                     <order-by field-name="-thruDate"/>
+                     <order-by field-name="periodNum"/>
+                </entity-and> 
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>                                                        					   					
+                    	<section>
+                    	  <widgets>
+                    	     <container style="button-bar">
+									<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/generatePayrollForm.ftl"/></html></platform-specific>							  	        					
+									<link url-mode="plain" target="javascript:showPayrollGenerateForm();" text="Generate Payroll" style="buttontext create"  link-type="anchor"/>
+							</container> 
+           					<!-- <screenlet title="create">
+            			           <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="createPayrollBilling"/>
+            			 	</screenlet> -->
+            			 	<screenlet title="List Payroll Billing">
+            				<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ListPayrollBilling"/>
+            			</screenlet>
+                  </widgets>
+               </section>
+               </decorator-section>         
+               </decorator-screen>    
+            </widgets>
+        </section>
+    </screen>   
+    
+	 <screen name="EmployeeWisePayrollAnalysis">
+        <section>
+            <actions>
+                <set field="titleProperty" value="FindPayrollBilling"/>
+                <set field="tabButtonItem" value="FindPayrollBilling"/>
+ 				<set field="tabButtonItem2" value="EmployeeWisePayrollAnalysis" />                                           
+				<set field="ajaxUrl" value="EmployeeWisePayrollAnalysisInternal" type="String"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysis.groovy"/>  				
+            </actions>            
+            <widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPayrollTabBar"/>                                                        					   
+                        <platform-specific> 
+                            <html><html-template location="component://humanres/webapp/humanres/humanres/employeeWisePayrollAnalysis.ftl"/></html>
+                        </platform-specific>   
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>   
+    
+	 <screen name="EmployeeWisePayrollAnalysisInternal">
+        <section>
+            <actions>
+<!--           		<set field="parameters.customTimePeriodId" value="APR_14" />-->
+            	<set field="parameters.partyId" value="Company" />            	
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>              
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>  
+            </actions>            
+            <widgets>
+            	<platform-specific> 
+                	<html><html-template location="component://humanres/webapp/humanres/humanres/employeeWisePayrollAnalysisInternal.ftl"/></html>
+                </platform-specific>   
+            </widgets>
+        </section>
+    </screen>         
 </screens>

@@ -1204,46 +1204,7 @@
             </widgets>
         </section>
     </screen>
-    <!-- TODO move this out of here -->
-    <screen name="FindPayrollBilling">
-        <section>
-            <actions>
-                <set field="titleProperty" value="FindPayrollBilling"/>
-                <set field="tabButtonItem" value="FindPayrollBilling"/> 
-                <entity-and list="orgList" entity-name="PartyRoleAndPartyDetail">
-                     <field-map field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
-                     <order-by field-name="partyId"/>
-                </entity-and>
-                <entity-and list="customTimePeriodList" entity-name="CustomTimePeriod">
-                     <field-map field-name="periodTypeId" value="HR_MONTH"/>
-                     <order-by field-name="-thruDate"/>
-                     <order-by field-name="periodNum"/>
-                </entity-and> 
-            </actions>            
-            <widgets>
-				<decorator-screen name="HumanresCommonDecorator"
-					location="component://humanres/widget/CommonScreens.xml">
-					<decorator-section name="body">
-                    	<section>
-                    	  <widgets>
-                    	     <container style="button-bar">
-									<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/generatePayrollForm.ftl"/></html></platform-specific>							  	        					
-									<link url-mode="plain" target="javascript:showPayrollGenerateForm();" text="Generate Payroll" style="buttontext create"  link-type="anchor"/>
-							</container> 
-           					<!-- <screenlet title="create">
-            			           <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="createPayrollBilling"/>
-            			 	</screenlet> -->
-            			 	<screenlet title="List Payroll Billing">
-            				<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="ListPayrollBilling"/>
-            			</screenlet>
-                  </widgets>
-               </section>
-               </decorator-section>
-          
-               </decorator-screen>    
-            </widgets>
-        </section>
-    </screen>
+
     <screen name="BenefitDeductionCalculator">
         <section>
             <actions>
