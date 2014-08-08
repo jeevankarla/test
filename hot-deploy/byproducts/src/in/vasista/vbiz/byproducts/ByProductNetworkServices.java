@@ -6518,6 +6518,28 @@ public class ByProductNetworkServices {
 	    }
 	    List conditionList = FastList.newInstance();
 	    
+	    if(UtilValidate.isEmpty(productPriceTypeId)){
+	    	try{
+	    		conditionList.clear();
+	    		conditionList.add(EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "PRICE_TYPE"));
+	    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	    		EntityCondition expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	    		
+	    		List<GenericValue> partyClassifications = delegator.findList("PartyClassificationAndGroupAndType", expr, null, null, null, false);
+	    		partyClassifications = EntityUtil.filterByDate(partyClassifications, priceDate);
+	    		if(UtilValidate.isNotEmpty(partyClassifications)){
+	    			productPriceTypeId = (EntityUtil.getFirst(partyClassifications)).getString("partyClassificationGroupId");
+	    		}
+	    		else{
+	    			productPriceTypeId = "DEFAULT_PRICE";
+	    		}
+	    	}
+	    	catch (GenericEntityException e) {
+				Debug.logError(e, e.toString(), module);
+		        return ServiceUtil.returnError(e.toString());
+			}
+	    }
+	    
 	    try {
     		Map inputRateAmt = UtilMisc.toMap("userLogin", userLogin,"partyId", partyId);
     		inputRateAmt.put("rateCurrencyUomId", currencyDefaultUomId);  
@@ -6541,14 +6563,6 @@ public class ByProductNetworkServices {
 	        return ServiceUtil.returnError("Unable to get margin/discount: " + e.getMessage());
         }
 
-	    if(UtilValidate.isNotEmpty(productSubscriptionTypeId) && productSubscriptionTypeId.equals("EMP_SUBSIDY")){
-	    	productPriceTypeId ="MRP_PRICE";
-	    }
-	    
-	    if(UtilValidate.isEmpty(productPriceTypeId)){
-	    	  productPriceTypeId = "DEFAULT_PRICE";
-	    }
-	    
 	    boolean taxInPrice = false;
 	    List<GenericValue> productPricesComponents = FastList.newInstance();
 	    conditionList.clear();
@@ -6608,19 +6622,39 @@ public class ByProductNetworkServices {
 			if(UtilValidate.isNotEmpty(MRPPriceList)){
 				MRPPrice = (BigDecimal)(EntityUtil.getFirst(MRPPriceList)).get("price");
 			}
-			
+			BigDecimal tempPrice = BigDecimal.ZERO;
+			tempPrice = tempPrice.add(basicPrice);
+			boolean exciseInvolvedFlag = false;
 			List<GenericValue> productTaxTypes = FastList.newInstance();
 			for(GenericValue priceType : prodPriceTypes){
 				String taxType = priceType.getString("productPriceTypeId"); 
 				if(taxType.equals("BED_SALE")){
 					BigDecimal taxPercent = priceType.getBigDecimal("taxPercentage");
 					if(UtilValidate.isNotEmpty(taxPercent) && taxPercent.compareTo(BigDecimal.ZERO)>0){
-						BigDecimal amount = (MRPPrice.multiply(taxPercent)).divide(new BigDecimal(100), 2, rounding);
+						BigDecimal excisableAmount = (MRPPrice.multiply(new BigDecimal(65))).divide(new BigDecimal(100), 2, rounding);
+						BigDecimal amount = (excisableAmount.multiply(taxPercent)).divide(new BigDecimal(100), 2, rounding);
 						priceType.set("price", amount);
-						priceType.set("taxPercentage", null);
+						exciseInvolvedFlag = true;
+						tempPrice = tempPrice.add(amount);
+					}
+					productTaxTypes.add(priceType);
+				}
+			}
+			if(discountAmount.compareTo(BigDecimal.ZERO)>0){
+				tempPrice = tempPrice.subtract(discountAmount);
+			}
+			for(GenericValue priceType : prodPriceTypes){
+				String taxType = priceType.getString("productPriceTypeId"); 
+				if(taxType.equals("VAT_SALE") || taxType.equals("CST_SALE")){
+					BigDecimal taxPercent = priceType.getBigDecimal("taxPercentage");
+					if(UtilValidate.isNotEmpty(taxPercent) && taxPercent.compareTo(BigDecimal.ZERO)>0 && exciseInvolvedFlag){
+						BigDecimal amount = (tempPrice.multiply(taxPercent)).divide(new BigDecimal(100), 2, rounding);
+						priceType.set("price", amount);
 					}
 				}
-				productTaxTypes.add(priceType);
+				if(!taxType.equals("BED_SALE")){
+					productTaxTypes.add(priceType);
+				}
 			}
 			// basicPrice = basicPrice.setScale( decimals,rounding);
 			List<GenericValue> taxList = TaxAuthorityServices.getTaxAdjustmentByType(delegator, product, productStore, null, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ZERO, null, productTaxTypes);
@@ -6632,13 +6666,16 @@ public class ByProductNetworkServices {
 				if(UtilValidate.isNotEmpty(taxItem.get("amount"))){
 					amount = (BigDecimal) taxItem.get("amount");
 				}
+				if(UtilValidate.isNotEmpty(taxItem.get("sourcePercentage"))){
+					percentage = (BigDecimal) taxItem.get("sourcePercentage");
+				}
 				if(UtilValidate.isNotEmpty(taxItem.get("sourcePercentage")) && amount.compareTo(BigDecimal.ZERO)== 0){
 					percentage = (BigDecimal) taxItem.get("sourcePercentage");
 					if(UtilValidate.isNotEmpty(percentage) && UtilValidate.isNotEmpty(basicPrice)){
 						amount = (basicPrice.multiply(percentage)).divide(new BigDecimal(100), 2, rounding);
 					}
 				}
-				
+
 				if(taxType.equals("BED_SALE")){
 					totalExciseDuty = totalExciseDuty.add(amount);
 				}

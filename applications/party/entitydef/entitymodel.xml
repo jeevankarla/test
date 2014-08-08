@@ -1985,6 +1985,22 @@ under the License.
         <key-map field-name="contactMechId"/>
       </relation>
     </view-entity>
+    <view-entity entity-name="PartyClassificationAndGroupAndType"
+            package-name="org.ofbiz.party.party"
+            title="Party Classification, PartyClassification Group and Classification Type Entity">
+      <member-entity entity-alias="PC" entity-name="PartyClassification"/>
+      <member-entity entity-alias="PCG" entity-name="PartyClassificationGroup"/>
+      <member-entity entity-alias="PCT" entity-name="PartyClassificationType"/>
+	  <alias-all entity-alias="PC"/>
+      <alias-all entity-alias="PCG"/>
+      <alias-all entity-alias="PCT"/>
+      <view-link entity-alias="PCG" rel-entity-alias="PC">
+        <key-map field-name="partyClassificationGroupId"/>
+      </view-link>
+      <view-link entity-alias="PCG" rel-entity-alias="PCT">
+        <key-map field-name="partyClassificationTypeId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="PartyContent"
             package-name="org.ofbiz.party.party"
             title="Party Data Object Entity">
