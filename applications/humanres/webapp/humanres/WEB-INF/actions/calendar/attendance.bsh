@@ -43,7 +43,7 @@ if(employeeId ==null && parameters.get("partyId")==null){
 exprList = UtilMisc.toList(
     EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-data=delegator.findList("EmplPunch" , condition, null, null,null,true);
+data=delegator.findList("EmplPunch" , condition, null, null,null,false);
 
 context.put("data",data);
 context.put("partyId",partyId);

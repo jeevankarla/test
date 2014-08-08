@@ -1088,6 +1088,7 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="GLOBALHR_EDIT"/>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="oldPunchType"  mode="IN" type="String" optional="true"/>
         <attribute name="punchdate" mode="IN" type="java.sql.Date"/> 
     </service>
     

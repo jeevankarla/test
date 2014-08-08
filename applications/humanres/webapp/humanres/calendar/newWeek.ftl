@@ -144,16 +144,19 @@ function dateValidation(){
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
     <#list data as Records>
         <#if period.start?date=Records.punchdate>
-      <#if Records.PunchType="Normal">
-        <#if Records.InOut!="OUT">
+       <#list punchTypeList as punchtype> 
+      <#if Records.PunchType="${punchtype.enumId}">
+       	<#if Records.InOut!="OUT">
           <#assign iocnt=iocnt+1> 
         </#if> 
        </#if> 
+       </#list>
        </#if> 
       </#list>
         <#if (tempcnt<iocnt)>
-        <#assign tempcnt=iocnt>
+        	<#assign tempcnt=iocnt>
         </#if>
+        
      </#list>
 
 <#assign cnt=tempcnt>
@@ -202,16 +205,17 @@ function dateValidation(){
 					   <#if x!=1>  onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=IN&dateTime=${period.start?string}&emplPunchId=${cellid?string}')"
 					   <#else>
 							 <#list data as Records>
-						     
+						     	<#if Records.InOut="${inOut.enumId}">
 						  		<#if period.start?date=Records.punchdate>   
 						    		<#if Records.PunchType="${punchtype.enumId}">   
 						      			<#if Records.emplPunchId=cellid?string>    
-						      				onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=${inOut.enumId?if_exists}&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?string}')" 
+						      				onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=${inOut.enumId?if_exists}&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?if_exists}')" 
 						     				<#assign x=0>
 						        			<#break> 
 						     			</#if>
 						     		</#if>
 						     	</#if>
+						     	</#if> 
 						  	</#list>
 					    </#if>
 			

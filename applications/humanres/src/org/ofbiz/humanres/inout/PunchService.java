@@ -71,6 +71,7 @@ public class PunchService {
 		String partyId = (String) context.get("partyId");
 		Debug.logInfo("Debug.loginfo*****" + partyId + "*****", module);
 		String emplPunchId = (String) context.get("emplPunchId");
+		String oldPunchType = (String) context.get("oldPunchType");
 		Date punchdate = (Date) context.get("punchdate");
 		Time punchtime = (Time) context.get("punchtime");
 		String PunchType = (String) context.get("PunchType");
@@ -488,6 +489,12 @@ public class PunchService {
 	  	    	}
 			}*/
 			delegator.createOrStore(emplPunch);
+			if(UtilValidate.isNotEmpty(oldPunchType) && (!PunchType.equals(oldPunchType))){				  
+				   GenericValue oldRecord = delegator.findOne("EmplPunch",UtilMisc.toMap("emplPunchId", emplPunchId,
+							"partyId", partyId, "PunchType", oldPunchType,
+							"punchdate", punchdate, "InOut", inout), true);
+				   delegator.removeValue(oldRecord);				  
+			}
 			return ServiceUtil.returnSuccess("Data added successfully");
 
 		} catch (GenericEntityException e) {
