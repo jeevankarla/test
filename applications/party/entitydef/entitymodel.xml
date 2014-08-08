@@ -3238,8 +3238,18 @@ under the License.
 		<field name="insuranceTypeId" type="id-ne"></field>
 		<field name="description" type="description"></field>
 		<field name="deductionTypeId" type="id"></field>
+		<prim-key field="insuranceTypeId"/>
 		<relation type="one" fk-name="INTYP_DTYP" rel-entity-name="DeductionType">
 			<key-map field-name="deductionTypeId" />
 		</relation>
     </entity>
+     <view-entity entity-name="PartyInsuranceAndType" package-name="org.ofbiz.party.party">
+        <member-entity entity-alias="PTIN" entity-name="PartyContent"/>
+        <member-entity entity-alias="INTYP" entity-name="InsuranceType"/>
+        <alias-all entity-alias="PTIN"/>
+        <alias-all entity-alias="INTYP"/>
+        <view-link entity-alias="PTIN" rel-entity-alias="INTYP">
+            <key-map field-name="insuranceTypeId"/>
+        </view-link>
+    </view-entity>
 </entitymodel>
