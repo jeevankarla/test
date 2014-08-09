@@ -670,6 +670,10 @@
 					<field-map field-name="partyClassificationGroupId" from-field="partyClassificationGroupId" />
 				</entity-one>
 				<set field="caste" value="${partyClassificationGroup.description}"/>
+			<entity-and entity-name="Employment" list="employmentList">
+				<field-map field-name="partyIdTo" value="${partyId}"/>
+			</entity-and>	
+			<set field="doj" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentList[0].appointmentDate, &quot;dd/MM/yyyy&quot;);}"/>
      	</actions>
      	
         <field name="partyId"><display/></field>
@@ -709,6 +713,7 @@
 		<field name="shiftType" title="${uiLabelMap.ShiftType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${shiftType}"></display-entity></field>
 		<field name="passportNumber" title="${uiLabelMap.FormFieldTitle_passportNumber}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportNumber}" ></display-entity></field>
 		<field name="presentEpf" title="PF Number"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${presentEpf}"></display-entity></field>
+       	<field name="doj" title="D.O.J"><display description="${doj}"></display></field>
         <field name="passportExpireDate" title="${uiLabelMap.FormFieldTitle_passportExpireDate}"><display-entity entity-name="Person" key-field-name="partyId" description="${passportExpireDate}" ></display-entity></field>
         <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${backgroundVerificationt}"></display-entity></field>
    </form>
