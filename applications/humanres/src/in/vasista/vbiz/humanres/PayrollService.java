@@ -2639,7 +2639,12 @@ public class PayrollService {
 			    			Boolean shiftFalg = Boolean.FALSE;
 			    			if(UtilValidate.isNotEmpty(dayShiftList)){
 			    				for(GenericValue dayShift :dayShiftList){
-			    					lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/1440);
+			    					if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
+			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/1440);
+			    					}else{
+			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/1440);
+			    					}
+			    					
 			    				}
 			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));

@@ -1096,6 +1096,7 @@ under the License.emplpunch
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <attribute name="oldPunchType"  mode="IN" type="String" optional="true"/>
+        <attribute name="oldShiftTypeId"  mode="IN" type="String" optional="true"/>
         <attribute name="punchdate" mode="IN" type="java.sql.Date"/> 
     </service>
     

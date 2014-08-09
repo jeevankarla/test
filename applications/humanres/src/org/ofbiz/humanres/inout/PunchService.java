@@ -72,6 +72,7 @@ public class PunchService {
 		Debug.logInfo("Debug.loginfo*****" + partyId + "*****", module);
 		String emplPunchId = (String) context.get("emplPunchId");
 		String oldPunchType = (String) context.get("oldPunchType");
+		String oldShiftTypeId = (String) context.get("oldShiftTypeId");
 		Date punchdate = (Date) context.get("punchdate");
 		Time punchtime = (Time) context.get("punchtime");
 		String PunchType = (String) context.get("PunchType");
@@ -488,6 +489,28 @@ public class PunchService {
 	  	    		shiftThreshold = (new Double(tenantShiftThreshold.getString("propertyValue"))).intValue();
 	  	    	}
 			}*/
+			//handle shift logic here
+			if(UtilValidate.isNotEmpty(shiftTypeId)){
+				GenericValue emplDetails = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",partyId), false);
+				List<GenericValue> shiftEmplDetails = delegator.findByAnd("EmplDailyAttendanceDetail", UtilMisc.toMap("shiftType",shiftTypeId,"date",punchdate ,"partyId",partyId));
+				if(UtilValidate.isEmpty(shiftEmplDetails)){
+					Map employeeDailyAttendanceMap = UtilMisc.toMap("userLogin",userLogin);
+					employeeDailyAttendanceMap.put("partyId", partyId);
+					employeeDailyAttendanceMap.put("availedCanteen", emplDetails.getString("canteenFacin"));
+					employeeDailyAttendanceMap.put("shiftType", shiftTypeId);
+					employeeDailyAttendanceMap.put("date", punchdate);
+					employeeDailyAttendanceMap.put("lateMin", BigDecimal.ZERO);
+					employeeDailyAttendanceMap.put("extraMin", BigDecimal.ZERO);
+					
+					Map result = dispatcher.runSync("createorUpdateEmployeeDailyAttendance", employeeDailyAttendanceMap);
+					if(ServiceUtil.isError(result)){
+						Debug.logError(ServiceUtil.getErrorMessage(result), module);
+						return result;
+					}
+					
+				}
+			}
+			
 			delegator.createOrStore(emplPunch);
 			if(UtilValidate.isNotEmpty(oldPunchType) && (!PunchType.equals(oldPunchType))){				  
 				   GenericValue oldRecord = delegator.findOne("EmplPunch",UtilMisc.toMap("emplPunchId", emplPunchId,
@@ -498,9 +521,18 @@ public class PunchService {
 				   }
 				  				  
 			}
+			if(UtilValidate.isNotEmpty(oldShiftTypeId) && (!shiftTypeId.equals(oldShiftTypeId))){				  
+				   List<GenericValue> shiftEmplPunch = delegator.findByAnd("EmplPunch", UtilMisc.toMap("shiftType",oldShiftTypeId,"punchdate",punchdate,"partyId",partyId));
+				   if(UtilValidate.isEmpty(shiftEmplPunch)){
+					   List<GenericValue> shiftEmplDetails = delegator.findByAnd("EmplDailyAttendanceDetail", UtilMisc.toMap("shiftType",oldShiftTypeId,"date",punchdate,"partyId",partyId));
+				       delegator.removeAll(shiftEmplDetails);
+				   }
+				  				  
+			}
+			
 			return ServiceUtil.returnSuccess("Data added successfully");
 
-		} catch (GenericEntityException e) {
+		} catch (Exception e) {
 
 			return ServiceUtil
 					.returnError("Unable to add punch, mismatch found! , Contact administrator");
