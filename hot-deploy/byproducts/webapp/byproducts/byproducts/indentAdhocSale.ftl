@@ -79,6 +79,8 @@ $(document).ready(function(){
     	<form method="post" name="indententryinit" action="<@ofbizUrl>PowderPlantSale</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='FgsSales'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSale</@ofbizUrl>" id="indententryinit">  
+    <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>InterUnitStkTr</@ofbizUrl>" id="indententryinit">  
     <#else>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
     </#if>
@@ -137,6 +139,9 @@ $(document).ready(function(){
 		        <#elseif changeFlag?exists && changeFlag=='FgsSales'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="FGS_SHIPMENT"/> 
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="FGS_PRODUCT_CHANNEL"/> 
+		        <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="INTUNIT_TR_CHANNEL"/> 
 		        <#else>
 		          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 		          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -197,7 +202,7 @@ $(document).ready(function(){
         <tr><td><br/></td></tr>
         <tr>
           <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer Id:<#else>Wholesaler Id:</#if></div></td>
+          <td align='left' valign='middle' nowrap="nowrap"><div class='h2'><#if changeFlag?exists && changeFlag=='AdhocSaleNew'>Retailer Id:<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>KMF Unit ID:<#else>Wholesaler Id:</#if></div></td>
           <td>&nbsp;</td>
         <#if changeFlag?exists && changeFlag=='AdhocSaleNew'>
 			<#if booth?exists && booth?has_content>  
@@ -390,6 +395,8 @@ $(document).ready(function(){
 		         <#assign formAction='processPowderSale'>
 		    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
 		         <#assign formAction='processFGSProductSale'>     
+		 	<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
+		         <#assign formAction='processInterUnitStkTrSale'>     
 		 	<#else>
 				<#assign formAction='processIcpSale'>		 					 	
 			</#if>				

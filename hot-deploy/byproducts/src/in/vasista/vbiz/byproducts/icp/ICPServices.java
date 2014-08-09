@@ -428,6 +428,27 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			       	TransactionUtil.rollback();
 			       	return "error";
 		        }
+		        //creditNote is created here
+		        if("INTUNIT_TR_CHANNEL".equals(salesChannelEnumId)){
+		    		  Map paymentInputMap = FastMap.newInstance();
+			  		  paymentInputMap.put("userLogin", userLogin);
+			  		  paymentInputMap.put("paymentTypeId", "SALES_PAYIN");
+			  		 // paymentInputMap.put("paymentType", "SALES_PAYIN");
+			  		  paymentInputMap.put("paymentMethodTypeId", "CREDITNOTE_PAYIN");
+			  		  paymentInputMap.put("paymentPurposeType","NON_ROUTE_MKTG");
+			  		  paymentInputMap.put("statusId", "PMNT_RECEIVED");
+			  		  paymentInputMap.put("invoiceIds",UtilMisc.toList(invoiceId));
+			  		  Map paymentResult = dispatcher.runSync("createCreditNoteOrDebitNoteForInvoice", paymentInputMap);
+			  		  if(ServiceUtil.isError(paymentResult)){
+		    			     Debug.logError(paymentResult.toString(), module);
+	    			        request.setAttribute("_ERROR_MESSAGE_", "There was an error in service createCreditNoteOrDebitNoteForInvoice");
+	    			        TransactionUtil.rollback();
+	    			        return "error";
+			  		  }
+			  		  List paymentIds = (List)paymentResult.get("paymentsList");
+    	        Debug.log("+++++++===paymentIds====="+paymentIds);
+		        }
+		        
     	        if(enableAdvancePaymentApp){
     		            // apply invoice if any adavance payments from this  party
     	     		Map<String, Object> resultPaymentApp = dispatcher.runSync("settleInvoiceAndPayments", UtilMisc.<String, Object>toMap("invoiceId", invoiceId,"userLogin", userLogin));

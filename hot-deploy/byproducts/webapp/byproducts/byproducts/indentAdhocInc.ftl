@@ -64,7 +64,10 @@
 		for (var rowCount=0; rowCount < data.length; ++rowCount)
 		{ 
 			var productId = data[rowCount]["productId"];
+			var prodId="";
+			if(typeof(productId)!= "undefined"){ 	  
 			var prodId = productId.toUpperCase();
+			}
 			var qty = parseFloat(data[rowCount]["quantity"]);
 			var batchNo = data[rowCount]["batchNo"];
 	 		if (!isNaN(qty)) {	 		
@@ -197,8 +200,10 @@
 			</#if>
 			<#--
 			{id:"crQuantity", name:"Qty(Cr/Can)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter}, -->
+			<#if changeFlag?exists && changeFlag!='InterUnitTransferSale'>
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
+			</#if>
 		];
 		
 			var options = {

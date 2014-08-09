@@ -97,8 +97,8 @@ under the License.
 //]]>
 </script>
 <#include "viewOrderDetails.ftl"/>
-
-<form name="dcForm" id="dcForm" method="post" 
+<#-->
+<form name="dcForm" id="dcForm" method="post" target="_blank"
 	<#if screenFlag?exists && screenFlag=="icpSales">
 		action="nonRouteGatePass.pdf"
 	<#elseif screenFlag?exists && screenFlag=="icpAmulSales">
@@ -107,8 +107,10 @@ under the License.
 		action="nonRouteGatePass.pdf"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="nonRouteGatePass.pdf"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="nonRouteGatePass.pdf"
 	</#if>>
-</form>
+</form>-->
 
 <form name="orderCancelForm" id="orderCancelForm" method="post" 
 	<#if screenFlag?exists && screenFlag=="icpSales">
@@ -119,6 +121,8 @@ under the License.
 		action="cancelPowderOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="cancelFGSOrder"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="cancelIUSTransferOrder"
 	</#if>>
 </form>
 <form name="orderApproveForm" id="orderApproveForm" method="post" 
@@ -130,6 +134,8 @@ under the License.
 		action="approvePowderOrder"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="approveFGSOrder"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="approveIUSTransferOrder"
 	</#if>>
 </form>
 
@@ -142,12 +148,14 @@ under the License.
 		action="createShipmentAndInvoiceForPowderOrders"
 	<#elseif screenFlag?exists && screenFlag=="fgsSales">
 		action="createShipmentAndInvoiceForFGSOrders"
+	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+		action="createShipAndInvForIUSTransferOrders"
 	</#if>>
 </form>
 
 <#if orderList?has_content>
   
-  <form name="listOrders" id="listOrders"  method="post">
+  <form name="listOrders" id="listOrders"  method="post" >
     <div align="right" width="100%">
     	<#if screenFlag?exists && screenFlag=="icpSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='ICP_NANDINI_SHIPMENT'/>
@@ -157,6 +165,8 @@ under the License.
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='POWDER_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="fgsSales">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='FGS_SHIPMENT'/>
+    	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
+    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='INTUNIT_TR_SHIPMENT'/>
     	</#if>
     	
     	<table width="100%">
@@ -197,9 +207,11 @@ under the License.
               	<#if eachOrder.get('statusId') == "ORDER_CREATED">
               		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#else>
-              		<td>${eachOrder.statusId?if_exists}</td>
+              	  <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
+                <td>${statusItem.description?default(eachOrder.statusId)}</td>
+              	<#--<td>${eachOrder.statusId?if_exists}</td>-->
               	</#if>
-        		<td><input type="button" name="dcReport" id="dcReport" value="Delivery Challan" onclick="javascript:getDCReport('${eachOrder.orderId?if_exists}');" target="_blank"/></td>
+              	<td><a class="buttontext" href="/byproducts/control/nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}" target="_blank"/>Delivery Challan</td>
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">
