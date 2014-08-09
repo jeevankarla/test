@@ -1190,6 +1190,7 @@ under the License.emplpunch
  	<service name="getPayHeadAmount" engine="java" auth="true" invoke="getPayHeadAmount" 
         location="in.vasista.vbiz.humanres.PayrollService">
         <description>Calculate amunt for the given payhead type</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
         <attribute name="employeeId" mode="IN" type="String"/> 
         <attribute name="proportionalFlag" mode="IN" type="String" optional="true"/> 
@@ -1201,6 +1202,7 @@ under the License.emplpunch
     <service name="calculateShiftBasePayHeadAmount" engine="java" auth="true" invoke="calculateShiftBasePayHeadAmount" 
         location="in.vasista.vbiz.humanres.PayrollService" validate="false">
         <description>Calculate amunt for the given payhead type</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
         <attribute name="employeeId" mode="IN" type="String"/> 
         <attribute name="timePeriodId" mode="IN" type="String"/>
@@ -1210,6 +1212,7 @@ under the License.emplpunch
     <service name="calculateLICPayHeadAmount" engine="java" auth="true" invoke="calculateLICPayHeadAmount" 
         location="in.vasista.vbiz.humanres.PayrollService" validate="false">
         <description>Calculate amunt for the given payhead type</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
         <attribute name="employeeId" mode="IN" type="String"/>
         <attribute name="timePeriodStart" mode="IN" type="Timestamp"/>
@@ -1222,6 +1225,7 @@ under the License.emplpunch
      <service name="calculateLoanPayHeadAmount" engine="java" auth="true" invoke="calculateLoanPayHeadAmount" 
         location="in.vasista.vbiz.humanres.PayrollService" validate="false">
         <description>Calculate amunt for the given payhead type</description>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
         <attribute name="payHeadTypeId" mode="IN" type="String"/> 
         <attribute name="employeeId" mode="IN" type="String"/>
         <attribute name="timePeriodStart" mode="IN" type="Timestamp"/>

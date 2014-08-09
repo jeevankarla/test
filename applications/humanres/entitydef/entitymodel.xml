@@ -1767,7 +1767,18 @@ under the License.
         <key-map field-name="payrollItemSeqId"/>
       </relation>
     </entity>
-    <view-entity entity-name="LoanAndRecoveryAndType"
+   <view-entity entity-name="LoanAndType"
+    package-name="org.ofbiz.humanres" title="Loan and Type and Recovery">
+      <member-entity entity-alias="LO" entity-name="Loan"/>
+      <member-entity entity-alias="LOT" entity-name="LoanType"/>
+      <alias-all entity-alias="LO"></alias-all>
+      <alias-all entity-alias="LOT"></alias-all>
+      <view-link entity-alias="LO" rel-entity-alias="LOT">
+        <key-map field-name="loanTypeId"/>
+      </view-link>
+    </view-entity>
+    
+     <view-entity entity-name="LoanAndRecoveryAndType"
     package-name="org.ofbiz.humanres" title="Loan and Type and Recovery">
       <member-entity entity-alias="LO" entity-name="Loan"/>
       <member-entity entity-alias="LOT" entity-name="LoanType"/>
@@ -1785,5 +1796,4 @@ under the License.
         <key-map field-name="loanId"/>
       </view-link>
     </view-entity>
-    
 </entitymodel>
