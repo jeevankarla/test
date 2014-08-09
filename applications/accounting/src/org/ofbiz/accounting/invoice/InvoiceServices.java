@@ -4753,5 +4753,162 @@ public class InvoiceServices {
         }
         return result;
 	}
-	
+	public static Map<String, Object> createCreditNoteOrDebitNoteForInvoice(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();              
+        Locale locale = (Locale) context.get("locale");     
+        String paymentTypeId = (String) context.get("paymentTypeId");
+        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
+        String paymentMethodId = (String) context.get("paymentMethodId");
+        String paymentPurposeType = (String) context.get("paymentPurposeType");
+        String paymentLocationId = (String) context.get("paymentLocationId");                
+        String paymentRefNum = (String) context.get("paymentRefNum");        
+        Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+        Timestamp paymentDate = (Timestamp) context.get("paymentDate");
+        String issuingAuthority = (String) context.get("issuingAuthority");
+        String issuingAuthorityBranch = (String) context.get("issuingAuthorityBranch");
+        String organizationPartyId =(String) context.get("organizationPartyId");
+        String statusId = (String) context.get("statusId");
+        String partyId =(String) context.get("partyId");
+        String facilityId =(String) context.get("facilityId");
+        String comments=(String) context.get("comments");
+        Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
+        List invoiceIds =(List) context.get("invoiceIds");
+        
+        String paymentId = "";
+        String partyIdFrom="";
+        String partyIdTo="";
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = ServiceUtil.returnSuccess(); 
+        List paymentsList =FastList.newInstance();
+       
+        for( int i=0; i< invoiceIds.size(); i++){
+        	String invoiceId = (String)invoiceIds.get(i);
+        	Map invoicePaymentInfoMap =FastMap.newInstance();
+			BigDecimal outstandingAmount =BigDecimal.ZERO;
+			BigDecimal amountAppliedRunningTotal = BigDecimal.ZERO;
+			  BigDecimal paymentAmount=BigDecimal.ZERO;
+			invoicePaymentInfoMap.put("invoiceId", invoiceId);
+			invoicePaymentInfoMap.put("userLogin",userLogin);
+			try{
+				Map<String, Object> getInvoicePaymentInfoListResult = dispatcher.runSync("getInvoicePaymentInfoList", invoicePaymentInfoMap);
+				if (ServiceUtil.isError(getInvoicePaymentInfoListResult)) {
+		            	Debug.logError(getInvoicePaymentInfoListResult.toString(), module);    			
+		                return ServiceUtil.returnError(null, null, null, getInvoicePaymentInfoListResult);
+		            }
+				Map invoicePaymentInfo = (Map)((List)getInvoicePaymentInfoListResult.get("invoicePaymentInfoList")).get(0);
+				outstandingAmount = (BigDecimal)invoicePaymentInfo.get("outstandingAmount");
+				if(outstandingAmount.compareTo(BigDecimal.ZERO) == 0){
+					break;
+				}
+			  paymentAmount=outstandingAmount;
+		      amountAppliedRunningTotal = paymentAmount;
+			}catch (GenericServiceException e) {
+				// TODO: handle exception
+				 Debug.logError(e, e.toString(), module);
+		         return ServiceUtil.returnError(e.toString());
+				
+			}
+		try{ 
+			GenericValue invoice= delegator.findOne("Invoice",UtilMisc.toMap("invoiceId", invoiceId), true);
+			if (UtilValidate.isEmpty(invoice)) {
+				Debug.logError("Invoice doesn't exists with Id: " + invoiceId,module);
+				return ServiceUtil.returnError("Invoice doesn't exists with Id: "	+ invoiceId);
+			}
+			Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentTypeId);
+            paymentCtx.put("paymentMethodTypeId", paymentMethodTypeId);
+			if (UtilValidate.isNotEmpty(invoice)) {
+				partyIdFrom = invoice.getString("partyId");
+				partyIdTo=invoice.getString("partyIdFrom");
+				if (!UtilValidate.isEmpty(effectiveDate) ) {
+	                paymentCtx.put("effectiveDate",invoice.getTimestamp("dueDate"));                        	
+	            }
+				if (UtilValidate.isNotEmpty(paymentDate) ) {
+	                paymentCtx.put("paymentDate",invoice.getTimestamp("invoiceDate"));    
+	            }
+			   }
+            paymentCtx.put("partyIdTo", partyIdTo);
+            paymentCtx.put("partyIdFrom", partyIdFrom);
+            paymentRefNum=invoiceId;
+            if (!UtilValidate.isEmpty(paymentMethodId)) {
+         	   paymentCtx.put("paymentMethodId", paymentMethodId);                       	
+            }   
+            paymentCtx.put("isEnableAcctg", context.get("isEnableAcctg"));
+            if (!UtilValidate.isEmpty(paymentLocationId) ) {
+                paymentCtx.put("paymentLocation", paymentLocationId);                        	
+            } 
+            if (!UtilValidate.isEmpty(paymentRefNum) ) {
+                paymentCtx.put("paymentRefNum", paymentRefNum);                        	
+            }
+            if (!UtilValidate.isEmpty(issuingAuthority) ) {
+                paymentCtx.put("issuingAuthority", issuingAuthority);                        	
+            }
+            if (!UtilValidate.isEmpty(issuingAuthorityBranch) ) {
+                paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);                        	
+            }
+            if (!UtilValidate.isEmpty(paymentPurposeType)) {
+                paymentCtx.put("paymentPurposeType", paymentPurposeType);                        	
+            }
+            paymentCtx.put("instrumentDate",instrumentDate);
+            paymentCtx.put("statusId", statusId);            
+            paymentCtx.put("amount", paymentAmount);
+            paymentCtx.put("userLogin", userLogin);
+            paymentCtx.put("comments", comments);
+            paymentCtx.put("facilityId", facilityId);
+            paymentCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+            paymentCtx.put("lastModifiedByUserLogin",  userLogin.getString("userLoginId"));
+            paymentCtx.put("createdDate", UtilDateTime.nowTimestamp());
+            paymentCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+            Map<String, Object> paymentResult = dispatcher.runSync("createPayment", paymentCtx);
+            if (ServiceUtil.isError(paymentResult)) {
+            	Debug.logError(paymentResult.toString(), module);    			
+                return ServiceUtil.returnError(null, null, null, paymentResult);
+            }
+            paymentId = (String)paymentResult.get("paymentId");
+            paymentsList.add(paymentId);
+            }catch (Exception e) {
+            Debug.logError(e, e.toString(), module);
+            return ServiceUtil.returnError(e.toString());
+            }
+        	 Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+             invoiceCtx.put("userLogin", userLogin);
+             invoiceCtx.put("statusId","INVOICE_READY");
+             try{
+             	Map<String, Object> invoiceResult = dispatcher.runSync("setInvoiceStatus",invoiceCtx);
+             	if (ServiceUtil.isError(invoiceResult)) {
+             		Debug.logError(invoiceResult.toString(), module);
+                     return ServiceUtil.returnError(null, null, null, invoiceResult);
+                 }
+             }catch(GenericServiceException e){
+             	 Debug.logError(e, e.toString(), module);
+                 return ServiceUtil.returnError(e.toString());
+             }
+             Map<String, Object> invoiceApplCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+             invoiceApplCtx.put("userLogin", userLogin);
+             invoiceApplCtx.put("paymentId",paymentId);                       
+             try{
+            	 Map<String, Object> invoiceTotalResult =dispatcher.runSync("getInvoiceTotal", UtilMisc.toMap("invoiceId",invoiceId ,"userLogin" ,userLogin));
+            	 if (ServiceUtil.isError(invoiceTotalResult)) {
+            		 Debug.logError(invoiceTotalResult.toString(), module);
+                     return ServiceUtil.returnError(null, null, null, invoiceTotalResult);
+                 }
+                 invoiceApplCtx.put("amountApplied", amountAppliedRunningTotal); 
+             	Map<String, Object> invoiceApplResult = dispatcher.runSync("createPaymentApplication",invoiceApplCtx);
+             	
+             	if (ServiceUtil.isError(invoiceApplResult)) {
+             		 Debug.logError(invoiceApplResult.toString(), module);
+                     return ServiceUtil.returnError(null, null, null, invoiceApplResult);
+                 }
+             	amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
+             	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
+             		break;
+             	}
+             }catch(GenericServiceException e){
+             	Debug.logError(e, e.toString(), module);
+                 return ServiceUtil.returnError(e.toString());
+             }
+        }
+        result.put("paymentsList", paymentsList);
+     return result;
+	}
 }
