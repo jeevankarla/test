@@ -141,7 +141,7 @@ invoiceIds.each { invoiceId ->
 			List prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 			prodDetail = EntityUtil.getFirst(prodDetails);
 			tempMap.put("productId", eachItem.productId);
-			tempMap.put("itemDescription", eachItem.description);
+			tempMap.put("itemDescription", prodDetails.description);
 			tempMap.put("quantityLtr", (eachItem.quantity)*prodDetail.quantityIncluded);
 			tempMap.put("quantity", eachItem.quantity);
 			tempMap.put("mrpPrice", mrpPrice);

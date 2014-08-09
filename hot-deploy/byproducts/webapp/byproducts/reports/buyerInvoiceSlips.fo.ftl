@@ -53,7 +53,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">(A UNIT OF KMF LTD.) GKVK POST : BANGALORE - 65</fo:block>
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">(ISSUED UNDER RULE 52A &amp; 173G)</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DCC NO: <#if fromPartyDetail?has_content>${fromPartyDetail.get('PLA_NUMBER')?if_exists}</#if></fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">ECC NO: <#if fromPartyDetail?has_content>${fromPartyDetail.get('PLA_NUMBER')?if_exists}</#if></fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DEPO: </fo:block>
 					            	
@@ -235,9 +235,9 @@ under the License.
 			                    <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">
 					            		<fo:table border-width="1pt" border-style="dotted">
-			            					<fo:table-column column-width="30pt"/>
-			            					<fo:table-column column-width="100pt"/>
-			            					<fo:table-column column-width="80pt"/>
+			            					<fo:table-column column-width="20pt"/>
+			            					<fo:table-column column-width="130pt"/>
+			            					<fo:table-column column-width="50pt"/>
 			            					<fo:table-column column-width="40pt"/>
 			            					<fo:table-column column-width="40pt"/>
 			            					<fo:table-column column-width="40pt"/>
@@ -256,8 +256,8 @@ under the License.
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Batch No.</fo:block>
-					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Batch</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">No.</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Qty</fo:block>
@@ -275,7 +275,8 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">MRP</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">MRP Value Rs.</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">MRP Value</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> Rs.</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Exfactory</fo:block>
@@ -288,6 +289,8 @@ under the License.
 												</fo:table-row>
 												<#assign totalAmt = 0>
 												<#assign grandTotal = 0>
+												<#assign totalMRPValue = 0>
+												<#assign totalLtr = 0>
 												<#if invoiceItems?has_content>
 													<#assign slNo = 1>
 													<#list invoiceItems as eachItem>
@@ -296,13 +299,14 @@ under the License.
 							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${slNo?if_exists}</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('itemDescription')?if_exists}</fo:block>
+							            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get('itemDescription')?if_exists)),21)}</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('batchNo')?if_exists}</fo:block>
 							            					</fo:table-cell>
+							            					<#assign totalLtr = totalLtr+eachItem.get('quantityLtr')>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists}</fo:block>
+							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('quantityLtr')?if_exists?string('#0.00')}</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('quantity')?if_exists}</fo:block>
@@ -313,12 +317,15 @@ under the License.
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('mrpPrice')?if_exists?string("#0.00")}</fo:block>
 							            					</fo:table-cell>
+							            					<#assign mrpValue = eachItem.get('mrpPrice') * eachItem.get('quantity')>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${(eachItem.get('mrpPrice') * eachItem.get('quantity'))?if_exists?string("#0.00")}</fo:block>
+							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${mrpValue?if_exists?string("#0.00")}</fo:block>
 							            					</fo:table-cell>
 							            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 							            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('defaultPrice')?if_exists?string("#0.00")}</fo:block>
 							            					</fo:table-cell>
+							            					
+							            					<#assign totalMRPValue = totalMRPValue+mrpValue>
 							            					<#assign totalItemAmt = eachItem.get('defaultPrice')*eachItem.get('quantity')>
 							            					<#assign grandTotal = grandTotal+totalItemAmt>
 							            					<#assign totalAmt = totalAmt+totalItemAmt>
@@ -340,7 +347,7 @@ under the License.
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
-					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totalLtr?if_exists?string("#0.00")}</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -352,13 +359,13 @@ under the License.
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
-					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totalMRPValue?if_exists?string("#0.00")}</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${totalAmt?if_exists?string("#0.00")}</fo:block>
+					            						<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totalAmt?if_exists?string("#0.00")}</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
 												<#if invoiceTaxItems?has_content>
@@ -407,7 +414,7 @@ under the License.
 												</fo:table-row>
 												<fo:table-row >
 			                    					<fo:table-cell number-columns-spanned="10" border-bottom-style="dotted" border-bottom-width="thin" border-color="black">
-					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">In Words: </fo:block>
+					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">(In Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(grandTotal?string("#0")), "%rupees-and-paise", locale).toUpperCase()} ONLY)</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
 			            					</fo:table-body>

@@ -153,10 +153,10 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">SL NO</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">CODE</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">CODE</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">DESCRIPTION</fo:block>
+					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">DESCRIPTION</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">QTY</fo:block>  
@@ -170,10 +170,10 @@ under the License.
 							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
 							            </fo:table-cell>
 							            <fo:table-cell>	
-							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.productId?if_exists}</fo:block>
+							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${eachItem.itemDescription?if_exists}</fo:block>
 							            </fo:table-cell>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.itemDescription?if_exists}</fo:block>
+							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${eachItem.description?if_exists}</fo:block>
 							            </fo:table-cell>
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.quantity?if_exists}</fo:block>  

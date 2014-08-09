@@ -99,10 +99,18 @@ orderIds.each{ eachOrderId ->
 	partyAddress = dispatcher.runSync("getPartyPostalAddress", [partyId: partyId, userLogin: userLogin]);
 	partyName = dispatcher.runSync("getPartyNameForDate", [partyId: partyId, userLogin: userLogin]);
 	orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId), null, null, null, false);
+	productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
+	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
+	
 	orderItemsList = [];
 	orderItems.each{eachItem ->
+		
+		List prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
+		prodDetail = EntityUtil.getFirst(prodDetails);
+		
 		tempMap = [:];
 		tempMap.put("productId",eachItem.productId);
+		tempMap.put("description",prodDetail.description);
 		tempMap.put("itemDescription",eachItem.itemDescription);
 		tempMap.put("quantity",eachItem.quantity);
 		/*tempMap.put("quantityLtr",eachItem.quantity*eachItem.quantityIncluded);*/
