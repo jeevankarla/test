@@ -69,7 +69,7 @@ function changeRowColor(){
 	$(tableObj).each( function( index, element ){
 	    var result = $(this).find("td:contains('Finalized')");
 	    var compText=$.trim($(result).text());
-		$(this).css("background-color", "#FFCC88");//initlly set to this color
+		$(this).css("background-color", "#FF8000");//initlly set to this color
 	    if (compText==("Finalized")){
 	    	 $(this).css("background-color", "#77BA72");//if finalized then reset
 	    }
@@ -78,6 +78,12 @@ function changeRowColor(){
 	    if(compTextCr==("CratesReturned")){
 	    	 $(this).css("background-color", "#98928F");// if Crates returned 
 	    } 
+	    var resultDI = $(this).find("td:contains('Dispatched')");
+	    var compTextDi=$.trim($(resultDI).text());
+	    if(compTextDi==("Dispatched")){
+	    	 $(this).css("background-color", "#FFCC88");// if Crates returned 
+	    } 
+	    
 	   
 	});
 	

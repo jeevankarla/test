@@ -695,7 +695,7 @@
             </hyperlink>
         </field> 
     </form>
-    <form name="listPowderShipments" type="list" list-name="listIt" paginate-target="FindPowderShipment"
+    <form name="listPowderShipments" type="list" list-name="listIt" paginate-target="${targetRequest}" 
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -1325,7 +1325,6 @@
         	<set field="estimatedShipDate" type="Timestamp" from-field="shipment.estimatedShipDate"/>
         	<set field="shipmentId"  from-field="shipment.shipmentId"/>
         </row-actions>
-        
         <field name="supplyDate" title="Supply Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}" /></field>
     	<field name="routeId" title="${uiLabelMap.Route}" sort-field="true"><display description="${facilityId}"/></field>
     	<field name="vehicleId"><display></display></field>  
@@ -1335,28 +1334,22 @@
         <field name="shipmentId"><hidden/></field>
         <field name="cratesSent" title="Crates Sent"><display></display></field>
         <field name="cansSent" title="Cans Sent"><display></display></field>
-        <field name="returnCrQuantity" title="Crates Received"><text default-value="${cratesReceived}"  size="10"/></field>
-        <field name="returnCnQuantity" title="Cans Received"><text default-value="${cansReceived}"  size="9"/></field>
-        <field name="UpdateCrates"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"     widget-style="buttontext"> 
+        <field name="returnCrQuantity" title="Crates Received"  use-when="&quot;${statusId}&quot;==&quot;VEHICLE_CRATE_RTN&quot; || &quot;${statusId}&quot;==&quot;VEHICLE_DISPACHED&quot;"><text default-value="${cratesReceived}"  size="10"/></field>
+        <field name="returnCnQuantity" title="Cans Received"  use-when="&quot;${statusId}&quot;==&quot;VEHICLE_CRATE_RTN&quot; || &quot;${statusId}&quot;==&quot;VEHICLE_DISPACHED&quot;"><text default-value="${cansReceived}"  size="9"/></field>
+        <field name="UpdateCrates"  use-when="&quot;${statusId}&quot;==&quot;VEHICLE_CRATE_RTN&quot; || &quot;${statusId}&quot;==&quot;VEHICLE_DISPACHED&quot;"    widget-style="buttontext"> 
            <submit button-type="button" />
         </field>
-       
-        <!--  <sort-order>
-	        <field-group>
-	        	<sort-field name="SupplyDate"/>
-		        <sort-field name="routeId"/>
-		        <sort-field name="vehicleId"/>
-		        <sort-field name="statusId"/>
-		        <sort-field name="cratesSent"/>
-		        <sort-field name="returnCrQuantity"/>
-		        <sort-field name="cansSent"/>
-		        <sort-field name="returnCnQuantity"/>
-	        </field-group>
-	        
-        </sort-order>  -->
-        
-        
-        
+         <field name="DispatchVehicle" title="Dispatch" use-when="&quot;${statusId}&quot;==&quot;VEHICLE_OUT&quot;"    widget-style="buttontext">
+            <hyperlink target="createReturnCrate"  description="Dispatch" target-window="_blank">
+                <parameter param-name="statusIdTo" value="VEHICLE_DISPACHED"  />
+                <parameter param-name="facilityId" value="${originFacilityId}"/>
+                 <parameter param-name="shipmentId"/>
+                 <parameter param-name="vehicleId"/>
+                 <parameter param-name="returnCrQuantity" value="0"/>
+                 <parameter param-name="returnCnQuantity" value="0"></parameter>
+                 <parameter param-name="supplyDate" value="${supplyDate}"></parameter>
+            </hyperlink>
+        </field>
     </form>
     <form name="ListTimePeriods" type="list" list-name="TimePeriods"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">

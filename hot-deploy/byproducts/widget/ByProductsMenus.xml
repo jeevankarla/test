@@ -494,7 +494,7 @@
          </link>
         </menu-item>
          
-        <menu-item name="PowderPlantSale" title="Powder Plant Sales"> 
+        <menu-item name="PowderPlantSale" title="Powder Product Sales"> 
         <condition>
         	<or>
         		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -505,6 +505,7 @@
       	 <link target="PowderPlantSale">    
          </link>
         </menu-item>
+        
         <menu-item name="FGSProductSale" title="FGS Product Sales"> 
         <condition>
         	<or>
@@ -516,6 +517,17 @@
       	 <link target="FGSProductSale">    
          </link>
         </menu-item> 
+       <menu-item name="InterUnitStkTr" title="Inter Unit Transfer"> 
+        <condition>
+        	<or>
+        		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
+        		<if-has-permission permission="ICPSALE"  action="_VIEW"/>
+        		
+        	</or>        		
+        </condition>  
+      	 <link target="InterUnitStkTr">    
+         </link>
+        </menu-item>
     </menu>
     
     <menu name="ReturnSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
@@ -809,6 +821,20 @@
         </menu-item>
         <menu-item name="FindPowderShipment" title="Find Shipments">
         	<link target="FindPowderShipment" />
+        </menu-item>
+      </menu>
+       <menu name="InterUnitTrTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+         <menu-item name="InterUnitStkTr" title="Order Entry">
+        	<link target="InterUnitStkTr"/>
+        </menu-item>
+        <menu-item name="ProcessInterUnitStkTr" title="Process InterUnit Stock Orders">
+        	<link target="ProcessInterUnitStkTr">
+        		<parameter param-name="salesChannelEnumId" value="INTUNIT_TR_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/>
+        	</link>
+        </menu-item>
+        <menu-item name="FindStockTranferShipment" title="Find Stock Transfer Shipments">
+        	<link target="FindStockTranferShipment" />
         </menu-item>
       </menu>
       <menu name="FGSSaleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">

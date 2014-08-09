@@ -669,6 +669,22 @@
         <response name="success" type="view" value="FGSProductSale"/>   
        <response name="failed" type="view" value="FGSProductSale"/>  
     </request-map>
+    <request-map uri="InterUnitStkTr">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InterUnitStkTr"/>   
+       <response name="failed" type="view" value="InterUnitStkTr"/>  
+    </request-map>
+     <request-map uri="ProcessInterUnitStkTr">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
+       <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
+    </request-map>
+    <request-map uri="FindStockTranferShipment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindStockTranferShipment"/>   
+       <response name="failed" type="view" value="FindStockTranferShipment"/>  
+    </request-map>
+    
     
     <request-map uri="processNandiniOrders">
         <security https="true" auth="true"/>
@@ -697,12 +713,26 @@
         <response name="success" type="view" value="ProcessPowderOrders"/>   
        <response name="failed" type="view" value="ProcessPowderOrders"/>  
     </request-map>
-    <request-map uri="approveFGSOrder">
+    <request-map uri="approveIUSTransferOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveICPOrder"/>
-        <response name="success" type="view" value="ProcessFGSOrders"/>   
-       <response name="failed" type="view" value="ProcessFGSOrders"/>  
+        <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
+       <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
     </request-map>
+     <request-map uri="cancelIUSTransferOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelICPOrder"/>
+        <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
+       <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
+    </request-map>
+     <request-map uri="createShipAndInvForIUSTransferOrders">
+        <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="createShipmentAndInvoiceForOrders"/>
+        <response name="success" type="view" value="ProcessInterUnitStkTr"/>   
+       <response name="failed" type="view" value="ProcessInterUnitStkTr"/>  
+    </request-map>
+    
+    
     <request-map uri="cancelFGSOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelICPOrder"/>
@@ -829,6 +859,16 @@
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="PowderPlantSale"/>
     </request-map>
+     <request-map uri="processInterUnitStkTrSale">
+        <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="InterUnitStkTr">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="InterUnitStkTr"/>
+    </request-map>
+    
     <request-map uri="processFGSProductSale">
         <security https="true" auth="true"/>
      	<event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices"  invoke="processIcpSale" global-transaction="true"/>
@@ -1473,5 +1513,8 @@
  <view-map name="PowderPlantSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#PowderPlantSale"/>
  <view-map name="FGSProductSale" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FGSProductSale"/>
  <view-map name="FindIcpAmulOrder" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindIcpAmulOrder"/>
+ <view-map name="InterUnitStkTr" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#InterUnitStkTr"/>
+ <view-map name="ProcessInterUnitStkTr" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#ProcessInterUnitStkTr"/>
+ <view-map name="FindStockTranferShipment" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#FindStockTranferShipment"/>
     
 </site-conf>

@@ -1670,7 +1670,7 @@
                       <include-menu name="AdhocSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
                       	<section>
                       		<widgets>
-           						<include-screen name="AdhocSaleInner"/>
+           						<include-screen name="AdhocSaleInnerOld"/>
                       		</widgets>
                       	</section>
                     </decorator-section>                                       
@@ -1678,7 +1678,7 @@
             </widgets>
         </section>
     </screen> 
-         <screen name="AdhocSaleInner">
+      <screen name="AdhocSaleInnerOld">
         <section>
             <actions>
                <set field="changeFlag" from-field="changeFlag"/> 
@@ -1710,6 +1710,54 @@
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>
               <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  --> 
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/>
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/> -->
+               <set field="routeId" from-field="parameters.routeId"/>            
+            </actions>
+            <widgets>
+               	<section>
+                 	 <widgets>
+          					<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/indentAdhocSale.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen> 
+    <screen name="AdhocSaleInner">
+        <section>
+            <actions>
+               <set field="changeFlag" from-field="changeFlag"/> 
+               <set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+               <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+               </entity-one>
+              
+            
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+               <set field="checkListType" value="indentEntry"/>
+               <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                <entity-condition entity-name="Enumeration" list="prodSubTypes" use-cache="true">
+                	<condition-list>
+                    	<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/>  
+                    	<condition-expr field-name="enumId" operator="not-equals" value="CARD"/> 
+                    	 <condition-expr field-name="enumId" operator="not-equals" value="LEAK"/>  
+                    </condition-list>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+              
+                <entity-condition entity-name="Product" list="productList" use-cache="true">
+                </entity-condition>                
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/>
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/>  --> 
+              <!--   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
                 <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
                <set field="routeId" from-field="parameters.routeId"/>            
             </actions>
@@ -3079,7 +3127,7 @@
     <screen name="PowderPlantSale">
         <section>
             <actions>
-               <set field="titleProperty" value="Powder Plant Sales"/>              
+               <set field="titleProperty" value="Powder Product Sales"/>              
 			   <set field="tabButtonItem" value="PowderPlantSale" />	
 			   <set field="tabButtonItem2" value="PowderPlantSale"/>  
 			    <set field="changeFlag" value="PowderSales"/>  
@@ -3230,7 +3278,7 @@
                       <include-menu name="FGSSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
                         <section>
                             <widgets>
-               					<screenlet title="Powder Plant Orders">
+               					<screenlet title="FGS Orders">
                						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
                					</screenlet>
                             </widgets>
@@ -3259,10 +3307,10 @@
             <widgets>
                    <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                       <decorator-section name="body">  
-                      <include-menu name="FGSSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                      <include-menu name="PowderPlantSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
                         <section>
                             <widgets>
-               					<screenlet title="FGS Orders">
+               					<screenlet title="Powder Plant Orders">
                						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
                					</screenlet>
                             </widgets>
@@ -3558,7 +3606,119 @@
             </widgets>            
         </section>
     </screen> 
-    	<screen name="TimePeriod">
+     <screen name="InterUnitStkTr">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Inter Unit Transfer"/>              
+			   <set field="tabButtonItem" value="InterUnitStkTr" />	
+			   <set field="tabButtonItem2" value="InterUnitStkTr"/>  
+			    <set field="changeFlag" value="InterUnitTransferSale"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="orderFacility" from-field="parameters.orderFacility"/> 
+               <set field="orderRoute" from-field="parameters.orderRoute"/> 
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+			  <!--  <set field="parameters.roleTypeId" value="POWDER_CUSTOMER"/>	 -->
+			   <set field="parameters.roleTypeId" value="UNITS"/>							  					  
+            </actions>
+            <widgets>
+              <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">   
+                      <include-menu name="InterUnitTrTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	           						<include-screen name="AdhocSaleInner"/>
+	                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                         <widgets>
+     						 <include-screen name="SalesInnerScreen"/>
+                		</widgets>
+                      </section>
+                      
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ProcessInterUnitStkTr">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Inter Unit Transfer"/>              
+			    <set field="tabButtonItem" value="InterUnitStkTr" />	
+			   <set field="tabButtonItem2" value="ProcessInterUnitStkTr"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+               <set field="shipmentTypeId" from-field="parameters.shipmentTypeId"/>
+               <set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+               <set field="screenFlag" value="InterUnitTransferSale"/>
+               <script	location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" />
+            </actions>
+            <widgets>
+                   <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="InterUnitTrTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+               					<screenlet title="Inter Unit Transfer Orders">
+               						<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/byproducts/ListSearchIceCreamOrders.ftl"/></html></platform-specific>
+               					</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+     <screen name="FindStockTranferShipment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Stock Transfer Shipment"/>              
+			    <set field="tabButtonItem" value="InterUnitStkTr" />	
+			   <set field="tabButtonItem2" value="FindStockTranferShipment"/>       
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindStockTranferShipment"/>
+               <set field="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
+            </actions>
+            <widgets>
+                  <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+                      <decorator-section name="body">  
+                      <include-menu name="InterUnitTrTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/> 
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindICPShipment" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="Inter Unit Stock Transfrd Shipments">
+                      						<include-form name="listPowderShipments" location="component://byproducts/widget/ByProductsNgForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
+   <screen name="TimePeriod">
 		<section>
 			<actions>
 				<set field="titleProperty" value="TimePeriod" />
