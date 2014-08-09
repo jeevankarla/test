@@ -32,7 +32,7 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>   
         <attribute name="paymentMethodTypeId" mode="INOUT" type="String" optional="true"></attribute> <!-- USING FOR NON ROUTE PAYMENT SCREEN -->
-         <attribute name="subTabItem" mode="INOUT" type="String" optional="true"></attribute>     
+         <attribute name="subTabItem" mode="INOUT" type="String" optional="true"></attribute>    
         <override name="paymentTypeId" optional="false"/>
         <override name="partyIdFrom" optional="false"/>
         <override name="partyIdTo" optional="false"/>
@@ -243,7 +243,27 @@ under the License.
         <attribute name="comments" type="String" mode="IN" optional="true"/>    
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>  
         <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>  
-     
+    </service>
+        <service name="createCreditNoteOrDebitNoteForInvoice" engine="java"
+            location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createCreditNoteOrDebitNoteForInvoice" auth="true">
+        <description>create CreditNote OR DebitNote Invoice and Application</description>
+        <attribute name="invoiceIds" type="List" mode="IN" optional="true"/>
+        <attribute name="paymentPurposeType" type="String" mode="IN" optional="true"/>
+        <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paymentDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="amount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentLocationId" type="String" mode="IN" optional="true"/>     
+        <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>   
+        <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
+        <attribute name="issuingAuthorityBranch" type="String" mode="IN" optional="true"/>
+        <attribute name="instrumentDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="isEnableAcctg" type="String" mode="IN" optional="true"/>  
+        <attribute name="comments" type="String" mode="IN" optional="true"/> 
+        <attribute name="statusId" type="String" mode="IN" optional="true"/> 
+        <attribute name="paymentsList" type="List" mode="OUT" optional="true"/> 
     </service>
     <service name="settleInvoiceAndPayments" engine="java"
             location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="settleInvoiceAndPayments" auth="true">
