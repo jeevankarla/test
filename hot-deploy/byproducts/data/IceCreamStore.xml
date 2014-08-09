@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!-- <ProductStore addToCartRemoveIncompat="Y"
 	addToCartReplaceUpsell="Y" allowPassword="Y" autoApproveInvoice="Y"
 	autoApproveOrder="Y" autoApproveReviews="N" autoInvoiceDigitalItems="Y"
@@ -99,7 +100,7 @@
 	usePrimaryEmailUsername="N" viewCartOnAdd="N" /> 
 	
 	
-	 <ProdCatalog catalogName="Nandini Store Catalog"  prodCatalogId="ICE_CREAM_AMUL" useQuickAdd="N"/> 
+	<ProdCatalog catalogName="Nandini Store Catalog"  prodCatalogId="ICE_CREAM_AMUL" useQuickAdd="N"/> 
 	<ProductStoreCatalog  fromDate="2014-01-20 00:00:00.0" prodCatalogId="ICE_CREAM_AMUL" productStoreId="1005"/>
 	
       <ProductStore addToCartRemoveIncompat="Y"
@@ -148,6 +149,17 @@
     
     
     
-     <Enumeration  description="WholeSale Reatailer" enumCode="WHS_RTLR" enumId="WHS_RTLR" enumTypeId="BOOTH_CAT_TYPE"  sequenceId="9"/> 
-	 
+     
+	 <ShipmentType description="ICP Nandini Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_NANDINI_SHIPMENT"/>
+	<ShipmentType description="ICP Amul Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="ICP_AMUL_SHIPMENT"/>
+	<ShipmentType description="Powder Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="POWDER_SHIPMENT"/>
+    <ShipmentType description="FGS Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="FGS_SHIPMENT"/>
+    <ShipmentType description="Inter Unit Transfer Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="INTUNIT_TR_SHIPMENT"/>
+    
+    <Enumeration  description="WholeSale Reatailer" enumCode="WHS_RTLR" enumId="WHS_RTLR" enumTypeId="BOOTH_CAT_TYPE"  sequenceId="9"/> 
+    <Enumeration description="FGS Product Channel" enumCode="FGS CHANNEL" enumId="FGS_PRODUCT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+    <Enumeration description="Powder Plant Channel" enumCode="POWDER PLANT CHANNEL" enumId="POWDER_PLANT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	<Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	<Enumeration description="ICP Nandini channel" enumCode="ICP Nandini" enumId="ICP_NANDINI_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
+	<Enumeration description="Inter Unit Transfer Channel" enumCode="Inter Unit Transfer Channel" enumId="INTUNIT_TR_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	 
