@@ -1,17 +1,11 @@
 
 
 <style type="text/css">
-		div.graph
+		#datatable1
 		{
-			width: 300px;
-			height: 400px;
+			border-collapse: separate;
 		}
-		label
-		{
-			display: block;
-			margin-left: 400px;
-			padding-left: 1em;
-		}
+
 		
 	.dataTables_filter input {
   		border-style: groove;    
@@ -39,7 +33,7 @@ $(document).ready(function() {
 	</#if> 
 //alert("numPayheads="+numPayheads);
 	tfooter = tfooter + '</tr></tfoot>';
-	$('#salaryAnalysisTable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable1">' + tfooter + '</table>' );
+	$('#salaryAnalysisTable').html( '<table cellpadding="0" cellspacing="0" border="0" width="100%" class="display" id="datatable1">' + tfooter + '</table>' );
 
 	var datatable1 = $('#datatable1').dataTable( {
 		"data": salaryTableData,
@@ -53,7 +47,9 @@ $(document).ready(function() {
 			</#list>			
 		</#if>											
 		],
-		"iDisplayLength" : 100,
+		"iDisplayLength" : 50,
+		"scrollX": "100%",
+		"bScrollCollapse": true,
         "sDom": 'lfTrtip',		
 		"tableTools": {
                 "sSwfPath": "<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf</@ofbizContentUrl>",
@@ -76,7 +72,7 @@ $(document).ready(function() {
         },
         "footerCallback": function ( row, data, start, end, display ) {
 			var api = this.api();
-            $( api.column( 0).footer() ).html("Total");                      
+            $( api.column( 2).footer() ).html("Total");                      
             // Total over all pages
             for (i = 0; i < numPayheads; ++i) {
             	var index = 3 + i;
@@ -89,8 +85,16 @@ $(document).ready(function() {
         }		
 	 });
 	 
-	 datatable1.fnSort( [ [0,'asc'] ] );	 
+	 datatable1.fnSort( [ [0,'asc'] ] );
 	 
+	 var api = datatable1.api();
+//	 api.search('x').draw();
+//	 api.search(' ').draw();
+	 	 	 
+	 //datatable1.fnFilter("x");
+	 //datatable1.fnFilter(""); 
+	 //new $.fn.dataTable.FixedHeader( datatable1 );
+	 //new $.fn.dataTable.FixedColumns( datatable1, {"iLeftColumns": 3, "iRightColumns": 0} );	 
  	 
 });
 </script>
@@ -99,7 +103,7 @@ $(document).ready(function() {
 <div class="container">
 <div class="screenlet">
 	<div class="screenlet-title-bar">
-      	<h3>Employe Wise Pay Sheet</h3>	
+      	<h3>Employee Wise Pay Sheet</h3>	
      </div>
     <div class="screenlet-body">
     	<div id="salaryAnalysisTable"/>
