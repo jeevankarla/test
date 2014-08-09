@@ -218,6 +218,43 @@
 			</widgets>
 		</section>
 	 </screen>
+	  <screen name="ApprovalHolidays">
+		<section>
+			<actions>
+				<set field="headerItem" value="Attendance" />
+				<set field="tabButtonItem" value="Attendance" />
+ 				<set field="tabButtonItem2" value="EditHolidays" />                                           				
+				<set field="titleProperty" value="EditHolidays" />
+			</actions>
+			<widgets>
+				<decorator-screen name="HumanresCommonDecorator"
+					location="component://humanres/widget/CommonScreens.xml">
+					<decorator-section name="body"> 
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>                                                        					   					
+                        <screenlet title="Find Holidays">
+                        <include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="EditHolidays"/>
+                        </screenlet> 
+                         <include-screen name="holidays" location="component://humanres/widget/HumanresScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+			</widgets>
+		</section>    
+    </screen>
+    <screen name="holidays">
+	 	<section>
+			<actions>
+			</actions>
+			<widgets>
+			 <section>
+				<widgets>
+					<screenlet  title="Holidays Details">
+                       		<include-form name="HolidaysList" location="component://humanres/widget/ReportHumanresSummaryForms.xml"/>
+					</screenlet>
+			  </widgets>
+			</section>
+			</widgets>
+		</section>
+	 </screen>
 	 <screen name="EmployeeAttendanceInternal">
         <section>
             <actions>

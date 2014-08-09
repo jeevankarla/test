@@ -713,7 +713,40 @@
 	    <!-- <field name="extraMin" title="Extra Minutes"><display/></field>-->
 	     <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
-    
+    <form name="EditHolidays" type="single" header-row-style="header-row" default-table-style="basic-table" target="findHolidays">
+		<field name="hideSearch"><hidden value="Y" /></field>
+		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+		 <field name="partyId" title="Employee Id" required-field="true">
+			<lookup target-form-name="LookupEmployeeName"/>
+		</field>
+		<field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+		<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>
+    </form>
+    <form name="HolidaysList" type="list" list-name="holidaysList" default-table-style="basic-table hover-bar" target="updatEncashmentStatus">
+    	<actions>
+    		 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/editLateHours.groovy"/>
+    	</actions>
+    	<field name="partyId" title="EmployeeId"><display/></field>
+    	<field name="seqId"><hidden/></field>
+    	<field name="date" title="Date"><display/></field>
+    	<field name="timePeriodId"><hidden/></field>
+    	<field name="encashmentStatus">
+    	<drop-down allow-empty="true">
+    		<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+    			<entity-constraint name="enumTypeId" operator="equals" value="ENCASHMENT_STATUS"/>
+    		</entity-options>
+    	</drop-down>
+    	</field>
+    	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
     <form name="ArrearDays" type="single" header-row-style="header-row" default-table-style="basic-table" target="findArrearDays">
    		 <field name="hideSearch"><hidden value="Y" /></field>
 		 <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>

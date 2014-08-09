@@ -2781,7 +2781,8 @@ public class PayrollService {
 	        }catch (Exception e) {
 				// TODO: handle exception
 	        	 Debug.logError(e, module);             
-	             return ServiceUtil.returnError("Failed to populate payrollattedance " + e);
+	            
+	        	 return ServiceUtil.returnError("Failed to populate payrollattedance " + e);
 			}
 	       Map<String, Object> result = ServiceUtil.returnSuccess();
 	      //result.put("lastCloseAttedancePeriod", lastCloseAttedancePeriod);
@@ -2866,6 +2867,8 @@ public class PayrollService {
 	      GenericValue userLogin = (GenericValue) context.get("userLogin");
 	      String partyId = (String) context.get("partyId");
 	      Date date=(Date)context.get("date");
+	      String timePeriodId = (String)context.get("timePeriodId");
+	      String encashmentStatus=(String) context.get("encashmentStatus");
 	      BigDecimal overrideLateMin=(BigDecimal)context.get("overrideLateMin");
 	      Map result = ServiceUtil.returnSuccess();
 	      try{
@@ -2885,8 +2888,37 @@ public class PayrollService {
   				Debug.logError(e, module);
   				return ServiceUtil.returnError(e.toString());
   			}
+  		try{
+  			
+  			List conditionLis=FastList.newInstance();
+  			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
+  			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
+  			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
+  			List<GenericValue> statusList=delegator.findList("PeriodBilling",conditon, null, null,null,false);
+		  	if(UtilValidate.isEmpty(statusList)){
+		  		List conditionList = FastList.newInstance();
+  				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId));
+  				conditionList.add(EntityCondition.makeCondition("date", EntityOperator.EQUALS , date));
+  				EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+  				List<GenericValue> EmplDailyAttendanceDetail = delegator.findList("EmplDailyAttendanceDetail", condition, null, null, null, false);
+  				for (int i = 0; i < EmplDailyAttendanceDetail.size(); ++i) {
+  					GenericValue DailyAttendanceDetail = EmplDailyAttendanceDetail.get(i);
+  					DailyAttendanceDetail.set("encashmentStatus",encashmentStatus);
+  					DailyAttendanceDetail.store();
+  				}
+		  	}
+		  	else{
+		  		Debug.logError("Already Payroll Generated ",module);
+		  		return ServiceUtil.returnError("Already Payroll Generated ");
+		  	}
+  			
+  		}catch (GenericEntityException e) {
+  				Debug.logError(e, module);
+  				return ServiceUtil.returnError(e.toString());
+  			}
   		result = ServiceUtil.returnSuccess("Successfully Updated!!");
   		return result;
+  		
   	}
 			
 

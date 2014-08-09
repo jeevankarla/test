@@ -16,8 +16,13 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 
 dctx = dispatcher.getDispatchContext();
 emplList=[];
+holidaysList=[];
+workedHolidaysList=[];
+holidays=[];
+partyId=parameters.partyId;
 timePeriodId=parameters.customTimePeriodId;
 if(UtilValidate.isNotEmpty(timePeriodId)){
+	context.timePeriodId=timePeriodId;
 		dates=delegator.findOne("CustomTimePeriod", [customTimePeriodId:timePeriodId], false);
 		fromDate=UtilDateTime.toDateString(dates.get("fromDate"), "MMM dd, yyyy");
 		thruDate=UtilDateTime.toDateString(dates.get("thruDate"), "MMM dd, yyyy");
@@ -69,7 +74,29 @@ if(UtilValidate.isNotEmpty(timePeriodId)){
 		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		emplList = delegator.findList("EmplDailyAttendanceDetail", condition ,null,null, null, false );
 		
+		
+		List holidayconditionList=[];
+		holidayconditionList.add(EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDateStart));
+		holidayconditionList.add(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDateEnd));
+		holidaycondition=EntityCondition.makeCondition(holidayconditionList,EntityOperator.AND);
+		holidaysList = delegator.findList("HolidayCalendar", holidaycondition ,null,null, null, false );
+		
+		secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(thruDateEnd),0,2,timeZone,locale), -1);
+		if(UtilValidate.isNotEmpty(holidaysList)){
+			holidaysList.each{ days ->
+				holidays.add(UtilDateTime.toSqlDate(days.get("holiDayDate")));
+			}
+		}
+		holidays.add(UtilDateTime.toSqlDate(secondSaturDay));
+		List conList=[];
+		conList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+		conList.add(EntityCondition.makeCondition("date",EntityOperator.IN,holidays));
+		con=EntityCondition.makeCondition(conList,EntityOperator.AND);
+		workedHolidaysList = delegator.findList("EmplDailyAttendanceDetail", con ,null,null, null, false );
+		
+		
 	}
 }
 context.emplList=emplList;
+context.holidaysList=workedHolidaysList;
 

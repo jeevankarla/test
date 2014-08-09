@@ -101,7 +101,14 @@ under the License.emplpunch
 		<auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>  
     </service>
-
+	<service name="updatEncashmentStatus" engine="java" default-entity-name="EmplDailyAttendanceDetail"
+    		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateLateMins" auth="true">
+    	<description>Upadate Encashment Status</description>
+    	<permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
+		<auto-attributes mode="IN" include="pk" optional="false"/>
+		<attribute name="timePeriodId" mode="IN" type="String" optional="false"></attribute>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>    
+    </service>
     <service name="updatePartySkill" engine="simple" default-entity-name="PartySkill"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="updatePartySkill" auth="true">
         <description>Update a PartySkill</description>
