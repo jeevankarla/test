@@ -198,13 +198,13 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      		  	<td width="25%">Insurance Type 
 					 	<select name="InsuranceType" class='h4'>
 							<#list finalInsuranceTypeList as org>    
-	  	    					<option value='${org.enumId}'>${org.description?if_exists}</option>
+	  	    					<option value='${org.insuranceTypeId}'>${org.description?if_exists}</option>
 							</#list> 
 						</select>
 					</td>
 					<td width="40%">Period Id
 			  			<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
-			  				<#list customTimePeriodList?sort_by("fromDate") as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
+			  				<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list>
 			  			</select>
 			  		</td>	
 					<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
