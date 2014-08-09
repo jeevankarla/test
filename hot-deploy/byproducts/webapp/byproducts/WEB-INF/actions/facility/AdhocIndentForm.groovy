@@ -18,6 +18,7 @@ import org.ofbiz.product.product.ProductWorker;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
 
+
 if(parameters.boothId){
 	parameters.boothId = parameters.boothId.toUpperCase();
 }
@@ -42,6 +43,9 @@ if(changeFlag=="PowderSales"){
 }
 if(changeFlag=="FgsSales"){
 	productCatageoryId="ICE_CREAM_AMUL";
+}
+if(changeFlag=="InterUnitTransferSale"){
+	productCatageoryId="MILK_POWDER";//later we should change tranferble products only
 }
 subscriptionProdList = [];
 displayGrid = true;
@@ -145,10 +149,14 @@ if(facility){
 			inputProductRate.put("geoTax", "CST");
 		}
 	}
+	if(changeFlag!="InterUnitTransferSale"){
 	priceResultMap = ByProductNetworkServices.getStoreProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);
+	}
 }
- 
-prodPriceMap = (Map)priceResultMap.get("priceMap");
+prodPriceMap=[:];
+if(changeFlag!="InterUnitTransferSale"){//for Stock Transfer price no need to populate
+	prodPriceMap = (Map)priceResultMap.get("priceMap");
+}
 
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
