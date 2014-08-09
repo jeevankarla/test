@@ -708,7 +708,11 @@
      
       <PaymentMethodType description="Bank Payments" paymentMethodTypeId="BANK"  />
       <PaymentMethodType description="Cash Payments" paymentMethodTypeId="CASH"  />
-      <PaymentMethodType description="Company Check" paymentMethodTypeId="COMPANY_CHECK" defaultGlAccountId="" parentTypeId="BANK" />
-      <PaymentMethodType description="Cash Receipt" paymentMethodTypeId="CASH_PAYIN" defaultGlAccountId="" parentTypeId="CASH"/>
-    
+      <PaymentMethodType  paymentMethodTypeId="COMPANY_CHECK" defaultGlAccountId="" parentTypeId="BANK" />
+       <PaymentMethodType  paymentMethodTypeId="COMPANY_CHECK" defaultGlAccountId="" parentTypeId="BANK" />
+      <PaymentMethodType  paymentMethodTypeId="CASH_PAYIN" defaultGlAccountId="" parentTypeId="CASH"/>
+      <PaymentMethodType  paymentMethodTypeId="CASH_PAYOUT" parentTypeId="CASH"/>
+      <PaymentMethodType  paymentMethodTypeId="CHEQUE_PAYOUT" parentTypeId="BANK"/>
+      <PaymentMethodType description="Debit Note" paymentMethodTypeId="DEBITNOTE"  />
+      <PaymentMethod  description="Debit Note" finAccountId="DEBITNOTE" fromDate="2011-07-12 00:00:00.0" glAccountId="659003"  partyId="Company" paymentMethodId="DEBITNOTE" paymentMethodTypeId="DEBITNOTE"/>
 </entity-engine-xml>
