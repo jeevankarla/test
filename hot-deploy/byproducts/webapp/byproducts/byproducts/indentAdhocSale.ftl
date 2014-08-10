@@ -219,6 +219,7 @@ $(document).ready(function(){
           		</td>
           	</#if>
     	<#else>
+    		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId}"/>
 		 	<#if party?exists && party?has_content>  
 	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
           		<td valign='middle'>

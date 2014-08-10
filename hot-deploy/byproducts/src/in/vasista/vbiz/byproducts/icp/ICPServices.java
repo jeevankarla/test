@@ -52,8 +52,6 @@ public class ICPServices {
 
     public static final String module = ICPServices.class.getName();
 
-   
-    
 	    
     public static Map<String, Object> getIceCreamFactoryStore(Delegator delegator){
         
@@ -85,6 +83,37 @@ public class ICPServices {
     	return result;
 	}
     
+    public static Map<String, Object> getProductStoreByGroupId(Delegator delegator, String productStoreGroupId){
+        
+    	Map<String, Object> result = FastMap.newInstance(); 
+        List<GenericValue> byProdStores =FastList.newInstance();
+        if(UtilValidate.isEmpty(productStoreGroupId)){
+        	productStoreGroupId = "BYPRODUCTS";
+        }
+        try{
+           	if(UtilValidate.isNotEmpty(productStoreGroupId)){
+           		byProdStores = delegator.findList("ProductStoreGroupMember", EntityCondition.makeCondition(EntityOperator.AND, "productStoreGroupId", productStoreGroupId), null, null, null, false);
+            }
+        }catch (GenericEntityException e) {
+            	Debug.logError(e, module);
+        }
+        for (GenericValue byProdStore : byProdStores) {
+        	GenericValue productStore = null;
+     		try {
+     			productStore = byProdStore.getRelatedOne("ProductStore");
+     		} catch (GenericEntityException e) {
+     			Debug.logError(e, module); 
+     		}
+     		if(UtilValidate.isNotEmpty(productStore.getString("isFactoryStore")) && (productStore.getString("isFactoryStore").equals("Y")  )){
+     			String productStoreId = productStore.getString("productStoreId");
+     			result.put("factoryStore", productStore);
+     			result.put("factoryStoreId", productStoreId);
+     			continue;
+     		}
+         }
+    	return result;
+	}
+    
 public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map context) {
 		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -104,7 +133,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String orderId = (String) context.get("orderId");
-		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");	
 		try{
 			if(UtilValidate.isNotEmpty(orderId)){
 				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
@@ -351,12 +380,17 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		else{
 			effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 		}
-		
+		if( UtilValidate.isEmpty(vehicleId)){
+			Debug.logWarning("Vehicle  number is empty ", module);
+			request.setAttribute("_ERROR_MESSAGE_", "Vehicle number is empty");
+			return "error";
+		}
 		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		if (rowCount < 1) {
-			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
-			return "success";
+			Debug.logError("No rows to process, as rowCount " + rowCount, module);
+			request.setAttribute("_ERROR_MESSAGE_", "No rows to process");
+			return "error";
 		}
 		try{
 			
@@ -505,6 +539,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
+		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderTaxType = (String) request.getParameter("orderTaxType");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
 		String subscriptionTypeId = "AM";
@@ -561,7 +596,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 		if (rowCount < 1) {
 			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
-			return "success";
+			return "error";
 		}
 	  
 		List indentProductList = FastList.newInstance();
@@ -613,10 +648,10 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		if( UtilValidate.isEmpty(indentProductList)){
 			Debug.logWarning("No rows to process, as rowCount = " + rowCount, module);
 			request.setAttribute("_ERROR_MESSAGE_", "No rows to process, as rowCount =  :" + rowCount);
-			return "success";
+			return "error";
 		}
-		String productStoreId = (String) (getIceCreamFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
-	 
+		/*String productStoreId = (String) (getIceCreamFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
+*/	 
 		processOrderContext.put("userLogin", userLogin);
 		processOrderContext.put("productQtyList", indentProductList);
 		processOrderContext.put("partyId", partyId);
@@ -632,6 +667,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			return "error";
 		}
 		
+		request.setAttribute("_EVENT_MESSAGE_", "Entry successfully");
 		return "success";
 	}
 	

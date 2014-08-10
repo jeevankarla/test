@@ -1662,7 +1662,8 @@
                <set field="supplyDate" from-field="parameters.supplyDate"/>
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
-					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />					  					  
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+										  					  
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3053,6 +3054,8 @@
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
 				 <set field="parameters.roleTypeId" value="FGS_WHOLESALE"/>
+				 <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3093,13 +3096,16 @@
                <set field="orderRoute" from-field="parameters.orderRoute"/> 
                <set field="supplyDate" from-field="parameters.supplyDate"/>
                 <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+                <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'ICECREAM_PRODUCTS')}" />
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
 				 <set field="parameters.roleTypeId" value="IC_WHOLESALE"/>
+				 
             </actions>
             <widgets>
-              <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
+            	<decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
                       <decorator-section name="body">   
                       <include-menu name="IcpSaleTabBar" location="component://byproducts/widget/ByProductsMenus.xml"/>
                       	<section>
@@ -3138,10 +3144,12 @@
                <set field="orderRoute" from-field="parameters.orderRoute"/> 
                <set field="supplyDate" from-field="parameters.supplyDate"/>
                 <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
-               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
-			   <set field="defaultEffectiveDate" 
+               	<set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   	<set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-			   <set field="parameters.roleTypeId" value="POWDER_CUSTOMER"/>							  					  
+			   	<set field="parameters.roleTypeId" value="POWDER_CUSTOMER"/>
+			   	<set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'POWDER_PLANT')}" />
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>							  					  
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
@@ -3188,7 +3196,9 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-			   <set field="parameters.roleTypeId" value="EXCLUSIVE_CUSTOMER"/>							  					  
+			   <set field="parameters.roleTypeId" value="EXCLUSIVE_CUSTOMER"/>
+			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'ICECREAM_PRODUCTS')}" />
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>							  					  
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">

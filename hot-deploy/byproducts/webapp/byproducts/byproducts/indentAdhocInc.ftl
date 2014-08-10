@@ -92,10 +92,13 @@
 		<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 			var partyId = $("#partyId").val();
 			var orderTaxType = $("#orderTaxType").val();
+			var productStoreId = $("#productStoreId").val();
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "partyId").val(partyId);
 			var tax = jQuery("<input>").attr("type", "hidden").attr("name", "orderTaxType").val(orderTaxType);
+			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			jQuery(formId).append(jQuery(party));
 			jQuery(formId).append(jQuery(tax));
+			jQuery(formId).append(jQuery(productStore));
 		</#if>
 		
 		jQuery(formId).attr("action", action);	

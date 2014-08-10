@@ -189,8 +189,8 @@ under the License.
           <td>Order Date</td>
           <td>View Order</td>
           <td>Edit Batch</td>
-          <td>DC Report</td>
           <td>Approve</td>
+          <td>DC Report</td>
           <td>Cancel</td>
 		  <td align="right" cell-padding>${uiLabelMap.CommonSelect} <input type="checkbox" id="checkAllOrders" name="checkAllOrders" onchange="javascript:toggleOrderId(this);"/></td>
           
@@ -212,9 +212,9 @@ under the License.
               	<#else>
               		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
-              		<td><input type="button" name="dcReport" id="dcReport" value="Delivery Challan" onclick="javascript:getDCReport('${eachOrder.orderId?if_exists}');" target="_blank"/></td>
+              		<td><a class="buttontext" href="/byproducts/control/nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}" target="_blank"/>Delivery Challan</td>
               	</#if>
-              	<td><a class="buttontext" href="/byproducts/control/nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}" target="_blank"/>Delivery Challan</td>
+              	
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
               	<#--<td><input type="text" name="paymentAmount" id="paymentAmount" onchange="javascript: getPaymentTotal();"></td>-->
               	<#if eachOrder.get('statusId') == "ORDER_APPROVED">

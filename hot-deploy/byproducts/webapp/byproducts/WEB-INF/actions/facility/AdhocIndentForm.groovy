@@ -126,9 +126,7 @@ if(UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
 else{
 	prodList =ByProductNetworkServices.getByProductProducts(dispatcher.getDispatchContext(), UtilMisc.toMap());
 }
-productStoreId = ICPServices.getIceCreamFactoryStore(delegator).get("factoryStoreId");
 Map inputProductRate = FastMap.newInstance();
-inputProductRate.put("productStoreId", productStoreId);
 inputProductRate.put("facilityId",boothId);
 inputProductRate.put("partyId",partyId);
 inputProductRate.put("userLogin",userLogin);
