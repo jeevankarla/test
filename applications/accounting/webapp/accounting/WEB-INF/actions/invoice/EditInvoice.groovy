@@ -142,8 +142,31 @@ if (invoice) {
     terms = invoice.getRelated("InvoiceTerm");
     context.terms = terms;
 
+	//for payment
+	printPaymentsList = FastList.newInstance();
     paymentAppls = delegator.findByAnd("PaymentApplication", [invoiceId : invoiceId]);
+	if(UtilValidate.isNotEmpty(paymentAppls)){
+		paymentDetails = EntityUtil.getFirst(paymentAppls);
+		if(UtilValidate.isNotEmpty(paymentDetails)){
+			paymentId = paymentDetails.paymentId;
+			if(UtilValidate.isNotEmpty(paymentId)){
+				tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
+				tempprintPaymentsList.each{paymentRecipt->
+					tempprintPaymentMap=[:];
+					tempprintPaymentMap.putAll(paymentRecipt);
+					totalAmount=paymentRecipt.amount;
+				
+					amountwords=UtilNumber.formatRuleBasedAmount(totalAmount,"%rupees-and-paise", locale).toUpperCase();
+					tempprintPaymentMap.put("amountWords",amountwords);
+					printPaymentsList.add(tempprintPaymentMap);
+					context.put("printPaymentsList",printPaymentsList);
+				}
+			}
+		}
+	}
     context.payments = paymentAppls;
+	
+	
 
     orderItemBillings = delegator.findByAnd("OrderItemBilling", [invoiceId : invoiceId], ['orderId']);
     orders = new LinkedHashSet();
@@ -170,3 +193,11 @@ if (invoice) {
         context.invoiceDate = "N/A";
     }
 }
+
+
+
+
+
+
+
+

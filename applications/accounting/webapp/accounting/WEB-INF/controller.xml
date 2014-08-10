@@ -2300,6 +2300,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DebitNote"/>
     </request-map>
+    <request-map uri="invoiceVoucher">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="invoiceVoucher"/>
+    </request-map>
 
     <!-- ================ Entity Lookup Requests ================= -->
     <request-map uri="LookupProduct" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
@@ -2351,7 +2355,6 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PrintInvoices"/>
     </request-map>
-
     <!--Global GL Settings -->
     <request-map uri="globalGLSettings">
         <security auth="true" https="true"/>
@@ -3341,6 +3344,7 @@ under the License.
 
     <view-map name="paymentReport" type="screen" page="component://accounting/widget/PaymentScreens.xml#PaymentReport"/>
     <view-map name="DebitNote" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#DebitNote" content-type="application/pdf"/>
+    <view-map name="invoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#invoiceVoucher" content-type="application/pdf"/>
     <view-map name="ViewPaymentReportHtml" type="birt" page="component://accounting/webapp/accounting/payment/report/PaymentReport.rptdesign" content-type="text/html"/>
     <view-map name="ViewPaymentReportPdf" type="birt" page="component://accounting/webapp/accounting/payment/report/PaymentReport.rptdesign" content-type="application/pdf"/>
 
