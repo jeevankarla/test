@@ -2829,14 +2829,21 @@ public class PayrollService {
 	      						employPayrollDetails.store();
 	      					}
 	      					else{
-	      						noOfPayableDays=noOfPayableDays.subtract(arrearDays);
+	      						  if(noOfArrearDays.compareTo(BigDecimal.ZERO)>0){
+	      							noOfPayableDays=noOfPayableDays.subtract(arrearDays);
 	      							noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
 	      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
 	      							employPayrollDetails.set("noOfArrearDays",noOfArrearDays);
 	      							employPayrollDetails.store();
+	      						  }
+	      						    
 	      					}
-	      					if(UtilValidate.isNotEmpty(lossOfPayDays)){
-	      						employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
+	      					if(UtilValidate.isNotEmpty(lossOfPayDays) && lossOfPayDays.compareTo(BigDecimal.ZERO)>0){
+	      						
+	      						noOfPayableDays=noOfPayableDays.add(employPayrollDetails.getBigDecimal("lossOfPayDays"));
+      							noOfPayableDays=noOfPayableDays.subtract(lossOfPayDays);
+      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
+      							employPayrollDetails.set("lossOfPayDays",lossOfPayDays);
       							employPayrollDetails.store();
 	      					}
 	      				}
