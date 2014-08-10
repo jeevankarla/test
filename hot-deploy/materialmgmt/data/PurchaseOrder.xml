@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-engine-xml>
+    <RoleType description="Supplier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SUPPLIER"/>
+
+    <Facility facilityId="Godown1" facilityTypeId="WAREHOUSE" facilityName="PrintPack Facility" description="Manufacturing Facility" ownerPartyId="Company" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM" defaultWeightUomId="WT_lb" defaultDaysToShip="25" geoPointId="9000"/>
+ <!--    <ContactMechPurposeType contactMechPurposeTypeId="SHIPPING_LOCATION" description="Shipping Destination Address"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="SHIP_ORIG_LOCATION" description="Shipping Origin Address"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIPPING" description="Shipping Destination Phone Number"/>
+    <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIP_ORIG" description="Shipping Origin Phone Number"/>
+    
+    <ContactMechTypePurpose contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="SHIP_ORIG_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIPPING" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIP_ORIG" contactMechTypeId="TELECOM_NUMBER"/>
+        
+    <ContactMech contactMechId="9200" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="9201" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMech contactMechId="9202" contactMechTypeId="EMAIL_ADDRESS" infoString="vbiz@vasista.com"/>
+    <PostalAddress contactMechId="9200" toName="Arunodaya" attnName="ZJAA" address1="2003 Apparel Park Kompalli" city="Hyderabad" postalCode="84058" countryGeoId="IN"/>
+    <TelecomNumber contactMechId="9201" areaCode="040" contactNumber="23112311"/>
+    <FacilityContactMech facilityId="Godown1" contactMechId="9200" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="Godown1" contactMechId="9201" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="Godown1" contactMechId="9202" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9200" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9200" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9201" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2011-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="Godown1" contactMechId="9202" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2011-05-13 12:00:00.0"/> -->
+    
+    <ProductStore productStoreId="9000" storeName="KMF Store" companyName="MDKMF" title="MDKMF"
+        subtitle="MDKMF" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" prorateTaxes="Y"
+        inventoryFacilityId="Godown1" oneInventoryFacility="Y" checkInventory="Y" isFactoryStore="Y" reserveInventory="Y" balanceResOnOrderCreation="Y" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
+        defaultLocaleString="en_US" defaultCurrencyUomId="INR" defaultSalesChannelEnumId="WEB_SALES_CHANNEL" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" reqReturnInventoryReceive="N"
+        headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+        itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
+        authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+        authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
+        authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+        storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
+        visualThemeId="EC_DEFAULT" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"/>
+
+    <ProductStoreFacility productStoreId="9000" facilityId="Godown1" fromDate="2001-05-13 12:00:00.0"/>
+
+    <ProdCatalog prodCatalogId="MDKMF-STORE-CATALOG" catalogName="MDKMF STORE CATALOG" useQuickAdd="N"/>
+    <ProductStoreCatalog productStoreId="9000" prodCatalogId="MDKMF-STORE-CATALOG" fromDate="2011-05-13 12:00:00.0" sequenceNum="1"/>
+    
+    <ProductStoreGroup  description="MOTHER DAIRY"  productStoreGroupId="PURCHASE_PRODUCTS" productStoreGroupName="MDKMF_RAWMETERIAL"/> 
+	<ProductStoreGroupMember  fromDate="2014-01-31 00:00:00.0"  productStoreGroupId="PURCHASE_PRODUCTS" productStoreId="9000"/> 
+	 
+    <ProductCategory longDescription="PACKING PRODUCT"
+        productCategoryId="PACKING_PRODUCT" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProdCatalogCategory prodCatalogId="ArunodayaCatalog" productCategoryId="PACKING_PRODUCT" fromDate="2011-05-13 12:00:00.0"
+        sequenceNum="1" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/> 
+        
+    <Product productId="3990580609342" productTypeId="FINISHED_GOOD" primaryProductCategoryId="100" internalName="Ovunal-HP Leaflet" productName="Ovunal-HP Leaflet" description="Ovunal-HP Leaflet" longDescription="Ovunal-HP Leaflet" densityUomId="DEN_gsm" productDensity="70.000000" heightUomId="LEN_mm" productHeight="145.000000" widthUomId="LEN_mm" productWidth="63.000000" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="0" createdDate="2011-05-13 12:00:00.0" lastModifiedDate="2011-09-12 15:24:50.0" lastModifiedByUserLogin="kvarma" inShippingBox="N" lastUpdatedStamp="2011-09-12 20:41:29.0" lastUpdatedTxStamp="2011-09-12 20:41:29.0" createdStamp="2011-08-23 14:49:01.0" createdTxStamp="2011-08-23 14:49:00.0"/>
+
+    <ProductPrice productId="3990580609342" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-05-13 12:00:00.0" price="3.0" createdDate="2011-05-13 12:00:00.0"  lastModifiedDate="2011-05-13 12:00:00.0" />
+    <ProductPrice productId="3990580609342" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-05-13 12:00:00.0" price="3.29" createdDate="2011-05-13 12:00:00.0"  lastModifiedDate="2011-05-13 12:00:00.0" />
+    <ProductFacility createdStamp="2011-09-12 14:28:17.0" createdTxStamp="2011-09-12 14:28:17.0" facilityId="Godown1" lastUpdatedStamp="2011-09-28 11:36:40.0" lastUpdatedTxStamp="2011-09-28 11:36:40.0" minimumStock="0.000000" productId="3990580609342"/>
+
+    <Product productId="PAPER_MP" productTypeId="RAW_MATERIAL" primaryProductCategoryId="100" internalName="Paper MP" productName="Paper MP" description="Paper MP" longDescription="Paper MP" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="1" createdDate="2011-05-13 12:00:00.0" lastModifiedDate="2011-05-13 12:00:00.0" lastUpdatedStamp="2011-09-12 20:41:29.0" lastUpdatedTxStamp="2011-09-12 20:41:29.0" createdStamp="2011-08-23 14:49:01.0" createdTxStamp="2011-08-23 14:49:00.0"/>
+
+    <ProductCategoryMember productCategoryId="100" productId="3990580609342" fromDate="2011-05-13 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="100" productId="PAPER_MP" fromDate="2011-05-13 12:00:00.0"/>
+
+    <ProductFacility productId="PAPER_MP" facilityId="Godown1" minimumStock="50000" reorderQuantity="100000" daysToShip="3"/>
+    <InventoryItem facilityId="Godown1" inventoryItemId="9026" productId="PAPER_MP" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000"  ownerPartyId="Company" currencyUomId="INR" unitCost="1.0"/>
+    <InventoryItemDetail inventoryItemId="9026" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="200000" quantityOnHandDiff="200000" accountingQuantityDiff="200000"/>
+
+    <MrpEvent eventDate="2011-08-24 18:05:15.0" facilityId="Godown1" isLate="N" 
+    	mrpEventTypeId="INITIAL_QOH" mrpId="10001" productId="PAPER_MP" quantity="200000.0"/>
+  
+    <ProductCategory longDescription="Ink"
+        productCategoryId="101" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProdCatalogCategory prodCatalogId="ArunodayaCatalog" productCategoryId="101" fromDate="2011-05-13 12:00:00.0"
+        sequenceNum="2" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/> 
+        
+    <Product productId="BLACK_INK" productTypeId="RAW_MATERIAL" primaryProductCategoryId="101" internalName="Black Ink" productName="Black Ink" description="Black Ink" longDescription="Black Ink" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="1" createdDate="2011-05-13 12:00:00.0" lastModifiedDate="2011-05-13 12:00:00.0" lastUpdatedStamp="2011-09-12 20:41:29.0" lastUpdatedTxStamp="2011-09-12 20:41:29.0" createdStamp="2011-08-23 18:28:58.0" createdTxStamp="2011-08-23 18:28:58.0"/>
+
+    <ProductCategoryMember productCategoryId="101" productId="BLACK_INK" fromDate="2011-05-13 12:00:00.0"/>
+    <ProductFacility productId="BLACK_INK" facilityId="Godown1" minimumStock="50000" reorderQuantity="100000" daysToShip="3"/>
+    <InventoryItem facilityId="Godown1" inventoryItemId="9027" productId="BLACK_INK" inventoryItemTypeId="NON_SERIAL_INV_ITEM" datetimeReceived="2008-08-01 08:00:00.000" ownerPartyId="Company" currencyUomId="INR" unitCost="1.0"/>
+    <InventoryItemDetail inventoryItemId="9027" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="200000" quantityOnHandDiff="200000" accountingQuantityDiff="200000"/>
+
+    <MrpEvent eventDate="2011-08-24 18:05:15.0" facilityId="Godown1" isLate="N" 
+    	mrpEventTypeId="INITIAL_QOH" mrpId="10001" productId="BLACK_INK" quantity="200000.0"/>
+
+    <RoleType description="Ship-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="SHIP_TO_CUSTOMER"/>
+    <RoleType description="Ship-From Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="SHIP_FROM_VENDOR"/>
+    <RoleType description="Supplier Agent" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SUPPLIER_AGENT"/>
+    
+    <PartyRole partyId="Company" roleTypeId="CARRIER"/>
+    <PartyRole partyId="_NA_" roleTypeId="CARRIER"/> 
+    <ShipmentMethodType description="No Shipping" shipmentMethodTypeId="NO_SHIPPING"/>
+    <ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
+    
+    <CarrierShipmentMethod partyId="_NA_" roleTypeId="CARRIER" shipmentMethodTypeId="NO_SHIPPING" sequenceNumber="4"/>
+    <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="5"/>
+    <CarrierShipmentMethod partyId="_NA_" roleTypeId="CARRIER" shipmentMethodTypeId="STANDARD" sequenceNumber="6"/>
+
+
+    <ProductStoreShipmentMeth productStoreShipMethId="9000" productStoreId="9000" partyId="_NA_" includeNoChargeItems="Y" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="NO_SHIPPING" sequenceNumber="6"/>
+    <ProductStoreShipmentMeth productStoreShipMethId="9001" productStoreId="9000" partyId="Company" includeNoChargeItems="Y" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="7"/>
+    <ProductStoreShipmentMeth productStoreShipMethId="9002" productStoreId="9000" partyId="_NA_" includeNoChargeItems="Y" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="STANDARD" sequenceNumber="8"/>
+
+    <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="5.0" orderItemFlatPrice="0.0" carrierPartyId="Company" carrierRoleTypeId="CARRIER" orderPricePercent="0.0" shipmentCostEstimateId="9002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+
+    <GlAccount parentGlAccountId="" glAccountId="500000" accountCode="500000"
+    glAccountClassId="COGS_EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"
+    accountName="COST OF GOODS SOLD" description="" postedBalance="0.0"/>   
+    <GlAccountOrganization organizationPartyId="Company" glAccountId="500000" fromDate="2011-01-01 00:00:00.0"/>    
+    <GlAccountTypeDefault organizationPartyId="Company" glAccountTypeId="COGS_ACCOUNT" glAccountId="500000"/>
+    <RoleType description="Packer" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="PACKER"/>
+    <PartyRole partyId="101" roleTypeId="PACKER"/>
+    <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="INV_PROD_ITEM" parentTypeId=""/>
+    <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="PINV_PROD_ITEM" parentTypeId=""/>    
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="INV_FPROD_ITEM" parentTypeId="INV_PROD_ITEM"/>
+    <InvoiceItemType description="Invoice Finished Good Item" hasTable="N" invoiceItemTypeId="PINV_FPROD_ITEM" parentTypeId="PINV_PROD_ITEM"/>
+
+    <PaymentMethodType description="Cash On Delivery" paymentMethodTypeId="EXT_COD"/>
+    <PaymentMethodType description="Offline Payment" paymentMethodTypeId="EXT_OFFLINE"/>                  
+    <PartyAcctgPreference partyId="Company"  cogsMethodId="COGS_LIFO" baseCurrencyUomId="INR"
+        invoiceSequenceEnumId="INVSQ_ENF_SEQ" invoiceIdPrefix="CI"
+        quoteSequenceEnumId="INVSQ_ENF_SEQ" quoteIdPrefix="CQ"
+        orderSequenceEnumId="INVSQ_ENF_SEQ" orderIdPrefix="CO"/>
+    <GlAccountOrganization organizationPartyId="Company" glAccountId="140000" fromDate="2011-01-01 00:00:00.0"/>
+    <GlAccountOrganization organizationPartyId="Company" glAccountId="141000" fromDate="2011-01-01 00:00:00.0"/>
+    <GlAccountOrganization organizationPartyId="Company" glAccountId="142000" fromDate="2011-01-01 00:00:00.0"/>
+    <GlAccountOrganization organizationPartyId="Company" glAccountId="143000" fromDate="2011-01-01 00:00:00.0"/>
+    <GlAccountOrganization organizationPartyId="Company" glAccountId="149000" fromDate="2011-01-01 00:00:00.0"/>
+    <GlAccountType description="Uninvoiced Shipment Receipts" glAccountTypeId="UNINVOICED_SHIP_RCPT" hasTable="N" parentTypeId="CURRENT_LIABILITY"/>
+    <GlAccountTypeDefault organizationPartyId="Company" glAccountTypeId="UNINVOICED_SHIP_RCPT" glAccountId="214000"/>
+    <GlAccountOrganization organizationPartyId="Company" glAccountId="214000" fromDate="2011-01-01 00:00:00.0"/>
+
+    <RoleType description="Request Manager" hasTable="N" parentTypeId="" roleTypeId="REQ_MANAGER"/>
+    <RoleType description="Requesting Party" hasTable="N" parentTypeId="" roleTypeId="REQ_REQUESTER"/>
+    <RoleType description="Request Taker" hasTable="N" parentTypeId="" roleTypeId="REQ_TAKER"/>
+
+
+<!-- Manufacturing related demo data -->
+    <Product productId="PRINTING_MACHINE" productTypeId="ASSET_USAGE" internalName="Printing Machine" productName="Printing Machine" description="Printing Machine - Basic" billOfMaterialLevel="0" lastUpdatedStamp="2011-09-12 20:41:29.0" lastUpdatedTxStamp="2011-09-12 20:41:29.0" createdStamp="2011-08-24 16:11:33.0" createdTxStamp="2011-08-24 16:11:33.0"/>
+    <FixedAsset fixedAssetId="PRINTING_MACHINE_01" fixedAssetTypeId="GROUP_EQUIPMENT" instanceOfProductId="PRINTING_MACHINE" fixedAssetName="Printing Machine Basic" calendarId="DEFAULT" locatedAtFacilityId="Godown1" purchaseCost="6000000.00" purchaseCostUomId="INR" lastUpdatedStamp="2011-08-27 11:52:31.0" lastUpdatedTxStamp="2011-08-27 11:52:31.0" createdStamp="2011-08-24 16:11:34.0" createdTxStamp="2011-08-24 16:11:33.0"/>    
+ 
+    <WorkEffort workEffortId="10000" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 15:01:55.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Digital &amp; Pre-press" description="Digital &amp; Pre-press" estimatedMilliSeconds="2.0" estimatedSetupMillis="1.0" revisionNumber="3" createdDate="2011-08-24 15:01:55.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-30 18:26:06.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-30 18:26:06.0" lastUpdatedTxStamp="2011-08-30 18:26:06.0" createdStamp="2011-08-24 15:01:55.0" createdTxStamp="2011-08-24 15:01:55.0"/>
+    <WorkEffort workEffortId="10013" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:07:20.0" workEffortPurposeTypeId="ROU_SUBCONTRACTING" workEffortName="Plate Making" revisionNumber="1" createdDate="2011-08-24 17:07:20.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:07:20.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:07:20.0" lastUpdatedTxStamp="2011-08-24 17:07:20.0" createdStamp="2011-08-24 17:07:20.0" createdTxStamp="2011-08-24 17:07:20.0"/>
+    <WorkEffort workEffortId="10014" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:08:53.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Board/Paper Cutting" description="Board/Paper Cutting" revisionNumber="1" createdDate="2011-08-24 17:08:53.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:08:53.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:08:53.0" lastUpdatedTxStamp="2011-08-24 17:08:52.0" createdStamp="2011-08-24 17:08:53.0" createdTxStamp="2011-08-24 17:08:52.0"/>
+    <WorkEffort workEffortId="10015" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:09:20.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Printing" description="Printing" estimatedMilliSeconds="20.0" estimatedSetupMillis="5.0" fixedAssetId="PRINTING_MACHINE_01" revisionNumber="3" createdDate="2011-08-24 17:09:20.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-26 14:38:18.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-26 14:38:18.0" lastUpdatedTxStamp="2011-08-26 14:38:18.0" createdStamp="2011-08-24 17:09:20.0" createdTxStamp="2011-08-24 17:09:20.0"/>
+    <WorkEffort workEffortId="10016" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:24:14.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Finishing" description="Finishing" revisionNumber="1" createdDate="2011-08-24 17:24:14.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:24:14.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:24:14.0" lastUpdatedTxStamp="2011-08-24 17:24:14.0" createdStamp="2011-08-24 17:24:14.0" createdTxStamp="2011-08-24 17:24:14.0"/>
+    <WorkEffort workEffortId="10017" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:24:35.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Folding" description="Folding" revisionNumber="1" createdDate="2011-08-24 17:24:35.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:24:35.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:24:35.0" lastUpdatedTxStamp="2011-08-24 17:24:34.0" createdStamp="2011-08-24 17:24:35.0" createdTxStamp="2011-08-24 17:24:34.0"/>
+    <WorkEffort workEffortId="10018" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:24:58.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Die Punching" description="Die Punching" revisionNumber="1" createdDate="2011-08-24 17:24:58.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:24:58.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:24:58.0" lastUpdatedTxStamp="2011-08-24 17:24:58.0" createdStamp="2011-08-24 17:24:58.0" createdTxStamp="2011-08-24 17:24:58.0"/>
+    <WorkEffort workEffortId="10019" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:26:29.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Pasting" description="Pasting" revisionNumber="1" createdDate="2011-08-24 17:26:29.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:26:29.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:26:29.0" lastUpdatedTxStamp="2011-08-24 17:26:29.0" createdStamp="2011-08-24 17:26:29.0" createdTxStamp="2011-08-24 17:26:29.0"/>
+    <WorkEffort workEffortId="10020" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:27:38.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Sorting &amp; Packing" description="Sorting &amp; Packing" revisionNumber="1" createdDate="2011-08-24 17:27:38.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:27:38.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:27:38.0" lastUpdatedTxStamp="2011-08-24 17:27:38.0" createdStamp="2011-08-24 17:27:38.0" createdTxStamp="2011-08-24 17:27:38.0"/>
+    <WorkEffort workEffortId="10021" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:28:33.0" workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Quality Assurance" description="Quality Assurance" revisionNumber="1" createdDate="2011-08-24 17:28:33.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:28:33.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:28:33.0" lastUpdatedTxStamp="2011-08-24 17:28:33.0" createdStamp="2011-08-24 17:28:33.0" createdTxStamp="2011-08-24 17:28:33.0"/>
+    <WorkEffort workEffortId="10022" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:30:59.0" workEffortName="Ovunal-HP Leaflet" description="Ovunal-HP Leaflet" revisionNumber="1" createdDate="2011-08-24 17:30:59.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:30:59.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 17:30:59.0" lastUpdatedTxStamp="2011-08-24 17:30:59.0" createdStamp="2011-08-24 17:30:59.0" createdTxStamp="2011-08-24 17:30:59.0"/>
+ 
+    <WorkEffortAttribute workEffortId="10000" attrName="Bleed" lastUpdatedStamp="2011-08-30 18:16:30.0" lastUpdatedTxStamp="2011-08-30 18:16:30.0" createdStamp="2011-08-30 18:16:30.0" createdTxStamp="2011-08-30 18:16:30.0"/>
+    <WorkEffortAttribute workEffortId="10000" attrName="Dimensions" lastUpdatedStamp="2011-08-30 18:17:41.0" lastUpdatedTxStamp="2011-08-30 18:17:41.0" createdStamp="2011-08-30 18:17:41.0" createdTxStamp="2011-08-30 18:17:41.0"/>
+    <WorkEffortAttribute workEffortId="10000" attrName="Gripper Margin" lastUpdatedStamp="2011-08-30 18:17:19.0" lastUpdatedTxStamp="2011-08-30 18:17:19.0" createdStamp="2011-08-30 18:17:19.0" createdTxStamp="2011-08-30 18:17:19.0"/>
+    <WorkEffortAttribute workEffortId="10000" attrName="Pasting Margin" lastUpdatedStamp="2011-08-30 18:17:05.0" lastUpdatedTxStamp="2011-08-30 18:17:05.0" createdStamp="2011-08-30 18:17:05.0" createdTxStamp="2011-08-30 18:17:05.0"/>
+    <WorkEffortAttribute workEffortId="10000" attrName="Product Code" lastUpdatedStamp="2011-08-30 18:16:04.0" lastUpdatedTxStamp="2011-08-30 18:16:04.0" createdStamp="2011-08-30 18:16:04.0" createdTxStamp="2011-08-30 18:16:04.0"/>
+    <WorkEffortAttribute workEffortId="10000" attrName="Registration Marks" lastUpdatedStamp="2011-08-30 18:16:23.0" lastUpdatedTxStamp="2011-08-30 18:16:23.0" createdStamp="2011-08-30 18:16:23.0" createdTxStamp="2011-08-30 18:16:23.0"/>
+    <WorkEffortAttribute workEffortId="10000" attrName="Text in all ups" lastUpdatedStamp="2011-08-30 18:16:56.0" lastUpdatedTxStamp="2011-08-30 18:16:56.0" createdStamp="2011-08-30 18:16:56.0" createdTxStamp="2011-08-30 18:16:56.0"/>
+    <WorkEffortAttribute workEffortId="10000" attrName="Trapping" lastUpdatedStamp="2011-08-30 18:16:37.0" lastUpdatedTxStamp="2011-08-30 18:16:37.0" createdStamp="2011-08-30 18:16:37.0" createdTxStamp="2011-08-30 18:16:37.0"/>
+    <WorkEffortAttribute workEffortId="10000" attrName="Up Numbers" lastUpdatedStamp="2011-08-30 18:17:31.0" lastUpdatedTxStamp="2011-08-30 18:17:31.0" createdStamp="2011-08-30 18:17:31.0" createdTxStamp="2011-08-30 18:17:31.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="Back &amp; Back" lastUpdatedStamp="2011-09-03 15:46:31.0" lastUpdatedTxStamp="2011-09-03 15:46:31.0" createdStamp="2011-09-03 15:46:31.0" createdTxStamp="2011-09-03 15:46:31.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="CTCP Plates" lastUpdatedStamp="2011-09-03 15:46:17.0" lastUpdatedTxStamp="2011-09-03 15:46:17.0" createdStamp="2011-09-03 15:46:17.0" createdTxStamp="2011-09-03 15:46:17.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="CTP Plates" lastUpdatedStamp="2011-09-03 15:47:39.0" lastUpdatedTxStamp="2011-09-03 15:47:39.0" createdStamp="2011-09-03 15:47:39.0" createdTxStamp="2011-09-03 15:47:39.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="Dimensions" lastUpdatedStamp="2011-09-03 15:46:39.0" lastUpdatedTxStamp="2011-09-03 15:46:39.0" createdStamp="2011-09-03 15:46:39.0" createdTxStamp="2011-09-03 15:46:39.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="Front &amp; Back" lastUpdatedStamp="2011-09-03 15:47:48.0" lastUpdatedTxStamp="2011-09-03 15:47:48.0" createdStamp="2011-09-03 15:47:48.0" createdTxStamp="2011-09-03 15:47:48.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="Opposite gripper" lastUpdatedStamp="2011-09-03 15:48:02.0" lastUpdatedTxStamp="2011-09-03 15:48:02.0" createdStamp="2011-09-03 15:48:02.0" createdTxStamp="2011-09-03 15:48:02.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="Product Code" lastUpdatedStamp="2011-09-03 15:47:28.0" lastUpdatedTxStamp="2011-09-03 15:47:28.0" createdStamp="2011-09-03 15:47:28.0" createdTxStamp="2011-09-03 15:47:28.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="PS Plates" lastUpdatedStamp="2011-09-03 15:46:07.0" lastUpdatedTxStamp="2011-09-03 15:46:07.0" createdStamp="2011-09-03 15:46:07.0" createdTxStamp="2011-09-03 15:46:07.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="Registration" lastUpdatedStamp="2011-09-03 15:45:46.0" lastUpdatedTxStamp="2011-09-03 15:45:46.0" createdStamp="2011-09-03 15:45:46.0" createdTxStamp="2011-09-03 15:45:46.0"/>
+    <WorkEffortAttribute workEffortId="10013" attrName="Up Numbers" lastUpdatedStamp="2011-09-03 15:45:59.0" lastUpdatedTxStamp="2011-09-03 15:45:59.0" createdStamp="2011-09-03 15:45:59.0" createdTxStamp="2011-09-03 15:45:59.0"/>
+
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10000" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2011-08-24 17:31:29.0" lastUpdatedStamp="2011-08-24 17:31:30.0" lastUpdatedTxStamp="2011-08-24 17:31:29.0" createdStamp="2011-08-24 17:31:30.0" createdTxStamp="2011-08-24 17:31:29.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10013" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2011-08-24 17:32:03.0" lastUpdatedStamp="2011-08-24 17:32:03.0" lastUpdatedTxStamp="2011-08-24 17:32:03.0" createdStamp="2011-08-24 17:32:03.0" createdTxStamp="2011-08-24 17:32:03.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10014" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="30" fromDate="2011-08-24 17:32:12.0" lastUpdatedStamp="2011-08-24 17:32:12.0" lastUpdatedTxStamp="2011-08-24 17:32:12.0" createdStamp="2011-08-24 17:32:12.0" createdTxStamp="2011-08-24 17:32:12.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10015" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="40" fromDate="2011-08-24 17:32:26.0" lastUpdatedStamp="2011-08-24 17:32:26.0" lastUpdatedTxStamp="2011-08-24 17:32:26.0" createdStamp="2011-08-24 17:32:26.0" createdTxStamp="2011-08-24 17:32:26.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10016" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="50" fromDate="2011-08-24 17:32:39.0" lastUpdatedStamp="2011-08-24 17:32:39.0" lastUpdatedTxStamp="2011-08-24 17:32:39.0" createdStamp="2011-08-24 17:32:39.0" createdTxStamp="2011-08-24 17:32:39.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10017" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="60" fromDate="2011-08-24 17:33:03.0" lastUpdatedStamp="2011-08-24 17:33:03.0" lastUpdatedTxStamp="2011-08-24 17:33:03.0" createdStamp="2011-08-24 17:33:03.0" createdTxStamp="2011-08-24 17:33:03.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10018" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="70" fromDate="2011-08-24 17:33:16.0" lastUpdatedStamp="2011-08-24 17:33:16.0" lastUpdatedTxStamp="2011-08-24 17:33:16.0" createdStamp="2011-08-24 17:33:16.0" createdTxStamp="2011-08-24 17:33:16.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10019" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="80" fromDate="2011-08-24 17:33:26.0" lastUpdatedStamp="2011-08-24 17:33:26.0" lastUpdatedTxStamp="2011-08-24 17:33:26.0" createdStamp="2011-08-24 17:33:26.0" createdTxStamp="2011-08-24 17:33:26.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10020" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="90" fromDate="2011-08-24 17:33:36.0" lastUpdatedStamp="2011-08-24 17:33:36.0" lastUpdatedTxStamp="2011-08-24 17:33:36.0" createdStamp="2011-08-24 17:33:36.0" createdTxStamp="2011-08-24 17:33:36.0"/>
+    <WorkEffortAssoc workEffortIdFrom="10022" workEffortIdTo="10021" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="100" fromDate="2011-08-24 17:33:46.0" lastUpdatedStamp="2011-08-24 17:33:46.0" lastUpdatedTxStamp="2011-08-24 17:33:46.0" createdStamp="2011-08-24 17:33:46.0" createdTxStamp="2011-08-24 17:33:46.0"/>
+  
+    <WorkEffortGoodStandard workEffortId="10022" productId="3990580609342" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" fromDate="2011-08-24 17:34:12.0" lastUpdatedStamp="2011-08-24 17:34:12.0" lastUpdatedTxStamp="2011-08-24 17:34:12.0" createdStamp="2011-08-24 17:34:12.0" createdTxStamp="2011-08-24 17:34:12.0"/> 
+     <WorkEffortAndGoods productId="3990580609342" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" workEffortId="10022" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" lastStatusUpdate="2011-08-24 17:30:59.0" workEffortName="Ovunal-HP Leaflet" description="Ovunal-HP Leaflet" revisionNumber="1" createdDate="2011-08-24 17:30:59.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 17:30:59.0" lastModifiedByUserLogin="kvarma"/>
+
+    <ProductAssoc productId="3990580609342" productIdTo="BLACK_INK" productAssocTypeId="MANUF_COMPONENT" fromDate="2011-08-23 18:29:58.0" quantity="1.000000" routingWorkEffortId="10015" lastUpdatedStamp="2011-08-25 10:51:24.0" lastUpdatedTxStamp="2011-08-25 10:51:24.0" createdStamp="2011-08-23 18:29:58.0" createdTxStamp="2011-08-23 18:29:58.0"/>
+    <ProductAssoc productId="3990580609342" productIdTo="PAPER_MP" productAssocTypeId="MANUF_COMPONENT" fromDate="2011-08-23 18:11:18.0" quantity="1.000000" routingWorkEffortId="10014" lastUpdatedStamp="2011-08-25 10:51:03.0" lastUpdatedTxStamp="2011-08-25 10:51:03.0" createdStamp="2011-08-23 18:11:18.0" createdTxStamp="2011-08-23 18:11:18.0"/>
+ 
+ <!-- order mgr demo data -->
+    <Party partyId="10000" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="INR" statusId="PARTY_ENABLED" createdDate="2011-08-23 18:33:00.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-23 18:33:00.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-23 18:33:00.0" lastUpdatedTxStamp="2011-08-23 18:33:00.0" createdStamp="2011-08-23 18:33:00.0" createdTxStamp="2011-08-23 18:33:00.0"/>
+    <Party partyId="10010" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="INR" statusId="PARTY_ENABLED" createdDate="2011-08-24 19:35:24.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 19:35:24.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 19:35:24.0" lastUpdatedTxStamp="2011-08-24 19:35:24.0" createdStamp="2011-08-24 19:35:24.0" createdTxStamp="2011-08-24 19:35:24.0"/>
+    <Party partyId="10011" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="INR" statusId="PARTY_ENABLED" createdDate="2011-08-24 19:36:20.0" createdByUserLogin="kvarma" lastModifiedDate="2011-08-24 19:36:20.0" lastModifiedByUserLogin="kvarma" lastUpdatedStamp="2011-08-24 19:36:20.0" lastUpdatedTxStamp="2011-08-24 19:36:20.0" createdStamp="2011-08-24 19:36:20.0" createdTxStamp="2011-08-24 19:36:20.0"/>
+
+    <PartyGroup partyId="10000" groupName="Uni Sankyo Ltd" lastUpdatedStamp="2011-08-23 18:33:00.0" lastUpdatedTxStamp="2011-08-23 18:33:00.0" createdStamp="2011-08-23 18:33:00.0" createdTxStamp="2011-08-23 18:33:00.0"/>
+    <PartyGroup partyId="10010" groupName="Best Inks Ltd" lastUpdatedStamp="2011-08-24 19:35:25.0" lastUpdatedTxStamp="2011-08-24 19:35:24.0" createdStamp="2011-08-24 19:35:25.0" createdTxStamp="2011-08-24 19:35:24.0"/>
+    <PartyGroup partyId="10011" groupName="ITC Paper" lastUpdatedStamp="2011-08-24 19:36:20.0" lastUpdatedTxStamp="2011-08-24 19:36:20.0" createdStamp="2011-08-24 19:36:20.0" createdTxStamp="2011-08-24 19:36:20.0"/>
+
+    <SupplierProduct productId="BLACK_INK" partyId="10010" availableFromDate="2011-08-24 19:52:32.0" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="100000.000000" lastPrice="1.000" currencyUomId="INR" supplierProductId="BEST_BLACK_INK" canDropShip="N" lastUpdatedStamp="2011-08-24 19:53:09.0" lastUpdatedTxStamp="2011-08-24 19:53:09.0" createdStamp="2011-08-24 19:53:09.0" createdTxStamp="2011-08-24 19:53:09.0"/>
+    <SupplierProduct productId="PAPER_MP" partyId="10011" availableFromDate="2011-08-24 19:51:05.0" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="100000.000000" lastPrice="1.000" currencyUomId="INR" supplierProductId="ITC_PAPER_MP" canDropShip="N" lastUpdatedStamp="2011-08-24 19:52:14.0" lastUpdatedTxStamp="2011-08-24 19:52:14.0" createdStamp="2011-08-24 19:52:14.0" createdTxStamp="2011-08-24 19:52:14.0"/>
+
+    <ContactMech contactMechId="10000" contactMechTypeId="POSTAL_ADDRESS" lastUpdatedStamp="2011-08-24 14:43:06.0" lastUpdatedTxStamp="2011-08-24 14:43:06.0" createdStamp="2011-08-24 14:43:06.0" createdTxStamp="2011-08-24 14:43:06.0"/>
+    <PostalAddress contactMechId="10000" toName="Uni Sankyo Ltd" address1="Madhapur" city="Hyderabad" postalCode="500081" countryGeoId="IND" lastUpdatedStamp="2011-08-24 14:43:06.0" lastUpdatedTxStamp="2011-08-24 14:43:06.0" createdStamp="2011-08-24 14:43:06.0" createdTxStamp="2011-08-24 14:43:06.0"/>
+ 
+    <PartyContactMech partyId="10000" contactMechId="10000" fromDate="2011-08-24 14:43:06.0" allowSolicitation="Y" lastUpdatedStamp="2011-08-24 14:43:06.0" lastUpdatedTxStamp="2011-08-24 14:43:06.0" createdStamp="2011-08-24 14:43:06.0" createdTxStamp="2011-08-24 14:43:06.0"/>
+    <PartyContactMechPurpose partyId="10000" contactMechId="10000" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2011-08-24 14:43:06.0" lastUpdatedStamp="2011-08-24 14:43:06.0" lastUpdatedTxStamp="2011-08-24 14:43:06.0" createdStamp="2011-08-24 14:43:06.0" createdTxStamp="2011-08-24 14:43:06.0"/>
+ 
+     <PartyRole partyId="10000" roleTypeId="BILL_TO_CUSTOMER" lastUpdatedStamp="2011-08-24 14:45:40.0" lastUpdatedTxStamp="2011-08-24 14:45:39.0" createdStamp="2011-08-24 14:45:40.0" createdTxStamp="2011-08-24 14:45:39.0"/>
+    <PartyRole partyId="10000" roleTypeId="CUSTOMER" lastUpdatedStamp="2011-08-24 14:37:01.0" lastUpdatedTxStamp="2011-08-24 14:37:01.0" createdStamp="2011-08-24 14:37:01.0" createdTxStamp="2011-08-24 14:37:01.0"/>
+    <PartyRole partyId="10000" roleTypeId="END_USER_CUSTOMER" lastUpdatedStamp="2011-08-24 14:45:40.0" lastUpdatedTxStamp="2011-08-24 14:45:39.0" createdStamp="2011-08-24 14:45:40.0" createdTxStamp="2011-08-24 14:45:39.0"/>
+    <PartyRole partyId="10000" roleTypeId="PLACING_CUSTOMER" lastUpdatedStamp="2011-08-24 14:45:40.0" lastUpdatedTxStamp="2011-08-24 14:45:39.0" createdStamp="2011-08-24 14:45:40.0" createdTxStamp="2011-08-24 14:45:39.0"/>
+    <PartyRole partyId="10000" roleTypeId="SHIP_TO_CUSTOMER" lastUpdatedStamp="2011-08-24 14:45:40.0" lastUpdatedTxStamp="2011-08-24 14:45:39.0" createdStamp="2011-08-24 14:45:40.0" createdTxStamp="2011-08-24 14:45:39.0"/>
+    <PartyRole partyId="10000" roleTypeId="TRADE_CUSTOMER" lastUpdatedStamp="2011-08-23 18:35:34.0" lastUpdatedTxStamp="2011-08-23 18:35:34.0" createdStamp="2011-08-23 18:35:34.0" createdTxStamp="2011-08-23 18:35:34.0"/>
+    <PartyRole partyId="10000" roleTypeId="_NA_" lastUpdatedStamp="2011-08-23 18:33:00.0" lastUpdatedTxStamp="2011-08-23 18:33:00.0" createdStamp="2011-08-23 18:33:00.0" createdTxStamp="2011-08-23 18:33:00.0"/>
+    <PartyRole partyId="10010" roleTypeId="BILL_FROM_VENDOR" lastUpdatedStamp="2011-09-07 15:17:29.0" lastUpdatedTxStamp="2011-09-07 15:17:29.0" createdStamp="2011-09-07 15:17:29.0" createdTxStamp="2011-09-07 15:17:29.0"/>
+    <PartyRole partyId="10010" roleTypeId="COGS_VENDOR" lastUpdatedStamp="2011-08-24 19:35:53.0" lastUpdatedTxStamp="2011-08-24 19:35:52.0" createdStamp="2011-08-24 19:35:53.0" createdTxStamp="2011-08-24 19:35:52.0"/>
+    <PartyRole partyId="10010" roleTypeId="SHIP_FROM_VENDOR" lastUpdatedStamp="2011-09-07 15:17:29.0" lastUpdatedTxStamp="2011-09-07 15:17:29.0" createdStamp="2011-09-07 15:17:29.0" createdTxStamp="2011-09-07 15:17:29.0"/>
+    <PartyRole partyId="10010" roleTypeId="SUPPLIER" lastUpdatedStamp="2011-08-24 19:44:16.0" lastUpdatedTxStamp="2011-08-24 19:44:16.0" createdStamp="2011-08-24 19:44:16.0" createdTxStamp="2011-08-24 19:44:16.0"/>
+    <PartyRole partyId="10010" roleTypeId="SUPPLIER_AGENT" lastUpdatedStamp="2011-09-07 15:17:29.0" lastUpdatedTxStamp="2011-09-07 15:17:29.0" createdStamp="2011-09-07 15:17:29.0" createdTxStamp="2011-09-07 15:17:29.0"/>
+    <PartyRole partyId="10010" roleTypeId="_NA_" lastUpdatedStamp="2011-08-24 19:35:25.0" lastUpdatedTxStamp="2011-08-24 19:35:24.0" createdStamp="2011-08-24 19:35:25.0" createdTxStamp="2011-08-24 19:35:24.0"/>
+    <PartyRole partyId="10011" roleTypeId="BILL_FROM_VENDOR" lastUpdatedStamp="2011-09-09 10:47:57.0" lastUpdatedTxStamp="2011-09-09 10:47:57.0" createdStamp="2011-09-09 10:47:57.0" createdTxStamp="2011-09-09 10:47:57.0"/>
+    <PartyRole partyId="10011" roleTypeId="COGS_VENDOR" lastUpdatedStamp="2011-08-24 19:36:31.0" lastUpdatedTxStamp="2011-08-24 19:36:31.0" createdStamp="2011-08-24 19:36:31.0" createdTxStamp="2011-08-24 19:36:31.0"/>
+    <PartyRole partyId="10011" roleTypeId="SHIP_FROM_VENDOR" lastUpdatedStamp="2011-09-09 10:47:58.0" lastUpdatedTxStamp="2011-09-09 10:47:57.0" createdStamp="2011-09-09 10:47:58.0" createdTxStamp="2011-09-09 10:47:57.0"/>
+    <PartyRole partyId="10011" roleTypeId="SUPPLIER" lastUpdatedStamp="2011-08-24 19:43:17.0" lastUpdatedTxStamp="2011-08-24 19:43:17.0" createdStamp="2011-08-24 19:43:17.0" createdTxStamp="2011-08-24 19:43:17.0"/>
+    <PartyRole partyId="10011" roleTypeId="SUPPLIER_AGENT" lastUpdatedStamp="2011-09-09 10:47:58.0" lastUpdatedTxStamp="2011-09-09 10:47:57.0" createdStamp="2011-09-09 10:47:58.0" createdTxStamp="2011-09-09 10:47:57.0"/>
+    <PartyRole partyId="10011" roleTypeId="_NA_" lastUpdatedStamp="2011-08-24 19:36:20.0" lastUpdatedTxStamp="2011-08-24 19:36:20.0" createdStamp="2011-08-24 19:36:20.0" createdTxStamp="2011-08-24 19:36:20.0"/>
+ 
+    <PartyStatus statusId="PARTY_ENABLED" partyId="10000" statusDate="2011-08-23 18:33:00.0" lastUpdatedStamp="2011-08-23 18:33:00.0" lastUpdatedTxStamp="2011-08-23 18:33:00.0" createdStamp="2011-08-23 18:33:00.0" createdTxStamp="2011-08-23 18:33:00.0"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="10010" statusDate="2011-08-24 19:35:24.0" lastUpdatedStamp="2011-08-24 19:35:24.0" lastUpdatedTxStamp="2011-08-24 19:35:24.0" createdStamp="2011-08-24 19:35:24.0" createdTxStamp="2011-08-24 19:35:24.0"/>
+    <PartyStatus statusId="PARTY_ENABLED" partyId="10011" statusDate="2011-08-24 19:36:20.0" lastUpdatedStamp="2011-08-24 19:36:20.0" lastUpdatedTxStamp="2011-08-24 19:36:20.0" createdStamp="2011-08-24 19:36:20.0" createdTxStamp="2011-08-24 19:36:20.0"/>
+         
+         
+         
+         
+         
+    <Product productId="1001" productTypeId="RAW_MATERIAL" primaryProductCategoryId="PACKING_PRODUCT" internalName="Paper MP" brandName="PaperMP" productName="Paper MP" description="Paper MP" longDescription="Paper MP" taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" billOfMaterialLevel="1" createdDate="2011-05-13 12:00:00.0" lastModifiedDate="2011-05-13 12:00:00.0" lastUpdatedStamp="2011-09-12 20:41:29.0" lastUpdatedTxStamp="2011-09-12 20:41:29.0" createdStamp="2011-08-23 14:49:01.0" createdTxStamp="2011-08-23 14:49:00.0"/>
+     <ProductPrice productId="1001" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="LIST_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-05-13 12:00:00.0" price="3.0" createdDate="2011-05-13 12:00:00.0"  lastModifiedDate="2011-05-13 12:00:00.0" />
+    <ProductPrice productId="1001" productPricePurposeId="COMPONENT_PRICE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="INR" productStoreGroupId="_NA_" fromDate="2011-05-13 12:00:00.0" price="3.29" createdDate="2011-05-13 12:00:00.0"  lastModifiedDate="2011-05-13 12:00:00.0" />
+    <ProductFacility createdStamp="2011-09-12 14:28:17.0" createdTxStamp="2011-09-12 14:28:17.0" facilityId="Godown1" lastUpdatedStamp="2011-09-28 11:36:40.0" lastUpdatedTxStamp="2011-09-28 11:36:40.0" minimumStock="0.000000" productId="3990580609342"/>
+
+          
+     <EnumerationType description="Order Purchase Channel" enumTypeId="ORDER_PRCHSE_CHANNEL" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Products  Purchase Channel" enumCode="PROD_PRCHSE_CHANNEL" enumId="PROD_PRCHSE_CHANNEL" sequenceId="01" enumTypeId="ORDER_PRCHSE_CHANNEL"/>
+        
+         
+         
+</entity-engine-xml>

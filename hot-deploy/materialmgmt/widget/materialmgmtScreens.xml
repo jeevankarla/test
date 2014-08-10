@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="materialmgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  <screen name="FindPurchaseOrder">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Purchase Order"/>              
+			    <set field="tabButtonItem" value="FindPurchaseOrder" />	
+			   <set field="tabButtonItem2" value="FindPurchaseOrder"/>       
+               <set field="headerItem" value="byProductsOrderEntry"/>
+               <set field="viewSize" from-field="parameters.VIEW_SIZE"/>
+               <set field="targetRequest" value="FindPurchaseOrder"/>
+             <!--   <set field="ChannalType" value="RM_DIRECT_CHANNEL"/> -->
+            </actions>
+            <widgets>
+                 <decorator-screen name="materialmgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">  
+                         <include-menu name="PurchasesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                            			<include-form name="FindPurchaseOrder" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      				</decorator-section>
+                      				<decorator-section name="search-results">
+                      					<screenlet title="">
+                      						<!-- <link target="parlourSalesOrders.csv" text="Export As CSV" style="buttontext create">
+									  	 		<parameter param-name="orderId" from-field="parameters.orderId"/>
+												<parameter param-name="hideSearch" from-field="parameters.hideSearch"/>
+												<parameter param-name="orderDate" from-field="parameters.orderDate"/>
+												<parameter param-name="orderType" from-field="parameters.orderType"/>
+												<parameter param-name="salesChannelEnumId" from-field="parameters.salesChannelEnumId"/>
+												<parameter param-name="statusId" from-field="parameters.statusId"/>
+												<parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
+												<parameter param-name="noConditionFind" from-field="parameters.noConditionFind"/>
+									  	 	</link> -->
+                          					<include-form name="listPurchaseOrders" location="component://materialmgmt/widget/materialmgmtForms.xml"/>
+                      					</screenlet>
+                      				</decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen> 
+<screen name="PurchaseOrderInit">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Purchase Order Entry"/>              
+			   <set field="tabButtonItem" value="FindPurchaseOrder" />	
+			   <set field="tabButtonItem2" value="newPurchaseOrder"/>  
+			    <set field="changeFlag" value="PurchaseOrder"/>  
+               <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+               <set field="orderStatus" from-field="parameters.orderStatus"/> 
+               <set field="orderId" from-field="parameters.orderId"/>
+               <set field="orderFacility" from-field="parameters.orderFacility"/> 
+               <set field="orderRoute" from-field="parameters.orderRoute"/> 
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+                <set field="isFormSubmitted" from-field="parameters.isFormSubmitted"/>
+               <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+			   <set field="defaultEffectiveDate" 
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
+				 <set field="parameters.roleTypeId" value="IC_WHOLESALE"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="materialmgmtCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                      <decorator-section name="body">   
+                      <include-menu name="PurchasesTabBar" location="component://materialmgmt/widget/materialmgmtMenus.xml"/>
+                      	<section>
+	                      	  <condition>
+	                             <if-compare operator="equals" field="isFormSubmitted" value=""/>
+	                         </condition>
+	                      		<widgets>
+	           						<include-screen name="PurchaseOrderInner"/>
+	                      		</widgets>
+                      	</section>
+                      <section>
+                      <condition>
+                      <if-compare operator="equals" field="isFormSubmitted" value="YES"/>
+                      </condition>
+                                <widgets>
+	           						 <include-screen name="PurchaseOrderEntry"/>
+	                      		</widgets>
+                      </section>
+                    </decorator-section>                                       
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    <screen name="PurchaseOrderInner">
+        <section>
+            <actions>
+               <set field="changeFlag" from-field="changeFlag"/> 
+               <set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/>
+               <entity-one value-field="showBoothAutoSuggestConf" entity-name="TenantConfiguration">
+               		<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST"/>
+               		<field-map field-name="propertyName" value="showBoothAutoSuggest"/>
+               		<select-field field-name="propertyValue"/>
+               </entity-one>
+               <set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}"/>
+               <set field="supplyDate" from-field="parameters.supplyDate"/>
+               <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+               <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                <set field="parameters.roleTypeId" value="IC_WHOLESALE"/>
+               <!--  <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+                <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/>
+            </actions>
+            <widgets>
+               	<section>
+                 	 <widgets>
+          					<platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl"/></html></platform-specific>
+                     </widgets>
+                     <fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+             	</section>                  
+            </widgets>
+        </section>
+    </screen>   
+    <screen name="PurchaseOrderEntry">
+        <section>
+            <actions>
+               <set field="changeFlag" from-field="changeFlag"/>  
+               <set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId"/>
+               <set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId"/> 
+               <set field="boothId" from-field="parameters.boothId"/>
+                <set field="checkListType" value="indentEntry"/>
+                <set field="effectiveDate" value="${parameters.effectiveDate}"/>
+                 <set field="shipmentTypeId" value="${parameters.shipmentTypeId}"/>
+                  <set field="priceTypeId" from-field="parameters.priceTypeId"/>
+                   <set field="productCatageoryId" from-field="parameters.productCatageoryId"/>
+                   <set field="vehicleId" from-field="parameters.vehicleId"/>
+                <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryForm.groovy"/>
+            </actions>
+            <widgets>
+                   <section>
+               	   <condition>
+               			<and>                     		
+          					<if-has-permission permission="BYPRODUCTS" action="_INDENT"/>
+              					<not><if-empty field="booth"/></not>
+               			</and>
+               		</condition> 
+                       	<widgets>
+                       	    <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl"/></html></platform-specific>
+                           </widgets>
+                       <fail-widgets>
+                           <platform-specific><html><html-template location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl"/></html></platform-specific>								                           
+                       </fail-widgets>
+                   </section>
+            </widgets>
+        </section>
+    </screen> 
+</screens>
