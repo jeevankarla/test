@@ -1630,7 +1630,24 @@
                     	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/buyerInvoiceSlips.fo.ftl"/></html></platform-specific>                 
                 </widgets>
             </section>
-   </screen>  
+   </screen>
+   <screen name="TaxInvoicePDF">
+            <section>
+                <actions>
+                   <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                    <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                   <!-- <set field="invoiceIds" from-field="parameters.invoiceIds" type="List"/> -->
+                   <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/printInvoices.groovy"/>  -->
+                   <!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/invoiceSlips.groovy"/> -->
+                   <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/buyerInvoicePrint.groovy"/>
+                </actions>           
+                <widgets>
+                    	<platform-specific><html><html-template location="component://byproducts/webapp/byproducts/reports/TaxInvoicePDF.fo.ftl"/></html></platform-specific>                 
+                </widgets>
+            </section>
+   </screen> 
    
    <screen name="orderSlipTXT">
             <section>

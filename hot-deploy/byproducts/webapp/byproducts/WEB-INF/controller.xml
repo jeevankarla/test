@@ -538,6 +538,10 @@
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="BuyerInvoicePDF"/>
     </request-map>
+    <request-map uri="taxInvoice.pdf">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="TaxInvoicePDF"/>
+    </request-map>
     <request-map uri="nonRouteGatePass.pdf">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="NonRouteGatePassPDF"/>
@@ -1420,6 +1424,7 @@
     <view-map name="RouteAbstractReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TruckSheetReportTXT" content-type="text/plain"/>
     <view-map name="InvoiceTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#InvoiceTXT" content-type="text/plain"/><!-- for AdhocSale We are Using Invoice -->
     <view-map name="BuyerInvoicePDF" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#BuyerInvoicePDF" content-type="application/pdf"/><!-- for AdhocSale We are Using Invoice -->
+	<view-map name="TaxInvoicePDF" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#TaxInvoicePDF" content-type="application/pdf"/>
 	<view-map name="NonRouteGatePassPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#NonRouteGatePassPDF" content-type="application/pdf"/>   
    <view-map name="orderSlipTXT" type="screenfop" page="component://byproducts/widget/ByProductsNgScreens.xml#orderSlipTXT" content-type="text/plain"/> 
     

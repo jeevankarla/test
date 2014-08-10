@@ -657,7 +657,6 @@
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
-      
         <field name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelICPNandiniShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
@@ -719,7 +718,11 @@
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
-      
+        <field name="taxInvoice" widget-style="buttontext" id-name = "taxInvoice">
+            <hyperlink target="taxInvoice.pdf" description="Tax Invoice" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
         <field name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelPowderShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
@@ -750,7 +753,11 @@
                	  <parameter param-name="shipmentId" /> 
             </hyperlink>
         </field>
-      
+      	<field name="taxInvoice" widget-style="buttontext" id-name = "taxInvoice">
+            <hyperlink target="taxInvoice.pdf" description="Tax Invoice" target-window="_blank"> 	
+               	  <parameter param-name="shipmentId" /> 
+            </hyperlink>
+        </field>
         <field name="cancelShipment" widget-style="buttontext">
             <hyperlink target="cancelFGSShipment" description="Cancel Shipment">
 	            <parameter param-name="shipmentId"/>
