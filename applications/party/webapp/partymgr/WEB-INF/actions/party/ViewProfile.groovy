@@ -34,10 +34,13 @@ if (!partyId && userLoginId) {
 }
 
 employments=delegator.findByAnd("Employment",[partyIdTo:partyId]);
-context.partyIdFrom=employments.get(0).partyIdFrom;
-context.roleTypeIdFrom=employments.get(0).roleTypeIdFrom;
-context.roleTypeIdTo=employments.get(0).roleTypeIdTo;
-context.fromDate=employments.get(0).fromDate;
+if(employments){
+	context.partyIdFrom=employments.get(0).partyIdFrom;
+	context.roleTypeIdFrom=employments.get(0).roleTypeIdFrom;
+	context.roleTypeIdTo=employments.get(0).roleTypeIdTo;
+	context.fromDate=employments.get(0).fromDate;
+}
+
 context.showOld = "true".equals(parameters.SHOW_OLD);
 context.partyId = partyId;
 context.party = delegator.findByPrimaryKey("Party", [partyId : partyId]);
