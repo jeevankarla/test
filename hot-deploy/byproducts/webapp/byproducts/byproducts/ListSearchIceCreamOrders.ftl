@@ -188,6 +188,7 @@ under the License.
           <td>Order Id</td>
           <td>Order Date</td>
           <td>View Order</td>
+          <td>Edit Batch</td>
           <td>DC Report</td>
           <td>Approve</td>
           <td>Cancel</td>
@@ -202,14 +203,16 @@ under the License.
             	<td>${eachOrder.partyId?if_exists}</td>
               	<td>${eachOrder.partyName?if_exists}</td>
               	<td>${eachOrder.orderId?if_exists}</td>
-              	<td>${eachOrder.orderDate?if_exists}</td>
-              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}');"/></td>
+              	<td>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(eachOrder.orderDate, "dd/MM/yyyy")}</td>
+              	<td><input type="button" name="viewOrder" id="viewOrder" value="View Order" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', '');"/></td>
+              	<td><input type="button" name="editBatch" id="editBatch" value="Edit Batch" onclick="javascript:fetchOrderDetails('${eachOrder.orderId?if_exists}', 'batchEdit');"/></td>
               	<#if eachOrder.get('statusId') == "ORDER_CREATED">
               		<td><input type="button" name="approveOrder" id="approveOrder" value="Approve Order" onclick="javascript: approveIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
+              		<td></td>
               	<#else>
-              	  <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
-                <td>${statusItem.description?default(eachOrder.statusId)}</td>
-              	<#--<td>${eachOrder.statusId?if_exists}</td>-->
+              		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
+                	<td>${statusItem.description?default(eachOrder.statusId)}</td>
+              		<td><input type="button" name="dcReport" id="dcReport" value="Delivery Challan" onclick="javascript:getDCReport('${eachOrder.orderId?if_exists}');" target="_blank"/></td>
               	</#if>
               	<td><a class="buttontext" href="/byproducts/control/nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}" target="_blank"/>Delivery Challan</td>
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>

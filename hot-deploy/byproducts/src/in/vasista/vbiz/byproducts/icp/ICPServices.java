@@ -635,6 +635,93 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		return "success";
 	}
 	
+	public static String editBatchNumber(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		String orderId = (String) request.getParameter("orderId");
+		Map resultMap = FastMap.newInstance();
+		Map processOrderContext = FastMap.newInstance();
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		if (orderId == "") {
+			request.setAttribute("_ERROR_MESSAGE_","Order Id is empty");
+			return "error";
+		}
+		String shipmentTypeId = "";
+		String salesChannelEnumId = "";
+		
+		try{
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			salesChannelEnumId = orderHeader.getString("salesChannelEnumId");
+			if(UtilValidate.isEmpty(orderHeader)){
+				request.setAttribute("_ERROR_MESSAGE_","Not a valid order");
+				return "error";
+			}
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Error fetching orderId " + orderId, module);
+			request.setAttribute("_ERROR_MESSAGE_","Invalid order Id");
+			return "error";
+		}
+		
+		Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		if (rowCount < 1) {
+			Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+			return "success";
+		}
+		
+		try{
+			
+			String orderItemSeqId = "";
+			
+			for (int i = 0; i < rowCount; i++) {
+				
+				String batchNo = "";
+				String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+				if (paramMap.containsKey("orderId" + thisSuffix)) {
+					orderId = (String) paramMap.get("orderId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing order id");
+					return "error";			  
+				}
+				
+				if (paramMap.containsKey("orderItemSeqId" + thisSuffix)) {
+					orderItemSeqId = (String) paramMap.get("orderItemSeqId" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing orderItemSeq id");
+					return "error";			  
+				}
+				
+				if (paramMap.containsKey("batchNo" + thisSuffix)) {
+					batchNo = (String) paramMap.get("batchNo" + thisSuffix);
+				}
+				else {
+					request.setAttribute("_ERROR_MESSAGE_", "Missing Batch Number");
+					return "error";			  
+				}
+
+				GenericValue orderItemAttribute = delegator.makeValue("OrderItemAttribute");
+				orderItemAttribute.set("orderId", orderId);
+				orderItemAttribute.set("orderItemSeqId", orderItemSeqId);
+				orderItemAttribute.set("attrName", "batchNumber");
+				orderItemAttribute.set("attrValue", batchNo);
+				delegator.createOrStore(orderItemAttribute);
+				
+			}//end row count for loop
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Error fetching order details for id: " + orderId, module);
+			request.setAttribute("_ERROR_MESSAGE_","Error fetching order details for id: ");
+			return "error";
+		}
+		return "success";
+	}
+	
 	public static Map<String, Object> cancelICPShipment(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();

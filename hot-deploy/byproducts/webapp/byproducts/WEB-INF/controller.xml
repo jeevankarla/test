@@ -686,6 +686,32 @@
     </request-map>
     
     
+    <request-map uri="editNandiniOrderBatchNumber">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="editBatchNumber"/>
+        <response name="success" type="view-last"/>   
+       <response name="failed" type="view-last"/>  
+    </request-map>
+    <request-map uri="editPowderOrderBatchNumber">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="editBatchNumber"/>
+        <response name="success" type="view-last"/>   
+       <response name="failed" type="view-last"/>  
+    </request-map>
+    <request-map uri="editFGSOrderBatchNumber">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="editBatchNumber"/>
+        <response name="success" type="view-last"/>   
+       <response name="failed" type="view-last"/>  
+    </request-map>
+    
+    <request-map uri="editAmulOrderBatchNumber">
+        <security https="true" auth="true"/>
+        <event type="java"  path="in.vasista.vbiz.byproducts.icp.ICPServices" invoke="editBatchNumber"/>
+        <response name="success" type="view-last"/>   
+       <response name="failed" type="view-last"/>  
+    </request-map>
+    
     <request-map uri="processNandiniOrders">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ProcessNandiniOrders"/>   
