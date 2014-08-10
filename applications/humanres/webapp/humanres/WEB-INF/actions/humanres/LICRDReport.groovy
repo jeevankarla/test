@@ -37,14 +37,14 @@ if(UtilValidate.isNotEmpty(employments)){
 		context.put("partyId",partyId);
 		List conditionList=[];
 		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-		conditionList.add(EntityCondition.makeCondition("insuranceTypeId", EntityOperator.EQUALS, (parameters.InsuranceType)));
-		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart));
-		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd));
+		conditionList.add(EntityCondition.makeCondition("insuranceTypeId", EntityOperator.EQUALS, (parameters.insuranceTypeId)));
+		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDateEnd));
+		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDateStart)));
 		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		InsuranceDetails = delegator.findList("PartyInsurance", condition , null, null, null, false );
-		
-		if(UtilValidate.isNotEmpty(InsuranceDetails)){
-			InsuranceDetails.each { insurance ->
+		insuranceDetails = delegator.findList("PartyInsurance", condition , null, null, null, false);
+		if(UtilValidate.isNotEmpty(insuranceDetails)){
+			insuranceDetails.each { insurance ->
 				LicDetailsMap=[:];
 				insuranceId=insurance.get("insuranceId")
 				employeeName=employment.get("firstName");

@@ -196,7 +196,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	  	   		<form id="LIC/RDReport" name="LIC/RDReport" mothed="post" action="<@ofbizUrl>LICRDReport.pdf</@ofbizUrl>" target="_blank">
 	  	   			<td width="20%">LIC/RD Report</td>
 	      		  	<td width="25%">Insurance Type 
-					 	<select name="InsuranceType" class='h4'>
+					 	<select name="insuranceTypeId" class='h4'>
 							<#list finalInsuranceTypeList as org>    
 	  	    					<option value='${org.insuranceTypeId}'>${org.description?if_exists}</option>
 							</#list> 
