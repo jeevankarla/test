@@ -1304,6 +1304,9 @@
     	<field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
+        <field name="dispatchTime" title="DispatchedTime">
+            <display></display>
+        </field>
          <field name="changedDate" title="createdDate" ><display description="${estimatedStartDate}" /></field>
           <field name="UpdateStatus"  use-when="&quot;${statusId}&quot;!=&quot;VEHICLE_RETURNED&quot;"    widget-style="buttontext">
             <hyperlink target="VehicleStatusChange"  description="Update Status" target-window="_blank">
@@ -1330,6 +1333,9 @@
     	<field name="vehicleId"><display></display></field>  
     	<field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+        <field name="dispatchedTime" title="DispatchTime">
+            <display></display>
         </field>
         <field name="shipmentId"><hidden/></field>
         <field name="cratesSent" title="Crates Sent"><display></display></field>
