@@ -128,6 +128,14 @@ shipmentTypeId="";
 					vehicleTripStatusList.add(vehicleTripStatusMap);//only needs to get one valid status for each shipment which is recent one
 					sequenceId=vehicleTripStatus.getString("sequenceNum");
 					vehicleId=vehicleTripStatus.getString("vehicleId");
+					vehicleCratesMap.put("dispatchTime", "");
+					vehicleTripStatusMap.put("dispatchTime","");
+					GenericValue dispatchVehicleTripStatus = delegator.findOne("VehicleTripStatus", UtilMisc.toMap("vehicleId", vehicleId,"sequenceNum",sequenceId,"statusId","VEHICLE_DISPACHED"), false);
+					if(UtilValidate.isNotEmpty(dispatchVehicleTripStatus)){
+						dispatchTimeDateString=UtilDateTime.toDateString(dispatchVehicleTripStatus.estimatedStartDate, "dd/MM/yyyy HH:mm:ss");
+						vehicleCratesMap.put("dispatchedTime",dispatchTimeDateString);
+						vehicleTripStatusMap.put("dispatchTime",dispatchTimeDateString);
+					}
 					vehicleCratesMap.put("shipmentId", shipmentId);
 					vehicleCratesMap.put("sequenceNum", sequenceId);
 					vehicleCratesMap.put("vehicleId", vehicleId);
