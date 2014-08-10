@@ -344,7 +344,14 @@ Debug.logInfo("result:" + result, module);
 				leave.put("leaveTypeId", emplLeave.getString("leaveTypeId"));
 				String leaveFromDate = UtilDateTime.toDateString(emplLeave.getTimestamp("fromDate"), "yyyy-MM-dd");
 				String leaveThruDate = UtilDateTime.toDateString(emplLeave.getTimestamp("thruDate"), "yyyy-MM-dd");	
-				leave.put("leaveStatus", emplLeave.getString("leaveStatus"));				
+				String leaveStatus;
+				GenericValue statusItem = delegator.findOne("StatusItem", UtilMisc.toMap("statusId", emplLeave.getString("leaveStatus")),true); 
+		        if (statusItem != null) {
+		        	leaveStatus = statusItem.getString("description");
+		        } else {
+		        	leaveStatus = emplLeave.getString("leaveStatus"); 
+		        }
+				leave.put("leaveStatus", leaveStatus);				
 				leave.put("leaveFromDate", leaveFromDate);
 				leave.put("leaveThruDate", leaveThruDate);		
 				leaves.add(leave);
