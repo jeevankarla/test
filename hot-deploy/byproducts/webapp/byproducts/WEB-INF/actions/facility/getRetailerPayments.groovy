@@ -53,9 +53,9 @@ if(facilityId){
 	}
 	if(facility.facilityTypeId == "BOOTH"){
 		isRetailer = true;
-		if(facility.categoryTypeEnum == "CR_INST"){
+		/*if(facility.categoryTypeEnum == "CR_INST"){
 			return;
-		}
+		}*/
 	}
 	if(facility.facilityTypeId == "ROUTE"){
 		isRoute = true;
