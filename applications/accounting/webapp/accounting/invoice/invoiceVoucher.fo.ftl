@@ -372,9 +372,7 @@ under the License.
 	        						   									 </fo:table-body>
 						        						   		 </fo:table>
 							        						</fo:table-cell> 
-						        						</fo:table-row>	
-						        						 </#list>
-						        						</#if>
+						        						</fo:table-row>
 						        						<fo:table-row>
 															<fo:table-cell>
 											            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -385,12 +383,16 @@ under the License.
 											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
 											       			</fo:table-cell>
 														 </fo:table-row>
-														 <fo:table-row>
-							        						<fo:table-cell>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Cheque in favour of:${partyName}</fo:block>
-							        						</fo:table-cell>
-						        						</fo:table-row>
+														 <#if paymentListReport.paymentRefNum?has_content> 
+															 <fo:table-row>
+								        						<fo:table-cell>
+								        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+								        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Cheque in favour of:${partyName}</fo:block>
+								        						</fo:table-cell>
+							        						</fo:table-row>
+						        						</#if>
+						        						 </#list>
+						        						</#if>
 						        						<fo:table-row>
 							        						<fo:table-cell>
 							        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
