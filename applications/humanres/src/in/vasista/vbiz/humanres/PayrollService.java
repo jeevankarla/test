@@ -2473,6 +2473,67 @@ public class PayrollService {
 	        result = ServiceUtil.returnSuccess("Successfully Updated!!");
 	        return result;
 	 }//end of service
+	
+	 public static Map<String, Object>  populatePeriodBillingForAttendanceFinalization(DispatchContext dctx, Map<String, ? extends Object> context)  {
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = ServiceUtil.returnSuccess();	
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String periodBillingId = null;
+			String partyId = (String) context.get("partyId");
+			String customTimePeriodId = (String) context.get("customTimePeriodId");
+			
+			List conditionList = FastList.newInstance();
+	        List periodBillingList = FastList.newInstance();
+	        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN , UtilMisc.toList("GENERATED","IN_PROCESS")));
+	        conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+	    	conditionList.add(EntityCondition.makeCondition("billingTypeId", EntityOperator.EQUALS ,"PB_HR_ATTN_FINAL"));
+	    	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	try {
+	    		periodBillingList = delegator.findList("PeriodBilling", condition, null,null, null, false);
+	    		if(!UtilValidate.isEmpty(periodBillingList)){
+	    			Debug.logError("Failed to create 'AttendanceFinalization': Already generated or In-process for the specified period", module);
+	    			return ServiceUtil.returnError("Failed to create 'AttendanceFinalization': Already generated or In-process for the specified period");
+	    		}
+	    	}catch (GenericEntityException e) {
+	    		 Debug.logError(e, module);             
+	             return ServiceUtil.returnError("Failed to find periodBillingList " + e);
+			} 
+	    	GenericValue customTimePeriod;
+			try {
+				customTimePeriod = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", customTimePeriodId), false);
+			} catch (GenericEntityException e1) {
+				Debug.logError(e1, e1.getMessage());
+				return ServiceUtil.returnError("Error in customTimePeriod" + e1);
+			}			
+			Timestamp fromDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate"));
+			Timestamp thruDateTime=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
+	    	
+	    	GenericValue newEntity = delegator.makeValue("PeriodBilling");
+	        newEntity.set("billingTypeId", "PB_HR_ATTN_FINAL");
+	        newEntity.set("customTimePeriodId", customTimePeriodId);
+	        newEntity.set("statusId", "IN_PROCESS");
+	        newEntity.set("createdByUserLogin", userLogin.get("userLoginId"));
+	        newEntity.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	        newEntity.set("createdDate", UtilDateTime.nowTimestamp());
+	        newEntity.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    try {     
+		        delegator.createSetNextSeqId(newEntity);		        
+				periodBillingId = (String) newEntity.get("periodBillingId");	
+				Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("payrollPeriodId", periodBillingId, "orgPartyId", partyId,"fromDate", fromDateTime, "thruDate", thruDateTime, "userLogin", userLogin);
+		        dispatcher.runAsync("populatePayrollAttedance", runSACOContext);
+	    	} catch (GenericEntityException e) {
+				Debug.logError(e,"Failed To Create New Period_Billing", module);
+				e.printStackTrace();
+			}
+	        catch (GenericServiceException e) {
+	            Debug.logError(e, "Error in calling 'populatePayrollAttedance' service", module);
+	            return ServiceUtil.returnError(e.getMessage());
+	        } 
+	        //result.put("periodBillingId", periodBillingId);
+	        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+	    	return result;
+	  }
 	 public static Map<String, Object> populatePayrollAttedance(DispatchContext dctx, Map<String, ? extends Object> context) {
                
 	        Delegator delegator = dctx.getDelegator();

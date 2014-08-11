@@ -1295,6 +1295,12 @@ under the License.emplpunch
         <attribute name="orgPartyId" mode="IN" type="String"/> 
         <attribute name="payrollPeriodId" mode="IN" type="String"/>
    </service> 
+    <service name="populatePeriodBillingForAttendanceFinalization" engine="java" auth="true" invoke="populatePeriodBillingForAttendanceFinalization" 
+        location="in.vasista.vbiz.humanres.PayrollService">
+        <description>Populate Period Billing for Attendance Finalization</description>
+        <attribute name="partyId" mode="IN" type="String"/> 
+        <attribute name="customTimePeriodId" mode="IN" optional="false" type="String"/>        
+   </service> 
    <service name="populateEmplPunchFromRawForPeriod" engine="java" auth="true" invoke="populateEmplPunchFromRawForPeriod" 
         location="in.vasista.vbiz.humanres.PunchService" transaction-timeout="1000">
         <description>populateEmplPunch From Raw For Period</description>

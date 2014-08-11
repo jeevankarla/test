@@ -193,4 +193,7 @@
     <InsuranceType description="Mother Dairy LIC"  insuranceTypeId="LIC_MD_INSR" deductionTypeId=""/>
     <InsuranceType description="Recurring Deposit" insuranceTypeId="RECCR_DEPOSIT" deductionTypeId="PAYROL_DD_RD_BNK"/>
     
+    
+    <Enumeration createdStamp="2014-03-22 11:07:41.0" createdTxStamp="2014-03-22 11:07:41.0" description="Payroll Attendance Finalizaton Billing" enumCode="CREDIT INST BILLING" enumId="PB_HR_ATTN_FINAL" enumTypeId="PERIOD_BILLING" lastUpdatedStamp="2014-03-22 11:07:41.0" lastUpdatedTxStamp="2014-03-22 11:07:41.0"/> 
+    
 </entity-engine-xml>

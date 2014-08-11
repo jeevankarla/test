@@ -691,6 +691,12 @@ under the License.
         <response name="success" type="view" value="EmployeeDailyAttendance"/>
         <response name="error" type="view" value="EmployeeDailyAttendance"/>
     </request-map>
+     <request-map uri="attendanceFinalization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="populatePeriodBillingForAttendanceFinalization"/>
+        <response name="success" type="view" value="AttendanceFinalization"/>
+        <response name="error" type="view" value="AttendanceFinalization"/>
+    </request-map>
     <request-map uri="PartyBenefitOrDeduction">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyBenefitOrDeduction"/>
@@ -1442,6 +1448,10 @@ under the License.
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmplLeaveStatus"/>
     </request-map>
+    <request-map uri="AttendanceFinalization">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="AttendanceFinalization"/>
+    </request-map>
     <request-map uri="updateEmplLeaveStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateEmplLeaveStatus"/>
@@ -1805,6 +1815,7 @@ under the License.
     <view-map name="DailyPunchInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#DailyPunchInternal"/>
 
     <view-map name="EmployeeAttendance" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeAttendance"/>
+    <view-map name="AttendanceFinalization" type="screen" page="component://humanres/widget/HumanresScreens.xml#AttendanceFinalization"/>
     <view-map name="EmployeeArrearDays" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeeArrearDays"></view-map>
     <view-map name="ApprovalHolidays" type="screen" page="component://humanres/widget/HumanresScreens.xml#ApprovalHolidays"></view-map>
     <view-map name="EditEmplLateHours" type="screen" page="component://humanres/widget/HumanresScreens.xml#EditEmplLateHours"></view-map>

@@ -20,7 +20,7 @@
         <field name="isManual"><hidden value="Y"/></field>	
         <field name="partyId"><lookup target-form-name="LookupPartyName" default-value="${partyId}" target-parameter="roleTypeId"/></field>
         <field name="punchtime" title="Punch Time"><text default-value="${nowTime}"/></field>
-        <!-- <field name="punchtime"  title="Punch Time" ><text/></field> -->
+        <field name="punchtime" use-when="punchtime!=null" title="Punch Time"><text/></field>
         <field name="dateTime"><hidden/></field>
         <field name="punchdate" title="Date"><date-time type="date" default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/></field> 
         <field name="emplPunchId"><hidden/></field>

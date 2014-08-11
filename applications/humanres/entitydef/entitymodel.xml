@@ -834,6 +834,7 @@ under the License.
       <field name="payGradeId" type="id-ne"></field>
       <field name="seqId" type="id"></field>
       <field name="payGradeName" type="name"></field>
+      <field name="payScale" type="currency-amount"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="payGradeId"/>
     </entity>
