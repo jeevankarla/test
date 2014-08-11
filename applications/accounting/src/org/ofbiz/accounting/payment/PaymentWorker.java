@@ -450,7 +450,11 @@ public class PaymentWorker {
         String paymentMethodId = (String) context.get("paymentMethodId");
         String instrumentDateStr=(String) context.get("instrumentDate");
         String paymentType = (String) context.get("paymentTypeId");
+        String invParentTypeId = (String) context.get("parentTypeId");
         String comments = (String) context.get("comments");
+        String paymentRefNum = (String) context.get("paymentRefNum");
+        String inFavourOf = (String) context.get("inFavourOf");//to be stored in PaymentAttribute
+        
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -479,7 +483,6 @@ public class PaymentWorker {
 				Debug.logError(e, "Cannot parse date string: "	+ instrumentDateStr, module);
 			}
 		}
-        Debug.log("=====instrumentDate==="+instrumentDate);
         try {
         Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
        // Debug.log("===paymentMethodType===="+paymentMethodType+"===partyIdFrom==="+partyIdFrom+"===partyId=="+partyIdTo+"==paymentMethodType=="+paymentMethodType+"===paymentType=="+paymentType);
@@ -493,9 +496,9 @@ public class PaymentWorker {
         /*if (!UtilValidate.isEmpty(paymentLocationId) ) {
             paymentCtx.put("paymentLocationId", paymentLocationId);                        	
         }   */         
-      /*  if (!UtilValidate.isEmpty(paymentRefNum) ) {
+        if (!UtilValidate.isEmpty(paymentRefNum) ) {
             paymentCtx.put("paymentRefNum", paymentRefNum);                        	
-        }*/
+        }
        // paymentCtx.put("issuingAuthority", issuingAuthority);  
        // paymentCtx.put("issuingAuthorityBranch", issuingAuthorityBranch);  
         paymentCtx.put("instrumentDate", instrumentDate);
@@ -512,6 +515,10 @@ public class PaymentWorker {
             return ServiceUtil.returnError(null, null, null, paymentResult);
         }
         paymentId = (String)paymentResult.get("paymentId");
+        //store attribute
+        GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
+        paymentAttribute.put("attrValue",inFavourOf);
+        paymentAttribute.create();
         }catch (Exception e) {
         Debug.logError(e, e.toString(), module);
         return ServiceUtil.returnError(e.toString());
@@ -521,6 +528,7 @@ public class PaymentWorker {
         
          result = ServiceUtil.returnSuccess("Payment successfully done for Party "+partyIdTo+" ..!");
          result.put("invoiceId",invoiceId);
+         result.put("parentTypeId",invParentTypeId);
          result.put("paymentId",paymentId);
          result.put("noConditionFind","Y");
          result.put("hideSearch","Y");
