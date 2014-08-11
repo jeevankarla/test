@@ -3651,7 +3651,10 @@
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
 			  <!--  <set field="parameters.roleTypeId" value="POWDER_CUSTOMER"/>	 -->
-			   <set field="parameters.roleTypeId" value="UNITS"/>							  					  
+			   <set field="parameters.roleTypeId" value="UNITS"/>
+			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'POWDER_PLANT')}" />
+				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>		
+			   					  					  
             </actions>
             <widgets>
               <decorator-screen name="ByProductsNgCommonDecorator" location="component://byproducts/widget/CommonScreens.xml">
