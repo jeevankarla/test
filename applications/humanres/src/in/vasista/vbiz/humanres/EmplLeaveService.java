@@ -130,7 +130,7 @@ public class EmplLeaveService {
 					if(UtilValidate.isNotEmpty(leaveTypeId)){
 						conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS, leaveTypeId));
 					}
-					
+					conditionList.add(EntityCondition.makeCondition("leaveStatus", EntityOperator.NOT_EQUAL, "LEAVE_CREATED"));
 					conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
 					conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 			    	EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));

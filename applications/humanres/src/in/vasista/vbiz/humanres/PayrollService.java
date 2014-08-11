@@ -2562,6 +2562,13 @@ public class PayrollService {
 	  	    	if (UtilValidate.isNotEmpty(tenantEarlyGo)) {
 	  	    		earlyGoMin = tenantEarlyGo.getDouble("propertyValue").doubleValue();
 	  	    	}*/
+	        	GenericValue payrollPeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",payrollPeriodId), false);
+	        	if(UtilValidate.isEmpty(payrollPeriod) || !(payrollPeriod.getString("periodTypeId").equals("HR_MONTH"))){
+	        		Debug.logError("invalid CustomTimePeriod", module);    			
+	 	 		    return ServiceUtil.returnError("invalid CustomTimePeriod");
+	        	}
+	        	timePeriodStart = UtilDateTime.toTimestamp(payrollPeriod.getDate("fromDate"));
+	        	timePeriodEnd	= UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(payrollPeriod.getDate("thruDate")));	
 	        	double noOfCalenderDays = UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd)+1;
 	        	// get attendance period here 
 	        	input.put("timePeriodId", payrollPeriodId);
@@ -2575,6 +2582,11 @@ public class PayrollService {
 	  	    	//lastCloseAttedancePeriod = ((GenericValue)result.get("lastClosedTimePeriod"))
 	  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 	  	    		lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
+	  	    		Timestamp attdTimePeriodStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate")));
+	  	    		if(UtilDateTime.getIntervalInDays(attdTimePeriodStart, timePeriodStart) > 32){
+	  	    			Debug.logError("invalid  Attedance Period : "+lastCloseAttedancePeriod.getString("customTimePeriodId") +",startDate :"+ lastCloseAttedancePeriod.getDate("fromDate")+",endDate:"+lastCloseAttedancePeriod.getDate("thruDate"), module);    			
+		 	 		    return ServiceUtil.returnError("invalid  Attedance Period : "+lastCloseAttedancePeriod.getString("customTimePeriodId") +",startDate :"+ lastCloseAttedancePeriod.getDate("fromDate")+",endDate:"+lastCloseAttedancePeriod.getDate("thruDate"));
+	  	    		}
 	  	    		timePeriodStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate")));
 	  	    		timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("thruDate")));
 	  	    	}
