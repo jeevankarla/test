@@ -63,7 +63,7 @@ under the License.
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">AUTHENTICATED BY: </fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Date: </fo:block> 
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">TAX INVOICE</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">TAX INVOICE</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            </fo:table-cell>
@@ -197,23 +197,28 @@ under the License.
 			                					<fo:table-row>
 			                    					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">RANGE: </fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if taxAuthority?has_content && taxAuthority.get('taxRange')?exists><#if ((taxAuthority.get('taxRange')).length()>24)>${taxAuthority.get('taxRange')?if_exists.substring(0,24)}<#else>${taxAuthority.get('taxRange')?if_exists}</#if></#if></fo:block>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxRange')?exists && (taxAuthority.get('taxRange')).length()>24)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxRange')).length()>48)>${taxAuthority.get('taxRange')?if_exists.substring(24, 48)}<#else>${taxAuthority.get('taxRange')?if_exists.substring(24, ((taxAuthority.get('taxRange')).length()-1))}</#if></fo:block>   
+					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if taxAuthority?has_content && taxAuthority.get('taxRange')?exists><#if ((taxAuthority.get('taxRange')).length()>26)>${taxAuthority.get('taxRange')?if_exists.substring(0,26)}<#else>${taxAuthority.get('taxRange')?if_exists}</#if></#if></fo:block>
+					            						<#if (taxAuthority?has_content && taxAuthority.get('taxRange')?exists && (taxAuthority.get('taxRange')).length()>26)>
+					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxRange')).length()>52)>${taxAuthority.get('taxRange')?if_exists.substring(26, 52)}<#else>${taxAuthority.get('taxRange')?if_exists.substring(26, ((taxAuthority.get('taxRange')).length()-1))}</#if></fo:block>   
 					            						</#if>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxRange')?exists && (taxAuthority.get('taxRange')).length()>48)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxRange')).length()>48)>${taxAuthority.get('taxRange')?if_exists.substring(48, 62)}<#else>${taxAuthority.get('taxRange')?if_exists.substring(48, ((taxAuthority.get('taxRange')).length()-1))}</#if></fo:block>   
+					            						<#if (taxAuthority?has_content && taxAuthority.get('taxRange')?exists && (taxAuthority.get('taxRange')).length()>52)>
+					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${taxAuthority.get('taxRange')?if_exists.substring(52, ((taxAuthority.get('taxRange')).length()-1))}</fo:block>   
 					            						</#if>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
 					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DIVISION: </fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if taxAuthority?has_content>${taxParty.get('description')?if_exists}</#if></fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if taxAuthority?has_content && taxAuthority.get('taxDivision')?exists><#if ((taxAuthority.get('taxDivision')).length()>24)>${taxAuthority.get('taxDivision')?if_exists.substring(0,24)}<#else>${taxAuthority.get('taxDivision')?if_exists}</#if></#if></fo:block>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>24)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>48)>${taxAuthority.get('taxDivision')?if_exists.substring(24, 48)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(24, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
+					            						<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if taxAuthority?has_content && taxAuthority.get('taxDivision')?exists><#if ((taxAuthority.get('taxDivision')).length()>28)>${taxAuthority.get('taxDivision')?if_exists.substring(0,28)}<#else>${taxAuthority.get('taxDivision')?if_exists}</#if></#if></fo:block>
+					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>28)>
+					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>56)>${taxAuthority.get('taxDivision')?if_exists.substring(28, 56)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(28, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
 					            						</#if>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>48)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>48)>${taxAuthority.get('taxDivision')?if_exists.substring(48, 62)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(48, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
+					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>56)>
+					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>84)>${taxAuthority.get('taxDivision')?if_exists.substring(56, 84)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(56, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
+					            						</#if>
+					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>84)>
+					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>112)>${taxAuthority.get('taxDivision')?if_exists.substring(84, 112)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(84, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
+					            						</#if>
+					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>112)>
+					            							<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>140)>${taxAuthority.get('taxDivision')?if_exists.substring(112, 140)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(112, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
 					            						</#if>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="dotted" border-width="thin" border-color="black">
@@ -427,6 +432,14 @@ under the License.
           		</fo:block>
 				<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">1. Certificate that the particulars given above are true &amp; correct &amp; the amount indicated represents the actual charged &amp; that there is no  </fo:block>
 				<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">flow of additional consideration directly or indirectly from the buyer.  </fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">2. All disputes regarding this bill shall be decided at Bangalore &amp; Bangalore Courts alone shall have jurisdiction.</fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">3. Please settle payment of this bill within fifteen days. </fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="7pt" white-space-collapse="false">4. In case of CST rate of tax, if the 'C' form is not given, the difference in tax rate is to your account.  </fo:block>
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">for KCMPF Ltd, Unit: Mother Dairy</fo:block>
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false">AUTHORISED SIGNATORY</fo:block>
 			</fo:flow>
 		</fo:page-sequence>
 		</#list>
