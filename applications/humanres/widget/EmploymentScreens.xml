@@ -461,7 +461,11 @@
 	    		<set field="titleProperty" value="HumanResFindEmployment"/>
 	            <set field="headerItem" value="newReports"/>
 				<set field="tabButtonItem" value="newReports" />   	
-	    		<set field="screenFlag" value="newReports"/>	
+	    		<set field="screenFlag" value="newReports"/>
+	    		<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>	
 	    		<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
 					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
 					<order-by field-name="sequenceNum"/>

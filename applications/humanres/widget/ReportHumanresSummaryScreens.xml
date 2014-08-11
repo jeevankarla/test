@@ -112,6 +112,27 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="EmployeesLOPdays">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				 <entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeesLOPdays.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/EmployeesLOPdays.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+			
+		</section>
+	</screen>
 	<screen name="LeaveAvailedReport">
 		<section>
 			<actions>

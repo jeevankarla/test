@@ -62,7 +62,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("larthruDate","larthruDate");
 		makeDatePicker("MPfromDate","MPfromDate");
 		makeDatePicker("MPthruDate","MPthruDate");
-		
+		makeDatePicker("LOPfromDate","LOPfromDate");
+		makeDatePicker("LOPthruDate","LOPthruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -251,6 +252,20 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      	   	<td width="20%">Employee Mis Punch Data</td>
 	      	   	<td width="15%">From Date<input  type="text"  id="MPfromDate"   name="MPfromDate"/></td>
 	  			<td width="15%">Thru Date<input  type="text"  id="MPthruDate"   name="MPthruDate"/></td>
+				<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+      	   		</form>
+      	   </tr>
+      	   <tr class="alternate-row">
+      	   		<form id="EmployeesLOPdays" name="EmployeeMisPunchData" mothed="post" action="<@ofbizUrl>EmployeesLOPdays.pdf</@ofbizUrl>" >
+	      	   	<td width="20%">LOP days Report</td>
+	      	   	
+	      	   	<td width="40%">Period Id
+			  			<select name="customTimePeriodId" class='h4'>
+	            					<#list timePeriodList as timePeriod>    
+	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+	            					</#list>      
+								</select>
+			  		</td>	
 				<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
       	   		</form>
       	   </tr>

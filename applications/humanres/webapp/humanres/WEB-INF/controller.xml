@@ -1575,6 +1575,10 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="EmployeeMisPunchData"/>        
     </request-map>
+    <request-map uri="EmployeesLOPdays.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="EmployeesLOPdays"/>        
+    </request-map>
     <request-map uri="LICRDReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="LICRDReport"/>        
@@ -1897,7 +1901,7 @@ under the License.
     <view-map name="LeaveAvailedReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveAvailedReport" content-type="application/pdf" encoding="none" />
     <view-map name="MonthlyAttendenceChecklist" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#MonthlyAttendenceChecklist" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeeMisPunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeMisPunchData" content-type="application/pdf" encoding="none"/>
-    
+    <view-map name="EmployeesLOPdays" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesLOPdays" content-type="application/pdf" encoding="none"/>
     <!-- <view-map name="WeeklyInOutExport" type="screen" page="component://humanres/widget/CalendarScreens.xml#WeeklyInOutExport"/> -->
     
     <view-map name="CompanyPunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CompanyPunchReport"/>
