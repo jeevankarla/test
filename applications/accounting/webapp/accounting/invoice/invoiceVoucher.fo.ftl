@@ -384,7 +384,7 @@ under the License.
 											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
 											       			</fo:table-cell>
 														 </fo:table-row>
-														 <#if paymentListReport.paymentRefNum?has_content> 
+														 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 															 <fo:table-row>
 								        						<fo:table-cell>
 								        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
