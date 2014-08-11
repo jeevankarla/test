@@ -847,7 +847,7 @@
         </field>
         
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
-			<hyperlink target="setPeriodBillingStatus" description="approve">
+			<hyperlink target=" " description="approve">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="APPROVED"/>
 	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
