@@ -320,7 +320,7 @@ under the License.
         <field name="finAccountTransId" position="1"><text/></field>        
         <field name="finAccountTransId"><ignored/></field>
         <field name="actualCurrencyAmount"><ignored/></field>
-        <field name="overrideGlAccountId"><ignored/></field>
+        <field name="overrideGlAccountId"></field>
         <field name="actualCurrencyUomId"><ignored/></field>
         <field position="1" name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
