@@ -3070,7 +3070,7 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />	
-				 <set field="parameters.roleTypeId" value="FGS_WHOLESALE"/>
+				 <set field="parameters.roleTypeId" value="FGS_CUSTOMER"/>
 				 <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'FG_STORE')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>
             </actions>
@@ -3650,7 +3650,6 @@
                <set field="defaultEffectiveDateTime" value="${supplyDate}" default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
 			   <set field="defaultEffectiveDate" 
 					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
-			  <!--  <set field="parameters.roleTypeId" value="POWDER_CUSTOMER"/>	 -->
 			   <set field="parameters.roleTypeId" value="UNITS"/>
 			   <set field="productStoreResult"	value="${groovy:in.vasista.vbiz.byproducts.icp.ICPServices.getProductStoreByGroupId(delegator, 'POWDER_PLANT')}" />
 				<set field="productStoreId" value="${productStoreResult.factoryStoreId}"/>		
