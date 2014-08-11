@@ -323,12 +323,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                <#else>
                 <td align="center"></td>
                </#if>
-                <#if (invoice.statusId?exists && invoice.statusId == "INVOICE_PAID")>
-              	<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Voucher</a></td>
-               <#else>
-                <td align="center"></td>
-               </#if>
-               <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+              <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Voucher</a></td>
+              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
