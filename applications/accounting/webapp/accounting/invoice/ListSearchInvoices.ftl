@@ -295,8 +295,10 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.AccountingToParty}</td>
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
-          <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td> 
-           <td>Payment</td> 
+          <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
+          <td>Payment</td> 
+          <td>Voucher</td>
+          <td>Cheque</td> 
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
       </thead>
@@ -309,6 +311,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><a class="buttontext" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></td>
               <td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />
+                
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
               </td>
               <td>${(invoice.invoiceDate)?if_exists}</td>
@@ -331,6 +334,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 <td align="center"></td>
                </#if>
               <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Voucher</a></td>
+              <td><#if invoice.parentTypeId == "PURCHASE_INVOICE"><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
               <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
             </tr>
             <#-- toggle the row color -->

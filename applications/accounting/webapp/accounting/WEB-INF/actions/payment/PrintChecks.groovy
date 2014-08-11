@@ -63,6 +63,18 @@ context.rounding = rounding;
 paymentMethodId = "";
 amount = BigDecimal.ZERO;
 paymentId = parameters.paymentId;
+invoiceId = parameters.invoiceId;
+
+if(UtilValidate.isEmpty(paymentId)){
+	paymentAppls = delegator.findByAnd("PaymentApplication", [invoiceId : invoiceId]);
+	if(UtilValidate.isNotEmpty(paymentAppls)){
+		paymentDetails = EntityUtil.getFirst(paymentAppls);
+		if(UtilValidate.isNotEmpty(paymentDetails)){
+			paymentId = paymentDetails.paymentId;
+		}
+	}
+}
+
 if(UtilValidate.isNotEmpty(paymentId)){
 	paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
 	if(UtilValidate.isNotEmpty(paymentDetails.paymentMethodId)){
@@ -73,9 +85,9 @@ if(UtilValidate.isNotEmpty(paymentId)){
 	}
 	context.put("paymentMethodId",paymentMethodId);
 	context.put("amount",amount);
+	context.put("paymentId",paymentId);
 }
 
-Debug.log("paymentMethodId======="+paymentMethodId);
 // list of payments
 payments = [];
 

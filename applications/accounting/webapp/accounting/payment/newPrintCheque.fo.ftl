@@ -29,7 +29,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if parameters.paymentId?has_content>  
+        <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
@@ -133,7 +133,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if parameters.paymentId?has_content>  
+        <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -234,7 +234,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if parameters.paymentId?has_content>  
+        <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;A/C PAYEE&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
@@ -326,7 +326,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if parameters.paymentId?has_content>  
+        <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
@@ -430,7 +430,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if parameters.paymentId?has_content>  
+        <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;A/C PAYEE&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
@@ -521,7 +521,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if parameters.paymentId?has_content>  
+        <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
@@ -624,7 +624,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
         ${setRequestAttribute("OUTPUT_FILENAME", "chequeVouvher.pdf")}
-        <#if parameters.paymentId?exists>  
+        <#if paymentId?exists>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
         	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
