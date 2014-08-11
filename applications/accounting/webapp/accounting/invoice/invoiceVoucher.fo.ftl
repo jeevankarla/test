@@ -73,7 +73,7 @@ under the License.
 						        						</fo:table-cell>
 						        						<#assign partyFullName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, dispalyParty.partyId?if_exists, false)>
 						        						<fo:table-cell>
-						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together = "always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PAYEE NAME:<#if billingParty?has_content>${partyFullName}</#if></fo:block>
+						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together = "always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PAYEE NAME:<#if billingParty?has_content>${partyFullName}</#if></fo:block>
 						        						</fo:table-cell> 
 						        					</fo:table-row>	
 						        					<fo:table-row>
@@ -81,7 +81,7 @@ under the License.
 						        								<fo:block font-size="12pt"  white-space-collapse="false" font-weight="bold" >&#160;</fo:block>
 						        						</fo:table-cell>
 						        						<fo:table-cell>
-						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;AMOUNT:${invoiceTotal?if_exists?string("#0.00")}</fo:block>
+						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;AMOUNT:${invoiceTotal?if_exists?string("#0.00")}</fo:block>
 						        						</fo:table-cell> 
 						        					</fo:table-row>	
 						        					 <fo:table-row>
@@ -232,11 +232,13 @@ under the License.
 						        						  <#list printPaymentsList as paymentListReport>
 						        						  <#assign sno=sno+1>
 						        						  <#assign  partyName="">
-						        						  <#if paymentListReport.partyIdFrom?exists>
-									            			<#assign partyId=paymentListReport.partyIdFrom>
-									            			<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
-									            		</#if>
-						        						 
+						        						  <#assign  partyId="">
+						        						  <#if paymentListReport.partyIdFrom?exists && paymentListReport.partyIdFrom == "Company">
+									            			  <#assign partyId = paymentListReport.partyIdTo>
+									            		  <#else>
+									            			  <#assign partyId = paymentListReport.partyIdFrom>
+									            		  </#if>
+						        						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
