@@ -2517,7 +2517,8 @@ public class PayrollService {
 	  	    		timePeriodStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate")));
 	  	    		timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("thruDate")));
 	  	    	}
-	        	//Active employes
+	        	
+	  	    	//Active employes
 	  	    	input.clear();
 	        	input.put("userLogin", userLogin);
 	        	input.put("orgPartyId", orgPartyId);
@@ -2640,9 +2641,9 @@ public class PayrollService {
 			    			if(UtilValidate.isNotEmpty(dayShiftList)){
 			    				for(GenericValue dayShift :dayShiftList){
 			    					if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
-			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/1440);
+			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
 			    					}else{
-			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/1440);
+			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
 			    					}
 			    					
 			    				}

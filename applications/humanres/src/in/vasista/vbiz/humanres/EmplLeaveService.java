@@ -141,7 +141,7 @@ public class EmplLeaveService {
 						GenericValue leave = leaves.get(i);
 						String leaveType =leave.getString("leaveTypeId");
 			            Timestamp from = leave.getTimestamp("fromDate");
-			            Timestamp thru = leave.getTimestamp("thruDate");			
+			            Timestamp thru = UtilDateTime.getDayEnd(leave.getTimestamp("thruDate"));			
 						if (from.compareTo(timePeriodStart) < 0 || thru.compareTo(timePeriodEnd) > 0) {
 							Debug.logError("leave entry ========"+leave, module);
 							Debug.logError( errorMsg + ": leave cannot span multiple payroll periods ,employeeId:"+partyId, module);
