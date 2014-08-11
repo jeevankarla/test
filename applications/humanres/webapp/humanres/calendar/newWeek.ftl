@@ -209,7 +209,7 @@ function dateValidation(){
 						  		<#if period.start?date=Records.punchdate>   
 						    		<#if Records.PunchType="${punchtype.enumId}">   
 						      			<#if Records.emplPunchId=cellid?string>    
-						      				onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=${inOut.enumId?if_exists}&dateTime=${period.start?string}&punchtime=${Records.punchtime}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?if_exists}')" 
+						      				onClick="leapTo('/humanres/control/admPunch?partyId=${partyId}&punchdate=${period.start?string}&PunchType=${punchtype.enumId?if_exists}&InOut=${inOut.enumId?if_exists}&dateTime=${period.start?string}&punchtime=${Records.getString('punchtime')}&emplPunchId=${cellid?string}&shiftType=${Records.shiftType?if_exists}')" 
 						     				<#assign x=0>
 						        			<#break> 
 						     			</#if>
