@@ -173,8 +173,10 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 				}
 			}
 			netAmount=totEarnings+totDeductions;
-			if(UtilValidate.isNotEmpty(partyDetails.get("employeeBankAccNo"))){
-				bankAdviceDetailsMap.put("acNo",partyDetails.get("employeeBankAccNo"));
+			List<GenericValue> partyBenefitList = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , partyId), null, null, null, false);
+			if(UtilValidate.isNotEmpty(partyBenefitList)){
+				accNo=partyBenefitList.get(0).get("finAccountCode");				
+				bankAdviceDetailsMap.put("acNo",accNo);
 			}
 			if(UtilValidate.isNotEmpty(partyDetails.employeeId)){
 				bankAdviceDetailsMap.put("emplNo",partyDetails.get("employeeId"));
