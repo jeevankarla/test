@@ -1924,6 +1924,18 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccount"/>
     </request-map>
+     <request-map uri="FindFinAccountAlt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFinAccountAlt"/>
+    </request-map>
+     <request-map uri="FindFinAccountTransAlt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFinAccountTransAlt"/>
+    </request-map>
+     <request-map uri="EditFinAccountAlt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFinAccountAlt"/>
+    </request-map>
     <request-map uri="EditFinAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFinAccount"/>
@@ -2862,16 +2874,19 @@ under the License.
         <event type="service" invoke="createVoucherPayment"/>
         <response name="success" type="request-redirect-noparam" value="FindApInvoices">
         <redirect-parameter  name="invoiceId"/> 
+         <redirect-parameter  name="parentTypeId"/> 
         </response>
         <response name="error" type="request-redirect-noparam" value="FindApInvoices">
         <redirect-parameter name="invoiceId"/>
+         <redirect-parameter  name="parentTypeId"/> 
         </response>
     </request-map>
     <request-map uri="createArVoucherPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createVoucherPayment"/>
         <response name="success" type="request-redirect-noparam" value="FindArInvoices">
-         <redirect-parameter  name="invoiceId" > </redirect-parameter> 
+         <redirect-parameter  name="invoiceId" />
+          <redirect-parameter  name="parentTypeId"/> 
          </response>
         <response name="error" type="request-redirect-noparam" value="FindArInvoices">
         </response>
@@ -3089,7 +3104,10 @@ under the License.
     <view-map name="EditDepositSlipAndMembers" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditDepositSlipAndMembers"/>
     <view-map name="NewDepositPayment" type="screen" page="component://accounting/widget/FinAccountScreens.xml#NewDepositPayment"/>
     <view-map name="NewWithdrawalPayment" type="screen" page="component://accounting/widget/FinAccountScreens.xml#NewWithdrawalPayment"/>
-
+    
+     <view-map name="FindFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
+    <view-map name="FindFinAccountTransAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountTransAlt"/>
+     <view-map name="EditFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditFinAccountAlt"/>
     <!-- TO BE REMOVED
     <view-map name="ListFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ListFinAccount"/>
     -->

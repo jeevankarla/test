@@ -47,7 +47,7 @@ under the License.
         						   	<fo:table-row>
 		    								<fo:table-cell border-style="solid">
 		    									 <fo:block text-align="right" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
-				                                <fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="12pt" keep-together="always">&#160;VOUCHER NO:${invoice.invoiceId}</fo:block>
+				                                <fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="12pt" keep-together="always">&#160;INVOICE NO:${invoice.invoiceId}</fo:block>
 				                             </fo:table-cell>
 		    								<fo:table-cell border-style="solid">
 		    									 <fo:block text-align="right" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
@@ -55,7 +55,7 @@ under the License.
 				                               </fo:table-cell>
 		    								<fo:table-cell border-style="solid">
 				                               <fo:block text-align="center" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
-		    									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; RECEIVED PAYMENT </fo:block>
+		    									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
 		    									</fo:table-cell>
 		    						</fo:table-row>	
         						   	</fo:table-header>

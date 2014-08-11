@@ -352,6 +352,9 @@ under the License.
           <attribute name="paymentMethodId" mode="IN" type="String" optional="true"/> 
          <attribute name="paymentTypeId" mode="IN" type="String" optional="true"/> 
          <attribute name="comments" mode="IN" type="String" optional="true"/> 
+         <attribute name="inFavourOf" mode="IN" type="String" optional="true"/> 
+         <attribute name="paymentRefNum" mode="IN" type="String" optional="true"/> 
+         <attribute name="parentTypeId" mode="INOUT" type="String" optional="true"/> 
          <attribute name="paymentId" mode="OUT" type="String" optional="true"/> 
           <attribute name="noConditionFind" mode="OUT" type="String"  optional="true"/> 
           <attribute name="hideSearch" mode="OUT" type="String" optional="true"/> 
