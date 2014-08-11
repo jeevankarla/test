@@ -90,8 +90,9 @@ under the License.
 											       			</fo:table-cell>
 														 </fo:table-row>
 						        					<fo:table-row>
+						        					<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(invoiceTotal, "%indRupees-and-paiseRupees", locale)>
 						        						<fo:table-cell>
-						        								<fo:block font-size="12pt"  white-space-collapse="false" font-weight="bold" keep-together="always">&#160;&#160;AMOUNT(in words):${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(invoiceTotal?string("#0")), "%rupees-and-paise", locale).toUpperCase()} ONLY </fo:block>
+						        								<fo:block font-size="12pt"  white-space-collapse="false" font-weight="bold" keep-together="always">&#160;&#160;AMOUNT(in words):${amountWords} ONLY </fo:block>
 						        						</fo:table-cell>
 						        						<fo:table-cell>
 						        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
