@@ -61,6 +61,7 @@ context.rounding = rounding;
 
 //for cheque printing
 paymentMethodId = "";
+attrValue = "";
 amount = BigDecimal.ZERO;
 paymentId = parameters.paymentId;
 invoiceId = parameters.invoiceId;
@@ -71,6 +72,13 @@ if(UtilValidate.isEmpty(paymentId)){
 		paymentDetails = EntityUtil.getFirst(paymentAppls);
 		if(UtilValidate.isNotEmpty(paymentDetails)){
 			paymentId = paymentDetails.paymentId;
+			if(UtilValidate.isNotEmpty(paymentId)){
+				paymentAttrDetails = delegator.findOne("PaymentAttribute", [paymentId : paymentId, attrName : "INFAVOUR_OF"], false);
+				if(UtilValidate.isNotEmpty(paymentAttrDetails.attrValue)){
+					attrValue = paymentAttrDetails.attrValue;
+					context.put("attrValue",attrValue);
+				}
+			}
 		}
 	}
 }

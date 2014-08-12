@@ -59,7 +59,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo?if_exists, false)}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -155,7 +155,7 @@ under the License.
                     <fo:table-body> 
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo?if_exists, false)}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -252,7 +252,7 @@ under the License.
                     <fo:table-body> 
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo?if_exists, false)}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -356,7 +356,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo?if_exists, false)}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -447,7 +447,7 @@ under the License.
                     <fo:table-body> 
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo?if_exists, false)}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -550,7 +550,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo?if_exists, false)}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -654,7 +654,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo?if_exists, false)}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
