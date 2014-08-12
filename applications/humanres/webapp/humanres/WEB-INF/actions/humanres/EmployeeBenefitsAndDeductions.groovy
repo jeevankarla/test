@@ -108,18 +108,49 @@ List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", con
 Map headerDetailsMap=FastMap.newInstance();
 List benfitItemIdsList=FastList.newInstance();
 Map benefitTypeFinalMap=FastMap.newInstance();
-
+Map benefitWiseMap=FastMap.newInstance();
+Map hederFinalBenfMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(partyBenefitList)){
 	partyBenefitList.each{ partyBenefit->
 		employeeId= partyBenefit.partyIdTo;
 		amount= partyBenefit.cost;
+		headerItemTypeId=partyBenefit.benefitTypeId;
+		if(UtilValidate.isNotEmpty(amount)){
+			//this is for Benefits/Deductions Report
+			if(parameters.benefitTypeId==headerItemTypeId){
+				if(UtilValidate.isEmpty(benefitWiseMap.get(employeeId))){
+					Map tempBenf=FastMap.newInstance();
+					tempBenf.put(headerItemTypeId, amount);		
+					if(UtilValidate.isNotEmpty(tempBenf)){
+						benefitWiseMap.put(employeeId,tempBenf);
+					}	
+				}else{				
+						Map tempMap=FastMap.newInstance();
+						tempMap.putAll(benefitWiseMap.get(employeeId));
+						tempMap.put(headerItemTypeId,amount);
+						benefitWiseMap.put(employeeId,tempMap);
+				}
+			}else{			
+				if(UtilValidate.isEmpty(hederFinalBenfMap.get(employeeId))){
+					Map headBenf=FastMap.newInstance();
+					headBenf.put(headerItemTypeId, amount);
+					if(UtilValidate.isNotEmpty(headBenf)){
+						hederFinalBenfMap.put(employeeId,headBenf);
+					}
+				}else{
+						Map headBenfMap=FastMap.newInstance();
+						headBenfMap.putAll(hederFinalBenfMap.get(employeeId));
+						headBenfMap.put(headerItemTypeId,amount);
+						hederFinalBenfMap.put(employeeId,headBenfMap);
+				}
+			}
+			benfitItemIdsList.addAll(headerItemTypeId);
+		}
 		if(UtilValidate.isNotEmpty(amount)){
 			amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
 		}else{
 			amount=" ";
 		}
-		headerItemTypeId=partyBenefit.benefitTypeId;
-		benfitItemIdsList.add(headerItemTypeId);
 		if(UtilValidate.isNotEmpty(amount)){
 			if(UtilValidate.isEmpty(benefitTypeFinalMap.get(employeeId))){
 				Map tempBenefitMap=FastMap.newInstance();
@@ -135,6 +166,10 @@ if(UtilValidate.isNotEmpty(partyBenefitList)){
 		
 	}
 }
+Set benefitIds = new HashSet(benfitItemIdsList);
+List benfitIdsList =  benefitIds.toList();
+benfitItemIdsList=benfitIdsList;
+
 //Debug.logError("benefitTypeFinalMap="+benefitTypeFinalMap,"");
 
 JSONArray headBenefitItemsJSON = new JSONArray();
@@ -176,17 +211,52 @@ if(UtilValidate.isNotEmpty(benefitTypeFinalMap)){
 }
 Map deductionTypeValueMap=FastMap.newInstance();
 List dedItemIdsList=FastList.newInstance();
+Map deductionWiseMap=FastMap.newInstance();
+Map hederFinalDedMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(partyDeductionList)){
 	partyDeductionList.each{ partyDed->
 		employeeId= partyDed.partyIdTo;
 		amount= partyDed.cost;
+		headerItemTypeId=partyDed.deductionTypeId;
+		if(UtilValidate.isNotEmpty(amount)){
+			//this is for Benefits/Deductions Report
+			if(parameters.dedTypeId==headerItemTypeId){
+				if(UtilValidate.isEmpty(deductionWiseMap.get(employeeId))){
+					Map tempDed=FastMap.newInstance();
+					tempDed.put(headerItemTypeId, amount);
+					if(UtilValidate.isNotEmpty(tempDed)){
+						deductionWiseMap.put(employeeId,tempDed);
+					}
+				}else{
+						Map tempMap=FastMap.newInstance();
+						tempMap.putAll(deductionWiseMap.get(employeeId));
+						tempMap.put(headerItemTypeId,amount);
+						deductionWiseMap.put(employeeId,tempMap);
+				}
+			}else{			
+				if(UtilValidate.isEmpty(hederFinalDedMap.get(employeeId))){
+					Map headDed=FastMap.newInstance();
+					headDed.put(headerItemTypeId, amount);
+					if(UtilValidate.isNotEmpty(headDed)){
+						hederFinalDedMap.put(employeeId,headDed);
+					}
+				}else{
+						Map headMap=FastMap.newInstance();
+						headMap.putAll(hederFinalDedMap.get(employeeId));
+						headMap.put(headerItemTypeId,amount);
+						hederFinalDedMap.put(employeeId,headMap);
+				}
+			}
+			dedItemIdsList.add(headerItemTypeId);
+			
+			
+			
+		}		
 		if(UtilValidate.isNotEmpty(amount)){
 			amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
 		}else{
 			amount=" ";
 		}
-		headerItemTypeId=partyDed.deductionTypeId;
-		dedItemIdsList.add(headerItemTypeId);
 		if(UtilValidate.isNotEmpty(amount)){
 			if(UtilValidate.isEmpty(deductionTypeValueMap.get(employeeId))){
 				Map tempDedMap=FastMap.newInstance();
@@ -202,6 +272,10 @@ if(UtilValidate.isNotEmpty(partyDeductionList)){
 		
 	}
 }
+Set deductionIds = new HashSet(dedItemIdsList);
+List dedIdsList =  deductionIds.toList();
+dedItemIdsList=dedIdsList;
+Map totalDeductionsMap=FastMap.newInstance();
 //this is for report purpose
 if(UtilValidate.isNotEmpty(parameters.benefitTypeId)){
 	benfitItemIdsList=UtilMisc.toList(parameters.benefitTypeId);
@@ -243,6 +317,11 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 			Iterator headerItemIter = (entry.getValue()).entrySet().iterator();
 			while(headerItemIter.hasNext()){
 				Map.Entry itemEntry = headerItemIter.next();
+				if(UtilValidate.isEmpty(totalDeductionsMap[itemEntry.getKey()])){
+					totalDeductionsMap[itemEntry.getKey()]=(itemEntry.getValue());
+				}else{
+					totalDeductionsMap[itemEntry.getKey()]+=(itemEntry.getValue());
+				}
 				newObj.put(itemEntry.getKey(),((itemEntry.getValue())));
 			}
 		}
@@ -252,11 +331,21 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 
 if("benefits".equals(parameters.type)){
 	context.headItemsJson=headBenefitItemsJSON;
-	context.headerDetailsMap=benefitTypeFinalMap;
+	if(UtilValidate.isNotEmpty(parameters.benefitTypeId)){
+		context.headerDetailsMap=benefitWiseMap;
+	}else{
+		context.headerDetailsMap=hederFinalBenfMap;	
+	}
 	context.headerItemIdsList=benfitItemIdsList;
+	context.totalBenefitsMap=totalBenefitsMap;
 }else{
 	context.headItemsJson=headItemsJSON;
-	context.headerDetailsMap=deductionTypeValueMap;
+	if(UtilValidate.isNotEmpty(parameters.dedTypeId)){
+		context.headerDetailsMap=deductionWiseMap;
+	}else{
+		context.headerDetailsMap=hederFinalDedMap;
+	}
 	context.headerItemIdsList=dedItemIdsList;
+	context.totalDeductionsMap=totalDeductionsMap;
 }
 //Debug.logError("context.headItemsJson="+context.headItemsJson,"");
