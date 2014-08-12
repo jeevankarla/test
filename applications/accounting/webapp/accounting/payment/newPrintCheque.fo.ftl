@@ -56,7 +56,7 @@ under the License.
         <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
-        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
+        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateStringBankFormat(paymentDate?if_exists, "ddMMyyyy")}</fo:block>
         	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
@@ -106,11 +106,6 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 							</fo:table-row>
-							<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>	
 							<fo:table-row>
 								<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -150,8 +145,8 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
-                     margin-left=".2in" margin-right=".3in" margin-top=".1in" margin-bottom=".3in">
-                <fo:region-body margin-top=".3in"/>
+                     margin-left=".2in" margin-right=".17in" margin-top=".01in" margin-bottom=".3in">
+                <fo:region-body margin-top=".2in"/>
                 <fo:region-before extent=".4in"/>
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
@@ -160,14 +155,10 @@ under the License.
         <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
-        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;A/C PAYEE&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
+        	<fo:block linefeed-treatment="preserve">&#160;</fo:block>
+        	<fo:block  keep-together="always" text-align="right" font-size = "12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd MM yyyy")}</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
-        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
               <fo:block font-size="12pt">                
                 <fo:table>
                     <fo:table-column column-width="100pt"/>
@@ -179,6 +170,31 @@ under the License.
                     <fo:table-body> 
 							<fo:table-row>
 				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;A/C PAYEE</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							
+				       		<fo:table-row>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#160;</fo:block>
+				       			</fo:table-cell>
+				       		</fo:table-row>
+				       		<fo:table-row>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#160;</fo:block>
+				       			</fo:table-cell>
+				       		</fo:table-row>
+							<fo:table-row>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
 				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
@@ -188,13 +204,13 @@ under the License.
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
+			                  <fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
 			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
 			                   <fo:table-cell>
 			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
 			                   </fo:table-cell>
-			                   <fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
 				       			<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
@@ -207,11 +223,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 							</fo:table-row>
-							<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-							</fo:table-row>
+							
 							<fo:table-row>
 								<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -251,21 +263,20 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
-                     margin-left=".2in" margin-right=".3in" margin-top=".01in" margin-bottom=".3in">
-                <fo:region-body margin-top=".2in"/>
+                     margin-left=".2in" margin-right=".10in" margin-top=".01in" margin-bottom=".3in">
+                <fo:region-body margin-top=".08in"/>
                 <fo:region-before extent=".4in"/>
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if paymentId?has_content>  
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVouvher.pdf")}
+        <#if paymentId?exists>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
-        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;A/C PAYEE&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
+        	<fo:block  keep-together="always" text-align="right" font-size = "12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd MM yyyy")}</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block font-size="12pt"> 
-              <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                 <fo:table>
                     <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="100pt"/>                
@@ -274,6 +285,22 @@ under the License.
                     <fo:table-column column-width="75pt"/>
                     <fo:table-column column-width="75pt"/>
                     <fo:table-body> 
+                    		<fo:table-row>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "13pt" font-weight = "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;A/C PAYEE</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
 				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
@@ -285,18 +312,13 @@ under the License.
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-							</fo:table-row>
-							<fo:table-row>
 			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
+			                   <fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       		  </fo:table-cell>
 			                  <fo:table-cell>
 			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
 			                   </fo:table-cell>
-			                   <fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
 				       			<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
@@ -318,7 +340,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt"><@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
 				       			</fo:table-cell>
 				       		</fo:table-row>
 	               	</fo:table-body>
@@ -343,7 +365,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
-                     margin-left=".2in" margin-right=".3in" margin-top=".3in" margin-bottom=".3in">
+                     margin-left=".2in" margin-right=".17in" margin-top=".2in" margin-bottom=".3in">
                 <fo:region-body margin-top=".1in"/>
                 <fo:region-before extent=".4in"/>
                 <fo:region-after extent=".4in"/>
@@ -353,12 +375,11 @@ under the License.
         <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
-        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
-        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+        	<fo:block  keep-together="always" text-align="right" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateStringBankFormat(paymentDate?if_exists, "ddMMyyyy")}</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
+        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
               <fo:block font-size="12pt"> 
-              <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                 <fo:table>
                     <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="100pt"/>                
@@ -442,97 +463,8 @@ under the License.
 		</fo:root>
 </#escape>
 </#if>
-<#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD9">
-<#escape x as x?xml>
-    <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
-        <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
-                     margin-left=".2in" margin-right=".3in" margin-top=".2in" margin-bottom=".3in">
-                <fo:region-body margin-top=".3in"/>
-                <fo:region-before extent=".4in"/>
-                <fo:region-after extent=".4in"/>
-            </fo:simple-page-master>
-        </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
-        <#if paymentId?has_content>  
-        <fo:page-sequence master-reference="main">
-        	<fo:static-content flow-name="xsl-region-before">
-        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;A/C PAYEE&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
-        	</fo:static-content>
-        	<fo:flow flow-name="xsl-region-body">
-              <fo:block font-size="12pt"> 
-	                <fo:table>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>                
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="75pt"/>
-                    <fo:table-column column-width="75pt"/>
-                    <fo:table-body> 
-							<fo:table-row>
-				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
-				       			</fo:table-cell>
-							</fo:table-row>
-							<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-							</fo:table-row>
-							<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-							</fo:table-row>
-							<fo:table-row>
-			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
-			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
-			                   </fo:table-cell>
-			                   <fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       			<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       			<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-							</fo:table-row>
-							<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       			<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       			<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       			<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
-				       			</fo:table-cell>
-				       		</fo:table-row>
-	               	</fo:table-body>
-                </fo:table>
-    	 	</fo:block>
-           </fo:flow>
-        </fo:page-sequence>
-        <#else>	
-			<fo:page-sequence master-reference="main">
-		    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-		       		 <fo:block font-size="14pt">
-		            	${uiLabelMap.OrderNoOrderFound}.
-		       		 </fo:block>
-		    	</fo:flow>
-			</fo:page-sequence>
-		</#if>
-		</fo:root>
-</#escape>
-</#if>
+<#-- Indian Bank-->
+
 <#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD3">
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -548,7 +480,7 @@ under the License.
         <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
-        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
+        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateStringBankFormat(paymentDate?if_exists, "ddMMyyyy")}</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block font-size="12pt"> 
@@ -641,8 +573,8 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
-                     margin-left=".2in" margin-right=".3in" margin-top=".3in" margin-bottom=".3in">
-                <fo:region-body margin-top=".1in"/>
+                     margin-left=".2in" margin-right=".10in" margin-top=".01in" margin-bottom=".3in">
+                <fo:region-body margin-top=".08in"/>
                 <fo:region-before extent=".4in"/>
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
@@ -651,12 +583,10 @@ under the License.
         <#if paymentId?exists>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
-        	<fo:block  keep-together="always" text-align="center" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd MM yyyy")}</fo:block>
-        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+        	<fo:block  keep-together="always" text-align="right" font-size = "12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd MM yyyy")}</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
               <fo:block font-size="12pt"> 
-              <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                 <fo:table>
                     <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="100pt"/>                
@@ -688,12 +618,12 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
+			                   <fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       		  </fo:table-cell>
 			                  <fo:table-cell>
 			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
 			                   </fo:table-cell>
-			                   <fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
 				       			<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
@@ -705,7 +635,106 @@ under the License.
 								<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
-				       		</fo:table-row>	
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+								<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
+				       			</fo:table-cell>
+				       		</fo:table-row>
+	               	</fo:table-body>
+                </fo:table>
+    	 	</fo:block>
+           </fo:flow>
+        </fo:page-sequence>
+        <#else>	
+			<fo:page-sequence master-reference="main">
+		    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+		       		 <fo:block font-size="14pt">
+		            	${uiLabelMap.OrderNoOrderFound}.
+		       		 </fo:block>
+		    	</fo:flow>
+			</fo:page-sequence>
+		</#if>
+		</fo:root>
+</#escape>
+</#if>
+
+
+<#if paymentMethodId?exists && paymentMethodId == "PAYMENTMETHOD9">
+<#escape x as x?xml>
+    <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+        <fo:layout-master-set>
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
+                     margin-left=".2in" margin-right=".10in" margin-top=".3in" margin-bottom=".3in">
+                <fo:region-body margin-top=".08in"/>
+                <fo:region-before extent=".4in"/>
+                <fo:region-after extent=".4in"/>
+            </fo:simple-page-master>
+        </fo:layout-master-set>
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVouvher.pdf")}
+        <#if paymentId?exists>  
+        <fo:page-sequence master-reference="main">
+        	<fo:static-content flow-name="xsl-region-before">
+        	<fo:block  keep-together="always" text-align="right" font-size = "12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate?if_exists, "dd MM yyyy")}</fo:block>
+        	</fo:static-content>
+        	<fo:flow flow-name="xsl-region-body">
+              <fo:block font-size="12pt"> 
+                <fo:table>
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="100pt"/>                
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="75pt"/>
+                    <fo:table-column column-width="75pt"/>
+                    <fo:table-body> 
+                    		<fo:table-row>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "13pt" font-weight = "bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;A/C PAYEE</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+				       			<fo:table-cell>
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
+							<fo:table-row>
+			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
+			                   <fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       		  </fo:table-cell>
+			                  <fo:table-cell>
+			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                   </fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
