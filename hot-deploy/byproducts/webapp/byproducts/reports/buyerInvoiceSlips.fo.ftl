@@ -88,7 +88,7 @@ under the License.
 							
 							<fo:table-row border-style="solid">
             					<fo:table-cell >
-            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">To: ${billingAddress.get("toName")?if_exists} </fo:block>
+            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">To: ${billingAddress.get("toName")?if_exists} </fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${billingAddress.get("address1")?if_exists} </fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${billingAddress.get("address2")?if_exists} </fo:block>
             						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${billingAddress.get("city")?if_exists} - ${billingAddress.get("postalCode")?if_exists} </fo:block>  
@@ -119,27 +119,26 @@ under the License.
 			            					<fo:table-body>
 			                					<fo:table-row>
 			                    					<fo:table-cell border-style="solid" >
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">PLA No.</fo:block>  
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">PLA No.</fo:block>  
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid" >
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Registration</fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">No.</fo:block>   
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Registration No.</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid" >
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Chapter No./Tarrif</fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Sub-Heading</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Chapter No./Tarrif</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Sub-Heading</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid" >
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Mode of</fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Despatch</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Mode of</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Despatch</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Vehicle</fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Reg. No.</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Vehicle</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Reg. No.</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid" >
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Name of the</fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">Commodity</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Name of the</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">Commodity</fo:block>
 					            					</fo:table-cell>
 												</fo:table-row>
 												<fo:table-row>
@@ -154,24 +153,24 @@ under the License.
 				            							<#if chapterMap?has_content>
 				            								<#assign chapterDetails = chapterMap.entrySet()>
 				            								<#list chapterDetails as eachDetail>
-				            									<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDetail.getValue()?if_exists}</fo:block>
+				            									<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${eachDetail.getValue()?if_exists}</fo:block>
 				            								</#list>
 				            							</#if>
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">By Road</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">By Road</fo:block>
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${shipment.get('vehicleId')?if_exists}</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${shipment.get('vehicleId')?if_exists}</fo:block>
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
 					            						<#if chapterMap?has_content>
 				            								<#assign chapterDetails = chapterMap.entrySet()>
 				            								<#list chapterDetails as eachDetail>
-				            									<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${eachDetail.getKey()?if_exists}</fo:block>
+				            									<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${eachDetail.getKey()?if_exists}</fo:block>
 				            								</#list>
 				            							</#if>
 					            						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -289,8 +288,8 @@ under the License.
 					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold"> Rs.</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
-					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">Exfctory</fo:block>
-					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">Rate/Pck</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Exfactory</fo:block>
+					            						<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Rate/Pck</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
 					            						<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block>
@@ -426,11 +425,15 @@ under the License.
 			            </fo:table-body>
 			        </fo:table>
           		</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">1. Certificate that the particulars given above are true &amp; correct &amp; the amount indicated represents the actual</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">charged &amp; that there is no flow of additional consideration directly or indirectly from the buyer.  </fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">2. All disputes regarding this bill shall be decided at Bangalore &amp; Bangalore Courts alone shall have jurisdiction.</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">3. Please settle payment of this bill within fifteen days. </fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">4. In case of CST rate of tax, if the 'C' form is not given, the difference in tax rate is to your account.  </fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">1. Certificate that the particulars given above are true &amp; correct &amp; the amount indicated </fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">represents the actual charged &amp; that there is no flow of additional consideration directly</fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"> or indirectly from the buyer.</fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">2. All disputes regarding this bill shall be decided at Bangalore &amp; Bangalore Courts alone shall</fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"> have jurisdiction.</fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">3. Please settle payment of this bill within fifteen days. </fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">4. In case of CST rate of tax, if the 'C' form is not given, the difference in tax rate is to</fo:block>
+				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"> your account.</fo:block>
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">for KCMPF Ltd, Unit: Mother Dairy</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
