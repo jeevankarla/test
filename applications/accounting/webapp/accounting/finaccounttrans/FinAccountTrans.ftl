@@ -102,13 +102,14 @@ function toggleFinAccntTransId(master) {
         <span class="label" id="showFinAccountTransRunningTotal"></span>
       </div>
     </#if>
+    <#--
    <form name="massCancelFinTrans" id="massCancelFinTrans"  method="post" action="setMassFinAccountTransStatus">
       <div align="right">
-       <input type="submit" value="Mass Cancel"  class="buttontext" id="MassCancaltionId" name="MassCancaltionName" onclick="javascript:getFinAccountTransInfo();" />
+       <input type="submit" value="Bulk Cancel"  class="buttontext" id="MassCancaltionId" name="MassCancaltionName" onclick="javascript:getFinAccountTransInfo();" />
         <input name="statusId" type="hidden" value="FINACT_TRNS_CANCELED"/>
          <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
        </div>
-     </form>
+     </form>-->
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal?exists>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>
       <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
@@ -163,9 +164,10 @@ function toggleFinAccntTransId(master) {
           <#if ((glReconciliationId?has_content && glReconciliationId == "_NA_") && (glReconciliations?has_content && finAccountTransList?has_content)) || !grandTotal?exists>
             <th>${uiLabelMap.CommonSelectAll} <input name="selectAll" type="checkbox" value="N" id="checkAllTransactions" onclick="javascript:togglefinAccountTransId(this);"/></th>
           </#if>
+          <#--
            <th align="right">${uiLabelMap.CommonSelectAll} 
            <input type="checkbox" id="checkAllInvoices" name="finAccountTransIdsList" onchange="javascript:toggleFinAccntTransId(this);" />
-           </th>
+           </th>-->
         </tr>
         <#-- Header Ends-->
         <#assign alt_row = false>
@@ -290,12 +292,13 @@ function toggleFinAccntTransId(master) {
                   <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">${uiLabelMap.CommonCancel}</a>
                 </#if>
               </td>
+              <#--
               <td align="right">
                <#if ((finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId != 'WITHDRAWAL' &&  contra !='FATR_CONTRA') ||
                        (finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId == 'WITHDRAWAL' && contra !='FATR_CONTRA' && companyCheck == 'COMPANY_CHECK'))>
                <input type="checkbox" id="finAccountTransId_${finAccountTrans.finAccountTransId}" class="chkFinTransId" name="finAccntTransIds" value="${finAccountTrans.finAccountTransId}" />
                </#if>
-               </td>
+               </td>-->
             </#if>
             <input name="finAccountTransId_o_${finAccountTrans_index}" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="organizationPartyId_o_${finAccountTrans_index}" type="hidden" value="${defaultOrganizationPartyId}"/>

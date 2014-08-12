@@ -1928,6 +1928,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountAlt"/>
     </request-map>
+     <request-map uri="FindNonBankAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindNonBankAccount"/>
+    </request-map>
+    
      <request-map uri="FindFinAccountTransAlt">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountTransAlt"/>
@@ -2076,6 +2081,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountTrans"/>
     </request-map>
+  
     <request-map uri="setFinAccountTransStatus">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="setFinAccountTransStatus"/>
@@ -3107,7 +3113,9 @@ under the License.
     
      <view-map name="FindFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
     <view-map name="FindFinAccountTransAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountTransAlt"/>
-     <view-map name="EditFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditFinAccountAlt"/>
+    <view-map name="EditFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditFinAccountAlt"/>
+    <view-map name="FindNonBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindNonBankAccount"/>
+     
     <!-- TO BE REMOVED
     <view-map name="ListFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ListFinAccount"/>
     -->
