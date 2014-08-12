@@ -408,13 +408,12 @@
             </widgets>
         </section>
     </screen>
-     <screen name="FindBenefitsOrDeductions">
+   <screen name="FindBenefitsOrDeductions">
         <section>
             <actions>
-                <set field="titleProperty" value="EditPartyBenefits"/>
-                <set field="headerItem" value="PayrollItems"/>
-                <set field="tabButtonItem" value="PayrollItems"/>
-                <set field="tabButtonItem2" value="EditPartyBenefits"/>
+                <set field="titleProperty" value="HumanResFindEmployment"/>
+                <set field="headerItem" value="benefitOrDeduction"/>
+				<set field="tabButtonItem" value="benefitOrDeduction" />      
 				<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
 					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
 					<order-by field-name="sequenceNum"/>
@@ -427,8 +426,6 @@
             <widgets>
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                     <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmployeeProfileTabBar"/>
-                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="PayrollItemsTabBar"/>
                     	<section>
 		                    <widgets>                       
 		                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">

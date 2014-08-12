@@ -213,6 +213,7 @@ if(UtilValidate.isNotEmpty(parameters.dedTypeId)){
 }else{
 	dedItemIdsList=dedItemIdsList;
 }
+List quarterDedList = UtilMisc.toList("PAYROL_DD_ELECT","PAYROL_DD_WATR");
 JSONArray headItemsJSON = new JSONArray();
 if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 	Iterator dedIter = deductionTypeValueMap.entrySet().iterator();
@@ -224,6 +225,10 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 		newObj.put("id",emplyId+"["+partyName+"]");	
 		partyName=PartyHelper.getPartyName(delegator, emplyId, false);
 		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplyId]);
+		empDetails = delegator.findOne("EmployeeDetail", [partyId : emplyId],true);
+		if(UtilValidate.isEmpty(empDetails.quarterType) && UtilValidate.isNotEmpty(parameters.dedTypeId) && (quarterDedList.contains(parameters.dedTypeId))){
+			continue;
+		}
 		deptName="";
 		if(departmentDetails){
 			deptPartyId=departmentDetails[0].partyIdFrom;
@@ -254,5 +259,4 @@ if("benefits".equals(parameters.type)){
 	context.headerDetailsMap=deductionTypeValueMap;
 	context.headerItemIdsList=dedItemIdsList;
 }
-
 //Debug.logError("context.headItemsJson="+context.headItemsJson,"");

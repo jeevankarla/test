@@ -44,6 +44,9 @@
         <field name="oldShiftTypeId">
         	<hidden value="${parameters.shiftType}"/>
         </field>
+         <field name="oldInOut">
+        	<hidden value="${parameters.InOut}"/>
+        </field>
         <field name="InOut"  widget-style="required">
                <drop-down allow-empty="false" current="selected" no-current-selected-key="IN">
   		<option key="IN" description="IN"/>

@@ -73,6 +73,7 @@ public class PunchService {
 		String emplPunchId = (String) context.get("emplPunchId");
 		String oldPunchType = (String) context.get("oldPunchType");
 		String oldShiftTypeId = (String) context.get("oldShiftTypeId");
+		String oldInOut = (String) context.get("oldInOut");
 		Date punchdate = (Date) context.get("punchdate");
 		Time punchtime = (Time) context.get("punchtime");
 		String PunchType = (String) context.get("PunchType");
@@ -515,7 +516,7 @@ public class PunchService {
 			if(UtilValidate.isNotEmpty(oldPunchType) && (!PunchType.equals(oldPunchType))){				  
 				   GenericValue oldRecord = delegator.findOne("EmplPunch",UtilMisc.toMap("emplPunchId", emplPunchId,
 							"partyId", partyId, "PunchType", oldPunchType,
-							"punchdate", punchdate, "InOut", inout), true);
+							"punchdate", punchdate, "InOut", oldInOut), true);
 				   if(UtilValidate.isNotEmpty(oldRecord)){
 					   delegator.removeValue(oldRecord);
 				   }

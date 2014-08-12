@@ -800,7 +800,7 @@
 			<display/>
 		</field>
 	</form>
-	 <form name="AttendanceFinalization" type="single" target="attendanceFinalization" header-row-style="header-row" default-table-style="basic-table">
+	<form name="AttendanceFinalization" type="single" target="attendanceFinalization" header-row-style="header-row" default-table-style="basic-table">
         <field name="partyId" title="Organisation">
 			<drop-down allow-empty="false">
 				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
@@ -810,12 +810,11 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="customTimePeriodId" title="Time Period" required-field="true">
+		<field name="customTimePeriodId" title="Payroll Period" required-field="true">
             <drop-down>
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
-                    <entity-constraint name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
                     <entity-order-by field-name="-thruDate"/>
-                    <entity-order-by field-name="periodNum"/>
                 </entity-options>
             </drop-down>
         </field>

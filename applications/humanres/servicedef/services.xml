@@ -1097,6 +1097,7 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <attribute name="oldPunchType"  mode="IN" type="String" optional="true"/>
         <attribute name="oldShiftTypeId"  mode="IN" type="String" optional="true"/>
+        <attribute name="oldInOut"  mode="IN" type="String" optional="true"/>
         <attribute name="punchdate" mode="IN" type="java.sql.Date"/> 
     </service>
     
@@ -1286,13 +1287,19 @@ under the License.emplpunch
       <attribute name="customTimePeriodId" mode="IN" optional="false" type="String"/>
       <attribute name="sendSms" mode="IN" optional="true" type="String" default-value="Y"/>
   </service>  
-  
+  <service name="populatePayrollAttedanceInternal" engine="java" auth="true" invoke="populatePayrollAttedanceInternal" 
+        location="in.vasista.vbiz.humanres.PayrollService">
+        <description>Calculate amunt for the given payhead type</description>
+        <attribute name="orgPartyId" mode="IN" type="String"/> 
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
+        <attribute name="payrollPeriodId" mode="IN" type="String" optional="false"/>
+   </service> 
+   
   <service name="populatePayrollAttedance" engine="java" auth="true" invoke="populatePayrollAttedance" 
         location="in.vasista.vbiz.humanres.PayrollService">
         <description>Calculate amunt for the given payhead type</description>
-        <!-- <attribute name="fromDate" mode="IN" type="Timestamp"/> 
-        <attribute name="thruDate" mode="IN" type="Timestamp"/>  -->
-        <attribute name="orgPartyId" mode="IN" type="String"/> 
+        <attribute name="orgPartyId" mode="IN" type="String"/>
+        <attribute name="periodBillingId" mode="IN" type="String" optional="true"/> 
         <attribute name="payrollPeriodId" mode="IN" type="String" optional="false"/>
    </service> 
     <service name="populatePeriodBillingForAttendanceFinalization" engine="java" auth="true" invoke="populatePeriodBillingForAttendanceFinalization" 

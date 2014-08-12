@@ -124,6 +124,8 @@ function comparer(a, b) {
 			var data;
 			<#if headItemsJson?has_content>
 			 	data = ${StringUtil.wrapString(headItemsJson)!'[]'};
+			 	<#else>
+			 	 data =[];
 			</#if>
 			var columns = [		
 					{id:"id", name:"Employee Id", field:"id", width:150, minWidth:100, cssClass:"cell-title", sortable:true},
