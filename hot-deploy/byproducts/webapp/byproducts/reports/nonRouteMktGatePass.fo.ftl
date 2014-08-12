@@ -162,6 +162,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">QTY</fo:block>  
 					            </fo:table-cell>
 							</fo:table-row>
+							<#assign totalQty = 0>
 							<#if orderItems?has_content>
 								<#assign slNo = 1>
 								<#list orderItems as eachItem>
@@ -175,12 +176,28 @@ under the License.
 							            <fo:table-cell>
 							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${eachItem.description?if_exists}</fo:block>
 							            </fo:table-cell>
+							            <#assign totalQty = totalQty+eachItem.get('quantity')>
 							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.quantity?if_exists}</fo:block>  
+							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('quantity')?if_exists?string("#0.00")}</fo:block>  
 							            </fo:table-cell>
 									</fo:table-row>
 									<#assign slNo = slNo+1>
 								</#list>
+								
+								<fo:table-row border-style="solid">
+					                    <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"></fo:block>
+							            </fo:table-cell>
+							            <fo:table-cell>	
+							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Totals</fo:block>
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+							            </fo:table-cell>
+							            <fo:table-cell>
+							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">${totalQty?if_exists?string("#0.00")}</fo:block>  
+							            </fo:table-cell>
+									</fo:table-row>
 							</#if>
 			            </fo:table-body>
 			        </fo:table>
