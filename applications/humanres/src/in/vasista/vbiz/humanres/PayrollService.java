@@ -2973,8 +2973,10 @@ public class PayrollService {
 		  	    	attendancePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
 	  	    	}
 	  	    	List<GenericValue> payrollAttendance = delegator.findByAnd("PayrollAttendance", UtilMisc.toMap("customTimePeriodId",attendancePeriodId));
-	    		if(UtilValidate.isNotEmpty(payrollAttendance)){
+	  	    	List<GenericValue> payrollAttendanceshiftWise = delegator.findByAnd("PayrollAttendanceShiftWise", UtilMisc.toMap("customTimePeriodId",attendancePeriodId));
+	  	    	if(UtilValidate.isNotEmpty(payrollAttendance)){
 	    			delegator.removeAll(payrollAttendance);
+	    			delegator.removeAll(payrollAttendanceshiftWise);
 	    			periodBilling.set("statusId", "COM_CANCELLED");
 	    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
 	    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
