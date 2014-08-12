@@ -354,7 +354,10 @@ under the License.
 															 
 															  <#if paymentAttrDetails.attrValue?has_content>
 															  	<#assign cheqFav = paymentAttrDetails.attrValue?if_exists>
+															  <#else>
+															  	<#assign cheqFav = partyName?if_exists>
 															 </#if>
+															 
 															 <fo:table-row>
 								        						<fo:table-cell>
 								        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>

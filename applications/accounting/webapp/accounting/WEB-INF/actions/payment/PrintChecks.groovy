@@ -74,15 +74,13 @@ if(UtilValidate.isEmpty(paymentId)){
 			paymentId = paymentDetails.paymentId;
 			if(UtilValidate.isNotEmpty(paymentId)){
 				paymentAttrDetails = delegator.findOne("PaymentAttribute", [paymentId : paymentId, attrName : "INFAVOUR_OF"], false);
-				if(UtilValidate.isNotEmpty(paymentAttrDetails.attrValue)){
+				if(UtilValidate.isNotEmpty(paymentAttrDetails)){
 					attrValue = paymentAttrDetails.attrValue;
-					context.put("attrValue",attrValue);
 				}
-			}
 		}
 	}
 }
-
+partyName = "";
 if(UtilValidate.isNotEmpty(paymentId)){
 	paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
 	if(UtilValidate.isNotEmpty(paymentDetails.paymentMethodId)){
@@ -91,11 +89,31 @@ if(UtilValidate.isNotEmpty(paymentId)){
 	if(UtilValidate.isNotEmpty(paymentDetails.amount)){
 		amount = paymentDetails.amount;
 	}
+	if(UtilValidate.isNotEmpty(paymentDetails.partyIdFrom) && (paymentDetails.partyIdFrom == "Company")){
+		partyId = paymentDetails.partyIdTo;
+	}else{
+		partyId = paymentDetails.partyIdFrom;
+	}
+	partyName = PartyHelper.getPartyName(delegator, partyId, false);
+}
 	context.put("paymentMethodId",paymentMethodId);
 	context.put("amount",amount);
 	context.put("paymentId",paymentId);
 }
-
+if(UtilValidate.isNotEmpty(attrValue)){
+	context.put("attrValue",attrValue);
+}else{
+	context.put("attrValue",partyName);
+}
+if(UtilValidate.isEmpty(paymentId)){
+	Debug.logError("paymentId Cannot Be Empty","");
+	context.errorMessage = "Payment not done...!";
+	return;
+}
+Debug.log("paymentId===="+paymentId);
+Debug.log("amount===="+amount);
+Debug.log("attrValue===="+attrValue);
+Debug.log("paymentMethodId===="+paymentMethodId);
 // list of payments
 payments = [];
 

@@ -16,6 +16,30 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#if errorMessage?exists>
+<#escape x as x?xml>
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+
+<#-- do not display columns associated with values specified in the request, ie constraint values -->
+
+<fo:layout-master-set>
+    <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
+            margin-top="0.5in" margin-bottom="1in" margin-left=".5in" margin-right=".5in">
+        <fo:region-body margin-top=".8in"/>
+        <fo:region-before extent="1in"/>
+        <fo:region-after extent="1in"/>
+    </fo:simple-page-master>
+</fo:layout-master-set> 
+	<fo:page-sequence master-reference="main">
+	    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+	       		 <fo:block font-size="14pt">
+	            	${errorMessage}.
+	       		 </fo:block>
+	    	</fo:flow>
+	</fo:page-sequence>
+</fo:root>
+</#escape>
+<#else>
  
 <#if paymentMethodId?exists && (paymentMethodId == "PAYMENTMETHOD11" || paymentMethodId == "PAYMENTMETHOD6")>
 <#escape x as x?xml>
@@ -715,4 +739,5 @@ under the License.
 		</#if>
 		</fo:root>
 </#escape>
+</#if>
 </#if>
