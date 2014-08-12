@@ -117,6 +117,38 @@ invoiceIds.each { invoiceId ->
 	invoiceItems = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
 	productIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "productId", true);
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
+	
+	prodCategories = ["ICE_CREAM_NANDINI", "ICE_CREAM_AMUL", "MILK_POWDER", "FG_STORE"];
+	condList = [];
+	condList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, prodCategories));
+	condList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+	condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	productCategories = delegator.findList("ProductCategoryAndMember", condExpr, null, null, null, false);
+	
+	chapters = EntityUtil.getFieldListFromEntityList(productCategories, "chapterNum", true);
+	chapterMap = [:];
+	chapters.each{ eachChap ->
+		chapterDetails = EntityUtil.filterByCondition(productCategories, EntityCondition.makeCondition("chapterNum", EntityOperator.EQUALS, eachChap));
+		chapDetail = EntityUtil.getFirst(chapterDetails);
+		chapter = "";
+		subHeading = "";
+		displayStr = "";
+		description = chapDetail.productCategoryId;
+		if(chapDetail.description){
+			description = chapDetail.description;
+		}
+		if(chapDetail.chapterNum){
+			chapter = chapDetail.chapterNum;
+			displayStr += chapter;
+		}
+		if(chapDetail.subHeading){
+			subHeading = chapDetail.subHeading;
+			displayStr += "/"+ subHeading;
+		}
+		chapterMap.put(description, displayStr)
+	}
+	
+	
 	orderItemAttributes = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
 	invoiceItemDetail = [];
 	invoiceTaxItems = [:];
@@ -162,6 +194,7 @@ invoiceIds.each { invoiceId ->
 			invoiceTaxItems.put(eachItem.invoiceItemTypeId, eachItem.amount);
 		}
 	}
+	invoiceDetailMap.put("chapterMap", chapterMap);
 	invoiceDetailMap.put("invoiceItems", invoiceItemDetail);
 	invoiceDetailMap.put("invoiceTaxItems", invoiceTaxItems);
 	invoiceSlipsMap.put(partyIdTo, invoiceDetailMap);
