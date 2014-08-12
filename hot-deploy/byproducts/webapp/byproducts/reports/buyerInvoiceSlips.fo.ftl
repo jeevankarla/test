@@ -184,7 +184,7 @@ under the License.
 							
 							<fo:table-row>
 			                    <fo:table-cell number-columns-spanned="3">
-					            	<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">
+					            	<fo:block text-align="left" font-size="12pt" white-space-collapse="false">
 					            		<fo:table border-width="1pt" border-style="solid">
 			            					<fo:table-column column-width="30%"/>
 			            					<fo:table-column column-width="30%"/>
@@ -193,30 +193,12 @@ under the License.
 			            					<fo:table-body>
 			                					<fo:table-row>
 			                    					<fo:table-cell border-style="solid">
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">RANGE: </fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if taxAuthority?has_content && taxAuthority.get('taxRange')?exists><#if ((taxAuthority.get('taxRange')).length()>26)>${taxAuthority.get('taxRange')?if_exists.substring(0,26)}<#else>${taxAuthority.get('taxRange')?if_exists}</#if></#if></fo:block>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxRange')?exists && (taxAuthority.get('taxRange')).length()>26)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if ((taxAuthority.get('taxRange')).length()>52)>${taxAuthority.get('taxRange')?if_exists.substring(26, 52)}<#else>${taxAuthority.get('taxRange')?if_exists.substring(26, ((taxAuthority.get('taxRange')).length()-1))}</#if></fo:block>   
-					            						</#if>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxRange')?exists && (taxAuthority.get('taxRange')).length()>52)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${taxAuthority.get('taxRange')?if_exists.substring(52, ((taxAuthority.get('taxRange')).length()-1))}</fo:block>   
-					            						</#if>
+					            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" >RANGE: </fo:block>
+					            						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">${taxAuthority.get('taxRange')?if_exists}</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">DIVISION: </fo:block>
-					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if taxAuthority?has_content && taxAuthority.get('taxDivision')?exists><#if ((taxAuthority.get('taxDivision')).length()>28)>${taxAuthority.get('taxDivision')?if_exists.substring(0,28)}<#else>${taxAuthority.get('taxDivision')?if_exists}</#if></#if></fo:block>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>28)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>56)>${taxAuthority.get('taxDivision')?if_exists.substring(28, 56)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(28, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
-					            						</#if>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>56)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>84)>${taxAuthority.get('taxDivision')?if_exists.substring(56, 84)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(56, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
-					            						</#if>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>84)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>112)>${taxAuthority.get('taxDivision')?if_exists.substring(84, 112)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(84, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
-					            						</#if>
-					            						<#if (taxAuthority?has_content && taxAuthority.get('taxDivision')?exists && (taxAuthority.get('taxDivision')).length()>112)>
-					            							<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"><#if ((taxAuthority.get('taxDivision')).length()>140)>${taxAuthority.get('taxDivision')?if_exists.substring(112, 140)}<#else>${taxAuthority.get('taxDivision')?if_exists.substring(112, ((taxAuthority.get('taxDivision')).length()-1))}</#if></fo:block>   
-					            						</#if>
+					            						<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">DIVISION: </fo:block>
+					            						<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" wrap-option="wrap">${taxAuthority.get('taxDivision')?if_exists}</fo:block>
 					            					</fo:table-cell>
 					            					<fo:table-cell border-style="solid">
 					            						<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">DC No: ${shipment.get('shipmentId')?if_exists}</fo:block>
@@ -425,14 +407,11 @@ under the License.
 			            </fo:table-body>
 			        </fo:table>
           		</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">1. Certificate that the particulars given above are true &amp; correct &amp; the amount indicated </fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">represents the actual charged &amp; that there is no flow of additional consideration directly</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"> or indirectly from the buyer.</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">2. All disputes regarding this bill shall be decided at Bangalore &amp; Bangalore Courts alone shall</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"> have jurisdiction.</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">3. Please settle payment of this bill within fifteen days. </fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">4. In case of CST rate of tax, if the 'C' form is not given, the difference in tax rate is to</fo:block>
-				<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"> your account.</fo:block>
+          		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				<fo:block text-align="left" font-size="12pt" white-space-collapse="false">1. Certificate that the particulars given above are true &amp; correct &amp; the amount indicated represents the actual charged &amp; that there is no flow of additional consideration directly or indirectly from the buyer.</fo:block>
+				<fo:block text-align="left" font-size="12pt" white-space-collapse="false">2. All disputes regarding this bill shall be decided at Bangalore &amp; Bangalore Courts alone shall have jurisdiction.</fo:block>
+				<fo:block text-align="left" font-size="12pt" white-space-collapse="false">3. Please settle payment of this bill within fifteen days. </fo:block>
+				<fo:block text-align="left" font-size="12pt" white-space-collapse="false">4. In case of CST rate of tax, if the 'C' form is not given, the difference in tax rate is to your account.</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">for KCMPF Ltd, Unit: Mother Dairy</fo:block>
