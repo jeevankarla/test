@@ -81,12 +81,14 @@ if(UtilValidate.isEmpty(paymentId)){
 	}
 }
 partyName = "";
+paymentDate = "";
 if(UtilValidate.isNotEmpty(paymentId)){
 	paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
-	if(UtilValidate.isNotEmpty(paymentDetails.paymentMethodId)){
+	if(UtilValidate.isNotEmpty(paymentDetails)){
 		paymentMethodId = paymentDetails.paymentMethodId;
+		paymentDate = paymentDetails.instrumentDate;
 	}
-	if(UtilValidate.isNotEmpty(paymentDetails.amount)){
+	if(UtilValidate.isNotEmpty(paymentDetails)){
 		amount = paymentDetails.amount;
 	}
 	if(UtilValidate.isNotEmpty(paymentDetails.partyIdFrom) && (paymentDetails.partyIdFrom == "Company")){
@@ -99,6 +101,8 @@ if(UtilValidate.isNotEmpty(paymentId)){
 	context.put("paymentMethodId",paymentMethodId);
 	context.put("amount",amount);
 	context.put("paymentId",paymentId);
+	
+	context.put("paymentDate",paymentDate);
 }
 if(UtilValidate.isNotEmpty(attrValue)){
 	context.put("attrValue",attrValue);
@@ -110,10 +114,6 @@ if(UtilValidate.isEmpty(paymentId)){
 	context.errorMessage = "Payment not done...!";
 	return;
 }
-Debug.log("paymentId===="+paymentId);
-Debug.log("amount===="+amount);
-Debug.log("attrValue===="+attrValue);
-Debug.log("paymentMethodId===="+paymentMethodId);
 // list of payments
 payments = [];
 
