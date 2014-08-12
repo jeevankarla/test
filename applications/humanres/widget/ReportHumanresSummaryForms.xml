@@ -846,18 +846,26 @@
         </field>
         
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
-			<hyperlink target=" " description="approve">
+			<hyperlink target="setAttPeriodBillingStatus" description="approve">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="APPROVED"/>
 	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
 	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
 	        </hyperlink>
-        </field>		
-        <!-- <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
-			<hyperlink target="cancelPayrollBilling" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+        </field>
+        <field use-when="statusId.equals(&quot;APPROVED&quot;)" name="reject" widget-style="buttontext cancel">
+			<hyperlink target="setAttPeriodBillingStatus" description="Reject" >
+	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        	<parameter param-name="statusId" value="GENERATED"/>
+	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
+	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+	        </hyperlink>
+        </field>	
+        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
+			<hyperlink target="cancelAttendanceFinalization" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        </hyperlink>
-        </field> -->
+        </field>
        
 	</form>
     

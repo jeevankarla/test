@@ -1994,7 +1994,7 @@ public class PayrollService {
                     dynamicView.addAlias("CT", "fromDate");
                     dynamicView.addAlias("CT", "thruDate");
                     dynamicView.addViewLink("LR", "CT", Boolean.FALSE, ModelKeyMap.makeKeyMapList("customTimePeriodId"));
-                    
+                    String isExternal =  loan.getString("isExternal");
                     GenericValue newEntityLoanRecovery = delegator.makeValue("LoanRecovery");
                     newEntityLoanRecovery.set("loanId", loan.getString("loanId"));
                     newEntityLoanRecovery.set("customTimePeriodId", timePeriodId);
@@ -2005,24 +2005,30 @@ public class PayrollService {
                     List<GenericValue> loanRecoveryList = pli.getCompleteList();
 					GenericValue loanRecovery = EntityUtil.getFirst(loanRecoveryList);
 					//Debug.log("loanRecovery============"+loanRecovery);
-					if(UtilValidate.isEmpty(loanRecovery)){
+					if(UtilValidate.isNotEmpty(isExternal) && isExternal.equalsIgnoreCase("Y")){
 						newEntityLoanRecovery.set("principalInstNum", new Long(1));
-						amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0);
+						amount = loan.getBigDecimal("principalAmount");
 						newEntityLoanRecovery.set("principalAmount", amount);
 					}else{
-						if(UtilValidate.isNotEmpty(loanRecovery.getLong("principalInstNum")) && (loanRecovery.getLong("principalInstNum")).compareTo(loan.getLong("numPrincipalInst"))<0){
+						if(UtilValidate.isEmpty(loanRecovery)){
+							newEntityLoanRecovery.set("principalInstNum", new Long(1));
 							amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0);
-							newEntityLoanRecovery.set("principalInstNum", new Long(loanRecovery.getLong("principalInstNum").intValue()+1));
 							newEntityLoanRecovery.set("principalAmount", amount);
 						}else{
-							
-							if(UtilValidate.isEmpty(loanRecovery.getLong("interestInstNum")) || (UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum")) && (loanRecovery.getLong("interestInstNum")).compareTo(loan.getLong("numInterestInst"))<0)){
-								amount = loan.getBigDecimal("interestAmount").divide(new BigDecimal(loan.getLong("numInterestInst")), 0);
-								newEntityLoanRecovery.set("interestInstNum",new Long(1));
-								if(UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum"))){
-									newEntityLoanRecovery.set("interestInstNum", new Long(loanRecovery.getLong("interestInstNum").intValue()+1));
+							if(UtilValidate.isNotEmpty(loanRecovery.getLong("principalInstNum")) && (loanRecovery.getLong("principalInstNum")).compareTo(loan.getLong("numPrincipalInst"))<0){
+								amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0);
+								newEntityLoanRecovery.set("principalInstNum", new Long(loanRecovery.getLong("principalInstNum").intValue()+1));
+								newEntityLoanRecovery.set("principalAmount", amount);
+							}else{
+								
+								if(UtilValidate.isEmpty(loanRecovery.getLong("interestInstNum")) || (UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum")) && (loanRecovery.getLong("interestInstNum")).compareTo(loan.getLong("numInterestInst"))<0)){
+									amount = loan.getBigDecimal("interestAmount").divide(new BigDecimal(loan.getLong("numInterestInst")), 0);
+									newEntityLoanRecovery.set("interestInstNum",new Long(1));
+									if(UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum"))){
+										newEntityLoanRecovery.set("interestInstNum", new Long(loanRecovery.getLong("interestInstNum").intValue()+1));
+									}
+									newEntityLoanRecovery.set("interestAmount", amount);
 								}
-								newEntityLoanRecovery.set("interestAmount", amount);
 							}
 						}
 					}
@@ -2520,8 +2526,8 @@ public class PayrollService {
 		    try {     
 		        delegator.createSetNextSeqId(newEntity);		        
 				periodBillingId = (String) newEntity.get("periodBillingId");	
-				Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("payrollPeriodId", periodBillingId, "orgPartyId", partyId,"fromDate", fromDateTime, "thruDate", thruDateTime, "userLogin", userLogin);
-		        dispatcher.runAsync("populatePayrollAttedance", runSACOContext);
+				Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("payrollPeriodId", customTimePeriodId, "orgPartyId", partyId, "periodBillingId",periodBillingId, "userLogin", userLogin);
+		        dispatcher.runAsync("populatePayrollAttedanceInternal", runSACOContext);
 	    	} catch (GenericEntityException e) {
 				Debug.logError(e,"Failed To Create New Period_Billing", module);
 				e.printStackTrace();
@@ -2534,34 +2540,73 @@ public class PayrollService {
 	        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
 	    	return result;
 	  }
+	 
+	public static Map<String, Object> populatePayrollAttedanceInternal(DispatchContext dctx, Map<String, ? extends Object> context) {
+         
+	        Delegator delegator = dctx.getDelegator();
+	        LocalDispatcher dispatcher = dctx.getDispatcher();
+	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String payrollPeriodId = (String) context.get("payrollPeriodId");
+			String orgPartyId =  (String)context.get("orgPartyId");
+			String periodBillingId = (String)context.get("periodBillingId");
+	        List conditionList = FastList.newInstance();
+	        Map input = FastMap.newInstance();
+	        Map result = ServiceUtil.returnSuccess();
+	        GenericValue periodBilling = null;
+	        try {     
+		        periodBilling = delegator.findOne("PeriodBilling",UtilMisc.toMap("periodBillingId",periodBillingId),false);
+		        if(UtilValidate.isEmpty(periodBilling)){
+		        	return ServiceUtil.returnError("invalid period billing");
+		        }
+				Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("payrollPeriodId", payrollPeriodId, "orgPartyId", orgPartyId, "periodBillingId",periodBillingId, "userLogin", userLogin);
+				result = dispatcher.runSync("populatePayrollAttedance", runSACOContext);
+				if(ServiceUtil.isError(result)){
+					periodBilling.set("statusId", "GENERATION_FAIL");
+					delegator.store(periodBilling);
+					return ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
+				}
+				periodBilling.set("statusId", "GENERATED");
+				delegator.store(periodBilling);
+		        
+	    	} catch (Exception e) {
+				Debug.logError(e,"Failed To run payroll attendance", module);
+				try{
+					periodBilling.set("statusId", "GENERATION_FAIL");
+					delegator.store(periodBilling);
+				}catch(Exception ex){
+					Debug.logError(e,"Failed To run payroll attendance", module);
+				}
+			}
+	        return result;
+	        
+	 }       
+	 
 	 public static Map<String, Object> populatePayrollAttedance(DispatchContext dctx, Map<String, ? extends Object> context) {
                
 	        Delegator delegator = dctx.getDelegator();
 	        LocalDispatcher dispatcher = dctx.getDispatcher();
 	        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 	        GenericValue userLogin = (GenericValue) context.get("userLogin");
-	        Timestamp timePeriodStart = (Timestamp)context.get("fromDate");
-			Timestamp timePeriodEnd = (Timestamp)context.get("thruDate");
 			String payrollPeriodId = (String) context.get("payrollPeriodId");
 			String orgPartyId =  (String)context.get("orgPartyId");
-	        Locale locale = (Locale) context.get("locale");
-	        TimeZone timeZone = TimeZone.getDefault();
+			String periodBillingId = (String)context.get("periodBillingId");
+			Locale locale = (Locale) context.get("locale");
+			TimeZone timeZone = TimeZone.getDefault();
 	        List conditionList = FastList.newInstance();
 	        GenericValue lastCloseAttedancePeriod= null;
 	        String attendancePeriodId = payrollPeriodId;
 	        Map input = FastMap.newInstance();
 	        
 	        try{
-	        	double lateComeMin = 0;
-	        	double earlyGoMin =0;
 	        	
 	        	GenericValue payrollPeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",payrollPeriodId), false);
 	        	if(UtilValidate.isEmpty(payrollPeriod) || !(payrollPeriod.getString("periodTypeId").equals("HR_MONTH"))){
-	        		Debug.logError("invalid CustomTimePeriod", module);    			
+	        		Debug.logError("invalid CustomTimePeriod ::"+payrollPeriodId, module);    			
 	 	 		    return ServiceUtil.returnError("invalid CustomTimePeriod");
 	        	}
-	        	timePeriodStart = UtilDateTime.toTimestamp(payrollPeriod.getDate("fromDate"));
-	        	timePeriodEnd	= UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(payrollPeriod.getDate("thruDate")));	
+	        	Timestamp timePeriodStart = UtilDateTime.toTimestamp(payrollPeriod.getDate("fromDate"));
+	        	Timestamp timePeriodEnd	= UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(payrollPeriod.getDate("thruDate")));	
 	        	double noOfCalenderDays = UtilDateTime.getIntervalInDays(timePeriodStart, timePeriodEnd)+1;
 	        	// get attendance period here 
 	        	input.put("timePeriodId", payrollPeriodId);
@@ -2664,8 +2709,11 @@ public class PayrollService {
 			    		List<GenericValue> leaves = (List)resultMap.get("leaves");
 			    		GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
 			    		//here handle no punch's in second half off the attendance month 
-			    		List<GenericValue> payrollPeriodPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition("punchdate",EntityOperator.BETWEEN,UtilMisc.toList(UtilDateTime.toSqlDate(timePeriodStart),UtilDateTime.toSqlDate(attdTimePeriodEnd))));
-			    	    //here handle no punch and no leaves for the period then populate noOfPayableDays zero
+			    		//List<GenericValue> payrollPeriodPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition("punchDateTime",EntityOperator.BETWEEN,UtilMisc.toList(timePeriodStart,attdTimePeriodEnd)));
+			    		List<GenericValue> payrollPeriodPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(timePeriodStart)),EntityOperator.AND
+			    				                                     ,EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(attdTimePeriodEnd))));
+			    		
+			    		//here handle no punch and no leaves for the period then populate noOfPayableDays zero
 			    		if(UtilValidate.isEmpty(payrollPeriodPunchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0) &&
 			    				   (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && !(employeeDetail.getString("punchType").equalsIgnoreCase("N")))){
 			    			Debug.logWarning("No punchs for employee"+employeeId, module);
@@ -2699,10 +2747,23 @@ public class PayrollService {
 			    			//Debug.log("cTime==========="+cTime);
 			    			List<GenericValue> dayPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition(EntityCondition.makeCondition("punchdate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("punchdate",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
 			    			// filter by normal punchType
+			    			//call edit punch to re-calculate late min
+			    			if(UtilValidate.isNotEmpty(dayPunchList) && UtilValidate.isNotEmpty(periodBillingId)){
+			    				for(GenericValue punchEntry : dayPunchList){
+			    					Map punchCtx = UtilMisc.toMap("userLogin",userLogin);
+			    					punchCtx.putAll(punchEntry);
+			    					Map result = dispatcher.runSync("emplPunch", punchCtx);
+			    					if(ServiceUtil.isError(result)){
+			    						Debug.logError(ServiceUtil.getErrorMessage(result), module);
+			    						return result;
+			    					}
+			    				}
+			    			}
 			    			dayPunchList = EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Normal"));
 			    			if((EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood"))).size() >0){
 			    				dayPunchList.addAll(EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood")));
 			    			}
+			    			
 			    			dayPunchList.addAll(EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood")));
 			    			List cHoliDayList = EntityUtil.filterByCondition(holiDayList, EntityCondition.makeCondition(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,cTimeEnd) , EntityOperator.AND,EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,cTime)));
 			    			List cDayLeaves = EntityUtil.filterByDate(leaves, cTime);
@@ -2871,7 +2932,67 @@ public class PayrollService {
 	      //result.put("lastCloseAttedancePeriod", lastCloseAttedancePeriod);
 	      return result;  
 	 }	 
-
+	 public static Map<String, Object>  cancelAttendanceFinalization(DispatchContext dctx, Map<String, ? extends Object> context)  {
+	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = FastMap.newInstance();	
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String periodBillingId = (String) context.get("periodBillingId");
+			GenericValue periodBilling = null;
+	    	try {
+	    		try {
+					periodBilling = delegator.findOne("PeriodBilling", UtilMisc.toMap("periodBillingId", periodBillingId), false);
+				} catch (GenericEntityException e1) {
+					Debug.logError(e1,"Error While Finding PeriodBilling");
+					return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
+				}
+	    		String payrollPeriodId = periodBilling.getString("customTimePeriodId");
+	    		GenericValue payrollPeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",payrollPeriodId), false);
+	        	if(UtilValidate.isEmpty(payrollPeriod) || !(payrollPeriod.getString("periodTypeId").equals("HR_MONTH"))){
+	        		Debug.logError("invalid CustomTimePeriod ::"+payrollPeriodId, module);    			
+	 	 		    return ServiceUtil.returnError("invalid CustomTimePeriod");
+	        	}
+	        	Timestamp timePeriodStart = UtilDateTime.toTimestamp(payrollPeriod.getDate("fromDate"));
+	        	Timestamp timePeriodEnd	= UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(payrollPeriod.getDate("thruDate")));	
+	        	// get attendance period here 
+	        	Map input = UtilMisc.toMap("userLogin",userLogin);
+	        	input.put("timePeriodId", payrollPeriodId);
+	        	input.put("timePeriodStart", timePeriodStart);
+	        	input.put("timePeriodEnd", timePeriodEnd);
+	        	Timestamp attdTimePeriodStart = timePeriodStart;
+	        	Timestamp attdTimePeriodEnd = timePeriodEnd;
+	        	
+	        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
+	  	    	if(ServiceUtil.isError(resultMap)){
+	 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
+	 	 		    return ServiceUtil.returnError("Error in service findLast Closed Attedance Date");
+	 	 	    }
+	  	    	String attendancePeriodId = null;
+	  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
+	  	    		GenericValue lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
+		  	    	attendancePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
+	  	    	}
+	  	    	List<GenericValue> payrollAttendance = delegator.findByAnd("PayrollAttendance", UtilMisc.toMap("customTimePeriodId",attendancePeriodId));
+	    		if(UtilValidate.isNotEmpty(payrollAttendance)){
+	    			delegator.removeAll(payrollAttendance);
+	    			periodBilling.set("statusId", "COM_CANCELLED");
+	    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+					periodBilling.store();
+	    		}else{
+	    			periodBilling.set("statusId", "CANCEL_FAILED");
+	    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	    			periodBilling.store();
+	    		}
+	    		
+	    	}catch (GenericEntityException e) {
+	    		 Debug.logError(e, module);
+	             return ServiceUtil.returnError("Failed to find payrollHeaderItemList " + e);
+			} 
+			result = ServiceUtil.returnSuccess("PayRoll Attendance Successfully Cancelled..");
+			return result;
+	}// end of service
 	 
 	 public static Map<String, Object> UpdateAttendance(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
