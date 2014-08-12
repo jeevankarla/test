@@ -3761,11 +3761,12 @@
 		<field name="paymentTypeId" type="id-ne"></field>
 		<field name="organizationPartyId" type="id-ne" />
 		<field name="glAccountTypeId" type="id-ne" />
+		<field name="glAccountId" type="id-ne" />
 		<prim-key field="paymentTypeId" />
 		<prim-key field="organizationPartyId" />
 		<relation type="one" fk-name="PMTGLACCT_PMTTYPE"
 			rel-entity-name="PaymentType">
-			<key-map field-name="paymentTypeId" />
+			<key-map field-name="paymentTypeId"/>
 		</relation>
 		<relation type="one" fk-name="PMTGLACCT_PARTY"
 			rel-entity-name="Party">
@@ -3774,6 +3775,10 @@
 		<relation type="one" fk-name="PMTGLACCT_GLACCT"
 			rel-entity-name="GlAccountType">
 			<key-map field-name="glAccountTypeId" />
+		</relation>
+		<relation type="one" fk-name="PMTGLACCT_GLAC"
+			rel-entity-name="GlAccount">
+			<key-map field-name="glAccountId" />
 		</relation>
 	</entity>
 	<entity entity-name="PaymentGatewayConfigType" package-name="org.ofbiz.accounting.payment"

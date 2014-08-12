@@ -927,8 +927,8 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-     <form name="NewAdvanceIn" type="single" target="createArAdvance" default-map-name="payment"
-        header-row-style="header-row" default-table-style="basic-table">
+    <form name="NewAdvanceIn" type="single" target="createArAdvance" default-map-name="payment"
+        header-row-style="header-row" default-table-style="basic-table" >
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
@@ -942,7 +942,7 @@ under the License.
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="PaymentType">
-                    <entity-constraint name="paymentTypeId" value="ADVDEPOSIT_PAYIN"/>
+                    <entity-constraint name="parentTypeId" value="ADVANCES_PAYIN"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
@@ -971,7 +971,7 @@ under the License.
         <actions>
             <entity-condition entity-name="PaymentType" list="paymentTypes">
                 <condition-list combine="or">
-                    <condition-expr field-name="paymentTypeId" operator="equals" value="ADVDEPOSIT_PAYOUT"/>
+                    <condition-expr field-name="parentTypeId" operator="equals" value="ADVANCES_PAYOUT"/>
                 </condition-list>
                 <order-by field-name="description"/>
             </entity-condition>
