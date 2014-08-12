@@ -2554,14 +2554,7 @@ public class PayrollService {
 	        try{
 	        	double lateComeMin = 0;
 	        	double earlyGoMin =0;
-	        	/* GenericValue tenantLateCome = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_LATE_COME"), false);
-	  	    	 if (UtilValidate.isNotEmpty(tenantLateCome)) {
-	  	    		lateComeMin = tenantLateCome.getDouble("propertyValue").doubleValue();
-	  	    	 }
-	  	    	GenericValue tenantEarlyGo = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","HUMANRES", "propertyName","HR_SHIFT_EARLY_GO"), false);
-	  	    	if (UtilValidate.isNotEmpty(tenantEarlyGo)) {
-	  	    		earlyGoMin = tenantEarlyGo.getDouble("propertyValue").doubleValue();
-	  	    	}*/
+	        	
 	        	GenericValue payrollPeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",payrollPeriodId), false);
 	        	if(UtilValidate.isEmpty(payrollPeriod) || !(payrollPeriod.getString("periodTypeId").equals("HR_MONTH"))){
 	        		Debug.logError("invalid CustomTimePeriod", module);    			
@@ -2574,6 +2567,9 @@ public class PayrollService {
 	        	input.put("timePeriodId", payrollPeriodId);
 	        	input.put("timePeriodStart", timePeriodStart);
 	        	input.put("timePeriodEnd", timePeriodEnd);
+	        	Timestamp attdTimePeriodStart = timePeriodStart;
+	        	Timestamp attdTimePeriodEnd = timePeriodEnd;
+	        	
 	        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
 	  	    	if(ServiceUtil.isError(resultMap)){
 	 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
@@ -2582,21 +2578,20 @@ public class PayrollService {
 	  	    	//lastCloseAttedancePeriod = ((GenericValue)result.get("lastClosedTimePeriod"))
 	  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
 	  	    		lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
-	  	    		Timestamp attdTimePeriodStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate")));
+	  	    		attdTimePeriodStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate")));
 	  	    		if(UtilDateTime.getIntervalInDays(attdTimePeriodStart, timePeriodStart) > 32){
 	  	    			Debug.logError("invalid  Attedance Period : "+lastCloseAttedancePeriod.getString("customTimePeriodId") +",startDate :"+ lastCloseAttedancePeriod.getDate("fromDate")+",endDate:"+lastCloseAttedancePeriod.getDate("thruDate"), module);    			
 		 	 		    return ServiceUtil.returnError("invalid  Attedance Period : "+lastCloseAttedancePeriod.getString("customTimePeriodId") +",startDate :"+ lastCloseAttedancePeriod.getDate("fromDate")+",endDate:"+lastCloseAttedancePeriod.getDate("thruDate"));
 	  	    		}
-	  	    		timePeriodStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("fromDate")));
-	  	    		timePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("thruDate")));
+	  	    		attdTimePeriodEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastCloseAttedancePeriod.getDate("thruDate")));
 	  	    	}
 	        	
 	  	    	//Active employes
 	  	    	input.clear();
 	        	input.put("userLogin", userLogin);
 	        	input.put("orgPartyId", orgPartyId);
-	        	input.put("fromDate", timePeriodStart);
-	        	input.put("thruDate", timePeriodEnd);
+	        	input.put("fromDate", attdTimePeriodStart);
+	        	input.put("thruDate", attdTimePeriodEnd);
 	        	resultMap = HumanresService.getActiveEmployements(dctx,input);
 	        	List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 	        	//Debug.log("employementList============"+employementList.size());
@@ -2605,13 +2600,13 @@ public class PayrollService {
 	        	input.clear();
 	    		input.put("userLogin", userLogin);
 	    		input.put("orgPartyId", orgPartyId);
-	    		input.put("fromDate", timePeriodStart);
-	    		input.put("thruDate", timePeriodEnd);
+	    		input.put("fromDate", attdTimePeriodStart);
+	    		input.put("thruDate", attdTimePeriodEnd);
 	    		resultMap = HumanresService.getGeneralHoliDays(dctx, input);
 	    		List<GenericValue> holiDayList = (List<GenericValue>)resultMap.get("holiDayList");
 	    		List lopCalDates = FastList.newInstance();
 	    		// second saturday
-	    		Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(timePeriodEnd),0,2,timeZone,locale), -1);
+	    		Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(attdTimePeriodEnd),0,2,timeZone,locale), -1);
 	    		//Debug.log("second saturday===="+secondSaturDay);
 	    		
 	        	for(GenericValue employement : employementList) {
@@ -2626,10 +2621,17 @@ public class PayrollService {
 	        		newEntity.set("noOfCompoffAvailed", BigDecimal.ZERO);
 	        		double noOfAttendedSsDays = 0;
 	        		double lossOfPayDays =0;
+	        		BigDecimal noOfEmployementDays = new BigDecimal(noOfCalenderDays);
+	        		Timestamp employementFromaDate = UtilDateTime.getDayStart(employement.getTimestamp("fromDate"));
+	        		Timestamp employementThruDate = employement.getTimestamp("thruDate");
+	        		if(UtilValidate.isNotEmpty(employementThruDate) && (employementThruDate.compareTo(timePeriodEnd) <0)){
+	        			noOfEmployementDays = new BigDecimal(UtilDateTime.getIntervalInDays(timePeriodStart, employementThruDate)+1);
+	        		}
+	        		
 	        		conditionList.clear();
 			        conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
-			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
-			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
+			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodStart)));
+			    	conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodEnd)));
 			    	EntityCondition condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			    	try {
 			    		List<GenericValue> punchList = delegator.findList("EmplPunch", condition, null,null, null, false);
@@ -2637,8 +2639,8 @@ public class PayrollService {
 			    		
 			    		conditionList.clear();
 			    		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
-					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
-					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
+					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodStart)));
+					    conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodEnd)));
 					    condition= EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 					    List<GenericValue> emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
 			    		if(UtilValidate.isEmpty(emplDailyAttendanceDetailList)){
@@ -2649,8 +2651,8 @@ public class PayrollService {
 			    		input.clear();
 			    		input.put("userLogin", userLogin);
 			    		input.put("partyId", employeeId);
-			    		input.put("timePeriodStart", timePeriodStart);
-			    		input.put("timePeriodEnd", timePeriodEnd);
+			    		input.put("timePeriodStart", attdTimePeriodStart);
+			    		input.put("timePeriodEnd", attdTimePeriodEnd);
 			    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
 			    		if(ServiceUtil.isError(resultMap)){
 			    			Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -2661,8 +2663,10 @@ public class PayrollService {
 			    		newEntity.set("noOfLeaveDays", resultMap.get("noOfLeaveDays"));
 			    		List<GenericValue> leaves = (List)resultMap.get("leaves");
 			    		GenericValue employeeDetail = delegator.findOne("EmployeeDetail", UtilMisc.toMap("partyId",employeeId), true);
+			    		//here handle no punch's in second half off the attendance month 
+			    		List<GenericValue> payrollPeriodPunchList = EntityUtil.filterByCondition(punchList, EntityCondition.makeCondition("punchdate",EntityOperator.BETWEEN,UtilMisc.toList(UtilDateTime.toSqlDate(timePeriodStart),UtilDateTime.toSqlDate(attdTimePeriodEnd))));
 			    	    //here handle no punch and no leaves for the period then populate noOfPayableDays zero
-			    		if(UtilValidate.isEmpty(punchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0) &&
+			    		if(UtilValidate.isEmpty(payrollPeriodPunchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0) &&
 			    				   (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && !(employeeDetail.getString("punchType").equalsIgnoreCase("N")))){
 			    			Debug.logWarning("No punchs for employee"+employeeId, module);
 			    			newEntity.set("lossOfPayDays", new BigDecimal(lossOfPayDays));
@@ -2680,9 +2684,9 @@ public class PayrollService {
 			    		
 			    		double noOfAttendedWeeklyOffDays =0;
 			    		Calendar c1=Calendar.getInstance();
-			    		c1.setTime(UtilDateTime.toSqlDate(timePeriodStart));
+			    		c1.setTime(UtilDateTime.toSqlDate(attdTimePeriodStart));
 			    		Calendar c2=Calendar.getInstance();
-			    		c2.setTime(UtilDateTime.toSqlDate(timePeriodEnd));
+			    		c2.setTime(UtilDateTime.toSqlDate(attdTimePeriodEnd));
 			    		String emplWeeklyOffDay = "SUNDAY";
 			    		
 				        if(UtilValidate.isNotEmpty(employeeDetail) && UtilValidate.isNotEmpty(employeeDetail.getString("weeklyOff"))){
@@ -2766,7 +2770,7 @@ public class PayrollService {
 			    		newEntity.set("noOfAttendedHoliDays", new BigDecimal(noOfAttendedHoliDays));
 			    		newEntity.set("noOfAttendedSsDays", new BigDecimal(noOfAttendedSsDays));
 			    		newEntity.set("noOfAttendedWeeklyOffDays", new BigDecimal(noOfAttendedWeeklyOffDays));
-			    		newEntity.set("noOfPayableDays",(newEntity.getBigDecimal("noOfCalenderDays")).subtract(newEntity.getBigDecimal("lossOfPayDays")));
+			    		newEntity.set("noOfPayableDays",noOfEmployementDays.subtract(newEntity.getBigDecimal("lossOfPayDays")));
 			    		//Debug.log("newEntity============="+newEntity);
 			    		delegator.createOrStore(newEntity);
 			    		
@@ -2778,8 +2782,8 @@ public class PayrollService {
 				 	    	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(lastCloseAttedancePeriod.getDate("thruDate"))));
 				        	
 				        }else{
-				        	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
-				 	    	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
+				        	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodStart)));
+				 	    	conditionList.add(EntityCondition.makeCondition("date", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(attdTimePeriodEnd)));
 				        }
 				        	
 				       
@@ -2790,8 +2794,8 @@ public class PayrollService {
 			    		Map availedCanteenDetailMap = FastMap.newInstance();
 			    		inputCtx.put("userLogin", userLogin);
 			    		inputCtx.put("partyId", employeeId);
-			    		inputCtx.put("timePeriodStart", timePeriodStart);
-			    		inputCtx.put("timePeriodEnd", timePeriodEnd);
+			    		inputCtx.put("timePeriodStart", attdTimePeriodStart);
+			    		inputCtx.put("timePeriodEnd", attdTimePeriodEnd);
 			    		inputCtx.put("leaveTypeId", "HPL");
 			    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
 			    		List<GenericValue> leavesList = (List)resultMap.get("leaves");
@@ -2801,7 +2805,7 @@ public class PayrollService {
 			    		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
 			    		if(UtilValidate.isNotEmpty(emplDailyAttendanceDetailList)){
 				    		for( GenericValue  emplDailyAttendanceDetail : emplDailyAttendanceDetailList){
-				    			Debug.log("emplDailyAttendanceDetail==========="+emplDailyAttendanceDetail);
+				    			//Debug.log("emplDailyAttendanceDetail==========="+emplDailyAttendanceDetail);
 				    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
 				    			if(UtilValidate.isNotEmpty(leavesList)){
 				    				List cDayLeaves = EntityUtil.filterByDate(leavesList, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getDate("date")));
@@ -2903,7 +2907,7 @@ public class PayrollService {
 	      						employPayrollDetails.store();
 	      					}
 	      					else{
-	      						  if(noOfArrearDays.compareTo(BigDecimal.ZERO)>0){
+	      						  if(noOfArrearDays.compareTo(BigDecimal.ZERO)>=0){
 	      							noOfPayableDays=noOfPayableDays.subtract(arrearDays);
 	      							noOfPayableDays=noOfPayableDays.add(noOfArrearDays);
 	      							employPayrollDetails.set("noOfPayableDays",noOfPayableDays);
@@ -2912,7 +2916,7 @@ public class PayrollService {
 	      						  }
 	      						    
 	      					}
-	      					if(UtilValidate.isNotEmpty(lossOfPayDays) && lossOfPayDays.compareTo(BigDecimal.ZERO)>0){
+	      					if(UtilValidate.isNotEmpty(lossOfPayDays) && lossOfPayDays.compareTo(BigDecimal.ZERO)>=0){
 	      						
 	      						noOfPayableDays=noOfPayableDays.add(employPayrollDetails.getBigDecimal("lossOfPayDays"));
       							noOfPayableDays=noOfPayableDays.subtract(lossOfPayDays);
