@@ -1671,6 +1671,7 @@ under the License.
       <field name="loanTypeId" type="id-ne"></field>
       <field name="payHeadTypeId" type="id-ne"></field>
       <field name="isActive" type="indicator"></field>
+      <field name="isExternal" type="indicator"></field>
       <field name="description" type="description"></field>
       <field name="maxAmount" type="currency-amount"></field>
       <field name="maxAvails" type="numeric"></field>
