@@ -225,7 +225,7 @@ under the License.
 				       									</fo:table-row>
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;PAYMENT REF NO:${paymentListReport.paymentId?if_exists}</fo:block>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;PAYMENT ID:${paymentListReport.paymentId?if_exists}</fo:block>
 						        						 	</fo:table-cell>
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentListReport.paymentMethodTypeId?has_content && (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>CHEQUE</#if><#if paymentListReport.paymentMethodTypeId?has_content && (paymentListReport.paymentMethodTypeId == "CASH_PAYIN" || paymentListReport.paymentMethodTypeId == "CASH_PAYOUT")>CASH</#if></fo:block>
@@ -239,7 +239,7 @@ under the License.
 						        							 <#if paymentListReport.paymentMethodId?has_content>
 														    	<#assign paymentMethodDetails = delegator.findOne("PaymentMethod", {"paymentMethodId" : paymentListReport.paymentMethodId}, true)?if_exists/>
 														    </#if>
-														 <#if paymentListReport.paymentRefNum?has_content>   
+														 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>   
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;CHEQUE NO:${paymentListReport.paymentRefNum?if_exists}</fo:block>
@@ -251,7 +251,7 @@ under the License.
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">CHEQUE DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.instrumentDate?if_exists, "dd-MM-yyyy")}</fo:block>
 						        						 	</fo:table-cell>
 						        						 </fo:table-row>
-						        						 <#if paymentMethodDetails?has_content>
+						        						 <#if (paymentListReport.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentListReport.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;CHEQUE BANK DETAILS:${paymentMethodDetails.description?if_exists}</fo:block>
