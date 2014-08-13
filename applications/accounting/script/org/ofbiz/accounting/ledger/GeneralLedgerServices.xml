@@ -2263,9 +2263,9 @@ under the License.
             <set field="creditEntry.debitCreditFlag" value="C"/>
             <!-- TODO -->
             <!--set field="creditEntry.glAccountTypeId" from-field=""/-->
-            <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
+            <!-- <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
             	<set field="creditEntry.glAccountId" from-field="paymentGlAccountTypeMap.glAccountId"/>
-            </if-not-empty>
+            </if-not-empty> -->
             <set field="creditEntry.origAmount" from-field="payment.amount"/>
             <set field="creditEntry.origCurrencyUomId" from-field="payment.currencyUomId"/>
             <set field="creditEntry.organizationPartyId" from-field="payment.partyIdFrom"/>
