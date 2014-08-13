@@ -42,7 +42,7 @@ if(changeFlag=="PowderSales"){
 	productCatageoryId="MILK_POWDER";
 }
 if(changeFlag=="FgsSales"){
-	productCatageoryId="ICE_CREAM_AMUL";
+	productCatageoryId="FG_STORE";
 }
 if(changeFlag=="InterUnitTransferSale"){
 	productCatageoryId="MILK_POWDER";//later we should change tranferble products only
@@ -113,14 +113,17 @@ prodList=[];
 if(UtilValidate.isNotEmpty(productCatageoryId) && "INDENT"==productCatageoryId){
 	prodList= ProductWorker.getProductsByCategory(delegator ,"INDENT" ,null);
 }else if(UtilValidate.isNotEmpty(productCatageoryId)){
-	exprList.clear();
+//TO DO:
+// we should not go with primaryProductCategoryId for now comment this , use product  catagory member
+	/*exprList.clear();
 	exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 	exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
 	exprList.add(EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.EQUALS, productCatageoryId));
 	exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.EQUALS, null),EntityOperator.OR,
 			 EntityCondition.makeCondition("salesDiscontinuationDate", EntityOperator.GREATER_THAN, effDateDayBegin)));
 	  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
-		prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);
+		prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);*/
+       prodList= ProductWorker.getProductsByCategory(delegator ,productCatageoryId ,null);
 		//Debug.log("=====discontinuationDateCondition===="+discontinuationDateCondition);
 }
 else{
