@@ -1271,6 +1271,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="FixedDepositReportPDF"/>
     </request-map>
+    <request-map uri="vatInvoiceSeqNoReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="VatInvoiceSeqNoReportPDF"/>
+    </request-map>
     
     <request-map uri="chequeReturnReport.pdf">
      <security https="true" auth="true"/>
@@ -1478,6 +1482,7 @@
 	<view-map name="NewOrTerminateRtlReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#NewOrTerminateRtlReportPDF" content-type="application/pdf"/>
 	<view-map name="FixedDepositReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#FixedDepositReportPDF" content-type="application/pdf"/>
 	<view-map name="RetailerSalesComparisonTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="text/plain"/>
+	<view-map name="VatInvoiceSeqNoReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#VatInvoiceSeqNoReportPDF" content-type="application/pdf"/>
 	
 	<view-map name="PCMReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerSalesComparisonTXT" content-type="application/pdf"/>
 	<view-map name="DailySalesRevenueTrend" type="screen" page="component://byproducts/widget/ByProductsNgScreens.xml#DailySalesRevenueTrend"/>

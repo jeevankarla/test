@@ -116,6 +116,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("crInstFromDateId","crInstThruDateId");
 		makeDatePicker("fixedDepositDate","");
 		makeDatePicker("newOrTerminatefDate","newOrTerminatetDate");
+		makeDatePicker("vatInvoiceSeqNofDate","vatInvoiceSeqNotDate");
 		
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
@@ -950,6 +951,16 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      					<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 	  					</form>
 	  				</tr>
+	  				 <tr class="alternate-row">
+						<form id="vatInvoiceSeqNoReport" name="vatInvoiceSeqNoReport" method="post" action="<@ofbizUrl>vatInvoiceSeqNoReport.pdf</@ofbizUrl>" target="_blank">	
+							<td width="30%">VAT Invoice Sequence No Report</td>
+							<td width="15%">From<input  type="text" size="18pt" id="vatInvoiceSeqNofDate" readonly  name="fromDate"/></td>
+						    <td width="15%">To<input  type="text" size="18pt" id="vatInvoiceSeqNotDate" readonly  name="thruDate"/></td>
+			      			<td width="15%"></td>
+			      			<td width="15%"></td>
+							<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
+						</form>
+	                  </tr>
 			        <#-- 
       				<tr class="alternate-row">
 		        	<form id="duesAbstract" name="duesAbstract" method="post" action="<@ofbizUrl>duesAbstract.csv</@ofbizUrl>">	
