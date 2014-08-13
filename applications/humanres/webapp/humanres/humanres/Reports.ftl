@@ -267,16 +267,29 @@ function makeDatePicker1(fromDateId ,thruDateId){
       	   		</form>
       	   </tr>
       	   <tr class="alternate-row">
+      	   	<form id="EmployeeWiseAttendanceDetails" name="EmployeeWiseAttendanceDetails" mothed="post" action="<@ofbizUrl>EmplMonthAttendanceDetails</@ofbizUrl>" target="_blank">
+      	   		<td width="25%">Employee Month Attendance Details</td>
+  				<td width="20%">Employee Id<input type="text" id="PartyId" name="partyIdTo"/></td>
+  				<td width="40%">Period Id
+	  				<select name="customTimePeriodId" class='h4'>
+    					<#list timePeriodList as timePeriod>    
+      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+    					</#list>      
+					</select>
+  				</td>
+  				<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+      	   </form>
+      	   </tr>
+      	   <tr class="alternate-row">
       	   		<form id="EmployeesLOPdays" name="EmployeeMisPunchData" mothed="post" action="<@ofbizUrl>EmployeesLOPdays.pdf</@ofbizUrl>" >
 	      	   	<td width="20%">LOP days Report</td>
-	      	   	
 	      	   	<td width="40%">Period Id
-			  			<select name="customTimePeriodId" class='h4'>
-	            					<#list timePeriodList as timePeriod>    
-	              	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
-	            					</#list>      
-								</select>
-			  		</td>	
+		  			<select name="customTimePeriodId" class='h4'>
+    					<#list timePeriodList as timePeriod>    
+      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+    					</#list>      
+					</select>
+			  	</td>	
 				<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
       	   		</form>
       	   </tr>

@@ -1573,6 +1573,11 @@ under the License.
    <request-map uri="EmployeeBankDetails"><security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeBankDetails"/>
     </request-map>
+    <request-map uri="EmplMonthAttendanceDetails">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="EmplMonthAttendanceDetailsPDF"/>
+        <response name="error" type="view" value="EmplMonthAttendanceDetailsPDF"></response>
+    </request-map>
     <request-map uri="EmployeeBankDetailsPdf.pdf"><security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeBankDetailsPdf"></response>
         </request-map>
@@ -1898,6 +1903,7 @@ under the License.
 	 <view-map name="BenefitDeductionCalculator" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitDeductionCalculator"/>
 	 <view-map name="EmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeDailyAttendance"/>
 	 <view-map name="createEmployeeDailyAttendance" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#createEmployeeDailyAttendance"/>
+	 <view-map name="EmplMonthAttendanceDetailsPDF" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmplMonthAttendanceDetailsPDF" content-type="application/pdf" encoding="none"/>
 	 <view-map name="PartyBenefitOrDeduction" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PartyBenefitOrDeduction"/>
 	 <view-map name="createPartyBenefitOrDeduction" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#createPartyBenefitOrDeduction"/>
 	 <view-map name="PFReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PFReport"/>
