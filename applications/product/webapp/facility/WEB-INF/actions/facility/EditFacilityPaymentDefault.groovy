@@ -10,6 +10,7 @@ import org.ofbiz.entity.util.EntityUtil;
     facilityId = parameters.facilityId;
 	condList = [];
 	if (UtilValidate.isNotEmpty(facilityId)) {
+		paymentMethodType="";
 		GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", facilityId), false);
 		partyId = (String) facility.get("ownerPartyId");
 		
@@ -17,8 +18,8 @@ import org.ofbiz.entity.util.EntityUtil;
 		if(UtilValidate.isNotEmpty(partyProfileDefault)){
 			GenericValue partyProfile = EntityUtil.getFirst(partyProfileDefault);
 			paymentMethodType=partyProfile.get("defaultPayMeth");
-			context.paymentMethodType = paymentMethodType;
 		}
+		context.paymentMethodType = paymentMethodType;
 		condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
 		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 		condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
