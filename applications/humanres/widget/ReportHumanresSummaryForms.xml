@@ -846,24 +846,22 @@
         </field>
         
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
-			<hyperlink target="setAttPeriodBillingStatus" description="approve">
+			<hyperlink target="setAttendanceFinalizationStatus" description="approve">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="APPROVED"/>
-	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
-	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
+	        	
 	        </hyperlink>
         </field>
         <field use-when="statusId.equals(&quot;APPROVED&quot;)" name="reject" widget-style="buttontext cancel">
-			<hyperlink target="setAttPeriodBillingStatus" description="Reject" >
+			<hyperlink target="setAttendanceFinalizationStatus" description="Reject">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="GENERATED"/>
-	        	<parameter param-name="lastModifiedDate" value="${nowTimeStamp}"/>
-	        	<parameter param-name="lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
 	        </hyperlink>
         </field>	
         <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="cancel" widget-style="buttontext cancel">
-			<hyperlink target="cancelAttendanceFinalization" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
+			<hyperlink target="setAttendanceFinalizationStatus" description="Cancel" confirmation-message="Are You Sure You Want To Cancel">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
+	        	<parameter param-name="statusId" value="COM_CANCELLED"/>
 	        </hyperlink>
         </field>
        

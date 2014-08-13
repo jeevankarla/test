@@ -2932,12 +2932,14 @@ public class PayrollService {
 	      //result.put("lastCloseAttedancePeriod", lastCloseAttedancePeriod);
 	      return result;  
 	 }	 
-	 public static Map<String, Object>  cancelAttendanceFinalization(DispatchContext dctx, Map<String, ? extends Object> context)  {
+	 public static Map<String, Object>  setAttendanceFinalizationStatus(DispatchContext dctx, Map<String, ? extends Object> context)  {
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			Map<String, Object> result = FastMap.newInstance();	
 			GenericValue userLogin = (GenericValue) context.get("userLogin");
 			String periodBillingId = (String) context.get("periodBillingId");
+			String statusId = (String) context.get("statusId");
+			
 			GenericValue periodBilling = null;
 	    	try {
 	    		try {
@@ -2946,53 +2948,80 @@ public class PayrollService {
 					Debug.logError(e1,"Error While Finding PeriodBilling");
 					return ServiceUtil.returnError("Error While Finding PeriodBilling" + e1);
 				}
+	    		
 	    		String payrollPeriodId = periodBilling.getString("customTimePeriodId");
-	    		GenericValue payrollPeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",payrollPeriodId), false);
-	        	if(UtilValidate.isEmpty(payrollPeriod) || !(payrollPeriod.getString("periodTypeId").equals("HR_MONTH"))){
-	        		Debug.logError("invalid CustomTimePeriod ::"+payrollPeriodId, module);    			
-	 	 		    return ServiceUtil.returnError("invalid CustomTimePeriod");
-	        	}
-	        	Timestamp timePeriodStart = UtilDateTime.toTimestamp(payrollPeriod.getDate("fromDate"));
-	        	Timestamp timePeriodEnd	= UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(payrollPeriod.getDate("thruDate")));	
-	        	// get attendance period here 
-	        	Map input = UtilMisc.toMap("userLogin",userLogin);
-	        	input.put("timePeriodId", payrollPeriodId);
-	        	input.put("timePeriodStart", timePeriodStart);
-	        	input.put("timePeriodEnd", timePeriodEnd);
-	        	Timestamp attdTimePeriodStart = timePeriodStart;
-	        	Timestamp attdTimePeriodEnd = timePeriodEnd;
-	        	
-	        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
-	  	    	if(ServiceUtil.isError(resultMap)){
-	 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
-	 	 		    return ServiceUtil.returnError("Error in service findLast Closed Attedance Date");
-	 	 	    }
-	  	    	String attendancePeriodId = null;
-	  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
-	  	    		GenericValue lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
-		  	    	attendancePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
-	  	    	}
-	  	    	List<GenericValue> payrollAttendance = delegator.findByAnd("PayrollAttendance", UtilMisc.toMap("customTimePeriodId",attendancePeriodId));
-	  	    	List<GenericValue> payrollAttendanceshiftWise = delegator.findByAnd("PayrollAttendanceShiftWise", UtilMisc.toMap("customTimePeriodId",attendancePeriodId));
-	  	    	if(UtilValidate.isNotEmpty(payrollAttendance)){
-	    			delegator.removeAll(payrollAttendance);
-	    			delegator.removeAll(payrollAttendanceshiftWise);
-	    			periodBilling.set("statusId", "COM_CANCELLED");
-	    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-	    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-					periodBilling.store();
-	    		}else{
-	    			periodBilling.set("statusId", "CANCEL_FAILED");
-	    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-	    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
-	    			periodBilling.store();
+	    		List condList =FastList.newInstance();
+	    		condList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,payrollPeriodId));
+	    		condList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
+	    		condList.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PAYROLL_BILL"));
+      			
+	    		
+	    		EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+	    		List<GenericValue> payrollBillg = delegator.findList("PeriodBilling",cond,null,null,null,true );
+	    		if(UtilValidate.isNotEmpty(payrollBillg)){
+	    			Debug.logError("payroll allready generated ,please cancel payroll and do attendance finalization or cancel  ::"+payrollPeriodId, module);    			
+	 	 		    return ServiceUtil.returnError("payroll allready generated ,please cancel payroll and do attendance finalization or cancel ");
 	    		}
 	    		
-	    	}catch (GenericEntityException e) {
+	    		if(statusId.equals("COM_CANCELLED")){
+	    			GenericValue payrollPeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",payrollPeriodId), false);
+		        	if(UtilValidate.isEmpty(payrollPeriod) || !(payrollPeriod.getString("periodTypeId").equals("HR_MONTH"))){
+		        		Debug.logError("invalid CustomTimePeriod ::"+payrollPeriodId, module);    			
+		 	 		    return ServiceUtil.returnError("invalid CustomTimePeriod");
+		        	}
+		        	Timestamp timePeriodStart = UtilDateTime.toTimestamp(payrollPeriod.getDate("fromDate"));
+		        	Timestamp timePeriodEnd	= UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(payrollPeriod.getDate("thruDate")));	
+		        	// get attendance period here 
+		        	Map input = UtilMisc.toMap("userLogin",userLogin);
+		        	input.put("timePeriodId", payrollPeriodId);
+		        	input.put("timePeriodStart", timePeriodStart);
+		        	input.put("timePeriodEnd", timePeriodEnd);
+		        	Timestamp attdTimePeriodStart = timePeriodStart;
+		        	Timestamp attdTimePeriodEnd = timePeriodEnd;
+		        	
+		        	Map resultMap = getPayrollAttedancePeriod(dctx,input);
+		  	    	if(ServiceUtil.isError(resultMap)){
+		 	 	    	Debug.logError("Error in service findLastClosed Attedance Date ", module);    			
+		 	 		    return ServiceUtil.returnError("Error in service findLast Closed Attedance Date");
+		 	 	    }
+		  	    	String attendancePeriodId = null;
+		  	    	if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){
+		  	    		GenericValue lastCloseAttedancePeriod = (GenericValue)resultMap.get("lastCloseAttedancePeriod");
+			  	    	attendancePeriodId = lastCloseAttedancePeriod.getString("customTimePeriodId");
+		  	    	}
+		  	    	List<GenericValue> payrollAttendance = delegator.findByAnd("PayrollAttendance", UtilMisc.toMap("customTimePeriodId",attendancePeriodId));
+		  	    	List<GenericValue> payrollAttendanceshiftWise = delegator.findByAnd("PayrollAttendanceShiftWise", UtilMisc.toMap("customTimePeriodId",attendancePeriodId));
+		  	    	if(UtilValidate.isNotEmpty(payrollAttendance)){
+		    			delegator.removeAll(payrollAttendance);
+		    			delegator.removeAll(payrollAttendanceshiftWise);
+		    			/*periodBilling.set("statusId", "COM_CANCELLED");
+		    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+						periodBilling.store();*/
+		    		}else{
+		    			periodBilling.set("statusId", "CANCEL_FAILED");
+		    			periodBilling.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+		    			periodBilling.set("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+		    			periodBilling.store();
+		    			return ServiceUtil.returnSuccess();
+		    		}
+	    		}
+	    		Map input = UtilMisc.toMap("userLogin",userLogin);
+	    		input.put("periodBillingId", periodBillingId);
+	    		input.put("statusId", statusId);
+	    		input.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+	    		input.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+	    		result = dispatcher.runSync("SetPeriodBillingStatus", input);
+        		if(ServiceUtil.isError(result)){
+        			 Debug.logError("Error while updating attendance status:"+result, module);
+ 		             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+        		}
+	    		
+	    	}catch (Exception e) {
 	    		 Debug.logError(e, module);
 	             return ServiceUtil.returnError("Failed to find payrollHeaderItemList " + e);
 			} 
-			result = ServiceUtil.returnSuccess("PayRoll Attendance Successfully Cancelled..");
+			result = ServiceUtil.returnSuccess("PayRoll Attendance status successfully changed..");
 			return result;
 	}// end of service
 	 
@@ -3010,6 +3039,8 @@ public class PayrollService {
 	      			List conditionLis=FastList.newInstance();
 	      			conditionLis.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,timePeriodId));
 	      			conditionLis.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_IN,UtilMisc.toList("COM_CANCELLED","CANCEL_FAILED")));
+	      			conditionLis.add(EntityCondition.makeCondition("billingTypeId",EntityOperator.EQUALS,"PAYROLL_BILL"));
+	      			
 	      			EntityCondition conditon=EntityCondition.makeCondition(conditionLis,EntityOperator.AND);
 	      			List<GenericValue> statusList=delegator.findList("PeriodBilling",conditon, null, null,null,false);
 	      	if(UtilValidate.isEmpty(statusList)){

@@ -637,11 +637,6 @@ under the License.
         <event type="service" invoke="SetPeriodBillingStatus"/>
         <response name="success" type="view" value="FindPayrollBilling"/>
     </request-map>
-    <request-map uri="setAttPeriodBillingStatus">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="SetPeriodBillingStatus"/>
-        <response name="success" type="view" value="AttendanceFinalization"/>
-    </request-map>
      <request-map uri="sendPayrollSms">
         <security https="true" auth="true"/>
         <event type="service" invoke="sendPayrollSms"></event>
@@ -702,9 +697,14 @@ under the License.
         <response name="success" type="view" value="AttendanceFinalization"/>
         <response name="error" type="view" value="AttendanceFinalization"/>
     </request-map>
-     <request-map uri="cancelAttendanceFinalization">
+    <!-- <request-map uri="setAttPeriodBillingStatus">
         <security https="true" auth="true"/>
-        <event type="service" invoke="cancelAttendanceFinalization"/>
+        <event type="service" invoke="SetPeriodBillingStatus"/>
+        <response name="success" type="view" value="AttendanceFinalization"/>
+    </request-map> -->
+     <request-map uri="setAttendanceFinalizationStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setAttendanceFinalizationStatus"/>
         <response name="success" type="view" value="AttendanceFinalization"/>
         <response name="error" type="view" value="AttendanceFinalization"/>
     </request-map>
