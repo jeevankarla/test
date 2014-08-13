@@ -1056,7 +1056,7 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-                <html><html-template location="component://accounting/webapp/accounting/payment/chequePaymentVoucher.fo.ftl"/></html>
+                <html><html-template location="component://accounting/webapp/accounting/payment/DebitCreditNote.fo.ftl"/></html>
 	            </platform-specific>	
             </widgets>
         </section>
