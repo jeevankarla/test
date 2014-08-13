@@ -743,6 +743,12 @@
         <response name="success" type="view" value="ProcessPowderOrders"/>   
        <response name="failed" type="view" value="ProcessPowderOrders"/>  
     </request-map>
+    <request-map uri="approveFGSOrder">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="approveICPOrder"/>
+        <response name="success" type="view" value="ProcessFGSOrders"/>   
+       <response name="failed" type="view" value="ProcessFGSOrders"/>  
+    </request-map>
     <request-map uri="approveIUSTransferOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="approveICPOrder"/>
