@@ -549,7 +549,7 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-n                    <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/newPrintCheque.fo.ftl"/></xsl-fo>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/newPrintCheque.fo.ftl"/></xsl-fo>
                 </platform-specific>
             </widgets>
         </section>
@@ -1056,7 +1056,7 @@ n                    <xsl-fo><html-template location="component://accounting/web
             </actions>
             <widgets>
                 <platform-specific>
-                <html><html-template location="component://accounting/webapp/accounting/payment/DebitCreditNote.fo.ftl"/></html>
+                <html><html-template location="component://accounting/webapp/accounting/payment/chequePaymentVoucher.fo.ftl"/></html>
 	            </platform-specific>	
             </widgets>
         </section>
