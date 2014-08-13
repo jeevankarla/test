@@ -118,7 +118,6 @@ if(UtilValidate.isNotEmpty(employementIds)){
 			}
 			String dayOfWeek = (UtilDateTime.getDayOfWeek(currentDay, timeZone, locale)).toString();
 			if(emplWeekOf.equalsIgnoreCase(weekMap.get(dayOfWeek))){
-				Debug.log(employeeId+"==emplWeekOf=="+ emplWeekOf);
 				weekOfList.add(currentDay);
 			}
 		}
