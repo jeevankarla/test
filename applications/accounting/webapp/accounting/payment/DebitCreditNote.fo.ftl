@@ -37,12 +37,12 @@ under the License.
         <#assign amount = (Static["java.math.BigDecimal"].ZERO)>
         <#assign comments = "">
         <#if paymentDetails?has_content>  
-	    	<#assign paymentId = paymentDetails.paymentId>
-	     	<#assign partyIdFrom = paymentDetails.partyIdFrom>
-	     	<#assign partyIdTo = paymentDetails.partyIdTo>
-	     	<#assign paymentDate = paymentDetails.paymentDate>
-	     	<#assign amount = paymentDetails.amount>
-	     	<#assign comments = paymentDetails.comments>
+	    	<#assign paymentId = paymentDetails.paymentId?if_exists>
+	     	<#assign partyIdFrom = paymentDetails.partyIdFrom?if_exists>
+	     	<#assign partyIdTo = paymentDetails.partyIdTo?if_exists>
+	     	<#assign paymentDate = paymentDetails.paymentDate?if_exists>
+	     	<#assign amount = paymentDetails.amount?if_exists>
+	     	<#assign comments = paymentDetails.comments?if_exists>
           
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -166,7 +166,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">Towards:                  ${comments?if_exists}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt" font-weight = "bold">Towards:                  ${comments?if_exists}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -179,15 +179,19 @@ under the License.
     	 	</fo:block>
     	 	<fo:block>
                  	<fo:table border-style="solid">
-                    <fo:table-column column-width="300pt"/>
+                    <fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="261pt"/>
+                    <fo:table-column column-width="250pt"/>
                     <fo:table-body>
                     	<fo:table-row >
                    			<fo:table-cell border-style="solid">
-                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Account Desc</fo:block> 
+                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">S.No</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
-                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block> 
+                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">Account Desc</fo:block> 
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block> 
                    			</fo:table-cell>
             			</fo:table-row>
                     </fo:table-body>
@@ -195,17 +199,59 @@ under the License.
              </fo:block>
              <fo:block>
                  	<fo:table border-style="solid">
-                    <fo:table-column column-width="300pt"/>
+                 	<fo:table-column column-width="50pt"/>
                     <fo:table-column column-width="261pt"/>
+                    <fo:table-column column-width="250pt"/>
                     <fo:table-body>
+                    	<#assign sno=0>
+						<#if invoiceItems?has_content>
+						<#list invoiceItems as invoiceItem>
+						 <#assign sno=sno+1>
+				         <#assign itemType = invoiceItem.getRelatedOne("InvoiceItemType")>
+				         <#assign isItemAdjustment = Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "InvoiceItemType", "invoiceItemTypeId", itemType.getString("invoiceItemTypeId"), "parentTypeId", "INVOICE_ADJ")/>
+						 <#if invoiceItem.description?has_content>
+				                <#assign description=invoiceItem.description>
+				            <#elseif taxRate?has_content & taxRate.get("description",locale)?has_content>
+				                <#assign description=taxRate.get("description",locale)>
+				            <#elseif itemType.get("description",locale)?has_content>
+				                <#assign description=itemType.get("description",locale)>
+				            </#if>
+							 <fo:table-row>
+	                   			<fo:table-cell border-style="solid">
+						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
+						     	</fo:table-cell>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${description?if_exists}</fo:block> 
+	                   			</fo:table-cell>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false"><@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=invoice.currencyUomId?if_exists/></fo:block> 
+	                   			</fo:table-cell>
+            				</fo:table-row>
+							</#list>
+							<fo:table-row>	
+								<fo:table-cell border-style="solid">
+						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
+						     	</fo:table-cell>
+	                   			<fo:table-cell border-style="solid">
+	                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false"></fo:block> 
+	                   			</fo:table-cell>
+								<fo:table-cell border-style="solid">
+			        				<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Total:&#160;<@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></fo:block>
+			        			</fo:table-cell>
+			        		</fo:table-row>	
+                    	<#else>
                     	<fo:table-row >
                    			<fo:table-cell border-style="solid">
-                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${comments?if_exists}</fo:block> 
+						        	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;1</fo:block>
+						     	</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                        		<fo:block  keep-together="always" text-align="center" font-size="12pt" white-space-collapse="false">${comments?if_exists}</fo:block> 
                    			</fo:table-cell>
                    			<fo:table-cell border-style="solid">
-                        		<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${amount?string("##0.00")}</fo:block> 
+                        		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${amount?string("##0.00")}</fo:block> 
                    			</fo:table-cell>
             			</fo:table-row>
+            			</#if>
 					</fo:table-body>
                 </fo:table>
              </fo:block>  
@@ -221,9 +267,9 @@ under the License.
 			       			</fo:table-cell>
 						</fo:table-row>	
                     	<fo:table-row >
-                          		<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paise", locale).toUpperCase()>
+                          		<#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paise", locale)>
 			                   <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">Amount Payable:(${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt" font-weight = "bold">Amount Payable:(${StringUtil.wrapString(amountWords?default(""))}  ONLY)</fo:block>
 			                   </fo:table-cell>
 			             </fo:table-row>
 			             <fo:table-row>
@@ -246,10 +292,10 @@ under the License.
 			            		<fo:block  keep-together="always" font-weight="bold">Prepared By</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">Pre-Auditor</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre-Auditor</fo:block>  
 			       			</fo:table-cell>
 			       			<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">For MotherDairy</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;For MotherDairy</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row>
@@ -270,7 +316,7 @@ under the License.
 			            		<fo:block  keep-together="always" font-weight="bold"></fo:block>  
 			       			</fo:table-cell>
 							<fo:table-cell>
-			            		<fo:block  keep-together="always" font-weight="bold">D.Mgr(Finance)/Mgr(Finance)</fo:block>  
+			            		<fo:block  keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
                     </fo:table-body>

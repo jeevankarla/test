@@ -761,8 +761,8 @@
 					</and>
 				</and>
 			</condition>
-			<link target="DebitNote">
-				<parameter param-name="paymentId" from-field="payment.paymentId" />
+			<link target="DebitNote" target-window="_BLANK">
+				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 			</link>
 		</menu-item>
 	</menu>

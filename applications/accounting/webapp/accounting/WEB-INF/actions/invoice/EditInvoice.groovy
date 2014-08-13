@@ -33,14 +33,20 @@ import javolution.util.FastMap;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
-
-
+paymentId = parameters.paymentId;
 invoiceId = parameters.get("invoiceId");
-
+//for debit credit note
+if(UtilValidate.isEmpty(invoiceId)){
+	paymentApplication = delegator.findByAnd("PaymentApplication", [paymentId :paymentId]);
+	if(UtilValidate.isNotEmpty(paymentApplication)){
+		invoiceDetails = EntityUtil.getFirst(paymentApplication);
+		if(UtilValidate.isNotEmpty(invoiceDetails)){
+			invoiceId = invoiceDetails.invoiceId;
+		}
+	}
+}
 invoice = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);
-context.invoice = invoice;
-
-currency = parameters.currency;        // allow the display of the invoice in the original currency, the default is to display the invoice in the default currency
+context.invoice = invoice;currency = parameters.currency;        // allow the display of the invoice in the original currency, the default is to display the invoice in the default currency
 BigDecimal conversionRate = new BigDecimal("1");
 ZERO = BigDecimal.ZERO;
 decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
@@ -105,7 +111,7 @@ if (invoice) {
     context.vatTaxIds = vatTaxesByType.keySet().asList();
 
     context.invoiceItems = invoiceItemsConv;
-
+	Debug.log("invoiceItems======"+invoiceItems);
     invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
     invoiceNoTaxTotal = InvoiceWorker.getInvoiceNoTaxTotal(invoice).multiply(conversionRate).setScale(decimals, rounding);
     context.invoiceTotal = invoiceTotal;
