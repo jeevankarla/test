@@ -91,7 +91,7 @@
 		conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
 		conditionList.add(EntityCondition.makeCondition("orderStatusId", EntityOperator.NOT_EQUAL ,"ORDER_REJECTED"));
 		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachFacilityId));
-		conditionList.add(EntityCondition.makeCondition("vatPercent", EntityOperator.GREATER_THAN, BigDecimal.ONE));
+		//conditionList.add(EntityCondition.makeCondition("vatPercent", EntityOperator.GREATER_THAN, BigDecimal.ONE));
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN , shipmentIds));
 		condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		fieldsToSelect = ["ownerPartyId","estimatedShipDate","orderId","productId","shipmentTypeId","itemDescription","productName","quantity","unitPrice","unitListPrice", "shipmentId"] as Set;
@@ -144,7 +144,7 @@
 		returnConditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 		returnConditionList.add(EntityCondition.makeCondition("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO ,thruDate));
 		returnConditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,eachFacilityId));
-		returnConditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN ,vatProductIds));//to get Only taxble products
+		//returnConditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN ,vatProductIds));//to get Only taxble products
 		returnConditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS, "RETURN_ACCEPTED"));
 		returnCondition = EntityCondition.makeCondition(returnConditionList,EntityOperator.AND);
 		returnHeaderItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility", returnCondition, null, null, null, false);
@@ -165,6 +165,9 @@
 							if(eachProdReturnItem.returnBasicPrice){
 								returnBasicPrice = returnBasicPrice+(eachProdReturnItem.returnQuantity*eachProdReturnItem.returnBasicPrice);
 							}
+							else{
+							   returnBasicPrice = returnBasicPrice+(eachProdReturnItem.returnQuantity*eachProdReturnItem.returnPrice);
+							}
 							
 						}
 						retTempMap.returnQuantity = prodTotalQty;
@@ -175,7 +178,7 @@
 			}
 		}
 		productMap.put("prodMap",productTotalsMap);
-		productMap.put("vatMap",vatMap);
+		//productMap.put("vatMap",vatMap);
 		productMap.put("returnMap",productReturnMap);
 		if (UtilValidate.isNotEmpty(productTotalsMap) || UtilValidate.isNotEmpty(productReturnMap)) {
 			facilityMap.put(eachFacilityId,productMap);
