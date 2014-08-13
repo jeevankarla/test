@@ -126,6 +126,12 @@ vatList.each { vat->
 					tempMap = [:];
 					tempProdMap = [:];
 					tempProdMap["quantity"] = productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+					if(currentProduct == "15"){
+						if(UtilValidate.isNotEmpty(productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total"))){
+							tempProdMap["subsidy"] = productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+							tempProdMap["subsidyRevenue"] = productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+						}
+					}
 					tempProdMap["revenue"] = productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 					tempProdMap["vatRevenue"] = productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 					tempMap[currentProduct] = tempProdMap;
@@ -136,6 +142,12 @@ vatList.each { vat->
 					tempMap.putAll(tempVariantMap.get(virtualProductId));
 					productQtyMap.putAll(tempMap);
 					productQtyMap["quantity"] += productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+					if(currentProduct == "15"){
+						if(UtilValidate.isNotEmpty(productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total"))){
+							productQtyMap["subsidy"] += productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+							productQtyMap["subsidyRevenue"] += productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+						}
+					}
 					productQtyMap["revenue"] += productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 					productQtyMap["vatRevenue"] += productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 					tempMap[currentProduct] = productQtyMap;
@@ -150,6 +162,12 @@ vatList.each { vat->
 						tempMap = [:];
 						tempProdMap = [:];
 						tempProdMap["quantity"] = productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+						if(currentProduct == "15"){
+							if(UtilValidate.isNotEmpty(productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total"))){
+								tempProdMap["subsidy"] = productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+								tempProdMap["subsidyRevenue"] = productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+							}
+						}
 						tempProdMap["revenue"] = productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 						tempProdMap["vatRevenue"] = productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 						tempMap[currentProduct] = tempProdMap;
@@ -160,12 +178,24 @@ vatList.each { vat->
 							if(UtilValidate.isEmpty(tempMap.get(currentProduct))){
 								currentTempMap = [:];
 								currentTempMap["quantity"] = productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+								if(currentProduct == "15"){
+									if(UtilValidate.isNotEmpty(productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total"))){
+										currentTempMap["subsidy"] = productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+										currentTempMap["subsidyRevenue"] = productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+									}
+								}
 								currentTempMap["revenue"] = productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 								currentTempMap["vatRevenue"] = productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 								tempMap[currentProduct] = currentTempMap;
 							}else{
 								currentTempMap = [:];
 								currentTempMap["quantity"] += productValue.getValue().get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+								if(currentProduct == "15"){
+									if(UtilValidate.isNotEmpty(productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total"))){
+										currentTempMap["subsidy"] += productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("total").setScale(0,BigDecimal.ROUND_HALF_UP);
+										currentTempMap["subsidyRevenue"] += productValue.getValue().get("supplyTypeTotals").get("EMP_SUBSIDY").get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
+									}
+								}
 								currentTempMap["revenue"] += productValue.getValue().get("totalRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 								currentTempMap["vatRevenue"] += productValue.getValue().get("vatRevenue").setScale(0,BigDecimal.ROUND_HALF_UP);
 								tempMap[currentProduct] = currentTempMap;
@@ -184,7 +214,6 @@ vatList.each { vat->
 	}
 }
 context.put("vatMap",vatMap);
-
 // for CSV
 vatReportCsvList = [];
 if(UtilValidate.isNotEmpty(vatMap)){

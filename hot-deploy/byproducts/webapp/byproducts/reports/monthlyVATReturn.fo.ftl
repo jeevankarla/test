@@ -45,13 +45,13 @@ under the License.
 						<fo:block  keep-together="always" text-align="center" font-weight="bold"  font-size="14pt" font-family="Courier,monospace" white-space-collapse="false">&#160;      ${uiLabelMap.KMFDairySubHeader}</fo:block>
                     	<fo:block text-align="center" font-size="14pt" font-weight="bold"  keep-together="always"  white-space-collapse="false">&#160;     MONTHLY VAT SUPPORT STATEMENT FOR THE PERIOD: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayBegin, "dd/MM/yyyy")} TO: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayEnd, "dd/MM/yyyy")}</fo:block>
               			<fo:block font-size="10pt">================================================================================================================</fo:block>
-            			<fo:block text-align="left" font-size="11pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">&#160;S NO      DESCRIPTION              SALE VALUE     		VAT COLLECTED   		 NET SALE   		 QUANTITY(KGS/LTRS)</fo:block>	 	 	  
+            			<fo:block text-align="left" font-size="11pt" keep-together="always" font-weight="bold"  font-family="Courier,monospace" white-space-collapse="false">&#160;S NO      DESCRIPTION              QUANTITY(KGS/LTRS) 		SALE VALUE     		VAT COLLECTED   		 NET SALE</fo:block>	 	 	  
             	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="80pt"/>
                     <fo:table-column column-width="100pt"/> 
                	    <fo:table-column column-width="120pt"/>
-            		<fo:table-column column-width="110pt"/> 	
+            		<fo:table-column column-width="120pt"/> 	
             		<fo:table-column column-width="120pt"/>	
             		<fo:table-column column-width="130pt"/>
             		<fo:table-column column-width="120pt"/>
@@ -128,8 +128,18 @@ under the License.
 												<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${serialNo?if_exists}</fo:block>  
 			                        			</fo:table-cell>
+			                        			<#if prod.getKey() == "15">
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${product.brandName?if_exists}*</fo:block>  
+			                        			</fo:table-cell>
+			                        			<#else>
 			                        			<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">${product.brandName?if_exists}</fo:block>  
+			                        			</fo:table-cell>
+			                        			</#if>
+			                        			<#assign totalNetQuantity = (totalNetQuantity + netQuantity?if_exists)>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${netQuantity?if_exists?string("#0.00")}</fo:block>  
 			                        			</fo:table-cell>
 			                        			<#assign totalNetVatExcValue = (totalNetVatExcValue + netExcVatValue?if_exists)>
 			                        			<fo:table-cell>
@@ -143,12 +153,32 @@ under the License.
 			                        			<fo:table-cell>
 			                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${netRevenue?if_exists?string("#0.00")}</fo:block>  
 			                        			</fo:table-cell>
-			                        			<#assign totalNetQuantity = (totalNetQuantity + netQuantity?if_exists)>
-			                        			<fo:table-cell>
-			                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${netQuantity?if_exists?string("#0.00")}</fo:block>  
-			                        			</fo:table-cell>
 			                        		</fo:table-row>
 			                        		<#assign serialNo = serialNo+1>
+			                        		 <#if prod.getKey() == "15">
+			                        		  <#assign subsidyMilk = prod.getValue().get("subsidy")?if_exists>
+			                        		  <#assign subsidyMilkRevenue = prod.getValue().get("subsidyRevenue")?if_exists>
+			                        		<fo:table-row font-style="italic" font-weight = "bold">
+												<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false"></fo:block>  
+			                        			</fo:table-cell>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="left" font-size="12pt" white-space-collapse="false">(Subsidy Milk)</fo:block>  
+			                        			</fo:table-cell>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${subsidyMilk?if_exists?string("#0.00")}</fo:block>  
+			                        			</fo:table-cell>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${subsidyMilkRevenue?if_exists?string("#0.00")}</fo:block>  
+			                        			</fo:table-cell>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">0.00</fo:block>  
+			                        			</fo:table-cell>
+			                        			<fo:table-cell>
+			                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${subsidyMilkRevenue?if_exists?string("#0.00")}</fo:block>  
+			                        			</fo:table-cell>
+			                        		</fo:table-row>
+			                        		</#if>
 			                        	</#list>
 			                        	</#list>
 		                        			<fo:table-row>
@@ -163,6 +193,10 @@ under the License.
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="left" font-weight="bold" font-size="12pt" white-space-collapse="false">&lt;SUB TOTAL&gt;</fo:block>  
 		                        			</fo:table-cell>
+		                        			<#assign vatTotalNetQuantity = (vatTotalNetQuantity + totalNetQuantity?if_exists)>
+		                        			<fo:table-cell>
+			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${totalNetQuantity?if_exists?string("#0.00")}</fo:block>  
+			                        		</fo:table-cell>
 		                        			<#assign vatTotalNetVatExcValue = (vatTotalNetVatExcValue + totalNetVatExcValue?if_exists)>
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${totalNetVatExcValue?if_exists?string("#0.00")}</fo:block>  
@@ -175,10 +209,6 @@ under the License.
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${totalNetRevenue?if_exists?string("#0.00")}</fo:block>  
 		                        			</fo:table-cell>
-		                        			<#assign vatTotalNetQuantity = (vatTotalNetQuantity + totalNetQuantity?if_exists)>
-		                        			<fo:table-cell>
-			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${totalNetQuantity?if_exists?string("#0.00")}</fo:block>  
-			                        		</fo:table-cell>
 		                        		</fo:table-row>
 		                        	</#list>
 		                        		<fo:table-row>
@@ -193,6 +223,10 @@ under the License.
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="left" font-weight="bold" font-size="14pt" white-space-collapse="false">&lt;VAT TOTAL&gt;</fo:block>  
 		                        			</fo:table-cell>
+		                        			<#assign grandTotalNetQuantity = (grandTotalNetQuantity + vatTotalNetQuantity?if_exists)>
+		                        			<fo:table-cell>
+			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${vatTotalNetQuantity?if_exists?string("#0.00")}</fo:block>  
+			                        		</fo:table-cell>
 		                        			<#assign grandTotalNetVatExcValue = (grandTotalNetVatExcValue + vatTotalNetVatExcValue?if_exists)>
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${vatTotalNetVatExcValue?if_exists?string("#0.00")}</fo:block>  
@@ -205,10 +239,6 @@ under the License.
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${vatTotalNetRevenue?if_exists?string("#0.00")}</fo:block>  
 		                        			</fo:table-cell>
-		                        			<#assign grandTotalNetQuantity = (grandTotalNetQuantity + vatTotalNetQuantity?if_exists)>
-		                        			<fo:table-cell>
-			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${vatTotalNetQuantity?if_exists?string("#0.00")}</fo:block>  
-			                        		</fo:table-cell>
 		                        		</fo:table-row>
 		                        	</#list>
 		                        	<fo:table-row >
@@ -224,6 +254,9 @@ under the License.
 		                            			<fo:block  keep-together="always" text-align="left" font-weight="bold" font-size="14pt" white-space-collapse="false">&lt;GRAND TOTAL&gt;</fo:block>  
 		                        			</fo:table-cell>
 		                        			<fo:table-cell>
+			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${grandTotalNetQuantity?if_exists?string("#0.00")}</fo:block>  
+			                        		</fo:table-cell>
+		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${grandTotalNetVatExcValue?if_exists?string("#0.00")}</fo:block>  
 		                        			</fo:table-cell>
 		                        			<fo:table-cell>
@@ -232,15 +265,17 @@ under the License.
 		                        			<fo:table-cell>
 		                            			<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${grandTotalNetRevenue?if_exists?string("#0.00")}</fo:block>  
 		                        			</fo:table-cell>
-		                        			<fo:table-cell>
-			                            		<fo:block  keep-together="always" text-align="right" font-size="12pt" white-space-collapse="false">${grandTotalNetQuantity?if_exists?string("#0.00")}</fo:block>  
-			                        		</fo:table-cell>
 		                        		</fo:table-row>
 		                        		<fo:table-row>
 			                        			<fo:table-cell>
 			                            			<fo:block font-size="10pt">----------------------------------------------------------------------------------------------------------------</fo:block>
 			                        			</fo:table-cell>
 				                        	</fo:table-row>
+		                        		<fo:table-row>
+											<fo:table-cell>
+							            		<fo:block keep-together="always" font-size="12pt">(*TMS1000 figures is inclusive of Subsidy Milk figures given beneath the product variant)</fo:block>  
+							       			</fo:table-cell>
+						  				</fo:table-row>
 		                        		<fo:table-row>
 											<fo:table-cell>
 							            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
