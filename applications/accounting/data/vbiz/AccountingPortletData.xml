@@ -77,7 +77,6 @@
     
     
         <SecurityPermission description="View Cashier Potal View in Accounting" permissionId="ACCOUNTING_CASHIER"/>
-         
         <SecurityGroup description="Cashier Role user will have  myportal Access" groupId="MYPORTAL_CASHIER"/>
 	 	 <SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="ACCOUNTING_CASHIER"/>
 	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="FACILITY_VIEW"/>
@@ -91,5 +90,31 @@
     	<PortalPage portalPageId="MYPORTAL_CASHIER" sequenceNum="0" portalPageName="CASHIER" description="The Milkosoft System ByProduct page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_CASHIER"/>
     	<PortalPageColumn portalPageId="MYPORTAL_CASHIER" columnSeqId="00001"/>
     	<PortalPagePortlet portalPageId="MYPORTAL_CASHIER" portalPortletId="CASHIER" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+    	
+    	<!--Treasurer portal work flow -->
+    	 <SecurityPermission description="View Treasurer Potal View in Accounting" permissionId="MYPORTAL_TREASURER"/>
+        <SecurityGroup description="Treasurer Role user will have  myportal Access" groupId="MYPORTAL_TREASURER"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_TREASURER" permissionId="ACCOUNTING_TREASURER"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_TREASURER" permissionId="MYPORTALBASE_ADMIN"/> 
+	 	 <SecurityGroupPermission groupId="MYPORTAL_TREASURER" permissionId="ACCOUNTING_VIEW"/>
+	 	<!-- <SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="FACILITY_VIEW"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="BYPRODUCTS_VIEW"/> 	
+	 	<SecurityGroupPermission groupId="MYPORTAL_CASHIER" permissionId="MYPORTALBASE_ADMIN"/> -->
+	 	
+		<PortalPage portalPageId="MYPORTAL_TREASURER" sequenceNum="0" portalPageName="Main" description="The Milkosoft System Treasure page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_TREASURER"/>
+	   
+	 <!--     -->
+    	    	
+    	   <PortalPortlet portalPortletId="TREASURER"
+        portletName="List bank account"
+        screenName="ListNewBankAccounts"
+        screenLocation="component://accounting/widget/TreasurerPortalScreens.xml"
+        description="List all financial account with type BANK_ACCOUNT" securityServiceName="portalPermissionIsEmployee" securityMainAction="VIEW"/>
+    	<PortalPage portalPageId="MYPORTAL_TREASURER" sequenceNum="0" portalPageName="TREASURER" description="The Milkosoft Treaurer Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_TREASURER"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_TREASURER" columnSeqId="00001"/>
+    	 <PortalPagePortlet portalPageId="MYPORTAL_TREASURER" portalPortletId="TREASURER" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+    	 <PortalPortlet portalPortletId="TREASURER" portletName="TREASURER Portal Screen" screenName="MyPortalTreasurerScreen"
+            screenLocation="component://accounting/widget/CommonScreens.xml" description="Treasurer Portal Screen"/>
+    	
     
 </entity-engine-xml>
