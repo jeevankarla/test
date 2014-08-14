@@ -287,4 +287,480 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- ==================================== Incoming Advances  ===================================   -->
+    <screen name="IncomingAdvancesReceived">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Incoming Advance Receipts"/>
+                <set field="tabButtonItem" value="IncomingAdvances"/>
+                <set field="tabButtonItem4" value="IncomingAdvancesReceived"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="IncomingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                             <container style="button-bar">
+                                            <link target="NewIncomingAdvanceReceived" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                        </container>
+                                        </widgets>
+                                    </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindIncomingAdvancesReceived" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
+                                        <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewIncomingAdvanceReceived">
+       <section>
+            <actions>
+                <set field="titleProperty" value="New Advance Receipt"/>
+                <set field="tabButtonItem" value="IncomingAdvances"/>
+                <set field="tabButtonItem4" value="IncomingAdvancesReceived"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+               	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="IncomingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                        	<condition>
+                        		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                        	</condition>
+                            <widgets>
+                                <screenlet title="New Incoming Deposit">
+                                    <include-form name="NewIncomingAdvanceReceipt" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                            	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="IncomingAdvancesRefund">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Incoming Advance Receipts"/>
+                <set field="tabButtonItem" value="IncomingAdvances"/>
+                <set field="tabButtonItem4" value="IncomingAdvancesRefund"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="IncomingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                             <container style="button-bar">
+                                            <link target="NewIncomingAdvancesRefund" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                        </container>
+                                        </widgets>
+                                    </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
+                                        <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewIncomingAdvancesRefund">
+       <section>
+            <actions>
+                <set field="titleProperty" value="New Advance Refund"/>
+                <set field="tabButtonItem" value="IncomingAdvances"/>
+                <set field="tabButtonItem4" value="IncomingAdvancesRefund"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="IncomingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                        	<condition>
+                        		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                        	</condition>
+                            <widgets>
+                                <screenlet title="New Incoming Advance">
+                                    <include-form name="NewIncomingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                            	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- ==================================== Outgoing Advances  ===================================   -->
+    
+    <screen name="OutgoingAdvancesRefund">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Outgoing Advance Refund"/>
+                <set field="tabButtonItem" value="OutgoingAdvances"/>
+                <set field="tabButtonItem4" value="OutgoingAdvancesRefund"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                             <container style="button-bar">
+                                            <link target="NewOutgoingAdvancesRefund" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                        </container>
+                                        </widgets>
+                                    </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindOutgoingAdvancesRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
+                                        <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewOutgoingAdvancesRefund">
+       <section>
+            <actions>
+                <set field="titleProperty" value="New Advance Refund"/>
+                <set field="tabButtonItem" value="OutgoingAdvances"/>
+                <set field="tabButtonItem4" value="OutgoingAdvancesRefund"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+               	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                        	<condition>
+                        		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                        	</condition>
+                            <widgets>
+                                <screenlet title="New Incoming Deposit">
+                                    <include-form name="NewOutgoingAdvanceRefund" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                            	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="OutgoingAdvancesPaid">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Incoming Advance Receipts"/>
+                <set field="tabButtonItem" value="OutgoingAdvances"/>
+                <set field="tabButtonItem4" value="OutgoingAdvancesPaid"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="performFind" result-map="result">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+	                <field-map field-name="orderBy" value="effectiveDate DESC"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+	            </service>
+	            <set field="payments" from-field="result.listIt"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                                    		</condition>
+                                    		<widgets>
+                                             <container style="button-bar">
+                                            <link target="NewOutgoingAdvancePaid" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/>
+                                        </container>
+                                        </widgets>
+                                    </section>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindOutgoingAdvancesPaid" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                    	<platform-specific>
+                                           	<html><html-template location="component://accounting/webapp/accounting/payment/ListSearchPayments.ftl"/></html>
+                                       	</platform-specific>
+                                        <!-- <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/> -->
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewOutgoingAdvancePaid">
+       <section>
+            <actions>
+                <set field="titleProperty" value="New Advance Refund"/>
+                <set field="tabButtonItem" value="OutgoingAdvances"/>
+                <set field="tabButtonItem4" value="OutgoingAdvancesPaid"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
+                <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                        	<condition>
+                        		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
+                        	</condition>
+                            <widgets>
+                                <screenlet title="New Incoming Advance">
+                                    <include-form name="NewOutgoingAdvancesPaid" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                            	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="PaymentOverview">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitlePaymentOverview"/>
+                <set field="tabButtonItem" value="PaymentOverview"/>
+                <set field="labelTitleProperty" value="PageTitlePaymentOverview"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <entity-one entity-name="Payment" value-field="payment"/>
+                <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
+                <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
+                <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
+                <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment).toString()}"/>
+                <entity-condition entity-name="AcctgTransAndEntries" list="AcctgTransAndEntries">
+                    <condition-expr field-name="paymentId" from-field="paymentId"/>
+                    <order-by field-name="acctgTransId"/>
+                    <order-by field-name="acctgTransEntrySeqId"/>
+                </entity-condition>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
+                </service>
+               <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+               <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTAPP_EDIT"/>
+                </service>
+               <set field="hasPaymentAppEditPermission" from-field="permResult.hasPermission"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="PAYMENTSTATUS_CANCEL"/>
+                </service>
+               <set field="hasPaymentStatusCancelPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPaymentPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field="payment.statusId" operator="equals"  value="PMNT_NOT_PAID"/>
+                            </condition>
+                            <widgets>
+                                  <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatus.ftl"/></html>
+                            </platform-specific>
+                                <container style="lefthalf">
+                                    <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
+                                        <link target="editPayment" text="ad${uiLabelMap.CommonUpdate}" style="buttontext">
+                                            <parameter param-name="paymentId"/>
+                                        </link>
+                                        <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </screenlet>
+                                </container>
+                                <container style="righthalf">
+                                    <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
+                                        <link target="editPaymentApplications" text="${uiLabelMap.CommonUpdate}" style="buttontext">
+                                            <parameter param-name="paymentId"/>
+                                        </link>
+                                        <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </screenlet>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="finAccountTransId"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <screenlet title="${uiLabelMap.AccountingFinAccountTransaction}">
+                                                <include-form name="FinAccountTransAssociatedWithPayment" location="component://accounting/widget/PaymentForms.xml"/>
+                                            </screenlet>
+                                        </widgets>
+                                    </section>
+                                </container>
+                                <container style="clear"/>
+                                <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <container style="lefthalf">
+                                    <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
+                                        <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </screenlet>
+                                </container>
+                                <container style="righthalf">
+                                    <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
+                                        <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
+                                    </screenlet>
+                                        <section>
+                                            <condition>
+                                                <not><if-empty field="finAccountTransId"/></not>
+                                            </condition>
+                                            <widgets>
+                                                <screenlet title="${uiLabelMap.AccountingFinAccountTransaction}">
+                                                    <include-form name="FinAccountTransAssociatedWithPayment" location="component://accounting/widget/PaymentForms.xml"/>
+                                                </screenlet>
+                                            </widgets>
+                                        </section>
+                                </container>
+                                <container style="clear"/>
+                                <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

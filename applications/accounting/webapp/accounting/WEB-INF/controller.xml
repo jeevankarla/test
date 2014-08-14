@@ -2241,7 +2241,75 @@ under the License.
         <response name="success" type="view" value="EditPartyFixedAssetAssignments"/>
         <response name="error" type="view" value="EditPartyFixedAssetAssignments"/>
     </request-map>
-
+	
+	
+	
+	<!--================= Advances ==================== -->
+	
+	<request-map uri="IncomingAdvancesReceived">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IncomingAdvancesReceived"/>
+    </request-map>
+    <request-map uri="NewIncomingAdvanceReceived">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewIncomingAdvanceReceived"/>
+    </request-map>
+	<request-map uri="createNewIncomingAdvanceReceipt">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    
+    <request-map uri="IncomingAdvancesRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IncomingAdvancesRefund"/>
+    </request-map>
+    <request-map uri="NewIncomingAdvancesRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewIncomingAdvancesRefund"/>
+    </request-map>
+	<request-map uri="createNewIncomingAdvanceRefund">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    <request-map uri="OutgoingAdvancesPaid">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="OutgoingAdvancesPaid"/>
+    </request-map>
+    <request-map uri="NewOutgoingAdvancePaid">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewOutgoingAdvancePaid"/>
+    </request-map>
+	<request-map uri="createNewOutgoingAdvancePayments">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    
+    <request-map uri="OutgoingAdvancesRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="OutgoingAdvancesRefund"/>
+    </request-map>
+    <request-map uri="NewOutgoingAdvancesRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewOutgoingAdvancesRefund"/>
+    </request-map>
+	<request-map uri="createNewOutgoingAdvanceRefund">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    
+    <request-map uri="PortalPaymentOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
     <!--=================Cost calculation request===============-->
     <!--<request-map uri="EditCostCalcs">
         <security https="true" auth="true"/>
@@ -3409,5 +3477,22 @@ under the License.
    <view-map name="PaymentsCheckList" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#PaymentsCheckList" content-type="application/pdf" encoding="none"/>
    <view-map name="DailyPaymentCheckListCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#DailyPaymentCheckListCSV" content-type="text/csv" encoding="none"/>
    
-    <!-- end of view mappings -->
+   
+   <!--================= Advances ==================== -->
+   <view-map name="IncomingAdvancesReceived" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#IncomingAdvancesReceived"/>
+   <view-map name="NewIncomingAdvanceReceived" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewIncomingAdvanceReceived"/>
+   
+   <view-map name="IncomingAdvancesRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#IncomingAdvancesRefund"/>
+   <view-map name="NewIncomingAdvancesRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewIncomingAdvancesRefund"/>
+   
+   
+   <view-map name="OutgoingAdvancesPaid" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OutgoingAdvancesPaid"/>
+   <view-map name="NewOutgoingAdvancePaid" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewOutgoingAdvancePaid"/>
+   
+   <view-map name="OutgoingAdvancesRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OutgoingAdvancesRefund"/>
+   <view-map name="NewOutgoingAdvancesRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewOutgoingAdvancesRefund"/>
+   
+   <view-map name="PortalPaymentOverview" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentOverview"/>
+   
+   <!-- end of view mappings -->
 </site-conf>

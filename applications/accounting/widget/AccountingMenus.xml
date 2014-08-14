@@ -1925,7 +1925,35 @@
             </condition>
 			<link target="FindNonBankAccount">
 			</link>
+		 </menu-item>
+		 <menu-item name="IncomingAdvances" title="Advances Received">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="IncomingAdvancesReceived">
+			</link>
+		 </menu-item>
+		 <menu-item name="OutgoingAdvances" title="Advances Paid">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="OutgoingAdvancesPaid">
+			</link>
 		 </menu-item> 
+		 <menu-item name="PaymentOverview" title="Payment Overview">
+          <condition>
+				<and>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <not><if-empty field="paymentId"/></not>
+            	</and>            
+            </condition>
+			<link target="PortalPaymentOverview">
+			</link>
+		 </menu-item>  
 		 
           
           <!-- <menu-item name="EditFinAccountTransAlt" title="${uiLabelMap.AccountingDepositWithdraw}">
@@ -2005,5 +2033,27 @@
 			</link>
 		</menu-item>
 	</menu>
+	<menu name="IncomingAdvancesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="IncomingAdvancesReceived" title="Receipts">
+             <link target="IncomingAdvancesReceived"></link>
+          </menu-item>
+          <menu-item name="IncomingAdvancesRefund" title="Refunds">
+             <link target="IncomingAdvancesRefund"></link>
+          </menu-item>
+    </menu>
+    <menu name="OutgoingAdvancesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
+           
+          <menu-item name="OutgoingAdvancesPaid" title="Payments">
+             <link target="OutgoingAdvancesPaid"></link>
+          </menu-item>
+          <menu-item name="OutgoingAdvancesRefund" title="Refunds">
+             <link target="OutgoingAdvancesRefund"></link>
+          </menu-item>
+        
+    </menu>
+    
+    
 	
 </menus>
