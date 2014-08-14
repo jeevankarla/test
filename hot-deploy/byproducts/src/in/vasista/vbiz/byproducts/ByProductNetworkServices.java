@@ -8035,7 +8035,47 @@ public class ByProductNetworkServices {
 		}
 		return result;
 	}
-
+	
+	public static Map<String, Object> getProductQtyConversions(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String productCategoryId = (String) context.get("productCategoryId");
+		List productList = (List) context.get("productList");
+		Map result = ServiceUtil.returnSuccess();
+		List<String> productIds = FastList.newInstance();
+		Map productConversionDetail = FastMap.newInstance();
+		if(UtilValidate.isEmpty(productList) && UtilValidate.isNotEmpty(productCategoryId)){
+			productList = ProductWorker.getProductsByCategory(delegator , productCategoryId, null);
+		}
+		
+		productIds = EntityUtil.getFieldListFromEntityList(productList, "productId", true);
+		
+		List<GenericValue> products = null;
+		List<GenericValue> productAttributes = null;
+		
+		try{
+			products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
+			productAttributes = delegator.findList("ProductAttribute", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
+			
+		}catch(GenericEntityException e){
+			Debug.logError(e, module);
+		}
+		
+		for(String prodId : productIds){
+			GenericValue productDetail = EntityUtil.getFirst(EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId)));
+			List<GenericValue> productAttribute = (List)EntityUtil.filterByCondition(productAttributes, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
+			Map uomMapDetail = FastMap.newInstance();
+			for(GenericValue prodAttr : productAttribute){
+				uomMapDetail.put(prodAttr.getString("attrName"), new BigDecimal(prodAttr.getString("attrValue")));
+			}
+			uomMapDetail.put("LtrKg", productDetail.getBigDecimal("quantityIncluded"));
+			productConversionDetail.put(prodId, uomMapDetail);
+		}
+		result.put("productConversionDetails", productConversionDetail);
+		return result;
+	}
+	
 	public static Map<String, Object> getProductCratesAndCans(DispatchContext ctx, Map<String, ? extends Object> context) {
 		Delegator delegator = ctx.getDelegator();
 		LocalDispatcher dispatcher = ctx.getDispatcher();

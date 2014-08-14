@@ -41,6 +41,7 @@
 	var productIdLabelMap = ${StringUtil.wrapString(productIdLabelJSON)!'{}'};
 	var availableTags = ${StringUtil.wrapString(productItemsJSON)!'[]'};
 	var priceTags = ${StringUtil.wrapString(productCostJSON)!'[]'};
+	var conversionData = ${StringUtil.wrapString(conversionJSON)!'{}'};
 	var data = ${StringUtil.wrapString(dataJSON)!'[]'};
 	var boothAutoJson = ${StringUtil.wrapString(boothsJSON)!'[]'};
 	var partyAutoJson = ${StringUtil.wrapString(partyJSON)!'[]'};	
@@ -199,10 +200,14 @@
 			</#if>
 			{id:"quantity", name:"Qty(Pkt)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false , formatter: quantityFormatter,  validator: quantityValidator},
 			<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
-				{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},
+				<#--{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},-->
 			</#if>
-			<#--
-			{id:"crQuantity", name:"Qty(Cr/Can)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter}, -->
+			<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+				{id:"crQuantity", name:"Qty(Crt)", field:"crQuantity", width:60, minWidth:60, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: quantityFormatter},
+				<#--{id:"batchNo", name:"Batch Number", field:"batchNo", width:65, minWidth:65, sortable:false, editor:TextCellEditor},-->
+			<#elseif changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+				{id:"ltrQuantity", name:"Ltr/KG Qty", field:"ltrQuantity", width:65, minWidth:65, sortable:false, editor:FloatCellEditor},
+			</#if>
 			<#if changeFlag?exists && changeFlag!='InterUnitTransferSale'>
 			{id:"unitCost", name:"Unit Price(Rs)", field:"unitPrice", width:65, minWidth:65, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false , align:"right"},
 			{id:"amount", name:"Total Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false}	
@@ -311,8 +316,29 @@
         grid.onCellChange.subscribe(function(e,args) {
         	if (args.cell == 0 || args.cell == 1) {
 				var prod = data[args.row]["productId"];
+				
 				var qty = parseFloat(data[args.row]["quantity"]);
+				var prodConversionData = conversionData[prod];
+				var convValue = 0;
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					convValue = prodConversionData['CRATE'];
+				</#if>
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+					convValue = prodConversionData['LtrKg'];
+				</#if>
 				var price = parseFloat(priceTags[prod]);
+				var crVal = 0;
+				if(convValue != 'undefined' || convValue != null || convValue > 0){
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+						crVal = parseFloat(Math.round((qty/convValue)*100)/100);
+						data[args.row]["crQuantity"] = crVal;
+					</#if>
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+						crVal = parseFloat(Math.round((qty*convValue)*100)/100);
+						data[args.row]["ltrQuantity"] = crVal;
+					</#if>
+					
+				}
 				if(isNaN(price)){
 					price = 0;
 				}
@@ -342,7 +368,65 @@
 				jQuery("#totalAmount").html(dispText);
 			}
 			
+			if (args.cell == 2) {
+				var prod = data[args.row]["productId"];
+				var calcQty = 0;
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					calcQty = parseFloat(data[args.row]["crQuantity"]);
+				</#if>
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+					calcQty = parseFloat(data[args.row]["ltrQuantity"]);
+				</#if>
+				var prodConversionData = conversionData[prod];
+				var convValue = 0;
+				<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+					convValue = prodConversionData['CRATE'];
+				</#if>
+				<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+					convValue = prodConversionData['LtrKg'];
+				</#if>
+				var price = parseFloat(priceTags[prod]);
+				var calculateQty = 0;
+				if(convValue != 'undefined' && convValue != null && calcQty>0){
+
+					<#if changeFlag?exists && changeFlag == "IcpSales" || changeFlag == "IcpSalesAmul">
+						calculateQty = parseFloat(Math.round((calcQty*convValue)*100)/100);
+						data[args.row]["quantity"] = calculateQty;
+					</#if>
+					<#if changeFlag?exists && changeFlag == "PowderSales" || changeFlag == "FgsSales">
+						calculateQty = parseFloat(Math.round((calcQty/convValue)*100)/100);
+						data[args.row]["quantity"] = calculateQty;
+					</#if>
+				}
+				
+				if(isNaN(price)){
+					price = 0;
+				}
+				if(isNaN(calculateQty)){
+					calculateQty = 0;
+				}
+				var roundedAmount;
+					roundedAmount = Math.round(calculateQty*price);
+				if(isNaN(roundedAmount)){
+					roundedAmount = 0;
+				}
+				data[args.row]["unitPrice"] = price;
+				data[args.row]["amount"] = roundedAmount;
+				grid.updateRow(args.row);
+				var totalAmount = 0;
+				for (i = 0; i < data.length; i++) {
+					totalAmount += data[i]["amount"];
+				}
+				var amt = parseFloat(Math.round((totalAmount) * 100) / 100);
 			
+				if(amt > 0 ){
+					var dispText = "<b>  [Invoice Amt: Rs " +  amt + "]</b>";
+				}
+				else{
+					var dispText = "<b>  [Invoice Amt: Rs 0 ]</b>";
+				}
+				jQuery("#totalAmount").html(dispText);
+			}
 			
 		
 		}); 
