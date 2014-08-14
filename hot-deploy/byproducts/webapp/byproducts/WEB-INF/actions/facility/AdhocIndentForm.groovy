@@ -159,6 +159,30 @@ if(changeFlag!="InterUnitTransferSale"){//for Stock Transfer price no need to po
 	prodPriceMap = (Map)priceResultMap.get("priceMap");
 }
 
+conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productCategoryId", productCatageoryId, "userLogin", userLogin));
+conversionMap = conversionResult.get("productConversionDetails");
+if(conversionMap){
+	Iterator prodConvIter = conversionMap.entrySet().iterator();
+	JSONObject conversionJSON = new JSONObject();
+	while (prodConvIter.hasNext()) {
+		Map.Entry entry = prodConvIter.next();
+		productId = entry.getKey();
+		convDetail = entry.getValue();
+		
+		Iterator detailIter = convDetail.entrySet().iterator();
+		JSONObject conversionDetailJSON = new JSONObject();
+		while (detailIter.hasNext()) {
+			Map.Entry entry1 = detailIter.next();
+			attrName = entry1.getKey();
+			attrValue = entry1.getValue();
+			conversionDetailJSON.put(attrName,attrValue);
+		}
+		conversionJSON.put(productId, conversionDetailJSON);
+	}
+	context.conversionJSON = conversionJSON;
+}
+
+
 JSONArray productItemsJSON = new JSONArray();
 JSONObject productIdLabelJSON = new JSONObject();
 JSONObject productLabelIdJSON=new JSONObject();
