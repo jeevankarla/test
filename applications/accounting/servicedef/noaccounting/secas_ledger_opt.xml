@@ -103,7 +103,7 @@ under the License.
         <condition field-name="statusId" operator="equals" value="PMNT_RECEIVED"/>
         <condition-service service-name="checkEnableAccounting"/>
         <action service="createAcctgTransAndEntriesForIncomingPayment" mode="sync"/>
-         <action service="depositCashReceiptPayment" mode="sync"/>
+         <action service="depositReceiptPayment" mode="sync"/>
     </eca>
     <eca service="setPaymentStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="PMNT_RECEIVED"/>
@@ -111,7 +111,7 @@ under the License.
         <condition field-name="oldStatusId" operator="not-equals" value="PMNT_RECEIVED"/>
         <condition field-name="oldStatusId" operator="not-equals" value="PMNT_CONFIRMED"/>
         <action service="createAcctgTransAndEntriesForIncomingPayment" mode="sync"/>
-        <action service="depositCashReceiptPayment" mode="sync"/>
+        <action service="depositReceiptPayment" mode="sync"/>
     </eca>
      <!-- if the payment is cash receipt deposit directly into cash account -->
      <!-- <eca service="setPaymentStatus" event="commit">

@@ -11,6 +11,8 @@
 	 * We'll use this method to create both our prompt and confirm dialogues
 	 * as they share very similar styles, but with varying content and titles.
 	 */
+	var finAccountIdsList;
+	var testFlag;
 	function dialogue(content, title) {
 		/* 
 		 * Since the dialogue isn't really a tooltip as such, we'll use a dummy
@@ -83,18 +85,30 @@
 	}
 	
 	
-	
-	
-	function showSetPaymentStatus() {	
+	function paymentStatusToolTip(checkFlag){
 		var message = "";
+		testFlag = checkFlag;
 		message += "<form action='setPaymentStatus' method='post' onsubmit='return disableButton();'><table cellspacing=10 cellpadding=10>" ; 		
 		     
-			message += "<tr class='h3'><td align='left' class='h3' width='40%'>Transaction Date:</td><td align='right' width='60%'><input class='h3' type='text' id='transactionDate' name='transactionDate' onmouseover='datepick()' size='17' readonly/></td></tr>"+
-			            "<input type='hidden' name='paymentId' id='paymentId' value='${payment.paymentId?if_exists}'/> <input type='hidden' name='statusId' id='statusId' value='${statusId?if_exists}'/>"+
+			message += "<tr class='h3'><td align='left' class='h3' width='40%'>Transaction Date:</td><td align='left' width='60%'><input class='h3' type='text' id='transactionDate' name='transactionDate' onmouseover='datepick()' size='17' readonly/></td></tr>";
+			            if(testFlag == true){
+			            	message += "<tr class='h3'><td align='left' class='h3' width='40%'>Finaccount:</td><td align='right' width='60%'><select name='finAccountId' id='finAccountId'>";
+			            	for(var i=0 ; i<finAccountIdsList.length ; i++){
+								var innerList=finAccountIdsList[i];
+								message += "<option value='"+innerList['finAccountId']+"'>"+ innerList['finAccountName'] + "</option>";
+							}
+							message += "</select></td></tr>";	              			             
+			      		}
+			            	
+			message += "<input type='hidden' name='paymentId' id='paymentId' value='${payment.paymentId?if_exists}'/> <input type='hidden' name='statusId' id='statusId' value='${statusId?if_exists}'/>"+
 						"<tr class='h3'><td align='right'><span align='right'><input type='submit' value='${uiLabelMap.CommonSubmit}' id='setPaymentStatus' class='smallSubmit'/></span></td><td class='h3' width='100%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		message += "</table></form>";				
 		var title = "<h2><center>Select Transaction Date</center></h2>";
 		Alert(message, title);
+	}
+	
+	function showSetPaymentStatus() {	
+		finAccountNameList();
 	};
 	var estimatedDate;	
 	var dateFormatted;
@@ -105,4 +119,29 @@
 	    jQuery("#transactionDate").val('${payment.paymentDate?if_exists}');
 		
 	};
+	
+	
+	function finAccountNameList() {
+		var paymentId = jQuery("input[name='paymentId']").val();
+        jQuery.ajax({
+            url: 'getFinAccountIdsListForPayment',
+            type: 'POST',
+            async: true,
+            data: {paymentId : paymentId } , 
+            success: function(result){ finAccountIdsList = result["finAcountIdList"],testFlag = result["flag"];
+             	paymentStatusToolTip(testFlag);   
+                /*if (finAccountIdsList) {	
+                     var optionList;	       				        	
+			        	for(var i=0 ; i<finAccountIdsList.length ; i++){
+							var innerList=finAccountIdsList[i];	              			             
+			                optionList += "<option value = " + innerList['finAccountId'] + " >" + innerList['finAccountName'] + "</option>";          			
+			      		}//end of main list for loop
+				    jQuery("[name='finAccountId']").html(optionList);
+	  			}*/
+            }
+        });
+        populateParams();
+	}	
+	
+	
 </script>

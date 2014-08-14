@@ -372,6 +372,11 @@ under the License.
         <response name="success" type="view" value="paymentOverview"/>
         <response name="error" type="view" value="paymentOverview"/>
     </request-map>
+    <request-map uri="getFinAccountIdsListForPayment">
+        <event type="service" invoke="getFinAccountIdsListForPayment"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
 	<request-map uri="setPaymentStatusPettyCash">
         <security https="true" auth="true"/>
         <event type="service" invoke="setPaymentStatus"/>

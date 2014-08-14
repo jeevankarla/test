@@ -102,7 +102,7 @@ under the License.
     <eca service="createPayment" event="commit">
         <condition field-name="statusId" operator="equals" value="PMNT_RECEIVED"/>
         <action service="createAcctgTransAndEntriesForIncomingPayment" mode="sync"/>
-        <action service="depositCashReceiptPayment" mode="sync"/>
+        <action service="depositReceiptPayment" mode="sync"/>
     </eca>
     <eca service="setPaymentStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="PMNT_RECEIVED"/>

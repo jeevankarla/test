@@ -47,6 +47,10 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+
 public class FinAccountServices {
 
     public static final String module = FinAccountServices.class.getName();
@@ -509,4 +513,44 @@ public class FinAccountServices {
          } 
         return ServiceUtil.returnSuccess("Status Change Successfully for Selected FinAccountTransactions");
     }
+    public static Map<String, Object> getFinAccountIdsListForPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+
+		Map<String, Object> result = FastMap.newInstance();
+		List<GenericValue> facilityPartyList = null;
+		Delegator delegator = dctx.getDelegator();
+		List finAccountList = FastList.newInstance();
+		String paymentId = (String) context.get("paymentId");
+		String finAccountId = null;
+		String paymentMethodId = null;
+		boolean flag;
+		if(UtilValidate.isNotEmpty(paymentId)){
+			try{
+				GenericValue paymentDetails = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+				if(UtilValidate.isNotEmpty(paymentDetails)){
+					paymentMethodId = (String) paymentDetails.get("paymentMethodId");
+					if(UtilValidate.isNotEmpty(paymentMethodId)){
+						flag = false;
+						result.put("flag", flag);
+						return result;
+					}else{
+						List condList = FastList.newInstance();
+						condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
+						condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
+						condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+				    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
+						finAccountList = delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId","finAccountName"), null, null, false);
+						if(UtilValidate.isNotEmpty(finAccountList)){
+							flag = true;
+							result.put("flag", flag);
+							result.put("finAcountIdList", finAccountList);
+						}
+					}
+				}
+			}catch (GenericEntityException e) {
+				Debug.logError(e, module);
+	            return ServiceUtil.returnError(e.getMessage());
+			} 
+		}
+		return result;
+	}
 }

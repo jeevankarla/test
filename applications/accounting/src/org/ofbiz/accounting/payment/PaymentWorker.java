@@ -534,26 +534,30 @@ public class PaymentWorker {
          result.put("hideSearch","Y");
         return result; 
    }
-    public static Map<String, Object> depositCashReceiptPayment(DispatchContext dctx, Map<String, ? extends Object> context){
+    public static Map<String, Object> depositReceiptPayment(DispatchContext dctx, Map<String, ? extends Object> context){
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String paymentId = (String) context.get("paymentId");
+        String finAccountId = (String) context.get("finAccountId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
        
         try {
 			GenericValue payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
 			if(!UtilAccounting.isPaymentType(payment, "RECEIPT")){
 				return result; 
 			}
-			 if(!UtilAccounting.isPaymentMethodType(payment, "CASH")){
+			 /*if(!UtilAccounting.isPaymentMethodType(payment, "CASH")){
 				 return result;  
-			 }
-			 List<EntityExpr> condList = UtilMisc.toList(
-	                    EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "CASH"),
-	                    EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH")
-	                   );
+			 }*/
+				List<EntityExpr> condList = FastList.newInstance();
+				if(UtilAccounting.isPaymentMethodType(payment, "CASH")){
+					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"CASH"));
+					condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH"));
+				}else{
+					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+					condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS,finAccountId));
+				}
 	            EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	            List cashFinAccountList = delegator.findList("FinAccount", cond, null, null, null, true);
 	           GenericValue cashAccount = EntityUtil.getFirst(cashFinAccountList);

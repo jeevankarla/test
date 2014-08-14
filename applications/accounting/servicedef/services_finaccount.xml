@@ -579,4 +579,12 @@ under the License.
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="autoFinAccountReconciliation" auth="true">
         <description>Auto Reconciled FinAccountTrans entries</description>
     </service>
+    
+    <service name="getFinAccountIdsListForPayment" engine="java"
+     location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="getFinAccountIdsListForPayment">
+        <description>Get Fin Account Bank Names for drop down</description>
+        <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+        <attribute name="finAcountIdList" type="List" mode="OUT" optional = "true"/>
+        <attribute name="flag" type="Boolean" mode="OUT" optional = "true"/>
+    </service>
 </services>
