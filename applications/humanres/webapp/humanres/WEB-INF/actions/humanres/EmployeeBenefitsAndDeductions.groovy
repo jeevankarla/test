@@ -300,7 +300,7 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 		partyName=PartyHelper.getPartyName(delegator, emplyId, false);
 		departmentDetails=delegator.findByAnd("Employment", [partyIdTo : emplyId]);
 		empDetails = delegator.findOne("EmployeeDetail", [partyId : emplyId],true);
-		if(UtilValidate.isEmpty(empDetails.quarterType) && UtilValidate.isNotEmpty(parameters.dedTypeId) && (quarterDedList.contains(parameters.dedTypeId))){
+		if(UtilValidate.isNotEmpty(empDetails) && UtilValidate.isEmpty(empDetails.quarterType) && UtilValidate.isNotEmpty(parameters.dedTypeId) && (quarterDedList.contains(parameters.dedTypeId))){
 			continue;
 		}
 		deptName="";
