@@ -194,7 +194,7 @@ under the License.
 											            		<fo:block>------------------------------------------------------------------------------------------------</fo:block>
 											       			</fo:table-cell>
 														 </fo:table-row>
-						        						// payment details here
+						        						<#-- payment details here -->
 						        						 <#if printPaymentsList?has_content> 
 						        						<#assign sno=0>
 						        						  <#list printPaymentsList as paymentListReport>
