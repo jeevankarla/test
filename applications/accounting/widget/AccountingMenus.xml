@@ -1816,7 +1816,7 @@
              <link target="findCashReceipts">
             </link>
           </menu-item>
-          <menu-item name="FindFinAccountAlt" title="BankAccounts">
+        <!--   <menu-item name="FindFinAccountAlt" title="BankAccounts">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -1826,7 +1826,7 @@
 			<link target="FindFinAccountAlt">
 			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
 			</link>
-		 </menu-item>
+		 </menu-item> -->
 		<!--  <menu-item name="FindNonBankAccount" title="Non BankAccounts">
           <condition>
 				<or>
@@ -1904,25 +1904,56 @@
     
     <!--
          -->
+         <menu name="TreasurerMainTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="FindFinAccountAlt" selected-menuitem-context-field-name="tabButtonItem">
+        
+          <menu-item name="FindFinAccountAlt" title="BankAccounts">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindFinAccountAlt">
+			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
+			</link>
+		 </menu-item>
+		 <menu-item name="FindNonBankAccount" title="Non BankAccounts">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindNonBankAccount">
+			</link>
+		 </menu-item> 
+		 
+          
+          <!-- <menu-item name="EditFinAccountTransAlt" title="${uiLabelMap.AccountingDepositWithdraw}">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
+            		<if-has-permission permission="BYPRODUCTS"  action="_CASH"/>
+            	</or>            
+            </condition>
+			<link target="EditFinAccountTransAlt">
+			</link>
+		 </menu-item> -->
+    </menu> 
+    
       <menu name="CompanyFinAccountTabBar" extends="CommonTabBarMenu"
 		extends-resource="component://common/widget/CommonMenus.xml"
 		default-menu-item-name="EditFinAccount" selected-menuitem-context-field-name="tabButtonItem2">
-	   <actions> 
+	 <!--   <actions> 
             <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
-		</actions>	
-		
-		<menu-item name="FindFinAccountAlt" title="${uiLabelMap.PageTitleFindFinAccount}">
-		  <!--  <condition>
-		      <if-compare field="screenFlag" operator="equals" value="BANKACCOUNT" />
-		 	</condition> -->
+		</actions>	 -->
+		<!-- <menu-item name="FindFinAccountAlt" title="Bank Accounts">
+		  <condition>
+			     <and> 
+					<if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" /> 
+           		 </and> 
+           	</condition>
 			<link target="FindFinAccountAlt" />
-		</menu-item>
-		<menu-item name="FindNonBankAccount" title="Non Financial Accounts">
-		  <!--  <condition>
-		      <if-compare field="screenFlag" operator="equals" value="NON_BANKACCOUNT" />
-		 	</condition> -->
-			<link target="FindNonBankAccount" />
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="EditFinAccountAlt" title="${uiLabelMap.AccountingFinAccount}">
 		 	<condition>
 			     <and> 
@@ -1935,28 +1966,6 @@
 				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
 			</link>
 		</menu-item> 
-		<!--  
-		<menu-item name="EditFinAccountRoles" title="${uiLabelMap.PartyRoles}">
-			<link target="EditFinAccountRoles">
-				<parameter param-name="finAccountId" />
-			</link>
-		</menu-item> 
-		
-		 <menu-item name="EditFacility" title="${uiLabelMap.ProductFacility}">
-			<condition>				
-				<and>
-					<not><if-empty field="ctxFacilityId"/></not>
-					<or>
-	            		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
-	            		<if-has-permission permission="FACILITY"  action="_UPDATE"/>
-            		</or>            		
-           		</and>				
-            </condition>        
-            <link target="EditFacility">
-                <parameter param-name="facilityId" from-field="ctxFacilityId"/>
-            </link>
-        </menu-item>
-		-->
 		<menu-item name="FinAccountTrans"
 			title="${uiLabelMap.AccountingFinAccountTransations}">
 			<condition>
@@ -1970,19 +1979,6 @@
 				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
 			</link>
 		</menu-item>
-		<!-- <menu-item name="EditFinAccountAuths" title="${uiLabelMap.AccountingFinAccountAuth}">
-			<condition>
-				<and>
-					<not><if-empty field="ctxFacilityId"/></not>
-					<or>
-	            	<if-compare field="finAccount.finAccountTypeId" operator="not-equals" value="BANK_ACCOUNT" />
-            		</or>            		
-           		</and>
-			</condition>
-			<link target="EditFinAccountAuths">
-				<parameter param-name="finAccountId" />
-			</link>
-		</menu-item> -->
 		<menu-item name="depositWithdraw" title="${uiLabelMap.AccountingDepositWithdraw}">
 		    <condition>
 				<and>
@@ -1996,12 +1992,6 @@
 				<parameter param-name="organizationPartyId" from-field="finAccount.ownerPartyId" />
 			</link>
 		</menu-item>
-		<!-- <menu-item name="findDepositSlips" title="${uiLabelMap.AccountingDepositSlips}">
-			<link target="FindDepositSlips">
-				<parameter param-name="finAccountId" />
-				<parameter param-name="organizationPartyId" from-field="finAccount.ownerPartyId" />
-			</link>
-		</menu-item> -->
 		<menu-item name="FindFinAccountReconciliations" title="${uiLabelMap.AccountingReconciliation}">
 		     <condition>
 				<and>
@@ -2015,4 +2005,5 @@
 			</link>
 		</menu-item>
 	</menu>
+	
 </menus>

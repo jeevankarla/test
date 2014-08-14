@@ -393,4 +393,44 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <!-- Treasurer Portal MainLogin Page -->
+    <screen name="CommonTreasurerPortalDecorator">
+        <section>
+            <actions>
+            	<set field="parameters.cashierDecoratorLocation"   value="component://accounting/widget/CommonScreens.xml"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="Cashier-main-decorator" location="${parameters.cashierDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                            	 <include-menu name="TreasurerMainTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <decorator-section-include name="body"></decorator-section-include>
+                            </widgets>
+                            <fail-widgets>
+                               <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="MyPortalTreasurerScreen">
+        <section>
+            <actions>
+                 <set field="tabButtonItem" value="FindFinAccountAlt" />
+				<set field="subTabButtonItem" value="findCashReceipts" />
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+              <include-menu name="TreasurerMainTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+              <decorator-section-include name="checks-body"/>
+               <include-screen name="FindFinAccountPortal" location="component://accounting/widget/TreasurerPortalScreens.xml"   />
+            </widgets>
+        </section>
+    </screen>
 </screens>

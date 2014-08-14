@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+   <!--   <screen name="CommonTreasurerPortalDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="FindFinAccount"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not><if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="VIEW"/></not>
+                            </condition>
+                            <widgets>
+                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> -->
+    <screen name="ListNewBankAccounts">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
+            </actions>
+            <widgets>
+                    <include-screen name="FindFinAccountPortal"/>
+            </widgets>
+        </section>
+    </screen>
+     <screen name="FindFinAccountPortal">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindFinAccount"/>
+                  <set field="tabButtonItem" value="FindFinAccountAlt"/>
+                 <set field="tabButtonItem2" value="FindFinAccountAlt"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+               <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
+                <set field="parameters.ownerPartyId" value="Company"/>
+                <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/>
+                <set field="noConditionFind" value="Y"/>
+                <!-- <field name="noConditionFind"><hidden value="Y"/> -->
+                <set field="screenFlag" value="BANKACCOUNT" /> 
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+             <widgets>
+                    <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<!-- <container style="button-bar">
+									<link target="CreateNewFineorPenalty" text="Create New" style="buttontext create">				
+									</link>
+								</container> -->
+								<!-- <screenlet title="Find Fines and Penalties">				
+									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
+								</screenlet> -->
+								<screenlet title="Bank Accounts List">				
+									 <include-form name="ListFinAccountsAlt" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
+               </widgets>
+        </section>
+    </screen>
     <screen name="FindNonBankAccount">
         <section>
             <actions>
                 <set field="titleProperty" value="Non Finacial Accounts"/>
-                  <set field="tabButtonItem" value="FindFinAccountAlt"/>
+                  <set field="tabButtonItem" value="FindNonBankAccount"/>
                  <set field="tabButtonItem2" value="FindNonBankAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
@@ -14,6 +86,7 @@
                <!--  <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/> -->
                 <set field="noConditionFind" value="Y"/>
                 <set field="screenFlag" value="NON_BANKACCOUNT" /> 
+                <set field="parameters.screenFlag" value="NON_BANKACCOUNT" /> 
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
@@ -21,33 +94,23 @@
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
             </actions>
             <widgets>
-             <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
-              <!--   <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        </container>
-                                    </decorator-section>
-                                   <!--  <decorator-section name="search-options">
-                                        <section>
-                                            <condition>
-                                                <if-compare field="displayAdvancedSearch" operator="equals" value="true"/>
-                                            </condition>
-                                            <widgets>
-                                                <include-form name="FindFinAccounts" location="component://accounting/widget/FinAccountForms.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </decorator-section> -->
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                    <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<!-- <container style="button-bar">
+									<link target="CreateNewFineorPenalty" text="Create New" style="buttontext create">				
+									</link>
+								</container> -->
+								<!-- <screenlet title="Find Fines and Penalties">				
+									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
+								</screenlet> -->
+								<screenlet title="Non Bank Accounts List">				
+									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+							</widgets>      
+                    	</section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -70,36 +133,27 @@
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
-             <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
-              <!--   <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+                    <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                            <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        </container>
-                                    </decorator-section>
-                                  <!--   <decorator-section name="search-options">
-                                        <section>
-                                            <condition>
-                                                <if-compare field="displayAdvancedSearch" operator="equals" value="true"/>
-                                            </condition>
-                                            <widgets>
-                                                <include-form name="FindFinAccounts" location="component://accounting/widget/FinAccountForms.xml"/>
-                                            </widgets>
-                                        </section>
-                                    </decorator-section> -->
-                                    <decorator-section name="search-results">
-                                        <include-form name="ListFinAccountsAlt" location="component://accounting/widget/TreasurerPortalForms.xml"/>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
+                    <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<!-- <container style="button-bar">
+									<link target="CreateNewFineorPenalty" text="Create New" style="buttontext create">				
+									</link>
+								</container> -->
+								<!-- <screenlet title="Find Fines and Penalties">				
+									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
+								</screenlet> -->
+								<screenlet title="Bank Accounts List">				
+								 <include-form name="ListFinAccountsAlt" location="component://accounting/widget/TreasurerPortalForms.xml"/> 
+								</screenlet>
+							</widgets>      
+                    	</section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -109,7 +163,8 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFinAccount"/>
-                <set field="tabButtonItem" value="FindFinAccountAlt"/>
+              <!--   <set field="tabButtonItem" value="${parameters.tabButtonItem}" value="${tabButtonItem}" /> -->
+                	<set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
                  <set field="tabButtonItem2" value="EditFinAccountAlt"/>
                 
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
@@ -119,17 +174,17 @@
                 </service>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
-                 
+            <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
             </actions>
             <widgets>
-              <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
              <!--    <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
                     <decorator-section name="body">
                       <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <section>
                             <condition>
                             	<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
-                                <not><if-empty field="finAccountId"/></not>
+                                <not><if-empty field="finAccountId" /></not>
                             </condition>
                             <widgets>
                                 <container style="button-bar">
@@ -156,7 +211,9 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindFinAccountTrans"/>
-                  <set field="tabButtonItem" value="FindFinAccountAlt"/>
+                <!--   <set field="tabButtonItem" value="FindFinAccountAlt"/> -->
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                  	<set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
                 <set field="tabButtonItem2" value="FinAccountTrans"/>
                 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
@@ -178,7 +235,8 @@
                 <set field="hasFinTxEditPermission" from-field="permResult.hasPermission"/> 
             </actions>
             <widgets>
-                 <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">
+               <!--   <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml"> -->
+                    <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
              <!--    <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
                     <decorator-section name="body">
                         <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
@@ -204,8 +262,8 @@
                         	</section>
                         <section>
                             <condition>
-                            	<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNTREC_EDIT" />
-                                <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+                            	<if-service-permission service-name="acctgFinAcctPermissionCheck"  main-action="FINACCOUNTREC_EDIT"> </if-service-permission>
+                                <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" type="String"></if-compare>
                             </condition>
                             <widgets>
                                 <link target="FinancialAccountReconciliation" text="${uiLabelMap.FinAccountReconciliation}" style="buttontext">
