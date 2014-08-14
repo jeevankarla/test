@@ -222,6 +222,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<td width="10%"><input type="submit" value="Download" class="buttontext"></td>
 	  	   		</form>
       	   </tr>
+      	   <tr class="alternate-row">
+      	   		<form id="CanteenReport" name="CanteenReport" mothed="post" action="<@ofbizUrl>CanteenReport.pdf</@ofbizUrl>" target="_blank">
+	      	   	<td width="20%">Canteen Report</td>
+	      	   	<td width="40%">Period Id
+		  			<select name="customTimePeriodId" class='h4'>
+    					<#list timePeriodList as timePeriod>    
+      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+    					</#list>      
+					</select>
+		  		</td>	
+				<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+      	   		</form>
+      	   </tr>
      <!-- 	<tr class="alternate-row">
       	   	<form id="AttendanceMonthlyReport" name="AttendanceMonthlyReport" mothed="post" action="<@ofbizUrl>EmplMonthlyPunchReport.csv</@ofbizUrl>" target="_blank">
       	   	<td width="25%">Monthly Attendance Report</td>
