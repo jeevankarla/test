@@ -2781,7 +2781,10 @@ public class PayrollService {
 			    					if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
 			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
 			    					}else{
-			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
+			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("lateMin"))){
+			    							lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
+			    						}
+			    						
 			    					}
 			    					
 			    				}
