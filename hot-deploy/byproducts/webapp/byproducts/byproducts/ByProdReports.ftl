@@ -691,7 +691,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			           </form>
 			        </tr>
 			        
-			        <#-- <tr class="alternate-row">
+			        <tr class="alternate-row">
 			      	   <form id="RetailerLedgerAbstract" name="RetailerLedgerAbstract" method="post" action="<@ofbizUrl>RetailerLedgerAbstract.pdf</@ofbizUrl>" target="_blank">        
 			             <td width="30%">Retailer Ledger Abstract(Incl Products)</td>
 			             <td width="15%" >From<input  type="text" size="10pt" id="RLAFromDateId" readonly  name="fromDate"/></td>
@@ -700,7 +700,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			             <td width="15%"></td>
 			             <td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 			           </form>
-			        </tr>--> 
+			        </tr> 
 	  				<tr class="alternate-row">
 	  					<form id="ShoppeRentReport" name="ShoppeRentReport" method="post" action="<@ofbizUrl>ShoppeRentReport.pdf</@ofbizUrl>" target="_blank">	
 	  						<td width="30%">Shoppe Rent Report</td>
