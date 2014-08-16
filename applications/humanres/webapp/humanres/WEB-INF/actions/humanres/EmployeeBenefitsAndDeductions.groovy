@@ -110,6 +110,7 @@ List benfitItemIdsList=FastList.newInstance();
 Map benefitTypeFinalMap=FastMap.newInstance();
 Map benefitWiseMap=FastMap.newInstance();
 Map hederFinalBenfMap=FastMap.newInstance();
+Map totalBenefitsMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(partyBenefitList)){
 	partyBenefitList.each{ partyBenefit->
 		employeeId= partyBenefit.partyIdTo;
@@ -145,6 +146,12 @@ if(UtilValidate.isNotEmpty(partyBenefitList)){
 				}
 			}
 			benfitItemIdsList.addAll(headerItemTypeId);
+			if(UtilValidate.isEmpty(totalBenefitsMap[headerItemTypeId])){
+				totalBenefitsMap[headerItemTypeId]=amount;
+			}else{
+				totalBenefitsMap[headerItemTypeId]+=amount;
+			}			
+			
 		}
 		if(UtilValidate.isNotEmpty(amount)){
 			amount=amount.setScale(0,BigDecimal.ROUND_HALF_UP);
@@ -173,7 +180,6 @@ benfitItemIdsList=benfitIdsList;
 //Debug.logError("benefitTypeFinalMap="+benefitTypeFinalMap,"");
 
 JSONArray headBenefitItemsJSON = new JSONArray();
-Map totalBenefitsMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(benefitTypeFinalMap)){
 	Iterator BenfIter = benefitTypeFinalMap.entrySet().iterator();
 	while(BenfIter.hasNext()){
@@ -198,11 +204,6 @@ if(UtilValidate.isNotEmpty(benefitTypeFinalMap)){
 			while(headerItemIter.hasNext()){
 				Map.Entry itemEntry = headerItemIter.next();
 				benefitAmt=((itemEntry.getValue()));
-				if(UtilValidate.isEmpty(totalBenefitsMap[itemEntry.getKey()])){
-					totalBenefitsMap[itemEntry.getKey()]=benefitAmt;
-				}else{
-					totalBenefitsMap[itemEntry.getKey()]+=benefitAmt;
-				}
 				newObj.put(itemEntry.getKey(),((itemEntry.getValue())));
 			}
 		}
@@ -213,6 +214,7 @@ Map deductionTypeValueMap=FastMap.newInstance();
 List dedItemIdsList=FastList.newInstance();
 Map deductionWiseMap=FastMap.newInstance();
 Map hederFinalDedMap=FastMap.newInstance();
+Map totalDeductionsMap=FastMap.newInstance();
 if(UtilValidate.isNotEmpty(partyDeductionList)){
 	partyDeductionList.each{ partyDed->
 		employeeId= partyDed.partyIdTo;
@@ -248,8 +250,11 @@ if(UtilValidate.isNotEmpty(partyDeductionList)){
 				}
 			}
 			dedItemIdsList.add(headerItemTypeId);
-			
-			
+			if(UtilValidate.isEmpty(totalDeductionsMap[headerItemTypeId])){
+				totalDeductionsMap[headerItemTypeId]=amount;
+			}else{
+				totalDeductionsMap[headerItemTypeId]+=amount;
+			}		
 			
 		}		
 		if(UtilValidate.isNotEmpty(amount)){
@@ -275,7 +280,6 @@ if(UtilValidate.isNotEmpty(partyDeductionList)){
 Set deductionIds = new HashSet(dedItemIdsList);
 List dedIdsList =  deductionIds.toList();
 dedItemIdsList=dedIdsList;
-Map totalDeductionsMap=FastMap.newInstance();
 //this is for report purpose
 if(UtilValidate.isNotEmpty(parameters.benefitTypeId)){
 	benfitItemIdsList=UtilMisc.toList(parameters.benefitTypeId);
@@ -317,11 +321,6 @@ if(UtilValidate.isNotEmpty(deductionTypeValueMap)){
 			Iterator headerItemIter = (entry.getValue()).entrySet().iterator();
 			while(headerItemIter.hasNext()){
 				Map.Entry itemEntry = headerItemIter.next();
-				if(UtilValidate.isEmpty(totalDeductionsMap[itemEntry.getKey()])){
-					totalDeductionsMap[itemEntry.getKey()]=(itemEntry.getValue());
-				}else{
-					totalDeductionsMap[itemEntry.getKey()]+=(itemEntry.getValue());
-				}
 				newObj.put(itemEntry.getKey(),((itemEntry.getValue())));
 			}
 		}
