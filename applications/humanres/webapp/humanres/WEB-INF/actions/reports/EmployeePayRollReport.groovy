@@ -173,10 +173,15 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 				}
 			}
 			netAmount=totEarnings+totDeductions;
-			List<GenericValue> partyBenefitList = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , partyId), null, null, null, false);
-			if(UtilValidate.isNotEmpty(partyBenefitList)){
-				accNo=partyBenefitList.get(0).get("finAccountCode");				
+			accountDetails = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , partyId), null, null, null, false);
+			if(UtilValidate.isNotEmpty(accountDetails)){
+				accDetails = EntityUtil.getFirst(accountDetails);
+				accNo=0;
+				if(UtilValidate.isNotEmpty(accDetails))	{
+					accNo= accDetails.get("finAccountCode");					
+				}		
 				bankAdviceDetailsMap.put("acNo",accNo);
+				
 			}
 			if(UtilValidate.isNotEmpty(partyDetails.employeeId)){
 				bankAdviceDetailsMap.put("emplNo",partyDetails.get("employeeId"));
@@ -259,6 +264,7 @@ if(UtilValidate.isNotEmpty(BankAdvicePayRollMap) && UtilValidate.isNotEmpty(para
 parameters.partyId=orgPartyId;
 context.put("InstallmentFinalMap",InstallmentFinalMap);
 context.put("BankAdvicePayRollMap",BankAdvicePayRollMap);
+Debug.log("BankAdvicePayRollMap======"+BankAdvicePayRollMap);
 context.put("payRollSummaryMap",payRollSummaryMap);
 context.put("payRollMap",payRollMap);
 context.put("payRollEmployeeMap",payRollEmployeeMap);

@@ -82,6 +82,7 @@ conditionList=UtilMisc.toList(EntityCondition.makeCondition("ownerPartyId", Enti
   EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
   companyBankAccountList= delegator.findList("FinAccount",condition,null,null,null,false);
   Map bankWiseEmplDetailsMap=FastMap.newInstance();
+Map CanaraBankMap=FastMap.newInstance();  
 if(UtilValidate.isNotEmpty(companyBankAccountList)){
 	companyBankAccountList.each{ bankDetails->		
 		finAccountId= bankDetails.finAccountId;
@@ -94,14 +95,33 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
 			if(UtilValidate.isNotEmpty(partyIds)){
-				List<GenericValue> partyBenefitList = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN , partyIds), null, ["finAccountCode"], null, false);
-				partyBenefitList = UtilMisc.sortMaps(partyBenefitList, UtilMisc.toList("finAccountCode"));
-				partyIds = EntityUtil.getFieldListFromEntityList(partyBenefitList, "ownerPartyId", true);
-				bankWiseEmplDetailsMap.put(finAccountId,partyIds);
+				emplPartyIds=[];
+				List<GenericValue> finAccountDetailsList = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN , partyIds), null, ["finAccountCode"], null, false);
+				finAccountDetailsList = UtilMisc.sortMaps(finAccountDetailsList, UtilMisc.toList("finAccountCode"));
+				canraBankPartyIds=[];
+				//handling canara bank 
+				if(UtilValidate.isNotEmpty(finAccountDetailsList)){
+					finAccountDetailsList.each{ finAcc->
+						gbCode = finAcc.get("gbCode");
+						ownerPartyId= finAcc.get("ownerPartyId");
+						if(UtilValidate.isNotEmpty(gbCode) && "CNRB".equals(gbCode)){
+							canraBankPartyIds.add(ownerPartyId);
+						}else{
+							emplPartyIds.add(ownerPartyId);
+						}
+						
+					}
+					if(UtilValidate.isNotEmpty(canraBankPartyIds)){
+						CanaraBankMap.put(finAccountId,canraBankPartyIds);
+					}
+				}
+				partyIds = EntityUtil.getFieldListFromEntityList(finAccountDetailsList, "ownerPartyId", true);
+				bankWiseEmplDetailsMap.put(finAccountId,emplPartyIds);
 			}
 		}
 		
 	}
 }
 context.put("bankWiseEmplDetailsMap",bankWiseEmplDetailsMap);
+context.put("CanaraBankMap",CanaraBankMap);
 	

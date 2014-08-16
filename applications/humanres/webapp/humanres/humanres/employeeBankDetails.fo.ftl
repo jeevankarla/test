@@ -42,7 +42,10 @@ under the License.
         <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" text-indent="50pt">${finAccDetails.finAccountName?if_exists}                                                     																					${uiLabelMap.CommonPage}No: <fo:page-number/></fo:block>
         <fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold">BANK STATEMENT(SALARY) FOR THE MONTH OF : ${(Static["org.ofbiz.base.util.UtilDateTime"].toDateString(timePeriodEnd, "MMMMM-yyyy")).toUpperCase()}                                             Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowDate, "dd-MMM-yyyy")}</fo:block>
   	</fo:static-content>  	
-    <fo:flow flow-name="xsl-region-body" font-family="Helvetica">    	
+    <fo:flow flow-name="xsl-region-body" font-family="Helvetica">  
+      <#if CanaraBankMap.get(companyBankDetails.getKey())?has_content>
+      
+      </#if>  	
       <fo:block>
 		<fo:table width="100%" table-layout="fixed">
 		    <fo:table-header height="14px">
@@ -97,8 +100,7 @@ under the License.
                			 		<fo:block page-break-after="always"></fo:block>        
                			 	</fo:table-cell>
                			 </fo:table-row>
-               		</#if>
-              
+               		</#if>              
                   </#list>
               <fo:table-row border="solid">
               	<fo:table-cell/>
@@ -109,7 +111,53 @@ under the License.
               	</fo:table-cell>
               	<fo:table-cell />
               	<fo:table-cell border="solid"><fo:block text-align="center" font-weight="bold">${totalNetAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
-              </fo:table-row>    
+              </fo:table-row>
+              <#if CanaraBankMap.get(companyBankDetails.getKey())?has_content>
+              	<fo:table-row>
+       			 	<fo:table-cell>
+       			 		<fo:block page-break-before="always"></fo:block>        
+       			 	</fo:table-cell>
+       			 </fo:table-row>
+              	<#assign totAmt=0>
+              	<#assign canaraBankIds=CanaraBankMap.get(companyBankDetails.getKey())>  
+              		<fo:table-row>
+	       			 	<fo:table-cell>
+	       			 		<fo:block font-weight="bold" keep-together="always">CANARA BANK</fo:block>        
+	       			 	</fo:table-cell>
+       			 	</fo:table-row>
+	              <#list canaraBankIds as partyId>               	
+	                   <fo:table-row height="14px" space-start=".15in">
+		                   <fo:table-cell  border="solid">
+		                   		<#assign temp=(temp+1)>
+		                        <fo:block text-align="center">${temp?if_exists}</fo:block>
+		                   </fo:table-cell >
+		                   <fo:table-cell border="solid">
+		                    	<fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("emplNo")?if_exists}</fo:block>
+		                   </fo:table-cell>
+		                   <fo:table-cell  border="solid">
+		                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${BankAdvicePayRollMap.get(partyId).get("empName")?if_exists}</fo:block>
+		                   </fo:table-cell>
+		                    <fo:table-cell  border="solid">
+		                        <fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;  ${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</fo:block>
+		                    </fo:table-cell>
+		                    <#assign totAmt=totAmt+BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists>
+		                   <fo:table-cell  border="solid">
+		                        <fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists?string("#0.00")}</fo:block>
+		                   </fo:table-cell>
+	               		</fo:table-row>
+	               		        
+	                  </#list>
+		              <fo:table-row border="solid">
+		              	<fo:table-cell/>
+		              	<fo:table-cell>              		
+		              	</fo:table-cell>
+		              	<fo:table-cell>
+		              		<fo:block text-align="center" font-weight="bold">TOTAL</fo:block>
+		              	</fo:table-cell>
+		              	<fo:table-cell />
+		              	<fo:table-cell border="solid"><fo:block text-align="center" font-weight="bold">${totAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
+		              </fo:table-row>
+		            </#if>          
           </fo:table-body>
         </fo:table> 
      </fo:block>
