@@ -44,6 +44,9 @@ if(changeFlag=="PowderSales"){
 if(changeFlag=="FgsSales"){
 	productCatageoryId="FG_STORE";
 }
+if(changeFlag=="ConvCharges"){
+	productCatageoryId="CON_CHG";
+}
 if(changeFlag=="InterUnitTransferSale"){
 	productCatageoryId="MILK_POWDER";//later we should change tranferble products only
 }
@@ -75,6 +78,7 @@ result = [:];
 routeId = parameters.routeId;
 partyId="";
 orderTaxType = parameters.orderTaxType;
+packingType = parameters.packingType;
 facility = null;
 prodPriceMap = [:];
 if(changeFlag != "AdhocSaleNew"){
@@ -82,6 +86,7 @@ if(changeFlag != "AdhocSaleNew"){
 	party = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", partyId), false);	
 	context.party = party;
 	context.orderTaxType = parameters.orderTaxType;
+	context.packingType = parameters.packingType;
 }else{
 	facility = delegator.findOne("Facility", [facilityId : boothId],false);
 	if(facility){
@@ -149,6 +154,9 @@ if(facility){
 		else{
 			inputProductRate.put("geoTax", "CST");
 		}
+	}
+	if(packingType){
+		inputProductRate.put("productPriceTypeId", packingType);
 	}
 	if(changeFlag!="InterUnitTransferSale"){
 	priceResultMap = ByProductNetworkServices.getStoreProductPricesByDate(delegator, dctx.getDispatcher(), inputProductRate);

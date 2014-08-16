@@ -45,7 +45,9 @@
 	<ShipmentType description="Powder Shipment" hasTable="N"  parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="POWDER_SHIPMENT"/>
     <ShipmentType description="FGS Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="FGS_SHIPMENT"/>
     <ShipmentType description="Inter Unit Transfer Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="INTUNIT_TR_SHIPMENT"/>
+    <ShipmentType description="Conversion Charges Shipment" hasTable="N" parentTypeId="DIRECT_SHIPMENT" shipmentTypeId="PROCESSING_SHIPMENT"/>
      
+    <Enumeration description="Conversion Processing Channel" enumCode="CONVERSION PROCESSING CHANNEL" enumId="PROCESSING_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
     <Enumeration description="FGS Product Channel" enumCode="FGS CHANNEL" enumId="FGS_PRODUCT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
     <Enumeration description="Powder Plant Channel" enumCode="POWDER PLANT CHANNEL" enumId="POWDER_PLANT_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>
 	<Enumeration description="ICP Amul channel" enumCode="ICP AMUL" enumId="ICP_AMUL_CHANNEL" enumTypeId="ORDER_SALES_CHANNEL"/>

@@ -162,6 +162,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 	    String productStoreId = (String) context.get("productStoreId");
 	  	String salesChannel = (String) context.get("salesChannel");
 	  	String orderTaxType = (String) context.get("orderTaxType");
+	  	String packingType = (String) context.get("packingType");
 	  	String partyId = (String) context.get("partyId");
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -261,6 +262,9 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 			priceContext.put("productStoreId", productStoreId);
 			priceContext.put("productId", productId);	
 			priceContext.put("partyId", partyId);
+			if(UtilValidate.isNotEmpty(packingType)){
+				priceContext.put("productPriceTypeId", packingType);
+			}
 			priceContext.put("priceDate", effectiveDate);
 			priceContext.put("geoTax", geoTax);
 			priceResult = ByProductNetworkServices.calculateStoreProductPrices(delegator, dispatcher, priceContext);
@@ -541,6 +545,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		String effectiveDateStr = (String) request.getParameter("effectiveDate");
 		String productStoreId = (String) request.getParameter("productStoreId");
 		String orderTaxType = (String) request.getParameter("orderTaxType");
+		String packingType = (String) request.getParameter("packingType");
 		String productSubscriptionTypeId = (String) request.getParameter("productSubscriptionTypeId");
 		String subscriptionTypeId = "AM";
 		String partyIdFrom = "";
@@ -658,6 +663,7 @@ public static Map<String, Object> approveICPOrder(DispatchContext dctx, Map cont
 		processOrderContext.put("supplyDate", effectiveDate);
 		processOrderContext.put("salesChannel", salesChannel);
 		processOrderContext.put("orderTaxType", orderTaxType);
+		processOrderContext.put("packingType", packingType);
 		processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
 		processOrderContext.put("productStoreId", productStoreId);
 		result = processICPSaleOrder(dctx, processOrderContext);

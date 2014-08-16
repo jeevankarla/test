@@ -80,7 +80,9 @@ $(document).ready(function(){
     <#elseif changeFlag?exists && changeFlag=='FgsSales'>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>FGSProductSale</@ofbizUrl>" id="indententryinit">  
     <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
-    	<form method="post" name="indententryinit" action="<@ofbizUrl>InterUnitStkTr</@ofbizUrl>" id="indententryinit">  
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>InterUnitStkTr</@ofbizUrl>" id="indententryinit">
+    <#elseif changeFlag?exists && changeFlag=='ConvCharges'>
+    	<form method="post" name="indententryinit" action="<@ofbizUrl>ConversionChargesEntry</@ofbizUrl>" id="indententryinit">	  
     <#else>
     	<form method="post" name="indententryinit" action="<@ofbizUrl>AdhocSaleNew</@ofbizUrl>" id="indententryinit">  
     </#if>
@@ -141,7 +143,10 @@ $(document).ready(function(){
 		           	<input type="hidden" name="salesChannel" id="salesChannel" value="FGS_PRODUCT_CHANNEL"/> 
 		        <#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
 		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="INTUNIT_TR_SHIPMENT"/> 
-		           	<input type="hidden" name="salesChannel" id="salesChannel" value="INTUNIT_TR_CHANNEL"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="INTUNIT_TR_CHANNEL"/>
+		        <#elseif changeFlag?exists && changeFlag=='ConvCharges'>
+		         	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="PROCESSING_SHIPMENT"/> 
+		           	<input type="hidden" name="salesChannel" id="salesChannel" value="PROCESSING_CHANNEL"/> 
 		        <#else>
 		          	<input type="hidden" name="shipmentTypeId" id="shipmentTypeId" value="RM_DIRECT_SHIPMENT"/>
 		          	<input type="hidden" name="salesChannel" id="salesChannel" value="RM_DIRECT_CHANNEL"/>
@@ -180,23 +185,44 @@ $(document).ready(function(){
        			</#if>
         	</tr>
         <#else>
-        	<tr>
-          		<td>&nbsp;</td>
-          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Order Tax Type:</div></td>
-          		<td>&nbsp;</td>
-       			<#if orderTaxType?exists && orderTaxType?has_content>  
-	  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
-          			<td valign='middle'>
-            			<div class='tabletext h2'>${orderTaxType?if_exists}</div>
-          			</td>       	
-       			<#else>      	         
-          			<td valign='middle'>
-          				<select name="orderTaxType" id="orderTaxType" class='h2'>
-          					<option value="INTRA">With in State</option>
-          					<option value="INTER">Out of State</option>
-          			</td>
-       			</#if>
-        	</tr>
+        	<#if changeFlag?exists && changeFlag=='ConvCharges'>
+        		<tr>
+	          		<td>&nbsp;</td>
+	          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Type: </div></td>
+	          		<td>&nbsp;</td>
+	       			<#if packingType?exists && packingType?has_content>  
+		  	  			<input type="hidden" name="packingType" id="packingType" value="${packingType?if_exists}"/>  
+	          			<td valign='middle'>
+	            			<div class='tabletext h2'>${packingType?if_exists}</div>
+	          			</td>       	
+	       			<#else>      	         
+	          			<td valign='middle'>
+	          				<select name="packingType" id="packingType" class='h2'>
+	          					<option value="WITHOUT_PK">Without Pack</option>
+	          					<option value="WITH_PK">With Pack</option>
+	          			</td>
+	       			</#if>
+        		</tr>
+        	<#else>
+        		<tr>
+	          		<td>&nbsp;</td>
+	          		<td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Order Tax Type:</div></td>
+	          		<td>&nbsp;</td>
+	       			<#if orderTaxType?exists && orderTaxType?has_content>  
+		  	  			<input type="hidden" name="orderTaxType" id="orderTaxType" value="${orderTaxType?if_exists}"/>  
+	          			<td valign='middle'>
+	            			<div class='tabletext h2'>${orderTaxType?if_exists}</div>
+	          			</td>       	
+	       			<#else>      	         
+	          			<td valign='middle'>
+	          				<select name="orderTaxType" id="orderTaxType" class='h2'>
+	          					<option value="INTRA">With in State</option>
+	          					<option value="INTER">Out of State</option>
+	          			</td>
+	       			</#if>
+        		</tr>
+        	</#if>
+        	
 		</#if>
           
         <tr><td><br/></td></tr>
@@ -219,7 +245,7 @@ $(document).ready(function(){
           		</td>
           	</#if>
     	<#else>
-    		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId}"/>
+    		<input type="hidden" name="productStoreId" id="productStoreId" value="${productStoreId?if_exists}"/>
 		 	<#if party?exists && party?has_content>  
 	  	  		<input type="hidden" name="partyId" id="partyId" value="${party.partyId.toUpperCase()}"/>  
           		<td valign='middle'>
@@ -397,7 +423,9 @@ $(document).ready(function(){
 		    <#elseif changeFlag?exists && changeFlag=='FgsSales'>
 		         <#assign formAction='processFGSProductSale'>     
 		 	<#elseif changeFlag?exists && changeFlag=='InterUnitTransferSale'>
-		         <#assign formAction='processInterUnitStkTrSale'>     
+		         <#assign formAction='processInterUnitStkTrSale'> 
+		    <#elseif changeFlag?exists && changeFlag=='ConvCharges'>
+		         <#assign formAction='processConvChargesSale'>     
 		 	<#else>
 				<#assign formAction='processIcpSale'>		 					 	
 			</#if>				

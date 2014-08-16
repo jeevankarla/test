@@ -123,6 +123,8 @@ under the License.
 		action="cancelFGSOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="cancelIUSTransferOrder"
+	<#elseif screenFlag?exists && screenFlag=="convSales">
+		action="cancelConversionOrder"
 	</#if>>
 </form>
 <form name="orderApproveForm" id="orderApproveForm" method="post" 
@@ -136,6 +138,8 @@ under the License.
 		action="approveFGSOrder"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="approveIUSTransferOrder"
+	<#elseif screenFlag?exists && screenFlag=="convSales">
+		action="approveConversionOrder"
 	</#if>>
 </form>
 
@@ -150,6 +154,8 @@ under the License.
 		action="createShipmentAndInvoiceForFGSOrders"
 	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
 		action="createShipAndInvForIUSTransferOrders"
+	<#elseif screenFlag?exists && screenFlag=="convSales">
+		action="createShipAndInvForConversionOrders"
 	</#if>>
 </form>
 
@@ -167,6 +173,8 @@ under the License.
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='FGS_SHIPMENT'/>
     	<#elseif screenFlag?exists && screenFlag=="InterUnitTransferSale">
     		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='INTUNIT_TR_SHIPMENT'/>
+    	<#elseif screenFlag?exists && screenFlag=="convSales">
+    		<input class='h3' type='hidden' id='shipmentTypeId' name='shipmentTypeId' value='PROCESSING_SHIPMENT'/>
     	</#if>
     	
     	<table width="100%">
