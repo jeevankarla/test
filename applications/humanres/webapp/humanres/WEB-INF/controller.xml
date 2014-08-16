@@ -1596,6 +1596,10 @@ under the License.
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="EmployeesLOPdays"/>        
     </request-map>
+    <request-map uri="EmployeePunchData.pdf">
+        <security https="true" auth="true"/>                        
+        <response name="success" type="view" value="EmployeePunchData"/>        
+    </request-map>
     <request-map uri="LICRDReport.pdf">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="LICRDReport"/>        
@@ -1928,7 +1932,8 @@ under the License.
     <view-map name="MonthlyAttendenceChecklist" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#MonthlyAttendenceChecklist" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeeMisPunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeMisPunchData" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeesLOPdays" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesLOPdays" content-type="application/pdf" encoding="none"/>
-    <!-- <view-map name="WeeklyInOutExport" type="screen" page="component://humanres/widget/CalendarScreens.xml#WeeklyInOutExport"/> -->
+    <view-map name="CanteenReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CanteenReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="EmployeePunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchData" content-type="application/pdf" encoding="none"/>
     
     <view-map name="CompanyPunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CompanyPunchReport"/>
     <view-map name="EmployeePunchReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchReport"/>
@@ -1959,7 +1964,6 @@ under the License.
 	<view-map name="viewEmployeeProfile" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EmployeeProfile"/>
 	<view-map name="LICRDReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#LICRDReport" content-type="application/pdf" encoding="none"/>
 	<view-map name="PayrollExceptionReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#PayrollExceptionReport" content-type="application/pdf" encoding="none"/>
-	<view-map name="CanteenReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CanteenReport" content-type="application/pdf" encoding="none"/>
 	<!-- Analytics -->
 	<view-map name="EmployeesTenureChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChart"/>
 	<view-map name="EmployeesTenureChartInternal" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesTenureChartInternal"/>

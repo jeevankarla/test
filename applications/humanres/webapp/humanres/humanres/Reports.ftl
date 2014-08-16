@@ -64,6 +64,8 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("MPthruDate","MPthruDate");
 		makeDatePicker("LOPfromDate","LOPfromDate");
 		makeDatePicker("LOPthruDate","LOPthruDate");
+		makeDatePicker("EPfromDate","EPfromDate");
+		makeDatePicker("EPthruDate","EPthruDate");
 		
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -303,6 +305,14 @@ function makeDatePicker1(fromDateId ,thruDateId){
     					</#list>      
 					</select>
 			  	</td>	
+				<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
+      	   		</form>
+      	   </tr>
+      	   <tr class="alternate-row">
+      	   		<form id="EmployeePunchData" name="EmployeePunchData" mothed="post" action="<@ofbizUrl>EmployeePunchData.pdf</@ofbizUrl>" target="_blank">
+	      	   	<td width="20%">Employee Punch Data</td>
+	      	   	<td width="15%">From Date<input  type="text"  id="EPfromDate"   name="EPfromDate"/></td>
+	  			<td width="15%">Thru Date<input  type="text"  id="EPthruDate"   name="EPthruDate"/></td>
 				<td width="10%"><input type="submit" value="Download" class="buttontext"></td> 
       	   		</form>
       	   </tr>
