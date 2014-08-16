@@ -52,7 +52,7 @@ under the License.
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
         <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -120,7 +120,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${amountStr?if_exists}</fo:block>          
 				       			</fo:table-cell>
 				       		</fo:table-row>
 	               	</fo:table-body>
@@ -151,7 +151,7 @@ under the License.
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
         <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -238,7 +238,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${amountStr?if_exists}</fo:block>     
 				       			</fo:table-cell>
 				       		</fo:table-row>
 	               	</fo:table-body>
@@ -269,7 +269,7 @@ under the License.
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVouvher.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
         <#if paymentId?exists>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -340,7 +340,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${amountStr?if_exists}</fo:block>          
 				       			</fo:table-cell>
 				       		</fo:table-row>
 	               	</fo:table-body>
@@ -371,7 +371,7 @@ under the License.
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
         <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -443,7 +443,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${amountStr?if_exists}</fo:block>          
 				       			</fo:table-cell>
 				       		</fo:table-row>
 	               	</fo:table-body>
@@ -476,7 +476,7 @@ under the License.
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "debitNote.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
         <#if paymentId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -548,7 +548,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${amountStr?if_exists}</fo:block>          
 				       			</fo:table-cell>
 				       		</fo:table-row>
 	               	</fo:table-body>
@@ -574,12 +574,12 @@ under the License.
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
                      margin-left=".2in" margin-right=".10in" margin-top=".01in" margin-bottom=".3in">
-                <fo:region-body margin-top=".08in"/>
+                <fo:region-body margin-top=".2in"/>
                 <fo:region-before extent=".4in"/>
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVouvher.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
         <#if paymentId?exists>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -588,8 +588,8 @@ under the License.
         	<fo:flow flow-name="xsl-region-body">
               <fo:block font-size="12pt"> 
                 <fo:table>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>                
+                    <fo:table-column column-width="50pt"/>
+                    <fo:table-column column-width="150pt"/>                
                     <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="75pt"/>
@@ -618,9 +618,9 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
-			                   <fo:table-cell>
+			                 	<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       		  </fo:table-cell>
+				       			</fo:table-cell>
 			                  <fo:table-cell>
 			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
 			                   </fo:table-cell>
@@ -632,20 +632,20 @@ under the License.
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       			<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
 								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       			<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       			<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       			<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${amountStr?if_exists}</fo:block>          
 				       			</fo:table-cell>
 				       		</fo:table-row>
 	               	</fo:table-body>
@@ -678,7 +678,7 @@ under the License.
                 <fo:region-after extent=".4in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVouvher.pdf")}
+        ${setRequestAttribute("OUTPUT_FILENAME", "chequeVoucher.pdf")}
         <#if paymentId?exists>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
@@ -749,7 +749,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 								<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=amount isoCode=currencyUomId/></fo:block>          
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${amountStr?if_exists}</fo:block>          
 				       			</fo:table-cell>
 				       		</fo:table-row>
 	               	</fo:table-body>

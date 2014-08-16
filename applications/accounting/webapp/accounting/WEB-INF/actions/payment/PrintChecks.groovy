@@ -82,6 +82,7 @@ if(UtilValidate.isEmpty(paymentId)){
 }
 partyName = "";
 paymentDate = "";
+amountStr = BigDecimal.ZERO;
 if(UtilValidate.isNotEmpty(paymentId)){
 	paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
 	if(UtilValidate.isNotEmpty(paymentDetails)){
@@ -90,6 +91,8 @@ if(UtilValidate.isNotEmpty(paymentId)){
 	}
 	if(UtilValidate.isNotEmpty(paymentDetails)){
 		amount = paymentDetails.amount;
+		amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
+		amountStr = amountWords.replace("Rs"," ");
 	}
 	if(UtilValidate.isNotEmpty(paymentDetails.partyIdFrom) && (paymentDetails.partyIdFrom == "Company")){
 		partyId = paymentDetails.partyIdTo;
@@ -100,8 +103,8 @@ if(UtilValidate.isNotEmpty(paymentId)){
 }
 	context.put("paymentMethodId",paymentMethodId);
 	context.put("amount",amount);
+	context.put("amountStr",amountStr);
 	context.put("paymentId",paymentId);
-	
 	context.put("paymentDate",paymentDate);
 }
 if(UtilValidate.isNotEmpty(attrValue)){
