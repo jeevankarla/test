@@ -541,7 +541,6 @@ public class PaymentWorker {
         String finAccountId = (String) context.get("finAccountId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-       
         try {
 			GenericValue payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
 			if(!UtilAccounting.isPaymentType(payment, "RECEIPT")){
@@ -556,7 +555,9 @@ public class PaymentWorker {
 					condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH"));
 				}else{
 					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
-					condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS,finAccountId));
+					if(UtilValidate.isNotEmpty(finAccountId)){
+						condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS,finAccountId));
+					}
 				}
 	            EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	            List cashFinAccountList = delegator.findList("FinAccount", cond, null, null, null, true);
@@ -574,15 +575,10 @@ public class PaymentWorker {
 	          	Debug.logError(depositResult.toString(), module);
 	              return ServiceUtil.returnError(null, null, null, depositResult);
 	          }
-			 
         }catch(Exception e){
         	 Debug.logError(e, e.toString(), module);
              return ServiceUtil.returnError(e.toString());
         }
-        
-        
-       
-  
         return result; 
    }
     
