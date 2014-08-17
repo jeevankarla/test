@@ -31,8 +31,14 @@
 		
 		glAccnt = delegator.findList("GlAccountOrganizationAndClass", EntityCondition.makeCondition(["organizationPartyId" : organizationPartyId]), null, null, null, true);
 		glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
-		
-		financialAccnt = delegator.findList("FinAccount", EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds), null, null, null, false);
+			conditionList = [];
+			if(UtilValidate.isNotEmpty(parameters.screenFlag)){
+			conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+			}
+			//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+			conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
+			
+		financialAccnt = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 		//glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
 		
 	    context.financialAccnt = financialAccnt;

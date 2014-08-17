@@ -71,7 +71,11 @@ function getPaymentRunningTotal() {
 </script>
 <div class="screenlet">
     <div class="screenlet-body">
-        <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@ofbizUrl>depositWithdrawPayments</@ofbizUrl>">
+	        <#if screenFlag?exists && screenFlag=='BankersDepositOrWithdraw'>
+	        <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@ofbizUrl>bankDepositWithdrawPayments</@ofbizUrl>">
+	       	<#else>
+	       	 <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@ofbizUrl>depositWithdrawPayments</@ofbizUrl>">
+	       	 </#if>
             <#if paymentList?has_content>
                 <input type="hidden" name='organizationPartyId' value="${organizationPartyId?if_exists}" />
                 <input type="hidden" name='finAccountId' value="${finAccountId?if_exists}" />

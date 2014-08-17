@@ -1942,6 +1942,22 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountTransAlt"/>
     </request-map>
+     <request-map uri="FinancialAccountingTransBANK">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinancialAccountingTransBANK"/>
+    </request-map>
+     <request-map uri="BankContraEntry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankContraEntry"><redirect-parameter name=""/></response>
+        <response name="error" type="view" value="BankContraEntry"/>
+    </request-map>
+    <request-map uri="preCreateBankContraEntry">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="preCreateFinAccountTrans"/>
+        <response name="success" type="request-redirect-noparam" value="BankContraEntry" />
+        <response name="error" type="request-redirect-noparam" value="BankContraEntry"/>
+    </request-map>
+    
      <request-map uri="EditFinAccountAlt">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFinAccountAlt"/>
@@ -2064,6 +2080,7 @@ under the License.
         <response name="success" type="view" value="EditFinAccountTransAlt"/>
         <response name="error" type="view" value="EditFinAccountTransAlt"/>
     </request-map>
+    
     <request-map uri="createFinAccountTrans">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFinAccountTrans"/>
@@ -2552,6 +2569,11 @@ under the License.
         <response name="success" type="view" value="PaymentsDepositWithdraw"/>
         <response name="error" type="view" value="PaymentsDepositWithdraw"/>
     </request-map>
+     <request-map uri="FindBankDepositOrWithdraw">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindBankDepositOrWithdraw"/>
+        <response name="error" type="view" value="FindBankDepositOrWithdraw"/>
+    </request-map>
     <request-map uri="getPaymentRunningTotal">
         <event type="service" invoke="getPaymentRunningTotal"/>
         <response name="success" type="request" value="json"/>
@@ -2566,6 +2588,12 @@ under the License.
         <event type="service" invoke="depositWithdrawPayments"/>
         <response name="success" type="view" value="PaymentsDepositWithdraw"/>
         <response name="error" type="view" value="PaymentsDepositWithdraw"/>
+    </request-map>
+    <request-map uri="bankDepositWithdrawPayments">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="depositWithdrawPayments"/>
+        <response name="success" type="view" value="FindBankDepositOrWithdraw"/>
+        <response name="error" type="view" value="FindBankDepositOrWithdraw"/>
     </request-map>
     <request-map uri="NewDepositSlip">
         <security auth="true" https="true"/>
@@ -3188,7 +3216,9 @@ under the License.
     <view-map name="FindFinAccountTransAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountTransAlt"/>
     <view-map name="EditFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditFinAccountAlt"/>
     <view-map name="FindNonBankAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindNonBankAccount"/>
-     
+    <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
+    <view-map name="BankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankContraEntry"/>
+    <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>
     <!-- TO BE REMOVED
     <view-map name="ListFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ListFinAccount"/>
     -->

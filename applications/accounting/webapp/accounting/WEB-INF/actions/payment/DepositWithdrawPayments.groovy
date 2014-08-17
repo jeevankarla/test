@@ -27,6 +27,7 @@ if ("Y".equals(parameters.noConditionFind)) {
     
     finAcctCond = EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId),
                                                  EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "DIVISION")], EntityOperator.AND);
+											 //data not configured locally
     finAccountRoles = EntityUtil.filterByDate(delegator.findList("FinAccountRole", finAcctCond, null, null, null, false));
     finAccountPartyIds = EntityUtil.getFieldListFromEntityList(finAccountRoles, "partyId", true);
     finAccountPartyIds.add(organizationPartyId);

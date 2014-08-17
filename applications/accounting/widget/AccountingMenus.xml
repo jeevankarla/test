@@ -1944,7 +1944,7 @@
 			<link target="OutgoingAdvancesPaid">
 			</link>
 		 </menu-item> 
-		 <menu-item name="PaymentOverview" title="Payment Overview">
+		  <menu-item name="PaymentOverview" title="Payment Overview">
           <condition>
 				<and>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -1953,7 +1953,26 @@
             </condition>
 			<link target="PortalPaymentOverview">
 			</link>
-		 </menu-item>  
+		 </menu-item>
+		 <menu-item name="ContraEntry" title="Transfer Funds/Contra">
+		  <condition>
+		   	<and>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</and> 
+           </condition>
+			<link target="BankContraEntry">
+			</link>
+		</menu-item> 
+		 <menu-item name="BankBook" title="Bank Book">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FinancialAccountingTransBANK">
+				<parameter param-name="organizationPartyId" value="Company"/>
+			</link>
+		 </menu-item>
 		 
           
           <!-- <menu-item name="EditFinAccountTransAlt" title="${uiLabelMap.AccountingDepositWithdraw}">
@@ -2015,11 +2034,12 @@
 					<!-- <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" /> -->
 					</and>
            	</condition>
-			<link target="FindPaymentsForDepositOrWithdraw">
+			<link target="FindBankDepositOrWithdraw">
 				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
 				<parameter param-name="organizationPartyId" from-field="finAccount.ownerPartyId" />
 			</link>
 		</menu-item>
+		
 		<menu-item name="FindFinAccountReconciliations" title="${uiLabelMap.AccountingReconciliation}">
 		     <condition>
 				<and>

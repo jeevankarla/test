@@ -46,6 +46,7 @@
                <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
                 <set field="parameters.ownerPartyId" value="Company"/>
                 <set field="parameters.finAccountTypeId" value="BANK_ACCOUNT"/>
+                <set field="parameters.statusId" value="FNACT_ACTIVE"/>
                 <set field="noConditionFind" value="Y"/>
                 <!-- <field name="noConditionFind"><hidden value="Y"/> -->
                 <set field="screenFlag" value="BANKACCOUNT" /> 
@@ -107,7 +108,7 @@
 									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
 								</screenlet> -->
 								<screenlet title="Non Bank Accounts List">				
-									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+									 <include-form name="ListFinAccountsAlt" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
 							</widgets>      
                     	</section>
@@ -187,12 +188,12 @@
                                 <not><if-empty field="finAccountId" /></not>
                             </condition>
                             <widgets>
-                                <container style="button-bar">
+                               <!--  <container style="button-bar">
                                     <link target="EditFinAccount" text="${uiLabelMap.AccountingCreateNewFinAccount}" style="buttontext create"/>
-                                </container>
-                                <label style="h1" text="${uiLabelMap.AccountingEditFinAccount}"></label>
+                                </container> -->
+                                <label style="h1" text="${uiLabelMap.AccountingEditBank}" ></label>
                                 <screenlet id="EditFinAccountPanel" collapsible="true">
-                                    <include-form name="EditFinAccount" location="component://accounting/widget/FinAccountForms.xml"/>
+                                    <include-form name="EditBankAccount" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -240,7 +241,7 @@
              <!--    <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
                     <decorator-section name="body">
                         <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                    	<section>
+                    	<!-- <section>
                     		<condition>
                     			<if-compare operator="equals" value="true" field="hasFinTxEditPermission"/>
                     		</condition>
@@ -250,16 +251,16 @@
                            			<parameter param-name="finAccountTransTypeId" value="ADJUSTMENT"/>
                            			<parameter param-name="entryType" value="Adjustment"/>                           			
                         		</link>
-                        		<!-- <link target="EditFinAccountTrans" text="${uiLabelMap.AccountingFinAccountTransationsPayment}" style="buttontext">
+                        		<link target="EditFinAccountTrans" text="${uiLabelMap.AccountingFinAccountTransationsPayment}" style="buttontext">
                            			<parameter param-name="finAccountId" from-field="finAccountId"/>
                            			<parameter param-name="entryType" value="Payment"/>                           			
-                        		</link> -->
+                        		</link>
                         		<link target="EditFinAccountTrans" text="${uiLabelMap.AccountingFinAccountTransationsContra}" style="buttontext">
                            			<parameter param-name="finAccountId" from-field="finAccountId"/>                           			
                            			<parameter param-name="entryType" value="Contra"/>
                            		</link>                        
                         	</widgets>
-                        	</section>
+                        	</section> -->
                         <section>
                             <condition>
                             	<if-service-permission service-name="acctgFinAcctPermissionCheck"  main-action="FINACCOUNTREC_EDIT"> </if-service-permission>
@@ -282,6 +283,68 @@
                                 </platform-specific>
                             </decorator-section>
                         </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      <screen name="PaymentsDepositWithdraw">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingDepositOrWithdrawPaymentsBANK"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                 <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
+                <set field="tabButtonItem2" value="depositWithdraw"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId"/>
+                <set field="cardType" from-field="parameters.cardType"/>
+                <set field="fromDate" type="Timestamp" from-field="parameters.fromDate"/>
+                <set field="thruDate" type="Timestamp" from-field="parameters.thruDate"/>
+                <set field="partyIdFrom" from-field="parameters.partyIdFrom"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                 <set field="issuingAuthority" from-field="parameters.issuingAuthority"/>
+                 <set field="screenFlag" value="BankersDepositOrWithdraw"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNTDW_EDIT"/>
+                </service>
+                <set field="hasFinDwEditPermission" from-field="permResult.hasPermission"/> 
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/DepositWithdrawPayments.groovy"/>
+            </actions>
+            <widgets>
+              <!--   <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+                    		<condition>
+                    			<if-service-permission service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNTDW_EDIT"/>
+                    			</condition>
+                    		<widgets>
+                    			<container style="button-bar">
+                                   <!--  <link target="NewDepositPayment" text="${uiLabelMap.AccountingCreateNewDepositPayment}" style="buttontext">
+                                        <parameter param-name="finAccountId"/>
+                                    </link>
+                                    <link target="NewWithdrawalPayment" text="${uiLabelMap.AccountingCreateNewWithdrawalPayment}" style="buttontext">
+                                        <parameter param-name="finAccountId"/>
+                                    </link> -->
+                                </container>
+                               </widgets>
+                    		</section>
+                        <section>
+                            <widgets>
+                             <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                                        <include-form name="PaymentsDepositWithdraw" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                    </decorator-section> 
+                                    <decorator-section name="search-results">
+                                        <platform-specific>
+                                            <html><html-template location="component://accounting/webapp/accounting/payment/depositWithdrawPayments.ftl"/></html>
+                                        </platform-specific>
+                                    </decorator-section>
+                                </decorator-screen>  
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -471,6 +534,83 @@
             </widgets>
         </section>
     </screen>
+       <screen name="BankContraEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditFinAccountTrans"/>
+               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="ContraEntry"/>
+                
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="entryType" from-field="parameters.entryType"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <!-- <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+                    <decorator-section name="body">
+                       <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <label style="h1" text="${uiLabelMap.AccountingEditFinAccountTransactionFor}"/>
+                        <screenlet id="FinAccountTransPanel" collapsible="true">
+                            <include-form name="BankContraEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FinancialAccountingTransBANK">
+		<section>
+			<actions>
+				<entity-one value-field="Name" entity-name="PartyGroup">
+					<field-map field-name="partyId" value="${parameters.organizationPartyId}"/>
+					<select-field field-name="groupName"/>
+				</entity-one>
+				<set field="titleProperty" value="FinancialAccountingTrans" />
+				<set field="labelTitleProperty" value="Financial Accounting Trans" />
+			    <set field="tabButtonItem" value="BankBook" />
+				<set field="tabButtonItem2" value="FinancialAccountingTrans" />
+				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<set field="parameters.screenFlag" value="TreasurerPortal" />
+				<service service-name="basicGeneralLedgerPermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="REPORTS" />
+				</service>
+				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<set field="formTargetRequest"    value="FinancialAccountingTransCASH" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="true"
+							field="hasReportsEditPermission" />
+					</condition>
+					<widgets>
+					 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+						<!--   <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml"> -->
+							<decorator-section name="body">
+							<include-screen name="FinancialAccountingTransInner" location="component://accounting/widget/ReportFinancialSummaryScreens.xml"/>
+							</decorator-section>
+						</decorator-screen>
+					</widgets>
+					<fail-widgets>
+						<decorator-screen name="main-decorator"
+							location="${parameters.mainDecoratorLocation}">
+							<decorator-section name="body">
+								<label style="h3" text="${uiLabelMap.AccountingReportError}"></label>
+							</decorator-section>
+						</decorator-screen>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+    
     
     <!-- ==================================== Outgoing Advances  ===================================   -->
     
