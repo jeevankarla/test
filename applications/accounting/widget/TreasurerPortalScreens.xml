@@ -108,7 +108,7 @@
 									<include-form name="FindFinesAndPenalties" location="component://byproducts/widget/TransporterForms.xml" />
 								</screenlet> -->
 								<screenlet title="Non Bank Accounts List">				
-									 <include-form name="ListFinAccountsAlt" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+									 <include-form name="ListNonBankAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
 							</widgets>      
                     	</section>
