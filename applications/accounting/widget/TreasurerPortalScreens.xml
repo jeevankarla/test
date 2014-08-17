@@ -77,7 +77,7 @@
     <screen name="FindNonBankAccount">
         <section>
             <actions>
-                <set field="titleProperty" value="Non Finacial Accounts"/>
+                <set field="titleProperty" value="Non Financial Accounts"/>
                   <set field="tabButtonItem" value="FindNonBankAccount"/>
                  <set field="tabButtonItem2" value="FindNonBankAccount"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
