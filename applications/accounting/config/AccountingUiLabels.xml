@@ -2891,6 +2891,11 @@
         <value xml:lang="fr">Dépôt ou retrait de paiements pour compte financier: ${finAccount.finAccountName} [${finAccountId}]</value>
         <value xml:lang="hi_IN">${finAccount.finAccountName} [${finAccountId}] वित्तीय खाते के लिए जमा भुगतान या भुगतान वापस करे</value>
     </property>
+     <property key="AccountingDepositOrWithdrawPaymentsBANK">
+        <value xml:lang="en">Deposit Or Withdraw Payments for Bank Account: ${finAccount.finAccountName} [${finAccountId}]</value>
+        <value xml:lang="fr">Dépôt ou retrait de paiements pour compte financier: ${finAccount.finAccountName} [${finAccountId}]</value>
+        <value xml:lang="hi_IN">${finAccount.finAccountName} [${finAccountId}] वित्तीय खाते के लिए जमा भुगतान या भुगतान वापस करे</value>
+    </property>
     <property key="AccountingDescr">
         <value xml:lang="ar">وصف</value>
         <value xml:lang="de">Beschreibung</value>
@@ -3022,6 +3027,17 @@
     <property key="AccountingEditFinAccount">
         <value xml:lang="de">Finanzkonto bearbeiten</value>
         <value xml:lang="en">Edit Financial Account ${finAccount.finAccountName} [${finAccountId}]</value>
+        <value xml:lang="fr">Créer/ mettre à jour un compte financier</value>
+        <value xml:lang="hi_IN">${finAccount.finAccountName} [${finAccountId}] वित्तीय खाता बनाएँ/सम्पादित करे</value>
+        <value xml:lang="it">Crea/Aggiorna Conto Finanziario</value>
+        <value xml:lang="nl">Maak/wijzig financiele rekening</value>
+        <value xml:lang="ru">Создать/обновить финансовый счет</value>
+        <value xml:lang="th">สร้าง/เปลี่ยนแปลงงบกำไรสะสมและงบแสดงการเปลี่ยนแปลงฐานะการเงิน</value>
+        <value xml:lang="zh">创建/更新金融账户</value>
+    </property>
+     <property key="AccountingEditBank">
+        <value xml:lang="de">Finanzkonto bearbeiten</value>
+        <value xml:lang="en">Bank Account ${finAccount.finAccountName} [${finAccountId}]</value>
         <value xml:lang="fr">Créer/ mettre à jour un compte financier</value>
         <value xml:lang="hi_IN">${finAccount.finAccountName} [${finAccountId}] वित्तीय खाता बनाएँ/सम्पादित करे</value>
         <value xml:lang="it">Crea/Aggiorna Conto Finanziario</value>

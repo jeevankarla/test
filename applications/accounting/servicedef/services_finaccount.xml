@@ -54,6 +54,32 @@ under the License.
        <attribute name="availableBalance" type="BigDecimal" mode="INOUT" optional="true"/>
        
     </service>
+     <service name="updateBankAccount" engine="simple" default-entity-name="FinAccount"
+            location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateFinAccount">
+        <description>Update a New Bank Account</description>
+        <permission-service service-name="acctgFinAcctPermissionCheck" main-action="FINACCOUNT_EDIT"/>
+        <auto-attributes mode="INOUT" optional="false" include="pk"/>
+        <auto-attributes mode="IN" optional="true" include="nonpk">
+            <exclude field-name="actualBalance"/>
+            <exclude field-name="availableBalance"/>
+            <exclude field-name="gbCode"/>
+            <exclude field-name="bCode"/>
+            <exclude field-name="bPlace"/>
+            <exclude field-name="categoryTypeEnum"/>
+             <exclude field-name="ownerPartyId"/>
+             <exclude field-name="isRefundable"/>
+              <exclude field-name="replenishPaymentId"/>
+              <exclude field-name="replenishLevel"/>
+        </auto-attributes>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="oldReplenishPaymentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="oldReplenishLevel" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="replenishPaymentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="replenishLevel" type="BigDecimal" mode="OUT" optional="true"/>
+        <attribute name="actualBalance" type="BigDecimal" mode="INOUT" optional="true"/>
+       <attribute name="availableBalance" type="BigDecimal" mode="INOUT" optional="true"/>
+       
+    </service>
     <service name="deleteFinAccount" engine="simple" default-entity-name="FinAccount"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="deleteFinAccount">
         <description>Delete a Financial Account</description>
