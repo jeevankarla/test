@@ -69,6 +69,51 @@ under the License.
             </hyperlink>
         </field> -->
     </form>
+    
+    <form name="ListNonBankAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindNonBankAccount" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+     
+        <auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
+         <field name="finAccountId"><hidden></hidden></field>
+         <field name="gbCode"><ignored></ignored></field>
+          <field name="bCode"><ignored></ignored></field>
+           <field name="bPlace"><ignored></ignored></field>
+            <field name="categoryTypeEnum"><ignored></ignored></field>
+             <field name="organizationPartyId"><ignored></ignored></field>
+              <field name="ownerPartyId"><ignored></ignored></field>
+               <field name="isRefundable"><ignored></ignored></field>
+                <field name="finAccountId"><ignored></ignored></field>
+                 <field name="replenishPaymentId"><ignored></ignored></field>
+                  <field name="replenishLevel"><ignored></ignored></field>
+        <field name="finAccountId">
+            <hyperlink  description="${finAccountId}" target="EditFinAccountAlt">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+        <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
+        <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field>
+        <field name="finAccountName">
+            <hyperlink description="${finAccountName}" target="EditFinAccount">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+        <field name="organizationPartyId">
+            <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
+                <parameter param-name="partyId" from-field="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="ownerPartyId">
+            <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
+                <parameter param-name="partyId" from-field="ownerPartyId"/>
+            </hyperlink>
+        </field>
+      <!--   <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasFinEditPermission">
+            <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field> -->
+    </form>
+    
    <form name="FindFinAccountTransactionsAlt" type="single" target="FindFinAccountTransAlt">
         <actions>
             <entity-and entity-name="GlReconciliation" list="glReconciliations">
