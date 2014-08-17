@@ -2021,7 +2021,7 @@ public class PayrollService {
 								newEntityLoanRecovery.set("principalAmount", amount);
 							}else{
 								
-								if(UtilValidate.isEmpty(loanRecovery.getLong("interestInstNum")) || (UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum")) && UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount")) && ((loan.getLong("numInterestInst")).intValue() !=0 ) &&  (loanRecovery.getLong("interestInstNum")).compareTo(loan.getLong("numInterestInst"))<0)){
+								if((UtilValidate.isEmpty(loanRecovery.getLong("interestInstNum")) && (loan.getLong("numInterestInst")).intValue() !=0 ) || (UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum")) && UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount")) && ((loan.getLong("numInterestInst")).intValue() !=0 ) &&  (loanRecovery.getLong("interestInstNum")).compareTo(loan.getLong("numInterestInst"))<0)){
 									amount = loan.getBigDecimal("interestAmount").divide(new BigDecimal(loan.getLong("numInterestInst")), 0);
 									newEntityLoanRecovery.set("interestInstNum",new Long(1));
 									if(UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum"))){
