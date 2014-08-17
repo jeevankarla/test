@@ -2045,7 +2045,7 @@ public class PayrollService {
 	        	priceInfos.add(priceInfoDescription);
 	            } catch (Exception e) {
 	                Debug.logError(e, "Error getting rules fr" +
-	                		"om the database while calculating price", module);
+	                		"om the database while calculating price , employeeId:"+employeeId, module);
 	                return ServiceUtil.returnError(e.toString());
 	            }
 	          result.put("amount", amount);
