@@ -145,8 +145,8 @@ public class EmplLeaveService {
 						if (from.compareTo(timePeriodStart) < 0 || thru.compareTo(timePeriodEnd) > 0) {
 							Debug.logError("leave entry ========"+leave, module);
 							Debug.logError( errorMsg + ": leave cannot span multiple payroll periods ,employeeId:"+partyId, module);
-			            	return ServiceUtil.returnError(errorMsg + ": leave cannot span multiple payroll periods, employeeId:"+partyId, 
-			            			null, null, null);				
+			            	/*return ServiceUtil.returnError(errorMsg + ": leave cannot span multiple payroll periods, employeeId:"+partyId, 
+			            			null, null, null);	*/			
 					 	}
 						int intv = (UtilDateTime.getIntervalInDays(from, thru)+1);
 						BigDecimal temp = new BigDecimal(intv);	
