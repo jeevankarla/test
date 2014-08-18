@@ -2011,7 +2011,6 @@ public class PayrollService {
                     EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, EntityCondition.makeCondition("loanId",EntityOperator.EQUALS, loan.getString("loanId")), null, null, UtilMisc.toList("-thruDate"), findOpts);
                     List<GenericValue> loanRecoveryList = pli.getCompleteList();
 					GenericValue loanRecovery = EntityUtil.getFirst(loanRecoveryList);
-					//Debug.log("loanRecovery============"+loanRecovery);
 					if(UtilValidate.isNotEmpty(isExternal) && isExternal.equalsIgnoreCase("Y")){
 						newEntityLoanRecovery.set("principalInstNum", new Long(1));
 						amount = loan.getBigDecimal("principalAmount");
@@ -2019,17 +2018,17 @@ public class PayrollService {
 					}else{
 						if(UtilValidate.isEmpty(loanRecovery)){
 							newEntityLoanRecovery.set("principalInstNum", new Long(1));
-							amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0 ,RoundingMode.HALF_UP);
+							amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0 ,BigDecimal.ROUND_UP);
 							newEntityLoanRecovery.set("principalAmount", amount);
 						}else{
 							if(UtilValidate.isNotEmpty(loanRecovery.getLong("principalInstNum")) && (loanRecovery.getLong("principalInstNum")).compareTo(loan.getLong("numPrincipalInst"))<0){
-								amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0,RoundingMode.HALF_UP);
+								amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0,BigDecimal.ROUND_UP);
 								newEntityLoanRecovery.set("principalInstNum", new Long(loanRecovery.getLong("principalInstNum").intValue()+1));
 								newEntityLoanRecovery.set("principalAmount", amount);
 							}else{
 								
 								if((UtilValidate.isEmpty(loanRecovery.getLong("interestInstNum")) && (loan.getLong("numInterestInst")).intValue() !=0 ) || (UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum")) && UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount")) && ((loan.getLong("numInterestInst")).intValue() !=0 ) &&  (loanRecovery.getLong("interestInstNum")).compareTo(loan.getLong("numInterestInst"))<0)){
-									amount = loan.getBigDecimal("interestAmount").divide(new BigDecimal(loan.getLong("numInterestInst")), 0,RoundingMode.HALF_UP);
+									amount = loan.getBigDecimal("interestAmount").divide(new BigDecimal(loan.getLong("numInterestInst")), 0,BigDecimal.ROUND_UP);
 									newEntityLoanRecovery.set("interestInstNum",new Long(1));
 									if(UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum"))){
 										newEntityLoanRecovery.set("interestInstNum", new Long(loanRecovery.getLong("interestInstNum").intValue()+1));

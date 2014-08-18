@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -149,7 +150,10 @@ public class EmplLeaveService {
 			            			null, null, null);	*/			
 					 	}
 						int intv = (UtilDateTime.getIntervalInDays(from, thru)+1);
-						BigDecimal temp = new BigDecimal(intv);	
+						BigDecimal temp = new BigDecimal(intv);
+						if(UtilValidate.isNotEmpty(leave.getString("dayFractionId"))){
+							temp = temp.divide(new BigDecimal(2), 1, BigDecimal.ROUND_HALF_UP);
+						}
 						
 						if(UtilValidate.isEmpty(leaveDetailmap.get(leaveType))){
 							leaveDetailmap.put(leaveType,BigDecimal.ZERO);

@@ -1315,7 +1315,7 @@ under the License.emplpunch
          <attribute name="statusId" mode="IN" type="String" optional="false"/> 
    </service> 
    <service name="populateEmplPunchFromRawForPeriod" engine="java" auth="true" invoke="populateEmplPunchFromRawForPeriod" 
-        location="in.vasista.vbiz.humanres.PunchService" transaction-timeout="1000">
+        location="in.vasista.vbiz.humanres.PunchService" transaction-timeout="10000">
         <description>populateEmplPunch From Raw For Period</description>
         <attribute name="fromDate" mode="IN" type="Timestamp"/> 
         <attribute name="thruDate" mode="IN" type="Timestamp"/> 
