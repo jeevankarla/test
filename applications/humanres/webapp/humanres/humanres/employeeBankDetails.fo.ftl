@@ -74,33 +74,35 @@ under the License.
          	  <#assign partyIdList=companyBankDetails.getValue()>
                <#list partyIdList as partyId>               	
                	   <#assign recordCnt=recordCnt+1>
-                   <fo:table-row height="14px" space-start=".15in">
-	                   <fo:table-cell  border="solid">
-	                   		<#assign temp=(temp+1)>
-	                        <fo:block text-align="center">${temp?if_exists}</fo:block>
-	                   </fo:table-cell >
-	                   <fo:table-cell border="solid">
-	                    	<fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("emplNo")?if_exists}</fo:block>
-	                   </fo:table-cell>
-	                   <fo:table-cell  border="solid">
-	                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${BankAdvicePayRollMap.get(partyId).get("empName")?if_exists}</fo:block>
-	                   </fo:table-cell>
-	                    <fo:table-cell  border="solid">
-	                        <fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;  ${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</fo:block>
-	                    </fo:table-cell>
-	                    <#assign totalNetAmt=totalNetAmt+BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists>
-	                   <fo:table-cell  border="solid">
-	                        <fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists?string("#0.00")}</fo:block>
-	                   </fo:table-cell>
-               		</fo:table-row>
-               		<#if recordCnt==40>
-               			 <#assign recordCnt=0>
-               			 <fo:table-row>
-               			 	<fo:table-cell>
-               			 		<fo:block page-break-after="always"></fo:block>        
-               			 	</fo:table-cell>
-               			 </fo:table-row>
-               		</#if>              
+               	   <#if BankAdvicePayRollMap.get(partyId)?has_content>
+	                   <fo:table-row height="14px" space-start=".15in">
+		                   <fo:table-cell  border="solid">
+		                   		<#assign temp=(temp+1)>
+		                        <fo:block text-align="center">${temp?if_exists}</fo:block>
+		                   </fo:table-cell >
+		                   <fo:table-cell border="solid">
+		                    	<fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("emplNo")?if_exists}</fo:block>
+		                   </fo:table-cell>
+		                   <fo:table-cell  border="solid">
+		                        <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;  ${BankAdvicePayRollMap.get(partyId).get("empName")?if_exists}</fo:block>
+		                   </fo:table-cell>
+		                    <fo:table-cell  border="solid">
+		                        <fo:block text-align="left" white-space-collapse="false" keep-together="always">&#160;  ${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</fo:block>
+		                    </fo:table-cell>
+		                    <#assign totalNetAmt=totalNetAmt+BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists>
+		                   <fo:table-cell  border="solid">
+		                        <fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists?string("#0.00")}</fo:block>
+		                   </fo:table-cell>
+	               		</fo:table-row>
+	               		<#if recordCnt==40>
+	               			 <#assign recordCnt=0>
+	               			 <fo:table-row>
+	               			 	<fo:table-cell>
+	               			 		<fo:block page-break-after="always"></fo:block>        
+	               			 	</fo:table-cell>
+	               			 </fo:table-row>
+	               		</#if> 
+	               	</#if>	             
                   </#list>
               <fo:table-row border="solid">
               	<fo:table-cell/>
@@ -125,7 +127,8 @@ under the License.
 	       			 		<fo:block font-weight="bold" keep-together="always">CANARA BANK</fo:block>        
 	       			 	</fo:table-cell>
        			 	</fo:table-row>
-	              <#list canaraBankIds as partyId>               	
+	              <#list canaraBankIds as partyId>            
+	              	 <#if BankAdvicePayRollMap.get(partyId)?has_content>   	
 	                   <fo:table-row height="14px" space-start=".15in">
 		                   <fo:table-cell  border="solid">
 		                   		<#assign temp=(temp+1)>
@@ -145,7 +148,7 @@ under the License.
 		                        <fo:block text-align="center">${BankAdvicePayRollMap.get(partyId).get("netAmt")?if_exists?string("#0.00")}</fo:block>
 		                   </fo:table-cell>
 	               		</fo:table-row>
-	               		        
+	               		 </#if>       
 	                  </#list>
 		              <fo:table-row border="solid">
 		              	<fo:table-cell/>
