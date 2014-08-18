@@ -67,7 +67,7 @@ function showPayrollGenerateForm() {
 		
 			//message += "<br/><br/>";
 			message +="<tr class='h3'><td align='left' class='h3' width='30%'>Organization Party Id :</td><td align='left' width='40%'><select name='orgPartyId' allow-empty='true' id='orgPartyId' class='h3'>"+
-	              		"<#list orgList as org><option value='${org.partyId}' >${org.groupName}</option></#list>"+            
+	              		"<#list orgList as org><option value='${org.partyId?if_exists}' >${org.groupName?if_exists}</option></#list>"+            
 						"</select></td></tr>";
 			message += 	"<tr class='h3'><td align='left' class='h3' width='40%'>Custom Time Period Id:</td><td align='left' width='40%'><select name='customTimePeriodId' id='customTimePeriodId'>"+
 						"<#list customTimePeriodList as customTimePeriod><option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option></#list></select></td></tr>"+
