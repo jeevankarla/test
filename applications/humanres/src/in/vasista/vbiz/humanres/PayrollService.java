@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -2018,17 +2019,17 @@ public class PayrollService {
 					}else{
 						if(UtilValidate.isEmpty(loanRecovery)){
 							newEntityLoanRecovery.set("principalInstNum", new Long(1));
-							amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0);
+							amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0 ,RoundingMode.HALF_UP);
 							newEntityLoanRecovery.set("principalAmount", amount);
 						}else{
 							if(UtilValidate.isNotEmpty(loanRecovery.getLong("principalInstNum")) && (loanRecovery.getLong("principalInstNum")).compareTo(loan.getLong("numPrincipalInst"))<0){
-								amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0);
+								amount = loan.getBigDecimal("principalAmount").divide(new BigDecimal(loan.getLong("numPrincipalInst")), 0,RoundingMode.HALF_UP);
 								newEntityLoanRecovery.set("principalInstNum", new Long(loanRecovery.getLong("principalInstNum").intValue()+1));
 								newEntityLoanRecovery.set("principalAmount", amount);
 							}else{
 								
 								if((UtilValidate.isEmpty(loanRecovery.getLong("interestInstNum")) && (loan.getLong("numInterestInst")).intValue() !=0 ) || (UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum")) && UtilValidate.isNotEmpty(loan.getBigDecimal("interestAmount")) && ((loan.getLong("numInterestInst")).intValue() !=0 ) &&  (loanRecovery.getLong("interestInstNum")).compareTo(loan.getLong("numInterestInst"))<0)){
-									amount = loan.getBigDecimal("interestAmount").divide(new BigDecimal(loan.getLong("numInterestInst")), 0);
+									amount = loan.getBigDecimal("interestAmount").divide(new BigDecimal(loan.getLong("numInterestInst")), 0,RoundingMode.HALF_UP);
 									newEntityLoanRecovery.set("interestInstNum",new Long(1));
 									if(UtilValidate.isNotEmpty(loanRecovery.getLong("interestInstNum"))){
 										newEntityLoanRecovery.set("interestInstNum", new Long(loanRecovery.getLong("interestInstNum").intValue()+1));
@@ -2659,7 +2660,6 @@ public class PayrollService {
 	    		// second saturday
 	    		Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(attdTimePeriodEnd),0,2,timeZone,locale), -1);
 	    		//Debug.log("second saturday===="+secondSaturDay);
-	    		
 	        	for(GenericValue employement : employementList) {
 	        		String employeeId = employement.getString("partyIdTo");
 	        		GenericValue newEntity = delegator.makeValue("PayrollAttendance");
@@ -2790,17 +2790,20 @@ public class PayrollService {
 			    			Boolean shiftFalg = Boolean.FALSE;
 			    			if(UtilValidate.isNotEmpty(dayShiftList)){
 			    				for(GenericValue dayShift :dayShiftList){
-			    					if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
-			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
-			    						lateMin= lateMin+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
-			    					}else{
-			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("lateMin"))){
-			    							lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
-			    							lateMin= lateMin+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
-			    						}
-			    						
+			    					if(UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))){
+			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
+				    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
+				    						lateMin= lateMin+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
+				    					}else{
+				    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("lateMin"))){
+				    							lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
+				    							lateMin= lateMin+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
+				    						}
+				    						
+				    					}
+				    					extraMin=extraMin+(((dayShift.getBigDecimal("extraMin")).doubleValue())/480);
 			    					}
-			    					extraMin=extraMin+(((dayShift.getBigDecimal("extraMin")).doubleValue())/480);
+			    					
 			    				}
 			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
