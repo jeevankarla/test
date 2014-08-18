@@ -33,6 +33,7 @@ under the License.
     <#assign doj=0 />
     <#assign emplPosition=0 />
     <#assign location=0 />
+    <#assign paySlipNo=0>
     <#if payRollMap?has_content>
     <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
      <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", parameters.partyId, "userLogin", userLogin))/>
@@ -59,9 +60,11 @@ under the License.
       	 <#assign emplLeavesDetails = delegator.findOne("PayrollAttendance", {"partyId" : partyId, "customTimePeriodId": timePeriod?if_exists}, true)/>
       	 <#assign doj=delegator.findByAnd("Employment", {"partyIdTo" : partyId})/>
       	 <#assign emplPosition=delegator.findByAnd("EmplPosition", {"partyId" : partyId})/>
+      	 <#assign payGrade=delegator.findByAnd("PayGradePayHistory", {"partyIdTo" : partyId})/>
       	 <#assign emplPositionAndFulfilment=delegator.findByAnd("EmplPositionAndFulfillment", {"employeePartyId" : partyId})/>
          <#assign location=delegator.findByAnd("EmployeeContactDetails", {"partyId" : partyId})/>
          <#assign emplLeaves = delegator.findByAnd("EmplLeaveBalanceStatus", {"partyId" : partyId, "customTimePeriodId": parameters.customTimePeriodId})/>       
+            <#assign paySlipNo=paySlipNo+1>
             <fo:block text-align="center" border-style="solid" font-weight="bold">
             	<fo:table>
             		<fo:table-column column-width="7in"/>
@@ -70,7 +73,7 @@ under the License.
             		<fo:table-column column-width="7in"/>
             		<fo:table-body>
             			<fo:table-row>
-            				<fo:table-cell><fo:block keep-together="always">${partyGroup.groupName?if_exists}</fo:block></fo:table-cell>
+            				<fo:table-cell><fo:block keep-together="always" white-space-collapse="false" text-indent="150pt">${partyGroup.groupName?if_exists}                            PaySlip No: ${paySlipNo?if_exists}</fo:block></fo:table-cell>
             			</fo:table-row>
             			<fo:table-row>
             				<fo:table-cell><fo:block keep-together="always"><#if partyAddressResult.address1?has_content>${partyAddressResult.address1?if_exists}</#if><#if (partyAddressResult.address2?has_content)>${partyAddressResult.address2?if_exists}</#if></fo:block></fo:table-cell>
@@ -101,9 +104,9 @@ under the License.
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">PF Account Number   : ${emplDetails.presentEpf?if_exists}</fo:block>
                      		 					</fo:table-cell>
-                     		 					<fo:table-cell>
+                     		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual Basic   : <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("basic")?if_exists}</#if></fo:block>
-                     		 					</fo:table-cell>
+                     		 					</fo:table-cell>-->
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
@@ -112,9 +115,9 @@ under the License.
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">ESI Number               : ${emplDetails.presentEsic?if_exists}</fo:block>
                      		 					</fo:table-cell>
-                     		 					<fo:table-cell>
+                     		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual DA       :  <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("daAmt")?if_exists}</#if></fo:block>
-                     		 					</fo:table-cell>
+                     		 					</fo:table-cell>-->
                      		 				</fo:table-row>
                      		 				<fo:table-row>
                      		 					<fo:table-cell>
@@ -123,9 +126,9 @@ under the License.
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN          : ${emplDetails.panId?if_exists}</fo:block>
                      		 					</fo:table-cell>
-                     		 					<fo:table-cell>
+                     		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual HRA    :  <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("hraAmt")?if_exists}</#if></fo:block>
-                     		 					</fo:table-cell>
+                     		 					</fo:table-cell>-->
                      		 				</fo:table-row>
                      		 				<#assign designation = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : emplPositionAndFulfilment[0].emplPositionTypeId?if_exists}, true)>
                      		 				<fo:table-row>
@@ -168,7 +171,7 @@ under the License.
                         		<fo:block font-weight="bold" text-align="center">Days</fo:block>
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
-                        		<fo:block font-weight="bold" text-align="center">Leave Details</fo:block>
+                        		<#--<fo:block font-weight="bold" text-align="center">Leave Details</fo:block>-->
                     		</fo:table-cell>
                     	</fo:table-row>
                     </fo:table-header>
@@ -212,7 +215,10 @@ under the License.
                         		<fo:block text-align="center" white-space-collapse="false">${(netPaidDays?if_exists)}  days</fo:block>                        		
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
-                    			<fo:block>
+                    				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Pay Scale          :  ${payGrade.payScale?if_exists}</fo:block>
+                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  ${emplLeavesDetails.lateMin?if_exists}</fo:block>
+                    			<#--<fo:block>
                     				<fo:table width="100%">
                     					<fo:table-column column-width="1.5in"/>
                     					<fo:table-column column-width="0.5in"/>
@@ -265,7 +271,7 @@ under the License.
                     						</fo:table-row>                   						
                     					</fo:table-body>	
                     				</fo:table>	
-                    			</fo:block>
+                    			</fo:block>-->
                         	</fo:table-cell>
                     	</fo:table-row>                    	
                    </fo:table-body>
@@ -373,8 +379,7 @@ under the License.
             		</fo:table-body>
             	</fo:table>            		          
             </fo:block>
-            <fo:block text-align="center" keep-together="always" font-size="8pt">This is a computer-generated salary slip. Does not require a Signature
-            </fo:block>
+            <fo:block text-align="center" keep-together="always" font-size="8pt">Any deviations on the information stated above shall be brought to the notice of the officer in charge immediately</fo:block>
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block>            
 	            <#assign pageCnt=pageCnt+1> 

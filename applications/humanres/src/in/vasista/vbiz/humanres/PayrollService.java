@@ -2664,8 +2664,12 @@ public class PayrollService {
 	        		newEntity.set("noOfAttendedSsDays", BigDecimal.ZERO);
 	        		newEntity.set("noOfArrearDays", BigDecimal.ZERO);
 	        		newEntity.set("noOfCompoffAvailed", BigDecimal.ZERO);
+	        		newEntity.set("lateMin", BigDecimal.ZERO);
+	        		newEntity.set("extraMin", BigDecimal.ZERO);
 	        		double noOfAttendedSsDays = 0;
 	        		double lossOfPayDays =0;
+	        		double lateMin =0;
+	        		double extraMin =0;
 	        		BigDecimal noOfEmployementDays = new BigDecimal(noOfCalenderDays);
 	        		Timestamp employementFromaDate = UtilDateTime.getDayStart(employement.getTimestamp("fromDate"));
 	        		Timestamp employementThruDate = employement.getTimestamp("thruDate");
@@ -2722,6 +2726,8 @@ public class PayrollService {
 				    		newEntity.set("noOfAttendedSsDays", BigDecimal.ZERO);
 				    		newEntity.set("noOfAttendedWeeklyOffDays", BigDecimal.ZERO);
 				    		newEntity.set("noOfPayableDays", BigDecimal.ZERO);
+				    		newEntity.set("lateMin", BigDecimal.ZERO);
+			        		newEntity.set("extraMin", BigDecimal.ZERO);
 				    		delegator.createOrStore(newEntity);
 				    		continue;
 			    		}
@@ -2780,13 +2786,15 @@ public class PayrollService {
 			    				for(GenericValue dayShift :dayShiftList){
 			    					if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
 			    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
+			    						lateMin= lateMin+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
 			    					}else{
 			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("lateMin"))){
 			    							lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
+			    							lateMin= lateMin+(((dayShift.getBigDecimal("lateMin")).doubleValue())/480);
 			    						}
 			    						
 			    					}
-			    					
+			    					extraMin=extraMin+(((dayShift.getBigDecimal("extraMin")).doubleValue())/480);
 			    				}
 			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
@@ -2829,7 +2837,8 @@ public class PayrollService {
 			    			
 			    			c1.add(Calendar.DATE,1);
 			    		}
-			    		
+			    		newEntity.set("lateMin",  new BigDecimal(lateMin));
+		        		newEntity.set("extraMin", new BigDecimal(extraMin));
 			    		newEntity.set("lossOfPayDays", new BigDecimal(lossOfPayDays));
 			    		newEntity.set("noOfAttendedHoliDays", new BigDecimal(noOfAttendedHoliDays));
 			    		newEntity.set("noOfAttendedSsDays", new BigDecimal(noOfAttendedSsDays));

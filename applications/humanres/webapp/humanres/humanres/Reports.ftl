@@ -230,7 +230,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      	   	<td width="40%">Period Id
 		  			<select name="customTimePeriodId" class='h4'>
     					<#list timePeriodList as timePeriod>    
-      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName?if_exists}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
     					</#list>      
 					</select>
 		  		</td>	
@@ -288,7 +288,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
   				<td width="40%">Period Id
 	  				<select name="customTimePeriodId" class='h4'>
     					<#list timePeriodList as timePeriod>    
-      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName?if_exists}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
     					</#list>      
 					</select>
   				</td>
@@ -301,7 +301,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	      	   	<td width="40%">Period Id
 		  			<select name="customTimePeriodId" class='h4'>
     					<#list timePeriodList as timePeriod>    
-      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+      	    				<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName?if_exists}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
     					</#list>      
 					</select>
 			  	</td>	
