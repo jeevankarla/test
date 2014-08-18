@@ -46,7 +46,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="8in"
-                     margin-left=".2in" margin-right=".2in" margin-top=".1in" margin-bottom=".3in">
+                     margin-left=".2in" margin-right=".1in" margin-top=".1in" margin-bottom=".3in">
                 <fo:region-body margin-top=".2in"/>
                 <fo:region-before extent=".4in"/>
                 <fo:region-after extent=".4in"/>
@@ -83,7 +83,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -94,7 +94,7 @@ under the License.
 							<fo:table-row>
 			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
 			                   </fo:table-cell>
 			                   <fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -383,7 +383,7 @@ under the License.
                     <fo:table-column column-width="100pt"/>                
                     <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="120pt"/>
                     <fo:table-column column-width="80pt"/>
                     <fo:table-body> 
                     		<fo:table-row>
@@ -399,7 +399,7 @@ under the License.
 							</fo:table-row>
 							<fo:table-row>
 				       			<fo:table-cell>
-				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
+				            		<fo:block text-align="left" keep-together="always" font-size = "12pt">&#160;&#160;&#160;&#160;&#160;${attrValue}</fo:block>     
 				       			</fo:table-cell>
 							</fo:table-row>
 							<fo:table-row>
@@ -410,7 +410,7 @@ under the License.
 							<fo:table-row>
 			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
 			                   </fo:table-cell>
 			                   <fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
