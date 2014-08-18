@@ -573,7 +573,7 @@ under the License.
                     <order-by field-name="-fromDate"/>
                 </entity-and>
                 <iterate list="productCategoryMembers" entry="productCategoryMember">
-                    <set field="parameters.glAccountTypeId" value="SALES_ACCOUNT"/>
+                	<set field="parameters.glAccountTypeId" value="SALES_ACCOUNT"/>
                     <call-simple-method method-name="getProductCategoryGlAccountInline"/>
                     <if-not-empty field="productCategoryGlAccount.glAccountId">
                         <field-to-result field="productCategoryGlAccount.glAccountId" result-name="glAccountId"/>
@@ -1850,98 +1850,95 @@ under the License.
         <call-class-method class-name="org.ofbiz.accounting.util.UtilAccounting" method-name="isReceipt" ret-field="isReceiptValue">
             <field field="payment" type="org.ofbiz.entity.GenericValue"/>
         </call-class-method>
-
+        
         <if-compare field="isReceiptValue" operator="equals" value="true" type="Boolean">
             <set field="origCurrencyUomId" from-field="payment.currencyUomId"/>
-            <set field="organizationPartyId" from-field="payment.partyIdTo"/>
-            <set field="partyId" from-field="payment.partyIdFrom"/>
-            <set field="paymentId" from-field="payment.paymentId"/>
-
-            <!-- Debit -->
-            <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
-            <set field="debitEntry.debitCreditFlag" value="D"/>
-            <!-- TODO -->
-            <!--set field="debitEntry.glAccountTypeId" value=""/-->
-            <set field="debitEntry.origAmount" from-field="payment.amount"/>
-            <set field="debitEntry.origCurrencyUomId" from-field="origCurrencyUomId"/>
-            <set field="debitEntry.organizationPartyId" from-field="organizationPartyId"/>
-            <set field="acctgTransEntries[]" from-field="debitEntry" type="Object"/>
-
-            <entity-one entity-name="PaymentGlAccountTypeMap" value-field="paymentGlAccountTypeMap">
-                <field-map field-name="paymentTypeId" from-field="payment.paymentTypeId"/>
-                <field-map field-name="organizationPartyId"/>
-            </entity-one>
-            <set field="creditGlAccountTypeId" from-field="paymentGlAccountTypeMap.glAccountTypeId"/>
-            <!-- This is now delegated to the createAcctgTransAndEntriesForPaymentApplication calls at the bottom of this service
-            <get-related value-field="payment" relation-name="PaymentApplication" list="paymentApplications"/>
-            <iterate list="paymentApplications" entry="paymentApplication">
-
-                <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
-                <set field="creditEntry.debitCreditFlag" value="C"/>
-                <set field="creditEntry.origAmount" from-field="paymentApplication.amountApplied"/>
-                <set field="creditEntry.origCurrencyUomId" from-field="origCurrencyUomId"/>
-                <if-not-empty field="paymentApplication.overrideGlAccountId">
-                    <set field="creditEntry.glAccountId" from-field="paymentApplication.overrideGlAccountId"/>
-                </if-not-empty>
-                <set field="creditEntry.organizationPartyId" from-field="organizationPartyId"/>
-                <set field="creditEntry.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
-                <calculate field="amountAppliedTotal" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
-                    <calcop operator="add">
-                        <calcop operator="get" field="amountAppliedTotal"/>
-                        <calcop operator="get" field="paymentApplication.amountApplied"/>
-                    </calcop>
-                </calculate>
-                <set field="acctgTransEntries[]" from-field="creditEntry" type="Object"/>
-            </iterate>
-            -->
-            <calculate field="diffAmount" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
-                <calcop operator="subtract">
-                    <calcop operator="get" field="payment.amount"/>
-                    <calcop operator="get" field="amountAppliedTotal"/>
-                </calcop>
-            </calculate>
-            <if-compare field="diffAmount" operator="greater" value="0" type="BigDecimal">
-                <!-- credit for diff amount-->
-                <make-value entity-name="AcctgTransEntry" value-field="creditEntryWithDiffAmount"/>
-                <set field="creditEntryWithDiffAmount.debitCreditFlag" value="C"/>
-                <set field="creditEntryWithDiffAmount.origAmount" from-field="diffAmount"/>
-                <set field="creditEntryWithDiffAmount.origCurrencyUomId" from-field="origCurrencyUomId"/>
-                <set field="creditEntryWithDiffAmount.glAccountId" from-field="payment.overrideGlAccountId"/>
-                <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
-                	<set field="creditEntryWithDiffAmount.glAccountId" from-field="paymentGlAccountTypeMap.glAccountId"/>
-                </if-not-empty>
-                <set field="creditEntryWithDiffAmount.glAccountTypeId" from-field="creditGlAccountTypeId"/>
-                <set field="creditEntryWithDiffAmount.organizationPartyId" from-field="organizationPartyId"/>
-                <set field="acctgTransEntries[]" from-field="creditEntryWithDiffAmount" type="Object"/>
-            </if-compare>
-
-            <!-- Set header fields (AcctgTrans) -->
-            <set field="createAcctgTransAndEntriesInMap.glFiscalTypeId" value="ACTUAL"/>
-            <set field="createAcctgTransAndEntriesInMap.partyId" from-field="partyId"/>
-            <set field="createAcctgTransAndEntriesInMap.roleTypeId" value="BILL_TO_CUSTOMER"/>
-            <set field="createAcctgTransAndEntriesInMap.paymentId" from-field="paymentId"/>
-            <set field="createAcctgTransAndEntriesInMap.acctgTransTypeId" value="INCOMING_PAYMENT"/>
-            <!--set acctgTran transactionDate as payment transactionDate or if null effectiveDate  -->
+	         <set field="organizationPartyId" from-field="payment.partyIdTo"/>
+	         <set field="partyId" from-field="payment.partyIdFrom"/>
+	         <set field="paymentId" from-field="payment.paymentId"/>
+	
+	         <!-- Debit -->
+	         <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
+	         <set field="debitEntry.debitCreditFlag" value="D"/>
+	         <!-- TODO -->
+	         <!--set field="debitEntry.glAccountTypeId" value=""/-->
+	         <set field="debitEntry.origAmount" from-field="payment.amount"/>
+	         <set field="debitEntry.origCurrencyUomId" from-field="origCurrencyUomId"/>
+	         <set field="debitEntry.organizationPartyId" from-field="organizationPartyId"/>
+	         <set field="acctgTransEntries[]" from-field="debitEntry" type="Object"/>
+	
+	         <entity-one entity-name="PaymentGlAccountTypeMap" value-field="paymentGlAccountTypeMap">
+	             <field-map field-name="paymentTypeId" from-field="payment.paymentTypeId"/>
+	             <field-map field-name="organizationPartyId"/>
+	         </entity-one>
+	         <set field="creditGlAccountTypeId" from-field="paymentGlAccountTypeMap.glAccountTypeId"/>
+	         <!-- This is now delegated to the createAcctgTransAndEntriesForPaymentApplication calls at the bottom of this service
+	         <get-related value-field="payment" relation-name="PaymentApplication" list="paymentApplications"/>
+	         <iterate list="paymentApplications" entry="paymentApplication">
+	
+	             <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
+	             <set field="creditEntry.debitCreditFlag" value="C"/>
+	             <set field="creditEntry.origAmount" from-field="paymentApplication.amountApplied"/>
+	             <set field="creditEntry.origCurrencyUomId" from-field="origCurrencyUomId"/>
+	             <if-not-empty field="paymentApplication.overrideGlAccountId">
+	                 <set field="creditEntry.glAccountId" from-field="paymentApplication.overrideGlAccountId"/>
+	             </if-not-empty>
+	             <set field="creditEntry.organizationPartyId" from-field="organizationPartyId"/>
+	             <set field="creditEntry.glAccountTypeId" value="ACCOUNTS_RECEIVABLE"/>
+	             <calculate field="amountAppliedTotal" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
+	                 <calcop operator="add">
+	                     <calcop operator="get" field="amountAppliedTotal"/>
+	                     <calcop operator="get" field="paymentApplication.amountApplied"/>
+	                 </calcop>
+	             </calculate>
+	             <set field="acctgTransEntries[]" from-field="creditEntry" type="Object"/>
+	         </iterate>
+	         -->
+	         <calculate field="diffAmount" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
+	             <calcop operator="subtract">
+	                 <calcop operator="get" field="payment.amount"/>
+	                 <calcop operator="get" field="amountAppliedTotal"/>
+	             </calcop>
+	         </calculate>
+	         <if-compare field="diffAmount" operator="greater" value="0" type="BigDecimal">
+	             <!-- credit for diff amount-->
+	             <make-value entity-name="AcctgTransEntry" value-field="creditEntryWithDiffAmount"/>
+	             <set field="creditEntryWithDiffAmount.debitCreditFlag" value="C"/>
+	             <set field="creditEntryWithDiffAmount.origAmount" from-field="diffAmount"/>
+	             <set field="creditEntryWithDiffAmount.origCurrencyUomId" from-field="origCurrencyUomId"/>
+	             <set field="creditEntryWithDiffAmount.glAccountId" from-field="payment.overrideGlAccountId"/>
+	             <set field="creditEntryWithDiffAmount.glAccountTypeId" from-field="creditGlAccountTypeId"/>
+	             <set field="creditEntryWithDiffAmount.organizationPartyId" from-field="organizationPartyId"/>
+	             <set field="acctgTransEntries[]" from-field="creditEntryWithDiffAmount" type="Object"/>
+	         </if-compare>
+	
+	         <!-- Set header fields (AcctgTrans) -->
+	         <set field="createAcctgTransAndEntriesInMap.glFiscalTypeId" value="ACTUAL"/>
+	         <set field="createAcctgTransAndEntriesInMap.partyId" from-field="partyId"/>
+	         <set field="createAcctgTransAndEntriesInMap.roleTypeId" value="BILL_TO_CUSTOMER"/>
+	         <set field="createAcctgTransAndEntriesInMap.paymentId" from-field="paymentId"/>
+	         <set field="createAcctgTransAndEntriesInMap.acctgTransTypeId" value="INCOMING_PAYMENT"/>
+	         <!--set acctgTran transactionDate as payment transactionDate or if null effectiveDate  -->
 	         <!-- this is to support  deposit withdraw for given date-->
 	         <set field="createAcctgTransAndEntriesInMap.transactionDate" from-field="payment.transactionDate"/>
 	         <if-empty field="payment.transactionDate">
 	               <set field="createAcctgTransAndEntriesInMap.transactionDate" from-field="payment.effectiveDate"/>
 	         </if-empty>
-            <set field="createAcctgTransAndEntriesInMap.acctgTransEntries" from-field="acctgTransEntries"/>
-            <call-service service-name="createAcctgTransAndEntries" in-map-name="createAcctgTransAndEntriesInMap">
-                <result-to-field result-name="acctgTransId"/>
-            </call-service>
-            <field-to-result field="acctgTransId" result-name="acctgTransId"/>
-            <!-- Now create accounting transactions for the payment applications -->
-            <get-related value-field="payment" relation-name="PaymentApplication" list="paymentApplications"/>
-            <iterate list="paymentApplications" entry="paymentApplication">
-                <set field="createAcctgTransAndEntriesForPaymentApplicationInMap.paymentApplicationId" from-field="paymentApplication.paymentApplicationId"/>
-                <call-service service-name="createAcctgTransAndEntriesForPaymentApplication" in-map-name="createAcctgTransAndEntriesForPaymentApplicationInMap">
-                    <result-to-field result-name="acctgTransId"/>
-                </call-service>
-                <log level="info" message="Accounting transaction ${acctgTransId} created for payment application ${paymentApplication.paymentApplicationId}"/>                 
-            </iterate>
-        </if-compare>
+	         <set field="createAcctgTransAndEntriesInMap.acctgTransEntries" from-field="acctgTransEntries"/>
+	         <call-service service-name="createAcctgTransAndEntries" in-map-name="createAcctgTransAndEntriesInMap">
+	             <result-to-field result-name="acctgTransId"/>
+	         </call-service>
+	         <field-to-result field="acctgTransId" result-name="acctgTransId"/>
+	         <!-- Now create accounting transactions for the payment applications -->
+	         <get-related value-field="payment" relation-name="PaymentApplication" list="paymentApplications"/>
+	         <iterate list="paymentApplications" entry="paymentApplication">
+	             <set field="createAcctgTransAndEntriesForPaymentApplicationInMap.paymentApplicationId" from-field="paymentApplication.paymentApplicationId"/>
+	             <call-service service-name="createAcctgTransAndEntriesForPaymentApplication" in-map-name="createAcctgTransAndEntriesForPaymentApplicationInMap">
+	                 <result-to-field result-name="acctgTransId"/>
+	             </call-service>
+	             <log level="info" message="Accounting transaction ${acctgTransId} created for payment application ${paymentApplication.paymentApplicationId}"/>                 
+	         </iterate>
+	    </if-compare>
     </simple-method>
 
     <!-- Service for the automatic creation of accounting transaction for Purchase Invoice -->
@@ -2062,9 +2059,9 @@ under the License.
             </iterate-map>
             <!-- Another entry for tax not attributed to a taxAuthPartyId -->
             <clear-field field="debitEntry"/>
-            <!-- For now comment this since we are not using  ofbiz taxiation functionality-->
+           <!-- For now comment this since we are not using  ofbiz taxiation functionality-->
            <!--  <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
-           <set field="debitEntry.debitCreditFlag" value="D"/>
+            <set field="debitEntry.debitCreditFlag" value="D"/>
             <set field="debitEntry.organizationPartyId" from-field="invoice.partyIdFrom"/>
             <call-class-method method-name="getInvoiceUnattributedTaxTotal" class-name="org.ofbiz.accounting.invoice.InvoiceWorker"
                     ret-field="taxAmount">
@@ -2263,9 +2260,6 @@ under the License.
             <set field="creditEntry.debitCreditFlag" value="C"/>
             <!-- TODO -->
             <!--set field="creditEntry.glAccountTypeId" from-field=""/-->
-            <!-- <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
-            	<set field="creditEntry.glAccountId" from-field="paymentGlAccountTypeMap.glAccountId"/>
-            </if-not-empty> -->
             <set field="creditEntry.origAmount" from-field="payment.amount"/>
             <set field="creditEntry.origCurrencyUomId" from-field="payment.currencyUomId"/>
             <set field="creditEntry.organizationPartyId" from-field="payment.partyIdFrom"/>
@@ -2317,9 +2311,6 @@ under the License.
                 <set field="debitEntryWithDiffAmount.origAmount" from-field="amount"/>
                 <set field="debitEntryWithDiffAmount.origCurrencyUomId" from-field="payment.currencyUomId"/>
                 <set field="debitEntryWithDiffAmount.glAccountId" from-field="payment.overrideGlAccountId"/>
-                <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
-	            	<set field="debitEntryWithDiffAmount.glAccountId" from-field="paymentGlAccountTypeMap.glAccountId"/>
-	            </if-not-empty>
                 <set field="debitEntryWithDiffAmount.glAccountTypeId" from-field="debitGlAccountTypeId"/>
                 <set field="debitEntryWithDiffAmount.organizationPartyId" from-field="organizationPartyId"/>
                 <set field="acctgTransEntries[]" from-field="debitEntryWithDiffAmount" type="Object"/>
@@ -2356,7 +2347,7 @@ under the License.
             <entity-one entity-name="PaymentMethod" value-field="paymentMethod">
             	<field-map field-name="paymentMethodId" from-field="payment.paymentMethodId"/>
             </entity-one>                       
-            <set field="createFinAccountTransMap.glAccountId" from-field="paymentMethod.glAccountId"/>
+            <set field="createFinAccountTransMap.glAccountId" from-field="paymentMethod.glAccountId"/>           
             <if-not-empty field="paymentMethod.finAccountId">
             	<entity-one entity-name="FinAccount" value-field="finAccount">
                 	<field-map field-name="finAccountId" from-field="paymentMethod.finAccountId"/>
@@ -2376,7 +2367,7 @@ under the License.
                 <set field="depositWithdrawPaymentCtx.paymentIds" from-field="payment.paymentId"/>
                 <call-service service-name="depositWithdrawPayments" in-map-name="depositWithdrawPaymentCtx">
                     <result-to-field result-name="finAccountTransId"/>
-                </call-service>          	 
+                </call-service>        	 
         	</if-not-empty>
         </if-compare>
     </simple-method>
