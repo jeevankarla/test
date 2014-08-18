@@ -797,7 +797,83 @@
 			</widgets>
 		</section>
 	</screen>
-
+	
+	<screen name="EditInvoiceItemsNew">
+		<section>
+			<actions>
+				<set field="titleProperty" value="PageTitleListInvoices" />
+				<set field="tabButtonItem" value="listInvoiceItems" />
+				<set field="invoiceId" from-field="parameters.invoiceId" />
+				<set field="invoiceItemSeqd" from-field="parameters.invoiceItemSeqId" />
+				<property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR" />
+				<entity-one entity-name="Invoice" value-field="invoice" />
+				<entity-one entity-name="InvoiceItem" value-field="invoiceItem" />
+				<entity-and entity-name="InvoiceItem" list="invoiceItems">
+					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
+					<order-by field-name="invoiceItemSeqId" />
+				</entity-and>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
+				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
+					<condition-expr field-name="parentTypeId" value="PAYROL" />
+				</entity-condition>
+				<entity-condition entity-name="InvoiceItemType"	list="PayrolList"></entity-condition>
+				<service service-name="acctgInvoicePermissionCheck"	result-map="permResult">
+					<field-map field-name="mainAction" value="ARINVOICE_EDIT" />
+				</service>
+				<set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission" />
+				<service service-name="acctgInvoicePermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="APINVOICE_EDIT" />
+				</service>
+				<set field="hasApInvoiceEditPermission" from-field="permResult.hasPermission" />
+				<set field="localDispatcherName" value="${parameters.localDispatcherName}" />
+			</actions>
+			<widgets>
+				<decorator-screen name="CommonInvoiceDecorator"
+					location="${parameters.invoiceDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<condition>
+								<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission" />
+							</condition>
+							<widgets>
+								<screenlet title="${uiLabelMap.AccountingInvoiceItems}">
+									<include-form name="EditInvoiceItemsNew" location="component://accounting/widget/InvoiceForms.xml" />
+							   </screenlet>
+							</widgets>
+							<fail-widgets>
+								<screenlet title="${uiLabelMap.AccountingInvoiceItems}">
+									<include-form name="EditInvoiceItemsRead" location="component://accounting/widget/InvoiceForms.xml" />
+						   		</screenlet>
+							</fail-widgets>
+						</section>
+						
+						 <section>
+							<condition>
+								<and>
+									<if-compare field="invoice.invoiceTypeId" operator="not-equals"	value="PAYROL_INVOICE" />
+									<or>
+										<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission" />
+										<if-compare operator="equals" value="true" field="hasApInvoiceEditPermission" />
+									</or>
+								</and>
+							</condition>
+							<widgets>
+								<screenlet title="${uiLabelMap.AccountingInvoiceItemAdd}">
+									<section>
+										<widgets>
+											<include-form name="InvoiceItemEdit" location="component://accounting/widget/InvoiceForms.xml" />
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+						</section> 
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	<screen name="EditInvoiceTimeEntries">
 		<section>
 			<actions>

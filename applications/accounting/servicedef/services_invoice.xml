@@ -192,6 +192,18 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceItemSeqId" mode="INOUT" optional="true"/><!-- will optionally assign by the system -->
     </service>
+    <service name="createInvoiceItemAndTax" engine="java" default-entity-name="InvoiceItem"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createInvoiceItemAndTax">
+        <description>Create a new Invoice Item Record</description>
+         <required-permissions join-type="OR">
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="ARINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="APINVOICE_EDIT"/>
+       		<permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="invoiceItemSeqId" mode="INOUT" optional="true"/><!-- will optionally assign by the system -->
+    </service>
     <service name="updateInvoiceItem" engine="simple" default-entity-name="InvoiceItem"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="updateInvoiceItem">
         <description>Update existing Invoice Item Record</description>
@@ -202,6 +214,17 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    <service name="updateInvoiceItemAndTax" engine="java" default-entity-name="InvoiceItem"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="updateInvoiceItemAndTax">
+        <description>Update existing Invoice Item Record</description>
+         <required-permissions join-type="OR">
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="ARINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
     <service name="removeInvoiceItem" engine="simple" default-entity-name="InvoiceItem"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="removeInvoiceItem">
         <description>Remove an existing Invoice Item Record</description>
@@ -212,7 +235,16 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <attribute name="taxAuthPartyId" mode="IN" optional="true" type="String"/>
     </service>
-
+    <service name="removeInvoiceItemAndTax" engine="java" default-entity-name="InvoiceItem"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="removeInvoiceItemAndTax">
+        <description>Remove an existing Invoice Item Record</description>
+         <required-permissions join-type="OR">
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="ARINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
+      </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <attribute name="taxAuthPartyId" mode="IN" optional="true" type="String"/>
+    </service>
     <service name="createInvoiceRole" engine="simple" default-entity-name="InvoiceRole"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceRole">
         <description>Create a new Invoice Role Record</description>

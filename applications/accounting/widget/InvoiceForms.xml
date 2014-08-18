@@ -465,6 +465,48 @@ under the License.
             </hyperlink>
        </field>
     </form>
+    <form name="EditInvoiceItemsNew" type="list"  list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItemNew" title="Edit Invoice Items" paginate-target="listInvoiceItems"
+       odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+       <row-actions>
+           <set field="total" value="${bsh:
+               import java.math.BigDecimal;
+               if(quantity == null || quantity.compareTo(BigDecimal.ZERO) == 0) quantity = BigDecimal.ONE;
+               return(quantity.multiply(amount));}"/>
+       </row-actions>
+       <field name="invoiceId"><hidden/></field>
+       <field name="taxAuthPartyId"><hidden/></field>
+       <field name="invoiceItemSeqId" widget-style="buttontext" use-when="hasArInvoiceEditPermission">
+           <hyperlink target="listInvoiceItems"  description="${invoiceItemSeqId}">
+                <parameter param-name="invoiceId"/>
+                <parameter param-name="invoiceItemSeqId"/>
+            </hyperlink>
+        </field>
+       <field name="quantity" use-when="hasArInvoiceEditPermission"><text size="3"/></field>
+       <field name="invoiceItemTypeId" use-when="hasArInvoiceEditPermission">
+           <drop-down allow-empty="false">
+               <list-options list-name="invoiceItemTypes" key-name="invoiceItemTypeId" description="${description}"/>
+           </drop-down>
+       </field>
+       <field name="productId"><lookup target-form-name="LookupProduct" size="10"/></field>
+        <field name="description" use-when="hasArInvoiceEditPermission"><text size="30"/></field>
+       
+       <field name="amount" title="Amount" use-when="hasArInvoiceEditPermission"><text size="7"/></field>
+       <field name="bedPercent" title="Excise(%)" use-when="hasArInvoiceEditPermission"><text size="7"/></field>
+       <field name="cstPercent" title="CST(%)" use-when="hasArInvoiceEditPermission"><text size="7"/></field>
+       <field name="vatPercent" title="VAT(%)" use-when="hasArInvoiceEditPermission"><text size="7"/></field>
+       <field name="total" widget-area-style="align-text"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence display -->
+       <field name="uomId"><hidden/></field>
+       <field name="taxableFlag"><hidden/></field>
+       <!-- <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" use-when="hasArInvoiceEditPermission"><submit button-type="text-link"/></field> -->
+       <field name="removeButton" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasArInvoiceEditPermission">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItemAndTax">
+                <parameter param-name="invoiceId"/>
+                <parameter param-name="invoiceItemSeqId"/>
+                <parameter param-name="taxAuthPartyId" from-field="taxAuthPartyId"/>
+            </hyperlink>
+       </field>
+    </form>
+    
        <form name="EditInvoiceItemsRead" type="list"  list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItem" title="Edit Invoice Items" paginate-target="listInvoiceItems"
        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
        <row-actions>
@@ -535,7 +577,35 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-
+    
+	<form name="InvoiceItemEdit" type="single" target="createInvoiceItemAndTax" title="" default-map-name="invoiceItem" default-entity-name="InvoiceItem"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="invoiceId"><hidden/></field>
+        <field position="1" name="invoiceItemTypeId">
+            <drop-down allow-empty="false">
+                <list-options list-name="invoiceItemTypes" key-name="invoiceItemTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field position="1" name="description"><text size="80"/></field>
+        
+        <field position="1" name="productId">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+       
+        <field position="1" name="quantity"><text size="10"/></field>
+        
+        <field position="1" name="amount" title="Amount"><text size="10"/></field>
+       	<field position="1" name="bedPercent" title="Excise(%)"><text size="10"/></field>
+       	<field position="1" name="vatPercent" title="VAT(%)"><text size="10"/></field>
+       	<field position="1" name="cstPercent" title="CST(%)"><text size="10"/></field>
+        <field name="addButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem==null">
+            <submit button-type="button"/>
+        </field>
+        <field name="updateButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem!=null">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
     <form name="ListInvoiceStatus" list-name="invoiceStatus" target="" title="" type="list" paginate-target="ListInvoiceStatus"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="invoiceId"><hidden/></field>

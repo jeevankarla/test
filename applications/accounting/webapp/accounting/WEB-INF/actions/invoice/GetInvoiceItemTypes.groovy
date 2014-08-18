@@ -103,6 +103,15 @@ if ("SALES_INVOICE".equals(invoice.invoiceTypeId)) {
 		}
 	}
 	
+	taxTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("taxAuthPartyId", EntityOperator.NOT_EQUAL, null), UtilMisc.toSet("invoiceItemTypeId"), null, null, false);
+	taxTypeIds = EntityUtil.getFieldListFromEntityList(taxTypes, "invoiceItemTypeId", true);
+	map.each{ eachType ->
+		if(taxTypeIds && taxTypeIds.contains(eachType.invoiceItemTypeId)){
+			map.remove(eachType);
+		}
+	}
+	/*Debug.log("taxTypeIds#######################"+taxTypeIds);
+	Debug.log("#######################"+map);*/
 	invoiceItemTypes = EntityUtil.getRelated("InvoiceItemType", map);
 }
 context.invoiceItemTypes = invoiceItemTypes;

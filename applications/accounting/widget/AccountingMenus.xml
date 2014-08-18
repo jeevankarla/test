@@ -132,7 +132,7 @@
 			</link>
 		</menu-item>
 
-		<menu-item name="listInvoiceItems" title="${uiLabelMap.AccountingInvoiceItems}">
+		<!-- <menu-item name="listInvoiceItems" title="${uiLabelMap.AccountingInvoiceItems}">
 			<condition>
 				<and>
 					<not>
@@ -147,6 +147,24 @@
 				</and>
 			</condition>
 			<link target="listInvoiceItems">
+				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+			</link>
+		</menu-item> -->
+		<menu-item name="listInvoiceItems" title="${uiLabelMap.AccountingInvoiceItems}">
+			<condition>
+				<and>
+					<not>
+						<if-empty field="invoice.invoiceId" />
+					</not>
+					<or>
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_IN_PROCESS" />
+						<if-compare field="invoice.statusId" operator="equals"
+							value="INVOICE_RECEIVED" />
+					</or>
+				</and>
+			</condition>
+			<link target="listInvoiceItemsNew">
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
 		</menu-item>

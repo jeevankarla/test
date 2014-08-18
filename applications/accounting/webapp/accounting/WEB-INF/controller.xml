@@ -196,12 +196,24 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="listInvoiceItems"/>
     </request-map>
+    <request-map uri="listInvoiceItemsNew">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listInvoiceItemsNew"/>
+    </request-map>
+    
     <request-map uri="createInvoiceItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="createInvoiceItem"/>
         <response name="success" type="view" value="listInvoiceItems"/>
         <response name="error" type="view" value="listInvoiceItems"/>
     </request-map>
+    <request-map uri="createInvoiceItemAndTax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceItemAndTax"/>
+        <response name="success" type="view" value="listInvoiceItemsNew"/>
+        <response name="error" type="view" value="listInvoiceItemsNew"/>
+    </request-map>
+    
     <request-map uri="createInvoiceItemPayrol">
         <security https="true" auth="true"/>
         <event type="simple" invoke="createInvoiceItemPayrol" path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceEvents.xml"/>
@@ -214,12 +226,26 @@ under the License.
         <response name="success" type="view" value="listInvoiceItems"/>
         <response name="error" type="view" value="listInvoiceItems"/>
     </request-map>
+    <request-map uri="updateInvoiceItemAndTax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoiceItemAndTax"/>
+        <response name="success" type="view" value="listInvoiceItemsNew"/>
+        <response name="error" type="view" value="listInvoiceItemsNew"/>
+    </request-map>
+    
     <request-map uri="removeInvoiceItem">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeInvoiceItem"/>
         <response name="success" type="view" value="listInvoiceItems"/>
         <response name="error" type="view" value="listInvoiceItems"/>
     </request-map>
+    <request-map uri="removeInvoiceItemAndTax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeInvoiceItemAndTax"/>
+        <response name="success" type="view" value="listInvoiceItemsNew"/>
+        <response name="error" type="view" value="listInvoiceItemsNew"/>
+    </request-map>
+    
     <request-map uri="editInvoiceTimeEntries">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editInvoiceTimeEntries"/>
@@ -3139,6 +3165,7 @@ under the License.
     <view-map name="newInvoice" type="screen" page="component://accounting/widget/InvoiceScreens.xml#NewInvoice"/>
     <view-map name="editInvoice" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoice"/>
     <view-map name="listInvoiceItems" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceItems"/>
+    <view-map name="listInvoiceItemsNew" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceItemsNew"/>
     <view-map name="editInvoiceTimeEntries" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceTimeEntries"/>
     <view-map name="invoiceStatus" type="screen" page="component://accounting/widget/InvoiceScreens.xml#InvoiceStatus"/>
     <view-map name="editInvoiceApplications" type="screen" page="component://accounting/widget/InvoiceScreens.xml#EditInvoiceApplications"/>
