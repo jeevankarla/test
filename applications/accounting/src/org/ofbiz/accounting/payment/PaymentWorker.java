@@ -554,10 +554,11 @@ public class PaymentWorker {
 					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"CASH"));
 					condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH"));
 				}else{
-					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
-					if(UtilValidate.isNotEmpty(finAccountId)){
-						condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS,finAccountId));
+					if(UtilValidate.isEmpty(finAccountId)){
+						return result;  
 					}
+					condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+				    condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS,finAccountId));
 				}
 	            EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	            List cashFinAccountList = delegator.findList("FinAccount", cond, null, null, null, true);
