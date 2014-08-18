@@ -59,6 +59,7 @@ if(UtilValidate.isNotEmpty(activeEmpMap)){
 							}
 						}
 						employeePayrollAttedance=PayrollService.getEmployeePayrollAttedance(dctx,[employeeId:employee.employeeId,timePeriodStart:fromDate, timePeriodEnd: thruDate,userLogin : userLogin]);
+						Debug.log("employeePayrollAttedance======================"+employeePayrollAttedance);
 						shiftDetails=employeePayrollAttedance.get("shiftDetailMap");
 						if(UtilValidate.isNotEmpty(shiftDetails)){
 							Iterator shiftIter=shiftDetails.entrySet().iterator();
@@ -71,6 +72,8 @@ if(UtilValidate.isNotEmpty(activeEmpMap)){
 						employeeMap.put("workedSsDays",employeePayrollAttedance.get("noOfAttendedSsDays"));
 						employeeMap.put("payableDays",employeePayrollAttedance.get("noOfPayableDays"));
 						employeeMap.put("arrearDays",employeePayrollAttedance.get("noOfArrearDays"));
+						employeeMap.put("lateMin", employeePayrollAttedance.get("lateMin"));
+						employeeMap.put("extraMin", employeePayrollAttedance.get("extraMin"));
 						leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:employee.employeeId],["leaveTypeId"]);
 						leaveBalances.each{ leaveType ->
 							if(leaveType.leaveTypeId=="CL")
@@ -107,6 +110,18 @@ if(UtilValidate.isNotEmpty(activeEmpMap)){
 								caDays=employeePayrollAttedance.get("noOfPayableDays");
 							}
 							employeeMap.put("caDays",caDays);
+							heatAmount=0;
+							heatDays=0;
+							heatAmountList=casteIds=delegator.findByAnd("PartyBenefit", [partyIdTo:employee.employeeId,benefitTypeId:"PAYROL_BEN_HEATALLOW"],["benefitTypeId"]);
+							
+							if(UtilValidate.isNotEmpty(heatAmountList)){
+								heatAmountIds=heatAmountList.get(0).benfitTypeId;
+								heatAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:heatAmountIds,employeeId:employee.employeeId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
+								heatAmount=heatAmountMap.get("amount");
+								if(UtilValidate.isNotEmpty(heatAmount) && heatAmount!=null)
+								heatDays=employeePayrollAttedance.get("noOfPayableDays");
+							}
+							employeeMap.put("heatDays",heatDays);
 						}
 					employeeList.add(employeeMap);
 					}
@@ -118,6 +133,3 @@ if(UtilValidate.isNotEmpty(activeEmpMap)){
 	
 context.put("employeeList",employeeList);		
 	
-
-
-

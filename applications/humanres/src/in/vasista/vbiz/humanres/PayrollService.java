@@ -1711,7 +1711,8 @@ public class PayrollService {
 			result.put("noOfLeaveDays", 0.0);
 			result.put("noOfPayableDays",result.get("noOfCalenderDays"));
 			result.put("noOfArrearDays", 0.0);
-			
+			result.put("lateMin", 0.0);
+			result.put("extraMin", 0.0);
 			result.put("availedVehicleDays" , availedVehicleDays);
 			if(UtilValidate.isNotEmpty(payrollAttendance)){
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("lossOfPayDays"))){
@@ -1746,7 +1747,12 @@ public class PayrollService {
 				if(UtilValidate.isNotEmpty(payrollAttendance.get("noOfArrearDays"))){
 					result.put("noOfArrearDays", (payrollAttendance.getBigDecimal("noOfArrearDays")).doubleValue());
 				}
-				
+				if(UtilValidate.isNotEmpty(payrollAttendance.get("lateMin"))){
+					result.put("lateMin", (payrollAttendance.getBigDecimal("lateMin")).doubleValue());
+				}
+				if(UtilValidate.isNotEmpty(payrollAttendance.get("extraMin"))){
+					result.put("extraMin", (payrollAttendance.getBigDecimal("extraMin")).doubleValue());
+				}
 			}
     		
 	    }catch (GenericEntityException e) {

@@ -23,7 +23,7 @@ under the License.
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="20in"
                      margin-left="0.09in" margin-right="0.2in"  margin-top="0.09in" margin-bottom="0.2in" >
-                <fo:region-body margin-top="1.5in"/>
+                <fo:region-body margin-top="1.6in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -189,7 +189,9 @@ under the License.
                     <fo:table-column column-width="60pt"/>
                     <fo:table-column column-width="50pt"/>
                     <fo:table-body> 
-                    
+                    <fo:table-row>
+                    <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
+                    </fo:table-row>
                     <fo:table-row>
                     <fo:table-cell><fo:block text-align="left" keep-together="always">${sno}</fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="center" keep-together="always">${employee.employeeId}</fo:block></fo:table-cell>
@@ -231,18 +233,20 @@ under the License.
                     <#assign shift_gen=0>
                     <#assign shift_gen=employee.SHIFT_GEN>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if shift_gen !=0>${shift_gen?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
+                    <#assign lateHours=0>
+                    <#assign lateHours=(employee.lateMin)/60>
+                    <fo:table-cell><fo:block text-align="right" keep-together="always"><#if lateHours !=0>${lateHours?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
+                    
                     <fo:table-cell><fo:block text-align="right" keep-together="always"></fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block text-align="right" keep-together="always"></fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block text-align="right" keep-together="always"></fo:block></fo:table-cell>
+                    <#assign extraHours=0>
+                    <#assign extraHours=(employee.extraMin)/60>
+                    <fo:table-cell><fo:block text-align="right" keep-together="always"><#if extraHours !=0>${extraHours?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employee.cldDays !=0>${(employee.cldDays)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employee.caDays !=0>${(employee.caDays)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
-                    <fo:table-cell><fo:block text-align="right" keep-together="always"></fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employee.heatDays !=0>${(employee.heatDays)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"></fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employee.arrearDays !=0>${employee.arrearDays?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if employee.payableDays !=0>${(employee.payableDays)?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
-                    </fo:table-row>
-                    <fo:table-row>
-                    <fo:table-cell><fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:table-cell>
                     </fo:table-row>
                     <#assign sno=sno+1>
                     </fo:table-body>
