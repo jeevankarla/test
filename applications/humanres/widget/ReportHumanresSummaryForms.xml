@@ -699,7 +699,7 @@
         </field>
 		<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>
     </form>
-    <form name="EmplDetails" type="list" list-name="emplList" default-table-style="basic-table hover-bar" target="updateLateMins">
+    <form name="EmplDetails" type="list" list-name="emplList" default-table-style="basic-table hover-bar" target="updateLateMins" paginate="false">
     <actions>		    
 		    <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/editLateHours.groovy"/>
 	</actions>
