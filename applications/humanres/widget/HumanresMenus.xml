@@ -65,14 +65,13 @@
             <link target="analytics"/>
         </menu-item> 
         <menu-item name="newReports" title="New Reports">
-        <link target="newReports"/>
+        <link target="MastersReports"/>
         </menu-item>	   
         <menu-item name="benefitOrDeduction" title="Benefits/Deductions">
         	<condition>
             	<if-has-permission permission="HR"  action="_BENFDED_VIEW"/>
             </condition> 
             <link target="benefitOrDeduction"/>
-                             
         </menu-item>
         <menu-item name="Attendance" title="Attendance">
         	<condition>
@@ -83,8 +82,7 @@
         <menu-item name="busTimings" title="Daily Bus Timings">
         <link target="busTimings"/>
         </menu-item>          	                    
-	</menu>   
-
+	</menu>
 	<menu name="AttendanceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="DailyPunch" title="Daily Punch Details"> 
@@ -577,7 +575,21 @@
             <link target="FindInternalJobPosting"/>
         </menu-item>
     </menu>
-    
+	<menu name="NewReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="MastersReports" title="Masters Reports"> 
+        	<link target="MastersReports"/>
+        </menu-item>   
+        <menu-item name="LeaveReports" title="Leave Reports"> 
+        	<link target="LeaveReports"/>
+        </menu-item>  
+        <menu-item name="AttendanceReports" title="Attendance Reports">
+        <link target="AttendanceReports"></link>
+        </menu-item>    
+          <menu-item name="PayrollReports" title="Payroll Reports">
+        <link target="PayrollReports"></link>
+        </menu-item>     
+    </menu>	
     <menu name="InternalJobPostingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="InternalJobPosting" type="simple" menu-container-style="button-bar tab-bar" 
         default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
