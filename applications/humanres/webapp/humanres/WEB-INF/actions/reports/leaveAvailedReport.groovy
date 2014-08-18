@@ -89,12 +89,24 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						employeeMap.put("name", employeesMap.get(empLeaves.get("partyId")));
 						employeeMap.put("leaveFrom",UtilDateTime.toDateString(empLeaves.get("fromDate"), "dd-MM-yyyy"));
 						employeeMap.put("leaveThru",UtilDateTime.toDateString(empLeaves.get("thruDate"), "dd-MM-yyyy"));
-						employeeMap.put("noOfDays",leaveDetailmap.get(leaveTypeId));
-						employeeMap.put("leaveTypeId",empLeaves.get("leaveTypeId"));
+						
 						leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
 						if(UtilValidate.isNotEmpty(leaveBalances) && leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL"){
-							employeeMap.put("balance",leaveBalances.get(0).openingBalance);
+							balance=leaveBalances.get(0).openingBalance;
 						}
+						employeeMap.put("balance", balance);
+						int interval=0;
+						interval=(UtilDateTime.getIntervalInDays(empLeaves.get("fromDate"), empLeaves.get("thruDate"))+1);
+						BigDecimal intv=new BigDecimal(interval);
+						//BigDecimal bal=new BigDecimal(balance);
+						if(empLeaves.get("dayFractionId")=="FIRST_HALF" || empLeaves.get("dayFractionId")=="SECOND_HALF"){
+							intv=interval/2;
+							employeeMap.put("noOfDays",intv);
+							
+						}
+						employeeMap.put("noOfDays",intv);
+						employeeMap.put("leaveTypeId",empLeaves.get("leaveTypeId"));
+						
 						if(UtilValidate.isNotEmpty(employeeMap)){
 							employeesList.add(employeeMap);
 						}
