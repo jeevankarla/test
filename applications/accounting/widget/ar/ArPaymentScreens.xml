@@ -311,7 +311,7 @@ under the License.
     <screen name="NewIncomingAdvance">
        <section>
             <actions>
-                <set field="titleProperty" value="New Ar Adavnce"/>
+                <set field="titleProperty" value="New Ar Advance"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
@@ -326,7 +326,7 @@ under the License.
                         		<if-compare operator="equals" value="true" field="hasPaymentEditPermission"/>
                         	</condition>
                             <widgets>
-                                <screenlet title="New Incoming Deposit">
+                                <screenlet title="New Incoming Advances">
                                     <include-form name="NewAdvanceIn" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>
                             </widgets>
