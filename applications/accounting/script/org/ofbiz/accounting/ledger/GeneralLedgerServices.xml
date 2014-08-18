@@ -2348,6 +2348,9 @@ under the License.
             	<field-map field-name="paymentMethodId" from-field="payment.paymentMethodId"/>
             </entity-one>                       
             <set field="createFinAccountTransMap.glAccountId" from-field="paymentMethod.glAccountId"/>           
+             <if-not-empty field="parameters.finAccountId">
+            	   <set field="paymentMethod.finAccountId" from-field="parameters.finAccountId"/>
+             </if-not-empty>
             <if-not-empty field="paymentMethod.finAccountId">
             	<entity-one entity-name="FinAccount" value-field="finAccount">
                 	<field-map field-name="finAccountId" from-field="paymentMethod.finAccountId"/>

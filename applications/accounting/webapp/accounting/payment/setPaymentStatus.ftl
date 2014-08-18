@@ -14,6 +14,7 @@
 	var finAccountIdsList;
 	var testFlag;
 	var paymentMethodType;
+	var paymentMethod;
 	function dialogue(content, title) {
 		/* 
 		 * Since the dialogue isn't really a tooltip as such, we'll use a dummy
@@ -91,7 +92,7 @@
 		testFlag = checkFlag;
 		message += "<form action='setPaymentStatus' method='post' onsubmit='return disableButton();'><table cellspacing=10 cellpadding=10>" ; 		
 			message += "<tr class='h3'><td align='left' class='h3' width='40%'>Transaction Date:</td><td align='left' width='60%'><input class='h3' type='text' id='transactionDate' name='transactionDate' onmouseover='datepick()' size='17' readonly/></td></tr>";
-			            if(testFlag == true && paymentMethodType == 'FT_PAYIN'){
+			            if(testFlag == true && (paymentMethodType == 'FT_PAYIN' || paymentMethod == 'PAYMENTMETHOD4' || paymentMethod == 'PAYMENTMETHOD6')){
 			            	message += "<tr class='h3'><td align='left' class='h3' width='40%'>Finaccount:</td><td align='right' width='60%'><select name='finAccountId' id='finAccountId'>";
 			            	for(var i=0 ; i<finAccountIdsList.length ; i++){
 								var innerList=finAccountIdsList[i];
@@ -112,10 +113,10 @@
 	var estimatedDate;	
 	var dateFormatted;
 	var shipmentTypeId;
-	var paymentMethodTypeId;
 	
 	function populateParams(){
 		paymentMethodType = '${payment.paymentMethodTypeId?if_exists}';
+		paymentMethod = '${payment.paymentMethodId?if_exists}';
 	    jQuery("#statusId").val(jQuery("input[name=statusId]").val());
 	    jQuery("#transactionDate").val('${payment.paymentDate?if_exists}');
 	};
