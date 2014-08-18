@@ -208,7 +208,7 @@
     
     <!-- ================ Lookup Requests ============= -->
     <request-map uri="LookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="LookupFacility"/></request-map>
-    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <!-- end of request mappings -->
     
     <!-- View Mappings -->

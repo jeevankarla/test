@@ -189,9 +189,9 @@
     <Enumeration description="Route-2" enumCode="ROUTE2" enumId="ROUTE2" sequenceId="02" enumTypeId="BUS_ROUTE"/>  
     <Enumeration description="Route-3" enumCode="ROUTE3" enumId="ROUTE3" sequenceId="03" enumTypeId="BUS_ROUTE"/>  
     
-    <InsuranceType description="LIC of KMF"  insuranceTypeId="LIC_KMF" deductionTypeId="PAYROL_DD_LIC_KMF"/>
+    <InsuranceType description="LIC of KMF"  insuranceTypeId="LIC_KMF"/>
     <InsuranceType description="Mother Dairy LIC"  insuranceTypeId="LIC_MD_INSR" deductionTypeId=""/>
-    <InsuranceType description="Recurring Deposit" insuranceTypeId="RECCR_DEPOSIT" deductionTypeId="PAYROL_DD_RD_BNK"/>
+    <InsuranceType description="Recurring Deposit" insuranceTypeId="RECCR_DEPOSIT" deductionTypeId=""/>
     
     <EnumerationType description="second Saturday AND general holiday Encash Status" enumTypeId="ENCASHMENT_STATUS" hasTable="N" parentTypeId=""/>
     <Enumeration description="Cash Encash" enumCode="CASH_ENCASHMENT" enumId="CASH_ENCASHMENT" sequenceId="01" enumTypeId="ENCASHMENT_STATUS"/>
