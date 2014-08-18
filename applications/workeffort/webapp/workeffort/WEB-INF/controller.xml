@@ -598,7 +598,7 @@ under the License.
     <request-map uri="LookupWorkEffort"><security https="true" auth="true"/><response name="success" type="view" value="LookupWorkEffort"/></request-map>
     <request-map uri="LookupTimesheet"><security https="true" auth="true"/><response name="success" type="view" value="LookupTimesheet"/></request-map>
 
-    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
     <request-map uri="LookupPartyGroup"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyGroup"/></request-map>
     <request-map uri="LookupPartyAndUserLoginAndPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/></request-map>

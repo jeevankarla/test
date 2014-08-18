@@ -1718,11 +1718,11 @@ under the License.
     
 
     <!-- ===================Lookup Request===================== -->
-    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
     <request-map uri="LookupBudget"><security auth="true" https="true"/><response name="success" type="view" value="LookupBudget"/></request-map>
     <request-map uri="LookupBudgetItem"><security auth="true" https="true"/><response name="success" type="view" value="LookupBudgetItem"/></request-map>
-    <request-map uri="LookupEmplPosition"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmplPosition"/></request-map>
+    <request-map uri="LookupEmplPosition" track-serverhit="false" track-visit="false"><security auth="true" https="true" /><response name="success" type="view" value="LookupEmplPosition"/></request-map>
     <request-map uri="LookupTerminationReason"><security auth="true" https="true"/><response name="success" type="view" value="LookupTerminationReason"/></request-map>
     <request-map uri="LookupSalaryStep"><security auth="true" https="true"/><response name="success" type="view" value="LookupSalaryStep"/></request-map>
     <request-map uri="LookupPayGrade"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayGrade"/></request-map>
@@ -1747,7 +1747,7 @@ under the License.
     <request-map uri="updateDeductionType"><security https="true" auth="true"/><event type="service" invoke="updateDeductionType"/><response name="success" type="view" value="EditDeductionType"/><response name="error" type="view" value="EditDeductionType"/></request-map>
     <request-map uri="deleteDeductionType"><security https="true" auth="true"/><event type="service" invoke="deleteDeductionType"/><response name="success" type="view" value="FindDeductionTypes"/><response name="error" type="view" value="FindDeductionTypes"/></request-map>
     <request-map uri="LookupDeductionTypes"><security auth="true" https="true"/><response name="success" type="view" value="LookupDeductionTypes"/></request-map>
-	<request-map uri="LookupEmployeeName"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployeeName"/></request-map>
+	<request-map uri="LookupEmployeeName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmployeeName"/></request-map>
     <request-map uri="LookupTerminationReason"><security auth="true" https="true"/><response name="success" type="view" value="LookupTerminationReason"/></request-map>
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <view-map name="LookupTerminationReason"  type="screen" page="component://humanres/widget/LookupScreens.xml#LookupTerminationReason"/>

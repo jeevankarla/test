@@ -1117,7 +1117,7 @@ under the License.
 
     <!-- Lookup request mappings -->
     <request-map uri="CreateRelationship"><security auth="true" https="true"></security><response name="success" type="view" value="CreateRelationship"></response></request-map>
-    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPartyName" track-serverhit="false" track-visit="false"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
     <request-map uri="LookupPartyEmail"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyEmail"/></request-map>
     <request-map uri="LookupPerson"><security https="true" auth="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
     <request-map uri="LookupContact"><security https="true" auth="true"/><response name="success" type="view" value="LookupContact"/></request-map>
