@@ -450,14 +450,15 @@
             </widgets>
         </section>
     </screen>
- <screen name="newReports">
+    
+ 	<screen name="MastersReports">
     	<section>
     		<actions>  
 	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
 				</entity-condition>
 	    		<set field="titleProperty" value="HumanResFindEmployment"/>
-	            <set field="headerItem" value="newReports"/>
-				<set field="tabButtonItem" value="newReports" />   	
+	            <set field="tabButtonItem" value="newReports"/>
+				<set field="tabButtonItem2" value="MastersReports" />   	
 	    		<set field="screenFlag" value="newReports"/>
 	    		<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
                 	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
@@ -471,15 +472,136 @@
 					<order-by field-name="sequenceNum"/>					
 				</entity-condition>
     		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
-                	                 
                 </entity-condition>  	
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+	    		<set field="reportFrequencyFlag" value="MastersReports"/>
     		</actions>
     		<widgets>
     		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
     			<decorator-section name="body">
     				<section>
     					<widgets>
+    					<include-menu name="NewReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/> 
+    					<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/Reports.ftl"></html-template></html></platform-specific>
+    					</widgets>
+    				</section>
+    			</decorator-section>    		
+    		</decorator-screen>
+    		</widgets>
+    	</section>
+    </screen>
+    
+    <screen name="LeaveReports">
+    	<section>
+    		<actions>  
+	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
+				</entity-condition>
+	    		<set field="titleProperty" value="HumanResFindEmployment"/>
+	            <set field="tabButtonItem" value="newReports"/>
+				<set field="tabButtonItem2" value="LeaveReports" />   	
+	    		<set field="screenFlag" value="newReports"/>
+	    		<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>	
+	    		<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
+					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
+					<order-by field-name="sequenceNum"/>
+				</entity-condition>
+				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<order-by field-name="sequenceNum"/>					
+				</entity-condition>
+    		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
+                </entity-condition>  	
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+	    		<set field="reportFrequencyFlag" value="LeaveReports"/>
+    		</actions>
+    		<widgets>
+    		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+    			<decorator-section name="body">
+    				<section>
+    					<widgets>
+    					<include-menu name="NewReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/> 
+    					<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/Reports.ftl"></html-template></html></platform-specific>
+    					</widgets>
+    				</section>
+    			</decorator-section>    		
+    		</decorator-screen>
+    		</widgets>
+    	</section>
+    </screen>
+    
+    <screen name="AttendanceReports">
+    	<section>
+    		<actions>  
+	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
+				</entity-condition>
+	    		<set field="titleProperty" value="HumanResFindEmployment"/>
+	            <set field="tabButtonItem" value="newReports"/>
+				<set field="tabButtonItem2" value="AttendanceReports" />   	
+	    		<set field="screenFlag" value="newReports"/>
+	    		<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>	
+	    		<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
+					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
+					<order-by field-name="sequenceNum"/>
+				</entity-condition>
+				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<order-by field-name="sequenceNum"/>					
+				</entity-condition>
+    		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
+                </entity-condition>  	
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+    			<set field="reportFrequencyFlag" value="AttendanceReports"/>
+    		</actions>
+    		<widgets>
+    		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+    			<decorator-section name="body">
+    				<section>
+    					<widgets>
+    					<include-menu name="NewReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/> 
+    					<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/Reports.ftl"></html-template></html></platform-specific>
+    					</widgets>
+    				</section>
+    			</decorator-section>    		
+    		</decorator-screen>
+    		</widgets>
+    	</section>
+    </screen>
+    
+    <screen name="PayrollReports">
+    	<section>
+    		<actions>  
+	    		<entity-condition list="leaveTypeList" entity-name="EmplLeaveType">
+				</entity-condition>
+	    		<set field="titleProperty" value="HumanResFindEmployment"/>
+	            <set field="tabButtonItem" value="newReports"/>
+				<set field="tabButtonItem2" value="PayrollReports" />   	
+	    		<set field="screenFlag" value="newReports"/>
+	    		<entity-condition list="timePeriodList" entity-name="CustomTimePeriod" use-cache="true" filter-by-date="false" >
+                	<condition-expr field-name="periodTypeId" operator="equals" value="ATTENDANCE_MONTH"/>
+                	<order-by field-name="-thruDate"/>
+                </entity-condition>	
+	    		<entity-condition list="allBenefitsTypeList" entity-name="BenefitType">
+					<condition-expr field-name="benefitTypeId" operator="not-equals" value="PAYROL_BEN_SALARY"/>
+					<order-by field-name="sequenceNum"/>
+				</entity-condition>
+				<entity-condition list="allDeductionTypeList" entity-name="DeductionType">
+					<order-by field-name="sequenceNum"/>					
+				</entity-condition>
+    		 	<entity-condition entity-name="InsuranceType" list="finalInsuranceTypeList" use-cache="true">
+                </entity-condition>  	
+	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
+    			<set field="reportFrequencyFlag" value="PayrollReports"/>
+    		</actions>
+    		<widgets>
+    		<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+    			<decorator-section name="body">
+    				<section>
+    					<widgets>
+    					<include-menu name="NewReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/> 
     					<platform-specific><html><html-template location="component://humanres/webapp/humanres/humanres/Reports.ftl"></html-template></html></platform-specific>
     					</widgets>
     				</section>

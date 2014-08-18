@@ -727,9 +727,21 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindBenefitsOrDeductions"/>
     </request-map>
-    <request-map uri="newReports">
+    <request-map uri="MastersReports">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="NewReports"></response>
+    	<response name="success" type="view" value="MastersReports"></response>
+    </request-map>
+    <request-map uri="LeaveReports">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="LeaveReports"></response>
+    </request-map>
+    <request-map uri="AttendanceReports">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="AttendanceReports"></response>
+    </request-map>
+    <request-map uri="PayrollReports">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="PayrollReports"></response>
     </request-map>
     <request-map uri="updateEmployeeBenefitsOrDeductions">
        <security https="true" auth="true"/>
@@ -1772,7 +1784,10 @@ under the License.
     <view-map name="ListEmployments" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListEmployments"/>
     <view-map name="EditPartyBenefits" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPartyBenefits"/>
     <view-map name="FindBenefitsOrDeductions" type="screen" page="component://humanres/widget/EmploymentScreens.xml#FindBenefitsOrDeductions"/>
-    <view-map name="NewReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#newReports"></view-map>
+    <view-map name="MastersReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#MastersReports"></view-map>
+    <view-map name="LeaveReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#LeaveReports"></view-map>
+    <view-map name="AttendanceReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#AttendanceReports"></view-map>
+    <view-map name="PayrollReports" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PayrollReports"></view-map>
     <view-map name="EditPayrollPreferences" type="screen" page="component://humanres/widget/EmploymentScreens.xml#EditPayrollPreferences"/>
     <view-map name="ListPayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#ListPayHistories"/>
     <view-map name="PayHistories" type="screen" page="component://humanres/widget/EmploymentScreens.xml#PayHistories"/>
