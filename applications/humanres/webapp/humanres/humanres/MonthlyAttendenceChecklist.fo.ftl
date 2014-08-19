@@ -228,7 +228,7 @@ under the License.
                     <#assign shift_02=employee.SHIFT_02>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if shift_02 !=0>${shift_02?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <#assign shift_03=0>
-                    <#assign shift_03=employee.SHIFT_03>
+                    <#assign shift_03=employee.SHIFT_NIGHT>
                     <fo:table-cell><fo:block text-align="right" keep-together="always"><#if shift_03 !=0>${shift_03?if_exists?string("##0.0")}</#if></fo:block></fo:table-cell>
                     <#assign shift_gen=0>
                     <#assign shift_gen=employee.SHIFT_GEN>
