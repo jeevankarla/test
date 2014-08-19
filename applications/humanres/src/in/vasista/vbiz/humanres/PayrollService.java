@@ -211,6 +211,10 @@ public class PayrollService {
 	       					Debug.logError("Problems in service Parol Header", module);
 				  			return ServiceUtil.returnError("Problems in service Parol Header");
 	       				}
+	       				int emplCounter = 0;
+	    	    		double elapsedSeconds;
+	    	    	    Timestamp startTimestamp = UtilDateTime.nowTimestamp();
+	    	    	    
 	       				List payHeaderList = (List)payHeadResult.get("itemsList");
 	       				for(int i=0;i<payHeaderList.size();i++){
 	       					Map payHeaderValue = (Map)payHeaderList.get(i);
@@ -226,7 +230,11 @@ public class PayrollService {
 							inputItem.put("partyId", payHeaderValue.get("partyIdFrom"));
 							inputItem.put("timePeriodId", customTimePeriodId);
 							inputItem.put("periodBillingId", periodBillingId);
-							
+							emplCounter++;
+		               		if ((emplCounter % 20) == 0) {
+		               			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+		               			Debug.logImportant("Completed " + emplCounter + " employee's [ in " + elapsedSeconds + " seconds]", module);
+		               		}
 							Map payHeadItemResult = preparePayrolItems(dctx,inputItem);
 							if(ServiceUtil.isError(payHeadItemResult)){
 		       					Debug.logError("Problems in service Parol Header Item", module);
@@ -2566,11 +2574,11 @@ public class PayrollService {
 		        	return ServiceUtil.returnError("invalid period billing");
 		        }
 				Map<String,  Object> runSACOContext = UtilMisc.<String, Object>toMap("payrollPeriodId", payrollPeriodId, "orgPartyId", orgPartyId, "periodBillingId",periodBillingId, "userLogin", userLogin);
-				result = dispatcher.runSync("populatePayrollAttedance", runSACOContext);
-				if(ServiceUtil.isError(result)){
+				Map resultAttd = dispatcher.runSync("populatePayrollAttedance", runSACOContext);
+				if(ServiceUtil.isError(resultAttd)){
 					periodBilling.set("statusId", "GENERATION_FAIL");
 					delegator.store(periodBilling);
-					return ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(result));
+					return ServiceUtil.returnSuccess(ServiceUtil.getErrorMessage(resultAttd));
 				}
 				periodBilling.set("statusId", "GENERATED");
 				delegator.store(periodBilling);
@@ -2656,6 +2664,9 @@ public class PayrollService {
 	    		resultMap = HumanresService.getGeneralHoliDays(dctx, input);
 	    		List<GenericValue> holiDayList = (List<GenericValue>)resultMap.get("holiDayList");
 	    		List lopCalDates = FastList.newInstance();
+	    		int emplCounter = 0;
+	    		double elapsedSeconds;
+	    	    Timestamp startTimestamp = UtilDateTime.nowTimestamp();
 	    		// second saturday
 	    		Timestamp secondSaturDay = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.getMonthStart(attdTimePeriodEnd),0,2,timeZone,locale), -1);
 	    		//Debug.log("second saturday===="+secondSaturDay);
@@ -2675,6 +2686,11 @@ public class PayrollService {
 	        		double lossOfPayDays =0;
 	        		double lateMin =0;
 	        		double extraMin =0;
+	        		emplCounter++;
+               		if ((emplCounter % 20) == 0) {
+               			elapsedSeconds = UtilDateTime.getInterval(startTimestamp, UtilDateTime.nowTimestamp())/1000;
+               			Debug.logImportant("Completed " + emplCounter + " employee [ in " + elapsedSeconds + " seconds]", module);
+               		}
 	        		BigDecimal noOfEmployementDays = new BigDecimal(noOfCalenderDays);
 	        		Timestamp employementFromaDate = UtilDateTime.getDayStart(employement.getTimestamp("fromDate"));
 	        		Timestamp employementThruDate = employement.getTimestamp("thruDate");
@@ -2809,7 +2825,12 @@ public class PayrollService {
 			    				if((inPunch.size() ==1) && (dayShifts.contains("SHIFT_NIGHT") || (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("O"))))){
 			    					shiftFalg = Boolean.TRUE;
 			    				}
+			    				// here handle multiple shifts on same day
+				    			if(UtilValidate.isNotEmpty(dayShifts) && dayShifts.size() >1){
+				    				noOfEmployementDays = noOfEmployementDays.add(new BigDecimal(dayShifts.size()-1));
+				    			}
 			    			}
+			    			
 			    			List encashmentStatusList = EntityUtil.getFieldListFromEntityList(dayShiftList, "encashmentStatus", true);
 			    			if((UtilValidate.isNotEmpty(dayPunchList) && dayPunchList.size() >=2) || shiftFalg){
 			    				if(!shiftFalg && (dayPunchList.size()%2) !=0){
@@ -2898,7 +2919,7 @@ public class PayrollService {
 				    			
 				    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
 				    			String availedCanteen = emplDailyAttendanceDetail.getString("availedCanteen");
-				    			if(UtilValidate.isNotEmpty(shiftDetailMap) && UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
+				    			if(UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
 				    				shiftDetailMap.put(shiftType,1);
 				    			}else{
 				    				shiftDetailMap.put(shiftType,(((Integer)(shiftDetailMap.get(shiftType))).intValue()+1));
