@@ -2877,10 +2877,10 @@ public class PayrollService {
 			    		inputCtx.put("partyId", employeeId);
 			    		inputCtx.put("timePeriodStart", attdTimePeriodStart);
 			    		inputCtx.put("timePeriodEnd", attdTimePeriodEnd);
-			    		inputCtx.put("leaveTypeId", "HPL");
+			    		//inputCtx.put("leaveTypeId", "HPL");
 			    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
 			    		List<GenericValue> leavesList = (List)resultMap.get("leaves");
-			    		input.put("leaveTypeId", "CML");
+			    		//input.put("leaveTypeId", "CML");
 			    		resultMap = EmplLeaveService.fetchLeaveDaysForPeriod(dctx, input);
 			    		leavesList.addAll((List)resultMap.get("leaves"));
 			    		emplDailyAttendanceDetailList = delegator.findList("EmplDailyAttendanceDetail", condition, null,null, null, false);
@@ -2890,7 +2890,8 @@ public class PayrollService {
 				    			String shiftType = emplDailyAttendanceDetail.getString("shiftType");
 				    			if(UtilValidate.isNotEmpty(leavesList)){
 				    				List cDayLeaves = EntityUtil.filterByDate(leavesList, UtilDateTime.toTimestamp(emplDailyAttendanceDetail.getDate("date")));
-					    			if(UtilValidate.isNotEmpty(cDayLeaves)){
+					    			List cDayLeaveFraction = EntityUtil.getFieldListFromEntityList(cDayLeaves, "dayFractionId", true);
+				    				if(UtilValidate.isNotEmpty(cDayLeaves) &&  UtilValidate.isNotEmpty(cDayLeaveFraction)){
 					    				continue;
 					    			}
 				    			}
