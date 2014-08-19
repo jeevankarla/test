@@ -92,7 +92,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						employeeMap.put("leaveFrom",UtilDateTime.toDateString(empLeaves.get("fromDate"), "dd-MM-yyyy"));
 						employeeMap.put("leaveThru",UtilDateTime.toDateString(empLeaves.get("thruDate"), "dd-MM-yyyy"));
 						
-						
+						balance = 0;
 						int interval=0;
 						interval=(UtilDateTime.getIntervalInDays(empLeaves.get("fromDate"), empLeaves.get("thruDate"))+1);
 						BigDecimal intv=new BigDecimal(interval);
