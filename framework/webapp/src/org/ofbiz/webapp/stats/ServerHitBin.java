@@ -698,7 +698,8 @@ public class ServerHitBin {
             // every server hit even with equal startTimes but that could be
             // solved adding a counter to the ServerHit's PK (a counter
             // counting multiple hits at the same startTime).
-            serverHit.create();
+            //serverHit.create();
+            delegator.createOrStore(serverHit ,false);
         }
     }
 }
