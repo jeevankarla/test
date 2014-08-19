@@ -1,3 +1,4 @@
+import org.apache.derby.impl.sql.compile.OrderByColumn;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
@@ -10,6 +11,7 @@ import freemarker.core.SequenceBuiltins.sort_byBI;
 import in.vasista.vbiz.humanres.EmplLeaveService;
 import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresApiService;
+import in.vasista.vbiz.humanres.HumanresService;
 
 
 dctx = dispatcher.getDispatchContext();
@@ -36,6 +38,15 @@ try {
 context.fromlarDate=UtilDateTime.toDateString(fromDate,"dd-MM-yyyy");
 context.thrularDate=UtilDateTime.toDateString(thruDate,"dd-MM-yyyy");
 
+hrMonthDates=[];
+List conList=[];
+conList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS,"HR_MONTH"));
+conList.add(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(thruDate)));
+con=EntityCondition.makeCondition(conList,EntityOperator.AND);
+hrMonthDates = delegator.findList("CustomTimePeriod", con ,null,UtilMisc.toList("-thruDate"), null, false );
+customTimePeriodIds=EntityUtil.getFirst(hrMonthDates);
+customTimePeriodId=customTimePeriodIds.get("customTimePeriodId");
+
 leaveTypeIds=[];
 if(parameters.leaveTypeId=="ALL"){
 	leaveList=delegator.findList("EmplLeaveType",null,null,null,null,false);
@@ -49,24 +60,30 @@ else{
 	leaveTypeIds.add(parameters.leaveTypeId);
 }
 
-
 employeesResult=[];
 employeeList=[];
 empIds=[];
 employeesMap=[:];
-activeEmpMap=HumanresApiService.getActiveEmployees(dctx,[userLogin:userLogin]);
-if(UtilValidate.isNotEmpty(activeEmpMap)){
-	employeesResult=activeEmpMap.get("employeesResult");
-	if(UtilValidate.isNotEmpty(employeesResult)){
-		employeeList=employeesResult.get("employeeList");
-	}
-	if(UtilValidate.isNotEmpty(employeeList)){
-		employeeList.each {employee ->
-			empIds.add(employee.get("employeeId"));
-			employeesMap.put(employee.get("employeeId"), employee.get("name"));
+
+def populateChildren(org, employeeList) {
+	EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:"Company"]);
+	employments=EmploymentsMap.get("employementList");
+	employments.each { employment ->
+		String lastName="";
+		if(employment.lastName!=null){
+			lastName=employment.lastName;
 		}
+		empIds.add(employment.partyId);
+		employeesMap.put(employment.partyId, employment.firstName + " " + lastName);
 	}
 }
+
+employeeList = [];
+internalOrgs=[];
+context.internalOrgs=internalOrgs;
+context.employeeList=employeeList;
+company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
+populateChildren(company, employeeList);
 
 finalMap=[:];
 leaveBalanceMap=[:];
@@ -91,8 +108,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						employeeMap.put("name", employeesMap.get(empLeaves.get("partyId")));
 						employeeMap.put("leaveFrom",UtilDateTime.toDateString(empLeaves.get("fromDate"), "dd-MM-yyyy"));
 						employeeMap.put("leaveThru",UtilDateTime.toDateString(empLeaves.get("thruDate"), "dd-MM-yyyy"));
-						
-						balance = 0;
+
 						int interval=0;
 						interval=(UtilDateTime.getIntervalInDays(empLeaves.get("fromDate"), empLeaves.get("thruDate"))+1);
 						BigDecimal intv=new BigDecimal(interval);
@@ -114,7 +130,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						if(UtilValidate.isNotEmpty(emplLeaveBalance)){
 							balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
 						}else{
-							leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
+							leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),customTimePeriodId:customTimePeriodId,leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
 							if(UtilValidate.isNotEmpty(leaveBalances) && leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL"){
 								balance=leaveBalances.get(0).openingBalance;
 							}
@@ -123,8 +139,6 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						emplLeaveBalance.putAt(empLeaves.get("leaveTypeId"), balance);
 						leaveBalanceMap.put(empLeaves.get("partyId"), emplLeaveBalance);
 						employeeMap.put("balance", balance);
-						
-						
 						if(UtilValidate.isNotEmpty(employeeMap)){
 							employeesList.add(employeeMap);
 						}
