@@ -46,6 +46,8 @@ JSONArray punchListJSON = new JSONArray();
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodStart)));
 conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.LESS_THAN_EQUAL_TO , UtilDateTime.toSqlDate(timePeriodEnd)));
+// currently other punctypes such as OOD are not handled
+conditionList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS , "Normal")); 
 conditionList.add(EntityCondition.makeCondition("partyId", employeeId));
 
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
