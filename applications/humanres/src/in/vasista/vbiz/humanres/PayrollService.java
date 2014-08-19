@@ -2898,7 +2898,7 @@ public class PayrollService {
 				    			
 				    			//String availedVehicleAllowance = emplDailyAttendanceDetail.getString("availedVehicleAllowance");
 				    			String availedCanteen = emplDailyAttendanceDetail.getString("availedCanteen");
-				    			if(UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
+				    			if(UtilValidate.isNotEmpty(shiftDetailMap) && UtilValidate.isEmpty(shiftDetailMap.get(shiftType))){
 				    				shiftDetailMap.put(shiftType,1);
 				    			}else{
 				    				shiftDetailMap.put(shiftType,(((Integer)(shiftDetailMap.get(shiftType))).intValue()+1));
