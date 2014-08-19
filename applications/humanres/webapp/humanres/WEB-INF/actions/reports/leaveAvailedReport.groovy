@@ -69,6 +69,8 @@ if(UtilValidate.isNotEmpty(activeEmpMap)){
 }
 
 finalMap=[:];
+leaveBalanceMap=[:];
+
 if(UtilValidate.isNotEmpty(leaveTypeIds)){
 		leaveTypeIds.each { leaveTypeId ->
 			employeesList=[];
@@ -90,11 +92,7 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						employeeMap.put("leaveFrom",UtilDateTime.toDateString(empLeaves.get("fromDate"), "dd-MM-yyyy"));
 						employeeMap.put("leaveThru",UtilDateTime.toDateString(empLeaves.get("thruDate"), "dd-MM-yyyy"));
 						
-						leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
-						if(UtilValidate.isNotEmpty(leaveBalances) && leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL"){
-							balance=leaveBalances.get(0).openingBalance;
-						}
-						employeeMap.put("balance", balance);
+						
 						int interval=0;
 						interval=(UtilDateTime.getIntervalInDays(empLeaves.get("fromDate"), empLeaves.get("thruDate"))+1);
 						BigDecimal intv=new BigDecimal(interval);
@@ -106,6 +104,26 @@ if(UtilValidate.isNotEmpty(leaveTypeIds)){
 						}
 						employeeMap.put("noOfDays",intv);
 						employeeMap.put("leaveTypeId",empLeaves.get("leaveTypeId"));
+						
+						//balance 
+						emplLeaveBalance=[:];
+						if(UtilValidate.isNotEmpty(leaveBalanceMap.get(empLeaves.get("partyId")))){
+							emplLeaveBalance=leaveBalanceMap.get(empLeaves.get("partyId"));
+						}
+						
+						if(UtilValidate.isNotEmpty(emplLeaveBalance)){
+							balance = emplLeaveBalance.getAt(empLeaves.get("leaveTypeId"));
+						}else{
+							leaveBalances = delegator.findByAnd("EmplLeaveBalanceStatus",[partyId:empLeaves.get("partyId"),leaveTypeId:empLeaves.get("leaveTypeId")],["openingBalance"]);
+							if(UtilValidate.isNotEmpty(leaveBalances) && leaveTypeId=="CL" || leaveTypeId=="EL" || leaveTypeId=="HPL"){
+								balance=leaveBalances.get(0).openingBalance;
+							}
+						}
+						balance = balance-intv;
+						emplLeaveBalance.putAt(empLeaves.get("leaveTypeId"), balance);
+						leaveBalanceMap.put(empLeaves.get("partyId"), emplLeaveBalance);
+						employeeMap.put("balance", balance);
+						
 						
 						if(UtilValidate.isNotEmpty(employeeMap)){
 							employeesList.add(employeeMap);
