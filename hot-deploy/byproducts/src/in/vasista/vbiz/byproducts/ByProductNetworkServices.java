@@ -42,6 +42,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityFunction;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -5602,7 +5603,10 @@ public class ByProductNetworkServices {
 		if (context.get("includeReturnOrders") != null) {
 			includeReturnOrders = (Boolean) context.get("includeReturnOrders");
 		}
-		List<GenericValue> orderItems = FastList.newInstance();
+//		List<GenericValue> orderItems = FastList.newInstance();
+    	EntityListIterator orderItemsIter = null;
+		List<GenericValue> returnItemsList = FastList.newInstance();
+
 		Map productAttributes = new TreeMap<String, Object>();
 		List productSubscriptionTypeList = FastList.newInstance();
 		Map<String, String> dayShipmentMap = FastMap.newInstance();
@@ -5663,7 +5667,7 @@ public class ByProductNetworkServices {
 			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			// Debug.logInfo("condition=" + condition, module);
 			if (!UtilValidate.isEmpty(shipmentIds)) {
-				orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition,	null, null, null, false);
+				orderItemsIter = delegator.find("OrderHeaderItemProductShipmentAndFacility", condition,	null, null, null, null);
 			}
 			// Returns Logic Starts here
 			if (includeReturnOrders) {
@@ -5680,7 +5684,8 @@ public class ByProductNetworkServices {
 				
 				returnConditionList.add(EntityCondition.makeCondition("returnStatusId", EntityOperator.EQUALS,"RETURN_ACCEPTED"));
 				EntityCondition returnCondition = EntityCondition.makeCondition(returnConditionList, EntityOperator.AND);
-				List<GenericValue> returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility",returnCondition, null, null, null, false);
+				returnItemsList = delegator.findList("ReturnHeaderItemAndShipmentAndFacility",returnCondition, null, null, null, false);
+/*				
 				List<GenericValue> newReturnItemList = FastList.newInstance();
 				for (GenericValue returnItem : returnItemsList) {
 					String boothId = "";
@@ -5704,16 +5709,14 @@ public class ByProductNetworkServices {
 					}
 					
 					if (UtilValidate.isNotEmpty(facility)) {
-						// lets override productSubscriptionTypeId based on facility category
 						if (facility.getString("categoryTypeEnum").equals("SO_INST")) {
 							productSubscriptionTypeId = "SPECIAL_ORDER";
 						} else if (facility.getString("categoryTypeEnum").equals("CR_INST")) {
 							productSubscriptionTypeId = "CREDIT";
 						}
 					}
-					// to Get related Order for return
+					
 					GenericValue returnHeaderOrderItem = EntityUtil.getFirst(EntityUtil.filterByAnd(orderItems,UtilMisc.toMap("productId", productId,"originFacilityId", boothId,"shipmentId", shipId,"productSubscriptionTypeId",productSubscriptionTypeId)));
-					// making Same record with minus Quantity
 					if (UtilValidate.isNotEmpty(returnHeaderOrderItem)) {
 						GenericValue newOrderReturnItem = delegator.makeValue("OrderHeaderItemProductShipmentAndFacility");
 						newOrderReturnItem.putAll(returnHeaderOrderItem);
@@ -5722,9 +5725,10 @@ public class ByProductNetworkServices {
 					}
 					if (UtilValidate.isEmpty(returnHeaderOrderItem)) {
 						Debug.logImportant("==InConsitentREcord=####==boothId==" + boothId+ "==shipId==" + shipId+ "==productSubscriptionTypeId="+ productSubscriptionTypeId+ "==productId=" + productId, "");
-					}
+					}					
 				}
-				orderItems.addAll(newReturnItemList);
+*/
+//				orderItems.addAll(newReturnItemList);
 			}// end of returns check
 
 		} catch (GenericEntityException e) {
@@ -5746,12 +5750,28 @@ public class ByProductNetworkServices {
 		Map<String, Object> productTotals = new TreeMap<String, Object>();
 		Map<String, Object> supplyTypeTotals = new TreeMap<String, Object>();
 		Map<String, Object> dayWiseTotals = new TreeMap<String, Object>();
-		Iterator<GenericValue> itemIter = orderItems.iterator();
-		while (itemIter.hasNext()) {
-			GenericValue orderItem = itemIter.next();
+        GenericValue orderItem;
+    	while( orderItemsIter != null && (orderItem = orderItemsIter.next()) != null) {
+    		String shipmentId = orderItem.getString("shipmentId");    	
+			String boothId = "";
+			if(isByParty){
+				boothId = orderItem.getString("ownerPartyId");
+			}
+			else{
+				boothId = orderItem.getString("originFacilityId");
+			}
+			String productId = orderItem.getString("productId");    		
 			String prodSubscriptionTypeId = orderItem.getString("productSubscriptionTypeId");
 			BigDecimal quantity = orderItem.getBigDecimal("quantity");
 			BigDecimal packetQuantity = orderItem.getBigDecimal("quantity");
+			// check if there's a corresponding return 
+			GenericValue returnHeaderItem = EntityUtil.getFirst(EntityUtil.filterByAnd(returnItemsList,UtilMisc.toMap("productId", productId,"originFacilityId", boothId,"shipmentId", shipmentId)));
+			if (returnHeaderItem != null && !prodSubscriptionTypeId.equals("EMP_SUBSIDY")) {
+				//::TODO:: Currently not handling multiple subscription types for same facility/shipment (and product).  
+				// Also return of EMP_SUBSIDY is not supported.
+				quantity = quantity.subtract(returnHeaderItem.getBigDecimal("returnQuantity"));	
+				packetQuantity = packetQuantity.subtract(returnHeaderItem.getBigDecimal("returnQuantity"));								
+			}
 			BigDecimal price = orderItem.getBigDecimal("unitListPrice");
 			BigDecimal revenue = price.multiply(quantity);
 			if (!(adjustmentOrderList.contains(orderItem.getString("orderId")))	&& (prodSubscriptionTypeId.equals("EMP_SUBSIDY"))) {
@@ -5779,7 +5799,6 @@ public class ByProductNetworkServices {
 			BigDecimal fat = ZERO;
 			BigDecimal snf = ZERO;
 			String productName = orderItem.getString("productName");
-			String productId = orderItem.getString("productId");
 			Map prodAttrMap = (Map) productAttributes.get(orderItem.getString("productId"));
 			// Debug.logInfo("orderItem=" + orderItem, module);
 			if (prodAttrMap != null) {
@@ -5797,14 +5816,6 @@ public class ByProductNetworkServices {
 			
 			Map zone = (Map) boothZoneMap.get(orderItem.getString("originFacilityId"));
 			// Handle booth totals
-			
-			String boothId = "";
-			if(isByParty){
-				boothId = orderItem.getString("ownerPartyId");
-			}
-			else{
-				boothId = orderItem.getString("originFacilityId");
-			}
 			
 			if (boothTotals.get(boothId) == null) {
 				Map<String, Object> newMap = FastMap.newInstance();
@@ -6138,94 +6149,6 @@ public class ByProductNetworkServices {
 					}
 				}
 			}
-			/*// Handle zone totals
-			String zoneName = (String)zone.get("name");
-			String zoneId = (String)zone.get("zoneId");
-			if (zoneTotals.get(zoneId) == null) {
-				Map<String, Object> newMap = FastMap.newInstance();
-				newMap.put("name", zoneName);
-				newMap.put("total", quantity);
-				newMap.put("totalRevenue", revenue); 
-		        Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
-		    	while(typeIter.hasNext()) {
-		    		// initialize type maps
-		            GenericValue type = typeIter.next();    				
-    				Map<String, Object> typeMap = FastMap.newInstance();
-    				typeMap.put("total", ZERO);
-    				typeMap.put("totalRevenue", ZERO);      				
-    				newMap.put(type.getString("enumId"), typeMap);
-				}
-				Map typeMap = (Map)newMap.get(prodSubscriptionTypeId);
-				typeMap.put("total", quantity);
-				typeMap.put("totalRevenue", revenue);      				
-				newMap.put(prodSubscriptionTypeId, typeMap);
-				zoneTotals.put(zoneId, newMap);
-			}
-			else {
-				Map zoneMap = (Map)zoneTotals.get(zoneId);
-				BigDecimal runningTotal = (BigDecimal)zoneMap.get("total");
-				runningTotal = runningTotal.add(quantity);
-				zoneMap.put("total", runningTotal);
-				BigDecimal runningTotalRevenue = (BigDecimal)zoneMap.get("totalRevenue");
-				runningTotalRevenue = runningTotalRevenue.add(revenue);
-				zoneMap.put("totalRevenue", runningTotalRevenue);    			    				
-				// next handle type totals
-				Map typeMap = (Map)zoneMap.get(prodSubscriptionTypeId);
-				runningTotal = (BigDecimal) typeMap.get("total");
-				runningTotal = runningTotal.add(quantity);
-				typeMap.put("total", runningTotal);
-				runningTotalRevenue = (BigDecimal) typeMap.get("totalRevenue");
-				runningTotalRevenue = runningTotalRevenue.add(revenue);
-				typeMap.put("totalRevenue", runningTotalRevenue);	
-			}
-			// Handle distributor totals
-			//distributorTotals
-			String distributorId = (String)zone.get("distributorId");    		
-			if (distributorTotals.get(distributorId) == null) {
-				Map<String, Object> newMap = FastMap.newInstance();
-				try{
-					GenericValue distributorDetail = delegator.findOne("Facility", UtilMisc.toMap("facilityId", distributorId), false);
-					
-					newMap.put("name", distributorDetail.getString("facilityName"));
-					newMap.put("total", quantity);
-    				newMap.put("totalRevenue", revenue); 
-    		        Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
-    		    	while(typeIter.hasNext()) {
-    		    		// initialize type maps
-    		            GenericValue type = typeIter.next();    				
-        				Map<String, Object> typeMap = FastMap.newInstance();
-        				typeMap.put("total", ZERO);
-        				typeMap.put("totalRevenue", ZERO);      				
-        				newMap.put(type.getString("enumId"), typeMap);
-    				}
-    				Map typeMap = (Map)newMap.get(prodSubscriptionTypeId);
-    				typeMap.put("total", quantity);
-    				typeMap.put("totalRevenue", revenue);      				
-    				newMap.put(prodSubscriptionTypeId, typeMap);
-    				distributorTotals.put(distributorId, newMap);
-				} catch (GenericEntityException e) {
-					// TODO: handle exception
-					 Debug.logError(e, module);
-				} 				
-				
-			}
-			else {
-				Map distributorMap = (Map)distributorTotals.get(distributorId);
-				BigDecimal runningTotal = (BigDecimal)distributorMap.get("total");
-				runningTotal = runningTotal.add(quantity);
-				distributorMap.put("total", runningTotal);
-				BigDecimal runningTotalRevenue = (BigDecimal)distributorMap.get("totalRevenue");
-				runningTotalRevenue = runningTotalRevenue.add(revenue);
-				distributorMap.put("totalRevenue", runningTotalRevenue);
-				// next handle type totals
-				Map typeMap = (Map)distributorMap.get(prodSubscriptionTypeId);
-				runningTotal = (BigDecimal) typeMap.get("total");
-				runningTotal = runningTotal.add(quantity);
-				typeMap.put("total", runningTotal);
-				runningTotalRevenue = (BigDecimal) typeMap.get("totalRevenue");
-				runningTotalRevenue = runningTotalRevenue.add(revenue);
-				typeMap.put("totalRevenue", runningTotalRevenue);	    				
-			}*/
 			// Handle product totals
 			if (productTotals.get(productId) == null) {
 				Map<String, Object> newMap = FastMap.newInstance();
@@ -6328,55 +6251,22 @@ public class ByProductNetworkServices {
 			}
 			// Debug.log("===INENDDDDDDD==boothId=="+boothId+"===productId=="+productId+"====OrderId=="+orderItem.getString("orderId")+"==qty=="+orderItem.getString("quantity"));
 		}
+    	
+        if (orderItemsIter != null) {
+            try {
+            	orderItemsIter.close();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+        
 		totalQuantity = totalQuantity.setScale(decimals, rounding);
 		totalRevenue = totalRevenue.setScale(decimals, rounding);
 		totalPacket = totalPacket.setScale(decimals, rounding);
 		totalFat = totalFat.setScale(decimals, rounding);
 		totalSnf = totalSnf.setScale(decimals, rounding);
 		totalVatRevenue = totalVatRevenue.setScale(decimals, rounding);
-		/*// set scale
-        for ( Map.Entry<String, Object> entry : zoneTotals.entrySet() ) {
-        	Map<String, Object> zoneValue = (Map<String, Object>)entry.getValue();
-        	BigDecimal tempVal = (BigDecimal)zoneValue.get("total");
-        	tempVal = tempVal.setScale(decimals, rounding); 
-        	zoneValue.put("total", tempVal);
-        	tempVal = (BigDecimal)zoneValue.get("totalRevenue");
-        	tempVal = tempVal.setScale(decimals, rounding); 
-        	zoneValue.put("totalRevenue", tempVal);	  
-	        Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
-	    	while(typeIter.hasNext()) {
-	    		// initialize type maps
-	            GenericValue type = typeIter.next();    				
-				Map<String, Object> typeMap = (Map)zoneValue.get(type.getString("enumId"));
-	        	BigDecimal tempVal2 = (BigDecimal)typeMap.get("total"); 
-	        	tempVal2 = tempVal2.setScale(decimals, rounding);     	        	
-				typeMap.put("total", tempVal2);
-				tempVal2 = (BigDecimal)typeMap.get("totalRevenue"); 
-	        	tempVal2 = tempVal2.setScale(decimals, rounding); 
-				typeMap.put("totalRevenue", tempVal2);      				
-			}	        	
-        }
-        for ( Map.Entry<String, Object> entry : distributorTotals.entrySet() ) {
-        	Map<String, Object> distributorValue = (Map<String, Object>)entry.getValue();
-        	BigDecimal tempVal = (BigDecimal)distributorValue.get("total");
-        	tempVal = tempVal.setScale(decimals, rounding); 
-        	distributorValue.put("total", tempVal);
-        	tempVal = (BigDecimal)distributorValue.get("totalRevenue");
-        	tempVal = tempVal.setScale(decimals, rounding); 
-        	distributorValue.put("totalRevenue", tempVal);
-	        Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
-	    	while(typeIter.hasNext()) {
-	    		// initialize type maps
-	            GenericValue type = typeIter.next();    				
-				Map<String, Object> typeMap = (Map)distributorValue.get(type.getString("enumId"));
-	        	BigDecimal tempVal2 = (BigDecimal)typeMap.get("total"); 
-	        	tempVal2 = tempVal2.setScale(decimals, rounding);     	        	
-				typeMap.put("total", tempVal2);
-				tempVal2 = (BigDecimal)typeMap.get("totalRevenue"); 
-	        	tempVal2 = tempVal2.setScale(decimals, rounding); 
-				typeMap.put("totalRevenue", tempVal2);      				
-			}		        	
-        }	   */
+
 		for (Map.Entry<String, Object> entry : productTotals.entrySet()) {
 			Map<String, Object> productValue = (Map<String, Object>) entry.getValue();
 			BigDecimal tempVal = (BigDecimal) productValue.get("total");
@@ -10206,6 +10096,8 @@ public class ByProductNetworkServices {
     public static Map<String, Object> getDayTotals(DispatchContext ctx, Timestamp salesDate, String subscriptionType, boolean onlySummary, boolean onlyVendorAndPTCBooths, List facilityIds) {
     	Delegator delegator = ctx.getDelegator();
     	List<GenericValue> orderItems= FastList.newInstance();
+    	EntityListIterator orderItemsIter = null;
+
     	Map productAttributes = new TreeMap<String, Object>();    
     	List productSubscriptionTypeList = FastList.newInstance();
     	List shipmentIds =FastList.newInstance();
@@ -10247,10 +10139,8 @@ public class ByProductNetworkServices {
         	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
     		//Debug.logInfo("condition=" + condition, module);  
         	if(!UtilValidate.isEmpty(shipmentIds)){        		
-        		orderItems = delegator.findList("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, false);
+        		orderItemsIter = delegator.find("OrderHeaderItemProductShipmentAndFacility", condition, null, null, null, null);
         	}
-    		
-
     	} catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -10271,10 +10161,8 @@ public class ByProductNetworkServices {
     	Map<String, Object> distributorTotals = new TreeMap<String, Object>();
     	Map<String, Object> productTotals = new TreeMap<String, Object>();
     	Map<String, Object> supplyTypeTotals = new TreeMap<String, Object>();
-    	
-        Iterator<GenericValue> itemIter = orderItems.iterator();
-    	while(itemIter.hasNext()) {
-            GenericValue orderItem = itemIter.next();
+        GenericValue orderItem;
+    	while( orderItemsIter != null && (orderItem = orderItemsIter.next()) != null) {
             String prodSubscriptionTypeId = orderItem.getString("productSubscriptionTypeId");
             BigDecimal quantity  = orderItem.getBigDecimal("quantity");
             BigDecimal price  = orderItem.getBigDecimal("unitPrice"); 
@@ -10431,97 +10319,9 @@ public class ByProductNetworkServices {
 	    				}
 	    			}
 				}
-    			// Handle zone totals
-    			/*String zoneName = (String)zone.get("name");
-    			String zoneId = (String)zone.get("zoneId");
-    			if (zoneTotals.get(zoneId) == null) {
-    				Map<String, Object> newMap = FastMap.newInstance();
-    				newMap.put("name", zoneName);
-    				newMap.put("total", quantity);
-    				newMap.put("totalRevenue", revenue); 
-    		        Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
-    		    	while(typeIter.hasNext()) {
-    		    		// initialize type maps
-    		            GenericValue type = typeIter.next();    				
-        				Map<String, Object> typeMap = FastMap.newInstance();
-        				typeMap.put("total", ZERO);
-        				typeMap.put("totalRevenue", ZERO);      				
-        				newMap.put(type.getString("enumId"), typeMap);
-    				}
-    				Map typeMap = (Map)newMap.get(prodSubscriptionTypeId);
-    				typeMap.put("total", quantity);
-    				typeMap.put("totalRevenue", revenue);      				
-    				newMap.put(prodSubscriptionTypeId, typeMap);
-    				zoneTotals.put(zoneId, newMap);
-    			}
-    			else {
-    				Map zoneMap = (Map)zoneTotals.get(zoneId);
-    				BigDecimal runningTotal = (BigDecimal)zoneMap.get("total");
-    				runningTotal = runningTotal.add(quantity);
-    				zoneMap.put("total", runningTotal);
-    				BigDecimal runningTotalRevenue = (BigDecimal)zoneMap.get("totalRevenue");
-    				runningTotalRevenue = runningTotalRevenue.add(revenue);
-    				zoneMap.put("totalRevenue", runningTotalRevenue);    			    				
-    				// next handle type totals
-    				Map typeMap = (Map)zoneMap.get(prodSubscriptionTypeId);
-					runningTotal = (BigDecimal) typeMap.get("total");
-					runningTotal = runningTotal.add(quantity);
-					typeMap.put("total", runningTotal);
-					runningTotalRevenue = (BigDecimal) typeMap.get("totalRevenue");
-					runningTotalRevenue = runningTotalRevenue.add(revenue);
-					typeMap.put("totalRevenue", runningTotalRevenue);	
-    			}*/
-    			// Handle distributor totals
-    			//distributorTotals
-    			/*String distributorId = (String)zone.get("distributorId");    		
-    			if (distributorTotals.get(distributorId) == null) {
-    				Map<String, Object> newMap = FastMap.newInstance();
-    				try{
-    					GenericValue distributorDetail = delegator.findOne("Facility", UtilMisc.toMap("facilityId", distributorId), false);
-    					
-    					newMap.put("name", distributorDetail.getString("facilityName"));
-    					newMap.put("total", quantity);
-        				newMap.put("totalRevenue", revenue); 
-        		        Iterator<GenericValue> typeIter = productSubscriptionTypeList.iterator();
-        		    	while(typeIter.hasNext()) {
-        		    		// initialize type maps
-        		            GenericValue type = typeIter.next();    				
-            				Map<String, Object> typeMap = FastMap.newInstance();
-            				typeMap.put("total", ZERO);
-            				typeMap.put("totalRevenue", ZERO);      				
-            				newMap.put(type.getString("enumId"), typeMap);
-        				}
-        				Map typeMap = (Map)newMap.get(prodSubscriptionTypeId);
-        				typeMap.put("total", quantity);
-        				typeMap.put("totalRevenue", revenue);      				
-        				newMap.put(prodSubscriptionTypeId, typeMap);
-        				distributorTotals.put(distributorId, newMap);
-    				} catch (GenericEntityException e) {
-						// TODO: handle exception
-    					 Debug.logError(e, module);
-					} 				
-    				
-    			}
-    			else {
-    				Map distributorMap = (Map)distributorTotals.get(distributorId);
-    				BigDecimal runningTotal = (BigDecimal)distributorMap.get("total");
-    				runningTotal = runningTotal.add(quantity);
-    				distributorMap.put("total", runningTotal);
-    				BigDecimal runningTotalRevenue = (BigDecimal)distributorMap.get("totalRevenue");
-    				runningTotalRevenue = runningTotalRevenue.add(revenue);
-    				distributorMap.put("totalRevenue", runningTotalRevenue);
-    				// next handle type totals
-    				Map typeMap = (Map)distributorMap.get(prodSubscriptionTypeId);
-					runningTotal = (BigDecimal) typeMap.get("total");
-					runningTotal = runningTotal.add(quantity);
-					typeMap.put("total", runningTotal);
-					runningTotalRevenue = (BigDecimal) typeMap.get("totalRevenue");
-					runningTotalRevenue = runningTotalRevenue.add(revenue);
-					typeMap.put("totalRevenue", runningTotalRevenue);	    				
-    			}
-    			// Handle product totals
-    			
- */   			if (productTotals.get(productId) == null) {
+
+    			// Handle product totals   			
+    			if (productTotals.get(productId) == null) {
     				Map<String, Object> newMap = FastMap.newInstance();
     				newMap.put("name", productName);
     				Map<String, Object> supplyTypeMap = FastMap.newInstance();
@@ -10592,7 +10392,16 @@ public class ByProductNetworkServices {
     				supplyTypeMap.put("totalRevenue", runningTotalRevenue);    			    					
     			}
     		}
-    	}    	
+    	}    
+    	
+        if (orderItemsIter != null) {
+            try {
+            	orderItemsIter.close();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+        
 		totalQuantity = totalQuantity.setScale(decimals, rounding);  
 		totalRevenue = totalRevenue.setScale(decimals, rounding);    
 		totalFat = totalFat.setScale(decimals, rounding);    
