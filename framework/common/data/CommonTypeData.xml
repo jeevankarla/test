@@ -161,5 +161,7 @@ under the License.
     <StatusValidChange condition="" statusId="IN_PROCESS" statusIdTo="GENERATED" transitionName="Set inprocess to Generated"/>
     <StatusValidChange condition="" statusId="GENERATED" statusIdTo="APPROVED" transitionName="Set Generated to Approved"/>
     <StatusValidChange condition="" statusId="APPROVED" statusIdTo="GENERATED" transitionName="Set Approved to Canceled"/>
+    <StatusValidChange condition="" statusId="GENERATED" statusIdTo="COM_CANCELLED" transitionName="Set Generated to Canceled"/>
+    
 	<TenantConfiguration propertyName="showServerDownTimeMsg" propertyValue="N" propertyTypeEnumId="GLOBAL" description="Show server downtime message in header"/>
 </entity-engine-xml>
