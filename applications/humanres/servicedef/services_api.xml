@@ -34,5 +34,11 @@
         location="in.vasista.vbiz.humanres.HumanresApiService" invoke="fetchEmployeeRecentLeaves">
         <description>Service to fetch employee leaves</description>
         <attribute type="Map" mode="OUT" name="employeeLeavesResult" optional="true"/>
-   </service>     
+   </service>   
+   
+   <service name="fetchEmployeeAttendance" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.humanres.HumanresApiService" invoke="fetchEmployeeAttendance">
+        <description>Service to fetch employee leaves</description>
+        <attribute type="Map" mode="OUT" name="employeeAttendanceResult" optional="true"/>
+   </service>        
 </services>   

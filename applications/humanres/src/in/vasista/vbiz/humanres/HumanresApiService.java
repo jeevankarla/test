@@ -379,5 +379,83 @@ Debug.logInfo("result:" + result, module);
     	result.put("employeeLeavesResult", employeeLeavesMap);	
 Debug.logInfo("result:" + result, module);		 
     	return result;
-    }          
+    }    
+    
+    /*
+     * Fetches all attendance records since last 45 days for given employee.
+     * Note: Only "Normal" punchtype entries are currently handled
+     */
+    public static Map<String, Object> fetchEmployeeAttendance(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_MYEMPLOYEE", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch employees!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }    	
+        
+    	if (userLogin == null || userLogin.get("partyId") == null) {
+            Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " not mapped to a party!", module);
+            return ServiceUtil.returnError("Valid employee code not found.");    		
+    	}
+    	SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    	SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    	String partyId = (String)userLogin.get("partyId");
+		List punches = FastList.newInstance();        
+    	Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), -45));
+		try{  
+			List conditionList = UtilMisc.toList(
+		            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+				conditionList.add(EntityCondition.makeCondition("punchdate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(fromDate)));    	
+	    	// currently other punctypes such as OOD are not handled
+	    	conditionList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS , "Normal")); 
+	    	conditionList.add(EntityCondition.makeCondition("partyId", partyId));
+	
+	    	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	List<GenericValue> punchList = delegator.findList("EmplPunch", condition, null, UtilMisc.toList("-punchdate","-punchtime"), null, false);
+	    	String outTimestamp = "";    	
+	    	for (int i = 0; i < punchList.size(); ++i) {
+		    	Map<String, Object> emplPunch = FastMap.newInstance();
+				GenericValue punch = punchList.get(i); 
+	    		String punchTime = timeFormat.format(punch.get("punchtime"));
+	    		String inOut = "";
+	    		if (UtilValidate.isNotEmpty(punch.getString("InOut"))) {
+	    			inOut = punch.getString("InOut");
+	    		}
+	    		if (inOut.equals("OUT")) {
+	    			outTimestamp = UtilDateTime.toDateString((Date)punch.get("punchdate"), "dd/MM/yyyy") + " " + punchTime;
+	    			continue;
+	    		}
+	    		if (inOut.equals("IN")) {
+	    			String inTimestamp = UtilDateTime.toDateString((Date)punch.get("punchdate"), "dd/MM/yyyy") + " " + punchTime;
+					emplPunch.put("inTimestamp", inTimestamp);
+	    			if (outTimestamp.isEmpty()) {
+	    				emplPunch.put("outTimestamp", "");
+	    				emplPunch.put("duration", "");
+	    			}
+	    			else {
+	    				emplPunch.put("outTimestamp", outTimestamp);    				
+	    				double elapsedHours = UtilDateTime.getInterval(new java.sql.Timestamp(dateTimeFormat.parse(inTimestamp).getTime()), 
+	    									new java.sql.Timestamp(dateTimeFormat.parse(outTimestamp).getTime()))/(1000*60*60);
+	    				emplPunch.put("duration", String.format( "%.2f", elapsedHours ));
+	    			}
+	    			punches.add(emplPunch);
+	    			outTimestamp = "";
+	    		}
+	    	}
+		} catch(Exception e){
+			Debug.logError("Error fetching employee attendance " + e.getMessage(), module);
+		}
+		Map<String, Object> employeeLeavesMap = FastMap.newInstance();  
+		employeeLeavesMap.put("employeeId", partyId);    	 		
+		employeeLeavesMap.put("recentPunches", punches); 
+		
+    	Map result = FastMap.newInstance(); 	
+    	result.put("employeeAttendanceResult", employeeLeavesMap);	
+Debug.logInfo("result:" + result, module);		 
+    	return result;   	
+    }
+    
 }
