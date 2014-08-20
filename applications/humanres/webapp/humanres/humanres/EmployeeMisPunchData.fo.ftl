@@ -1,7 +1,7 @@
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="10in" page-width="10in"
+            <fo:simple-page-master master-name="main" page-height="11in" page-width="10in"
                      margin-left="0.1in" margin-right="0.2in"  margin-top="0.2in" margin-bottom="0.2in" >
                 <fo:region-body margin-top="1.8in"/>
                 <fo:region-before extent="1in"/>
@@ -53,32 +53,34 @@
 	                            <#list currentDateKeysList as date>
 	                            	<#assign misPunchMap=misPunchDataMap.entrySet()>
 		                   			<#list misPunchMap as misPunchValues>
-			                   			<#assign misPunchData=misPunchValues.getValue()>
-			                   			<#if (misPunchValues.getValue().get("date"))==date>
-				                   			<fo:table-row >
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${misPunchValues.getValue().get("partyId")?if_exists}</fo:block>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${misPunchValues.getValue().get("partyName")?if_exists}</fo:block>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="center" keep-together="always" font-size="15pt">${misPunchValues.getValue().get("date")?if_exists}</fo:block>
-					                            </fo:table-cell>
-					                            <fo:table-cell >	
-					                            	<fo:block text-align="right" keep-together="always" font-size="15pt">${misPunchValues.getValue().get("Time")?if_exists?string("HH:mm")}</fo:block>
-					                            </fo:table-cell>
-					                            <#assign noofLines=noofLines+1>
-					                     	</fo:table-row>
-					                     	<#if (noofLines >= 31)>
-					                     		<#assign noofLines=1>
-						                     	<fo:table-row>
-					                            	<fo:table-cell >	
-					                            		<fo:block page-break-after="always"></fo:block>
-					                            	</fo:table-cell>
-					                            </fo:table-row>
-					                        </#if>
-					                     </#if>
+			                   			<#assign misPunchData=misPunchValues.getValue().entrySet()>
+			                   			<#list misPunchData as empMisPunchValues>
+			                   				<#if (empMisPunchValues.getValue().get("date"))==date>
+					                   			<fo:table-row >
+						                            <fo:table-cell >	
+						                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${empMisPunchValues.getValue().get("partyId")?if_exists}</fo:block>
+						                            </fo:table-cell>
+						                            <fo:table-cell >	
+						                            	<fo:block text-align="left" keep-together="always" font-size="15pt">${empMisPunchValues.getValue().get("partyName")?if_exists}</fo:block>
+						                            </fo:table-cell>
+						                            <fo:table-cell >	
+						                            	<fo:block text-align="center" keep-together="always" font-size="15pt">${empMisPunchValues.getValue().get("date")?if_exists}</fo:block>
+						                            </fo:table-cell>
+						                            <fo:table-cell >	
+						                            	<fo:block text-align="right" keep-together="always" font-size="15pt">${empMisPunchValues.getValue().get("Time")?if_exists?string("HH:mm")}</fo:block>
+						                            </fo:table-cell>
+						                            <#assign noofLines=noofLines+1>
+						                     	</fo:table-row>
+						                     	<#if (noofLines >= 31)>
+						                     		<#assign noofLines=1>
+							                     	<fo:table-row>
+						                            	<fo:table-cell >	
+						                            		<fo:block page-break-after="always"></fo:block>
+						                            	</fo:table-cell>
+						                            </fo:table-row>
+						                        </#if>
+					                     	</#if>
+					                     </#list>
 			                   		</#list>
 			                   	</#list>
 			                   	<fo:table-row >
@@ -126,6 +128,14 @@
                  	</fo:block>
 				</fo:flow>
   			</fo:page-sequence>
+  		<#else>
+	  		<fo:page-sequence master-reference="main">
+		    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+		       		 <fo:block font-size="14pt">
+		            	${uiLabelMap.NoEmployeeFound}.
+		       		 </fo:block>
+		    	</fo:flow>
+			</fo:page-sequence>
   		</#if>
      </fo:root>
 </#escape>
