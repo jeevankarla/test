@@ -81,7 +81,7 @@ if(UtilValidate.isNotEmpty(customTimePeriodList)){
 invoiceSequenceNumMap = [:];
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.IN, boothList));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("INVOICE_WRITEOFF")));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN,UtilMisc.toList("INVOICE_CANCELLED", "INVOICE_WRITEOFF")));
 conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 conditionList.add(EntityCondition.makeCondition("dueDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -107,7 +107,7 @@ invoiceDates.each{eachDate ->
 	}
 	crInvoices.put(eachDate, eachDayInvoiceDetails);
 }
-Debug.log("crInvoices====="+crInvoices);
+//Debug.log("crInvoices====="+crInvoices);
 invoiceSequenceNumMap = [:];
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.EQUALS , "VAT_INV"));
