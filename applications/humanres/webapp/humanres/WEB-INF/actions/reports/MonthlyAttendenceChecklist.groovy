@@ -93,7 +93,7 @@ def populateChildren(org, employeeList) {
 					cldAmountIds=cldAmountList.get(0).benefitTypeId;
 					cldAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:cldAmountIds,employeeId:employee.partyId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
 					cldAmount=cldAmountMap.get("amount");
-					if(UtilValidate.isNotEmpty(cldAmount) && cldAmount!=null && cldAmount>0)
+					if(UtilValidate.isNotEmpty(cldAmount) && cldAmount!=null)
 						cldDays=employeePayrollAttedance.get("noOfPayableDays");
 				}
 				employeeMap.put("cldDays",cldDays);
@@ -115,7 +115,7 @@ def populateChildren(org, employeeList) {
 					heatAmountIds=heatAmountList.get(0).benfitTypeId;
 					heatAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:heatAmountIds,employeeId:employee.partyId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
 					heatAmount=heatAmountMap.get("amount");
-					if(UtilValidate.isNotEmpty(heatAmount) && heatAmount!=null && heatAmount>0)
+					if(UtilValidate.isNotEmpty(heatAmount) && heatAmount!=null)
 					heatDays=employeePayrollAttedance.get("noOfPayableDays");
 				}
 				employeeMap.put("heatDays",heatDays);
