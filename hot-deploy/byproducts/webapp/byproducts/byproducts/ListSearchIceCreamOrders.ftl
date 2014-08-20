@@ -220,7 +220,7 @@ under the License.
               	<#else>
               		<#assign statusItem = delegator.findOne("StatusItem", {"statusId" : eachOrder.statusId}, true) />
                 	<td>${statusItem.description?default(eachOrder.statusId)}</td>
-              		<td><a class="buttontext" href="/byproducts/control/nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}" target="_blank"/>Delivery Challan</td>
+              		<td><a class="buttontext" href="<@ofbizUrl>nonRouteGatePass.pdf?orderId=${eachOrder.orderId?if_exists}</@ofbizUrl>" target="_blank"/>Delivery Challan</td>
               	</#if>
               	
         		<td><input type="button" name="cancelOrder" id="cancelOrder" value="Cancel Order" onclick="javascript: cancelIceCreamOrder('${eachOrder.orderId?if_exists}', '${parameters.salesChannelEnumId}');"/></td>
