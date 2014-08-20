@@ -96,6 +96,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			               <fo:table-body>
 				               <fo:table-row>
 				                <fo:table-cell>
+				                	<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
 								    <fo:block  font-weight="bold" font-size = "12pt">TIN :${orgTinNumber}</fo:block>
 			                         <fo:block  font-weight="bold" font-size = "12pt">CST :90750068</fo:block>
 								</fo:table-cell>
@@ -104,6 +105,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 									<fo:block text-align="left" font-size = "12pt" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;&#160;           FOR SALE OF VAT EXEMPTED GOODS</fo:block>
 								</fo:table-cell>
 								 <fo:table-cell>
+								 <fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;</fo:block>
 								 <fo:block text-align="right" font-size = "12pt" font-weight="bold" keep-together="always" white-space-collapse="false">INVOICE DATE :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceList.getTimestamp("invoiceDate"), "dd-MMM-yyyy")}</fo:block>
 			                     <fo:block text-align="right" font-size = "12pt" font-weight="bold" keep-together="always" white-space-collapse="false">INVOICE NO   :&#160;&#160;&#160;&#160;&#160;&#160;<#if invoiceSequenceNumMap?has_content && (invoiceSequenceNumMap.get(invoiceList.get('invoiceId')))?exists>${(invoiceSequenceNumMap.get(invoiceList.get("invoiceId")))?if_exists}<#else>${invoiceList.get("invoiceId")?if_exists}</#if></fo:block>
 			                  </fo:table-cell>
@@ -203,13 +205,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			<fo:block>---------------------------------------------------------------------------------</fo:block>  	
 			<fo:block >
 				<fo:table >
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="50pt"/>
+					<fo:table-column column-width="60pt"/>
+					<fo:table-column column-width="45pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="200pt"/>
+					<fo:table-column column-width="150pt"/>
+					<fo:table-column column-width="190pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="80pt"/>
 					<fo:table-body>
 						<fo:table-row>
 							<fo:table-cell>
@@ -222,7 +224,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 								<fo:block  text-align="center" font-size = "12pt" font-weight="bold">DC NO</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  text-align="center" font-size = "12pt" font-weight="bold">PO No</fo:block>
+								<fo:block  text-align="left" font-size = "12pt" font-weight="bold">PO No</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="left" font-size = "12pt" font-weight="bold">PRODUCT</fo:block>
@@ -248,13 +250,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			<fo:block >
 				<#assign noOfCrReturns=05>	
 				<fo:table>
-					<fo:table-column column-width="70pt"/>
-					<fo:table-column column-width="50pt"/>
+					<fo:table-column column-width="60pt"/>
+					<fo:table-column column-width="45pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="100pt"/>
-					<fo:table-column column-width="200pt"/>
+					<fo:table-column column-width="150pt"/>
+					<fo:table-column column-width="190pt"/>
 					<fo:table-column column-width="80pt"/>
-					<fo:table-column column-width="100pt"/>
+					<fo:table-column column-width="80pt"/>
 					<fo:table-body>
 					 <#assign totalQuantity=0>
 					 <#assign totalAmount=0>
@@ -298,7 +300,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 								<fo:block  font-size = "12pt" font-weight="bold" text-align="center">${eachItem.get('orderId')?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
-								<fo:block  font-size = "12pt" font-weight="bold" text-align="center">${eachItem.get("externalId")?if_exists}</fo:block>
+								<fo:block  font-size = "12pt" font-weight="bold" text-align="left">${eachItem.get("externalId")?if_exists}</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="left" font-weight="bold" font-size="12pt">${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(eachItem.get("productName")?if_exists)),26)}</fo:block>
@@ -325,7 +327,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 				
 						<fo:table-row font-weight="bold">
 							<fo:table-cell number-columns-spanned="5">
-								<fo:block  text-align="left" font-weight="bold" text-indent="15pt">TOTAL </fo:block>
+								<fo:block  text-align="left" font-weight="bold" font-size="12pt">TOTAL </fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="right" font-size="12pt">${finalToatlQty?string("#0.0")}</fo:block>
@@ -337,7 +339,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 						</fo:table-row>
 						<fo:table-row font-weight="bold">
 							<fo:table-cell>
-								<fo:block  text-align="left" font-size="12pt" font-weight="bold" >&#160;&#160;Net Pay</fo:block>
+								<fo:block  text-align="left" font-size="12pt" font-weight="bold" >Net Pay</fo:block>
 							</fo:table-cell>
 							<fo:table-cell>
 								<fo:block  text-align="right">&#160;</fo:block>
@@ -369,11 +371,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "BILLOFSALEReport.txt")}
 			</fo:block>
 			    <fo:block>
 			           <fo:table width="100%" table-layout="fixed" space-after="0.0in">
-			           <fo:table-column column-width="100pt"/>
+			           <fo:table-column column-width="100%"/>
 			              <fo:table-body>
 			              <fo:table-row>
 						  <fo:table-cell>
-								<fo:block text-align="left" keep-together="always" white-space-collapse="false" font-weight="bold" font-size="12pt">Amount in Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmount?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()} ONLY  </fo:block>
+								<fo:block text-align="left"  white-space-collapse="false" font-weight="bold" font-size="12pt">Amount in Words:${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmount?string("#0.00")), "%rupees-and-paise", locale).toUpperCase()} ONLY  </fo:block>
 							</fo:table-cell>
 							</fo:table-row>	
 							
