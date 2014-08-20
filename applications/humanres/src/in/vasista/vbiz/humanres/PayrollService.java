@@ -1226,7 +1226,7 @@ public class PayrollService {
 	                            if (UtilValidate.isNotEmpty(formulaId)) {
 	                            
 		    		        		Evaluator evltr = new Evaluator(dctx);
-		    		        		Debug.log("*********** formulaId ================"+formulaId);
+		    		        		//Debug.log("*********** formulaId ================"+formulaId);
 		    		        		evltr.setFormulaIdAndSlabAmount(formulaId, modifyAmount.doubleValue());
 		    						HashMap<String, Double> variables = new HashMap<String, Double>();
 		    						Map formulaVaribules = evltr.getVariableValues();
@@ -2605,7 +2605,8 @@ public class PayrollService {
 			String payrollPeriodId = (String) context.get("payrollPeriodId");
 			String orgPartyId =  (String)context.get("orgPartyId");
 			String periodBillingId = (String)context.get("periodBillingId");
-			Locale locale = (Locale) context.get("locale");
+			//Locale locale = (Locale) context.get("locale");
+			Locale locale = new Locale("en","IN");
 			TimeZone timeZone = TimeZone.getDefault();
 	        List conditionList = FastList.newInstance();
 	        GenericValue lastCloseAttedancePeriod= null;
@@ -2742,7 +2743,7 @@ public class PayrollService {
 			    		if(UtilValidate.isEmpty(payrollPeriodPunchList) && (((BigDecimal)resultMap.get("noOfLeaveDays")).compareTo(BigDecimal.ZERO) ==0) &&
 			    				   (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && !(employeeDetail.getString("punchType").equalsIgnoreCase("N")))){
 			    			Debug.logWarning("No punchs for employee"+employeeId, module);
-			    			newEntity.set("lossOfPayDays", new BigDecimal(lossOfPayDays));
+			    			newEntity.set("lossOfPayDays", noOfEmployementDays);
 				    		newEntity.set("noOfAttendedHoliDays", BigDecimal.ZERO);
 				    		newEntity.set("noOfAttendedSsDays", BigDecimal.ZERO);
 				    		newEntity.set("noOfAttendedWeeklyOffDays", BigDecimal.ZERO);
@@ -2753,6 +2754,7 @@ public class PayrollService {
 				    		continue;
 			    		}
 			    		lossOfPayDays = lossOfPayDays+ ((BigDecimal)resultMap.get("lossOfPayDays")).doubleValue();
+			    		
 			    		double noOfAttendedHoliDays =0;
 			    		
 			    		// get employee weekly off day weeklyOff
@@ -2786,26 +2788,26 @@ public class PayrollService {
 			    					}
 			    				}
 			    			}
-			    			dayPunchList = EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Normal"));
-			    			if((EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood"))).size() >0){
+			    			dayPunchList = EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.IN,UtilMisc.toList("Normal","Ood")));
+			    			/*if((EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood"))).size() >0){
 			    				dayPunchList.addAll(EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood")));
-			    			}
+			    			}*/
 			    			
-			    			dayPunchList.addAll(EntityUtil.filterByCondition(dayPunchList, EntityCondition.makeCondition("PunchType",EntityOperator.EQUALS,"Ood")));
 			    			List cHoliDayList = EntityUtil.filterByCondition(holiDayList, EntityCondition.makeCondition(EntityCondition.makeCondition("holiDayDate",EntityOperator.LESS_THAN_EQUAL_TO,cTimeEnd) , EntityOperator.AND,EntityCondition.makeCondition("holiDayDate",EntityOperator.GREATER_THAN_EQUAL_TO,cTime)));
 			    			List cDayLeaves = EntityUtil.filterByDate(leaves, cTime);
+			    			List cDayLeaveFraction = EntityUtil.getFieldListFromEntityList(cDayLeaves, "dayFractionId", true);
 			    			List<GenericValue> dayShiftList = EntityUtil.filterByCondition(emplDailyAttendanceDetailList, EntityCondition.makeCondition(EntityCondition.makeCondition("date",EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime)) , EntityOperator.AND,EntityCondition.makeCondition("date",EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.toSqlDate(cTime))));
 			    			// handle no punch employees here
-			    			if((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("N")))){
+			    			if(((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("N"))))
+			    					||  (UtilValidate.isNotEmpty(cDayLeaves) && UtilValidate.isEmpty(cDayLeaveFraction))){
 			    				c1.add(Calendar.DATE,1);
 		    					continue;
 		    				}
-			    			//Debug.log("dayPunchList size==========="+dayPunchList.size());
 			    			//TO:DO need to handle SHIFT_NIGHT mispunch
 			    			Boolean shiftFalg = Boolean.FALSE;
 			    			if(UtilValidate.isNotEmpty(dayShiftList)){
 			    				for(GenericValue dayShift :dayShiftList){
-			    					if(UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (!(employeeDetail.getString("punchType").equalsIgnoreCase("O")))))){
+			    					if(UtilValidate.isEmpty(cDayLeaveFraction) && (UtilValidate.isEmpty(employeeDetail.getString("punchType"))||((UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (!(employeeDetail.getString("punchType").equalsIgnoreCase("O"))))))){
 			    						if(UtilValidate.isNotEmpty(dayShift.getBigDecimal("overrideLateMin"))){
 				    						lossOfPayDays = lossOfPayDays+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
 				    						lateMin= lateMin+(((dayShift.getBigDecimal("overrideLateMin")).doubleValue())/480);
@@ -2822,7 +2824,7 @@ public class PayrollService {
 			    				}
 			    				List dayShifts = EntityUtil.getFieldListFromEntityList(dayShiftList, "shiftType", true);
 			    				List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
-			    				if((inPunch.size() ==1) && (dayShifts.contains("SHIFT_NIGHT") || (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("O"))))){
+			    				if((inPunch.size() >= 1) && (dayShifts.contains("SHIFT_NIGHT") || (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("O"))))){
 			    					shiftFalg = Boolean.TRUE;
 			    				}
 			    				// here handle multiple shifts on same day
@@ -2853,17 +2855,11 @@ public class PayrollService {
 			    					noOfAttendedHoliDays = noOfAttendedHoliDays+1;
 			    				}
 			    				
-			    				// here calculating  late come and early going minutes
-			    				for(GenericValue dayShift : dayShiftList){
-			    					List<GenericValue> inPunch = EntityUtil.filterByAnd(dayPunchList, UtilMisc.toMap("PunchType","Normal","InOut","IN"));
-			    				}
-			    				
 			    			}else if((!(emplWeeklyOffDay.equalsIgnoreCase(weekName))) && (cTime.compareTo(secondSaturDay) != 0) 
 			    					 && UtilValidate.isEmpty(cHoliDayList) &&  UtilValidate.isEmpty(cDayLeaves)){
 			    				// no punch ,not weekly off ,not secondSaturDay, not general holiday  and no leave then consider it as lossOfPay
 			    				lossOfPayDays = lossOfPayDays+1;
 			    			}
-			    			
 			    			c1.add(Calendar.DATE,1);
 			    		}
 			    		newEntity.set("lateMin",  new BigDecimal(lateMin));
