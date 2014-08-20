@@ -93,7 +93,7 @@ def populateChildren(org, employeeList) {
 					cldAmountIds=cldAmountList.get(0).benefitTypeId;
 					cldAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:cldAmountIds,employeeId:employee.partyId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
 					cldAmount=cldAmountMap.get("amount");
-					if(UtilValidate.isNotEmpty(cldAmount) && cldAmount!=null)
+					if(UtilValidate.isNotEmpty(cldAmount) && cldAmount!=null && cldAmount>0)
 						cldDays=employeePayrollAttedance.get("noOfPayableDays");
 				}
 				employeeMap.put("cldDays",cldDays);
@@ -104,7 +104,7 @@ def populateChildren(org, employeeList) {
 					caAmountIds=caAmountList.get(0).benefitTypeId;
 					caAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:caAmountIds,employeeId:employee.partyId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
 					caAmount=caAmountMap.get("amount");
-					if(UtilValidate.isNotEmpty(caAmount) && caAmount!=null)
+					if(UtilValidate.isNotEmpty(caAmount) && caAmount!=null && caAmount>0)
 					caDays=employeePayrollAttedance.get("noOfPayableDays");
 				}
 				employeeMap.put("caDays",caDays);
@@ -115,7 +115,7 @@ def populateChildren(org, employeeList) {
 					heatAmountIds=heatAmountList.get(0).benfitTypeId;
 					heatAmountMap=PayrollService.getPayHeadAmount(dctx,[userLogin:userLogin,payHeadTypeId:heatAmountIds,employeeId:employee.partyId,customTimePeriodId:resultMap.get("customTimePeriodId"),locale:locale]);
 					heatAmount=heatAmountMap.get("amount");
-					if(UtilValidate.isNotEmpty(heatAmount) && heatAmount!=null)
+					if(UtilValidate.isNotEmpty(heatAmount) && heatAmount!=null && heatAmount>0)
 					heatDays=employeePayrollAttedance.get("noOfPayableDays");
 				}
 				employeeMap.put("heatDays",heatDays);
@@ -132,4 +132,3 @@ company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : "Company"]);
 populateChildren(company, employeeList);
 	
 context.put("employeeList",emplList);		
-	
