@@ -303,6 +303,23 @@ function makeDatePicker1(fromDateId ,thruDateId){
 							</table>
 						</form>
 					</tr>
+					<tr class="alternate-row">
+						<form id="AttendanceExceptionReport" name="AttendanceExceptionReport" mothed="post" action="<@ofbizUrl>AttendanceExceptionReport.pdf</@ofbizUrl>" target="_blank">
+							<table class="basic-table" cellspacing="5">
+								<tr class="alternate-row">
+									<td width="12%"><span class='h3'>Attendance Exception Report</span></td>
+									<td width="24%"><span class='h3'>Period Id</span>
+									<select name="customTimePeriodId" class='h4'>
+										<#list timePeriodList as timePeriod>    
+											<option value='${timePeriod.customTimePeriodId}'>${timePeriod.periodName}:${timePeriod.fromDate}-${timePeriod.thruDate}</option>
+										</#list>      
+									</select>
+									</td>	
+									<td width="12%"><span class='h3'><input type="submit" value="Download" class="buttontext"></span></td> 
+								</tr>
+							</table>
+						</form>
+					</tr>
 				</table>
 			</div>
 		</div>
