@@ -2393,7 +2393,7 @@ public class PayrollService {
 							}
 						}else{	
 							// Create New One
-							if(prevAmount.compareTo(amount)!= 0){
+							if(UtilValidate.isEmpty(prevAmount) || prevAmount.compareTo(amount)!= 0){
 								GenericValue newEntity = delegator.makeValue("PartyBenefit");
 								newEntity.set("roleTypeIdFrom", "INTERNAL_ORGANIZATIO");
 								newEntity.set("roleTypeIdTo", "EMPLOYEE");
