@@ -2353,6 +2353,66 @@ under the License.
         <response name="success" type="view" value="PortalPaymentOverview"/>
     </request-map>
     
+    <!--================= Deposits ==================== -->
+	
+	<request-map uri="IncomingDepositsReceived">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IncomingDepositsReceived"/>
+    </request-map>
+    <request-map uri="NewIncomingDepositsReceived">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewIncomingDepositsReceived"/>
+    </request-map>
+	<request-map uri="createNewIncomingDepositsReceipt">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    
+    <request-map uri="IncomingDepositsRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IncomingDepositsRefund"/>
+    </request-map>
+    <request-map uri="NewIncomingDepositsRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewIncomingDepositsRefund"/>
+    </request-map>
+	<request-map uri="createNewIncomingDepositsRefund">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    <request-map uri="OutgoingDepositsPaid">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="OutgoingDepositsPaid"/>
+    </request-map>
+    <request-map uri="NewOutgoingDepositsPaid">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewOutgoingDepositsPaid"/>
+    </request-map>
+	<request-map uri="createNewOutgoingDepositsPayments">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
+    
+    <request-map uri="OutgoingDepositsRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="OutgoingDepositsRefund"/>
+    </request-map>
+    <request-map uri="NewOutgoingDepositsRefund">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewOutgoingDepositsRefund"/>
+    </request-map>
+	<request-map uri="createNewOutgoingDepositsRefund">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentAndFinAccountTrans"/>
+        <response name="success" type="view" value="PortalPaymentOverview"/>
+    </request-map>
+    
     <!--=================Cost calculation request===============-->
     <!--<request-map uri="EditCostCalcs">
         <security https="true" auth="true"/>
@@ -3550,6 +3610,20 @@ under the License.
    <view-map name="NewOutgoingAdvancesRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewOutgoingAdvancesRefund"/>
    
    <view-map name="PortalPaymentOverview" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentOverview"/>
+   
+   <!--================= Deposits ==================== -->
+   <view-map name="IncomingDepositsReceived" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#IncomingDepositsReceived"/>
+   <view-map name="NewIncomingDepositsReceived" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewIncomingDepositsReceived"/>
+   
+   <view-map name="IncomingDepositsRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#IncomingDepositsRefund"/>
+   <view-map name="NewIncomingDepositsRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewIncomingDepositsRefund"/>
+   
+   
+   <view-map name="OutgoingDepositsPaid" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OutgoingDepositsPaid"/>
+   <view-map name="NewOutgoingDepositsPaid" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewOutgoingDepositsPaid"/>
+   
+   <view-map name="OutgoingDepositsRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OutgoingDepositsRefund"/>
+   <view-map name="NewOutgoingDepositsRefund" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#NewOutgoingDepositsRefund"/>
    
    <!-- end of view mappings -->
 </site-conf>

@@ -1907,6 +1907,9 @@ under the License.
 	             <set field="creditEntryWithDiffAmount.origAmount" from-field="diffAmount"/>
 	             <set field="creditEntryWithDiffAmount.origCurrencyUomId" from-field="origCurrencyUomId"/>
 	             <set field="creditEntryWithDiffAmount.glAccountId" from-field="payment.overrideGlAccountId"/>
+	             <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
+                	<set field="creditEntryWithDiffAmount.glAccountId" from-field="paymentGlAccountTypeMap.glAccountId"/>
+                 </if-not-empty>
 	             <set field="creditEntryWithDiffAmount.glAccountTypeId" from-field="creditGlAccountTypeId"/>
 	             <set field="creditEntryWithDiffAmount.organizationPartyId" from-field="organizationPartyId"/>
 	             <set field="acctgTransEntries[]" from-field="creditEntryWithDiffAmount" type="Object"/>
@@ -2311,6 +2314,9 @@ under the License.
                 <set field="debitEntryWithDiffAmount.origAmount" from-field="amount"/>
                 <set field="debitEntryWithDiffAmount.origCurrencyUomId" from-field="payment.currencyUomId"/>
                 <set field="debitEntryWithDiffAmount.glAccountId" from-field="payment.overrideGlAccountId"/>
+                <if-not-empty field="paymentGlAccountTypeMap.glAccountId">
+	            	<set field="debitEntryWithDiffAmount.glAccountId" from-field="paymentGlAccountTypeMap.glAccountId"/>
+	            </if-not-empty>
                 <set field="debitEntryWithDiffAmount.glAccountTypeId" from-field="debitGlAccountTypeId"/>
                 <set field="debitEntryWithDiffAmount.organizationPartyId" from-field="organizationPartyId"/>
                 <set field="acctgTransEntries[]" from-field="debitEntryWithDiffAmount" type="Object"/>

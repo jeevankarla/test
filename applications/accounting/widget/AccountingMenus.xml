@@ -1961,6 +1961,24 @@
             </condition>
 			<link target="OutgoingAdvancesPaid">
 			</link>
+		 </menu-item>
+		 <menu-item name="IncomingDeposits" title="Deposits Received">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="IncomingDepositsReceived">
+			</link>
+		 </menu-item>
+		 <menu-item name="OutgoingDeposits" title="Deposits Paid">
+          <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="OutgoingDepositsPaid">
+			</link>
 		 </menu-item> 
 		  <menu-item name="PaymentOverview" title="Payment Overview">
           <condition>
@@ -2082,15 +2100,33 @@
     </menu>
     <menu name="OutgoingAdvancesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
-           
           <menu-item name="OutgoingAdvancesPaid" title="Payments">
              <link target="OutgoingAdvancesPaid"></link>
           </menu-item>
           <menu-item name="OutgoingAdvancesRefund" title="Refunds">
              <link target="OutgoingAdvancesRefund"></link>
           </menu-item>
-        
     </menu>
+    
+    <menu name="IncomingDepositsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="IncomingDepositsReceived" title="Receipts">
+             <link target="IncomingDepositsReceived"></link>
+          </menu-item>
+          <menu-item name="IncomingDepositsRefund" title="Refunds">
+             <link target="IncomingDepositsRefund"></link>
+          </menu-item>
+    </menu>
+    <menu name="OutgoingDepositsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="Payments" selected-menuitem-context-field-name="tabButtonItem4">
+          <menu-item name="OutgoingDepositsPaid" title="Payments">
+             <link target="OutgoingDepositsPaid"></link>
+          </menu-item>
+          <menu-item name="OutgoingDepositsRefund" title="Refunds">
+             <link target="OutgoingDepositsRefund"></link>
+          </menu-item>
+    </menu>
+    
     
     
 	
