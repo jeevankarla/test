@@ -68,13 +68,13 @@ under the License.
 						            		<fo:table-body>
 						            			<fo:table-row>
 						            				<fo:table-cell>
-						            					<fo:block keep-together="always">${dayWise.getValue().get("IN").get("punchdate")?if_exists}</fo:block>
+						            					<fo:block keep-together="always"><#if dayWise.getValue().get("IN")?has_content>${dayWise.getValue().get("IN").get("punchdate")?if_exists}</#if></fo:block>
 						            				</fo:table-cell>
 						            				<fo:table-cell>
 						            					<fo:block keep-together="always"><#if dayWise.getValue().get("OUT")?has_content>${dayWise.getValue().get("OUT").get("punchdate")?if_exists}</#if></fo:block>
 						            				</fo:table-cell>
 						            				<fo:table-cell>
-						            					<fo:block keep-together="always">${dayWise.getValue().get("IN").get("punchTime")?if_exists}</fo:block>
+						            					<fo:block keep-together="always"><#if dayWise.getValue().get("IN")?has_content>${dayWise.getValue().get("IN").get("punchTime")?if_exists}</#if></fo:block>
 						            				</fo:table-cell>
 						            				<fo:table-cell>
 						            					<fo:block keep-together="always"><#if dayWise.getValue().get("OUT")?has_content>${dayWise.getValue().get("OUT").get("punchTime")?if_exists}</#if></fo:block>
