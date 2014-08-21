@@ -31,6 +31,7 @@
 		                	<fo:table-column column-width="40pt"/>
 		                	<fo:table-column column-width="60pt"/>
 		                	<fo:table-column column-width="70pt"/>
+		                	<fo:table-column column-width="70pt"/>
 			                <fo:table-body> 
 	                     		<fo:table-row >
 	                     			<fo:table-cell >	
@@ -66,11 +67,13 @@
 	                            		<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
 	                            	</fo:table-cell>
 	                            </fo:table-row>
+	                            <#assign Fin_Amount=0>
 	                            <#assign shiftMap=shiftFinalMap.entrySet()>
 			                   	<#list shiftMap as shiftMapValues>
 			                   	<#assign totalDays=0>
 			                   	<#assign amount=0>
 			                   	<#assign finalAmount=0>
+			                   	
 			                   		<fo:table-row >
 		                     			<fo:table-cell >	
 			                            	<fo:block text-align="left" keep-together="always" font-weight="bold" font-size="12pt">${sNo}</fo:block>
@@ -155,10 +158,22 @@
 						                    <fo:table-cell>	
 						                    	<fo:block text-align="right" keep-together="always" font-weight="bold" font-size="12pt">${finalAmount}.00</fo:block>
 						                    </fo:table-cell>
+						                    
 		                    		</fo:table-row>
+		                    		<#assign Fin_Amount=Fin_Amount+finalAmount>
 		                    		<#assign sNo=sNo+1>
 		                    	</#list>
 		                    	<fo:table-row >
+			                   		<fo:table-cell >	
+	                            		<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
+	                            	</fo:table-cell>
+	                            </fo:table-row>
+	                            <fo:table-row >
+			                   		<fo:table-cell >	
+	                            		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">&#160;	                                                                             Total :${Fin_Amount}.00</fo:block>
+	                            	</fo:table-cell>
+	                            </fo:table-row>
+	                            <fo:table-row >
 			                   		<fo:table-cell >	
 	                            		<fo:block keep-together="always" font-weight="bold">---------------------------------------------------------------------------------------------</fo:block>
 	                            	</fo:table-cell>
