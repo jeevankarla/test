@@ -425,11 +425,11 @@ Debug.logInfo("result:" + result, module);
 	    			inOut = punch.getString("InOut");
 	    		}
 	    		if (inOut.equals("OUT")) {
-	    			outTimestamp = UtilDateTime.toDateString((Date)punch.get("punchdate"), "dd/MM/yyyy") + " " + punchTime;
+	    			outTimestamp = UtilDateTime.toDateString((Date)punch.get("punchdate"), "dd/MM/yy") + "  " + punchTime;
 	    			continue;
 	    		}
 	    		if (inOut.equals("IN")) {
-	    			String inTimestamp = UtilDateTime.toDateString((Date)punch.get("punchdate"), "dd/MM/yyyy") + " " + punchTime;
+	    			String inTimestamp = UtilDateTime.toDateString((Date)punch.get("punchdate"), "dd/MM/yy") + "  " + punchTime;
 					emplPunch.put("inTimestamp", inTimestamp);
 	    			if (outTimestamp.isEmpty()) {
 	    				emplPunch.put("outTimestamp", "");
