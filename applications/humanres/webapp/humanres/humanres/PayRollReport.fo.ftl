@@ -136,7 +136,7 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Designation               : <#if designation?has_content>${designation.description?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">D.O.J                         : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((doj[0].appointmentDate?if_exists), "dd/MM/yyyy")}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">D.O.J                         : <#if (doj[0].appointmentDate)?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((doj[0].appointmentDate?if_exists), "dd/MM/yyyy")}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 				</fo:table-row>                     		 				
@@ -148,6 +148,11 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : ${emplDetails.employeeBankAccNo?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
+                     		 				</fo:table-row>
+                     		 				<fo:table-row>
+                     		 					<fo:table-cell>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;PayScale                   : ${payGrade.get(0).payScale?if_exists}</fo:block>
+                     		 					</fo:table-cell>                     		 					
                      		 				</fo:table-row>
                      		 			</fo:table-body>
                      		 		</fo:table>
@@ -216,8 +221,9 @@ under the License.
                      		</fo:table-cell> 
                     		<fo:table-cell border-style="solid">
                     				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-                    				<fo:block text-indent="5pt" white-space-collapse="false" wrap-option="wrap">Pay Scale :</fo:block><fo:block text-indent="3pt" white-space-collapse="false" wrap-option="wrap">${payGrade.get(0).payScale?if_exists}</fo:block>
-                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  ${emplLeavesDetails.lateMin?if_exists}</fo:block>
+                    				
+                    				<#--<fo:block text-indent="5pt" white-space-collapse="false" wrap-option="wrap">Pay Scale :</fo:block><fo:block text-indent="3pt"  wrap-option="wrap">${payGrade.get(0).payScale?if_exists}</fo:block>-->
+                    				<fo:block text-indent="5pt" white-space-collapse="false" keep-together="always">Late Minutes      :  <#if emplLeavesDetails?has_content>${emplLeavesDetails.lateMin?if_exists}</#if></fo:block>
                     			<#--<fo:block>
                     				<fo:table width="100%">
                     					<fo:table-column column-width="1.5in"/>
