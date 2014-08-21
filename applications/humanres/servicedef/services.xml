@@ -1288,7 +1288,7 @@ under the License.emplpunch
       <attribute name="sendSms" mode="IN" optional="true" type="String" default-value="Y"/>
   </service>  
   <service name="populatePayrollAttedanceInternal" engine="java" auth="true" invoke="populatePayrollAttedanceInternal" 
-        location="in.vasista.vbiz.humanres.PayrollService">
+        location="in.vasista.vbiz.humanres.PayrollService" transaction-timeout="1800">
         <description>Calculate amunt for the given payhead type</description>
         <attribute name="orgPartyId" mode="IN" type="String"/> 
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/>
@@ -1296,7 +1296,7 @@ under the License.emplpunch
    </service> 
    
   <service name="populatePayrollAttedance" engine="java" auth="true" invoke="populatePayrollAttedance" 
-        location="in.vasista.vbiz.humanres.PayrollService">
+        location="in.vasista.vbiz.humanres.PayrollService" transaction-timeout="1800">
         <description>Calculate amunt for the given payhead type</description>
         <attribute name="orgPartyId" mode="IN" type="String"/>
         <attribute name="periodBillingId" mode="IN" type="String" optional="true"/> 

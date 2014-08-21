@@ -2827,10 +2827,10 @@ public class PayrollService {
 			    				if((inPunch.size() >= 1) && (dayShifts.contains("SHIFT_NIGHT") || (UtilValidate.isNotEmpty(employeeDetail.getString("punchType")) && (employeeDetail.getString("punchType").equalsIgnoreCase("O"))))){
 			    					shiftFalg = Boolean.TRUE;
 			    				}
-			    				// here handle multiple shifts on same day
+			    				/*// here handle multiple shifts on same day
 				    			if(UtilValidate.isNotEmpty(dayShifts) && dayShifts.size() >1){
 				    				noOfEmployementDays = noOfEmployementDays.add(new BigDecimal(dayShifts.size()-1));
-				    			}
+				    			}*/
 			    			}
 			    			
 			    			List encashmentStatusList = EntityUtil.getFieldListFromEntityList(dayShiftList, "encashmentStatus", true);
