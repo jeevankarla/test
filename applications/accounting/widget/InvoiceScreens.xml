@@ -802,7 +802,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="PageTitleListInvoices" />
-				<set field="tabButtonItem" value="listInvoiceItems" />
+				<set field="tabButtonItem" value="listInvoiceItemsNew" />
 				<set field="invoiceId" from-field="parameters.invoiceId" />
 				<set field="invoiceItemSeqd" from-field="parameters.invoiceItemSeqId" />
 				<property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR" />

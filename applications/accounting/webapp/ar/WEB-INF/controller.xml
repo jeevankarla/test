@@ -115,7 +115,7 @@ under the License.
     <request-map uri="createInvoice">
         <security https="true" auth="true"/>
         <event type="service" invoke="createInvoice"/>
-        <response name="success" type="request" value="listInvoiceItemsNew"/>
+        <response name="success" type="request" value="listInvoiceItems"/>
         <response name="error" type="view" value="NewSalesInvoice"/>
     </request-map>
     <request-map uri="createPartyGroupInvoice">

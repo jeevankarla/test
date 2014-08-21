@@ -3775,18 +3775,18 @@ public class InvoiceServices {
         BigDecimal amount = (BigDecimal)context.get("amount");
         String productId = (String)context.get("productId");
         BigDecimal quantity = (BigDecimal)context.get("quantity");
-        
-        if(UtilValidate.isEmpty(amount) || (UtilValidate.isNotEmpty(amount) && amount.compareTo(BigDecimal.ZERO)<=0)){
+        if(UtilValidate.isEmpty(amount)){
         	return ServiceUtil.returnError("Amount cannot be empty or ZERO");
         }
         // similarly, tax only for purchase invoices
-        
         try{
         	
         	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", context);
+        	
             if (ServiceUtil.isError(createInvoiceItemResult)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceItemFromOrder",locale), null, null, createInvoiceItemResult);
             }
+            
             BigDecimal totalAmt = BigDecimal.ZERO;
     		if(UtilValidate.isNotEmpty(quantity) && quantity.compareTo(BigDecimal.ZERO)>0){
     			totalAmt = amount.multiply(quantity);
@@ -3794,77 +3794,93 @@ public class InvoiceServices {
     		else{
     			totalAmt = amount;
     		}
-        	List<GenericValue> invoiceItems = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
+    		GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+    		String invoiceTypeId = invoice.getString("invoiceTypeId");
+    		List<GenericValue> invoiceTypeMap = delegator.findList("InvoiceItemTypeMap", EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId), null, null, null, false);
+    		
+    		List<GenericValue> invoiceItems = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
         	
         	if(UtilValidate.isNotEmpty(bedPercent) && bedPercent.compareTo(BigDecimal.ZERO)>0){
-        		List<GenericValue> bedInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "BED_SALE"));
-        		BigDecimal bedItemAmt = BigDecimal.ZERO;
-        		bedItemAmt = (totalAmt.multiply(bedPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
-    			totalAmt = totalAmt.add(bedItemAmt);
-        		if(UtilValidate.isEmpty(bedInvItems)){
-        			
-        			Map<String, Object> createTaxItemContext = FastMap.newInstance();
-        			createTaxItemContext.put("invoiceId", invoiceId);
-        			createTaxItemContext.put("invoiceItemTypeId", "BED_SALE");
-        			createTaxItemContext.put("amount", bedItemAmt);
-        			createTaxItemContext.put("userLogin", userLogin);
-                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
-                    
-        		}
-        		else{
-        			GenericValue bedInvItem = EntityUtil.getFirst(bedInvItems);
-        			BigDecimal extAmt = bedInvItem.getBigDecimal("amount");
-        			BigDecimal totalBEDAmt = bedItemAmt.add(extAmt);
-        			bedInvItem.set("amount", totalBEDAmt);
-        			bedInvItem.store();
+        		
+        		List<GenericValue> bedItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "BED_%"));
+        		if(UtilValidate.isNotEmpty(bedItemTypes)){
+        			String invoiceTaxItemType = (EntityUtil.getFirst(bedItemTypes)).getString("invoiceItemTypeId");
+        			List<GenericValue> bedInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+            		BigDecimal bedItemAmt = BigDecimal.ZERO;
+            		bedItemAmt = (totalAmt.multiply(bedPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+            		totalAmt = totalAmt.add(bedItemAmt);
+            		if(UtilValidate.isEmpty(bedInvItems)){
+            			
+            			Map<String, Object> createTaxItemContext = FastMap.newInstance();
+            			createTaxItemContext.put("invoiceId", invoiceId);
+            			createTaxItemContext.put("invoiceItemTypeId", invoiceTaxItemType);
+            			createTaxItemContext.put("amount", bedItemAmt);
+            			createTaxItemContext.put("userLogin", userLogin);
+                        createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
+            		}
+            		else{
+            			GenericValue bedInvItem = EntityUtil.getFirst(bedInvItems);
+            			BigDecimal extAmt = bedInvItem.getBigDecimal("amount");
+            			BigDecimal totalBEDAmt = bedItemAmt.add(extAmt);
+            			bedInvItem.set("amount", totalBEDAmt);
+            			bedInvItem.store();
+            		}
         		}
         	}
         	
         	if(UtilValidate.isNotEmpty(cstPercent) && cstPercent.compareTo(BigDecimal.ZERO)>0){
-        		List<GenericValue> cstInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "CST_SALE"));
-        		BigDecimal cstItemAmt = BigDecimal.ZERO;
         		
-    			cstItemAmt = (totalAmt.multiply(cstPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
-    			
-        		if(UtilValidate.isEmpty(cstInvItems)){
+        		List<GenericValue> cstItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "CST_%"));
+        		if(UtilValidate.isNotEmpty(cstItemTypes)){
+        			String invoiceTaxItemType = (EntityUtil.getFirst(cstItemTypes)).getString("invoiceItemTypeId");
+        			List<GenericValue> cstInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+        			BigDecimal cstItemAmt = BigDecimal.ZERO;
+        		
+        			cstItemAmt = (totalAmt.multiply(cstPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+        			if(UtilValidate.isEmpty(cstInvItems)){
         			
-        			Map<String, Object> createTaxItemContext = FastMap.newInstance();
-        			createTaxItemContext.put("invoiceId", invoiceId);
-        			createTaxItemContext.put("invoiceItemTypeId", "CST_SALE");
-        			createTaxItemContext.put("amount", cstItemAmt);
-        			createTaxItemContext.put("userLogin", userLogin);
-                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
-                    
-        		}
-        		else{
-        			GenericValue cstInvItem = EntityUtil.getFirst(cstInvItems);
-        			BigDecimal extAmt = cstInvItem.getBigDecimal("amount");
-        			BigDecimal totalCSTAmt = cstItemAmt.add(extAmt);
-        			cstInvItem.set("amount", totalCSTAmt);
-        			cstInvItem.store();
+	        			Map<String, Object> createTaxItemContext = FastMap.newInstance();
+	        			createTaxItemContext.put("invoiceId", invoiceId);
+	        			createTaxItemContext.put("invoiceItemTypeId", invoiceTaxItemType);
+	        			createTaxItemContext.put("amount", cstItemAmt);
+	        			createTaxItemContext.put("userLogin", userLogin);
+	                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
+	                    
+	        		}
+	        		else{
+	        			GenericValue cstInvItem = EntityUtil.getFirst(cstInvItems);
+	        			BigDecimal extAmt = cstInvItem.getBigDecimal("amount");
+	        			BigDecimal totalCSTAmt = cstItemAmt.add(extAmt);
+	        			cstInvItem.set("amount", totalCSTAmt);
+	        			cstInvItem.store();
+	        		}
         		}
         	}
         	if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
-        		List<GenericValue> vatInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "VAT_SALE"));
-        		BigDecimal vatItemAmt = BigDecimal.ZERO;
-    			vatItemAmt = (totalAmt.multiply(vatPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
-    			
-        		if(UtilValidate.isEmpty(vatInvItems)){
-        			
-        			Map<String, Object> createTaxItemContext = FastMap.newInstance();
-        			createTaxItemContext.put("invoiceId", invoiceId);
-        			createTaxItemContext.put("invoiceItemTypeId", "VAT_SALE");
-        			createTaxItemContext.put("amount", vatItemAmt);
-        			createTaxItemContext.put("userLogin", userLogin);
-                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
-                    
-        		}
-        		else{
-        			GenericValue vatInvItem = EntityUtil.getFirst(vatInvItems);
-        			BigDecimal extAmt = vatInvItem.getBigDecimal("amount");
-        			BigDecimal totalVATAmt = vatItemAmt.add(extAmt);
-        			vatInvItem.set("amount", totalVATAmt);
-        			vatInvItem.store();
+        		
+        		List<GenericValue> vatItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "VAT_%"));
+        		if(UtilValidate.isNotEmpty(vatItemTypes)){
+        			String invoiceTaxItemType = (EntityUtil.getFirst(vatItemTypes)).getString("invoiceItemTypeId");
+	        		List<GenericValue> vatInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+	        		BigDecimal vatItemAmt = BigDecimal.ZERO;
+	    			vatItemAmt = (totalAmt.multiply(vatPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+	        		if(UtilValidate.isEmpty(vatInvItems)){
+	        			
+	        			Map<String, Object> createTaxItemContext = FastMap.newInstance();
+	        			createTaxItemContext.put("invoiceId", invoiceId);
+	        			createTaxItemContext.put("invoiceItemTypeId", invoiceTaxItemType);
+	        			createTaxItemContext.put("amount", vatItemAmt);
+	        			createTaxItemContext.put("userLogin", userLogin);
+	                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
+	                    
+	        		}
+	        		else{
+	        			GenericValue vatInvItem = EntityUtil.getFirst(vatInvItems);
+	        			BigDecimal extAmt = vatInvItem.getBigDecimal("amount");
+	        			BigDecimal totalVATAmt = vatItemAmt.add(extAmt);
+	        			vatInvItem.set("amount", totalVATAmt);
+	        			vatInvItem.store();
+	        		}
         		}
         	}
         	
@@ -4035,6 +4051,11 @@ public class InvoiceServices {
             
         	GenericValue invoiceItem = delegator.findOne("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId), false);
         	
+        	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+        	
+        	String invoiceTypeId = invoice.getString("invoiceTypeId");
+    		List<GenericValue> invoiceTypeMap = delegator.findList("InvoiceItemTypeMap", EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId), null, null, null, false);
+    		
         	BigDecimal amount = invoiceItem.getBigDecimal("amount");
         	BigDecimal quantity = BigDecimal.ZERO;
         	BigDecimal totalAmt = BigDecimal.ZERO;
@@ -4054,39 +4075,63 @@ public class InvoiceServices {
         	}
         	
         	if(bedPercent.compareTo(BigDecimal.ZERO)>0){
-        		List<GenericValue> bedInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "BED_SALE"));
-        		BigDecimal bedItemAmt = BigDecimal.ZERO;
-        		bedItemAmt = (totalAmt.multiply(bedPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
-    			totalAmt = totalAmt.add(bedItemAmt);
-    			GenericValue bedInvItem = EntityUtil.getFirst(bedInvItems);
-    			BigDecimal extAmt = bedInvItem.getBigDecimal("amount");
-    			BigDecimal totalBEDAmt = extAmt.subtract(bedItemAmt);
-    			bedInvItem.set("amount", totalBEDAmt);
-    			bedInvItem.store();
+        		
+        		List<GenericValue> bedItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "BED_%"));
+        		if(UtilValidate.isNotEmpty(bedItemTypes)){
+        			String invoiceTaxItemType = (EntityUtil.getFirst(bedItemTypes)).getString("invoiceItemTypeId");
+        			
+        			List<GenericValue> bedInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+	        		if(UtilValidate.isNotEmpty(bedInvItems)){
+	        			BigDecimal bedItemAmt = BigDecimal.ZERO;
+		        		bedItemAmt = (totalAmt.multiply(bedPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+		    			totalAmt = totalAmt.add(bedItemAmt);
+		    			GenericValue bedInvItem = EntityUtil.getFirst(bedInvItems);
+		    			BigDecimal extAmt = bedInvItem.getBigDecimal("amount");
+		    			BigDecimal totalBEDAmt = extAmt.subtract(bedItemAmt);
+		    			bedInvItem.set("amount", totalBEDAmt);
+		    			bedInvItem.store();
+	        		}
+        			
+        		}
         	}
         	
         	if(cstPercent.compareTo(BigDecimal.ZERO)>0){
-        		List<GenericValue> cstInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "CST_SALE"));
         		
-        		BigDecimal cstItemAmt = BigDecimal.ZERO;
-    			cstItemAmt = (totalAmt.multiply(cstPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
-    			
-    			GenericValue cstInvItem = EntityUtil.getFirst(cstInvItems);
-    			BigDecimal extAmt = cstInvItem.getBigDecimal("amount");
-    			BigDecimal totalCSTAmt = extAmt.subtract(cstItemAmt);
-    			cstInvItem.set("amount", totalCSTAmt);
-    			cstInvItem.store();
+        		List<GenericValue> cstItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "CST_%"));
+        		if(UtilValidate.isNotEmpty(cstItemTypes)){
+        			String invoiceTaxItemType = (EntityUtil.getFirst(cstItemTypes)).getString("invoiceItemTypeId");
+        		
+	        		List<GenericValue> cstInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+	        		if(UtilValidate.isNotEmpty(cstInvItems)){
+	        			BigDecimal cstItemAmt = BigDecimal.ZERO;
+		    			cstItemAmt = (totalAmt.multiply(cstPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+		    			
+		    			GenericValue cstInvItem = EntityUtil.getFirst(cstInvItems);
+		    			BigDecimal extAmt = cstInvItem.getBigDecimal("amount");
+		    			BigDecimal totalCSTAmt = extAmt.subtract(cstItemAmt);
+		    			cstInvItem.set("amount", totalCSTAmt);
+		    			cstInvItem.store();
+	        		}
+        		}
         	}
         	if(UtilValidate.isNotEmpty(vatPercent) && vatPercent.compareTo(BigDecimal.ZERO)>0){
-        		List<GenericValue> vatInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "VAT_SALE"));
-        		BigDecimal vatItemAmt = BigDecimal.ZERO;
-    			vatItemAmt = (totalAmt.multiply(vatPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
-    			
-    			GenericValue vatInvItem = EntityUtil.getFirst(vatInvItems);
-    			BigDecimal extAmt = vatInvItem.getBigDecimal("amount");
-    			BigDecimal totalVATAmt = vatItemAmt.subtract(extAmt);
-    			vatInvItem.set("amount", totalVATAmt);
-    			vatInvItem.store();
+        		
+        		List<GenericValue> vatItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "VAT_%"));
+        		if(UtilValidate.isNotEmpty(vatItemTypes)){
+        			String invoiceTaxItemType = (EntityUtil.getFirst(vatItemTypes)).getString("invoiceItemTypeId");
+        			
+	        		List<GenericValue> vatInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+	        		if(UtilValidate.isNotEmpty(vatInvItems)){
+	        			BigDecimal vatItemAmt = BigDecimal.ZERO;
+		    			vatItemAmt = (totalAmt.multiply(vatPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+		    			
+		    			GenericValue vatInvItem = EntityUtil.getFirst(vatInvItems);
+		    			BigDecimal extAmt = vatInvItem.getBigDecimal("amount");
+		    			BigDecimal totalVATAmt = vatItemAmt.subtract(extAmt);
+		    			vatInvItem.set("amount", totalVATAmt);
+		    			vatInvItem.store();
+	        		}
+        		}
         	}
         	
         	Map<String, Object> removeInvoiceItemResult = dispatcher.runSync("removeInvoiceItem", context);
