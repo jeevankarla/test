@@ -41,6 +41,7 @@ under the License.
         <#assign invoice = orderDetail.get('invoice')>
         <#assign partyCode = orderDetail.get('partyCode')>
         <#assign screenFlag = orderDetail.get('screenFlag')>
+        <#assign companyDetail = orderDetail.get('companyDetail')>
         <fo:page-sequence master-reference="main" font-size="10pt">	
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         		<fo:block text-align="left" font-size="13pt" keep-together="always"  white-space-collapse="false">
@@ -56,6 +57,8 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"> UNIT : MOTHER DAIRY:G.K.V.K POST : YELAHANKA:BANGALORE : 560065</fo:block>
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold"><#if screenFlag?has_content && screenFlag == "gatePass">GATE PASS<#else>DELIVERY CHALLAN</#if></fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">TIN : ${companyDetail.get('TIN_NUMBER')?if_exists}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">Date:  ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy HH:mm:ss")?if_exists}                CST : ${companyDetail.get('CST_NUMBER')?if_exists}</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 			            </fo:table-body>
@@ -64,7 +67,7 @@ under the License.
         	</fo:static-content>	        	
         	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
         		<fo:block>
-             		<fo:table border-style="dotted" border-width="solid" border-color="black">
+             		<fo:table border-style="solid">
 			            <fo:table-column column-width="150pt"/>
 			            <fo:table-column column-width="150pt"/>
 			            <fo:table-column column-width="150pt"/>
@@ -89,7 +92,7 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">NAME : </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>	
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${partyName.get('groupName')?if_exists}</fo:block>
+					            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" wrap-option="wrap">${partyName.get('groupName')?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">GP DATE : </fo:block>
@@ -103,9 +106,9 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">ADDRESS : </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${billingAddress.get('address1')?if_exists}</fo:block>
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${billingAddress.get('address2')?if_exists}</fo:block>
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${billingAddress.get('city')?if_exists},${billingAddress.get('countryGeoId')?if_exists}, ${billingAddress.get('postalCode')?if_exists}</fo:block>
+					            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" wrap-option="wrap">${billingAddress.get('address1')?if_exists}</fo:block>
+					            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" wrap-option="wrap">${billingAddress.get('address2')?if_exists}</fo:block>
+					            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" wrap-option="wrap">${billingAddress.get('city')?if_exists},${billingAddress.get('countryGeoId')?if_exists}, ${billingAddress.get('postalCode')?if_exists}</fo:block>
 								</fo:table-cell>
 								<fo:table-cell>
 					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">DC No : </fo:block>
@@ -148,57 +151,103 @@ under the License.
 					            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
-							<fo:table-row border-style="dotted" border-width="thin" border-color="black">
-			                    <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">SL NO</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">CODE</fo:block>
-								</fo:table-cell>
-								<fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">DESCRIPTION</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell>
-					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">QTY</fo:block>  
+							<fo:table-row border-style="solid" >
+			                    <fo:table-cell number-columns-spanned="4">
+					            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">
+					            		<fo:table border-style="solid">
+								            <fo:table-column column-width="40pt"/>
+								            <fo:table-column column-width="200pt"/>
+								            <fo:table-column column-width="90pt"/>
+								            <fo:table-column column-width="60pt"/>
+								            <fo:table-column column-width="60pt"/>
+								            <fo:table-column column-width="60pt"/>
+								            <fo:table-column column-width="90pt"/>
+								            <fo:table-body>
+								                <fo:table-row>
+								                    <fo:table-cell border-style="solid">
+										            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">SL</fo:block>
+										            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">NO</fo:block>
+										            </fo:table-cell>
+													<fo:table-cell border-style="solid">
+										            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">PRODUCT</fo:block>
+										            </fo:table-cell>
+										            <fo:table-cell border-style="solid">
+										            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">BATCH NO</fo:block>  
+										            </fo:table-cell>
+										            <fo:table-cell border-style="solid">
+										            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">NO. OF</fo:block>
+										            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold"> CRATES</fo:block>
+										            </fo:table-cell>
+										            <fo:table-cell border-style="solid">
+										            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">QTY/CRATE</fo:block>  
+										            </fo:table-cell>
+										            <fo:table-cell border-style="solid">
+										            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">TOTAL QTY</fo:block>
+										            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">(LTR/KG)</fo:block>
+										            </fo:table-cell>
+										            <fo:table-cell border-style="solid">
+										            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">REMARKS</fo:block>  
+										            </fo:table-cell>
+												</fo:table-row>
+												
+												<#if orderItems?has_content>
+													<#assign totalCrates = 0>
+													<#assign totalLtrs = 0>
+													<#assign slNo = 1>
+													<#list orderItems as eachItem>
+														<fo:table-row>
+										                    <fo:table-cell>
+												            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
+												            </fo:table-cell>
+												            <fo:table-cell>	
+												            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${eachItem.get('description')?if_exists}</fo:block>
+												            </fo:table-cell>
+												            <fo:table-cell>
+												            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${eachItem.get('batchNo')?if_exists}</fo:block>
+												            </fo:table-cell>
+												            <fo:table-cell>
+												            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('qtyInCrate')?if_exists?string("#0.00")}</fo:block>
+												            </fo:table-cell>
+												            <fo:table-cell>
+												            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('qtyPerCrate')?if_exists}</fo:block>  
+												            </fo:table-cell>
+												            <fo:table-cell>	
+												            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false">${eachItem.get('qtyLtr')?if_exists?string("#0.00")}</fo:block>
+												            </fo:table-cell>
+												            <fo:table-cell>
+												            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"></fo:block>  
+												            </fo:table-cell>
+														</fo:table-row>
+														<#assign totalCrates = totalCrates+eachItem.get('qtyInCrate')>
+														<#assign totalLtrs = totalLtrs+eachItem.get('qtyLtr')>
+														<#assign slNo = slNo+1>
+													</#list>
+													<fo:table-row border-style="solid">
+									                    <fo:table-cell>
+											            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"></fo:block>
+											            </fo:table-cell>
+											            <fo:table-cell>	
+											            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Total</fo:block>
+											            </fo:table-cell>
+											            <fo:table-cell>
+											            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Crates:</fo:block>
+											            </fo:table-cell>
+											            <fo:table-cell>
+											            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totalCrates?if_exists?string("#0.00")}</fo:block>  
+											            </fo:table-cell>
+											            <fo:table-cell>
+											            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">Ltrs:</fo:block>
+											            </fo:table-cell>
+											            <fo:table-cell>
+											            	<fo:block  keep-together="always" text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totalLtrs?if_exists?string("#0.00")}</fo:block>  
+											            </fo:table-cell>
+													</fo:table-row>
+												</#if>
+											</fo:table-body>
+											</fo:table>
+					            	</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
-							<#assign totalQty = 0>
-							<#if orderItems?has_content>
-								<#assign slNo = 1>
-								<#list orderItems as eachItem>
-									<fo:table-row>
-					                    <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${slNo?if_exists} </fo:block>
-							            </fo:table-cell>
-							            <fo:table-cell>	
-							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${eachItem.itemDescription?if_exists}</fo:block>
-							            </fo:table-cell>
-							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false">${eachItem.description?if_exists}</fo:block>
-							            </fo:table-cell>
-							            <#assign totalQty = totalQty+eachItem.get('quantity')>
-							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">${eachItem.get('quantity')?if_exists?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
-									</fo:table-row>
-									<#assign slNo = slNo+1>
-								</#list>
-								
-								<fo:table-row border-style="solid">
-					                    <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false"></fo:block>
-							            </fo:table-cell>
-							            <fo:table-cell>	
-							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Totals</fo:block>
-							            </fo:table-cell>
-							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
-							            </fo:table-cell>
-							            <fo:table-cell>
-							            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">${totalQty?if_exists?string("#0.00")}</fo:block>  
-							            </fo:table-cell>
-									</fo:table-row>
-							</#if>
 			            </fo:table-body>
 			        </fo:table>
           		</fo:block>

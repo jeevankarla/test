@@ -23,7 +23,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.base.util.Debug;
 import java.util.*;
-
+import java.math.RoundingMode;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.util.EntityUtil;
@@ -44,6 +44,8 @@ shipmentId = parameters.shipmentId;
 shipment = null;
 orderHeaders = [];
 orderIds = [];
+rounding = RoundingMode.HALF_UP;
+dctx = dispatcher.getDispatchContext();
 conditionList = [];
 if(shipmentId){
 	shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
@@ -96,30 +98,57 @@ orderIds.each{ eachOrderId ->
 	if(orderRole){
 		partyId = (EntityUtil.getFirst(orderRole)).getString("partyId")
 	}
+	companyDetails = (Map)(PartyWorker.getPartyIdentificationDetails(delegator, "Company")).get("partyDetails");
 	partyAddress = dispatcher.runSync("getPartyPostalAddress", [partyId: partyId, userLogin: userLogin]);
 	partyName = dispatcher.runSync("getPartyNameForDate", [partyId: partyId, userLogin: userLogin]);
 	orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId), null, null, null, false);
 	productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 	products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 	
+	conversionResult = ByProductNetworkServices.getProductQtyConversions(dctx, UtilMisc.toMap("productList", products, "userLogin", userLogin));
+	productConversionDetails = [:];
+	if(conversionResult){
+		productConversionDetails = conversionResult.get("productConversionDetails");
+	}
+	condList = [];
+	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));
+	condList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "batchNumber"));
+	condExpr = EntityCondition.makeCondition(condList, EntityOperator.AND);
+	orderBatchNumbers = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
 	orderItemsList = [];
 	orderItems.each{eachItem ->
 		
+		productConvDetail = productConversionDetails.get(eachItem.productId);
+		
+		batchList = EntityUtil.filterByCondition(orderBatchNumbers, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+		batchNo = "";
+		if(batchList){
+			batchValue = EntityUtil.getFirst(batchList);
+			batchNo = batchValue.get("attrValue");
+		}
+		prodCrateValue = 1;
+		if(productConvDetail && productConvDetail.get("CRATE")){
+			prodCrateValue = productConvDetail.get("CRATE");
+		}
 		List prodDetails = EntityUtil.filterByCondition(products, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, eachItem.productId));
 		prodDetail = EntityUtil.getFirst(prodDetails);
-		
+		crateQty = (eachItem.quantity).divide(new BigDecimal(prodCrateValue) , 2, rounding);
+		qtyLtr = (eachItem.quantity).multiply(prodDetail.quantityIncluded).setScale(2, rounding);
 		tempMap = [:];
 		tempMap.put("productId",eachItem.productId);
 		tempMap.put("description",prodDetail.description);
-		tempMap.put("itemDescription",eachItem.itemDescription);
-		tempMap.put("quantity",eachItem.quantity);
-		/*tempMap.put("quantityLtr",eachItem.quantity*eachItem.quantityIncluded);*/
+//		tempMap.put("itemDescription",eachItem.itemDescription);
+		tempMap.put("batchNo", batchNo);
+		tempMap.put("qtyInCrate", crateQty);
+		tempMap.put("qtyPerCrate", prodCrateValue);
+		tempMap.put("qtyLtr", qtyLtr);
 		orderItemsList.add(tempMap);
 	}
 	ordersMap.put("orderItems", orderItemsList);
 	ordersMap.put("orderHeader", orderDetail);
 	ordersMap.put("shipment", shipment);
 	ordersMap.put("partyAddress", partyAddress);
+	ordersMap.put("companyDetail", companyDetails);
 	ordersMap.put("partyName", partyName);
 	ordersMap.put("partyCode", partyId);
 	ordersMap.put("invoice", invoice);
