@@ -219,14 +219,36 @@ if(hideSearch == "N" || stopListing){
 			if(paymentMethodTypeId == "CASH_PAYIN" && isRoute){
 				facilityGroup = delegator.findList("FacilityGroupMember", EntityCondition.makeCondition("facilityGroupId", EntityOperator.EQUALS, parameters.facilityId), ["facilityId"] as Set, ["sequenceNum"], null, false);
 				facilityGroupSequenceIds = EntityUtil.getFieldListFromEntityList(facilityGroup, "facilityId", true);
+				cashTypeParty = EntityUtil.filterByCondition(partyProfileDefault, EntityCondition.makeCondition("defaultPayMeth", EntityOperator.EQUALS, "CASH_PAYIN"));
+				cashTypeRouteParty = EntityUtil.filterByCondition(cashTypeParty, EntityCondition.makeCondition("partyId", EntityOperator.IN, facilityGroupSequenceIds));
 				orderedPayList = [];
+				duesBoothList = [];
 				facilityGroupSequenceIds.each{ eachSeqFacId ->
 					boothPaymentsInnerList.each{eachPayEntry ->
 						if(eachPayEntry.facilityId == eachSeqFacId){
 							orderedPayList.addAll(eachPayEntry);
+							duesBoothList.add(eachSeqFacId);
 						}
 					}
 				}
+				cashTypeZeroDueParty = EntityUtil.filterByCondition(cashTypeRouteParty, EntityCondition.makeCondition("partyId", EntityOperator.NOT_IN, duesBoothList));
+				cashPartyIds = EntityUtil.getFieldListFromEntityList(cashTypeZeroDueParty, "partyId", true);
+				
+				cashPartyIds.each{eachParty ->
+					tempMap = [:];
+					facList = partyFacilityMap.get(eachParty);
+					tempMap.facilityId = eachParty;
+					if(facList){
+						tempMap.facilityId = facList.get(0);
+					}
+					tempMap.routeId = parameters.facilityId;
+					tempMap.paymentMethodTypeDesc = paymentMethodDesc;
+					tempMap.grandTotal = 0;
+					tempMap.totalDue = 0;
+					tempMap.supplyDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+					orderedPayList.add(tempMap);
+				}
+					
 				boothPaymentsInnerList.clear();
 				boothPaymentsInnerList.addAll(orderedPayList);
 			}
@@ -308,6 +330,7 @@ if(hideSearch == "N" || stopListing){
 		//}
 		
 	}
+	
 	context.boothPaymentsList = boothPaymentsList;	
 	context.paymentDate= paymentDate;
 	context.paymentTimestamp= paymentTimestamp;
@@ -318,24 +341,6 @@ if(hideSearch == "N" || stopListing){
 	// now get the past dues breakup
 	boothsDuesDayWise = [:];
 	
-	/*if (!onlyCurrentDues) {
-		boothPaymentsList.each { booth ->
-			boothDuesDetail = ByProductNetworkServices.getDaywiseBoothDues(dctx, [userLogin: userLogin, facilityId:booth.facilityId]);	
-			duesList = boothDuesDetail["boothDuesList"];
-			JSONArray boothDuesList= new JSONArray();
-			duesList.each { due ->
-				JSONObject dueJSON = new JSONObject();
-				dueJSON.put("supplyDate", UtilDateTime.toDateString(due.supplyDate, "dd MMM, yyyy"));
-				dueJSON.put("amount", due.amount);
-				dueJSON.put("amount", UtilFormatOut.formatCurrency(due.amount, context.get("currencyUomId"), locale));
-				boothDuesList.add(dueJSON);
-			}
-			JSONObject boothDuesMap = new JSONObject();
-			boothDuesMap.put("totalAmount", UtilFormatOut.formatCurrency(boothDuesDetail["totalAmount"], context.get("currencyUomId"), locale));
-			boothDuesMap.put("boothDuesList", boothDuesList);
-			boothsDuesDaywiseJSON.put(booth.facilityId, boothDuesMap);
-		}
-	}	*/
 }
 context.boothsDuesDaywiseJSON = boothsDuesDaywiseJSON;
 context.statusId = statusId;
