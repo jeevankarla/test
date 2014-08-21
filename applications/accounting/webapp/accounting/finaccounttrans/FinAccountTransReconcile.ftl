@@ -18,7 +18,7 @@ under the License.
 -->
 
 <script language="JavaScript" type="text/javascript">
-<!--
+
 function togglefinAccountTransId(master) {
     var form = document.selectAllForm;
     var finAccountTransList = form.elements.length;
@@ -29,13 +29,13 @@ function togglefinAccountTransId(master) {
         }
     }
     getFinAccountTransRunningTotalAndBalances();
+    
 }
 
 function getFinAccountTransRunningTotalAndBalances() {
 
     var isSingle = true;
     var isAllSelected = true;
-
     var finAccountTxs = jQuery('input[name^="_rowSubmit_o_"]');  
     jQuery.each(finAccountTxs, function() {
     	if (jQuery(this).is(':checked')) {
@@ -50,9 +50,11 @@ function getFinAccountTransRunningTotalAndBalances() {
     } else {
         jQuery('#checkAllTransactions').attr('checked', false);
     }
+    
     if (!isSingle) {
         jQuery('#submitButton').removeAttr('disabled');
         if (jQuery('#showFinAccountTransRunningTotal').length) {
+      
             jQuery.ajax({
                 url: 'getFinAccountTransRunningTotalAndBalances',
                 async: false,
@@ -77,13 +79,22 @@ function getFinAccountTransRunningTotalAndBalances() {
         jQuery('#submitButton').removeAttr('disabled');        
     }
 }
--->
+
 function toggleFinAccntTransId(master) {
         var finTransactions = jQuery("#listFinAccTra :checkbox[name='finAccntTransIds']");
+       
         jQuery.each(finTransactions, function() {
             this.checked = master.checked;
         });
     }
+    function toggleFinTransIdForReconsile(master) {
+        var finTransactions = jQuery("#listFinAccTra :checkbox[name='finAccntTransIds']");
+        
+        jQuery.each(finTransactions, function() {
+            this.checked = master.checked;
+        });
+    }
+    
     function getFinAccountTransInfo() {
     var finAccountTansList=[];
         $('.chkFinTransId:checked').each(function() {
@@ -91,7 +102,21 @@ function toggleFinAccntTransId(master) {
         $('#massCancelFinTrans').append('<input type="hidden" name="finAccountTransIds" value="'+finAccountTrnsId+'" />');
         });
         }
-
+    function appendFinTransToReconsileForm() {// for Recinsilation Automation
+    var finAccountTansList=[];
+    var finTransSize=0;
+        $('.chkRecFinTransId:checked').each(function() {
+        finTransSize=finTransSize+1;
+        var finAccountTrnsId=$(this).val();
+        $('#newFinTransReconsileId').append('<input type="hidden" name="finAccountTransIds" value="'+finAccountTrnsId+'" />');
+        });
+        
+        if(finTransSize<=0){
+        alert("Bank Transactions Not Selected To Reconciled  !");
+        return false;
+        }
+       
+        }
 </script>
 
 <div class="screenlet screenlet-body">
@@ -110,6 +135,15 @@ function toggleFinAccntTransId(master) {
          <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
        </div>
      </form>-->
+     
+   <form name="newFinTransReconsile" id="newFinTransReconsileId"  method="post" action="createReconsileToFinAccountTrans">
+      <div align="right">
+       <input type="submit" value="Create Reconsile"  class="buttontext" id="bulkReconsileId" name="bulkReconsileName" onclick="javascript:return appendFinTransToReconsileForm();" />
+        <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
+         <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
+         <input name="organizationPartyId" type="hidden" value="${defaultOrganizationPartyId}"/>
+       </div>
+     </form>
     <form id="listFinAccTra" name="selectAllForm" method="post" action="<@ofbizUrl><#if !grandTotal?exists>reconcileFinAccountTrans?clearAll=Y<#else>assignGlRecToFinAccTrans?clearAll=Y</#if></@ofbizUrl>">
       <input name="_useRowSubmit" type="hidden" value="Y"/>
       <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
@@ -118,33 +152,14 @@ function toggleFinAccntTransId(master) {
         <input name="reconciledBalance" type="hidden" value="${(glReconciliation.reconciledBalance)?if_exists}"/>
         <input name="reconciledBalanceWithUom" type="hidden" id="reconciledBalanceWithUom" value="<@ofbizCurrency amount=(glReconciliation.reconciledBalance)?default('0')/>"/>
       </#if>
-      <#assign glReconciliations = delegator.findByAnd("GlReconciliation", {"glAccountId" : finAccount.postToGlAccountId?if_exists, "statusId" : "GLREC_CREATED"}, Static["org.ofbiz.base.util.UtilMisc"].toList("reconciledDate DESC"))>
-      <#if (glReconciliationId?has_content && (glReconciliationId == "_NA_" && finAccountTransList?has_content)) || !grandTotal?exists>
-        <div align="right">
-          <#if grandTotal?exists>
-            <#if glReconciliations?has_content>
-              <select name="glReconciliationId">
-                <option value="">--${uiLabelMap.CommonSelect}--</option>
-                <#list glReconciliations as glReconciliation>
-                  <option value="${glReconciliation.glReconciliationId}">${glReconciliation.glReconciliationName?if_exists}[[${glReconciliation.glReconciliationId}] [${glReconciliation.reconciledDate?if_exists}] [${glReconciliation.reconciledBalance?if_exists}]]</option>
-                </#list>
-              </select>
-              <input id="submitButton" type="submit" onclick="javascript:document.selectAllForm.submit();" value="${uiLabelMap.AccountingAssignToReconciliation}" disabled="disabled" />
-            <#else>
-              <span class="tooltip">${uiLabelMap.FinAccountNoReconciliationExists} <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${parameters.finAccountId?if_exists}</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a></span>
-            </#if>
-          <#else>
-            <input id="submitButton" type="submit" onclick="javascript:document.selectAllForm.submit();" value="${uiLabelMap.AccountingReconcile}" disabled="disabled" />
-          </#if>
-        </div>
-      </#if>
+      
       <table class="basic-table hover-bar" cellspacing="0">
         <#-- Header Begins -->
         <tr class="header-row-2">
           <th>${uiLabelMap.FormFieldTitle_finAccountTransId}</th>
           <th>${uiLabelMap.FormFieldTitle_finAccountTransTypeId}</th>
           <th>${uiLabelMap.PartyParty}</th>
-         <#-- <th>${uiLabelMap.FinAccountReconciliationName}</th> -->
+          <#--<th>${uiLabelMap.FinAccountReconciliationName}</th>-->
           <th>${uiLabelMap.FormFieldTitle_transactionDate}</th>
           <th>${uiLabelMap.FormFieldTitle_entryDate}</th>
           <th>${uiLabelMap.CommonAmount}</th>
@@ -153,17 +168,23 @@ function toggleFinAccntTransId(master) {
           <th>${uiLabelMap.FormFieldTitle_paymentMethodTypeId}</th>
           <th>${uiLabelMap.CommonStatus}</th>
           <th>${uiLabelMap.CommonComments}</th>
+          <#--
           <#if grandTotal?exists>
             <th>${uiLabelMap.AccountingCancelTransactionStatus}</th>
-          </#if>
+          </#if>-->
           <#if !grandTotal?exists>
             <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
               <th>${uiLabelMap.AccountingRemoveFromGlReconciliation}</th>
             </#if>
           </#if>
+           <#--
           <#if ((glReconciliationId?has_content && glReconciliationId == "_NA_") && (glReconciliations?has_content && finAccountTransList?has_content)) || !grandTotal?exists>
             <th>${uiLabelMap.CommonSelectAll} <input name="selectAll" type="checkbox" value="N" id="checkAllTransactions" onclick="javascript:togglefinAccountTransId(this);"/></th>
-          </#if>
+          </#if>-->
+           
+           <th align="right">${uiLabelMap.CommonSelectAll} 
+           <input type="checkbox"  name="finAccountTransIdsList" onchange="javascript:toggleFinTransIdForReconsile(this);" />
+           </th>
           <#--
            <th align="right">${uiLabelMap.CommonSelectAll} 
            <input type="checkbox" id="checkAllInvoices" name="finAccountTransIdsList" onchange="javascript:toggleFinAccntTransId(this);" />
@@ -265,9 +286,9 @@ function toggleFinAccntTransId(master) {
             </td>
             <td>${finAccountTransType.description?if_exists}</td>
             <td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="/partymgr/control/viewprofile?partyId=${partyName.partyId}">[${(partyName.partyId)!}]</a></#if></td>
-             <#--
+            <#--
             <td><#if glReconciliation?has_content>${glReconciliation.glReconciliationName?if_exists}<a href="ViewGlReconciliationWithTransaction?glReconciliationId=${glReconciliation.glReconciliationId?if_exists}&amp;finAccountId=${parameters.finAccountId?if_exists}">[${glReconciliation.glReconciliationId?if_exists}]</a></#if></td>
-           -->
+            -->
             <td>${finAccountTrans.transactionDate?if_exists}</td>
             <td>${finAccountTrans.entryDate?if_exists}</td>
             <td>${finAccountTrans.amount?if_exists}</td>
@@ -283,30 +304,12 @@ function toggleFinAccntTransId(master) {
 	        </td>
             <td><#if status?has_content>${status.description?if_exists}</#if></td>
             <td>${finAccountTrans.comments?if_exists}</td>
-            <#if grandTotal?exists>
-                <#assign contra = ""/>
-          		<#if finAccountTrans.reasonEnumId?has_content>                         
-                     <#assign contra = finAccountTrans.reasonEnumId?if_exists />                        
-                </#if>
-              <td><!-- to avoid cancel of contra FinAccount transaction -->
-                <#if ((finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId != 'WITHDRAWAL' &&  contra !='FATR_CONTRA') ||
-                       (finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId == 'WITHDRAWAL' && contra !='FATR_CONTRA' && companyCheck == 'COMPANY_CHECK'))>
-                  <a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="buttontext">${uiLabelMap.CommonCancel}</a>
-                </#if>
-              </td>
-              <#--
-              <td align="right">
-               <#if ((finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId != 'WITHDRAWAL' &&  contra !='FATR_CONTRA') ||
-                       (finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED' && hasFinTxEditPermission && finAccountTransType.finAccountTransTypeId == 'WITHDRAWAL' && contra !='FATR_CONTRA' && companyCheck == 'COMPANY_CHECK'))>
-               <input type="checkbox" id="finAccountTransId_${finAccountTrans.finAccountTransId}" class="chkFinTransId" name="finAccntTransIds" value="${finAccountTrans.finAccountTransId}" />
-               </#if>
-               </td>-->
-            </#if>
             <input name="finAccountTransId_o_${finAccountTrans_index}" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
             <input name="organizationPartyId_o_${finAccountTrans_index}" type="hidden" value="${defaultOrganizationPartyId}"/>
             <#if glReconciliationId?has_content && glReconciliationId != "_NA_">
               <input name="glReconciliationId_o_${finAccountTrans_index}" type="hidden" value="${glReconciliationId}"/>
             </#if>
+             <#--
             <#if !(grandTotal?exists)>
               <#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
                 <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
@@ -314,11 +317,13 @@ function toggleFinAccntTransId(master) {
                 </#if>
               </#if>
             </#if>
-            <#if ((glReconciliationId?has_content && glReconciliationId == "_NA_") && (glReconciliations?has_content && finAccountTransList?has_content)) || !grandTotal?exists>
+            -->
               <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                <td><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances();"/></td>
+                <td align="center" >
+                <#--><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances();"/>-->
+                <input type="checkbox" id="finAccountTransId_${finAccountTrans.finAccountTransId}" class="chkRecFinTransId" name="finAccntTransIds" value="${finAccountTrans.finAccountTransId}" />
+                </td>
               </#if>
-            </#if>
           </tr>
           <#-- toggle the row color -->
           <#assign alt_row = !alt_row>

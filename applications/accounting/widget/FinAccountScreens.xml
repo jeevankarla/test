@@ -772,6 +772,7 @@ under the License.
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNTREC_EDIT"/>
                 </service>
+                 <set field="targetReuest" value="FindFinAccountReconciliations"/>
                 <set field="hasFinRecEditPermission" from-field="permResult.hasPermission"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">

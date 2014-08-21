@@ -1998,7 +1998,7 @@
 			<link target="PortalPaymentOverview">
 			</link>
 		 </menu-item>
-		 <menu-item name="ContraEntry" title="Transfer Funds/Contra">
+		 <menu-item name="ContraEntry" title="Contra">
 		  <condition>
 		   	<and>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2057,19 +2057,6 @@
 				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
 			</link>
 		</menu-item> 
-		<menu-item name="FinAccountTrans"
-			title="${uiLabelMap.AccountingFinAccountTransations}">
-			<condition>
-				<and>
-					<not><if-empty field="ctxFinAccountId"/></not>
-					<or><not><if-empty field="finAccountId"/></not></or>
-					<!-- <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" /> -->
-					</and>
-           	</condition>
-			<link target="FindFinAccountTransAlt">
-				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
-			</link>
-		</menu-item>
 		<menu-item name="depositWithdraw" title="${uiLabelMap.AccountingDepositWithdraw}">
 		    <condition>
 				<and>
@@ -2083,8 +2070,36 @@
 				<parameter param-name="organizationPartyId" from-field="finAccount.ownerPartyId" />
 			</link>
 		</menu-item>
-		
-		<menu-item name="FindFinAccountReconciliations" title="${uiLabelMap.AccountingReconciliation}">
+		<menu-item name="FinAccountTrans"
+			title="Find Transations">
+			<condition>
+				<and>
+					<not><if-empty field="ctxFinAccountId"/></not>
+					<or><not><if-empty field="finAccountId"/></not></or>
+					<!-- <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" /> -->
+					</and>
+           	</condition>
+			<link target="FindFinAccountTransAlt">
+				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
+				<parameter param-name="subTabItem" value="FinAccountTrans" />
+			</link>
+		</menu-item>
+		<menu-item name="FinAccountTransForReconsile"
+			title="Reconcilation">
+			<condition>
+				<and>
+					<not><if-empty field="ctxFinAccountId"/></not>
+					<or><not><if-empty field="finAccountId"/></not></or>
+					<!-- <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" /> -->
+					</and>
+           	</condition>
+			<link target="FinAccountTransForReconsile">
+				<parameter param-name="finAccountId" value="${ctxFinAccountId}" />
+				<parameter param-name="glReconciliationId" value="_NA_" />
+				<parameter param-name="subTabItem" value="FinAccountTransForReconsile" />
+			</link>
+		</menu-item>
+		<menu-item name="FindFinAccountReconciliations" title="Reconciliation Batches">
 		     <condition>
 				<and>
 					<not><if-empty field="ctxFinAccountId"/></not>
@@ -2092,7 +2107,7 @@
 					<!-- <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" /> -->
 					</and>
            	</condition>
-			<link target="FindFinAccountReconciliations">
+			<link target="FindFinAccountReconciliationsNew">
 				<parameter param-name="finAccountId" />
 			</link>
 		</menu-item>

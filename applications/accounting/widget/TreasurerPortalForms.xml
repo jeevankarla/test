@@ -46,14 +46,21 @@ under the License.
                 <field name="finAccountId"><ignored></ignored></field>
                  <field name="replenishPaymentId"><ignored></ignored></field>
                   <field name="replenishLevel"><ignored></ignored></field>
-        <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field>
+                   <field name="finAccountTypeId"><ignored></ignored></field>
+                   <field name="statusId"><ignored></ignored></field> 
+                     <field name="finAccountPin"><ignored></ignored></field>
+                        <field name="micrNumber"><ignored></ignored></field>
+                           <field name="fromDate"><ignored></ignored></field>
+                            <field name="thruDate"><ignored></ignored></field>
+      
+       <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
         <field name="finAccountName">
             <hyperlink description="${finAccountName}" target="EditFinAccountAlt">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="organizationPartyId">
+      <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
+       <!--  <field name="organizationPartyId">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
@@ -62,7 +69,7 @@ under the License.
             <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="ownerPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
        <!--  <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasFinEditPermission">
             <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="finAccountId"/>
@@ -85,19 +92,21 @@ under the License.
                 <field name="finAccountId"><ignored></ignored></field>
                  <field name="replenishPaymentId"><ignored></ignored></field>
                   <field name="replenishLevel"><ignored></ignored></field>
-        <field name="finAccountId">
-            <hyperlink  description="${finAccountId}" target="EditFinAccountAlt">
-                <parameter param-name="finAccountId"/>
-            </hyperlink>
-        </field>
-        <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field>
+                   <field name="finAccountTypeId"><ignored></ignored></field>
+                   <field name="statusId"><ignored></ignored></field> 
+                     <field name="finAccountPin"><ignored></ignored></field>
+                        <field name="micrNumber"><ignored></ignored></field>
+                           <field name="fromDate"><ignored></ignored></field>
+                            <field name="thruDate"><ignored></ignored></field>
+      
+       <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
         <field name="finAccountName">
-            <hyperlink description="${finAccountName}" target="EditFinAccount">
+            <hyperlink description="${finAccountName}" target="EditFinAccountAlt">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="organizationPartyId">
+      <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
+       <!--  <field name="organizationPartyId">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
@@ -106,8 +115,8 @@ under the License.
             <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="ownerPartyId"/>
             </hyperlink>
-        </field>
-      <!--   <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasFinEditPermission">
+        </field> -->
+       <!--  <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasFinEditPermission">
             <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
@@ -130,26 +139,67 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="FINACT_TRNS_STATUS"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glReconciliationId" title="${uiLabelMap.FinAccountReconciliationId}" position="2">
+        <!-- <field name="glReconciliationId" title="${uiLabelMap.FinAccountReconciliationId}" position="2">
             <drop-down allow-empty="true">
                 <option key="_NA_" description="${uiLabelMap.CommonNotAssigned}"/>
                 <list-options list-name="glReconciliations" key-name="glReconciliationId" 
                     description="${glReconciliationName}[[${glReconciliationId}] [${reconciledDate}] [${reconciledBalance}]]"/>
             </drop-down>
-        </field>
+        </field> -->
         <field name="fromTransactionDate" position="1"><date-time/></field>
         <field name="thruTransactionDate" position="2"><date-time/></field>
         <field name="fromEntryDate" position="1"><date-time/></field>
         <field name="thruEntryDate" position="2"><date-time/></field>
         <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+     <form name="FinAccountTransForReconsile" type="single" target="FinAccountTransForReconsile">
+        <actions>
+            <entity-and entity-name="GlReconciliation" list="glReconciliations">
+                <field-map field-name="glAccountId" from-field="finAccount.postToGlAccountId"/>
+                <order-by field-name="reconciledDate DESC"/>
+            </entity-and>
+        </actions>
+        
+        <field name="glReconciliationId"><hidden value="${glReconciliationId}"></hidden></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="finAccountId"><hidden value="${finAccountId}"/></field>
+        <field name="statusId"><hidden value="FINACT_TRNS_CREATED"/></field>
+        <field name="finAccountTransTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="FinAccountTransType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+       <!--  <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint name="statusTypeId" value="FINACT_TRNS_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <!-- <field name="glReconciliationId" title="${uiLabelMap.FinAccountReconciliationId}" position="2">
+            <drop-down allow-empty="true">
+                <option key="_NA_" description="${uiLabelMap.CommonNotAssigned}"/>
+                <list-options list-name="glReconciliations" key-name="glReconciliationId" 
+                    description="${glReconciliationName}[[${glReconciliationId}] [${reconciledDate}] [${reconciledBalance}]]"/>
+            </drop-down>
+        </field> -->
+        <field name="fromTransactionDate" position="1"><date-time/></field>
+        <field name="thruTransactionDate" position="2"><date-time/></field>
+        <field name="fromEntryDate" position="1"><date-time/></field>
+        <field name="thruEntryDate" position="2"><date-time/></field>
+        <field name="searchButton" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
      <!-- create NewTreasurer Simple Deposit for Contra -->
      <form name="BankContraEntry" type="single" target="preCreateBankContraEntry"
         header-row-style="header-row" default-table-style="basic-table">
@@ -207,9 +257,29 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    <form name="PaymentsDepositWithdraw" type="single" target="FindBankDepositOrWithdraw" extends="FindBatchPayments" extends-resource="component://accounting/widget/ar/forms/ArPaymentForms.xml">
+    <form name="PaymentsDepositWithdraw" type="single" target="FindBankDepositOrWithdraw" >
+         <actions>
+            <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
+            <set field="noConditionFind" value="Y"/>
+        </actions>
         <field name="finAccountId"><hidden/></field>
+        <field name="organizationPartyId"><hidden/></field>
         <field name="noConditionFind"><hidden/></field>
+        <field name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}">
+            <drop-down allow-empty="true">
+             <!--    <entity-options entity-name="PaymentMethodType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                    
+                </entity-options> -->
+                 <list-options list-name="paymentMethodTypeList" key-name="paymentMethodTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}">
+            <lookup target-form-name="LookupPartyName"/>
+        </field> 
+        <field name="issuingAuthority"><text/></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
      <form name="EditBankAccount" type="single" target="updateFinAccount" default-map-name="finAccount"
@@ -434,6 +504,28 @@ under the License.
         <field position="1" name="createButton" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+    </form>
+    <form name="FindDepositWithdraw" type="single" >
+        <actions>
+            <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
+            <set field="noConditionFind" value="Y"/>
+        </actions>
+        <field name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentMethodType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="noConditionFind"><hidden/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}">
+            <lookup target-form-name="LookupPartyName"/>
+        </field> 
+        <field name="issuingAuthority"><text/></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <!-- ============= Outgoing Advances =========== -->

@@ -1968,6 +1968,11 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountTransAlt"/>
     </request-map>
+     <request-map uri="FinAccountTransForReconsile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FinAccountTransForReconsile"/>
+    </request-map>
+    
      <request-map uri="FinancialAccountingTransBANK">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinancialAccountingTransBANK"/>
@@ -2142,6 +2147,13 @@ under the License.
         <response name="success" type="view"  value="FindFinAccountTrans"/>
         <response name="error" type="view" value="FindFinAccountTrans"/>
     </request-map>
+     <request-map uri="createReconsileToFinAccountTrans">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createReconsileAndUpdateFinAccountTrans"/>
+        <response name="success" type="view"  value="FinAccountTransForReconsile"/>
+        <response name="error" type="view" value="FinAccountTransForReconsile"/>
+    </request-map>
+   
     <request-map uri="FinancialAccountReconciliation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FinancialAccountReconciliation"/>
@@ -2164,6 +2176,10 @@ under the License.
     <request-map uri="FindFinAccountReconciliations">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountReconciliations"/>
+    </request-map>
+    <request-map uri="FindFinAccountReconciliationsNew">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindFinAccountReconciliationsNew"/>
     </request-map>
     <request-map uri="createGlReconciliation">
         <security https="true" auth="true"/>
@@ -3306,6 +3322,8 @@ under the License.
     <view-map name="FinancialAccountingTransBANK" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinancialAccountingTransBANK"/>
     <view-map name="BankContraEntry" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankContraEntry"/>
     <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>
+    <view-map name="FinAccountTransForReconsile" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsile"/>
+    <view-map name="FindFinAccountReconciliationsNew" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountReconciliationsNew"/>
     <!-- TO BE REMOVED
     <view-map name="ListFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ListFinAccount"/>
     -->

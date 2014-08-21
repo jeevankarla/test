@@ -13312,6 +13312,16 @@
         <value xml:lang="th">แก้ไขรายการงบกำไรสะสม</value>
         <value xml:lang="zh">编辑金融账户交易</value>
     </property>
+     <property key="PageTitleBankContraTrans">
+        <value xml:lang="en">Contra Transactions</value>
+        <value xml:lang="fr">Modifier une transaction de rôle financier</value>
+        <value xml:lang="hi_IN">वित्तीय खाता गतिविधि संपादित करें</value>
+        <value xml:lang="it">Aggiorna Transazione Conto Finanziario</value>
+        <value xml:lang="nl">Transactie financiele rekening aanpassen</value>
+        <value xml:lang="ru">Изменить проводку финансового счета</value>
+        <value xml:lang="th">แก้ไขรายการงบกำไรสะสม</value>
+        <value xml:lang="zh">编辑金融账户交易</value>
+    </property>
     <property key="PageTitleEditFixedAsset">
         <value xml:lang="en">Edit Fixed Asset</value>
         <value xml:lang="es">Editar Activo Fijo</value>
@@ -13618,8 +13628,23 @@
         <value xml:lang="en">Find Transactions for Financial Account: ${finAccount.finAccountName} [${finAccountId}]</value>
         <value xml:lang="hi_IN">${finAccount.finAccountName} [${finAccountId}] वित्तीय खाते के लिए वित्तीय खाता गतिविधियाँ खोजें</value>
     </property>
+     <property key="PageTitleFindBankAccountTrans">
+        <value xml:lang="en">Find Transactions for Bank Account: ${finAccount.finAccountName} </value>
+        <value xml:lang="hi_IN">${finAccount.finAccountName} [${finAccountId}] वित्तीय खाते के लिए वित्तीय खाता गतिविधियाँ खोजें</value>
+    </property>
+    
     <property key="PageTitleFindFinAccountReconciliations">
         <value xml:lang="en">Find Financial Account Reconciliations for Financial Account : ${finAccount.finAccountName} [${finAccountId}]</value>
+    </property>
+     <property key="FindBankAccountReconciliationsTitle">
+        <value xml:lang="en">Find Financial Account Reconciliations for Financial Account : ${finAccount.finAccountName} </value>
+    </property>
+     <property key="CreateBankAccountReconciliationsTitle">
+        <value xml:lang="en">Create Bank Reconciliations for : ${finAccount.finAccountName} </value>
+    </property>
+     <property key="AccountingDepositOrWithdrawPaymentsBANK">
+        <value xml:lang="en">Deposit Or Withdraw Payments for Bank Account: ${finAccount.finAccountName} </value>
+        <value xml:lang="hi_IN">${finAccount.finAccountName} [${finAccountId}] वित्तीय खाते के लिए जमा भुगतान या भुगतान वापस करे</value>
     </property>
     <property key="PageTitleFindPaymentGatewayConfig">
         <value xml:lang="en">Find Payment Gateway Config</value>

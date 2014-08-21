@@ -513,6 +513,87 @@ public class FinAccountServices {
          } 
         return ServiceUtil.returnSuccess("Status Change Successfully for Selected FinAccountTransactions");
     }
+    public static Map<String, Object> createReconsileAndUpdateFinAccountTrans(DispatchContext dctx, Map<String, Object> context) {//Simplifying Reconsilation
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        List finAccountTransIdsList =  (List)context.get("finAccountTransIds");
+        String organizationPartyId =  (String)context.get("organizationPartyId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String  statusId=(String)context.get("statusId");
+        String  finAccountId=(String)context.get("finAccountId");
+        
+      String dateGlReconciliStr= UtilDateTime.toDateString(UtilDateTime.nowTimestamp(), "-dd/MM/yyyy HH:mm:ss");
+         try {
+        GenericValue finAccountDetails = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+        if(UtilValidate.isEmpty(finAccountDetails)){
+                 return ServiceUtil.returnError("Unable to locate financial account");
+        }
+        if(UtilValidate.isEmpty(organizationPartyId)){
+        	organizationPartyId=finAccountDetails.getString("ownerPartyId");
+        }
+        Map newGlReconcilationMap = UtilMisc.toMap("statusId","GLREC_CREATED");
+        newGlReconcilationMap.put("userLogin", userLogin);
+        newGlReconcilationMap.put("glAccountId", finAccountDetails.getString("postToGlAccountId"));
+        newGlReconcilationMap.put("glReconciliationName", finAccountDetails.getString("finAccountId")+dateGlReconciliStr);
+        newGlReconcilationMap.put("description", finAccountDetails.getString("finAccountName")+dateGlReconciliStr);
+        newGlReconcilationMap.put("organizationPartyId", finAccountDetails.getString("ownerPartyId"));
+        newGlReconcilationMap.put("reconciledDate", UtilDateTime.nowTimestamp());
+        
+        String  glReconciliationId="";
+    	Map createGlReconcilMapResult=dispatcher.runSync("createGlReconciliation", newGlReconcilationMap);
+        if (ServiceUtil.isError(createGlReconcilMapResult)){
+		  		String errMsg =  ServiceUtil.getErrorMessage(createGlReconcilMapResult);
+		  		Debug.logError(errMsg , module);
+		  	    return ServiceUtil.returnError("Creation of Reoncilation Having Some Problem For BankAccount:" + finAccountId);    
+		  }
+        glReconciliationId=(String)createGlReconcilMapResult.get("glReconciliationId");
+        
+        Map finAccountTransMap = UtilMisc.toMap("statusId",statusId);
+            finAccountTransMap.put("userLogin", userLogin);
+            //assigning ReconcilationId to FinAccountTrans batch
+            for(int i = 0; i < finAccountTransIdsList.size(); i++){
+           	 String finAccountTransId = (String) finAccountTransIdsList.get(i);
+           	 finAccountTransMap.put("finAccountTransId", finAccountTransId);
+           	// Debug.log("===finAccountTransId=="+finAccountTransId+"==finAccountId==="+finAccountId+"=glReconciliationId=="+glReconciliationId);
+           	try {
+               	Map assignGlRecToFinAccTransRes=dispatcher.runSync("assignGlRecToFinAccTrans",  UtilMisc.toMap("finAccountTransId",finAccountTransId,"glReconciliationId",glReconciliationId,"userLogin",userLogin));
+                   if (ServiceUtil.isError(assignGlRecToFinAccTransRes)){
+         		  		String errMsg =  ServiceUtil.getErrorMessage(assignGlRecToFinAccTransRes);
+         		  		Debug.logError(errMsg , module);
+         		  	    return ServiceUtil.returnError("Problem for Assigning of TransactionId:" + finAccountTransId+" To ReconcilationId ");    
+         		  	}
+               } catch (GenericServiceException e) {
+                   Debug.logError(e, "Problem for Reconcilation of TransactionId:" + finAccountTransId, module);
+                   return ServiceUtil.returnError(e.getMessage());
+               }
+             }  
+            //Reconsilation starts here
+            for(int i = 0; i < finAccountTransIdsList.size(); i++){
+              	 String finAccountTransId = (String) finAccountTransIdsList.get(i);
+              	 finAccountTransMap.put("finAccountTransId", finAccountTransId);
+                  try {
+                     	Map reconcileFinAccountTransRes=dispatcher.runSync("reconcileFinAccountTrans",  UtilMisc.toMap("finAccountTransId",finAccountTransId,"organizationPartyId",organizationPartyId,"userLogin",userLogin));
+                         if (ServiceUtil.isError(reconcileFinAccountTransRes)){
+               		  		String errMsg =  ServiceUtil.getErrorMessage(reconcileFinAccountTransRes);
+               		  		Debug.logError(errMsg , module);
+               		  	    return ServiceUtil.returnError("Problem for Reconcilation of TransactionId:" + finAccountTransId);    
+               		  	}
+                     } catch (GenericServiceException e) {
+                         Debug.logError(e, "Problem for Reconcilation of TransactionId:" + finAccountTransId, module);
+                         return ServiceUtil.returnError(e.getMessage());
+                     }
+                    
+                }  
+		    }catch (GenericEntityException e) {
+				Debug.logError(e, module);
+		        return ServiceUtil.returnError(e.getMessage());
+			} 
+		    catch (GenericServiceException e) {
+		        Debug.logError(e, "Reconcilation Having Problem ", module);
+		        return ServiceUtil.returnError(e.getMessage());
+		    }
+        return ServiceUtil.returnSuccess("Reconcilation Created Successfully for Selected FinAccountTransactions");
+    }
     public static Map<String, Object> getFinAccountIdsListForPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 		Map<String, Object> result = FastMap.newInstance();

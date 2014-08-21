@@ -537,7 +537,7 @@ under the License.
         <field name="reconciledBalance"><display type="currency" currency="${currencyUomId}"></display></field>
         <field name="openingBalance"><display type="currency" currency="${currencyUomId}"></display></field>
     </form>
-    <form name="FindFinancialAccountReconciliation" type="single" target="FindFinAccountReconciliations">
+    <form name="FindFinancialAccountReconciliation" type="single" target="${targetReuest}">
         <field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
         <field name="glReconciliationId" title="${uiLabelMap.FinAccountReconciliationId}"><lookup target-form-name="LookupGlReconciliation"/></field>
         <field name="glReconciliationName" title="${uiLabelMap.FinAccountReconciliationName}"><text/></field>

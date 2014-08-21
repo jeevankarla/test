@@ -211,11 +211,12 @@
      <screen name="FindFinAccountTransAlt">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleFindFinAccountTrans"/>
+                <set field="titleProperty" value="PageTitleFindBankAccountTrans"/>
                 <!--   <set field="tabButtonItem" value="FindFinAccountAlt"/> -->
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
                   	<set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
                 <set field="tabButtonItem2" value="FinAccountTrans"/>
+                <set field="glReconciliationId" value="${parameters.glReconciliationId}"/>
                 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
                 <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
@@ -267,10 +268,10 @@
                                 <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" type="String"></if-compare>
                             </condition>
                             <widgets>
-                                <link target="FinancialAccountReconciliation" text="${uiLabelMap.FinAccountReconciliation}" style="buttontext">
+                              <!--   <link target="FinancialAccountReconciliation" text="${uiLabelMap.FinAccountReconciliation}" style="buttontext">
                                     <parameter param-name="finAccountId" from-field="finAccountId"/>
                                     <parameter param-name="statusId" value="FINACT_TRNS_CREATED"/>
-                                </link>
+                                </link> -->
                             </widgets>
                         </section>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
@@ -288,10 +289,79 @@
             </widgets>
         </section>
     </screen>
+      <screen name="FinAccountTransForReconsile">
+        <section>
+            <actions>
+                <set field="titleProperty" value="CreateBankAccountReconciliationsTitle"/>
+                <!--   <set field="tabButtonItem" value="FindFinAccountAlt"/> -->
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                  	<set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
+               <!--  <set field="tabButtonItem2" value="${parameters.subTabItem}"/> -->
+                <set field="tabButtonItem2" value="FinAccountTransForReconsile"/>
+                <set field="parameters.glReconciliationId" value="${glReconciliationId}"/><!-- instead of Form we are setting in Screen  -->
+                <set field="parameters.finAccountId" value="${finAccountId}"/>
+                 <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
+                 <set field="glReconciliationId" value="${glReconciliationId}"/>
+                 <set field="parameters.noConditionFind" value="Y"/>
+                 
+                <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
+                <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
+                <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
+                <set field="grandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.grandTotal"/>
+                <set field="createdGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdGrandTotal"/>
+                <set field="totalCreatedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalCreatedTransactions"/>
+                <set field="approvedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.approvedGrandTotal"/>
+                <set field="totalApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalApprovedTransactions"/>
+                <set field="createdApprovedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdApprovedGrandTotal"/>
+                <set field="totalCreatedApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalCreatedApprovedTransactions"/>
+                 <set field="finAccountId" from-field="parameters.finAccountId"/> 
+                <entity-one entity-name="FinAccount"  value-field="finAccount"/>
+                <set field="glReconciliationId" from-field="parameters.glReconciliationId"/> 
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNTTX_EDIT"/>
+                </service>
+                <set field="hasFinTxEditPermission" from-field="permResult.hasPermission"/> 
+            </actions>
+            <widgets>
+               <!--   <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml"> -->
+                    <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+             <!--    <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+                    <decorator-section name="body">
+                        <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <section>
+                            <condition>
+                            	<if-service-permission service-name="acctgFinAcctPermissionCheck"  main-action="FINACCOUNTREC_EDIT"> </if-service-permission>
+                                <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT" type="String"></if-compare>
+                            </condition>
+                            <widgets>
+                              <!--   <link target="FinancialAccountReconciliation" text="${uiLabelMap.FinAccountReconciliation}" style="buttontext">
+                                    <parameter param-name="finAccountId" from-field="finAccountId"/>
+                                    <parameter param-name="statusId" value="FINACT_TRNS_CREATED"/>
+                                </link> -->
+                            </widgets>
+                        </section>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                             <decorator-section name="search-options">
+                              <!--   <include-form name="FinAccountTransForReconsile" location="component://accounting/widget/TreasurerPortalForms.xml"/> -->
+                            </decorator-section>  
+                            <decorator-section name="search-results">
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/FinAccountTransReconcile.ftl"/></html>
+                                </platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
       <screen name="PaymentsDepositWithdraw">
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingDepositOrWithdrawPaymentsBANK"/>
+                 <set field="parameters.findPaymentMethodType" value="bankOrNonBankMethodType"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
                  <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
                 <set field="tabButtonItem2" value="depositWithdraw"/>
@@ -350,31 +420,53 @@
             </widgets>
         </section>
     </screen>
-    
-       <screen name="BankContraEntry">
+        <screen name="FindFinAccountReconciliationsNew">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditFinAccountTrans"/>
-               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
-                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
-                <set field="tabButtonItem" value="ContraEntry"/>
-                
+                <set field="titleProperty" value="FindBankAccountReconciliationsTitle"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                 <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/>
+                <set field="tabButtonItem2" value="FindFinAccountReconciliations"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
-                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
-                <set field="entryType" from-field="parameters.entryType"/>
+                <set field="glReconciliationId" from-field="parameters.glReconciliationId" default-value=""/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNTREC_EDIT"/>
+                </service>
+                <set field="targetReuest" value="FindFinAccountReconciliationsNew"/>
+                <set field="hasFinRecEditPermission" from-field="permResult.hasPermission"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
-                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
-                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">
+                    <condition-list>
+                        <condition-expr field-name="finAccountId" operator="equals" from-field="finAccountId"/>
+                        <condition-expr field-name="glReconciliationId" operator="not-equals" from-field="nullField" ignore-if-empty="true"/>
+                        <condition-expr field-name="glReconciliationId" operator="equals" from-field="glReconciliationId" ignore-if-empty="true"/>
+                    </condition-list>
+                </entity-condition>
+                <set field="glReconciliationIds" value="${groovy:org.ofbiz.entity.util.EntityUtil.getFieldListFromEntityList(finAccountTransList, 'glReconciliationId', true);}" type="List"/>
+                <entity-condition entity-name="GlReconciliation" list="glReconciliations">
+                    <condition-list>
+                        <condition-expr field-name="glReconciliationId" operator="in" from-field="glReconciliationIds"/>
+                        <condition-expr field-name="glAccountId" operator="equals" from-field="finAccount.postToGlAccountId" ignore-if-empty="true"/>
+                        <condition-expr field-name="glReconciliationName" operator="equals" from-field="parameters.glReconciliationName" ignore-if-empty="true"/>
+                        <condition-expr field-name="description" operator="equals" from-field="parameters.description" ignore-if-empty="true"/>
+                        <condition-expr field-name="statusId" operator="equals" from-field="parameters.statusId" ignore-if-empty="true"/>
+                        <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.organizationPartyId" ignore-if-empty="true"/>
+                    </condition-list>
+                </entity-condition>
             </actions>
             <widgets>
-              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
-                <!-- <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                       <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <label style="h1" text="${uiLabelMap.AccountingEditFinAccountTransactionFor}"/>
-                        <screenlet id="FinAccountTransPanel" collapsible="true">
-                            <include-form name="BankContraEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
-                        </screenlet>
+                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                      <!--   <include-menu name="FinAccountReconciliationsTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindFinancialAccountReconciliation" location="component://accounting/widget/FinAccountForms.xml"/>
+                            </decorator-section> 
+                            <decorator-section name="search-results">
+                                <include-form name="ListFinAccountReconciliations" location="component://accounting/widget/FinAccountForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -606,6 +698,35 @@
                             	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+       <screen name="BankContraEntry">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleBankContraTrans" />
+               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+                <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
+                <set field="tabButtonItem" value="ContraEntry"/>
+                
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="entryType" from-field="parameters.entryType"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                <!-- <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}"> -->
+                    <decorator-section name="body">
+                       <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <label style="h1" text="${uiLabelMap.PageTitleBankContraTrans}"/>
+                        <screenlet id="FinAccountTransPanel" collapsible="true">
+                            <include-form name="BankContraEntry" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

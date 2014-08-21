@@ -195,6 +195,13 @@ under the License.
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
+     <service name="createReconsileAndUpdateFinAccountTrans" engine="java"
+     location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createReconsileAndUpdateFinAccountTrans">
+        <description>Simple finAccntTrans reconsilation Process </description>
+        <attribute name="finAccountTransIds" type="List"  mode="IN" optional="true"/>
+         <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+    </service>
 
     <service name="updatePaymentOnFinAccTransStatusSetToCancel" engine="simple" location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updatePaymentOnFinAccTransStatusSetToCancel">
         <description>Update payment when FinAccountTrans status is set to Cancle, remove finAccountTransId form Payment entity.</description>

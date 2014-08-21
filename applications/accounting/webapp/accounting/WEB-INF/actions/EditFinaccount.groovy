@@ -44,7 +44,7 @@ if (context.finAccount != null) {
 }
 
 context.ctxFinAccountId = session.getAttribute("ctxFinAccountId");
-Debug.log("===context.ctxFinAccountId==="+context.ctxFinAccountId);
+
 if (context.ctxFinAccountId != null) {
 	ctxFinAccount = delegator.findByPrimaryKey("FinAccount", [finAccountId : context.ctxFinAccountId]);
 	if(UtilValidate.isNotEmpty(ctxFinAccount)){
@@ -60,11 +60,12 @@ if (context.ctxFinAccountId != null) {
 	}
 	context.ctxFinAccount = ctxFinAccount;
 }
-Debug.log("===context.ctxFinAccountId==="+context.ctxFinAccountId);
+
 
 //Debug.log("===finAccountId==="+finAccountId);
 //Debug.log("===tabButtonItem==="+tabButtonItem);
-Debug.log("===screenFlag==="+parameters.screenFlag);
+
+
 if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
@@ -73,6 +74,18 @@ conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUAL
 List nonBankAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 context.nonBankAccountsList=nonBankAccountsList;
 }
+if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
+	conditionList = [];
+	if(UtilValidate.isNotEmpty(finAccount) && ("BANK_ACCOUNT"==finAccount.finAccountTypeId)){
+	conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "MONEY"));
+	}
+	if(UtilValidate.isNotEmpty(finAccount) && ("BANK_ACCOUNT"!=finAccount.finAccountTypeId) ){
+	conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "STATUTORY"));
+	}
+	List paymentMethodTypeList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	context.paymentMethodTypeList=paymentMethodTypeList;
+	}
+
 //Debug.log("===nonBankAccountsList==="+nonBankAccountsList);
 
 
