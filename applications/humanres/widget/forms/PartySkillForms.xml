@@ -23,7 +23,7 @@ under the License.
     <form name="FindPartySkills" type="single" target="FindPartySkills"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="PartySkill" default-field-type="find"/>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="skillTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="SkillType">
@@ -67,7 +67,7 @@ under the License.
         </actions>
         <alt-target use-when="insideEmployee != null" target="createPartySkillExt"/>
         <field name="partyId" use-when="partySkill != null"><hidden/></field>
-        <field name="partyId" use-when="partySkill == null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyId" use-when="partySkill == null" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="skillTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down>
                 <entity-options description="${description}" entity-name="SkillType">

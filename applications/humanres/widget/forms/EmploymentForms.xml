@@ -590,8 +590,8 @@
         <auto-fields-service service-name="createAgreementEmploymentAppl" default-field-type="display"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupAgreement"/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupAgreementEmploymentAppl"/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.HumanResPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyIdTo" title="${uiLabelMap.HumanResPartyIdTo}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.HumanResPartyIdFrom}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupEmployeeName"/></field>
+        <field name="partyIdTo" title="${uiLabelMap.HumanResPartyIdTo}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="roleTypeIdFrom" tooltip="${uiLabelMap.CommonRequired}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" key-field-name="roleTypeId" entity-name="RoleType">

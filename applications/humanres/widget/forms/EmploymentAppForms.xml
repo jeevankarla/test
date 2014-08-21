@@ -57,9 +57,9 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId"><hidden/></field>
-        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="referredByPartyId" title="${uiLabelMap.FormFieldTitle_referredByPartyId}" use-when="&quot;${referredByPartyId}&quot;.equals(null)"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="referredByPartyId" use-when="referredByPartyId!=null"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><lookup target-form-name="LookupEmployeeName"/></field>
+        <field name="referredByPartyId" title="${uiLabelMap.FormFieldTitle_referredByPartyId}" use-when="&quot;${referredByPartyId}&quot;.equals(null)"><lookup target-form-name="LookupEmployeeName"/></field>
+        <field name="referredByPartyId" use-when="referredByPartyId!=null"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="applicationDate" title="${uiLabelMap.FormFieldTitle_applicationDate}"><date-time/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmploymentApp" description="${uiLabelMap.CommonDelete}" also-hidden="true">
@@ -94,9 +94,9 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applyingPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="applyingPartyId"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="referredByPartyId" use-when="referredByPartyId==null">
-            <lookup target-form-name="LookupPartyName"/>
+            <lookup target-form-name="LookupEmployeeName"/>
         </field>
         <field name="referredByPartyId" use-when="referredByPartyId!=null"><hidden/></field>
         <field name="approverPartyId"><hidden/></field>
@@ -122,8 +122,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applyingPartyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="referredByPartyId" use-when="employmentApp==null"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="applyingPartyId"><lookup target-form-name="LookupEmployeeName"/></field>
+        <field name="referredByPartyId" use-when="employmentApp==null"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="referredByPartyId" use-when="employmentApp!=null"><hidden/></field>
         <field name="employmentAppSourceTypeId">
             <drop-down allow-empty="true" current-description="">
