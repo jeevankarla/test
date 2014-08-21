@@ -124,35 +124,41 @@ ${setRequestAttribute("OUTPUT_FILENAME", "trabs.txt")}
 			                        </fo:table-cell>
 			                      </fo:table-row>
 			                       <#list bootDetilsList as eachDayDeatils>
-			                       <#if eachDayDeatils.getKey()=="AM" ||  eachDayDeatils.getKey()=="PM">
-			                       <#assign  productWiseEntryList=eachDayDeatils.getValue().entrySet()>
-			                         <#list productWiseEntryList as productEntry>
-			                         <#assign productDeatils = delegator.findOne("Product", {"productId" : productEntry.getKey()}, true)>
-			                        <fo:table-row >
-			                        <fo:table-cell>
-			                          <fo:block text-align="right" >${daySaleEntry.getKey()}</fo:block>
-			                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="center"  >${routeId?if_exists}</fo:block>
-			                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="left"   keep-together="always">${eachDayDeatils.getKey()}</fo:block>
-			                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="right"  >${productEntry.getValue().get("packetQuantity")}&#160;&#160;</fo:block>
-			                        </fo:table-cell>
-			                        <fo:table-cell>
-			                          <fo:block text-align="left"  >&#160;${productDeatils.get("brandName")}</fo:block>
-			                        </fo:table-cell>
-			                         <fo:table-cell>
-			                          <fo:block text-align="right"  >${productEntry.getValue().get("totalRevenue")}</fo:block>
-			                        </fo:table-cell>
-			                         <fo:table-cell>
-			                          <fo:block text-align="right"  ></fo:block>
-			                        </fo:table-cell>
-			                      </fo:table-row>
-			                       </#list>
-			                       </#if>
+				                       <#if eachDayDeatils.getKey()=="AM" ||  eachDayDeatils.getKey()=="PM">
+					                       <#assign  productWiseEntryList=eachDayDeatils.getValue().entrySet()>
+					                       <#list productWiseEntryList as productEntry>
+						                       <#assign productDeatils = delegator.findOne("Product", {"productId" : productEntry.getKey()}, true)>
+						                       <fo:table-row >
+						                        <fo:table-cell>
+						                          <fo:block text-align="right" >${daySaleEntry.getKey()}</fo:block>
+						                        </fo:table-cell>
+						                        <#assign routeId = "">
+						                        <#if eachDayDeatils.getKey() == "PM">
+						                        	<#assign routeId = PMRouteId>
+						                        <#else>
+						                        	<#assign routeId = AMRouteId>
+						                        </#if>
+						                        <fo:table-cell>
+						                          <fo:block text-align="center"  >${routeId?if_exists}</fo:block>
+						                        </fo:table-cell>
+						                        <fo:table-cell>
+						                          <fo:block text-align="left"   keep-together="always">${eachDayDeatils.getKey()}</fo:block>
+						                        </fo:table-cell>
+						                        <fo:table-cell>
+						                          <fo:block text-align="right"  >${productEntry.getValue().get("packetQuantity")}&#160;&#160;</fo:block>
+						                        </fo:table-cell>
+						                        <fo:table-cell>
+						                          <fo:block text-align="left"  >&#160;${productDeatils.get("brandName")}</fo:block>
+						                        </fo:table-cell>
+						                         <fo:table-cell>
+						                          <fo:block text-align="right"  >${productEntry.getValue().get("totalRevenue")}</fo:block>
+						                        </fo:table-cell>
+						                         <fo:table-cell>
+						                          <fo:block text-align="right"  ></fo:block>
+						                        </fo:table-cell>
+						                      </fo:table-row>
+					                       </#list>
+				                       </#if>
 			                      </#list>
 			                       <fo:table-row>
 			                         <fo:table-cell>

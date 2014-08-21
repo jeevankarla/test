@@ -64,9 +64,6 @@ conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 routeList = delegator.findList("Facility",condition,null,null,null,false);*/
 
-
-
-
 Map boothWiseSaleMap= FastMap.newInstance();
 
 List amShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator ,dayStart,dayEnd,"AM");
@@ -74,10 +71,15 @@ List pmShipmentIds = ByProductNetworkServices.getShipmentIdsSupplyType(delegator
 amBoothTotals=[:];
 pmBoothTotals=[:];
 
-boothDeatilMap=ByProductNetworkServices.getBoothRoute(dispatcher.getDispatchContext(),[boothId:boothId]).get("boothDetails");
-if(UtilValidate.isNotEmpty(boothDeatilMap)){
-	context.routeId=boothDeatilMap.get("routeId");
+AMboothDeatilMap=ByProductNetworkServices.getBoothRoute(dispatcher.getDispatchContext(),[boothId:boothId, "subscriptionTypeId":"AM"]).get("boothDetails");
+PMboothDeatilMap=ByProductNetworkServices.getBoothRoute(dispatcher.getDispatchContext(),[boothId:boothId, "subscriptionTypeId":"PM"]).get("boothDetails");
+if(UtilValidate.isNotEmpty(AMboothDeatilMap)){
+	context.AMRouteId = AMboothDeatilMap.get("routeId");
 }
+if(UtilValidate.isNotEmpty(PMboothDeatilMap)){
+	context.PMRouteId = PMboothDeatilMap.get("routeId");
+}
+
 
 amBoothDayTotals=[:];
 pmBoothDayTotals=[:]
@@ -100,46 +102,46 @@ if(UtilValidate.isNotEmpty(pmShipmentIds)){
 
 routeWiseMap =[:];
 
-	boothSalesMap=[:];
-	allDaySaleMap=[:];
-	
-		obAmount=BigDecimal.ZERO;
-		closingBal=BigDecimal.ZERO;
+boothSalesMap=[:];
+allDaySaleMap=[:];
+
+obAmount=BigDecimal.ZERO;
+closingBal=BigDecimal.ZERO;
 		
-		for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
-			Timestamp saleDate = UtilDateTime.addDaysToTimestamp(dayStart, j);
-			dayLmsTotalQty = 0;
-			dayTotalRevenue=BigDecimal.ZERO;
-			curntDay=UtilDateTime.toDateString(saleDate ,"yyyy-MM-dd");
-			curntDaySalesMap=[:];
-			if(UtilValidate.isNotEmpty(amBoothDayTotals.getAt(curntDay))){
-				curntDaySalesMap["AM"]=amBoothDayTotals.getAt(curntDay).get("productTotals");
-				dayTotalRevenue=dayTotalRevenue.add(amBoothDayTotals.getAt(curntDay).get("totalRevenue"));
-			}
-			if(UtilValidate.isNotEmpty(pmBoothDayTotals.getAt(curntDay))){
-				curntDaySalesMap["PM"]=pmBoothDayTotals.getAt(curntDay).get("productTotals");
-				dayTotalRevenue=dayTotalRevenue.add(pmBoothDayTotals.getAt(curntDay).get("totalRevenue"));
-			}
-			if(UtilValidate.isNotEmpty(curntDaySalesMap)){
-				curntDaySalesMap["totalRevenue"]=dayTotalRevenue;
-				reciepts = BigDecimal.ZERO;
-				boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:saleDate ,thruDate:saleDate , facilityId:boothId]);
-				if(UtilValidate.isNotEmpty(boothPaidDetail)){
-					reciepts = boothPaidDetail.get("invoicesTotalAmount");
-				}
-				curntDaySalesMap["PaidAmt"] = ((new BigDecimal(reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
-				if(j==0){//Opeinig Balance called only  for firstDay  in whole period
-					obAmount =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: saleDate , facilityId:boothId])).get("openingBalance");
-					closingBal=obAmount+dayTotalRevenue-reciepts;
-				}else{
-					obAmount=closingBal;
-					closingBal=obAmount+dayTotalRevenue-reciepts;
-				}
-				curntDaySalesMap["OpeningBal"]=((new BigDecimal(obAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
-				curntDaySalesMap["ClosingBal"]=((new BigDecimal(obAmount+dayTotalRevenue-reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
-				allDaySaleMap[curntDay]=curntDaySalesMap;
-			}
+for(int j=0 ; j < (UtilDateTime.getIntervalInDays(dayStart,dayEnd)+1); j++){
+	Timestamp saleDate = UtilDateTime.addDaysToTimestamp(dayStart, j);
+	dayLmsTotalQty = 0;
+	dayTotalRevenue=BigDecimal.ZERO;
+	curntDay=UtilDateTime.toDateString(saleDate ,"yyyy-MM-dd");
+	curntDaySalesMap=[:];
+	if(UtilValidate.isNotEmpty(amBoothDayTotals.getAt(curntDay))){
+		curntDaySalesMap["AM"]=amBoothDayTotals.getAt(curntDay).get("productTotals");
+		dayTotalRevenue=dayTotalRevenue.add(amBoothDayTotals.getAt(curntDay).get("totalRevenue"));
+	}
+	if(UtilValidate.isNotEmpty(pmBoothDayTotals.getAt(curntDay))){
+		curntDaySalesMap["PM"]=pmBoothDayTotals.getAt(curntDay).get("productTotals");
+		dayTotalRevenue=dayTotalRevenue.add(pmBoothDayTotals.getAt(curntDay).get("totalRevenue"));
+	}
+	if(UtilValidate.isNotEmpty(curntDaySalesMap)){
+		curntDaySalesMap["totalRevenue"]=dayTotalRevenue;
+		reciepts = BigDecimal.ZERO;
+		boothPaidDetail = ByProductNetworkServices.getBoothPaidPayments( dctx , [fromDate:saleDate ,thruDate:saleDate , facilityId:boothId]);
+		if(UtilValidate.isNotEmpty(boothPaidDetail)){
+			reciepts = boothPaidDetail.get("invoicesTotalAmount");
 		}
+		curntDaySalesMap["PaidAmt"] = ((new BigDecimal(reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
+		if(j==0){//Opeinig Balance called only  for firstDay  in whole period
+			obAmount =	( ByProductNetworkServices.getOpeningBalanceForBooth( dctx , [userLogin: userLogin ,saleDate: saleDate , facilityId:boothId])).get("openingBalance");
+			closingBal=obAmount+dayTotalRevenue-reciepts;
+		}else{
+			obAmount=closingBal;
+			closingBal=obAmount+dayTotalRevenue-reciepts;
+		}
+		curntDaySalesMap["OpeningBal"]=((new BigDecimal(obAmount)).setScale(2,BigDecimal.ROUND_HALF_UP));
+		curntDaySalesMap["ClosingBal"]=((new BigDecimal(obAmount+dayTotalRevenue-reciepts)).setScale(2,BigDecimal.ROUND_HALF_UP));
+		allDaySaleMap[curntDay]=curntDaySalesMap;
+	}
+}
 	
 boothSalesMap[boothId]=allDaySaleMap;
 context.put("boothSalesMap",boothSalesMap);

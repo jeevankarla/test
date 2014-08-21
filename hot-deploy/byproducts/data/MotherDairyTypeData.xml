@@ -12,7 +12,8 @@
     <EnumerationType description="Period billing" enumTypeId="PERIOD_BILLING"/>  
     
     <Enumeration description="Credit Institution Billing" enumCode="CREDIT INST BILLING" enumId="CR_INST_BILLING" enumTypeId="PERIOD_BILLING"/> 
-    <TenantConfiguration description="enable Stop Ship List" propertyName="enableStopShip" propertyTypeEnumId="LMS" propertyValue="Y"/> 
+    <TenantConfiguration description="enable Stop Ship List" propertyName="enableStopShip" propertyTypeEnumId="LMS" propertyValue="Y"/>
+    <TenantConfiguration description="enable Edit New InvoiceItem Screen" propertyName="enableNewInvItemScr" propertyTypeEnumId="LMS" propertyValue="Y"/> 
     <TenantConfiguration description="Enable Employee Subsidy Shift" propertyName="enableSubsidyRouteShift" propertyTypeEnumId="LMS" propertyValue="N"/>
     <TenantConfiguration description="Enable OB by Party" propertyName="enableOBbyParty" propertyTypeEnumId="LMS" propertyValue="Y"/>
     <TenantConfiguration description="Enable Continuous Indent" propertyName="enableContinuousIndent" propertyTypeEnumId="LMS" propertyValue="N"/>

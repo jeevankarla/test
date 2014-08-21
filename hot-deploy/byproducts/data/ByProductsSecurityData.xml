@@ -278,6 +278,10 @@
 	<SecurityPermission permissionId="BYPRODUCTS_INSTBILL" description="Special permission to show and generate institution bill generation" />
 	<SecurityGroupPermission groupId="BYPRODUCTS_INST" permissionId="BYPRODUCTS_INSTBILL"/>
     
+    <!--  Spl permission for reports-->
+    <SecurityGroup groupId="BYPRODUCTS_SPLREPO" description="Route Marketing Special permission for reports"/>
+	<SecurityPermission permissionId="BYPRODUCTS_LDRREP" description="Special permission to show Retailer ledger report" />
+	<SecurityGroupPermission groupId="BYPRODUCTS_SPLREPO" permissionId="BYPRODUCTS_LDRREP"/>
     
     <!-- instead of adding each group one Permission group added -->
      <SecurityGroup groupId="BYPROD_PAYMENT_WING" description="Route Marketing All Types of Payment  Entry"/>
