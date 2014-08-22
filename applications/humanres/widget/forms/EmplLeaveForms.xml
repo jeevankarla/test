@@ -92,9 +92,9 @@
       </form>
     <form name="EditEmplLeave" type="single" target="updateEmplLeaveExt" default-map-name="leaveApp"
         header-row-style="header-row" default-table-style="basic-table">
-        <actions>
+       <!--  <actions>
         	<set field="partyId" value="${userLogin.partyId}"/>
-        </actions>
+        </actions> -->
         <alt-target use-when="leaveApp==null" target="createEmplLeaveExt"/>
         <field name="partyId" title="Employee Id" tooltip="${uiLabelMap.CommonRequired}" use-when="hasEmplLeaveApprovePermission"><lookup target-form-name="LookupEmployeeName"/></field>
         <field name="partyId" title="Name :" use-when="!hasEmplLeaveApprovePermission"><display-entity entity-name="PartyNameView" description="${firstName} ${lastName}"/></field>
