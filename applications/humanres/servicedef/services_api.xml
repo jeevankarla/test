@@ -45,6 +45,7 @@
    <service name="fetchEmployeeLastPunch" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.humanres.HumanresApiService" invoke="fetchEmployeeLastPunch">
         <description>Service to fetch employee's last punch</description>
+        <attribute name="partyId" mode="IN" optional="false" type="String"/>        
         <attribute type="Map" mode="OUT" name="employeeLastPunchResult" optional="true"/>
    </service>              
 </services>   
