@@ -471,7 +471,7 @@ under the License.
         <actions>
             <entity-condition entity-name="PaymentType" list="paymentTypes">
                 <condition-list combine="or">
-                    <condition-expr field-name="parentTypeId" operator="equals" value="REFSDEPOSIT_PAYOUT"/>
+                    <condition-expr field-name="parentTypeId" operator="equals" value="REFUND_PAYOUT"/>
                 </condition-list>
                 <order-by field-name="description"/>
             </entity-condition>
@@ -806,7 +806,60 @@ under the License.
     
     <form name="NewIncomingDepositsRefund" type="single" target="createNewIncomingDepositsRefund" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table" >
-        
+        <actions>
+            <entity-condition entity-name="PaymentType" list="paymentTypes">
+                <condition-list combine="or">
+                    <condition-expr field-name="parentTypeId" operator="equals" value="REFSDEPOSIT_PAYOUT"/>
+                </condition-list>
+                <order-by field-name="description"/>
+            </entity-condition>
+            <entity-one entity-name="PartyGroup" use-cache="true" value-field="partyGroup">
+                <field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
+            </entity-one>
+            <set field="partyGroupName" from-field="partyGroup.groupName"/>
+            <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${defaultOrganizationPartyId}"/>
+            <entity-condition entity-name="PaymentMethodAndFinAccount" list="paymentMethodAndFinAccounts">
+                <condition-list>
+                    <condition-expr field-name="partyId" from-field="paymentPartyId"/>
+                    <condition-expr field-name="statusId" operator="not-equals" value="FNACT_MANFROZEN"/>
+                    <condition-expr field-name="statusId" operator="not-equals" value="FNACT_CANCELLED"/>
+                </condition-list>
+            </entity-condition>
+        </actions>
+        <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
+        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:(document.NewPaymentOut.action = 'newPayment'),(document.NewPaymentOut.submit())">
+            <drop-down allow-empty="false">
+                <option key="${parameters.partyIdFrom}" description="${partyGroupName}"/>
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+            <drop-down allow-empty="false">
+                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="paymentMethodId" id-name="paymentMethodId" position="2" event="onchange" action="javascript:setPaymentMethodTypeFields();" >
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentMethod" description="${description}">
+                    <entity-constraint name="partyId" operator="equals" env-name="paymentPartyId"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
+        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>            
+        <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="comments" position="2"><text size="70"/></field>
+        <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
+        <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
+        <field position="1" name="createButton" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
     </form>
     <!-- ==========================Outgoing Deposits======================================== -->
     
