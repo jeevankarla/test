@@ -38,7 +38,7 @@ timePeriodEnd=UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate"));
 resultMap = PayrollService.getPayrollAttedancePeriod(dctx, [timePeriodStart:timePeriodStart, timePeriodEnd: timePeriodEnd, timePeriodId: parameters.customTimePeriodId, userLogin : userLogin]);
 if(UtilValidate.isNotEmpty(resultMap.get("lastCloseAttedancePeriod"))){	
 	lastCloseAttedancePeriod=resultMap.get("lastCloseAttedancePeriod");
-	timePeriod=lastCloseAttedancePeriod.get("periodName");
+	timePeriod=lastCloseAttedancePeriod.get("customTimePeriodId");
 	context.timePeriod=timePeriod;
 }
 List stautsList = UtilMisc.toList("GENERATED","APPROVED");
