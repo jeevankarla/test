@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.party.contact.ContactMechWorker;
+import java.lang.Integer;
 /*List employeeBankList=[];
 List conditionList =[];
 addresses=null;
@@ -97,11 +98,24 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 			if(UtilValidate.isNotEmpty(partyIds)){
 				emplPartyIds=[];
 				List<GenericValue> finAccountDetailsList = delegator.findList("FinAccount", EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN , partyIds), null, ["finAccountCode"], null, false);
-				finAccountDetailsList = UtilMisc.sortMaps(finAccountDetailsList, UtilMisc.toList("finAccountCode"));
+				List tempfinAccountList = FastList.newInstance();
+				partiesFinAccList = UtilMisc.sortMaps(finAccountDetailsList, UtilMisc.toList("finAccountCode"));
+				for(finAccount in partiesFinAccList){
+					Map tempAccNoMap = FastMap.newInstance();
+					tempAccNoMap.put("ownerPartyId", finAccount.get("ownerPartyId"));
+					tempAccNoMap.put("gbCode", finAccount.get("gbCode"));
+					tempAccNoMap.put("finAccountCode", finAccount.get("finAccountCode"));
+					if(UtilValidate.isNotEmpty(finAccount.get("finAccountCode"))){
+						BigDecimal accCodeBig = new BigDecimal(finAccount.get("finAccountCode"));
+						tempAccNoMap.put("finAccountCode", accCodeBig.intValue());
+					}
+					tempfinAccountList.add(tempAccNoMap);
+				}
+				tempfinAccountList = UtilMisc.sortMaps(tempfinAccountList, UtilMisc.toList("finAccountCode"));
 				canraBankPartyIds=[];
 				//handling canara bank 
-				if(UtilValidate.isNotEmpty(finAccountDetailsList)){
-					finAccountDetailsList.each{ finAcc->
+				if(UtilValidate.isNotEmpty(tempfinAccountList)){
+					tempfinAccountList.each{ finAcc->
 						gbCode = finAcc.get("gbCode");
 						ownerPartyId= finAcc.get("ownerPartyId");
 						if(UtilValidate.isNotEmpty(gbCode) && "CNRB".equals(gbCode)){
