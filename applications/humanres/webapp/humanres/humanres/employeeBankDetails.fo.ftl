@@ -26,7 +26,7 @@ under the License.
           <fo:region-after extent="1in"/>
       </fo:simple-page-master>
     </fo:layout-master-set>
-    <#assign temp=0>
+    
     <#assign totalAmount=0>
  <#if BankAdvicePayRollMap?has_content>   
  <#assign bankDetailsList=bankWiseEmplDetailsMap.entrySet()>
@@ -34,6 +34,7 @@ under the License.
  <#assign partyGroup = delegator.findOne("PartyGroup", {"partyId" : parameters.partyId}, true)>
  <#assign partyAddressResult = dispatcher.runSync("getPartyPostalAddress", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", parameters.partyId, "userLogin", userLogin))/>
  <#list bankDetailsList as companyBankDetails>
+ <#assign temp=0>
   <fo:page-sequence master-reference="main">
   	<fo:static-content flow-name="xsl-region-before">
   		<#assign finAccDetails = delegator.findOne("FinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
