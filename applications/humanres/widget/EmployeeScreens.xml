@@ -613,6 +613,7 @@ under the License.
         <section>
             <actions>
                 <service service-name="getCurrentPartyEmploymentData" auto-field-map="true" result-map="employmentData"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/ServeProfilePic.groovy"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.HumanResCurrentEmploymentData}">

@@ -993,6 +993,7 @@
         <field name="comment"><display/></field>                                        
     </form>    
     <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">
+    	<field name="partyId" ><hidden value="${parameters.partyId}"/></field>
         <field name="company" entry-name="employment.partyIdFrom">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
                 <sub-hyperlink target="/partymgr/control/viewprofile" description="[${employmentData.employment.partyIdFrom}]" target-type="inter-app">
@@ -1005,9 +1006,12 @@
                 <parameter param-name="emplPositionId" from-field="employmentData.emplPosition.emplPositionId"/>
             </hyperlink>
         </field>
-         <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
+        <field name="location" title="Location"><display description="${location}"/></field>
+        <field name="grade" title="Pay Grade"><display description="${grade}"/></field>
+        <field name="salary" title="Basic Salary"><display description="${salary}"/></field>
+         <!-- <field name="salary" entry-name="emplPositionRateAmount.rateAmount">
             <display type="currency" currency="${employmentData.emplPositionRateAmount.rateCurrencyUomId}"/>
-        </field>
+        </field> -->
         <field name="appointmentDate" entry-name="employment.appointmentDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.appointmentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="resignationDate" entry-name="employment.resignationDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentData.employment.resignationDate, &quot;dd/MM/yyyy&quot;);}"/></field>
     </form>

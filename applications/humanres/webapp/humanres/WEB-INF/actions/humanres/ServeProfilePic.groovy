@@ -12,6 +12,10 @@
 	import org.ofbiz.entity.DelegatorFactory;
 	import org.ofbiz.service.GenericDispatcher;
 	import org.ofbiz.service.ServiceUtil;
+	import in.vasista.vbiz.humanres.PayrollService;
+	import in.vasista.vbiz.humanres.HumanresService;
+	import in.vasista.vbiz.byproducts.ByProductServices;
+	
 	
 	HttpServletRequest httpRequest = (HttpServletRequest) request;
 	//HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -38,5 +42,22 @@
 	
 	context.imageUrl = imageUrl;
 	
+//salary,paygrade and location 	
+nowDate=UtilDateTime.nowTimestamp();
+fromDate = UtilDateTime.getMonthStart(nowDate);
+thruDate = UtilDateTime.getMonthEnd(nowDate,timeZone,locale);
+
+partyId=parameters.partyId;
+
+basicSalAndGradeMap=PayrollService.fetchBasicSalaryAndGrade(dctx,[employeeId:partyId,timePeriodStart:fromDate, timePeriodEnd: thruDate, userLogin : userLogin, proportionalFlag:"N"]);
+salary=basicSalAndGradeMap.get("amount");
+grade=basicSalAndGradeMap.get("payGradeId");
+locations=delegator.findByAnd("Employment",[partyIdTo:partyId]);
+if(UtilValidate.isNotEmpty(locations))
+location=locations.get(0).locationGeoId;
+context.salary=salary;
+context.grade=grade;
+context.location=location;
+
 	
 	
