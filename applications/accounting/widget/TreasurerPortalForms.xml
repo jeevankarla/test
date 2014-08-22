@@ -445,98 +445,6 @@ under the License.
         <field name="paymentTypeId" position="1">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentType" description="${description}">
-                    <entity-constraint name="parentTypeId" value="REFUND_PAYIN" />
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="paymentDate"><date-find type="date" default-option-from="sameDay"/></field>
-        <field position="1" name="amount"><range-find></range-find></field>
-        <field name="paymentRefNum"><text-find ignore-case="true"/></field>
-        <field name="parentTypeId"><hidden value="REFUND_PAYIN"/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    
-    <form name="NewIncomingAdvancesRefund" type="single" target="createNewIncomingAdvanceRefund" default-map-name="payment"
-        header-row-style="header-row" default-table-style="basic-table" >
-        <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
-        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
-        <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                	<entity-order-by field-name="groupName"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="partyIdFrom" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
-            <drop-down allow-empty="false">
-                <entity-options description="${description}" entity-name="PaymentType">
-                    <entity-constraint name="parentTypeId" value="REFUND_PAYIN"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="PaymentMethodType"  description="${description}">
-                	<entity-constraint name="paymentMethodTypeId" operator="like" value="%_PAYIN%"/>
-                    <entity-order-by field-name="description"/>                   
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
-        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
-        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>        
-        <field name="amount" position="1" required-field="true"><text/></field>
-        <field name="comments" position="2"><text size="70"/></field>
-        <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
-        <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
-        <field position="1" name="createButton" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-    <form name="FindDepositWithdraw" type="single" >
-        <actions>
-            <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
-            <set field="noConditionFind" value="Y"/>
-        </actions>
-        <field name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="PaymentMethodType" description="${description}">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="organizationPartyId"><hidden/></field>
-        <field name="noConditionFind"><hidden/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}">
-            <lookup target-form-name="LookupPartyName"/>
-        </field> 
-        <field name="issuingAuthority"><text/></field>
-        <field name="fromDate"><date-time/></field>
-        <field name="thruDate"><date-time/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    
-    <!-- ============= Outgoing Advances =========== -->
-    
-    <form name="FindOutgoingAdvancesRefund" type="single" target="OutgoingAdvancesRefund" header-row-style="header-row" default-table-style="basic-table">
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="paymentId"><text-find ignore-case="true"/></field>
-        <field name="comments"><text-find ignore-case="true"/></field>
-        <field name="paymentTypeId" position="1">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="PaymentType" description="${description}">
                     <entity-constraint name="parentTypeId" value="REFUND_PAYOUT"/>
                 </entity-options>
             </drop-down>
@@ -557,12 +465,13 @@ under the License.
         <field name="parentTypeId"><hidden value="REFUND_PAYOUT"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="NewOutgoingAdvanceRefund" type="single" target="createNewOutgoingAdvanceRefund" default-map-name="payment"
+    
+    <form name="NewIncomingAdvancesRefund" type="single" target="createNewIncomingAdvanceRefund" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table" >
         <actions>
             <entity-condition entity-name="PaymentType" list="paymentTypes">
                 <condition-list combine="or">
-                    <condition-expr field-name="parentTypeId" operator="equals" value="REFUND_PAYOUT"/>
+                    <condition-expr field-name="parentTypeId" operator="equals" value="REFSDEPOSIT_PAYOUT"/>
                 </condition-list>
                 <order-by field-name="description"/>
             </entity-condition>
@@ -610,6 +519,97 @@ under the License.
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
+        <field position="1" name="createButton" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="FindDepositWithdraw" type="single" >
+        <actions>
+            <set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}"/>
+            <set field="noConditionFind" value="Y"/>
+        </actions>
+        <field name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentMethodType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="noConditionFind"><hidden/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingPartyIdFrom}">
+            <lookup target-form-name="LookupPartyName"/>
+        </field> 
+        <field name="issuingAuthority"><text/></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- ============= Outgoing Advances =========== -->
+    
+    <form name="FindOutgoingAdvancesRefund" type="single" target="OutgoingAdvancesRefund" header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="paymentId"><text-find ignore-case="true"/></field>
+        <field name="comments"><text-find ignore-case="true"/></field>
+        <field name="paymentTypeId" position="1">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentType" description="${description}">
+                    <entity-constraint name="parentTypeId" value="REFUND_PAYIN" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentDate"><date-find type="date" default-option-from="sameDay"/></field>
+        <field position="1" name="amount"><range-find></range-find></field>
+        <field name="paymentRefNum"><text-find ignore-case="true"/></field>
+        <field name="parentTypeId"><hidden value="REFUND_PAYIN"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="NewOutgoingAdvanceRefund" type="single" target="createNewOutgoingAdvanceRefund" default-map-name="payment"
+        header-row-style="header-row" default-table-style="basic-table" >
+        <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
+        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                	<entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyIdFrom" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="PaymentType">
+                    <entity-constraint name="parentTypeId" value="REFUND_PAYIN"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="2" name="paymentMethodTypeId" event="onchange" action="javascript:paymentFieldsOnchange();">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentMethodType"  description="${description}">
+                	<entity-constraint name="paymentMethodTypeId" operator="like" value="%_PAYIN%"/>
+                    <entity-order-by field-name="description"/>                   
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
+        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
+        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>        
+        <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="comments" position="2"><text size="70"/></field>
+        <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
+        <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -783,6 +783,40 @@ under the License.
         <field name="paymentTypeId" position="1">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentType" description="${description}">
+                    <entity-constraint name="parentTypeId" value="REFSDEPOSIT_PAYOUT"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentDate"><date-find type="date" default-option-from="sameDay"/></field>
+        <field position="1" name="amount"><range-find></range-find></field>
+        <field name="paymentRefNum"><text-find ignore-case="true"/></field>
+        <field name="parentTypeId"><hidden value="REFSDEPOSIT_PAYOUT"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="NewIncomingDepositsRefund" type="single" target="createNewIncomingDepositsRefund" default-map-name="payment"
+        header-row-style="header-row" default-table-style="basic-table" >
+        
+    </form>
+    <!-- ==========================Outgoing Deposits======================================== -->
+    
+    <form name="FindOutgoingDepositsRefund" type="single" target="OutgoingDepositsRefund" header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="paymentId"><text-find ignore-case="true"/></field>
+        <field name="comments"><text-find ignore-case="true"/></field>
+        <field name="paymentTypeId" position="1">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentType" description="${description}">
                     <entity-constraint name="parentTypeId" value="REFSDEPOSIT_PAYIN" />
                 </entity-options>
             </drop-down>
@@ -803,8 +837,7 @@ under the License.
         <field name="parentTypeId"><hidden value="REFSDEPOSIT_PAYIN"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
-    <form name="NewIncomingDepositsRefund" type="single" target="createNewIncomingDepositsRefund" default-map-name="payment"
+    <form name="NewOutgoingDepositsRefund" type="single" target="createNewOutgoingDepositsRefund" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table" >
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
@@ -839,92 +872,6 @@ under the License.
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
-        <field position="1" name="createButton" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-    <!-- ==========================Outgoing Deposits======================================== -->
-    
-    <form name="FindOutgoingDepositsRefund" type="single" target="OutgoingDepositsRefund" header-row-style="header-row" default-table-style="basic-table">
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="paymentId"><text-find ignore-case="true"/></field>
-        <field name="comments"><text-find ignore-case="true"/></field>
-        <field name="paymentTypeId" position="1">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="PaymentType" description="${description}">
-                    <entity-constraint name="parentTypeId" value="REFSDEPOSIT_PAYOUT"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="paymentDate"><date-find type="date" default-option-from="sameDay"/></field>
-        <field position="1" name="amount"><range-find></range-find></field>
-        <field name="paymentRefNum"><text-find ignore-case="true"/></field>
-        <field name="parentTypeId"><hidden value="REFSDEPOSIT_PAYOUT"/></field>
-        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
-    <form name="NewOutgoingDepositsRefund" type="single" target="createNewOutgoingDepositsRefund" default-map-name="payment"
-        header-row-style="header-row" default-table-style="basic-table" >
-        <actions>
-            <entity-condition entity-name="PaymentType" list="paymentTypes">
-                <condition-list combine="or">
-                    <condition-expr field-name="parentTypeId" operator="equals" value="REFSDEPOSIT_PAYOUT"/>
-                </condition-list>
-                <order-by field-name="description"/>
-            </entity-condition>
-            <entity-one entity-name="PartyGroup" use-cache="true" value-field="partyGroup">
-                <field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
-            </entity-one>
-            <set field="partyGroupName" from-field="partyGroup.groupName"/>
-            <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${defaultOrganizationPartyId}"/>
-            <entity-condition entity-name="PaymentMethodAndFinAccount" list="paymentMethodAndFinAccounts">
-                <condition-list>
-                    <condition-expr field-name="partyId" from-field="paymentPartyId"/>
-                    <condition-expr field-name="statusId" operator="not-equals" value="FNACT_MANFROZEN"/>
-                    <condition-expr field-name="statusId" operator="not-equals" value="FNACT_CANCELLED"/>
-                </condition-list>
-            </entity-condition>
-        </actions>
-        <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
-        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
-        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:(document.NewPaymentOut.action = 'newPayment'),(document.NewPaymentOut.submit())">
-            <drop-down allow-empty="false">
-                <option key="${parameters.partyIdFrom}" description="${partyGroupName}"/>
-                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                    <entity-order-by field-name="groupName"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
-            <drop-down allow-empty="false">
-                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
-            </drop-down>
-        </field>
-        <field name="paymentMethodId" id-name="paymentMethodId" position="2" event="onchange" action="javascript:setPaymentMethodTypeFields();" >
-            <drop-down allow-empty="false">
-                <entity-options entity-name="PaymentMethod" description="${description}">
-                    <entity-constraint name="partyId" operator="equals" env-name="paymentPartyId"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}" required-field="true"><text/></field>
-        <field name="effectiveDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
-        <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}" required-field="true"><text></text></field>            
-        <field name="amount" position="1" required-field="true"><text/></field>
-        <field name="comments" position="2"><text size="70"/></field>
-        <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
-        <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
         <field position="1" name="createButton" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
