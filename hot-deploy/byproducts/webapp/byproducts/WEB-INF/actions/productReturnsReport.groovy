@@ -23,12 +23,13 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 
 effectiveDate = null;
 thruEffectiveDate = null;
-
+thruEffectiveDateStr = null;
 dayBegin = "";
 dayEnd = "";
 if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 	if(reportTypeFlag=="productReturnsReport"){
 		effectiveDateStr = parameters.prodReturnDate;
+		thruEffectiveDateStr = parameters.prodReturnTDateId;
 		if (UtilValidate.isEmpty(effectiveDateStr)) {
 			effectiveDate = UtilDateTime.nowTimestamp();
 		}
@@ -40,8 +41,19 @@ if (UtilValidate.isNotEmpty(reportTypeFlag)) {
 				Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, "");
 			}
 		}
+		if (UtilValidate.isEmpty(thruEffectiveDateStr)) {
+			thruEffectiveDate = effectiveDate;
+		}
+		else{
+			def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+			try {
+				thruEffectiveDate = new java.sql.Timestamp(sdf.parse(thruEffectiveDateStr+" 00:00:00").getTime());
+			}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + thruEffectiveDateStr, "");
+			}
+		}
 		dayBegin = UtilDateTime.getDayStart(effectiveDate);
-		dayEnd = UtilDateTime.getDayEnd(effectiveDate);
+		dayEnd = UtilDateTime.getDayEnd(thruEffectiveDate);
 	}
 }
 
@@ -148,7 +160,7 @@ if(UtilValidate.isNotEmpty(returnHeaderItemsList)){
 			returnReasonId = returnItem.returnReasonId;
 			userLogin = returnItem.createdBy;
 			returnPrice = returnItem.returnPrice; 
-			productReturnMap["date"]=dayBegin;
+			productReturnMap["date"]=returnItem.estimatedShipDate;
 			productReturnMap["boothId"]=boothId;
 			productReturnMap["routeId"]=routeId;
 			productReturnMap["shipmentTypeId"]=shipmentTypeId;
@@ -194,6 +206,7 @@ if(UtilValidate.isNotEmpty(returnProducts)){
 			retTempMap.returnQuantity = prodTotalQty;
 			retTempMap.returnPrice = returnPrice;
 			retTempMap.returnQtyLtrs = prodTotalQty*returnQtyIncluded;
+			retTempMap.returnProdName = prodTotalQty*returnQtyIncluded;
 			productReturnMap.put(eachProduct, retTempMap);
 	}
 }

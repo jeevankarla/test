@@ -727,7 +727,7 @@
 			</widgets>
 		</section>
 	</screen>
-	<screen name="ProductReturnsReportTXT">
+	<screen name="ProductReturnsReportPDF">
 		<section>
 			<actions>
 				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>

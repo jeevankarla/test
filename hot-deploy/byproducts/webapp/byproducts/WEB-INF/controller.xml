@@ -467,9 +467,9 @@
         <response name="success" type="view" value="BoothWiseSalesCSV"/>
     </request-map>
    
-   <request-map uri="productReturnsReport.txt">
+   <request-map uri="productReturnsReport.pdf">
    		<security https="true" auth="true"/>
-        <response name="success" type="view" value="ProductReturnsReportTXT"/>
+        <response name="success" type="view" value="ProductReturnsReportPDF"/>
     </request-map>
     <request-map uri="salesReport.txt">
    		<security https="true" auth="true"/>
@@ -1447,7 +1447,7 @@
     <view-map name="BoothWiseSalesCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothWiseSalesCSV" content-type="text/csv"/>
     <view-map name="TruckSheetCorrectionsReport" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetCorrectionsReport" content-type="application/pdf"/>
     <view-map name="BoothWiseSalesCSV" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#BoothWiseSalesCSV" content-type="text/csv"/>
-    <view-map name="ProductReturnsReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ProductReturnsReportTXT" content-type="text/plain"/>
+    <view-map name="ProductReturnsReportPDF" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#ProductReturnsReportPDF" content-type="application/pdf"/>
  	<view-map name="TruckSheetDetailReport" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#TruckSheetDetailReportCSV" content-type="text/csv"/>
     <view-map name="RetailerDetailReport" type="screencsv" page="component://byproducts/widget/ByProductsReportScreens.xml#RetailerDetailReportCSV" content-type="text/csv"/>
     <view-map name="SalesReportTXT" type="screenfop" page="component://byproducts/widget/ByProductsReportScreens.xml#SalesReportTXT" content-type="text/plain"/>

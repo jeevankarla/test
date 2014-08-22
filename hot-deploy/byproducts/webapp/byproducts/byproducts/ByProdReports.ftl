@@ -94,7 +94,7 @@ function makeDatePicker1(fromDateId ,thruDateId){
 		makeDatePicker("RouteTrDetDate","");
 		makeDatePicker("retailerDetailDate","");
 		makeDatePicker("bsFromDateId","bsThruDateId");
-		makeDatePicker("prodReturnDateId","thuDateId");
+		makeDatePicker("prodReturnDateId","prodReturnTDateId");
 		makeDatePicker("saleFromDateId","saleThruDateId");
 		makeDatePicker("chequeFromDateId","chequeThruDateId");
 		//makeDatePicker("materialFromDateId","materialThruDateId");
@@ -324,9 +324,10 @@ function makeDatePicker1(fromDateId ,thruDateId){
       		</form>	
         </tr>
         <tr class="alternate-row">
-      		<form id="ProductReturnsReport" name="ProductReturnsReport" method="post" action="<@ofbizUrl>productReturnsReport.txt</@ofbizUrl>" target="_blank">	
+      		<form id="ProductReturnsReport" name="ProductReturnsReport" method="post" action="<@ofbizUrl>productReturnsReport.pdf</@ofbizUrl>" target="_blank">	
       			<td width="30%">Product Returns Report</td>
-      			<td width="15%">Date<input  type="text" size="18pt" id="prodReturnDateId" readonly  name="prodReturnDate"/></td>
+      			<td width="15%">From<input  type="text" size="18pt" id="prodReturnDateId" readonly  name="prodReturnDate"/></td>
+      			<td width="15%">Thru<input  type="text" size="18pt" id="prodReturnTDateId" readonly  name="prodReturnTDateId"/></td>
       			<td width="15%">Route 
 				 	<select name="routeId" class='h4'>
 						<option value='All-Routes'>All</option>
@@ -342,7 +343,6 @@ function makeDatePicker1(fromDateId ,thruDateId){
 					<option value='PM'>PM</option>
 					</select>
 				</td>
-				<td width="15%"></td>
 				<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
       		</form>
       	</tr> 
