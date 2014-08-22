@@ -678,7 +678,7 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
-                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
@@ -800,7 +800,7 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
-               	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
+               	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
@@ -1181,7 +1181,7 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
-                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
@@ -1274,7 +1274,7 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
-               	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
+               	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
