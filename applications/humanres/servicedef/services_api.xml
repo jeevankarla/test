@@ -38,7 +38,13 @@
    
    <service name="fetchEmployeeAttendance" engine="java"  auth="true" export="true"
         location="in.vasista.vbiz.humanres.HumanresApiService" invoke="fetchEmployeeAttendance">
-        <description>Service to fetch employee leaves</description>
+        <description>Service to fetch employee's attendance</description>
         <attribute type="Map" mode="OUT" name="employeeAttendanceResult" optional="true"/>
-   </service>        
+   </service>  
+   
+   <service name="fetchEmployeeLastPunch" engine="java"  auth="true" export="true"
+        location="in.vasista.vbiz.humanres.HumanresApiService" invoke="fetchEmployeeLastPunch">
+        <description>Service to fetch employee's last punch</description>
+        <attribute type="Map" mode="OUT" name="employeeLastPunchResult" optional="true"/>
+   </service>              
 </services>   

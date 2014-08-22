@@ -23,6 +23,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -457,5 +459,66 @@ Debug.logInfo("result:" + result, module);
 Debug.logInfo("result:" + result, module);		 
     	return result;   	
     }
-    
+   
+    /*
+     * Fetch last punch for given employee.
+     * Note: Only "Normal" punchtype entries are considered
+     */
+    public static Map<String, Object> fetchEmployeeLastPunch(DispatchContext dctx, Map<String, ? extends Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();    	
+        GenericValue userLogin = (GenericValue) context.get("userLogin");		
+        Security security = dctx.getSecurity();
+        // security check
+        if (!security.hasEntityPermission("MOB_PUNCH", "_VIEW", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to fetch employees!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }   
+        String partyId = (String)context.get("partyId");
+        if(UtilValidate.isEmpty(context.get("partyId"))){
+            Debug.logWarning("**** INVALID PARTY [" + (new Date()).toString() + "]: " + "party Id missing!", module);
+            return ServiceUtil.returnError("Party Id is missing.");         
+        }
+    	SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    	EntityListIterator punchIter = null;
+    	Map<String, Object> emplPunch = FastMap.newInstance();
+		try {
+			List condList = FastList.newInstance();
+			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			condList.add(EntityCondition.makeCondition("PunchType", EntityOperator.EQUALS , "Normal")); 			
+			EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+			
+			punchIter = delegator.find("EmplPunch", cond, null, null, UtilMisc.toList("-punchdate","-punchtime"),null);
+	        GenericValue punch;
+	    	if( punchIter != null && (punch = punchIter.next()) != null) {
+    			String punchTime = UtilDateTime.toDateString((Date)punch.get("punchdate"), "dd/MM/yy") + "  " 
+    				+ timeFormat.format(punch.get("punchtime"));
+				emplPunch.put("punchTime", punchTime);
+	    		String inOut = "";
+	    		if (UtilValidate.isNotEmpty(punch.getString("InOut"))) {
+	    			inOut = punch.getString("InOut");
+	    		}
+				emplPunch.put("inOut", inOut);	    		
+	    	}
+        } catch (Exception e) {
+        	Debug.logError(e, module);
+        }
+        finally {
+            if (punchIter != null) {
+                try {
+                	punchIter.close();
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, module);
+                }
+            }
+        }
+		Map<String, Object> employeeLastPunchMap = FastMap.newInstance();  
+		employeeLastPunchMap.put("employeeId", partyId);    	 		
+		employeeLastPunchMap.put("punch", emplPunch); 
+		
+    	Map result = FastMap.newInstance(); 	
+    	result.put("employeeLastPunchResult", employeeLastPunchMap);	
+Debug.logInfo("result:" + result, module);		 
+    	return result;        
+    }
 }
