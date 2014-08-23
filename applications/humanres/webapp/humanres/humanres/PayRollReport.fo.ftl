@@ -145,7 +145,7 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Location                    : ${(doj[0].locationGeoId)?if_exists}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : ${emplDetails.employeeBankAccNo?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>
                      		 				</fo:table-row>
