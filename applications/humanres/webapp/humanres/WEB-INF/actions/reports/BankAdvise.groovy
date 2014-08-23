@@ -78,8 +78,11 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 }else{
 	parameters.partyIdFrom=parameters.partyId;
 }
-conditionList=UtilMisc.toList(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.partyIdFrom),
-  EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,parameters.partyIdFrom));
+	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+	if(UtilValidate.isNotEmpty(parameters.finAccountId) && (!"All".equals(parameters.finAccountId))){
+		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS ,parameters.finAccountId));
+	}
   EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
   companyBankAccountList= delegator.findList("FinAccount",condition,null,null,null,false);
   Map bankWiseEmplDetailsMap=FastMap.newInstance();

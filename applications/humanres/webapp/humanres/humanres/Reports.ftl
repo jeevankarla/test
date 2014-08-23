@@ -373,7 +373,15 @@ function makeDatePicker1(fromDateId ,thruDateId){
 									<td width="25%"><span class='h3'>Organization Id </span>
 										<select name="partyIdFrom" class='h4'>
 											<#list orgList as org>    
-												<option value='${org.partyId}'>${org.groupName}</option>
+												<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+											</#list> 
+										</select>
+									</td>
+									<td width="25%"><span class='h3'>Bank</span>
+										<select name="finAccountId" class='h4'>
+											<option value='All'>All</option>
+											<#list companyAccList as bank>    
+												<option value='${bank.finAccountId?if_exists}'>${bank.finAccountName?if_exists}</option>
 											</#list> 
 										</select>
 									</td>
