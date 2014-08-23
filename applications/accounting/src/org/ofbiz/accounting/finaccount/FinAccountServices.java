@@ -622,22 +622,26 @@ public class FinAccountServices {
 							result.put("finAcountIdList", finAccountList);
 						}
 					}else{
-						if("PAYMENTMETHOD4".equals(paymentMethodId) || "PAYMENTMETHOD6".equals(paymentMethodId)){
-							List condList = FastList.newInstance();
-							condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
-							condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
-							condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
-					    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
-							finAccountList = delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId","finAccountName"), null, null, false);
-							if(UtilValidate.isNotEmpty(finAccountList)){
-								flag = true;
+						GenericValue paymentMethodDetails = delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+						if(UtilValidate.isNotEmpty(paymentMethodDetails)){
+							finAccountId = (String) paymentMethodDetails.get("finAccountId");
+							if(UtilValidate.isEmpty(finAccountId)){
+								List condList = FastList.newInstance();
+								condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
+								condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
+								condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+						    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
+								finAccountList = delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId","finAccountName"), null, null, false);
+								if(UtilValidate.isNotEmpty(finAccountList)){
+									flag = true;
+									result.put("flag", flag);
+									result.put("finAcountIdList", finAccountList);
+								}
+							}else{
+								flag = false;
 								result.put("flag", flag);
-								result.put("finAcountIdList", finAccountList);
+								return result;
 							}
-						}else{
-							flag = false;
-							result.put("flag", flag);
-							return result;
 						}
 					}
 				}
